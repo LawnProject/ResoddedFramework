@@ -2,7 +2,6 @@
 project(LawnProject)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
-    "${CMAKE_CURRENT_SOURCE_DIR}/*.rc"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
 
@@ -10,6 +9,14 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}../Sexy.TodLib/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}../Sexy.TodLib/*.h"
 )
+
+# ..and the lawn files in root dir
+file(GLOB LAWN_FILES
+    "${CMAKE_CURRENT_SOURCE_DIR}../*.rc"
+    "${CMAKE_CURRENT_SOURCE_DIR}../*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}../*.h"
+)
+list(APPEND SOURCES ${LAWN_FILES})
 
 foreach(EXCLUDED_FILE IN LISTS EXCLUDE_FILES)
     list(REMOVE_ITEM SOURCES "${EXCLUDED_FILE}")
