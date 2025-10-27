@@ -17,3 +17,5 @@ set(CMAKE_CXX_EXTENSIONS ON)
 set(CMAKE_USE_FOLDERS ON)
 
 add_subdirectory(src/SexyAppFramework)
+add_subdirectory(src/ImageLib)
+add_subdirectory(src/PakLib)
