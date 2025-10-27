@@ -6,6 +6,7 @@
 #include "MemoryImage.h"
 #include "D3DInterface.h"
 #include "WidgetManager.h"
+#include "DDInterface.h"
 #include <stdlib.h>
 
 using namespace Sexy;

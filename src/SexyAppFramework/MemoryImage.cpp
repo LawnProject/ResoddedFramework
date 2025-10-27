@@ -7,6 +7,8 @@
 #include "Quantize.h"
 #include "PerfTimer.h"
 #include "SWTri.h"
+#include "D3DInterface.h"
+#include "DDInterface.h"
 
 #include <math.h>
 
@@ -1126,7 +1128,7 @@ void MemoryImage::PurgeBits()
 		if ((mBits == NULL) && (mColorIndices == NULL))
 			return;
 		
-		GetNativeAlphaData(gSexyAppBase->mDDInterface);		
+		GetNativeAlphaData((NativeDisplay*)gSexyAppBase->mDDInterface);
 	}		
 	
 	delete [] mBits;
@@ -1256,7 +1258,7 @@ ulong* MemoryImage::GetBits()
 		}
 		else if (mNativeAlphaData != NULL)
 		{
-			NativeDisplay* aDisplay = gSexyAppBase->mDDInterface;
+			NativeDisplay* aDisplay = (NativeDisplay*)gSexyAppBase->mDDInterface;
 
 			const int rMask = aDisplay->mRedMask;
 			const int gMask = aDisplay->mGreenMask;

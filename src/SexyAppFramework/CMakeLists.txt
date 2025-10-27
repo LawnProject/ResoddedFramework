@@ -32,6 +32,9 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
     $<$<CONFIG:Debug>:DEBUG>
     $<$<CONFIG:Release>:NDEBUG>
     _LIB
+
+    # SAF specific
+    USE_OGG_LIB
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

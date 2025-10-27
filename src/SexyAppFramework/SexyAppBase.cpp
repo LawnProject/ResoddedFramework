@@ -19,7 +19,6 @@
 #include "DSoundManager.h"
 #include "DSoundInstance.h"
 #include "Rect.h"
-#include "FModMusicInterface.h"
 #include "PropertiesParser.h"
 #include "PerfTimer.h"
 #include "MTRand.h"
@@ -6025,8 +6024,8 @@ MusicInterface* SexyAppBase::CreateMusicInterface(HWND theWindow)
 {
 	if (mNoSoundNeeded)
 		return new MusicInterface;
-	else if (mWantFMod)
-		return new FModMusicInterface(mInvisHWnd);
+	//else if (mWantFMod)
+	//	return new FModMusicInterface(mInvisHWnd);
 	else 
 		return new BassMusicInterface(mInvisHWnd);
 }
