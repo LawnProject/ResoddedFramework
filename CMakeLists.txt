@@ -19,3 +19,5 @@ set(CMAKE_USE_FOLDERS ON)
 add_subdirectory(src/SexyAppFramework)
 add_subdirectory(src/ImageLib)
 add_subdirectory(src/PakLib)
+
+add_subdirectory(src/Lawn)

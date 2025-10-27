@@ -2,15 +2,20 @@
 project(LawnProject)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.rc"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
+
+    # Todlib is a part of pvz
+    "${CMAKE_CURRENT_SOURCE_DIR}../Sexy.TodLib/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}../Sexy.TodLib/*.h"
 )
 
 foreach(EXCLUDED_FILE IN LISTS EXCLUDE_FILES)
     list(REMOVE_ITEM SOURCES "${EXCLUDED_FILE}")
 endforeach()
 
-add_library(${PROJECT_NAME} STATIC ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC
     WIN32
@@ -25,6 +30,12 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}../PakLib"
     "${CMAKE_CURRENT_SOURCE_DIR}../Sexy.TodLib"
     "${CMAKE_CURRENT_SOURCE_DIR}../SexyAppFramework"
+)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC
+    SexyAppFramework
+    ImageLib
+    PakLib
 )
 
 foreach(FILE_PATH IN LISTS SOURCES)
