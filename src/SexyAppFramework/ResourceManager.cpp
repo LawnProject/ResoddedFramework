@@ -7,6 +7,7 @@
 #include "ImageFont.h"
 #include "SysFont.h"
 #include "../ImageLib/ImageLib.h"
+#include <memory>
 
 //#define SEXY_PERF_ENABLED
 #include "PerfTimer.h"
@@ -631,7 +632,7 @@ bool ResourceManager::LoadAlphaGridImage(ImageRes *theRes, DDImage *theImage)
 	if (anAlphaImage==NULL)
 		return Fail(StrFormat("Failed to load image: %s",theRes->mAlphaGridImage.c_str()));
 
-	std::auto_ptr<ImageLib::Image> aDelAlphaImage(anAlphaImage);
+	std::unique_ptr<ImageLib::Image> aDelAlphaImage(anAlphaImage);
 
 	int aNumRows = theRes->mRows;
 	int aNumCols = theRes->mCols;

@@ -1103,7 +1103,7 @@ ActiveFontLayer::ActiveFontLayer(const ActiveFontLayer& theActiveFontLayer) :
 	mOwnsImage(theActiveFontLayer.mOwnsImage)
 {
 	if (mOwnsImage)	
-		mScaledImage = mBaseFontLayer->mFontData->mApp->CopyImage(mScaledImage);	
+		mScaledImage = (Sexy::Image*)mBaseFontLayer->mFontData->mApp->CopyImage(mScaledImage);	
 
 	for (int aCharNum = 0; aCharNum < 256; aCharNum++)
 		mScaledCharImageRects[aCharNum] = theActiveFontLayer.mScaledCharImageRects[aCharNum];
