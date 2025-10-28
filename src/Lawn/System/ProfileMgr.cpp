@@ -73,7 +73,7 @@ void ProfileMgr::SyncState(DataSync& theSync)
 void ProfileMgr::Load()
 {
     Buffer aBuffer;
-    std::string aFileName = GetAppDataFolder() + "userdata/users.dat";
+    std::string aFileName = /*GetAppDataFolder() +*/ "savefiles/userdata/users.dat";
 
     try
     {
@@ -99,8 +99,8 @@ void ProfileMgr::Save()
     DataSync aSync(aWriter);
     SyncState(aSync);
 
-    MkDir(GetAppDataFolder() + "userdata");
-    std::string aFileName = GetAppDataFolder() + "userdata/users.dat";
+    MkDir(/*GetAppDataFolder() +*/ "savefiles/userdata");
+    std::string aFileName = /*GetAppDataFolder() +*/"savefiles/userdata/users.dat";
     gSexyAppBase->WriteBytesToFile(aFileName, aWriter.GetDataPtr(), aWriter.GetDataLen());
 }
 

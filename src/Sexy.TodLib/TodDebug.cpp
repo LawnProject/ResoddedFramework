@@ -4,6 +4,9 @@
 #include "../SexyAppFramework/Debug.h"
 #include "../SexyAppFramework/SEHCatcher.h"
 #include "../SexyAppFramework/SexyAppBase.h"
+#include <sstream>
+#include <chrono>
+#include <iomanip>
 
 using namespace Sexy;
 
@@ -260,11 +263,22 @@ void (*gBetaSubmitFunc)() = nullptr;
 
 void TodAssertInitForApp()
 {
-	MkDir(GetAppDataFolder() + "userdata");
-	std::string aRelativeUserPath = GetAppDataFolder() + "userdata\\";
+	std::chrono::system_clock::time_point aNow = std::chrono::system_clock::now();
+	std::time_t t = std::chrono::system_clock::to_time_t(aNow);
+	std::tm aLocalTime;
+	localtime_s(&aLocalTime, &t);
+
+	std::ostringstream aOss;
+	aOss << std::put_time(&aLocalTime, "%d-%m-%Y-%H.%M");
+	std::string aTimestamp = aOss.str();
+
+	MkDir(/*GetAppDataFolder() +*/ "savefiles/logs");
+	std::string aRelativeUserPath = /*GetAppDataFolder() +*/ "savefiles/logs/";
 	strcpy(gDebugDataFolder, GetFullPath(aRelativeUserPath).c_str());
 	strcpy(gLogFileName, gDebugDataFolder);
-	strcpy(gLogFileName + strlen(gLogFileName), "log.txt");
+	std::string aFormatted = StrFormat("log-%s.txt", aTimestamp.c_str());
+	strcat(gLogFileName, aFormatted.c_str());
+
 	TOD_ASSERT(strlen(gLogFileName) < MAX_PATH);
 
 	__time64_t aclock = _time64(nullptr);

@@ -310,7 +310,7 @@ void Board::TryToSaveGame()
 			return;
 		}
 
-		MkDir(GetAppDataFolder() + "userdata");
+		MkDir(/*GetAppDataFolder() */+"savefiles/userdata");
 		mApp->mMusic->GameMusicPause(true);
 		LawnSaveGame(this, aFileName);
 		mApp->ClearUpdateBacklog();
