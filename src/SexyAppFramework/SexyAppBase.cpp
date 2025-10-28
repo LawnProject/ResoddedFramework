@@ -143,8 +143,6 @@ SexyAppBase::SexyAppBase()
 	gDSoundDLL = LoadLibraryA("dsound.dll");
 	gGetLastInputInfoFunc = (GetLastInputInfoFunc) GetProcAddress(GetModuleHandleA("user32.dll"),"GetLastInputInfo");
 
-	ImageLib::InitJPEG2000();
-
 	mMutex = NULL;
 	mNotifyGameMessage = 0;
 
@@ -1186,7 +1184,7 @@ void SexyAppBase::TakeScreenshot()
 	aSaveImage.mBits = anImage.mBits;
 	aSaveImage.mWidth = anImage.mWidth;
 	aSaveImage.mHeight = anImage.mHeight;
-	ImageLib::WritePNGImage(anImageName, &aSaveImage);
+	ImageLib::WriteImage(anImageName, &aSaveImage, ".png");
 	aSaveImage.mBits = NULL;
 		
 
@@ -1429,7 +1427,7 @@ void SexyAppBase::DumpProgramInfo()
 				*(aThumbBitsPtr++) = aBits[aSrcX + (aSrcY*aCopiedImage.mWidth)];
 			}
 
-		ImageLib::WriteJPEGImage((GetAppDataFolder() + std::string("_dump\\") + aThumbName).c_str(), &anImageLibImage);
+		ImageLib::WriteImage((GetAppDataFolder() + std::string("_dump\\") + aThumbName).c_str(), &anImageLibImage, ".jpeg");
 
 		// Write high resolution image
 
@@ -1438,7 +1436,7 @@ void SexyAppBase::DumpProgramInfo()
 		anFullImage.mWidth = aCopiedImage.GetWidth();
 		anFullImage.mHeight = aCopiedImage.GetHeight();
 
-		ImageLib::WritePNGImage((GetAppDataFolder() + std::string("_dump\\") + anImageName).c_str(), &anFullImage);
+		ImageLib::WriteImage((GetAppDataFolder() + std::string("_dump\\") + anImageName).c_str(), &anFullImage, ".png");
 
 		anFullImage.mBits = NULL;
 
@@ -2175,8 +2173,6 @@ void SexyAppBase::Shutdown()
 
 		if (mReadFromRegistry)
 			WriteToRegistry();
-
-		ImageLib::CloseJPEG2000();
 	}
 }
 
