@@ -26,7 +26,7 @@ Image::Image()
 
 Image::~Image()
 {
-	delete mBits;
+	delete[] mBits;
 }
 
 int Image::GetWidth()
