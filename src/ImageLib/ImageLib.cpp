@@ -168,47 +168,44 @@ Image* ImageLib::GetImage(const std::string& theFilename, bool lookForAlphaImage
 
 	Image* anImage = NULL;
 
-	if (!anExt.empty())
-	{
-		anImage = GetImageBackend(aFilename, anExt);
-	}
-	else
-	{
-		std::vector<std::string> aPossibleExtensions = {".png", ".jpeg", ".jpg", ".gif", ".tga"};
+	if ((anImage == NULL) && ((stricmp(anExt.c_str(), ".tga") == 0) || (anExt.length() == 0)))
+		anImage = GetImageBackend(aFilename, ".tga");
 
-		for (const std::string& ext : aPossibleExtensions)
-		{
-			if (anExt == ext) 
-            	continue;
-			anImage = GetImageBackend(aFilename, ext);
-			if (anImage != nullptr)
-				break;
-		}
-	}
+	if ((anImage == NULL) && ((stricmp(anExt.c_str(), ".jpg") == 0) || (anExt.length() == 0)))
+		anImage = GetImageBackend(aFilename, ".jpg");
+
+	if ((anImage == NULL) && ((stricmp(anExt.c_str(), ".png") == 0) || (anExt.length() == 0)))
+		anImage = GetImageBackend(aFilename, ".png");
+
+	if ((anImage == NULL) && ((stricmp(anExt.c_str(), ".gif") == 0) || (anExt.length() == 0)))
+		anImage = GetImageBackend(aFilename, ".gif");
 
 	// Check for alpha images
 	Image* anAlphaImage = NULL;
-	if (lookForAlphaImage)
+	if(lookForAlphaImage)
 	{
 		// Check _ImageName
-		anAlphaImage =
-			GetImage(theFilename.substr(0, aLastSlashPos + 1) + "_" + theFilename.substr(aLastSlashPos + 1, theFilename.length() - aLastSlashPos - 1), false);
+		anAlphaImage = GetImage(theFilename.substr(0, aLastSlashPos+1) + "_" +
+			theFilename.substr(aLastSlashPos+1, theFilename.length() - aLastSlashPos - 1), false);
 
 		// Check ImageName_
-		if (anAlphaImage == NULL)
+		if(anAlphaImage==NULL)
 			anAlphaImage = GetImage(theFilename + "_", false);
 	}
 
+
+
 	// Compose alpha channel with image
-	if (anAlphaImage != NULL)
+	if (anAlphaImage != NULL) 
 	{
 		if (anImage != NULL)
 		{
-			if ((anImage->mWidth == anAlphaImage->mWidth) && (anImage->mHeight == anAlphaImage->mHeight))
+			if ((anImage->mWidth == anAlphaImage->mWidth) &&
+				(anImage->mHeight == anAlphaImage->mHeight))
 			{
 				unsigned long* aBits1 = anImage->mBits;
 				unsigned long* aBits2 = anAlphaImage->mBits;
-				int aSize = anImage->mWidth * anImage->mHeight;
+				int aSize = anImage->mWidth*anImage->mHeight;
 
 				for (int i = 0; i < aSize; i++)
 				{
@@ -220,13 +217,13 @@ Image* ImageLib::GetImage(const std::string& theFilename, bool lookForAlphaImage
 
 			delete anAlphaImage;
 		}
-		else if (gAlphaComposeColor == 0xFFFFFF)
+		else if (gAlphaComposeColor==0xFFFFFF)
 		{
 			anImage = anAlphaImage;
 
 			unsigned long* aBits1 = anImage->mBits;
 
-			int aSize = anImage->mWidth * anImage->mHeight;
+			int aSize = anImage->mWidth*anImage->mHeight;
 			for (int i = 0; i < aSize; i++)
 			{
 				*aBits1 = (0x00FFFFFF) | ((*aBits1 & 0xFF) << 24);
@@ -240,7 +237,7 @@ Image* ImageLib::GetImage(const std::string& theFilename, bool lookForAlphaImage
 
 			unsigned long* aBits1 = anImage->mBits;
 
-			int aSize = anImage->mWidth * anImage->mHeight;
+			int aSize = anImage->mWidth*anImage->mHeight;
 			for (int i = 0; i < aSize; i++)
 			{
 				*aBits1 = aColor | ((*aBits1 & 0xFF) << 24);
