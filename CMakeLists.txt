@@ -16,6 +16,11 @@ set(CMAKE_CXX_EXTENSIONS ON)
 # woohooo now we can use folder filters
 set(CMAKE_USE_FOLDERS ON)
 
+set(ZLIB_BUILD_EXAMPLES OFF CACHE BOOL "Disable zlib examples" FORCE)
+set(SKIP_INSTALL_ALL ON CACHE BOOL "Skip all install rules" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Disable building dll zlib" FORCE)
+add_subdirectory(src/zlib)
+
 add_subdirectory(src/SexyAppFramework)
 add_subdirectory(src/ImageLib)
 add_subdirectory(src/PakLib)

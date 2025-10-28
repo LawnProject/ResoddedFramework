@@ -43,12 +43,14 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}../PakLib"
     "${CMAKE_CURRENT_SOURCE_DIR}../Sexy.TodLib"
     "${CMAKE_CURRENT_SOURCE_DIR}../SexyAppFramework"
+    "${CMAKE_CURRENT_SOURCE_DIR}../zlib"
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
     SexyAppFramework
     ImageLib
     PakLib
+    zlibstatic
 )
 
 # Okay. Yes. We get it.
