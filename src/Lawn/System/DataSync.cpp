@@ -29,13 +29,13 @@ DataReader::~DataReader()
 	mOwnData = false;
 }
 
-bool DataReader::OpenFile(const std::string& theFileName)
+bool DataReader::OpenFile(const std::string &theFileName)
 {
 	mFile = fopen(theFileName.c_str(), "rb");
 	return mFile;
 }
 
-void DataReader::OpenMemory(const void* theData, unsigned long theDataLen, bool takeOwnership)
+void DataReader::OpenMemory(const void *theData, unsigned long theDataLen, bool takeOwnership)
 {
 	if (mFile)
 	{
@@ -47,7 +47,7 @@ void DataReader::OpenMemory(const void* theData, unsigned long theDataLen, bool 
 		delete[] mData;
 	}
 
-	mData = (char*)theData;
+	mData = (char *)theData;
 	mDataLen = theDataLen;
 	mOwnData = takeOwnership;
 }
@@ -62,7 +62,7 @@ void DataReader::Close()
 }
 
 //0x441BE0
-void DataReader::ReadBytes(void* theMem, unsigned long theNumBytes)
+void DataReader::ReadBytes(void *theMem, unsigned long theNumBytes)
 {
 	if (mData)
 	{
@@ -130,24 +130,24 @@ double DataReader::ReadDouble()
 	return aDouble;
 }
 
-void DataReader::ReadString(SexyString& theStr)
+void DataReader::ReadString(SexyString &theStr)
 {
 	unsigned int aStrLen = ReadShort();
 	theStr.resize(aStrLen);
-	ReadBytes((void*)theStr.c_str(), aStrLen);
+	ReadBytes((void *)theStr.c_str(), aStrLen);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //0x441E70
-DataSync::DataSync(DataReader& theReader)
+DataSync::DataSync(DataReader &theReader)
 {
 	Reset();
 	mReader = &theReader;
 }
 
 //0x441F10
-DataSync::DataSync(DataWriter& theWriter)
+DataSync::DataSync(DataWriter &theWriter)
 {
 	Reset();
 	mWriter = &theWriter;
@@ -176,7 +176,7 @@ void DataSync::Reset()
 	ResetPointerTable();
 }
 
-void DataSync::SyncBytes(void* theData, unsigned long theDataLen)
+void DataSync::SyncBytes(void *theData, unsigned long theDataLen)
 {
 	if (mReader)
 	{
@@ -188,7 +188,7 @@ void DataSync::SyncBytes(void* theData, unsigned long theDataLen)
 	}
 }
 
-void DataSync::SyncLong(unsigned long& theNum)
+void DataSync::SyncLong(unsigned long &theNum)
 {
 	if (mReader)
 	{
@@ -200,37 +200,37 @@ void DataSync::SyncLong(unsigned long& theNum)
 	}
 }
 
-void DataSync::SyncLong(char& theNum)
+void DataSync::SyncLong(char &theNum)
 {
-	SyncLong((unsigned long&)theNum);
+	SyncLong((unsigned long &)theNum);
 }
 
-void DataSync::SyncLong(short& theNum)
+void DataSync::SyncLong(short &theNum)
 {
-	SyncLong((unsigned long&)theNum);
+	SyncLong((unsigned long &)theNum);
 }
 
-void DataSync::SyncLong(long& theNum)
+void DataSync::SyncLong(long &theNum)
 {
-	SyncLong((unsigned long&)theNum);
+	SyncLong((unsigned long &)theNum);
 }
 
-void DataSync::SyncLong(unsigned char& theNum)
+void DataSync::SyncLong(unsigned char &theNum)
 {
-	SyncLong((unsigned long&)theNum);
+	SyncLong((unsigned long &)theNum);
 }
 
-void DataSync::SyncLong(unsigned short& theNum)
+void DataSync::SyncLong(unsigned short &theNum)
 {
-	SyncLong((unsigned long&)theNum);
+	SyncLong((unsigned long &)theNum);
 }
 
-void DataSync::SyncLong(int& theNum)
+void DataSync::SyncLong(int &theNum)
 {
-	SyncLong((unsigned long&)theNum);
+	SyncLong((unsigned long &)theNum);
 }
 
-void DataSync::SyncSLong(long& theNum)
+void DataSync::SyncSLong(long &theNum)
 {
 	if (mReader)
 	{
@@ -242,37 +242,37 @@ void DataSync::SyncSLong(long& theNum)
 	}
 }
 
-void DataSync::SyncSLong(char& theNum)
+void DataSync::SyncSLong(char &theNum)
 {
-	SyncSLong((long&)theNum);
+	SyncSLong((long &)theNum);
 }
 
-void DataSync::SyncSLong(short& theNum)
+void DataSync::SyncSLong(short &theNum)
 {
-	SyncSLong((long&)theNum);
+	SyncSLong((long &)theNum);
 }
 
-void DataSync::SyncSLong(int& theNum)
+void DataSync::SyncSLong(int &theNum)
 {
-	SyncSLong((long&)theNum);
+	SyncSLong((long &)theNum);
 }
 
-void DataSync::SyncSLong(unsigned char& theNum)
+void DataSync::SyncSLong(unsigned char &theNum)
 {
-	SyncSLong((long&)theNum);
+	SyncSLong((long &)theNum);
 }
 
-void DataSync::SyncSLong(unsigned short& theNum)
+void DataSync::SyncSLong(unsigned short &theNum)
 {
-	SyncSLong((long&)theNum);
+	SyncSLong((long &)theNum);
 }
 
-void DataSync::SyncSLong(unsigned long& theNum)
+void DataSync::SyncSLong(unsigned long &theNum)
 {
-	SyncSLong((long&)theNum);
+	SyncSLong((long &)theNum);
 }
 
-void DataSync::SyncShort(unsigned short& theNum)
+void DataSync::SyncShort(unsigned short &theNum)
 {
 	if (mReader)
 	{
@@ -284,37 +284,37 @@ void DataSync::SyncShort(unsigned short& theNum)
 	}
 }
 
-void DataSync::SyncShort(char& theNum)
+void DataSync::SyncShort(char &theNum)
 {
-	SyncShort((unsigned short&)theNum);
+	SyncShort((unsigned short &)theNum);
 }
 
-void DataSync::SyncShort(short& theNum)
+void DataSync::SyncShort(short &theNum)
 {
-	SyncShort((unsigned short&)theNum);
+	SyncShort((unsigned short &)theNum);
 }
 
-void DataSync::SyncShort(long& theNum)
+void DataSync::SyncShort(long &theNum)
 {
-	SyncShort((unsigned short&)theNum);
+	SyncShort((unsigned short &)theNum);
 }
 
-void DataSync::SyncShort(unsigned char& theNum)
+void DataSync::SyncShort(unsigned char &theNum)
 {
-	SyncShort((unsigned short&)theNum);
+	SyncShort((unsigned short &)theNum);
 }
 
-void DataSync::SyncShort(unsigned long& theNum)
+void DataSync::SyncShort(unsigned long &theNum)
 {
-	SyncShort((unsigned short&)theNum);
+	SyncShort((unsigned short &)theNum);
 }
 
-void DataSync::SyncShort(int& theNum)
+void DataSync::SyncShort(int &theNum)
 {
-	SyncShort((unsigned short&)theNum);
+	SyncShort((unsigned short &)theNum);
 }
 
-void DataSync::SyncSShort(short& theNum)
+void DataSync::SyncSShort(short &theNum)
 {
 	if (mReader)
 	{
@@ -326,37 +326,37 @@ void DataSync::SyncSShort(short& theNum)
 	}
 }
 
-void DataSync::SyncSShort(char& theNum)
+void DataSync::SyncSShort(char &theNum)
 {
-	SyncSShort((short&)theNum);
+	SyncSShort((short &)theNum);
 }
 
-void DataSync::SyncSShort(long& theNum)
+void DataSync::SyncSShort(long &theNum)
 {
-	SyncSShort((short&)theNum);
+	SyncSShort((short &)theNum);
 }
 
-void DataSync::SyncSShort(unsigned char& theNum)
+void DataSync::SyncSShort(unsigned char &theNum)
 {
-	SyncSShort((short&)theNum);
+	SyncSShort((short &)theNum);
 }
 
-void DataSync::SyncSShort(unsigned short& theNum)
+void DataSync::SyncSShort(unsigned short &theNum)
 {
-	SyncSShort((short&)theNum);
+	SyncSShort((short &)theNum);
 }
 
-void DataSync::SyncSShort(unsigned long& theNum)
+void DataSync::SyncSShort(unsigned long &theNum)
 {
-	SyncSShort((short&)theNum);
+	SyncSShort((short &)theNum);
 }
 
-void DataSync::SyncSShort(int& theNum)
+void DataSync::SyncSShort(int &theNum)
 {
-	SyncSShort((short&)theNum);
+	SyncSShort((short &)theNum);
 }
 
-void DataSync::SyncByte(unsigned char& theChar)
+void DataSync::SyncByte(unsigned char &theChar)
 {
 	if (mReader)
 	{
@@ -368,37 +368,37 @@ void DataSync::SyncByte(unsigned char& theChar)
 	}
 }
 
-void DataSync::SyncByte(char& theChar)
+void DataSync::SyncByte(char &theChar)
 {
-	SyncByte((unsigned char&)theChar);
+	SyncByte((unsigned char &)theChar);
 }
 
-void DataSync::SyncByte(short& theChar)
+void DataSync::SyncByte(short &theChar)
 {
-	SyncByte((unsigned char&)theChar);
+	SyncByte((unsigned char &)theChar);
 }
 
-void DataSync::SyncByte(long& theChar)
+void DataSync::SyncByte(long &theChar)
 {
-	SyncByte((unsigned char&)theChar);
+	SyncByte((unsigned char &)theChar);
 }
 
-void DataSync::SyncByte(unsigned short& theChar)
+void DataSync::SyncByte(unsigned short &theChar)
 {
-	SyncByte((unsigned char&)theChar);
+	SyncByte((unsigned char &)theChar);
 }
 
-void DataSync::SyncByte(unsigned long& theChar)
+void DataSync::SyncByte(unsigned long &theChar)
 {
-	SyncByte((unsigned char&)theChar);
+	SyncByte((unsigned char &)theChar);
 }
 
-void DataSync::SyncByte(int& theChar)
+void DataSync::SyncByte(int &theChar)
 {
-	SyncByte((unsigned char&)theChar);
+	SyncByte((unsigned char &)theChar);
 }
 
-void DataSync::SyncSByte(char& theChar)
+void DataSync::SyncSByte(char &theChar)
 {
 	if (mReader)
 	{
@@ -410,37 +410,37 @@ void DataSync::SyncSByte(char& theChar)
 	}
 }
 
-void DataSync::SyncSByte(short& theChar)
+void DataSync::SyncSByte(short &theChar)
 {
-	SyncByte((char&)theChar);
+	SyncByte((char &)theChar);
 }
 
-void DataSync::SyncSByte(long& theChar)
+void DataSync::SyncSByte(long &theChar)
 {
-	SyncByte((char&)theChar);
+	SyncByte((char &)theChar);
 }
 
-void DataSync::SyncSByte(unsigned char& theChar)
+void DataSync::SyncSByte(unsigned char &theChar)
 {
-	SyncByte((char&)theChar);
+	SyncByte((char &)theChar);
 }
 
-void DataSync::SyncSByte(unsigned short& theChar)
+void DataSync::SyncSByte(unsigned short &theChar)
 {
-	SyncByte((char&)theChar);
+	SyncByte((char &)theChar);
 }
 
-void DataSync::SyncSByte(unsigned long& theChar)
+void DataSync::SyncSByte(unsigned long &theChar)
 {
-	SyncByte((char&)theChar);
+	SyncByte((char &)theChar);
 }
 
-void DataSync::SyncSByte(int& theChar)
+void DataSync::SyncSByte(int &theChar)
 {
-	SyncByte((char&)theChar);
+	SyncByte((char &)theChar);
 }
 
-void DataSync::SyncBool(bool& theBool)
+void DataSync::SyncBool(bool &theBool)
 {
 	if (mReader)
 	{
@@ -452,7 +452,7 @@ void DataSync::SyncBool(bool& theBool)
 	}
 }
 
-void DataSync::SyncFloat(float& theFloat)
+void DataSync::SyncFloat(float &theFloat)
 {
 	if (mReader)
 	{
@@ -464,7 +464,7 @@ void DataSync::SyncFloat(float& theFloat)
 	}
 }
 
-void DataSync::SyncDouble(double& theDouble)
+void DataSync::SyncDouble(double &theDouble)
 {
 	if (mReader)
 	{
@@ -476,7 +476,7 @@ void DataSync::SyncDouble(double& theDouble)
 	}
 }
 
-void DataSync::SyncString(SexyString& theStr)
+void DataSync::SyncString(SexyString &theStr)
 {
 	if (mReader)
 	{
@@ -513,7 +513,7 @@ DataWriter::~DataWriter()
 	mCapacity = 0;
 }
 
-bool DataWriter::OpenFile(const std::string& theFileName)
+bool DataWriter::OpenFile(const std::string &theFileName)
 {
 	mFile = fopen(theFileName.c_str(), "wb");
 	return mFile;
@@ -534,10 +534,13 @@ void DataWriter::EnsureCapacity(unsigned long theNumBytes)
 	if (mCapacity < theNumBytes)
 	{
 		// 每次将容量乘 2 直到容量达到 theNumBytes 或更多
-		do { mCapacity <<= 1; } while (mCapacity < theNumBytes);
+		do
+		{
+			mCapacity <<= 1;
+		} while (mCapacity < theNumBytes);
 
 		// 申请新内存
-		char* aData = new char[mCapacity];
+		char *aData = new char[mCapacity];
 		// 将原数据迁移至新内存区域中
 		memcpy(aData, mData, mDataLen);
 		// 释放旧有内存区域
@@ -564,7 +567,7 @@ void DataWriter::OpenMemory(unsigned long theReserveAmount)
 	mCapacity = theReserveAmount;
 }
 
-void DataWriter::WriteBytes(const void* theData, unsigned long theDataLen)
+void DataWriter::WriteBytes(const void *theData, unsigned long theDataLen)
 {
 	if (mData)
 	{
@@ -631,7 +634,7 @@ void DataWriter::WriteDouble(double theDouble)
 }
 
 //0x443810
-void DataWriter::WriteString(const SexyString& theStr)
+void DataWriter::WriteString(const SexyString &theStr)
 {
 	unsigned short aStrLen = (unsigned short)theStr.length();
 	WriteShort(aStrLen);

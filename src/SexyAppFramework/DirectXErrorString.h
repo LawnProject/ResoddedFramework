@@ -5,7 +5,7 @@
 
 namespace Sexy
 {
-	std::string GetDirectXErrorString(HRESULT theResult);
-} // namespace 
+std::string GetDirectXErrorString(HRESULT theResult);
+} // namespace Sexy
 
 #endif

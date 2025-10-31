@@ -8,20 +8,20 @@ namespace Sexy
 
 class HyperlinkWidget : public ButtonWidget
 {
-public:
-	Color					mColor;
-	Color					mOverColor;
-	int						mUnderlineSize;
-	int						mUnderlineOffset;
+  public:
+	Color mColor;
+	Color mOverColor;
+	int mUnderlineSize;
+	int mUnderlineOffset;
 
-public:
-	HyperlinkWidget(int theId, ButtonListener* theButtonListener);
+  public:
+	HyperlinkWidget(int theId, ButtonListener *theButtonListener);
 
-	void					Draw(Graphics* g);
-	void					MouseEnter();
-	void					MouseLeave();	
+	void Draw(Graphics *g);
+	void MouseEnter();
+	void MouseLeave();
 };
 
-}
+} // namespace Sexy
 
 #endif //__HYPERLINKWIDGET_H__

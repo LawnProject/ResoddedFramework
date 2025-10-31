@@ -9,7 +9,7 @@
 #include "../Sexy.TodLib/TodStringFile.h"
 
 //(0x4081F1)
-MessageWidget::MessageWidget(LawnApp* theApp)
+MessageWidget::MessageWidget(LawnApp *theApp)
 {
 	mApp = theApp;
 	mDuration = 0;
@@ -26,7 +26,7 @@ void MessageWidget::ClearReanim()
 {
 	for (int i = 0; i < MAX_MESSAGE_LENGTH; i++)
 	{
-		Reanimation* aReanim = mApp->ReanimationTryToGet(mTextReanimID[i]);
+		Reanimation *aReanim = mApp->ReanimationTryToGet(mTextReanimID[i]);
 		if (aReanim)
 		{
 			aReanim->ReanimationDie();
@@ -48,7 +48,7 @@ void MessageWidget::ClearLabel()
 }
 
 //0x459010
-void MessageWidget::SetLabel(const SexyString& theNewLabel, MessageStyle theMessageStyle)
+void MessageWidget::SetLabel(const SexyString &theNewLabel, MessageStyle theMessageStyle)
 {
 	SexyString aLabel = TodStringTranslate(theNewLabel);
 	TOD_ASSERT(aLabel.length() < MAX_MESSAGE_LENGTH - 1);
@@ -111,7 +111,7 @@ void MessageWidget::SetLabel(const SexyString& theNewLabel, MessageStyle theMess
 			TOD_ASSERT();
 			break;
 		}
-		
+
 		if (mReanimType != ReanimationType::REANIM_NONE)
 		{
 			LayoutReanimText();
@@ -125,7 +125,7 @@ void MessageWidget::LayoutReanimText()
 {
 	float aMaxWidth = 0;
 	int aCurLine = 0, aCurPos = 0;
-	Font* aFont = GetFont();
+	Font *aFont = GetFont();
 	int aLabelLen = strlen(mLabel);
 	mSlideOffTime = aLabelLen + 100;
 
@@ -140,7 +140,7 @@ void MessageWidget::LayoutReanimText()
 			int aOff = aCurPos;
 			aCurPos = aPos + 1;
 			SexyString aLine(&mLabel[aOff], aLen);
-			
+
 			aLineWidth[aCurLine] = aFont->StringWidth(aLine);
 			aMaxWidth = max(aMaxWidth, aLineWidth[aCurLine]);
 			aCurLine++;
@@ -154,13 +154,13 @@ void MessageWidget::LayoutReanimText()
 	for (int aPos = 0; aPos < aLabelLen; aPos++)
 	{
 		// 创建文字的动画
-		Reanimation* aReanimText = mApp->AddReanimation(aCurPosX, aCurPosY, 0, mReanimType);
+		Reanimation *aReanimText = mApp->AddReanimation(aCurPosX, aCurPosY, 0, mReanimType);
 		aReanimText->mIsAttachment = true;
 		aReanimText->PlayReanim("anim_enter", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0.0f, 0.0f);
 		mTextReanimID[aPos] = mApp->ReanimationGetID(aReanimText);
 
-		aCurPosX += aFont->CharWidth(mLabel[aPos]);  // 坐标调整至下一个文字的位置
-		if (mLabel[aPos] == _S('\n'))  // 换行处理
+		aCurPosX += aFont->CharWidth(mLabel[aPos]); // 坐标调整至下一个文字的位置
+		if (mLabel[aPos] == _S('\n'))				// 换行处理
 		{
 			aCurLine++;
 			TOD_ASSERT(aCurLine < MAX_REANIM_LINES);
@@ -195,10 +195,10 @@ void MessageWidget::Update()
 	// 以下遍历每个文字的动画，设置其动画速率并更新其动画
 	for (int aPos = 0; aPos < aLabelLen; aPos++)
 	{
-		Reanimation* aTextReanim = mApp->ReanimationTryToGet(mTextReanimID[aPos]);
+		Reanimation *aTextReanim = mApp->ReanimationTryToGet(mTextReanimID[aPos]);
 		if (aTextReanim == nullptr)
 		{
-			break;  // 当不存在文本动画时，跳出循环，直接返回
+			break; // 当不存在文本动画时，跳出循环，直接返回
 		}
 
 		// 设置动画速率
@@ -211,7 +211,8 @@ void MessageWidget::Update()
 			}
 			else
 			{
-				aTextReanim->mAnimRate = TodAnimateCurveFloat(0, 50, (mDisplayTime - mDuration) * aTextSpeed - aPos, 0.0f, 40.0f, TodCurves::CURVE_LINEAR);
+				aTextReanim->mAnimRate = TodAnimateCurveFloat(
+					0, 50, (mDisplayTime - mDuration) * aTextSpeed - aPos, 0.0f, 40.0f, TodCurves::CURVE_LINEAR);
 			}
 		}
 		else
@@ -220,23 +221,24 @@ void MessageWidget::Update()
 			{
 				aTextReanim->PlayReanim("anim_leave", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0, 0.0f);
 			}
-			aTextReanim->mAnimRate = TodAnimateCurveFloat(0, 50, (mSlideOffTime - mDuration) * aTextSpeed - aPos, 0.0f, 40.0f, TodCurves::CURVE_LINEAR);
+			aTextReanim->mAnimRate = TodAnimateCurveFloat(
+				0, 50, (mSlideOffTime - mDuration) * aTextSpeed - aPos, 0.0f, 40.0f, TodCurves::CURVE_LINEAR);
 		}
 
-		aTextReanim->Update();  //更新动画
+		aTextReanim->Update(); //更新动画
 	}
 }
 
 //0x459710
-void MessageWidget::DrawReanimatedText(Graphics* g, Font* theFont, const Color& theColor, float thePosY)
+void MessageWidget::DrawReanimatedText(Graphics *g, Font *theFont, const Color &theColor, float thePosY)
 {
 	int aLabelLen = strlen(mLabel);
 	for (int aPos = 0; aPos < aLabelLen; aPos++)
 	{
-		Reanimation* aTextReanim = mApp->ReanimationTryToGet(mTextReanimID[aPos]);
+		Reanimation *aTextReanim = mApp->ReanimationTryToGet(mTextReanimID[aPos]);
 		if (aTextReanim == nullptr)
 		{
-			break;  // 当不存在文本动画时，跳出循环，直接返回
+			break; // 当不存在文本动画时，跳出循环，直接返回
 		}
 
 		ReanimatorTransform aTransform;
@@ -245,7 +247,7 @@ void MessageWidget::DrawReanimatedText(Graphics* g, Font* theFont, const Color& 
 		int anAlpha = ClampInt(FloatRoundToInt(theColor.mAlpha * aTransform.mAlpha), 0, 255);
 		if (anAlpha <= 0)
 		{
-			break;  // 文本动画完全透明时，直接返回
+			break; // 文本动画完全透明时，直接返回
 		}
 		Color aFinalColor(theColor);
 		aFinalColor.mAlpha = anAlpha;
@@ -267,7 +269,7 @@ void MessageWidget::DrawReanimatedText(Graphics* g, Font* theFont, const Color& 
 }
 
 //0x459990
-Font* MessageWidget::GetFont()
+Font *MessageWidget::GetFont()
 {
 	switch (mMessageStyle)
 	{
@@ -297,13 +299,13 @@ Font* MessageWidget::GetFont()
 }
 
 //0x4599E0
-void MessageWidget::Draw(Graphics* g)
+void MessageWidget::Draw(Graphics *g)
 {
 	if (mDuration <= 0)
 		return;
-	
-	Font* aFont = GetFont();
-	Font* aOutlineFont = nullptr;
+
+	Font *aFont = GetFont();
+	Font *aOutlineFont = nullptr;
 	int aPosX = BOARD_WIDTH / 2;
 	int aPosY = 596;
 	int aTextOffsetY = 0;
@@ -401,7 +403,8 @@ void MessageWidget::Draw(Graphics* g)
 	{
 		if (aMinAlpha != 255)
 		{
-			aColor.mAlpha = TodAnimateCurve(75, 0, mApp->mBoard->mMainCounter % 75, aMinAlpha, 255, TodCurves::CURVE_BOUNCE_SLOW_MIDDLE);
+			aColor.mAlpha = TodAnimateCurve(
+				75, 0, mApp->mBoard->mMainCounter % 75, aMinAlpha, 255, TodCurves::CURVE_BOUNCE_SLOW_MIDDLE);
 			aOutlineColor.mAlpha = aColor.mAlpha;
 		}
 		if (aFadeOut)
@@ -418,14 +421,16 @@ void MessageWidget::Draw(Graphics* g)
 			g->FillRect(aRect);
 
 			aRect.mY += aTextOffsetY;
-			TodDrawStringWrapped(g, mLabel, aRect, aFont, aColor, DrawStringJustification::DS_ALIGN_CENTER_VERTICAL_MIDDLE);
+			TodDrawStringWrapped(
+				g, mLabel, aRect, aFont, aColor, DrawStringJustification::DS_ALIGN_CENTER_VERTICAL_MIDDLE);
 		}
 		else
 		{
 			Rect aRect(aPosX - mApp->mBoard->mX - BOARD_WIDTH / 2, aPosY - aFont->mAscent, BOARD_WIDTH, BOARD_HEIGHT);
 			if (aOutlineFont)
 			{
-				TodDrawStringWrapped(g, mLabel, aRect, aOutlineFont, aOutlineColor, DrawStringJustification::DS_ALIGN_CENTER);
+				TodDrawStringWrapped(
+					g, mLabel, aRect, aOutlineFont, aOutlineColor, DrawStringJustification::DS_ALIGN_CENTER);
 			}
 			TodDrawStringWrapped(g, mLabel, aRect, aFont, aColor, DrawStringJustification::DS_ALIGN_CENTER);
 		}
@@ -435,22 +440,21 @@ void MessageWidget::Draw(Graphics* g)
 			SexyString aSubStr;
 			if (mApp->IsSurvivalMode() && mApp->mBoard->mChallenge->mSurvivalStage > 0)
 			{
-				int aFlags = mApp->mBoard->GetNumWavesPerSurvivalStage() * mApp->mBoard->mChallenge->mSurvivalStage / mApp->mBoard->GetNumWavesPerFlag();
+				int aFlags = mApp->mBoard->GetNumWavesPerSurvivalStage() * mApp->mBoard->mChallenge->mSurvivalStage /
+							 mApp->mBoard->GetNumWavesPerFlag();
 				SexyString aFlagStr = mApp->Pluralize(aFlags, _S("[ONE_FLAG]"), _S("[COUNT_FLAGS]"));
 				SexyString aSubStr = TodReplaceString(_S("[FLAGS_COMPLETED]"), _S("{FLAGS}"), aFlagStr);
 			}
 
 			if (aSubStr.size() > 0)
 			{
-				TodDrawString(
-					g, 
-					aSubStr, 
-					BOARD_WIDTH / 2 - mApp->mBoard->mX, 
-					aPosY + 26, 
-					Sexy::FONT_HOUSEOFTERROR16, 
-					Color(224, 187, 62, aColor.mAlpha), 
-					DrawStringJustification::DS_ALIGN_CENTER
-				);
+				TodDrawString(g,
+							  aSubStr,
+							  BOARD_WIDTH / 2 - mApp->mBoard->mX,
+							  aPosY + 26,
+							  Sexy::FONT_HOUSEOFTERROR16,
+							  Color(224, 187, 62, aColor.mAlpha),
+							  DrawStringJustification::DS_ALIGN_CENTER);
 			}
 		}
 	}

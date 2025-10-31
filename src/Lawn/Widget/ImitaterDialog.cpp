@@ -9,8 +9,14 @@
 #include "../../SexyAppFramework/WidgetManager.h"
 
 //0x482B00
-ImitaterDialog::ImitaterDialog() : 
-	LawnDialog(gLawnApp, Dialogs::DIALOG_IMITATER, true, _S("[CHOOSE_SEED_TO_COPY]"), _S(""), _S("[DIALOG_BUTTON_OK]"), Dialog::BUTTONS_YES_NO)
+ImitaterDialog::ImitaterDialog()
+	: LawnDialog(gLawnApp,
+				 Dialogs::DIALOG_IMITATER,
+				 true,
+				 _S("[CHOOSE_SEED_TO_COPY]"),
+				 _S(""),
+				 _S("[DIALOG_BUTTON_OK]"),
+				 Dialog::BUTTONS_YES_NO)
 {
 	CalcSize(IMITATER_DIALOG_WIDTH - mWidth, IMITATER_DIALOG_HEIGHT - mHeight);
 	mToolTip = new ToolTipWidget();
@@ -69,14 +75,14 @@ void ImitaterDialog::Update()
 }
 
 //0x482E70
-void ImitaterDialog::GetSeedPosition(int theIndex, int& x, int& y)
+void ImitaterDialog::GetSeedPosition(int theIndex, int &x, int &y)
 {
 	x = (theIndex % 8) * (SEED_PACKET_WIDTH + 1) + mWidth / 2 - 210;
 	y = (theIndex / 8) * (SEED_PACKET_HEIGHT + 1) + 112;
 }
 
 //0x482EC0
-void ImitaterDialog::Draw(Graphics* g)
+void ImitaterDialog::Draw(Graphics *g)
 {
 	LawnDialog::Draw(g);
 	g->SetLinearBlend(true);
@@ -86,7 +92,8 @@ void ImitaterDialog::Draw(Graphics* g)
 		{
 			int aSeedX, aSeedY;
 			GetSeedPosition(aSeedType, aSeedX, aSeedY);
-			bool aGrayed = mApp->mSeedChooserScreen->SeedNotAllowedToPick(aSeedType) || mApp->mSeedChooserScreen->SeedNotRecommendedToPick(aSeedType);
+			bool aGrayed = mApp->mSeedChooserScreen->SeedNotAllowedToPick(aSeedType) ||
+						   mApp->mSeedChooserScreen->SeedNotRecommendedToPick(aSeedType);
 			DrawSeedPacket(g, aSeedX, aSeedY, SeedType::SEED_IMITATER, aSeedType, 0, aGrayed ? 115 : 255, true, false);
 		}
 	}
@@ -101,7 +108,7 @@ void ImitaterDialog::ShowToolTip()
 		RemoveToolTip();
 		return;
 	}
-	
+
 	SeedType aSeedType = SeedHitTest(mApp->mWidgetManager->mLastMouseX - mX, mApp->mWidgetManager->mLastMouseY - mY);
 	if (aSeedType == SeedType::SEED_NONE)
 	{
@@ -111,11 +118,11 @@ void ImitaterDialog::ShowToolTip()
 	{
 		RemoveToolTip();
 		uint aRecFlags = mApp->mSeedChooserScreen->SeedNotRecommendedToPick(aSeedType);
-		if (mApp->mSeedChooserScreen->SeedNotAllowedToPick(aSeedType))  // 如果不能携带
+		if (mApp->mSeedChooserScreen->SeedNotAllowedToPick(aSeedType)) // 如果不能携带
 		{
 			mToolTip->SetWarningText(_S("[NOT_ALLOWED_ON_THIS_LEVEL]"));
 		}
-		else if (aRecFlags)  // 如果不推荐携带
+		else if (aRecFlags) // 如果不推荐携带
 		{
 			if (TestBit(aRecFlags, NotRecommend::NOT_RECOMMENDED_NOCTURNAL))
 			{
@@ -154,10 +161,10 @@ void ImitaterDialog::MouseDown(int x, int y, int theClickCount)
 	SeedType aSeedType = SeedHitTest(x, y);
 	if (aSeedType != SeedType::SEED_NONE)
 	{
-		SeedChooserScreen* aSeedChooser = mApp->mSeedChooserScreen;
+		SeedChooserScreen *aSeedChooser = mApp->mSeedChooserScreen;
 		if (!aSeedChooser->SeedNotAllowedToPick(aSeedType))
 		{
-			ChosenSeed& aImitater = aSeedChooser->mChosenSeeds[SeedType::SEED_IMITATER];
+			ChosenSeed &aImitater = aSeedChooser->mChosenSeeds[SeedType::SEED_IMITATER];
 			aImitater.mSeedState = ChosenSeedState::SEED_IN_CHOOSER;
 			aImitater.mImitaterType = aSeedType;
 			aImitater.mX = aSeedChooser->mImitaterButton->mX;

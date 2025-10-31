@@ -4,14 +4,14 @@
 #include "../../SexyAppFramework/WidgetManager.h"
 
 //0x45D610
-NewUserDialog::NewUserDialog(LawnApp* theApp, bool isRename) : LawnDialog(
-	theApp, 
-	isRename ? Dialogs::DIALOG_RENAMEUSER : Dialogs::DIALOG_CREATEUSER, 
-	true, 
-	isRename ? _S("RENAME USER"/*[RENAME_USER]*/) : _S("NEW USER"/*[NEW_USER]*/),
-	_S("Please enter your name:"/*[PLEASE_ENTER_NAME]*/),
-	_S("[DIALOG_BUTTON_OK]"), 
-	Dialog::BUTTONS_OK_CANCEL)
+NewUserDialog::NewUserDialog(LawnApp *theApp, bool isRename)
+	: LawnDialog(theApp,
+				 isRename ? Dialogs::DIALOG_RENAMEUSER : Dialogs::DIALOG_CREATEUSER,
+				 true,
+				 isRename ? _S("RENAME USER" /*[RENAME_USER]*/) : _S("NEW USER" /*[NEW_USER]*/),
+				 _S("Please enter your name:" /*[PLEASE_ENTER_NAME]*/),
+				 _S("[DIALOG_BUTTON_OK]"),
+				 Dialog::BUTTONS_OK_CANCEL)
 {
 	mApp = theApp;
 	mVerticalCenterText = false;
@@ -28,7 +28,7 @@ NewUserDialog::~NewUserDialog()
 }
 
 //0x45D870
-void NewUserDialog::AddedToManager(WidgetManager* theWidgetManager)
+void NewUserDialog::AddedToManager(WidgetManager *theWidgetManager)
 {
 	LawnDialog::AddedToManager(theWidgetManager);
 	AddWidget(mNameEditWidget);
@@ -36,7 +36,7 @@ void NewUserDialog::AddedToManager(WidgetManager* theWidgetManager)
 }
 
 //0x45D8E0
-void NewUserDialog::RemovedFromManager(WidgetManager* theWidgetManager)
+void NewUserDialog::RemovedFromManager(WidgetManager *theWidgetManager)
 {
 	LawnDialog::RemovedFromManager(theWidgetManager);
 	RemoveWidget(mNameEditWidget);
@@ -51,18 +51,19 @@ int NewUserDialog::GetPreferredHeight(int theWidth)
 void NewUserDialog::Resize(int theX, int theY, int theWidth, int theHeight)
 {
 	LawnDialog::Resize(theX, theY, theWidth, theHeight);
-	mNameEditWidget->Resize(mContentInsets.mLeft + 12, mHeight - 155, mWidth - mContentInsets.mLeft - mContentInsets.mRight - 24, 28);
+	mNameEditWidget->Resize(
+		mContentInsets.mLeft + 12, mHeight - 155, mWidth - mContentInsets.mLeft - mContentInsets.mRight - 24, 28);
 }
 
 //0x45D970
-void NewUserDialog::Draw(Graphics* g)
+void NewUserDialog::Draw(Graphics *g)
 {
 	LawnDialog::Draw(g);
 	DrawEditBox(g, mNameEditWidget);
 }
 
 //0x45D9D0
-void NewUserDialog::EditWidgetText(int theId, const SexyString& theString)
+void NewUserDialog::EditWidgetText(int theId, const SexyString &theString)
 {
 	mApp->ButtonDepress(mId + 2000);
 }
@@ -102,7 +103,7 @@ SexyString NewUserDialog::GetName()
 	return aString;
 }
 
-void NewUserDialog::SetName(const SexyString& theName)
+void NewUserDialog::SetName(const SexyString &theName)
 {
 	mNameEditWidget->SetText(theName, true);
 	mNameEditWidget->mCursorPos = theName.size();

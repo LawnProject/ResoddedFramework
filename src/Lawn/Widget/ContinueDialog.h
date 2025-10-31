@@ -5,27 +5,27 @@
 
 class ContinueDialog : public LawnDialog
 {
-public:
+  public:
 	enum
 	{
 		ContinueDialog_Continue,
 		ContinueDialog_NewGame
 	};
 
-public:
-	DialogButton*		mContinueButton;	//+0x16C
-	DialogButton*		mNewGameButton;		//+0x170
+  public:
+	DialogButton *mContinueButton; //+0x16C
+	DialogButton *mNewGameButton;  //+0x170
 
-public:
-	ContinueDialog(LawnApp* theApp);
+  public:
+	ContinueDialog(LawnApp *theApp);
 	virtual ~ContinueDialog();
 
-	virtual int			GetPreferredHeight(int theWidth);
-	virtual void		Resize(int theX, int theY, int theWidth, int theHeight);
-	virtual void		AddedToManager(WidgetManager* theWidgetManager);
-	virtual void		RemovedFromManager(WidgetManager* theWidgetManager);
-	virtual void		ButtonDepress(int theId);
-	void				RestartLoopingSounds();
+	virtual int GetPreferredHeight(int theWidth);
+	virtual void Resize(int theX, int theY, int theWidth, int theHeight);
+	virtual void AddedToManager(WidgetManager *theWidgetManager);
+	virtual void RemovedFromManager(WidgetManager *theWidgetManager);
+	virtual void ButtonDepress(int theId);
+	void RestartLoopingSounds();
 };
 
 #endif

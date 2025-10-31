@@ -14,7 +14,7 @@ static char gLogFileName[MAX_PATH];
 static char gDebugDataFolder[MAX_PATH];
 
 //0x514EA0
-void TodErrorMessageBox(const char* theMessage, const char* theTitle)
+void TodErrorMessageBox(const char *theMessage, const char *theTitle)
 {
 	HWND hWnd = (gSexyAppBase && gSexyAppBase->mHWnd) ? gSexyAppBase->mHWnd : GetActiveWindow();
 	TodTraceAndLog("%s.%s", theMessage, theTitle);
@@ -25,13 +25,13 @@ void TodTraceMemory()
 {
 }
 
-void* TodMalloc(int theSize)
+void *TodMalloc(int theSize)
 {
 	TOD_ASSERT(theSize > 0);
 	return malloc(theSize);
 }
 
-void TodFree(void* theBlock)
+void TodFree(void *theBlock)
 {
 	if (theBlock != nullptr)
 	{
@@ -39,7 +39,7 @@ void TodFree(void* theBlock)
 	}
 }
 
-void TodAssertFailed(const char* theCondition, const char* theFile, int theLine, const char* theMsg, ...)
+void TodAssertFailed(const char *theCondition, const char *theFile, int theLine, const char *theMsg, ...)
 {
 #ifdef _DEBUG
 	char aFormattedMsg[1024];
@@ -64,7 +64,13 @@ void TodAssertFailed(const char* theCondition, const char* theFile, int theLine,
 	char aBuffer[1024];
 	if (*theCondition != '\0')
 	{
-		TodSnprintf(aBuffer, sizeof(aBuffer), "\n%s(%d)\nassertion failed: '%s'\n%s\n", theFile, theLine, theCondition, aFormattedMsg);
+		TodSnprintf(aBuffer,
+					sizeof(aBuffer),
+					"\n%s(%d)\nassertion failed: '%s'\n%s\n",
+					theFile,
+					theLine,
+					theCondition,
+					aFormattedMsg);
 	}
 	else
 	{
@@ -79,7 +85,6 @@ void TodAssertFailed(const char* theCondition, const char* theFile, int theLine,
 			TodLog("Assert during exception processing");
 			exit(0);
 		}
-
 
 		gInAssert = true;
 		LPEXCEPTION_POINTERS exp;
@@ -99,7 +104,7 @@ void TodAssertFailed(const char* theCondition, const char* theFile, int theLine,
 #endif
 }
 
-void TodLog(const char* theFormat, ...)
+void TodLog(const char *theFormat, ...)
 {
 #ifdef _DEBUG
 	char aButter[1024];
@@ -125,10 +130,10 @@ void TodLog(const char* theFormat, ...)
 #endif
 }
 
-void TodLogString(const char* theMsg)
+void TodLogString(const char *theMsg)
 {
 #ifdef _DEBUG
-	FILE* f = fopen(gLogFileName, "a");
+	FILE *f = fopen(gLogFileName, "a");
 	if (f == nullptr)
 	{
 		OutputDebugString(_S("Failed to open log file\n"));
@@ -146,7 +151,7 @@ void TodLogString(const char* theMsg)
 #endif
 }
 
-void TodTrace(const char* theFormat, ...)
+void TodTrace(const char *theFormat, ...)
 {
 #ifdef _DEBUG
 	char aButter[1024];
@@ -176,7 +181,7 @@ void TodHesitationTrace(...)
 {
 }
 
-void TodTraceAndLog(const char* theFormat, ...)
+void TodTraceAndLog(const char *theFormat, ...)
 {
 #ifdef _DEBUG
 	char aButter[1024];
@@ -203,7 +208,7 @@ void TodTraceAndLog(const char* theFormat, ...)
 #endif
 }
 
-void TodTraceWithoutSpamming(const char* theFormat, ...)
+void TodTraceWithoutSpamming(const char *theFormat, ...)
 {
 #ifdef _DEBUG
 	static __time64_t gLastTraceTime = 0i64;
@@ -237,7 +242,7 @@ void TodTraceWithoutSpamming(const char* theFormat, ...)
 #endif
 }
 
-void TodReportError(LPEXCEPTION_POINTERS exceptioninfo, const char* theMessage)
+void TodReportError(LPEXCEPTION_POINTERS exceptioninfo, const char *theMessage)
 {
 	Sexy::SEHCatcher::UnhandledExceptionFilter(exceptioninfo);
 }

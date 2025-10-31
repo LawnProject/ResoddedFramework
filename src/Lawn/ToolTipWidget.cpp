@@ -22,7 +22,7 @@ ToolTipWidget::ToolTipWidget()
 }
 
 //0x51A530
-void ToolTipWidget::GetLines(std::vector<SexyString>& theLines)
+void ToolTipWidget::GetLines(std::vector<SexyString> &theLines)
 {
 	int aLineWidth = 0;
 	unsigned int aIndexStart = 0;
@@ -95,28 +95,28 @@ void ToolTipWidget::CalculateSize()
 }
 
 //0x51A8D0
-void ToolTipWidget::SetLabel(const SexyString& theLabel)
+void ToolTipWidget::SetLabel(const SexyString &theLabel)
 {
 	mLabel = TodStringTranslate(theLabel);
 	CalculateSize();
 }
 
 //0x51A950
-void ToolTipWidget::SetTitle(const SexyString& theTitle)
+void ToolTipWidget::SetTitle(const SexyString &theTitle)
 {
 	mTitle = TodStringTranslate(theTitle);
 	CalculateSize();
 }
 
 //0x51A9D0
-void ToolTipWidget::SetWarningText(const SexyString& theWarningText)
+void ToolTipWidget::SetWarningText(const SexyString &theWarningText)
 {
 	mWarningText = TodStringTranslate(theWarningText);
 	CalculateSize();
 }
 
 //0x51AA50
-void ToolTipWidget::Draw(Graphics* g)
+void ToolTipWidget::Draw(Graphics *g)
 {
 	if (!mVisible)
 		return;
@@ -126,7 +126,7 @@ void ToolTipWidget::Draw(Graphics* g)
 	{
 		aPosX -= mWidth / 2;
 	}
-	if (mMinLeft - g->mTransX > aPosX)  // aPosX + g->mTransX < mMinLeft
+	if (mMinLeft - g->mTransX > aPosX) // aPosX + g->mTransX < mMinLeft
 	{
 		aPosX = mMinLeft - (int)g->mTransX;
 	}
@@ -136,7 +136,7 @@ void ToolTipWidget::Draw(Graphics* g)
 	}
 
 	int aPosY = mY;
-	if (-g->mTransY > aPosY)  // aPosY + g->mTransY > 0
+	if (-g->mTransY > aPosY) // aPosY + g->mTransY > 0
 	{
 		aPosY = (int)-g->mTransY;
 	}
@@ -154,7 +154,8 @@ void ToolTipWidget::Draw(Graphics* g)
 	if (!mTitle.empty())
 	{
 		g->SetFont(FONT_TINYBOLD);
-		g->DrawString(mTitle, aPosX + (mWidth - FONT_TINYBOLD->StringWidth(mTitle)) / 2, aPosY + FONT_TINYBOLD->GetAscent());
+		g->DrawString(
+			mTitle, aPosX + (mWidth - FONT_TINYBOLD->StringWidth(mTitle)) / 2, aPosY + FONT_TINYBOLD->GetAscent());
 		aPosY += FONT_TINYBOLD->GetAscent() + 2;
 	}
 
@@ -184,7 +185,8 @@ void ToolTipWidget::Draw(Graphics* g)
 	for (int i = 0; i < aLines.size(); i++)
 	{
 		SexyString aLine = aLines[i];
-		g->DrawString(aLine, aPosX + (mWidth - FONT_PICO129->StringWidth(aLine)) / 2, aPosY + FONT_PICO129->GetAscent());
+		g->DrawString(
+			aLine, aPosX + (mWidth - FONT_PICO129->StringWidth(aLine)) / 2, aPosY + FONT_PICO129->GetAscent());
 		aPosY += FONT_PICO129->GetAscent() + 2;
 	}
 }

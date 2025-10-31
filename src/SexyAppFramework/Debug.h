@@ -13,18 +13,28 @@ void SexyTrace(const char *theStr);
 #define SEXY_TRACE(theStr)
 #endif
 
-extern void SexyTraceFmt(const SexyChar* fmt ...);
-extern void OutputDebug(const SexyChar* fmt ...);
+extern void SexyTraceFmt(const SexyChar *fmt...);
+extern void OutputDebug(const SexyChar *fmt...);
 
 #ifdef NDEBUG
 
-#define DBG_ASSERTE(exp)	((void)0)
-#define DBG_ASSERT(exp)		((void)0)
+#define DBG_ASSERTE(exp) ((void)0)
+#define DBG_ASSERT(exp) ((void)0)
 
 #else
 
-#define DBG_ASSERTE(exp)	{ gInAssert = true; assert(exp); gInAssert = false; }
-#define DBG_ASSERT(exp)		{ gInAssert = true; assert(exp); gInAssert = false; }
+#define DBG_ASSERTE(exp)                                                                                               \
+	{                                                                                                                  \
+		gInAssert = true;                                                                                              \
+		assert(exp);                                                                                                   \
+		gInAssert = false;                                                                                             \
+	}
+#define DBG_ASSERT(exp)                                                                                                \
+	{                                                                                                                  \
+		gInAssert = true;                                                                                              \
+		assert(exp);                                                                                                   \
+		gInAssert = false;                                                                                             \
+	}
 
 #endif // NDEBUG
 

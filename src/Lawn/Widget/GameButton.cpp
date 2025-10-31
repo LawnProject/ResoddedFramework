@@ -8,14 +8,16 @@
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "../../SexyAppFramework/WidgetManager.h"
 
-static Color gGameButtonColors[6] = { Color(0, 0, 0), Color(0, 0, 0), Color(0, 0, 0), Color(255, 255, 255), Color(132, 132, 132), Color(212, 212, 212) };
+static Color gGameButtonColors[6] = {
+	Color(0, 0, 0), Color(0, 0, 0), Color(0, 0, 0), Color(255, 255, 255), Color(132, 132, 132), Color(212, 212, 212)};
 
 //0x447B00
-void DrawStoneButton(Graphics* g, int x, int y, int theWidth, int theHeight, bool isDown, bool isHighLighted, const SexyString& theLabel)
+void DrawStoneButton(
+	Graphics *g, int x, int y, int theWidth, int theHeight, bool isDown, bool isHighLighted, const SexyString &theLabel)
 {
-	Image* aLeftImage = Sexy::IMAGE_BUTTON_LEFT;
-	Image* aMiddleImage = Sexy::IMAGE_BUTTON_MIDDLE;
-	Image* aRightImage = Sexy::IMAGE_BUTTON_RIGHT;
+	Image *aLeftImage = Sexy::IMAGE_BUTTON_LEFT;
+	Image *aMiddleImage = Sexy::IMAGE_BUTTON_MIDDLE;
+	Image *aRightImage = Sexy::IMAGE_BUTTON_RIGHT;
 	int aFontX = x;
 	int aFontY = y;
 	int aImageX = x;
@@ -42,7 +44,10 @@ void DrawStoneButton(Graphics* g, int x, int y, int theWidth, int theHeight, boo
 
 	g->SetFont(isHighLighted ? Sexy::FONT_DWARVENTODCRAFT18BRIGHTGREENINSET : Sexy::FONT_DWARVENTODCRAFT18GREENINSET);
 	aFontX += (theWidth - Sexy::FONT_DWARVENTODCRAFT18GREENINSET->StringWidth(theLabel)) / 2 + 1;
-	aFontY += (theHeight - Sexy::FONT_DWARVENTODCRAFT18GREENINSET->GetAscent() / 6 - 1 + Sexy::FONT_DWARVENTODCRAFT18GREENINSET->GetAscent()) / 2 - 4;
+	aFontY += (theHeight - Sexy::FONT_DWARVENTODCRAFT18GREENINSET->GetAscent() / 6 - 1 +
+			   Sexy::FONT_DWARVENTODCRAFT18GREENINSET->GetAscent()) /
+				  2 -
+			  4;
 	g->SetColor(Color::White);
 	g->DrawString(theLabel, aFontX, aFontY);
 }
@@ -53,7 +58,7 @@ GameButton::GameButton(int theId)
 	mLabel = "";
 	mNormalRect = mOverRect = mDownRect = mDisabledRect = Rect();
 	mOverAlpha = mOverAlphaSpeed = mOverAlphaFadeInSpeed = 0;
-	mApp = (LawnApp*)gSexyAppBase;
+	mApp = (LawnApp *)gSexyAppBase;
 	mId = theId;
 	mLabelJustify = 0;
 	mFont = nullptr;
@@ -64,7 +69,8 @@ GameButton::GameButton(int theId)
 	mParentWidget = nullptr;
 	mDrawStoneButton = false;
 	mTextOffsetX = mTextOffsetY = mButtonOffsetX = mButtonOffsetY = 0;
-	for (int i = 0; i < 6; i++) mColors[i] = gGameButtonColors[i];
+	for (int i = 0; i < 6; i++)
+		mColors[i] = gGameButtonColors[i];
 }
 
 //0x447DE0
@@ -74,13 +80,13 @@ GameButton::~GameButton()
 		delete mFont;
 }
 
-bool GameButton::HaveButtonImage(Image* theImage, Rect& theRect)
-{ 
+bool GameButton::HaveButtonImage(Image *theImage, Rect &theRect)
+{
 	return theImage != nullptr || theRect.mWidth != 0;
 }
 
 //0x447E60
-void GameButton::DrawButtonImage(Graphics* g, Image* theImage, Rect& theRect, int theX, int theY)
+void GameButton::DrawButtonImage(Graphics *g, Image *theImage, Rect &theRect, int theX, int theY)
 {
 	int aPosX = theX + mButtonOffsetX;
 	int aPosY = theY + mButtonOffsetY;
@@ -91,25 +97,25 @@ void GameButton::DrawButtonImage(Graphics* g, Image* theImage, Rect& theRect, in
 }
 
 void GameButton::SetDisabled(bool theDisabled)
-{ 
+{
 	mDisabled = theDisabled;
 }
 
-void GameButton::SetFont(Font* theFont)
+void GameButton::SetFont(Font *theFont)
 {
 	if (mFont)
 		delete mFont;
-	
+
 	mFont = theFont->Duplicate();
 }
 
 bool GameButton::IsButtonDown()
-{ 
+{
 	return mIsDown && mIsOver && !mDisabled && !mBtnNoDraw;
 }
 
 //0x447EC0
-void GameButton::Draw(Graphics* g)
+void GameButton::Draw(Graphics *g)
 {
 	if (mBtnNoDraw)
 		return;
@@ -126,7 +132,7 @@ void GameButton::Draw(Graphics* g)
 	g->mTransY += mY;
 	if (!mFont && mLabel.size() > 0)
 		mFont = new SysFont(mApp, "Arial Unicode MS", 10);
-	
+
 	int aFontX = mTextOffsetX;
 	int aFontY = mTextOffsetY;
 	if (mFont)
@@ -146,7 +152,7 @@ void GameButton::Draw(Graphics* g)
 			DrawButtonImage(g, mDisabledImage, mDisabledRect, 0, 0);
 		else if (mOverAlpha > 0.0f && HaveButtonImage(mOverImage, mOverRect))
 		{
-			if (HaveButtonImage(mButtonImage, mNormalRect) && mOverAlpha < 1.0f)  // 未完全过渡结束
+			if (HaveButtonImage(mButtonImage, mNormalRect) && mOverAlpha < 1.0f) // 未完全过渡结束
 				DrawButtonImage(g, mButtonImage, mNormalRect, 0, 0);
 
 			g->SetColorizeImages(true);
@@ -177,7 +183,7 @@ void GameButton::Draw(Graphics* g)
 			DrawButtonImage(g, mOverImage, mOverRect, 1, 1);
 		else
 			DrawButtonImage(g, mButtonImage, mNormalRect, 1, 1);
-		
+
 		g->SetColor(mColors[GameButton::COLOR_LABEL_HILITE]);
 		g->DrawString(StringToSexyStringFast(mLabel), aFontX + 1, aFontY + 1);
 
@@ -193,7 +199,7 @@ void GameButton::Draw(Graphics* g)
 }
 
 void GameButton::Resize(int theX, int theY, int theWidth, int theHeight)
-{ 
+{
 	mX = theX;
 	mY = theY;
 	mWidth = theWidth;
@@ -209,7 +215,7 @@ bool GameButton::IsMouseOver()
 //0x448330
 void GameButton::Update()
 {
-	WidgetManager* aManager = mApp->mWidgetManager;
+	WidgetManager *aManager = mApp->mWidgetManager;
 	int aMouseX = aManager->mLastMouseX, aMouseY = aManager->mLastMouseY;
 	if (mParentWidget)
 	{
@@ -232,7 +238,7 @@ void GameButton::Update()
 	if (!mIsDown && !mIsOver && mOverAlpha > 0)
 	{
 		if (mOverAlphaSpeed < 0)
-		{ 
+		{
 			mOverAlpha = 0;
 			return;
 		}
@@ -254,25 +260,25 @@ void GameButton::Update()
 }
 
 //0x448470
-void GameButton::SetLabel(const SexyString& theLabel)
+void GameButton::SetLabel(const SexyString &theLabel)
 {
 	mLabel = TodStringTranslate(theLabel);
 }
 
 //0x4484E0
-void NewLawnButton::SetLabel(const SexyString& theLabel)
+void NewLawnButton::SetLabel(const SexyString &theLabel)
 {
 	mLabel = TodStringTranslate(theLabel);
 }
 
 //0x448550
-void LawnStoneButton::SetLabel(const SexyString& theLabel)
+void LawnStoneButton::SetLabel(const SexyString &theLabel)
 {
 	mLabel = TodStringTranslate(theLabel);
 }
 
 //0x4485C0
-void LawnStoneButton::Draw(Graphics* g)
+void LawnStoneButton::Draw(Graphics *g)
 {
 	if (mBtnNoDraw)
 		return;
@@ -282,9 +288,9 @@ void LawnStoneButton::Draw(Graphics* g)
 }
 
 //0x448620
-LawnStoneButton* MakeButton(int theId, ButtonListener* theListener, const SexyString& theText)
+LawnStoneButton *MakeButton(int theId, ButtonListener *theListener, const SexyString &theText)
 {
-	LawnStoneButton* aButton = new LawnStoneButton(nullptr, theId, theListener);
+	LawnStoneButton *aButton = new LawnStoneButton(nullptr, theId, theListener);
 	aButton->SetLabel(theText);
 
 	aButton->mTranslateX = 1;
@@ -296,7 +302,8 @@ LawnStoneButton* MakeButton(int theId, ButtonListener* theListener, const SexySt
 }
 
 //0x4486C0
-NewLawnButton::NewLawnButton(Image* theComponentImage, int theId, ButtonListener* theListener) : DialogButton(theComponentImage, theId, theListener)
+NewLawnButton::NewLawnButton(Image *theComponentImage, int theId, ButtonListener *theListener)
+	: DialogButton(theComponentImage, theId, theListener)
 {
 	mHiliteFont = nullptr;
 	mTextDownOffsetX = 0;
@@ -314,7 +321,7 @@ NewLawnButton::~NewLawnButton()
 }
 
 //0x448790
-void NewLawnButton::Draw(Graphics* g)
+void NewLawnButton::Draw(Graphics *g)
 {
 	if (mBtnNoDraw)
 		return;
@@ -331,7 +338,7 @@ void NewLawnButton::Draw(Graphics* g)
 
 		aFontY += (mHeight - mFont->GetAscent() / 6 + mFont->GetAscent() - 1) / 2;
 	}
-	
+
 	g->SetColorizeImages(true);
 	if (!isDown)
 	{
@@ -340,7 +347,7 @@ void NewLawnButton::Draw(Graphics* g)
 			DrawButtonImage(g, mDisabledImage, mDisabledRect, mButtonOffsetX, mButtonOffsetY);
 		else if (mOverAlpha > 0.0f && HaveButtonImage(mOverImage, mOverRect))
 		{
-			if (HaveButtonImage(mButtonImage, mNormalRect) && mOverAlpha < 1.0f)  // 未完全过渡结束
+			if (HaveButtonImage(mButtonImage, mNormalRect) && mOverAlpha < 1.0f) // 未完全过渡结束
 				DrawButtonImage(g, mButtonImage, mNormalRect, mButtonOffsetX, mButtonOffsetY);
 
 			g->mColor.mAlpha = mOverAlpha * 255;
@@ -391,9 +398,15 @@ bool NewLawnButton::IsPointVisible(int x, int y)
 }
 
 //0x448BC0
-NewLawnButton* MakeNewButton(int theId, ButtonListener* theListener, const SexyString& theText, Font* theFont, Image* theImageNormal, Image* theImageOver, Image* theImageDown)
+NewLawnButton *MakeNewButton(int theId,
+							 ButtonListener *theListener,
+							 const SexyString &theText,
+							 Font *theFont,
+							 Image *theImageNormal,
+							 Image *theImageOver,
+							 Image *theImageDown)
 {
-	NewLawnButton* aButton = new NewLawnButton(nullptr, theId, theListener);
+	NewLawnButton *aButton = new NewLawnButton(nullptr, theId, theListener);
 	aButton->SetFont(theFont == nullptr ? Sexy::FONT_BRIANNETOD12 : theFont);
 	aButton->SetLabel(theText);
 

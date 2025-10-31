@@ -28,13 +28,13 @@
 #include "backends.h"
 
 #if defined(_WIN32) && defined(VORBISDLL_IMPORT)
-# define EXTERN __declspec(dllimport) extern
+#define EXTERN __declspec(dllimport) extern
 #else
-# define EXTERN extern
+#define EXTERN extern
 #endif
 
-EXTERN vorbis_func_floor     *_floor_P[];
-EXTERN vorbis_func_residue   *_residue_P[];
-EXTERN vorbis_func_mapping   *_mapping_P[];
+EXTERN vorbis_func_floor *_floor_P[];
+EXTERN vorbis_func_residue *_residue_P[];
+EXTERN vorbis_func_mapping *_mapping_P[];
 
 #endif

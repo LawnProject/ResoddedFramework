@@ -15,7 +15,7 @@ PlayerInfo::PlayerInfo()
 }
 
 //0x468310
-void PlayerInfo::SyncSummary(DataSync& theSync)
+void PlayerInfo::SyncSummary(DataSync &theSync)
 {
 	theSync.SyncString(mName);
 	theSync.SyncLong(mUseSeq);
@@ -23,7 +23,7 @@ void PlayerInfo::SyncSummary(DataSync& theSync)
 }
 
 //0x468390
-void PlayerInfo::SyncDetails(DataSync& theSync)
+void PlayerInfo::SyncDetails(DataSync &theSync)
 {
 	if (theSync.GetReader())
 	{
@@ -70,7 +70,7 @@ void PlayerInfo::SyncDetails(DataSync& theSync)
 	theSync.SyncLong(mHasSeenUpsell);
 	theSync.SyncLong(mPlaceHolderPlayerStats);
 	theSync.SyncLong(mNumPottedPlants);
-	
+
 	TOD_ASSERT(mNumPottedPlants <= MAX_POTTED_PLANTS);
 	for (int i = 0; i < mNumPottedPlants; i++)
 	{
@@ -95,7 +95,7 @@ void PlayerInfo::LoadDetails()
 		DataSync aSync(aReader);
 		SyncDetails(aSync);
 	}
-	catch (DataReaderException&)
+	catch (DataReaderException &)
 	{
 		TodTrace("Failed to player data, resetting it\n");
 		Reset();

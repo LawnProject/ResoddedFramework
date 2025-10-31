@@ -1,4 +1,4 @@
-#pragma warning(disable:4244 4305 4309)
+#pragma warning(disable : 4244 4305 4309)
 
 #include "Trail.h"
 #include "TodDebug.h"
@@ -11,7 +11,7 @@
 #include "../SexyAppFramework/DDInterface.h"
 #include "../SexyAppFramework/D3DInterface.h"
 
-EffectSystem* gEffectSystem = nullptr;  //[0x6A9EB8]
+EffectSystem *gEffectSystem = nullptr; //[0x6A9EB8]
 
 //0x445330
 void EffectSystem::EffectSystemInitialize()
@@ -79,22 +79,22 @@ void EffectSystem::EffectSystemFreeAll()
 //0x445680
 void EffectSystem::ProcessDeleteQueue()
 {
-	TodParticleSystem* aParticle = nullptr;
+	TodParticleSystem *aParticle = nullptr;
 	while (mParticleHolder->mParticleSystems.IterateNext(aParticle))
 		if (aParticle->mDead)
 			mParticleHolder->mParticleSystems.DataArrayFree(aParticle);
 
-	Trail* aTrail = nullptr;
+	Trail *aTrail = nullptr;
 	while (mTrailHolder->mTrails.IterateNext(aTrail))
 		if (aTrail->mDead)
 			mTrailHolder->mTrails.DataArrayFree(aTrail);
 
-	Reanimation* aReanim = nullptr;
+	Reanimation *aReanim = nullptr;
 	while (mReanimationHolder->mReanimations.IterateNext(aReanim))
 		if (aReanim->mDead)
 			mReanimationHolder->mReanimations.DataArrayFree(aReanim);
 
-	Attachment* aAttachment = nullptr;
+	Attachment *aAttachment = nullptr;
 	while (mAttachmentHolder->mAttachments.IterateNext(aAttachment))
 		if (aAttachment->mDead)
 			mAttachmentHolder->mAttachments.DataArrayFree(aAttachment);
@@ -103,17 +103,17 @@ void EffectSystem::ProcessDeleteQueue()
 //0x445890
 void EffectSystem::Update()
 {
-	TodParticleSystem* aParticle = nullptr;
+	TodParticleSystem *aParticle = nullptr;
 	while (mParticleHolder->mParticleSystems.IterateNext(aParticle))
 		if (!aParticle->mIsAttachment)
 			aParticle->Update();
 
-	Trail* aTrail = nullptr;
+	Trail *aTrail = nullptr;
 	while (mTrailHolder->mTrails.IterateNext(aTrail))
 		if (!aTrail->mIsAttachment)
 			aTrail->Update();
 
-	Reanimation* aReanim = nullptr;
+	Reanimation *aReanim = nullptr;
 	while (mReanimationHolder->mReanimations.IterateNext(aReanim))
 		if (!aReanim->mIsAttachment)
 			aReanim->Update();
@@ -123,8 +123,8 @@ void EffectSystem::Update()
 // #################################################################################################### //
 // #################################################################################################### //
 
-static TriVertex		gTodVertexReservoir[64];
-static unsigned int		gTodVertexReservoirUsed = 0;
+static TriVertex gTodVertexReservoir[64];
+static unsigned int gTodVertexReservoirUsed = 0;
 
 static int FixedFloor(int x)
 {
@@ -135,70 +135,66 @@ static int FixedFloor(int x)
 }
 
 //0x4459B0
-static inline void Tod_Tod_lClip(TriVertex& dst, const TriVertex& on, const TriVertex& off, const float edge)
+static inline void Tod_Tod_lClip(TriVertex &dst, const TriVertex &on, const TriVertex &off, const float edge)
 {
 	float delta = (edge - off.x) / (on.x - off.x);
 	dst.x = off.x + (on.x - off.x) * delta;
 	dst.y = off.y + (on.y - off.y) * delta;
 	dst.u = off.u + (on.u - off.u) * delta;
 	dst.v = off.v + (on.v - off.v) * delta;
-	dst.color =
-		((int)((off.color >> 24 & 0xff) + ((on.color >> 24 & 0xff) - (off.color >> 24 & 0xff)) * delta) << 24) |
-		((int)((off.color >> 16 & 0xff) + ((on.color >> 16 & 0xff) - (off.color >> 16 & 0xff)) * delta) << 16) |
-		((int)((off.color >>  8 & 0xff) + ((on.color >>  8 & 0xff) - (off.color >>  8 & 0xff)) * delta) << 8) |
-		((int)((off.color       & 0xff) + ((on.color       & 0xff) - (off.color       & 0xff)) * delta));
+	dst.color = ((int)((off.color >> 24 & 0xff) + ((on.color >> 24 & 0xff) - (off.color >> 24 & 0xff)) * delta) << 24) |
+				((int)((off.color >> 16 & 0xff) + ((on.color >> 16 & 0xff) - (off.color >> 16 & 0xff)) * delta) << 16) |
+				((int)((off.color >> 8 & 0xff) + ((on.color >> 8 & 0xff) - (off.color >> 8 & 0xff)) * delta) << 8) |
+				((int)((off.color & 0xff) + ((on.color & 0xff) - (off.color & 0xff)) * delta));
 }
-static inline void rClip(TriVertex& dst, const TriVertex& on, const TriVertex& off, const float edge)
+static inline void rClip(TriVertex &dst, const TriVertex &on, const TriVertex &off, const float edge)
 {
 	float delta = (edge - off.x) / (on.x - off.x);
 	dst.x = off.x + (on.x - off.x) * delta;
 	dst.y = off.y + (on.y - off.y) * delta;
 	dst.u = off.u + (on.u - off.u) * delta;
 	dst.v = off.v + (on.v - off.v) * delta;
-	dst.color =
-		((int)((off.color >> 24 & 0xff) + ((on.color >> 24 & 0xff) - (off.color >> 24 & 0xff)) * delta) << 24) |
-		((int)((off.color >> 16 & 0xff) + ((on.color >> 16 & 0xff) - (off.color >> 16 & 0xff)) * delta) << 16) |
-		((int)((off.color >>  8 & 0xff) + ((on.color >>  8 & 0xff) - (off.color >>  8 & 0xff)) * delta) << 8) |
-		((int)((off.color       & 0xff) + ((on.color       & 0xff) - (off.color       & 0xff)) * delta));
+	dst.color = ((int)((off.color >> 24 & 0xff) + ((on.color >> 24 & 0xff) - (off.color >> 24 & 0xff)) * delta) << 24) |
+				((int)((off.color >> 16 & 0xff) + ((on.color >> 16 & 0xff) - (off.color >> 16 & 0xff)) * delta) << 16) |
+				((int)((off.color >> 8 & 0xff) + ((on.color >> 8 & 0xff) - (off.color >> 8 & 0xff)) * delta) << 8) |
+				((int)((off.color & 0xff) + ((on.color & 0xff) - (off.color & 0xff)) * delta));
 }
 
 //0x445B50
-static inline void Tod_tClip(TriVertex& dst, const TriVertex& on, const TriVertex& off, const float edge)
+static inline void Tod_tClip(TriVertex &dst, const TriVertex &on, const TriVertex &off, const float edge)
 {
 	float delta = (edge - off.y) / (on.y - off.y);
 	dst.x = off.x + (on.x - off.x) * delta;
 	dst.y = off.y + (on.y - off.y) * delta;
 	dst.u = off.u + (on.u - off.u) * delta;
 	dst.v = off.v + (on.v - off.v) * delta;
-	dst.color = 
-		((int)((off.color >> 24 & 0xff) + ((on.color >> 24 & 0xff) - (off.color >> 24  & 0xff)) * delta) << 24) |
-		((int)((off.color >> 16 & 0xff) + ((on.color >> 16 & 0xff) - (off.color >> 16  & 0xff)) * delta) << 16) |
-		((int)((off.color >>  8 & 0xff) + ((on.color >>  8 & 0xff) - (off.color >>  8  & 0xff)) * delta) <<  8) |
-		((int)((off.color       & 0xff) + ((on.color       & 0xff) - (off.color        & 0xff)) * delta));
+	dst.color = ((int)((off.color >> 24 & 0xff) + ((on.color >> 24 & 0xff) - (off.color >> 24 & 0xff)) * delta) << 24) |
+				((int)((off.color >> 16 & 0xff) + ((on.color >> 16 & 0xff) - (off.color >> 16 & 0xff)) * delta) << 16) |
+				((int)((off.color >> 8 & 0xff) + ((on.color >> 8 & 0xff) - (off.color >> 8 & 0xff)) * delta) << 8) |
+				((int)((off.color & 0xff) + ((on.color & 0xff) - (off.color & 0xff)) * delta));
 }
-static inline void Tod_bClip(TriVertex& dst, const TriVertex& on, const TriVertex& off, const float edge)
+static inline void Tod_bClip(TriVertex &dst, const TriVertex &on, const TriVertex &off, const float edge)
 {
 	float delta = (edge - off.y) / (on.y - off.y);
 	dst.x = off.x + (on.x - off.x) * delta;
 	dst.y = off.y + (on.y - off.y) * delta;
 	dst.u = off.u + (on.u - off.u) * delta;
 	dst.v = off.v + (on.v - off.v) * delta;
-	dst.color = 
-		((int)((off.color >> 24 & 0xff) + ((on.color >> 24 & 0xff) - (off.color >> 24  & 0xff)) * delta) << 24) |
-		((int)((off.color >> 16 & 0xff) + ((on.color >> 16 & 0xff) - (off.color >> 16  & 0xff)) * delta) << 16) |
-		((int)((off.color >>  8 & 0xff) + ((on.color >>  8 & 0xff) - (off.color >>  8  & 0xff)) * delta) <<  8) |
-		((int)((off.color       & 0xff) + ((on.color       & 0xff) - (off.color        & 0xff)) * delta));
+	dst.color = ((int)((off.color >> 24 & 0xff) + ((on.color >> 24 & 0xff) - (off.color >> 24 & 0xff)) * delta) << 24) |
+				((int)((off.color >> 16 & 0xff) + ((on.color >> 16 & 0xff) - (off.color >> 16 & 0xff)) * delta) << 16) |
+				((int)((off.color >> 8 & 0xff) + ((on.color >> 8 & 0xff) - (off.color >> 8 & 0xff)) * delta) << 8) |
+				((int)((off.color & 0xff) + ((on.color & 0xff) - (off.color & 0xff)) * delta));
 }
 
 //0x445D00
-static inline unsigned int Tod_leClip(TriVertex** src, TriVertex** dst, const float edge)
+static inline unsigned int Tod_leClip(TriVertex **src, TriVertex **dst, const float edge)
 {
-	TriVertex** _dst = dst;
+	TriVertex **_dst = dst;
 
-	for (TriVertex** v = src; *v; ++v)
+	for (TriVertex **v = src; *v; ++v)
 	{
-		TriVertex* cur = *v;
-		TriVertex* nex = *(v + 1) ? *(v + 1) : *src;
+		TriVertex *cur = *v;
+		TriVertex *nex = *(v + 1) ? *(v + 1) : *src;
 
 		switch ((cur->x < edge ? 1 : 0) | (nex->x < edge ? 2 : 0))
 		{
@@ -206,19 +202,17 @@ static inline unsigned int Tod_leClip(TriVertex** src, TriVertex** dst, const fl
 			*dst = *v;
 			++dst;
 			break;
-		case 1:
-		{
-			TriVertex& tmp = gTodVertexReservoir[gTodVertexReservoirUsed++];
+		case 1: {
+			TriVertex &tmp = gTodVertexReservoir[gTodVertexReservoirUsed++];
 			Tod_Tod_lClip(tmp, *nex, *cur, edge);
 			*dst = &tmp;
 			++dst;
 			break;
 		}
-		case 2:
-		{
+		case 2: {
 			*dst = *v;
 			++dst;
-			TriVertex& tmp = gTodVertexReservoir[gTodVertexReservoirUsed++];
+			TriVertex &tmp = gTodVertexReservoir[gTodVertexReservoirUsed++];
 			Tod_Tod_lClip(tmp, *cur, *nex, edge);
 			*dst = &tmp;
 			++dst;
@@ -231,14 +225,14 @@ static inline unsigned int Tod_leClip(TriVertex** src, TriVertex** dst, const fl
 }
 
 //0x445E00
-static inline unsigned int Tod_reClip(TriVertex** src, TriVertex** dst, const float edge)
+static inline unsigned int Tod_reClip(TriVertex **src, TriVertex **dst, const float edge)
 {
-	TriVertex** _dst = dst;
+	TriVertex **_dst = dst;
 
-	for (TriVertex** v = src; *v; ++v)
+	for (TriVertex **v = src; *v; ++v)
 	{
-		TriVertex* cur = *v;
-		TriVertex* nex = *(v + 1) ? *(v + 1) : *src;
+		TriVertex *cur = *v;
+		TriVertex *nex = *(v + 1) ? *(v + 1) : *src;
 
 		switch ((cur->x > edge ? 1 : 0) | (nex->x > edge ? 2 : 0))
 		{
@@ -246,19 +240,17 @@ static inline unsigned int Tod_reClip(TriVertex** src, TriVertex** dst, const fl
 			*dst = *v;
 			++dst;
 			break;
-		case 1:
-		{
-			TriVertex& tmp = gTodVertexReservoir[gTodVertexReservoirUsed++];
+		case 1: {
+			TriVertex &tmp = gTodVertexReservoir[gTodVertexReservoirUsed++];
 			rClip(tmp, *nex, *cur, edge);
 			*dst = &tmp;
 			++dst;
 			break;
 		}
-		case 2:
-		{
+		case 2: {
 			*dst = *v;
 			++dst;
-			TriVertex& tmp = gTodVertexReservoir[gTodVertexReservoirUsed++];
+			TriVertex &tmp = gTodVertexReservoir[gTodVertexReservoirUsed++];
 			rClip(tmp, *cur, *nex, edge);
 			*dst = &tmp;
 			++dst;
@@ -271,14 +263,14 @@ static inline unsigned int Tod_reClip(TriVertex** src, TriVertex** dst, const fl
 }
 
 //0x445F00
-static inline unsigned int Tod_teClip(TriVertex** src, TriVertex** dst, const float edge)
+static inline unsigned int Tod_teClip(TriVertex **src, TriVertex **dst, const float edge)
 {
-	TriVertex** _dst = dst;
+	TriVertex **_dst = dst;
 
-	for (TriVertex** v = src; *v; ++v)
+	for (TriVertex **v = src; *v; ++v)
 	{
-		TriVertex* cur = *v;
-		TriVertex* nex = *(v + 1) ? *(v + 1) : *src;
+		TriVertex *cur = *v;
+		TriVertex *nex = *(v + 1) ? *(v + 1) : *src;
 
 		switch ((cur->y < edge ? 1 : 0) | (nex->y < edge ? 2 : 0))
 		{
@@ -286,19 +278,17 @@ static inline unsigned int Tod_teClip(TriVertex** src, TriVertex** dst, const fl
 			*dst = *v;
 			++dst;
 			break;
-		case 1:
-		{
-			TriVertex& tmp = gTodVertexReservoir[gTodVertexReservoirUsed++];
+		case 1: {
+			TriVertex &tmp = gTodVertexReservoir[gTodVertexReservoirUsed++];
 			Tod_tClip(tmp, *nex, *cur, edge);
 			*dst = &tmp;
 			++dst;
 			break;
 		}
-		case 2:
-		{
+		case 2: {
 			*dst = *v;
 			++dst;
-			TriVertex& tmp = gTodVertexReservoir[gTodVertexReservoirUsed++];
+			TriVertex &tmp = gTodVertexReservoir[gTodVertexReservoirUsed++];
 			Tod_tClip(tmp, *cur, *nex, edge);
 			*dst = &tmp;
 			++dst;
@@ -311,14 +301,14 @@ static inline unsigned int Tod_teClip(TriVertex** src, TriVertex** dst, const fl
 }
 
 //0x446000
-static inline unsigned int Tod_beClip(TriVertex** src, TriVertex** dst, const float edge)
+static inline unsigned int Tod_beClip(TriVertex **src, TriVertex **dst, const float edge)
 {
-	TriVertex** _dst = dst;
+	TriVertex **_dst = dst;
 
-	for (TriVertex** v = src; *v; ++v)
+	for (TriVertex **v = src; *v; ++v)
 	{
-		TriVertex* cur = *v;
-		TriVertex* nex = *(v + 1) ? *(v + 1) : *src;
+		TriVertex *cur = *v;
+		TriVertex *nex = *(v + 1) ? *(v + 1) : *src;
 
 		switch ((cur->y > edge ? 1 : 0) | (nex->y > edge ? 2 : 0))
 		{
@@ -326,19 +316,17 @@ static inline unsigned int Tod_beClip(TriVertex** src, TriVertex** dst, const fl
 			*dst = *v;
 			++dst;
 			break;
-		case 1:
-		{
-			TriVertex& tmp = gTodVertexReservoir[gTodVertexReservoirUsed++];
+		case 1: {
+			TriVertex &tmp = gTodVertexReservoir[gTodVertexReservoirUsed++];
 			Tod_bClip(tmp, *nex, *cur, edge);
 			*dst = &tmp;
 			++dst;
 			break;
 		}
-		case 2:
-		{
+		case 2: {
 			*dst = *v;
 			++dst;
-			TriVertex& tmp = gTodVertexReservoir[gTodVertexReservoirUsed++];
+			TriVertex &tmp = gTodVertexReservoir[gTodVertexReservoirUsed++];
 			Tod_bClip(tmp, *cur, *nex, edge);
 			*dst = &tmp;
 			++dst;
@@ -351,12 +339,13 @@ static inline unsigned int Tod_beClip(TriVertex** src, TriVertex** dst, const fl
 }
 
 //0x446100
-static inline int Tod_clipShape(TriVertex** dst, TriVertex* src, const float left, const float right, const float top, const float bottom)
+static inline int Tod_clipShape(
+	TriVertex **dst, TriVertex *src, const float left, const float right, const float top, const float bottom)
 {
 	gTodVertexReservoirUsed = 0;
 
-	TriVertex* buf[64];
-	TriVertex* ptr[4];
+	TriVertex *buf[64];
+	TriVertex *ptr[4];
 	ptr[0] = src;
 	ptr[1] = src + 1;
 	ptr[2] = src + 2;
@@ -388,7 +377,7 @@ TodTriangleGroup::TodTriangleGroup()
 }
 
 //0x4461F0
-void TodTriangleGroup::DrawGroup(Graphics* g)
+void TodTriangleGroup::DrawGroup(Graphics *g)
 {
 	if (mImage && mTriangleCount)
 	{
@@ -398,13 +387,22 @@ void TodTriangleGroup::DrawGroup(Graphics* g)
 
 		if (DDImage::Check3D(g->mDestImage))
 		{
-			DDImage* anImage = (DDImage*)g->mDestImage;
+			DDImage *anImage = (DDImage *)g->mDestImage;
 			mImage->mDrawn = true;
-			anImage->mDDInterface->mD3DInterface->DrawTrianglesTex(mVertArray, mTriangleCount, Color::White, mDrawMode, mImage, 0.0f, 0.0f, g->mLinearBlend);
+			anImage->mDDInterface->mD3DInterface->DrawTrianglesTex(
+				mVertArray, mTriangleCount, Color::White, mDrawMode, mImage, 0.0f, 0.0f, g->mLinearBlend);
 		}
 		else
 		{
-			g->mDestImage->BltTrianglesTex(mImage, mVertArray, mTriangleCount, Rect(0, 0, BOARD_WIDTH, BOARD_HEIGHT), Color::White, mDrawMode, 0.0f, 0.0f, g->mLinearBlend);
+			g->mDestImage->BltTrianglesTex(mImage,
+										   mVertArray,
+										   mTriangleCount,
+										   Rect(0, 0, BOARD_WIDTH, BOARD_HEIGHT),
+										   Color::White,
+										   mDrawMode,
+										   0.0f,
+										   0.0f,
+										   g->mLinearBlend);
 		}
 
 		mTriangleCount = 0;
@@ -413,7 +411,13 @@ void TodTriangleGroup::DrawGroup(Graphics* g)
 }
 
 //0x446300
-void TodTriangleGroup::AddTriangle(Graphics* g, Image* theImage, const SexyMatrix3& theMatrix, const Rect& theClipRect, const Color& theColor, int theDrawMode, const Rect& theSrcRect)
+void TodTriangleGroup::AddTriangle(Graphics *g,
+								   Image *theImage,
+								   const SexyMatrix3 &theMatrix,
+								   const Rect &theClipRect,
+								   const Color &theColor,
+								   int theDrawMode,
+								   const Rect &theSrcRect)
 {
 	TOD_ASSERT(theImage != nullptr);
 
@@ -454,21 +458,19 @@ void TodTriangleGroup::AddTriangle(Graphics* g, Image* theImage, const SexyMatri
 
 	bool aNoClipping = false;
 	TriVertex aVertBuffer[2][3];
-	register TriVertex (*aTriRef)[3] = aVertBuffer;
+	register TriVertex(*aTriRef)[3] = aVertBuffer;
 	if (mTriangleCount + 2 <= MAX_TRIANGLES)
 	{
-		if ((
-				theClipRect.mX == 0 && theClipRect.mY == 0 && theClipRect.mWidth == BOARD_WIDTH && theClipRect.mHeight == BOARD_HEIGHT && gSexyAppBase->Is3DAccelerated()
-			) || (
-				theClipRect.mX <= tp[0].x && theClipRect.mX + theClipRect.mWidth >= tp[0].x && 
-				theClipRect.mX <= tp[1].x && theClipRect.mX + theClipRect.mWidth >= tp[1].x &&
-				theClipRect.mX <= tp[2].x && theClipRect.mX + theClipRect.mWidth >= tp[2].x && 
-				theClipRect.mX <= tp[3].x && theClipRect.mX + theClipRect.mWidth >= tp[3].x &&
-				theClipRect.mY <= tp[0].y && theClipRect.mY + theClipRect.mHeight >= tp[0].y && 
-				theClipRect.mY <= tp[1].y && theClipRect.mY + theClipRect.mHeight >= tp[1].y &&
-				theClipRect.mY <= tp[2].y && theClipRect.mY + theClipRect.mHeight >= tp[2].y && 
-				theClipRect.mY <= tp[3].y && theClipRect.mY + theClipRect.mHeight >= tp[3].y
-			))
+		if ((theClipRect.mX == 0 && theClipRect.mY == 0 && theClipRect.mWidth == BOARD_WIDTH &&
+			 theClipRect.mHeight == BOARD_HEIGHT && gSexyAppBase->Is3DAccelerated()) ||
+			(theClipRect.mX <= tp[0].x && theClipRect.mX + theClipRect.mWidth >= tp[0].x && theClipRect.mX <= tp[1].x &&
+			 theClipRect.mX + theClipRect.mWidth >= tp[1].x && theClipRect.mX <= tp[2].x &&
+			 theClipRect.mX + theClipRect.mWidth >= tp[2].x && theClipRect.mX <= tp[3].x &&
+			 theClipRect.mX + theClipRect.mWidth >= tp[3].x && theClipRect.mY <= tp[0].y &&
+			 theClipRect.mY + theClipRect.mHeight >= tp[0].y && theClipRect.mY <= tp[1].y &&
+			 theClipRect.mY + theClipRect.mHeight >= tp[1].y && theClipRect.mY <= tp[2].y &&
+			 theClipRect.mY + theClipRect.mHeight >= tp[2].y && theClipRect.mY <= tp[3].y &&
+			 theClipRect.mY + theClipRect.mHeight >= tp[3].y))
 		{
 			aNoClipping = true;
 			aTriRef = &mVertArray[mTriangleCount];
@@ -514,18 +516,18 @@ void TodTriangleGroup::AddTriangle(Graphics* g, Image* theImage, const SexyMatri
 	}
 	else
 	{
-		TriVertex* clipped[64];
+		TriVertex *clipped[64];
 		float clipX0 = theClipRect.mX;
 		float clipY0 = theClipRect.mY;
 		float clipX1 = theClipRect.mX + theClipRect.mWidth;
 		float clipY1 = theClipRect.mY + theClipRect.mHeight;
-		
+
 		for (int i = 0; i < 2; i++)
 		{
 			int vCount = Tod_clipShape(clipped, aTriRef[i], clipX0, clipX1, clipY0, clipY1);
 			for (int j = 0; j < vCount - 2; j++)
 			{
-				TriVertex* pVert = mVertArray[mTriangleCount];
+				TriVertex *pVert = mVertArray[mTriangleCount];
 				pVert[0].x = clipped[0]->x;
 				pVert[0].y = clipped[0]->y;
 				pVert[0].u = clipped[0]->u;
@@ -547,4 +549,3 @@ void TodTriangleGroup::AddTriangle(Graphics* g, Image* theImage, const SexyMatri
 		}
 	}
 }
-

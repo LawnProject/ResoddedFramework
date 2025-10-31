@@ -13,19 +13,19 @@ class MTRand
 	unsigned long mt[MTRAND_N]; /* the array for the state vector  */
 	int mti;
 
-public:
-	MTRand(const std::string& theSerialData);
+  public:
+	MTRand(const std::string &theSerialData);
 	MTRand(unsigned long seed);
 	MTRand();
 
-	void SRand(const std::string& theSerialData);
+	void SRand(const std::string &theSerialData);
 	void SRand(unsigned long seed);
 	unsigned long NextNoAssert();
 	unsigned long Next();
 	unsigned long NextNoAssert(unsigned long range);
 	unsigned long Next(unsigned long range);
 	float NextNoAssert(float range);
-	float Next( float range );
+	float Next(float range);
 
 	std::string Serialize();
 
@@ -34,10 +34,16 @@ public:
 
 struct MTAutoDisallowRand
 {
-	MTAutoDisallowRand() { MTRand::SetRandAllowed(false); }
-	~MTAutoDisallowRand() { MTRand::SetRandAllowed(true); }
+	MTAutoDisallowRand()
+	{
+		MTRand::SetRandAllowed(false);
+	}
+	~MTAutoDisallowRand()
+	{
+		MTRand::SetRandAllowed(true);
+	}
 };
 
-}
+} // namespace Sexy
 
 #endif //__MTRAND_H__

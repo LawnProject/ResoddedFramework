@@ -9,48 +9,53 @@ using namespace Sexy;
 class ReanimatorDefinition;
 namespace Sexy
 {
-    class Image;
-    class MemoryImage;
-};
+class Image;
+class MemoryImage;
+}; // namespace Sexy
 
 class ReanimAtlasImage
 {
-public:
-    int                             mX;
-    int                             mY;
-    int                             mWidth;
-    int                             mHeight;
-    Image*                          mOriginalImage;
+  public:
+	int mX;
+	int mY;
+	int mWidth;
+	int mHeight;
+	Image *mOriginalImage;
 
-public:
-    ReanimAtlasImage() : mX(0), mY(0), mWidth(0), mHeight(0), mOriginalImage(nullptr){ }
+  public:
+	ReanimAtlasImage() : mX(0), mY(0), mWidth(0), mHeight(0), mOriginalImage(nullptr)
+	{
+	}
 };
 
-bool                                sSortByNonIncreasingHeight(const ReanimAtlasImage& image1, const ReanimAtlasImage& image2);
+bool sSortByNonIncreasingHeight(const ReanimAtlasImage &image1, const ReanimAtlasImage &image2);
 
 class ReanimAtlas
 {
-public:
-    ReanimAtlasImage                mImageArray[MAX_REANIM_IMAGES];     //+0x0
-    int                             mImageCount;                        //+0x500
-    MemoryImage*                    mMemoryImage;                       //+0x504
+  public:
+	ReanimAtlasImage mImageArray[MAX_REANIM_IMAGES]; //+0x0
+	int mImageCount;								 //+0x500
+	MemoryImage *mMemoryImage;						 //+0x504
 
-public:
-    ReanimAtlas();
+  public:
+	ReanimAtlas();
 
-    void                            ReanimAtlasCreate(ReanimatorDefinition* theReanimDef);
-    void                            ReanimAtlasDispose();
-    /*inline*/ void                 AddImage(Image* theImage);
-    /*inline*/ int                  FindImage(Image* theImage);
-    bool                            ImageFits(int theImageCount, const Rect& rectTest, int theMaxWidth);
-    bool                            ImageFindPlaceOnSide(ReanimAtlasImage* theAtlasImageToPlace, int theImageCount, int theMaxWidth, bool theToRight);
-    /*inline*/ bool                 ImageFindPlace(ReanimAtlasImage* theAtlasImageToPlace, int theImageCount, int theMaxWidth);
-    /*inline*/ bool                 PlaceAtlasImage(ReanimAtlasImage* theAtlasImageToPlace, int theImageCount, int theMaxWidth);
-    int                             PickAtlasWidth();
-    void                            ArrangeImages(int& theAtlasWidth, int& theAtlasHeight);
-    ReanimAtlasImage*               GetEncodedReanimAtlas(Image* theImage);
+	void ReanimAtlasCreate(ReanimatorDefinition *theReanimDef);
+	void ReanimAtlasDispose();
+	/*inline*/ void AddImage(Image *theImage);
+	/*inline*/ int FindImage(Image *theImage);
+	bool ImageFits(int theImageCount, const Rect &rectTest, int theMaxWidth);
+	bool ImageFindPlaceOnSide(ReanimAtlasImage *theAtlasImageToPlace,
+							  int theImageCount,
+							  int theMaxWidth,
+							  bool theToRight);
+	/*inline*/ bool ImageFindPlace(ReanimAtlasImage *theAtlasImageToPlace, int theImageCount, int theMaxWidth);
+	/*inline*/ bool PlaceAtlasImage(ReanimAtlasImage *theAtlasImageToPlace, int theImageCount, int theMaxWidth);
+	int PickAtlasWidth();
+	void ArrangeImages(int &theAtlasWidth, int &theAtlasHeight);
+	ReanimAtlasImage *GetEncodedReanimAtlas(Image *theImage);
 };
 
-MemoryImage*                        ReanimAtlasMakeBlankMemoryImage(int theWidth, int theHeight);
+MemoryImage *ReanimAtlasMakeBlankMemoryImage(int theWidth, int theHeight);
 
 #endif

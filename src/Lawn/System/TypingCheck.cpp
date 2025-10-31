@@ -2,13 +2,13 @@
 using namespace Sexy;
 
 //0x51C470
-TypingCheck::TypingCheck(const std::string& thePhrase)
+TypingCheck::TypingCheck(const std::string &thePhrase)
 {
 	SetPhrase(thePhrase);
 }
 
 //0x51C4D0
-void TypingCheck::SetPhrase(const std::string& thePhrase)
+void TypingCheck::SetPhrase(const std::string &thePhrase)
 {
 	for (int i = 0; i < thePhrase.size(); i++)
 		AddChar(thePhrase[i]);
@@ -47,6 +47,6 @@ bool TypingCheck::Check(Sexy::KeyCode theKeyCode)
 
 	if (mRecentTyping.size() > aLength)
 		mRecentTyping = mRecentTyping.substr(1, aLength);
-	
+
 	return Check();
 }

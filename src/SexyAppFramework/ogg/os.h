@@ -22,43 +22,43 @@
 #include "os_types.h"
 
 #ifndef _V_IFDEFJAIL_H_
-#  define _V_IFDEFJAIL_H_
+#define _V_IFDEFJAIL_H_
 
-#  ifdef __GNUC__
-#    define STIN static __inline__
-#  elif _WIN32
-#  pragma warning(disable:4267 4244)
-#    define STIN static __inline
-#  endif
+#ifdef __GNUC__
+#define STIN static __inline__
+#elif _WIN32
+#pragma warning(disable : 4267 4244)
+#define STIN static __inline
+#endif
 #else
-#  define STIN static
+#define STIN static
 #endif
 
 #ifndef M_PI
-#  define M_PI (3.1415926536f)
+#define M_PI (3.1415926536f)
 #endif
 
 #ifdef _WIN32
-#  include <malloc.h>
-#  define rint(x)   (floor((x)+0.5f)) 
-#  define NO_FLOAT_MATH_LIB
-#  define FAST_HYPOT(a, b) sqrt((a)*(a) + (b)*(b))
+#include <malloc.h>
+#define rint(x) (floor((x) + 0.5f))
+#define NO_FLOAT_MATH_LIB
+#define FAST_HYPOT(a, b) sqrt((a) * (a) + (b) * (b))
 #endif
 
 #ifdef HAVE_ALLOCA_H
-#  include <alloca.h>
+#include <alloca.h>
 #endif
 
 #ifdef USE_MEMORY_H
-#  include <memory.h>
+#include <memory.h>
 #endif
 
 #ifndef min
-#  define min(x,y)  ((x)>(y)?(y):(x))
+#define min(x, y) ((x) > (y) ? (y) : (x))
 #endif
 
 #ifndef max
-#  define max(x,y)  ((x)<(y)?(y):(x))
+#define max(x, y) ((x) < (y) ? (y) : (x))
 #endif
 
 #endif /* _OS_H */

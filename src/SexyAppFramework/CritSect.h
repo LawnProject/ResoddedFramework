@@ -8,17 +8,17 @@ class CritSync;
 namespace Sexy
 {
 
-class CritSect 
+class CritSect
 {
-private:
+  private:
 	CRITICAL_SECTION mCriticalSection;
 	friend class AutoCrit;
 
-public:
+  public:
 	CritSect(void);
 	~CritSect(void);
 };
 
-}
+} // namespace Sexy
 
 #endif // _H_CritSect

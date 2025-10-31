@@ -58,10 +58,6 @@ PopDRMComm::~PopDRMComm()
 void PopDRMComm::Start()
 {
 	//mEventHwnd = CreateEvent(NULL, NULL, NULL, NULL);
-
-
-
-
 }
 
 //0x5D5C80
@@ -109,8 +105,6 @@ void PopDRMComm::BuyGame()
 
 	//sub_5D5C10
 	EnterCriticalSection(&mCritSect);
-	
-	
 
 	SendMessage(mHWnd, mWindowMessage[PopDRMComm::PopCapDRM_BuyGame], 0, 1);
 	LeaveCriticalSection(&mCritSect);
@@ -124,7 +118,8 @@ bool PopDRMComm::DoIPC()
 	if (!mIsWindow)
 	{
 		mEventHwnd = CreateEvent(NULL, NULL, NULL, NULL);
-		PostMessage((HWND)0xFFFF, mWindowMessage[PopDRMComm::PopCapDRM_IPC], GetCurrentProcessId(), (LPARAM)mDrmGameWnd);
+		PostMessage(
+			(HWND)0xFFFF, mWindowMessage[PopDRMComm::PopCapDRM_IPC], GetCurrentProcessId(), (LPARAM)mDrmGameWnd);
 		WaitForSingleObject(mEventHwnd, 100);
 		CloseHandle(mEventHwnd);
 	}

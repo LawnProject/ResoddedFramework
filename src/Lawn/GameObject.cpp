@@ -14,7 +14,7 @@ GameObject::GameObject()
 	mRenderOrder = RenderLayer::RENDER_LAYER_TOP;
 }
 
-bool GameObject::BeginDraw(Graphics* g)
+bool GameObject::BeginDraw(Graphics *g)
 {
 	if (!mVisible)
 		return false;
@@ -23,12 +23,12 @@ bool GameObject::BeginDraw(Graphics* g)
 	return true;
 }
 
-void GameObject::EndDraw(Graphics* g)
+void GameObject::EndDraw(Graphics *g)
 {
 	g->Translate(-mX, -mY);
 }
 
-void GameObject::MakeParentGraphicsFrame(Graphics* g)
+void GameObject::MakeParentGraphicsFrame(Graphics *g)
 {
 	g->Translate(-mX, -mY);
 }

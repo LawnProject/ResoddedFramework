@@ -6,10 +6,10 @@ namespace Sexy
 
 class SliderListener
 {
-public:
-	virtual void			SliderVal(int theId, double theVal) {};
+  public:
+	virtual void SliderVal(int theId, double theVal) {};
 };
 
-}
+} // namespace Sexy
 
 #endif //__SLIDERLISTENER_H__

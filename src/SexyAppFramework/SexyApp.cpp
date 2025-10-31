@@ -15,16 +15,15 @@ using namespace zylom::zylomso;
 
 using namespace Sexy;
 
-SexyApp* Sexy::gSexyApp = NULL;
+SexyApp *Sexy::gSexyApp = NULL;
 
 // Groups of 80-byte data
-const char DYNAMIC_DATA_BLOCK[400] = 
-	"DYN00000PACPOPPOPCAPPACPOPPOPCAPBUILDINFOMARKERPACPOPPOPCAPPACPOPPOPCAPXXXXXXXXX"
-	"00000000PACPOPPOPCAPPACPOPPOPCAPBUILDINFOMARKERPACPOPPOPCAPPACPOPPOPCAPXXXXXXXXX";
-									
-const char* BUILD_INFO_MARKER		= DYNAMIC_DATA_BLOCK + 80;
-const char* SIGNATURE_CODE_MARKER	= DYNAMIC_DATA_BLOCK + 80*2;
-const char* BETA_ID_MARKER			= DYNAMIC_DATA_BLOCK + 80*3;
+const char DYNAMIC_DATA_BLOCK[400] = "DYN00000PACPOPPOPCAPPACPOPPOPCAPBUILDINFOMARKERPACPOPPOPCAPPACPOPPOPCAPXXXXXXXXX"
+									 "00000000PACPOPPOPCAPPACPOPPOPCAPBUILDINFOMARKERPACPOPPOPCAPPACPOPPOPCAPXXXXXXXXX";
+
+const char *BUILD_INFO_MARKER = DYNAMIC_DATA_BLOCK + 80;
+const char *SIGNATURE_CODE_MARKER = DYNAMIC_DATA_BLOCK + 80 * 2;
+const char *BETA_ID_MARKER = DYNAMIC_DATA_BLOCK + 80 * 3;
 
 SexyApp::SexyApp()
 {
@@ -43,14 +42,15 @@ SexyApp::SexyApp()
 	mLastVerCheckQueryTime = 0;
 
 	mDemoPrefix = "popcap";
-	mDemoFileName = mDemoPrefix + ".dmo";	
+	mDemoFileName = mDemoPrefix + ".dmo";
 	mCompanyName = "PopCap";
-	mFullCompanyName= "PopCap Games";
-	mInternetManager = nullptr;//new InternetManager();
+	mFullCompanyName = "PopCap Games";
+	mInternetManager = nullptr; //new InternetManager();
 	mBetaSupport = NULL;
-	mBetaValidate = false;	
+	mBetaValidate = false;
 
-	SetString("UPDATE_CHECK_BODY", L"Contacting PopCap.com to determine if there are any updates available for this product ...");
+	SetString("UPDATE_CHECK_BODY",
+			  L"Contacting PopCap.com to determine if there are any updates available for this product ...");
 
 	char aStr[9] = {0};
 	strncpy(aStr, BUILD_INFO_MARKER, 8);
@@ -66,7 +66,7 @@ SexyApp::~SexyApp()
 	delete mInternetManager;
 }
 
-bool SexyApp::Validate(const std::string& theUserName, const std::string& theRegCode)
+bool SexyApp::Validate(const std::string &theUserName, const std::string &theRegCode)
 {
 	/*BigInt n("42BF94023BBA6D040C8B81D9");
 	BigInt e("11");
@@ -125,11 +125,11 @@ void SexyApp::ReadFromRegistry()
 
 		char aFileName[256];
 		GetWindowsDirectory(aFileName, 256);
-		if (aFileName[strlen(aFileName)-1] != '\\')
+		if (aFileName[strlen(aFileName) - 1] != '\\')
 			strcat(aFileName, "\\");
 		strcat(aFileName, "popcinfo.dat");
 
-		FILE* fp = fopen(aFileName, "rb");
+		FILE *fp = fopen(aFileName, "rb");
 		if (fp != NULL)
 		{
 			for (;;)
@@ -165,7 +165,7 @@ void SexyApp::ReadFromRegistry()
 
 	RegistryReadString("ReferId", &mReferId);
 	mReferId = GetString("ReferId", mReferId);
-	mRegisterLink = "http://www.popcap.com/register.php?theGame=" + mProdName + "&referid=" + mReferId;	
+	mRegisterLink = "http://www.popcap.com/register.php?theGame=" + mProdName + "&referid=" + mReferId;
 	RegistryReadString("RegisterLink", &mRegisterLink);
 
 	int anInt;
@@ -203,7 +203,7 @@ void SexyApp::ReadFromRegistry()
 			mTimesExecuted = anInt;
 		}
 	}
-	
+
 	if (RegistryReadInteger("LastVerCheckQueryTime", &anInt))
 	{
 		mLastVerCheckQueryTime = anInt;
@@ -218,10 +218,10 @@ void SexyApp::ReadFromRegistry()
 
 	if (RegistryReadString("RegName", &mRegUserName))
 		mUserName = mRegUserName;
-	
-	RegistryReadString("RegCode", &mRegCode);		
 
-	mIsRegistered |= Validate(mRegUserName, mRegCode);	
+	RegistryReadString("RegCode", &mRegCode);
+
+	mIsRegistered |= Validate(mRegUserName, mRegCode);
 
 	// Override registry values with partner.xml values
 	mRegisterLink = GetString("RegisterLink", mRegisterLink);
@@ -236,11 +236,11 @@ void SexyApp::WriteToRegistry()
 	{
 		char aFileName[256];
 		GetWindowsDirectory(aFileName, 256);
-		if (aFileName[strlen(aFileName)-1] != '\\')
+		if (aFileName[strlen(aFileName) - 1] != '\\')
 			strcat(aFileName, "\\");
 		strcat(aFileName, "popcinfo.dat");
 
-		FILE* fp = fopen(aFileName, "r+b");
+		FILE *fp = fopen(aFileName, "r+b");
 		if (fp != NULL)
 		{
 			for (;;)
@@ -267,7 +267,7 @@ void SexyApp::WriteToRegistry()
 		}
 		else
 			fp = fopen(aFileName, "wb");
-			
+
 		if (fp != NULL)
 		{
 			ushort aLen = mProdName.length();
@@ -289,9 +289,7 @@ void SexyApp::WriteToRegistry()
 	RegistryWriteInteger("TimesExecuted", mTimesExecuted);
 
 	// This is for "compatibility"
-	if ((mRegUserName.length() == 0) &&
-		(mUserName.length() > 0) &&
-		(mRegCode.length() > 0))
+	if ((mRegUserName.length() == 0) && (mUserName.length() > 0) && (mRegCode.length() > 0))
 		mRegUserName = mUserName;
 
 	if (mRegUserName.length() > 0)
@@ -301,7 +299,7 @@ void SexyApp::WriteToRegistry()
 		RegistryWriteString("RegCode", mRegCode);
 }
 
-bool SexyApp::OpenHTMLTemplate(const std::string& theTemplateFile, const DefinesMap& theDefinesMap)
+bool SexyApp::OpenHTMLTemplate(const std::string &theTemplateFile, const DefinesMap &theDefinesMap)
 {
 	std::fstream anInStream(theTemplateFile.c_str(), std::ios::in);
 
@@ -316,15 +314,14 @@ bool SexyApp::OpenHTMLTemplate(const std::string& theTemplateFile, const Defines
 		{
 			std::string aFilePath = std::string("temp\\") + aFindData.cFileName;
 			DeleteFile(aFilePath.c_str());
-		}
-		while (FindNextFile(aHandle, &aFindData));
-		
+		} while (FindNextFile(aHandle, &aFindData));
+
 		FindClose(aHandle);
 	}
 
 	mkdir("temp");
 
-	std::string anOutFilename = StrFormat("temp\\tpl%04d.html", rand()%10000);
+	std::string anOutFilename = StrFormat("temp\\tpl%04d.html", rand() % 10000);
 
 	//TODO: A better failover case?
 	std::fstream anOutStream(anOutFilename.c_str(), std::ios::out);
@@ -335,12 +332,12 @@ bool SexyApp::OpenHTMLTemplate(const std::string& theTemplateFile, const Defines
 	while (!anInStream.eof())
 	{
 		anInStream.getline(aStr, 4096);
-		
+
 		std::string aNewString = Evaluate(aStr, theDefinesMap);
 
 		anOutStream << aNewString.c_str() << std::endl;
 	}
-	
+
 	return OpenURL(GetFullPath(anOutFilename));
 }
 
@@ -351,9 +348,9 @@ bool SexyApp::OpenRegisterPage(DefinesMap theStatsMap)
 	return true;
 #endif
 
-	// Insert standard defines 
+	// Insert standard defines
 	DefinesMap aDefinesMap;
-	
+
 	aDefinesMap.insert(DefinesMap::value_type("Src", mRegSource));
 	aDefinesMap.insert(DefinesMap::value_type("ProdName", mProdName));
 	aDefinesMap.insert(DefinesMap::value_type("Version", mProductVersion));
@@ -364,7 +361,7 @@ bool SexyApp::OpenRegisterPage(DefinesMap theStatsMap)
 	aDefinesMap.insert(DefinesMap::value_type("TimesExecuted", StrFormat("%d", mTimesExecuted)));
 	aDefinesMap.insert(DefinesMap::value_type("TimedOut", mTimedOut ? "Y" : "N"));
 
-	// Insert game specific stats 
+	// Insert game specific stats
 	std::string aStatsString;
 	DefinesMap::iterator anItr = theStatsMap.begin();
 	while (anItr != theStatsMap.end())
@@ -372,10 +369,8 @@ bool SexyApp::OpenRegisterPage(DefinesMap theStatsMap)
 		std::string aKeyString = anItr->first;
 		std::string aValueString = anItr->second;
 
-		aStatsString += 
-			StrFormat("%04X", aKeyString.length()) + aKeyString + 
-			"S" +
-			StrFormat("%04X", aValueString.length()) + aValueString;
+		aStatsString += StrFormat("%04X", aKeyString.length()) + aKeyString + "S" +
+						StrFormat("%04X", aValueString.length()) + aValueString;
 
 		++anItr;
 	}
@@ -389,7 +384,7 @@ bool SexyApp::OpenRegisterPage(DefinesMap theStatsMap)
 	else
 	{
 		return OpenURL(mRegisterLink);
-	}	
+	}
 }
 
 bool SexyApp::ShouldCheckForUpdate()
@@ -404,10 +399,8 @@ bool SexyApp::ShouldCheckForUpdate()
 	time(&aTimeNow);
 
 	// It is set to 0 if we crash, otherwise ask every week
-	return ((mLastVerCheckQueryTime == 0) || 
-		(!mLastShutdownWasGraceful) ||
-		((mLastVerCheckQueryTime != 0) && 
-		(aTimeNow - mLastVerCheckQueryTime > 7*24*60*60)));
+	return ((mLastVerCheckQueryTime == 0) || (!mLastShutdownWasGraceful) ||
+			((mLastVerCheckQueryTime != 0) && (aTimeNow - mLastVerCheckQueryTime > 7 * 24 * 60 * 60)));
 #endif
 }
 
@@ -419,7 +412,7 @@ void SexyApp::UpdateCheckQueried()
 	mLastVerCheckQueryTime = aTimeNow;
 }
 
-void SexyApp::URLOpenSucceeded(const std::string& theURL)
+void SexyApp::URLOpenSucceeded(const std::string &theURL)
 {
 	SexyAppBase::URLOpenSucceeded(theURL);
 
@@ -433,7 +426,7 @@ bool SexyApp::OpenRegisterPage()
 	return OpenRegisterPage(aStatsMap);
 }
 
-bool SexyApp::CheckSignature(const Buffer& theBuffer, const std::string& theFileName)
+bool SexyApp::CheckSignature(const Buffer &theBuffer, const std::string &theFileName)
 {
 #ifdef _DEBUG
 	// Don't check signatures on debug version because it's annoying and the build number
@@ -495,7 +488,7 @@ void SexyApp::PreTerminate()
 #ifdef ZYLOM
 	ZylomShowAd();
 #else
-	//if ((!mSkipAd) && 
+	//if ((!mSkipAd) &&
 	//	((((!mIsRegistered) || (mInternetManager->HasNewAds())) && ((Rand()%2) == 0))))
 	//{
 	//	mInternetManager->TryShowAd();
@@ -508,22 +501,19 @@ void SexyApp::OpenUpdateURL()
 #ifdef ZYLOM
 	ZylomGS_StandAlone_ShowUpdatePage();
 #else
-	//OpenURL(mInternetManager->GetUpdateURL(), true);	
+	//OpenURL(mInternetManager->GetUpdateURL(), true);
 #endif
 	Shutdown();
 }
 
-void SexyApp::HandleCmdLineParam(const std::string& theParamName, const std::string& theParamValue)
+void SexyApp::HandleCmdLineParam(const std::string &theParamName, const std::string &theParamValue)
 {
 	if (theParamName == "-version")
 	{
 		// Just print version info and then quit
-		
-		std::string aVersionString = 
-			"Product: " + mProdName + "\r\n" +
-			"Version: " + mProductVersion + "\r\n" +
-			"Build Num: " + StrFormat("%d", mBuildNum) + "\r\n" +
-			"Build Date: " + mBuildDate;
+
+		std::string aVersionString = "Product: " + mProdName + "\r\n" + "Version: " + mProductVersion + "\r\n" +
+									 "Build Num: " + StrFormat("%d", mBuildNum) + "\r\n" + "Build Date: " + mBuildDate;
 
 		MessageBox(NULL, aVersionString.c_str(), "Version Info", MB_ICONINFORMATION | MB_OK);
 		DoExit(0);
@@ -537,26 +527,23 @@ std::string SexyApp::GetGameSEHInfo()
 	char aGamesPlayedStr[16];
 	sprintf(aGamesPlayedStr, "%d", mTimesPlayed);
 
-	std::string anInfoString = SexyAppBase::GetGameSEHInfo() + 
-		"Times Played: " + std::string(aGamesPlayedStr) + "\r\n";
-		"Build Num: " + StrFormat("%d", mBuildNum) + "\r\n" +
-		"Build Date: " + mBuildDate + "\r\n";
+	std::string anInfoString = SexyAppBase::GetGameSEHInfo() + "Times Played: " + std::string(aGamesPlayedStr) + "\r\n";
+	"Build Num: " + StrFormat("%d", mBuildNum) + "\r\n" + "Build Date: " + mBuildDate + "\r\n";
 
 	if (mReferId.length() != 0)
 	{
-		anInfoString +=
-			"ReferId: " + mReferId + "\r\n";
+		anInfoString += "ReferId: " + mReferId + "\r\n";
 	}
 
 	return anInfoString;
 }
 
-void SexyApp::GetSEHWebParams(DefinesMap* theDefinesMap)
+void SexyApp::GetSEHWebParams(DefinesMap *theDefinesMap)
 {
 	theDefinesMap->insert(DefinesMap::value_type("username", mUserName));
 	theDefinesMap->insert(DefinesMap::value_type("buildnum", StrFormat("%d", mBuildNum)));
 	theDefinesMap->insert(DefinesMap::value_type("builddate", mBuildDate));
-	theDefinesMap->insert(DefinesMap::value_type("referid", mReferId));	
+	theDefinesMap->insert(DefinesMap::value_type("referid", mReferId));
 }
 
 void SexyApp::PreDisplayHook()
@@ -583,50 +570,49 @@ void SexyApp::InitPropertiesHook()
 	}
 
 	mProdName = GetString("ProdName", mProdName);
-	mIsWindowed = GetBoolean("DefaultWindowed", mIsWindowed);	
+	mIsWindowed = GetBoolean("DefaultWindowed", mIsWindowed);
 
 	std::string aNewTitle = GetString("Title", "");
 	if (aNewTitle.length() > 0)
-		mTitle = aNewTitle + " " + mProductVersion;	
-		
+		mTitle = aNewTitle + " " + mProductVersion;
+
 	//mInternetManager->Init();
-	mBetaSupport = nullptr;//new BetaSupport(this);
+	mBetaSupport = nullptr; //new BetaSupport(this);
 
 #ifdef ZYLOM
 	LoadProperties();
-	ZylomGS_StandAlone_Init(mZylomGameId, (char*) GetString("BUG_REPORT_TITLE").c_str(), (char*) GetString("BUG_REPORT_BODY").c_str());
+	ZylomGS_StandAlone_Init(
+		mZylomGameId, (char *)GetString("BUG_REPORT_TITLE").c_str(), (char *)GetString("BUG_REPORT_BODY").c_str());
 #endif
 }
 
 void SexyApp::Init()
 {
-	SEHCatcher::mCrashMessage = 
-		L"An unexpected error has occured!  Pressing 'Send Report' "
-		"will send us helpful debugging information that may help "
-		"us resolve this issue in the future.\r\n\r\n"
-		"You can also contact us directly at feedback@popcap.com.";
+	SEHCatcher::mCrashMessage = L"An unexpected error has occured!  Pressing 'Send Report' "
+								"will send us helpful debugging information that may help "
+								"us resolve this issue in the future.\r\n\r\n"
+								"You can also contact us directly at feedback@popcap.com.";
 
-	SEHCatcher::mSubmitMessage = 
-		L"Please help us out by providing as much information as "
-		"you can about this crash. Is this the first time it happened? "
-		"Have you used other PopCap Deluxe games successfully before? "
-		"Have you upgraded your drivers or any software recently that "
-		"may be interfering with this program?";
+	SEHCatcher::mSubmitMessage = L"Please help us out by providing as much information as "
+								 "you can about this crash. Is this the first time it happened? "
+								 "Have you used other PopCap Deluxe games successfully before? "
+								 "Have you upgraded your drivers or any software recently that "
+								 "may be interfering with this program?";
 
-	SEHCatcher::mSubmitErrorMessage = 
+	SEHCatcher::mSubmitErrorMessage =
 		L"Failed to connect to PopCap servers.  Please check your Internet connection.\n"
 		"If you are on a dial-up connection, you may have to manually connect to your ISP.";
 
 	SEHCatcher::mSubmitHost = "www.popcap.com";
 
-	OutputDebugString(StrFormat("Product: %s\r\n", mProdName.c_str()).c_str());	
+	OutputDebugString(StrFormat("Product: %s\r\n", mProdName.c_str()).c_str());
 	OutputDebugString(StrFormat("BuildNum: %d\r\n", mBuildNum).c_str());
-	OutputDebugString(StrFormat("BuildDate: %s\r\n", mBuildDate.c_str()).c_str());	
+	OutputDebugString(StrFormat("BuildDate: %s\r\n", mBuildDate.c_str()).c_str());
 
 	SexyAppBase::Init();
 
-	if (IsScreenSaver())	
-		mSkipAd = true;	
+	if (IsScreenSaver())
+		mSkipAd = true;
 
 	mTimesExecuted++;
 }

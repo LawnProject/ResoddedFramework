@@ -14,16 +14,14 @@ SexyMatrix3::SexyMatrix3()
 ///////////////////////////////////////////////////////////////////////////////
 void SexyMatrix3::ZeroMatrix()
 {
-	m00 = m01 = m02 =
-	m10 = m11 = m12 = 
-	m20 = m21 = m22 = 0;
+	m00 = m01 = m02 = m10 = m11 = m12 = m20 = m21 = m22 = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 void SexyMatrix3::LoadIdentity()
 {
-	m01	= m02 = m10 = m12 = m20 = m21 = 0;
+	m01 = m02 = m10 = m12 = m20 = m21 = 0;
 	m00 = m11 = m22 = 1;
 }
 
@@ -33,13 +31,13 @@ SexyMatrix3 SexyMatrix3::operator*(const SexyMatrix3 &theMat) const
 {
 	SexyMatrix3 aResult;
 
-	for(int i=0; i<3; i++)
+	for (int i = 0; i < 3; i++)
 	{
-		for(int j=0; j<3; j++)
+		for (int j = 0; j < 3; j++)
 		{
 			float x = 0;
-			for(int k=0; k<3; k++)				
-				x += m[i][k]*theMat.m[k][j];
+			for (int k = 0; k < 3; k++)
+				x += m[i][k] * theMat.m[k][j];
 
 			aResult.m[i][j] = x;
 		}
@@ -52,24 +50,21 @@ SexyMatrix3 SexyMatrix3::operator*(const SexyMatrix3 &theMat) const
 ///////////////////////////////////////////////////////////////////////////////
 SexyVector2 SexyMatrix3::operator*(const SexyVector2 &theVec) const
 {
-	return SexyVector2(
-		m00*theVec.x + m01*theVec.y + m02,
-		m10*theVec.x + m11*theVec.y + m12);
-}
-	
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-SexyVector3 SexyMatrix3::operator*(const SexyVector3 &theVec) const
-{
-	return SexyVector3(
-		m00*theVec.x + m01*theVec.y + m02*theVec.z,
-		m10*theVec.x + m11*theVec.y + m12*theVec.z,
-		m20*theVec.x + m21*theVec.y + m22*theVec.z);
+	return SexyVector2(m00 * theVec.x + m01 * theVec.y + m02, m10 * theVec.x + m11 * theVec.y + m12);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-const SexyMatrix3& SexyMatrix3::operator*=(const SexyMatrix3 &theMat)
+SexyVector3 SexyMatrix3::operator*(const SexyVector3 &theVec) const
+{
+	return SexyVector3(m00 * theVec.x + m01 * theVec.y + m02 * theVec.z,
+					   m10 * theVec.x + m11 * theVec.y + m12 * theVec.z,
+					   m20 * theVec.x + m21 * theVec.y + m22 * theVec.z);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+const SexyMatrix3 &SexyMatrix3::operator*=(const SexyMatrix3 &theMat)
 {
 	return operator=(operator*(theMat));
 }
@@ -91,13 +86,13 @@ SexyTransform2D::SexyTransform2D(bool loadIdentity)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-SexyTransform2D::SexyTransform2D(const SexyMatrix3& theMatrix) : SexyMatrix3(theMatrix)
+SexyTransform2D::SexyTransform2D(const SexyMatrix3 &theMatrix) : SexyMatrix3(theMatrix)
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-const SexyTransform2D& SexyTransform2D::operator=(const SexyMatrix3 &theMat)
+const SexyTransform2D &SexyTransform2D::operator=(const SexyMatrix3 &theMat)
 {
 	SexyMatrix3::operator=(theMat);
 	return *this;
@@ -193,7 +188,7 @@ void Transform::Translate(float tx, float ty)
 		}
 	}
 	else
-		mMatrix.Translate(tx,ty);
+		mMatrix.Translate(tx, ty);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -207,7 +202,7 @@ void Transform::RotateRad(float rot)
 			MakeComplex();
 			mMatrix.RotateRad(rot);
 		}
-		else 
+		else
 		{
 			mNeedCalcMatrix = true;
 			mHaveRot = true;
@@ -231,10 +226,10 @@ void Transform::Scale(float sx, float sy)
 {
 	if (!mComplex)
 	{
-		if (mHaveRot || mTransX1!=0 || mTransY1!=0 || (sx<0 && mScaleX*sx!=-1) || sy<0)
+		if (mHaveRot || mTransX1 != 0 || mTransY1 != 0 || (sx < 0 && mScaleX * sx != -1) || sy < 0)
 		{
 			MakeComplex();
-			mMatrix.Scale(sx,sy);
+			mMatrix.Scale(sx, sy);
 		}
 		else
 		{
@@ -245,7 +240,7 @@ void Transform::Scale(float sx, float sy)
 		}
 	}
 	else
-		mMatrix.Scale(sx,sy);
+		mMatrix.Scale(sx, sy);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -280,15 +275,14 @@ void Transform::CalcMatrix() const
 		else if (mHaveRot)
 			mMatrix.RotateRad(mRot);
 
-		if (mTransX2!=0 || mTransY2!=0)
-			mMatrix.Translate(mTransX2,mTransY2);
+		if (mTransX2 != 0 || mTransY2 != 0)
+			mMatrix.Translate(mTransX2, mTransY2);
 	}
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-const SexyTransform2D& Transform::GetMatrix() const
+const SexyTransform2D &Transform::GetMatrix() const
 {
 	CalcMatrix();
 	return mMatrix;

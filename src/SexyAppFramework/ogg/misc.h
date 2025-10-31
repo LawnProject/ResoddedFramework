@@ -22,11 +22,11 @@
 #include "os_types.h"
 
 #include "asm_arm.h"
-  
+
 #ifndef _V_WIDE_MATH
 #define _V_WIDE_MATH
-  
-#ifndef  _LOW_ACCURACY_
+
+#ifndef _LOW_ACCURACY_
 /* 64 bit multiply */
 
 #include <sys/types.h>
@@ -34,13 +34,14 @@
 #if 1 //BYTE_ORDER==LITTLE_ENDIAN
 
 union magic {
-  struct {
-    ogg_int32_t lo;
-    ogg_int32_t hi;
-  } halves;
-  ogg_int64_t whole;
+	struct
+	{
+		ogg_int32_t lo;
+		ogg_int32_t hi;
+	} halves;
+	ogg_int64_t whole;
 };
-#endif 
+#endif
 
 #if 0 //BYTE_ORDER==BIG_ENDIAN
 union magic {
@@ -52,20 +53,23 @@ union magic {
 };
 #endif
 
-STIN ogg_int32_t MULT32(ogg_int32_t x, ogg_int32_t y) {
-  union magic magic;
-  magic.whole = (ogg_int64_t)x * y;
-  return magic.halves.hi;
+STIN ogg_int32_t MULT32(ogg_int32_t x, ogg_int32_t y)
+{
+	union magic magic;
+	magic.whole = (ogg_int64_t)x * y;
+	return magic.halves.hi;
 }
 
-STIN ogg_int32_t MULT31(ogg_int32_t x, ogg_int32_t y) {
-  return MULT32(x,y)<<1;
+STIN ogg_int32_t MULT31(ogg_int32_t x, ogg_int32_t y)
+{
+	return MULT32(x, y) << 1;
 }
 
-STIN ogg_int32_t MULT31_SHIFT15(ogg_int32_t x, ogg_int32_t y) {
-  union magic magic;
-  magic.whole  = (ogg_int64_t)x * y;
-  return ((ogg_uint32_t)(magic.halves.lo)>>15) | ((magic.halves.hi)<<17);
+STIN ogg_int32_t MULT31_SHIFT15(ogg_int32_t x, ogg_int32_t y)
+{
+	union magic magic;
+	magic.whole = (ogg_int64_t)x * y;
+	return ((ogg_uint32_t)(magic.halves.lo) >> 15) | ((magic.halves.hi) << 17);
 }
 
 #else
@@ -84,16 +88,19 @@ STIN ogg_int32_t MULT31_SHIFT15(ogg_int32_t x, ogg_int32_t y) {
  * tables in this case.
  */
 
-STIN ogg_int32_t MULT32(ogg_int32_t x, ogg_int32_t y) {
-  return (x >> 9) * y;  /* y preshifted >>23 */
+STIN ogg_int32_t MULT32(ogg_int32_t x, ogg_int32_t y)
+{
+	return (x >> 9) * y; /* y preshifted >>23 */
 }
 
-STIN ogg_int32_t MULT31(ogg_int32_t x, ogg_int32_t y) {
-  return (x >> 8) * y;  /* y preshifted >>23 */
+STIN ogg_int32_t MULT31(ogg_int32_t x, ogg_int32_t y)
+{
+	return (x >> 8) * y; /* y preshifted >>23 */
 }
 
-STIN ogg_int32_t MULT31_SHIFT15(ogg_int32_t x, ogg_int32_t y) {
-  return (x >> 6) * y;  /* y preshifted >>9 */
+STIN ogg_int32_t MULT31_SHIFT15(ogg_int32_t x, ogg_int32_t y)
+{
+	return (x >> 6) * y; /* y preshifted >>9 */
 }
 
 #endif
@@ -117,40 +124,40 @@ STIN ogg_int32_t MULT31_SHIFT15(ogg_int32_t x, ogg_int32_t y) {
 
 #ifdef __i386__
 
-#define XPROD32(_a, _b, _t, _v, _x, _y)		\
-  { *(_x)=MULT32(_a,_t)+MULT32(_b,_v);		\
-    *(_y)=MULT32(_b,_t)-MULT32(_a,_v); }
-#define XPROD31(_a, _b, _t, _v, _x, _y)		\
-  { *(_x)=MULT31(_a,_t)+MULT31(_b,_v);		\
-    *(_y)=MULT31(_b,_t)-MULT31(_a,_v); }
-#define XNPROD31(_a, _b, _t, _v, _x, _y)	\
-  { *(_x)=MULT31(_a,_t)-MULT31(_b,_v);		\
-    *(_y)=MULT31(_b,_t)+MULT31(_a,_v); }
+#define XPROD32(_a, _b, _t, _v, _x, _y)                                                                                \
+	{                                                                                                                  \
+		*(_x) = MULT32(_a, _t) + MULT32(_b, _v);                                                                       \
+		*(_y) = MULT32(_b, _t) - MULT32(_a, _v);                                                                       \
+	}
+#define XPROD31(_a, _b, _t, _v, _x, _y)                                                                                \
+	{                                                                                                                  \
+		*(_x) = MULT31(_a, _t) + MULT31(_b, _v);                                                                       \
+		*(_y) = MULT31(_b, _t) - MULT31(_a, _v);                                                                       \
+	}
+#define XNPROD31(_a, _b, _t, _v, _x, _y)                                                                               \
+	{                                                                                                                  \
+		*(_x) = MULT31(_a, _t) - MULT31(_b, _v);                                                                       \
+		*(_y) = MULT31(_b, _t) + MULT31(_a, _v);                                                                       \
+	}
 
 #else
 
-STIN void XPROD32(ogg_int32_t  a, ogg_int32_t  b,
-			   ogg_int32_t  t, ogg_int32_t  v,
-			   ogg_int32_t *x, ogg_int32_t *y)
+STIN void XPROD32(ogg_int32_t a, ogg_int32_t b, ogg_int32_t t, ogg_int32_t v, ogg_int32_t *x, ogg_int32_t *y)
 {
-  *x = MULT32(a, t) + MULT32(b, v);
-  *y = MULT32(b, t) - MULT32(a, v);
+	*x = MULT32(a, t) + MULT32(b, v);
+	*y = MULT32(b, t) - MULT32(a, v);
 }
 
-STIN void XPROD31(ogg_int32_t  a, ogg_int32_t  b,
-			   ogg_int32_t  t, ogg_int32_t  v,
-			   ogg_int32_t *x, ogg_int32_t *y)
+STIN void XPROD31(ogg_int32_t a, ogg_int32_t b, ogg_int32_t t, ogg_int32_t v, ogg_int32_t *x, ogg_int32_t *y)
 {
-  *x = MULT31(a, t) + MULT31(b, v);
-  *y = MULT31(b, t) - MULT31(a, v);
+	*x = MULT31(a, t) + MULT31(b, v);
+	*y = MULT31(b, t) - MULT31(a, v);
 }
 
-STIN void XNPROD31(ogg_int32_t  a, ogg_int32_t  b,
-			    ogg_int32_t  t, ogg_int32_t  v,
-			    ogg_int32_t *x, ogg_int32_t *y)
+STIN void XNPROD31(ogg_int32_t a, ogg_int32_t b, ogg_int32_t t, ogg_int32_t v, ogg_int32_t *x, ogg_int32_t *y)
 {
-  *x = MULT31(a, t) - MULT31(b, v);
-  *y = MULT31(b, t) + MULT31(a, v);
+	*x = MULT31(a, t) - MULT31(b, v);
+	*y = MULT31(b, t) + MULT31(a, v);
 }
 
 #endif
@@ -160,83 +167,91 @@ STIN void XNPROD31(ogg_int32_t  a, ogg_int32_t  b,
 #ifndef _V_CLIP_MATH
 #define _V_CLIP_MATH
 
-STIN ogg_int32_t CLIP_TO_15(ogg_int32_t x) {
-  int ret=x;
-  ret-= ((x<=32767)-1)&(x-32767);
-  ret-= ((x>=-32768)-1)&(x+32768);
-  return(ret);
+STIN ogg_int32_t CLIP_TO_15(ogg_int32_t x)
+{
+	int ret = x;
+	ret -= ((x <= 32767) - 1) & (x - 32767);
+	ret -= ((x >= -32768) - 1) & (x + 32768);
+	return (ret);
 }
 
 #endif
 
-STIN ogg_int32_t VFLOAT_MULT(ogg_int32_t a,ogg_int32_t ap,
-				      ogg_int32_t b,ogg_int32_t bp,
-				      ogg_int32_t *p){
-  if(a && b){
+STIN ogg_int32_t VFLOAT_MULT(ogg_int32_t a, ogg_int32_t ap, ogg_int32_t b, ogg_int32_t bp, ogg_int32_t *p)
+{
+	if (a && b)
+	{
 #ifndef _LOW_ACCURACY_
-    *p=ap+bp+32;
-    return MULT32(a,b);
+		*p = ap + bp + 32;
+		return MULT32(a, b);
 #else
-    *p=ap+bp+31;
-    return (a>>15)*(b>>16); 
+		*p = ap + bp + 31;
+		return (a >> 15) * (b >> 16);
 #endif
-  }else
-    return 0;
+	}
+	else
+		return 0;
 }
 
-STIN ogg_int32_t VFLOAT_MULTI(ogg_int32_t a,ogg_int32_t ap,
-				      ogg_int32_t i,
-				      ogg_int32_t *p){
+STIN ogg_int32_t VFLOAT_MULTI(ogg_int32_t a, ogg_int32_t ap, ogg_int32_t i, ogg_int32_t *p)
+{
 
-  extern int _ilog(unsigned int v);
-  int ip=_ilog(abs(i))-31;
-  return VFLOAT_MULT(a,ap,i<<-ip,ip,p);
+	extern int _ilog(unsigned int v);
+	int ip = _ilog(abs(i)) - 31;
+	return VFLOAT_MULT(a, ap, i << -ip, ip, p);
 }
 
-STIN ogg_int32_t VFLOAT_ADD(ogg_int32_t a,ogg_int32_t ap,
-				      ogg_int32_t b,ogg_int32_t bp,
-				      ogg_int32_t *p){
+STIN ogg_int32_t VFLOAT_ADD(ogg_int32_t a, ogg_int32_t ap, ogg_int32_t b, ogg_int32_t bp, ogg_int32_t *p)
+{
 
-  if(!a){
-    *p=bp;
-    return b;
-  }else if(!b){
-    *p=ap;
-    return a;
-  }
+	if (!a)
+	{
+		*p = bp;
+		return b;
+	}
+	else if (!b)
+	{
+		*p = ap;
+		return a;
+	}
 
-  /* yes, this can leak a bit. */
-  if(ap>bp){
-    int shift=ap-bp+1;
-    *p=ap+1;
-    a>>=1;
-    if(shift<32){
-      b=(b+(1<<(shift-1)))>>shift;
-    }else{
-      b=0;
-    }
-  }else{
-    int shift=bp-ap+1;
-    *p=bp+1;
-    b>>=1;
-    if(shift<32){
-      a=(a+(1<<(shift-1)))>>shift;
-    }else{
-      a=0;
-    }
-  }
+	/* yes, this can leak a bit. */
+	if (ap > bp)
+	{
+		int shift = ap - bp + 1;
+		*p = ap + 1;
+		a >>= 1;
+		if (shift < 32)
+		{
+			b = (b + (1 << (shift - 1))) >> shift;
+		}
+		else
+		{
+			b = 0;
+		}
+	}
+	else
+	{
+		int shift = bp - ap + 1;
+		*p = bp + 1;
+		b >>= 1;
+		if (shift < 32)
+		{
+			a = (a + (1 << (shift - 1))) >> shift;
+		}
+		else
+		{
+			a = 0;
+		}
+	}
 
-  a+=b;
-  if((a&0xc0000000)==0xc0000000 || 
-     (a&0xc0000000)==0){
-    a<<=1;
-    (*p)--;
-  }
-  return(a);
+	a += b;
+	if ((a & 0xc0000000) == 0xc0000000 || (a & 0xc0000000) == 0)
+	{
+		a <<= 1;
+		(*p)--;
+	}
+	return (a);
 }
 
 #endif
-
-
-
-

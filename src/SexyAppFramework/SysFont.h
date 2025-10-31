@@ -11,28 +11,43 @@ class SexyAppBase;
 
 class SysFont : public Font
 {
-public:	
-	HFONT					mHFont;
-	SexyAppBase*			mApp;
-	bool					mDrawShadow;
-	bool					mSimulateBold;
-	
-	void Init(SexyAppBase* theApp, const std::string& theFace, int thePointSize, int theScript, bool bold, bool italics, bool underline, bool useDevCaps);
+  public:
+	HFONT mHFont;
+	SexyAppBase *mApp;
+	bool mDrawShadow;
+	bool mSimulateBold;
 
-public:
-	SysFont(const std::string& theFace, int thePointSize, bool bold = false, bool italics = false, bool underline = false);
-	SysFont(SexyAppBase* theApp, const std::string& theFace, int thePointSize, int theScript = ANSI_CHARSET, bool bold = false, bool italics = false, bool underline = false);
-	SysFont(const SysFont& theSysFont);
+	void Init(SexyAppBase *theApp,
+			  const std::string &theFace,
+			  int thePointSize,
+			  int theScript,
+			  bool bold,
+			  bool italics,
+			  bool underline,
+			  bool useDevCaps);
+
+  public:
+	SysFont(
+		const std::string &theFace, int thePointSize, bool bold = false, bool italics = false, bool underline = false);
+	SysFont(SexyAppBase *theApp,
+			const std::string &theFace,
+			int thePointSize,
+			int theScript = ANSI_CHARSET,
+			bool bold = false,
+			bool italics = false,
+			bool underline = false);
+	SysFont(const SysFont &theSysFont);
 
 	virtual ~SysFont();
 
-	ImageFont*				CreateImageFont();
-	virtual int				StringWidth(const SexyString& theString);
-	virtual void			DrawString(Graphics* g, int theX, int theY, const SexyString& theString, const Color& theColor, const Rect& theClipRect);
+	ImageFont *CreateImageFont();
+	virtual int StringWidth(const SexyString &theString);
+	virtual void DrawString(
+		Graphics *g, int theX, int theY, const SexyString &theString, const Color &theColor, const Rect &theClipRect);
 
-	virtual Font*			Duplicate();
+	virtual Font *Duplicate();
 };
 
-}
+} // namespace Sexy
 
 #endif //__SYSFONT_H__

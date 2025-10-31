@@ -21,25 +21,28 @@ using namespace Sexy;
 ///////////////////////////////////////////////////////////////////////////////
 struct SEXY_ALLOC_INFO
 {
-	int		size;
-	char	file[_MAX_PATH+1];
-	int		line;
+	int size;
+	char file[_MAX_PATH + 1];
+	int line;
 };
 static bool gShowLeaks = false;
 static bool gSexyAllocMapValid = false;
-class SexyAllocMap : public std::map<void*,SEXY_ALLOC_INFO>
+class SexyAllocMap : public std::map<void *, SEXY_ALLOC_INFO>
 {
-public:
+  public:
 	CritSect mCrit;
 
-public:
-	SexyAllocMap() { gSexyAllocMapValid = true; }
-	~SexyAllocMap() 
-	{ 
-		if (gShowLeaks) 
-			SexyDumpUnfreed();		
+  public:
+	SexyAllocMap()
+	{
+		gSexyAllocMapValid = true;
+	}
+	~SexyAllocMap()
+	{
+		if (gShowLeaks)
+			SexyDumpUnfreed();
 
-		gSexyAllocMapValid = false; 
+		gSexyAllocMapValid = false;
 	}
 };
 static SexyAllocMap gSexyAllocMap;
@@ -48,17 +51,17 @@ static SexyAllocMap gSexyAllocMap;
 ///////////////////////////////////////////////////////////////////////////////
 void SexyTrace(const char *theStr)
 {
-	if (gTraceFile==NULL)
+	if (gTraceFile == NULL)
 	{
-		gTraceFileNum = (gTraceFileNum+1)%2;
+		gTraceFileNum = (gTraceFileNum + 1) % 2;
 		char aBuf[50];
-		sprintf(aBuf,"trace%d.txt",gTraceFileNum+1);
-		gTraceFile = fopen(aBuf,"w");
-		if (gTraceFile==NULL)
+		sprintf(aBuf, "trace%d.txt", gTraceFileNum + 1);
+		gTraceFile = fopen(aBuf, "w");
+		if (gTraceFile == NULL)
 			return;
 	}
 
-	fprintf(gTraceFile,"%s\n",theStr);
+	fprintf(gTraceFile, "%s\n", theStr);
 	fflush(gTraceFile);
 
 	gTraceFileLen += strlen(theStr);
@@ -72,7 +75,7 @@ void SexyTrace(const char *theStr)
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-void SexyTraceFmt(const SexyChar* fmt ...)
+void SexyTraceFmt(const SexyChar *fmt...)
 {
 	// Does not append a newline by default, also takes vararg parameters
 
@@ -81,18 +84,17 @@ void SexyTraceFmt(const SexyChar* fmt ...)
 	std::string result = SexyStringToStringFast(vformat(fmt, argList));
 	va_end(argList);
 
-	
-	if (gTraceFile==NULL)
+	if (gTraceFile == NULL)
 	{
-		gTraceFileNum = (gTraceFileNum+1)%2;
+		gTraceFileNum = (gTraceFileNum + 1) % 2;
 		char aBuf[50];
-		sprintf(aBuf,"trace%d.txt",gTraceFileNum+1);
-		gTraceFile = fopen(aBuf,"w");
-		if (gTraceFile==NULL)
+		sprintf(aBuf, "trace%d.txt", gTraceFileNum + 1);
+		gTraceFile = fopen(aBuf, "w");
+		if (gTraceFile == NULL)
 			return;
 	}
 
-	fprintf(gTraceFile,"%s",result.c_str());
+	fprintf(gTraceFile, "%s", result.c_str());
 	fflush(gTraceFile);
 
 	gTraceFileLen += result.length();
@@ -106,7 +108,7 @@ void SexyTraceFmt(const SexyChar* fmt ...)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-void SexyMemAddTrack(void *addr,  int asize,  const char* fname, int lnum)
+void SexyMemAddTrack(void *addr, int asize, const char *fname, int lnum)
 {
 	if (!gSexyAllocMapValid)
 		return;
@@ -115,14 +117,14 @@ void SexyMemAddTrack(void *addr,  int asize,  const char* fname, int lnum)
 	gShowLeaks = true;
 
 	SEXY_ALLOC_INFO &info = gSexyAllocMap[addr];
-	strncpy(info.file, fname, sizeof(info.file)-1);
+	strncpy(info.file, fname, sizeof(info.file) - 1);
 	info.line = lnum;
 	info.size = asize;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-void SexyMemRemoveTrack(void* addr)
+void SexyMemRemoveTrack(void *addr)
 {
 	if (!gSexyAllocMapValid)
 		return;
@@ -152,33 +154,38 @@ void SexyDumpUnfreed()
 	int index = 0;
 #endif
 
-	FILE* f = fopen("mem_leaks.txt", "wt");
+	FILE *f = fopen("mem_leaks.txt", "wt");
 	if (!f)
 		return;
 
 	time_t aTime = time(NULL);
-	sprintf(buf, "Memory Leak Report for %s\n",	asctime(localtime(&aTime)));
+	sprintf(buf, "Memory Leak Report for %s\n", asctime(localtime(&aTime)));
 	fprintf(f, buf);
 	OutputDebugString("\n");
 	OutputDebugString(buf);
-	for(i = gSexyAllocMap.begin(); i != gSexyAllocMap.end(); i++) 
+	for (i = gSexyAllocMap.begin(); i != gSexyAllocMap.end(); i++)
 	{
-		sprintf(buf, "%s(%d) : Leak %d byte%s\n", i->second.file, i->second.line, i->second.size,i->second.size>1?"s":"");
+		sprintf(buf,
+				"%s(%d) : Leak %d byte%s\n",
+				i->second.file,
+				i->second.line,
+				i->second.size,
+				i->second.size > 1 ? "s" : "");
 		OutputDebugString(buf);
 		fprintf(f, buf);
 
 #ifdef SEXY_DUMP_LEAKED_MEM
-		unsigned char* data = (unsigned char*)i->first;
+		unsigned char *data = (unsigned char *)i->first;
 
 		for (index = 0; index < i->second.size; index++)
-		{			
+		{
 			unsigned char _c = *data;
-			
+
 			if (count == 0)
 				sprintf(hex_dump, "\t%02X ", _c);
 			else
 				sprintf(hex_dump, "%s%02X ", hex_dump, _c);
-		
+
 			if ((_c < 32) || (_c > 126))
 				_c = '.';
 
@@ -186,7 +193,6 @@ void SexyDumpUnfreed()
 				sprintf(ascii_dump, "%s%c ", ascii_dump, _c);
 			else
 				sprintf(ascii_dump, "%s%c", count == 0 ? "\t" : ascii_dump, _c);
-			
 
 			if (++count == 16)
 			{
@@ -194,8 +200,8 @@ void SexyDumpUnfreed()
 				sprintf(buf, "%s\t%s\n", hex_dump, ascii_dump);
 				fprintf(f, buf);
 
-				memset((void*)hex_dump, 0, 1024);
-				memset((void*)ascii_dump, 0, 1024);
+				memset((void *)hex_dump, 0, 1024);
+				memset((void *)ascii_dump, 0, 1024);
 			}
 
 			data++;
@@ -215,14 +221,13 @@ void SexyDumpUnfreed()
 
 		count = 0;
 		fprintf(f, "\n\n");
-		memset((void*)hex_dump, 0, 1024);	
-		memset((void*)ascii_dump, 0, 1024);
+		memset((void *)hex_dump, 0, 1024);
+		memset((void *)ascii_dump, 0, 1024);
 
 #endif // SEXY_DUMP_LEAKED_MEM
 
 		totalSize += i->second.size;
 	}
-
 
 	sprintf(buf, "-----------------------------------------------------------\n");
 	fprintf(f, buf);
@@ -234,13 +239,12 @@ void SexyDumpUnfreed()
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-void OutputDebug(const SexyChar* fmt ...)
+void OutputDebug(const SexyChar *fmt...)
 {
 	va_list argList;
-    va_start(argList, fmt);
-    std::string result = SexyStringToStringFast(vformat(fmt, argList));
-    va_end(argList);
+	va_start(argList, fmt);
+	std::string result = SexyStringToStringFast(vformat(fmt, argList));
+	va_end(argList);
 
 	OutputDebugStringA(result.c_str());
 }
-

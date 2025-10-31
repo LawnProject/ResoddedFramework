@@ -13,7 +13,7 @@
 #include "../System/Music.h"
 
 //0x48D4B0
-TitleScreen::TitleScreen(LawnApp* theApp)
+TitleScreen::TitleScreen(LawnApp *theApp)
 {
 	mCurBarWidth = 0.0f;
 	mTotalBarWidth = 314.0f;
@@ -52,13 +52,13 @@ TitleScreen::~TitleScreen()
 	}
 }
 
-void TitleScreen::DrawToPreload(Graphics* g)
+void TitleScreen::DrawToPreload(Graphics *g)
 {
 	g->DrawImageF(IMAGE_PLANTSHADOW, 1000.0f, 0.0f);
 }
 
 //0x48D730
-void TitleScreen::Draw(Graphics* g)
+void TitleScreen::Draw(Graphics *g)
 {
 	g->SetLinearBlend(true);
 
@@ -76,7 +76,7 @@ void TitleScreen::Draw(Graphics* g)
 
 		return;
 	}
-	
+
 	if (mTitleState == TitleState::TITLESTATE_POPCAP_LOGO)
 	{
 		g->SetColor(Color::Black);
@@ -92,11 +92,13 @@ void TitleScreen::Draw(Graphics* g)
 		}
 		else
 		{
-			anAlpha = TodAnimateCurve(mTitleStateDuration, mTitleStateDuration - 50, mTitleStateCounter, 0, 255, TodCurves::CURVE_LINEAR);
+			anAlpha = TodAnimateCurve(
+				mTitleStateDuration, mTitleStateDuration - 50, mTitleStateCounter, 0, 255, TodCurves::CURVE_LINEAR);
 		}
 		g->SetColorizeImages(true);
 		g->SetColor(Color(255, 255, 255, anAlpha));
-		g->DrawImage(IMAGE_POPCAP_LOGO, (mWidth - IMAGE_POPCAP_LOGO->mWidth) / 2, (mHeight - IMAGE_POPCAP_LOGO->mHeight) / 2);
+		g->DrawImage(
+			IMAGE_POPCAP_LOGO, (mWidth - IMAGE_POPCAP_LOGO->mWidth) / 2, (mHeight - IMAGE_POPCAP_LOGO->mHeight) / 2);
 		g->SetColorizeImages(false);
 
 		return;
@@ -111,16 +113,20 @@ void TitleScreen::Draw(Graphics* g)
 		int anAlpha = 255;
 		if (mTitleStateCounter >= mTitleStateDuration - 35)
 		{
-			anAlpha = TodAnimateCurve(mTitleStateDuration, mTitleStateDuration - 35, mTitleStateCounter, 0, 255, TodCurves::CURVE_LINEAR);
+			anAlpha = TodAnimateCurve(
+				mTitleStateDuration, mTitleStateDuration - 35, mTitleStateCounter, 0, 255, TodCurves::CURVE_LINEAR);
 			g->SetColor(Color(255, 255, 255, 255 - anAlpha));
-			g->DrawImage(IMAGE_POPCAP_LOGO, (mWidth - IMAGE_POPCAP_LOGO->mWidth) / 2, (mHeight - IMAGE_POPCAP_LOGO->mHeight) / 2);
+			g->DrawImage(IMAGE_POPCAP_LOGO,
+						 (mWidth - IMAGE_POPCAP_LOGO->mWidth) / 2,
+						 (mHeight - IMAGE_POPCAP_LOGO->mHeight) / 2);
 		}
 		else
 		{
 			anAlpha = TodAnimateCurve(35, 0, mTitleStateCounter, 255, 0, TodCurves::CURVE_LINEAR);
 		}
 		g->SetColor(Color(255, 255, 255, anAlpha));
-		g->DrawImage(IMAGE_PARTNER_LOGO, (mWidth - IMAGE_PARTNER_LOGO->mWidth) / 2, (mHeight - IMAGE_PARTNER_LOGO->mHeight) / 2);
+		g->DrawImage(
+			IMAGE_PARTNER_LOGO, (mWidth - IMAGE_PARTNER_LOGO->mWidth) / 2, (mHeight - IMAGE_PARTNER_LOGO->mHeight) / 2);
 		g->SetColorizeImages(false);
 
 		return;
@@ -173,12 +179,13 @@ void TitleScreen::Draw(Graphics* g)
 		float aRotation = -aRollLen / 180 * PI * 2;
 		float aScale = TodAnimateCurveFloatTime(0, mTotalBarWidth, mCurBarWidth, 1, 0.5f, TodCurves::CURVE_LINEAR);
 		SexyTransform2D aTransform;
-		TodScaleRotateTransformMatrix(aTransform, aGrassX + 11.0f + aRollLen, aGrassY - 3.0f - 35.0f * aScale + 35.0f, aRotation, aScale, aScale);
+		TodScaleRotateTransformMatrix(
+			aTransform, aGrassX + 11.0f + aRollLen, aGrassY - 3.0f - 35.0f * aScale + 35.0f, aRotation, aScale, aScale);
 		Rect aSrcRect(0, 0, IMAGE_REANIM_SODROLLCAP->mWidth, IMAGE_REANIM_SODROLLCAP->mHeight);
 		TodBltMatrix(g, IMAGE_REANIM_SODROLLCAP, aTransform, g->mClipRect, Color::White, g->mDrawMode, aSrcRect);
 	}
 
-	Reanimation* aReanim = nullptr;
+	Reanimation *aReanim = nullptr;
 	while (mApp->mEffectSystem->mReanimationHolder->mReanimations.IterateNext(aReanim))
 	{
 		aReanim->Draw(g);
@@ -214,7 +221,7 @@ void TitleScreen::Update()
 		{
 			mTitleStateDuration = 200;
 		}
-		
+
 		mTitleStateCounter = mTitleStateDuration;
 	}
 
@@ -333,7 +340,8 @@ void TitleScreen::Update()
 	{
 		float aBarWidth = TodAnimateCurveFloatTime(0, 1, aLoadingPercent, 0, mTotalBarWidth, TodCurves::CURVE_EASE_IN);
 		float aDiff = aBarWidth - mCurBarWidth;
-		float aAcceleration = TodAnimateCurveFloatTime(0, 1, aLoadingPercent, 0.0001f, 0.00001f, TodCurves::CURVE_LINEAR);
+		float aAcceleration =
+			TodAnimateCurveFloatTime(0, 1, aLoadingPercent, 0.0001f, 0.00001f, TodCurves::CURVE_LINEAR);
 		if (mLoadingThreadComplete)
 		{
 			aAcceleration = 0.0001f;
@@ -419,13 +427,11 @@ void TitleScreen::Update()
 		}
 	}
 
-	float aTriggerPoint[] = { 
-		mTotalBarWidth * 0.11f, 
-		mTotalBarWidth * 0.32f, 
-		mTotalBarWidth * 0.54f, 
-		mTotalBarWidth * 0.72f, 
-		mTotalBarWidth * 0.91f 
-	};
+	float aTriggerPoint[] = {mTotalBarWidth * 0.11f,
+							 mTotalBarWidth * 0.32f,
+							 mTotalBarWidth * 0.54f,
+							 mTotalBarWidth * 0.72f,
+							 mTotalBarWidth * 0.91f};
 
 	for (int i = 0; i < LENGTH(aTriggerPoint); i++)
 	{
@@ -438,7 +444,7 @@ void TitleScreen::Update()
 			}
 			float aPosX = aTriggerPoint[i] + 225.0f;
 			float aPosY = 511.0f;
-			Reanimation* aSproutReanim = mApp->AddReanimation(aPosX, aPosY, 0, aReanimType);
+			Reanimation *aSproutReanim = mApp->AddReanimation(aPosX, aPosY, 0, aReanimType);
 			aSproutReanim->mAnimRate = 18.0f;
 			aSproutReanim->mLoopType = ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD;
 
@@ -475,14 +481,14 @@ void TitleScreen::Resize(int theX, int theY, int theWidth, int theHeight)
 }
 
 //0x48E5A0
-void TitleScreen::AddedToManager(Sexy::WidgetManager* theWidgetManager)
+void TitleScreen::AddedToManager(Sexy::WidgetManager *theWidgetManager)
 {
 	Widget::AddedToManager(theWidgetManager);
 	theWidgetManager->AddWidget(mStartButton);
 }
 
 //0x48E5D0
-void TitleScreen::RemovedFromManager(Sexy::WidgetManager* theWidgetManager)
+void TitleScreen::RemovedFromManager(Sexy::WidgetManager *theWidgetManager)
 {
 	Widget::RemovedFromManager(theWidgetManager);
 	theWidgetManager->RemoveWidget(mStartButton);

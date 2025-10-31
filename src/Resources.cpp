@@ -7,64 +7,93 @@ using namespace Sexy;
 bool gNeedRecalcVariableToIdMap = false;
 
 //0x474700
-bool Sexy::ExtractResourcesByName(ResourceManager* theResourceManager, const char* theName)
+bool Sexy::ExtractResourcesByName(ResourceManager *theResourceManager, const char *theName)
 {
-	if (!strcmp(theName, "DelayLoad_Almanac"))					return ExtractDelayLoad_AlmanacResources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_AwardScreen"))			return ExtractDelayLoad_AwardScreenResources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_Background1"))			return ExtractDelayLoad_Background1Resources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_Background2"))			return ExtractDelayLoad_Background2Resources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_Background3"))			return ExtractDelayLoad_Background3Resources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_Background4"))			return ExtractDelayLoad_Background4Resources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_Background5"))			return ExtractDelayLoad_Background5Resources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_Background6"))			return ExtractDelayLoad_Background6Resources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_BackgroundUnsodded"))	return ExtractDelayLoad_BackgroundUnsoddedResources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_ChallengeScreen"))		return ExtractDelayLoad_ChallengeScreenResources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_Credits"))				return ExtractDelayLoad_CreditsResources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_GreenHouseGarden"))	return ExtractDelayLoad_GreenHouseGardenResources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_GreenHouseOverlay"))	return ExtractDelayLoad_GreenHouseOverlayResources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_MushroomGarden"))		return ExtractDelayLoad_MushroomGardenResources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_Store"))				return ExtractDelayLoad_StoreResources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_TreeOfWisdom"))		return ExtractDelayLoad_TreeOfWisdomResources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_ZombieFinalNote"))		return ExtractDelayLoad_ZombieFinalNoteResources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_ZombieNote"))			return ExtractDelayLoad_ZombieNoteResources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_ZombieNote1"))			return ExtractDelayLoad_ZombieNote1Resources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_ZombieNote2"))			return ExtractDelayLoad_ZombieNote2Resources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_ZombieNote3"))			return ExtractDelayLoad_ZombieNote3Resources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_ZombieNote4"))			return ExtractDelayLoad_ZombieNote4Resources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_ZombieNoteHelp"))		return ExtractDelayLoad_ZombieNoteHelpResources(theResourceManager);
-	else if (!strcmp(theName, "DelayLoad_Zombiquarium"))		return ExtractDelayLoad_ZombiquariumResources(theResourceManager);
-	else if (!strcmp(theName, "Init"))							return ExtractInitResources(theResourceManager);
-	else if (!strcmp(theName, "LoaderBar"))						return ExtractLoaderBarResources(theResourceManager);
-	else if (!strcmp(theName, "LoadingFonts"))					return ExtractLoadingFontsResources(theResourceManager);
-	else if (!strcmp(theName, "LoadingImages"))					return ExtractLoadingImagesResources(theResourceManager);
-	else if (!strcmp(theName, "LoadingSounds"))					return ExtractLoadingSoundsResources(theResourceManager);
+	if (!strcmp(theName, "DelayLoad_Almanac"))
+		return ExtractDelayLoad_AlmanacResources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_AwardScreen"))
+		return ExtractDelayLoad_AwardScreenResources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_Background1"))
+		return ExtractDelayLoad_Background1Resources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_Background2"))
+		return ExtractDelayLoad_Background2Resources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_Background3"))
+		return ExtractDelayLoad_Background3Resources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_Background4"))
+		return ExtractDelayLoad_Background4Resources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_Background5"))
+		return ExtractDelayLoad_Background5Resources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_Background6"))
+		return ExtractDelayLoad_Background6Resources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_BackgroundUnsodded"))
+		return ExtractDelayLoad_BackgroundUnsoddedResources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_ChallengeScreen"))
+		return ExtractDelayLoad_ChallengeScreenResources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_Credits"))
+		return ExtractDelayLoad_CreditsResources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_GreenHouseGarden"))
+		return ExtractDelayLoad_GreenHouseGardenResources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_GreenHouseOverlay"))
+		return ExtractDelayLoad_GreenHouseOverlayResources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_MushroomGarden"))
+		return ExtractDelayLoad_MushroomGardenResources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_Store"))
+		return ExtractDelayLoad_StoreResources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_TreeOfWisdom"))
+		return ExtractDelayLoad_TreeOfWisdomResources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_ZombieFinalNote"))
+		return ExtractDelayLoad_ZombieFinalNoteResources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_ZombieNote"))
+		return ExtractDelayLoad_ZombieNoteResources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_ZombieNote1"))
+		return ExtractDelayLoad_ZombieNote1Resources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_ZombieNote2"))
+		return ExtractDelayLoad_ZombieNote2Resources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_ZombieNote3"))
+		return ExtractDelayLoad_ZombieNote3Resources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_ZombieNote4"))
+		return ExtractDelayLoad_ZombieNote4Resources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_ZombieNoteHelp"))
+		return ExtractDelayLoad_ZombieNoteHelpResources(theResourceManager);
+	else if (!strcmp(theName, "DelayLoad_Zombiquarium"))
+		return ExtractDelayLoad_ZombiquariumResources(theResourceManager);
+	else if (!strcmp(theName, "Init"))
+		return ExtractInitResources(theResourceManager);
+	else if (!strcmp(theName, "LoaderBar"))
+		return ExtractLoaderBarResources(theResourceManager);
+	else if (!strcmp(theName, "LoadingFonts"))
+		return ExtractLoadingFontsResources(theResourceManager);
+	else if (!strcmp(theName, "LoadingImages"))
+		return ExtractLoadingImagesResources(theResourceManager);
+	else if (!strcmp(theName, "LoadingSounds"))
+		return ExtractLoadingSoundsResources(theResourceManager);
 }
 
 // DelayLoad_Almanac Resources
-Image* Sexy::IMAGE_ALMANAC_CLOSEBUTTON;
-Image* Sexy::IMAGE_ALMANAC_CLOSEBUTTONHIGHLIGHT;
-Image* Sexy::IMAGE_ALMANAC_GROUNDDAY;
-Image* Sexy::IMAGE_ALMANAC_GROUNDICE;
-Image* Sexy::IMAGE_ALMANAC_GROUNDNIGHT;
-Image* Sexy::IMAGE_ALMANAC_GROUNDNIGHTPOOL;
-Image* Sexy::IMAGE_ALMANAC_GROUNDPOOL;
-Image* Sexy::IMAGE_ALMANAC_GROUNDROOF;
-Image* Sexy::IMAGE_ALMANAC_INDEXBACK;
-Image* Sexy::IMAGE_ALMANAC_INDEXBUTTON;
-Image* Sexy::IMAGE_ALMANAC_INDEXBUTTONHIGHLIGHT;
-Image* Sexy::IMAGE_ALMANAC_PLANTBACK;
-Image* Sexy::IMAGE_ALMANAC_PLANTCARD;
-Image* Sexy::IMAGE_ALMANAC_ZOMBIEBACK;
-Image* Sexy::IMAGE_ALMANAC_ZOMBIEBLANK;
-Image* Sexy::IMAGE_ALMANAC_ZOMBIECARD;
-Image* Sexy::IMAGE_ALMANAC_ZOMBIEWINDOW;
-Image* Sexy::IMAGE_ALMANAC_ZOMBIEWINDOW2;
+Image *Sexy::IMAGE_ALMANAC_CLOSEBUTTON;
+Image *Sexy::IMAGE_ALMANAC_CLOSEBUTTONHIGHLIGHT;
+Image *Sexy::IMAGE_ALMANAC_GROUNDDAY;
+Image *Sexy::IMAGE_ALMANAC_GROUNDICE;
+Image *Sexy::IMAGE_ALMANAC_GROUNDNIGHT;
+Image *Sexy::IMAGE_ALMANAC_GROUNDNIGHTPOOL;
+Image *Sexy::IMAGE_ALMANAC_GROUNDPOOL;
+Image *Sexy::IMAGE_ALMANAC_GROUNDROOF;
+Image *Sexy::IMAGE_ALMANAC_INDEXBACK;
+Image *Sexy::IMAGE_ALMANAC_INDEXBUTTON;
+Image *Sexy::IMAGE_ALMANAC_INDEXBUTTONHIGHLIGHT;
+Image *Sexy::IMAGE_ALMANAC_PLANTBACK;
+Image *Sexy::IMAGE_ALMANAC_PLANTCARD;
+Image *Sexy::IMAGE_ALMANAC_ZOMBIEBACK;
+Image *Sexy::IMAGE_ALMANAC_ZOMBIEBLANK;
+Image *Sexy::IMAGE_ALMANAC_ZOMBIECARD;
+Image *Sexy::IMAGE_ALMANAC_ZOMBIEWINDOW;
+Image *Sexy::IMAGE_ALMANAC_ZOMBIEWINDOW2;
 
-bool Sexy::ExtractDelayLoad_AlmanacResources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_AlmanacResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_ALMANAC_CLOSEBUTTON = aMgr.GetImageThrow("IMAGE_ALMANAC_CLOSEBUTTON");
@@ -86,7 +115,7 @@ bool Sexy::ExtractDelayLoad_AlmanacResources(ResourceManager* theManager)
 		IMAGE_ALMANAC_ZOMBIEWINDOW = aMgr.GetImageThrow("IMAGE_ALMANAC_ZOMBIEWINDOW");
 		IMAGE_ALMANAC_ZOMBIEWINDOW2 = aMgr.GetImageThrow("IMAGE_ALMANAC_ZOMBIEWINDOW2");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -94,18 +123,18 @@ bool Sexy::ExtractDelayLoad_AlmanacResources(ResourceManager* theManager)
 }
 
 // DelayLoad_AwardScreen Resources
-Image* Sexy::IMAGE_AWARDSCREEN_BACK;
+Image *Sexy::IMAGE_AWARDSCREEN_BACK;
 
-bool Sexy::ExtractDelayLoad_AwardScreenResources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_AwardScreenResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_AWARDSCREEN_BACK = aMgr.GetImageThrow("IMAGE_AWARDSCREEN_BACK");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -113,22 +142,22 @@ bool Sexy::ExtractDelayLoad_AwardScreenResources(ResourceManager* theManager)
 }
 
 // DelayLoad_Background1 Resources
-Image* Sexy::IMAGE_BACKGROUND1;
-Image* Sexy::IMAGE_BACKGROUND1_GAMEOVER_INTERIOR_OVERLAY;
-Image* Sexy::IMAGE_BACKGROUND1_GAMEOVER_MASK;
+Image *Sexy::IMAGE_BACKGROUND1;
+Image *Sexy::IMAGE_BACKGROUND1_GAMEOVER_INTERIOR_OVERLAY;
+Image *Sexy::IMAGE_BACKGROUND1_GAMEOVER_MASK;
 
-bool Sexy::ExtractDelayLoad_Background1Resources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_Background1Resources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_BACKGROUND1 = aMgr.GetImageThrow("IMAGE_BACKGROUND1");
 		IMAGE_BACKGROUND1_GAMEOVER_INTERIOR_OVERLAY = aMgr.GetImageThrow("IMAGE_BACKGROUND1_GAMEOVER_INTERIOR_OVERLAY");
 		IMAGE_BACKGROUND1_GAMEOVER_MASK = aMgr.GetImageThrow("IMAGE_BACKGROUND1_GAMEOVER_MASK");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -136,22 +165,22 @@ bool Sexy::ExtractDelayLoad_Background1Resources(ResourceManager* theManager)
 }
 
 // DelayLoad_Background2 Resources
-Image* Sexy::IMAGE_BACKGROUND2;
-Image* Sexy::IMAGE_BACKGROUND2_GAMEOVER_INTERIOR_OVERLAY;
-Image* Sexy::IMAGE_BACKGROUND2_GAMEOVER_MASK;
+Image *Sexy::IMAGE_BACKGROUND2;
+Image *Sexy::IMAGE_BACKGROUND2_GAMEOVER_INTERIOR_OVERLAY;
+Image *Sexy::IMAGE_BACKGROUND2_GAMEOVER_MASK;
 
-bool Sexy::ExtractDelayLoad_Background2Resources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_Background2Resources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_BACKGROUND2 = aMgr.GetImageThrow("IMAGE_BACKGROUND2");
 		IMAGE_BACKGROUND2_GAMEOVER_INTERIOR_OVERLAY = aMgr.GetImageThrow("IMAGE_BACKGROUND2_GAMEOVER_INTERIOR_OVERLAY");
 		IMAGE_BACKGROUND2_GAMEOVER_MASK = aMgr.GetImageThrow("IMAGE_BACKGROUND2_GAMEOVER_MASK");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -159,22 +188,22 @@ bool Sexy::ExtractDelayLoad_Background2Resources(ResourceManager* theManager)
 }
 
 // DelayLoad_Background3 Resources
-Image* Sexy::IMAGE_BACKGROUND3;
-Image* Sexy::IMAGE_BACKGROUND3_GAMEOVER_INTERIOR_OVERLAY;
-Image* Sexy::IMAGE_BACKGROUND3_GAMEOVER_MASK;
+Image *Sexy::IMAGE_BACKGROUND3;
+Image *Sexy::IMAGE_BACKGROUND3_GAMEOVER_INTERIOR_OVERLAY;
+Image *Sexy::IMAGE_BACKGROUND3_GAMEOVER_MASK;
 
-bool Sexy::ExtractDelayLoad_Background3Resources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_Background3Resources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_BACKGROUND3 = aMgr.GetImageThrow("IMAGE_BACKGROUND3");
 		IMAGE_BACKGROUND3_GAMEOVER_INTERIOR_OVERLAY = aMgr.GetImageThrow("IMAGE_BACKGROUND3_GAMEOVER_INTERIOR_OVERLAY");
 		IMAGE_BACKGROUND3_GAMEOVER_MASK = aMgr.GetImageThrow("IMAGE_BACKGROUND3_GAMEOVER_MASK");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -182,17 +211,17 @@ bool Sexy::ExtractDelayLoad_Background3Resources(ResourceManager* theManager)
 }
 
 // DelayLoad_Background4 Resources
-Image* Sexy::IMAGE_BACKGROUND4;
-Image* Sexy::IMAGE_BACKGROUND4_GAMEOVER_INTERIOR_OVERLAY;
-Image* Sexy::IMAGE_BACKGROUND4_GAMEOVER_MASK;
-Image* Sexy::IMAGE_FOG;
-Image* Sexy::IMAGE_FOG_SOFTWARE;
+Image *Sexy::IMAGE_BACKGROUND4;
+Image *Sexy::IMAGE_BACKGROUND4_GAMEOVER_INTERIOR_OVERLAY;
+Image *Sexy::IMAGE_BACKGROUND4_GAMEOVER_MASK;
+Image *Sexy::IMAGE_FOG;
+Image *Sexy::IMAGE_FOG_SOFTWARE;
 
-bool Sexy::ExtractDelayLoad_Background4Resources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_Background4Resources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_BACKGROUND4 = aMgr.GetImageThrow("IMAGE_BACKGROUND4");
@@ -201,7 +230,7 @@ bool Sexy::ExtractDelayLoad_Background4Resources(ResourceManager* theManager)
 		IMAGE_FOG = aMgr.GetImageThrow("IMAGE_FOG");
 		IMAGE_FOG_SOFTWARE = aMgr.GetImageThrow("IMAGE_FOG_SOFTWARE");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -209,20 +238,20 @@ bool Sexy::ExtractDelayLoad_Background4Resources(ResourceManager* theManager)
 }
 
 // DelayLoad_Background5 Resources
-Image* Sexy::IMAGE_BACKGROUND5;
-Image* Sexy::IMAGE_BACKGROUND5_GAMEOVER_MASK;
+Image *Sexy::IMAGE_BACKGROUND5;
+Image *Sexy::IMAGE_BACKGROUND5_GAMEOVER_MASK;
 
-bool Sexy::ExtractDelayLoad_Background5Resources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_Background5Resources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_BACKGROUND5 = aMgr.GetImageThrow("IMAGE_BACKGROUND5");
 		IMAGE_BACKGROUND5_GAMEOVER_MASK = aMgr.GetImageThrow("IMAGE_BACKGROUND5_GAMEOVER_MASK");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -230,20 +259,20 @@ bool Sexy::ExtractDelayLoad_Background5Resources(ResourceManager* theManager)
 }
 
 // DelayLoad_Background6 Resources
-Image* Sexy::IMAGE_BACKGROUND6BOSS;
-Image* Sexy::IMAGE_BACKGROUND6_GAMEOVER_MASK;
+Image *Sexy::IMAGE_BACKGROUND6BOSS;
+Image *Sexy::IMAGE_BACKGROUND6_GAMEOVER_MASK;
 
-bool Sexy::ExtractDelayLoad_Background6Resources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_Background6Resources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_BACKGROUND6BOSS = aMgr.GetImageThrow("IMAGE_BACKGROUND6BOSS");
 		IMAGE_BACKGROUND6_GAMEOVER_MASK = aMgr.GetImageThrow("IMAGE_BACKGROUND6_GAMEOVER_MASK");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -251,22 +280,22 @@ bool Sexy::ExtractDelayLoad_Background6Resources(ResourceManager* theManager)
 }
 
 // DelayLoad_BackgroundUnsodded Resources
-Image* Sexy::IMAGE_BACKGROUND1UNSODDED;
-Image* Sexy::IMAGE_SOD1ROW;
-Image* Sexy::IMAGE_SOD3ROW;
+Image *Sexy::IMAGE_BACKGROUND1UNSODDED;
+Image *Sexy::IMAGE_SOD1ROW;
+Image *Sexy::IMAGE_SOD3ROW;
 
-bool Sexy::ExtractDelayLoad_BackgroundUnsoddedResources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_BackgroundUnsoddedResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_BACKGROUND1UNSODDED = aMgr.GetImageThrow("IMAGE_BACKGROUND1UNSODDED");
 		IMAGE_SOD1ROW = aMgr.GetImageThrow("IMAGE_SOD1ROW");
 		IMAGE_SOD3ROW = aMgr.GetImageThrow("IMAGE_SOD3ROW");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -274,20 +303,20 @@ bool Sexy::ExtractDelayLoad_BackgroundUnsoddedResources(ResourceManager* theMana
 }
 
 // DelayLoad_ChallengeScreen Resources
-Image* Sexy::IMAGE_CHALLENGE_BACKGROUND;
-Image* Sexy::IMAGE_CHALLENGE_BLANK;
-Image* Sexy::IMAGE_CHALLENGE_THUMBNAILS;
-Image* Sexy::IMAGE_CHALLENGE_WINDOW;
-Image* Sexy::IMAGE_CHALLENGE_WINDOW_HIGHLIGHT;
-Image* Sexy::IMAGE_LOCK;
-Image* Sexy::IMAGE_LOCK_OPEN;
-Image* Sexy::IMAGE_SURVIVAL_THUMBNAILS;
+Image *Sexy::IMAGE_CHALLENGE_BACKGROUND;
+Image *Sexy::IMAGE_CHALLENGE_BLANK;
+Image *Sexy::IMAGE_CHALLENGE_THUMBNAILS;
+Image *Sexy::IMAGE_CHALLENGE_WINDOW;
+Image *Sexy::IMAGE_CHALLENGE_WINDOW_HIGHLIGHT;
+Image *Sexy::IMAGE_LOCK;
+Image *Sexy::IMAGE_LOCK_OPEN;
+Image *Sexy::IMAGE_SURVIVAL_THUMBNAILS;
 
-bool Sexy::ExtractDelayLoad_ChallengeScreenResources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_ChallengeScreenResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_CHALLENGE_BACKGROUND = aMgr.GetImageThrow("IMAGE_CHALLENGE_BACKGROUND");
@@ -299,7 +328,7 @@ bool Sexy::ExtractDelayLoad_ChallengeScreenResources(ResourceManager* theManager
 		IMAGE_LOCK_OPEN = aMgr.GetImageThrow("IMAGE_LOCK_OPEN");
 		IMAGE_SURVIVAL_THUMBNAILS = aMgr.GetImageThrow("IMAGE_SURVIVAL_THUMBNAILS");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -307,24 +336,24 @@ bool Sexy::ExtractDelayLoad_ChallengeScreenResources(ResourceManager* theManager
 }
 
 // DelayLoad_Credits Resources
-Font* Sexy::FONT_BRIANNETOD32;
-Font* Sexy::FONT_BRIANNETOD32BLACK;
-Image* Sexy::IMAGE_CREDITS_PLAYBUTTON;
-Image* Sexy::IMAGE_CREDITS_ZOMBIENOTE;
-Image* Sexy::IMAGE_REANIM_CREDITS_DISCOLIGHTS;
-Image* Sexy::IMAGE_REANIM_CREDITS_FOGMACHINE;
-Image* Sexy::IMAGE_REANIM_SUNFLOWER_HEAD_SING1;
-Image* Sexy::IMAGE_REANIM_SUNFLOWER_HEAD_SING2;
-Image* Sexy::IMAGE_REANIM_SUNFLOWER_HEAD_SING3;
-Image* Sexy::IMAGE_REANIM_SUNFLOWER_HEAD_SING4;
-Image* Sexy::IMAGE_REANIM_SUNFLOWER_HEAD_SING5;
-Image* Sexy::IMAGE_REANIM_SUNFLOWER_HEAD_WINK;
+Font *Sexy::FONT_BRIANNETOD32;
+Font *Sexy::FONT_BRIANNETOD32BLACK;
+Image *Sexy::IMAGE_CREDITS_PLAYBUTTON;
+Image *Sexy::IMAGE_CREDITS_ZOMBIENOTE;
+Image *Sexy::IMAGE_REANIM_CREDITS_DISCOLIGHTS;
+Image *Sexy::IMAGE_REANIM_CREDITS_FOGMACHINE;
+Image *Sexy::IMAGE_REANIM_SUNFLOWER_HEAD_SING1;
+Image *Sexy::IMAGE_REANIM_SUNFLOWER_HEAD_SING2;
+Image *Sexy::IMAGE_REANIM_SUNFLOWER_HEAD_SING3;
+Image *Sexy::IMAGE_REANIM_SUNFLOWER_HEAD_SING4;
+Image *Sexy::IMAGE_REANIM_SUNFLOWER_HEAD_SING5;
+Image *Sexy::IMAGE_REANIM_SUNFLOWER_HEAD_WINK;
 
-bool Sexy::ExtractDelayLoad_CreditsResources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_CreditsResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		FONT_BRIANNETOD32 = aMgr.GetFontThrow("FONT_BRIANNETOD32");
@@ -340,7 +369,7 @@ bool Sexy::ExtractDelayLoad_CreditsResources(ResourceManager* theManager)
 		IMAGE_REANIM_SUNFLOWER_HEAD_SING5 = aMgr.GetImageThrow("IMAGE_REANIM_SUNFLOWER_HEAD_SING5");
 		IMAGE_REANIM_SUNFLOWER_HEAD_WINK = aMgr.GetImageThrow("IMAGE_REANIM_SUNFLOWER_HEAD_WINK");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -348,18 +377,18 @@ bool Sexy::ExtractDelayLoad_CreditsResources(ResourceManager* theManager)
 }
 
 // DelayLoad_GreenHouseGarden Resources
-Image* Sexy::IMAGE_BACKGROUND_GREENHOUSE;
+Image *Sexy::IMAGE_BACKGROUND_GREENHOUSE;
 
-bool Sexy::ExtractDelayLoad_GreenHouseGardenResources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_GreenHouseGardenResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_BACKGROUND_GREENHOUSE = aMgr.GetImageThrow("IMAGE_BACKGROUND_GREENHOUSE");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -367,18 +396,18 @@ bool Sexy::ExtractDelayLoad_GreenHouseGardenResources(ResourceManager* theManage
 }
 
 // DelayLoad_GreenHouseOverlay Resources
-Image* Sexy::IMAGE_BACKGROUND_GREENHOUSE_OVERLAY;
+Image *Sexy::IMAGE_BACKGROUND_GREENHOUSE_OVERLAY;
 
-bool Sexy::ExtractDelayLoad_GreenHouseOverlayResources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_GreenHouseOverlayResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_BACKGROUND_GREENHOUSE_OVERLAY = aMgr.GetImageThrow("IMAGE_BACKGROUND_GREENHOUSE_OVERLAY");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -386,18 +415,18 @@ bool Sexy::ExtractDelayLoad_GreenHouseOverlayResources(ResourceManager* theManag
 }
 
 // DelayLoad_MushroomGarden Resources
-Image* Sexy::IMAGE_BACKGROUND_MUSHROOMGARDEN;
+Image *Sexy::IMAGE_BACKGROUND_MUSHROOMGARDEN;
 
-bool Sexy::ExtractDelayLoad_MushroomGardenResources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_MushroomGardenResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_BACKGROUND_MUSHROOMGARDEN = aMgr.GetImageThrow("IMAGE_BACKGROUND_MUSHROOMGARDEN");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -405,36 +434,36 @@ bool Sexy::ExtractDelayLoad_MushroomGardenResources(ResourceManager* theManager)
 }
 
 // DelayLoad_Store Resources
-Image* Sexy::IMAGE_STORE_AQUARIUMGARDENICON;
-Image* Sexy::IMAGE_STORE_BACKGROUND;
-Image* Sexy::IMAGE_STORE_BACKGROUNDNIGHT;
-Image* Sexy::IMAGE_STORE_CAR;
-Image* Sexy::IMAGE_STORE_CARCLOSED;
-Image* Sexy::IMAGE_STORE_CARCLOSED_NIGHT;
-Image* Sexy::IMAGE_STORE_CAR_NIGHT;
-Image* Sexy::IMAGE_STORE_FIRSTAIDWALLNUTICON;
-Image* Sexy::IMAGE_STORE_HATCHBACKOPEN;
-Image* Sexy::IMAGE_STORE_MAINMENUBUTTON;
-Image* Sexy::IMAGE_STORE_MAINMENUBUTTONDOWN;
-Image* Sexy::IMAGE_STORE_MAINMENUBUTTONHIGHLIGHT;
-Image* Sexy::IMAGE_STORE_MUSHROOMGARDENICON;
-Image* Sexy::IMAGE_STORE_NEXTBUTTON;
-Image* Sexy::IMAGE_STORE_NEXTBUTTONDISABLED;
-Image* Sexy::IMAGE_STORE_NEXTBUTTONHIGHLIGHT;
-Image* Sexy::IMAGE_STORE_PACKETUPGRADE;
-Image* Sexy::IMAGE_STORE_PREVBUTTON;
-Image* Sexy::IMAGE_STORE_PREVBUTTONDISABLED;
-Image* Sexy::IMAGE_STORE_PREVBUTTONHIGHLIGHT;
-Image* Sexy::IMAGE_STORE_PRICETAG;
-Image* Sexy::IMAGE_STORE_PVZICON;
-Image* Sexy::IMAGE_STORE_SIGN;
-Image* Sexy::IMAGE_STORE_TREEOFWISDOMICON;
+Image *Sexy::IMAGE_STORE_AQUARIUMGARDENICON;
+Image *Sexy::IMAGE_STORE_BACKGROUND;
+Image *Sexy::IMAGE_STORE_BACKGROUNDNIGHT;
+Image *Sexy::IMAGE_STORE_CAR;
+Image *Sexy::IMAGE_STORE_CARCLOSED;
+Image *Sexy::IMAGE_STORE_CARCLOSED_NIGHT;
+Image *Sexy::IMAGE_STORE_CAR_NIGHT;
+Image *Sexy::IMAGE_STORE_FIRSTAIDWALLNUTICON;
+Image *Sexy::IMAGE_STORE_HATCHBACKOPEN;
+Image *Sexy::IMAGE_STORE_MAINMENUBUTTON;
+Image *Sexy::IMAGE_STORE_MAINMENUBUTTONDOWN;
+Image *Sexy::IMAGE_STORE_MAINMENUBUTTONHIGHLIGHT;
+Image *Sexy::IMAGE_STORE_MUSHROOMGARDENICON;
+Image *Sexy::IMAGE_STORE_NEXTBUTTON;
+Image *Sexy::IMAGE_STORE_NEXTBUTTONDISABLED;
+Image *Sexy::IMAGE_STORE_NEXTBUTTONHIGHLIGHT;
+Image *Sexy::IMAGE_STORE_PACKETUPGRADE;
+Image *Sexy::IMAGE_STORE_PREVBUTTON;
+Image *Sexy::IMAGE_STORE_PREVBUTTONDISABLED;
+Image *Sexy::IMAGE_STORE_PREVBUTTONHIGHLIGHT;
+Image *Sexy::IMAGE_STORE_PRICETAG;
+Image *Sexy::IMAGE_STORE_PVZICON;
+Image *Sexy::IMAGE_STORE_SIGN;
+Image *Sexy::IMAGE_STORE_TREEOFWISDOMICON;
 
-bool Sexy::ExtractDelayLoad_StoreResources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_StoreResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_STORE_AQUARIUMGARDENICON = aMgr.GetImageThrow("IMAGE_STORE_AQUARIUMGARDENICON");
@@ -462,7 +491,7 @@ bool Sexy::ExtractDelayLoad_StoreResources(ResourceManager* theManager)
 		IMAGE_STORE_SIGN = aMgr.GetImageThrow("IMAGE_STORE_SIGN");
 		IMAGE_STORE_TREEOFWISDOMICON = aMgr.GetImageThrow("IMAGE_STORE_TREEOFWISDOMICON");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -471,15 +500,15 @@ bool Sexy::ExtractDelayLoad_StoreResources(ResourceManager* theManager)
 
 // DelayLoad_TreeOfWisdom Resources
 
-bool Sexy::ExtractDelayLoad_TreeOfWisdomResources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_TreeOfWisdomResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -487,18 +516,18 @@ bool Sexy::ExtractDelayLoad_TreeOfWisdomResources(ResourceManager* theManager)
 }
 
 // DelayLoad_ZombieFinalNote Resources
-Image* Sexy::IMAGE_ZOMBIE_FINAL_NOTE;
+Image *Sexy::IMAGE_ZOMBIE_FINAL_NOTE;
 
-bool Sexy::ExtractDelayLoad_ZombieFinalNoteResources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_ZombieFinalNoteResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_ZOMBIE_FINAL_NOTE = aMgr.GetImageThrow("IMAGE_ZOMBIE_FINAL_NOTE");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -506,18 +535,18 @@ bool Sexy::ExtractDelayLoad_ZombieFinalNoteResources(ResourceManager* theManager
 }
 
 // DelayLoad_ZombieNote Resources
-Image* Sexy::IMAGE_ZOMBIE_NOTE;
+Image *Sexy::IMAGE_ZOMBIE_NOTE;
 
-bool Sexy::ExtractDelayLoad_ZombieNoteResources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_ZombieNoteResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_ZOMBIE_NOTE = aMgr.GetImageThrow("IMAGE_ZOMBIE_NOTE");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -525,18 +554,18 @@ bool Sexy::ExtractDelayLoad_ZombieNoteResources(ResourceManager* theManager)
 }
 
 // DelayLoad_ZombieNote1 Resources
-Image* Sexy::IMAGE_ZOMBIE_NOTE1;
+Image *Sexy::IMAGE_ZOMBIE_NOTE1;
 
-bool Sexy::ExtractDelayLoad_ZombieNote1Resources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_ZombieNote1Resources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_ZOMBIE_NOTE1 = aMgr.GetImageThrow("IMAGE_ZOMBIE_NOTE1");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -544,18 +573,18 @@ bool Sexy::ExtractDelayLoad_ZombieNote1Resources(ResourceManager* theManager)
 }
 
 // DelayLoad_ZombieNote2 Resources
-Image* Sexy::IMAGE_ZOMBIE_NOTE2;
+Image *Sexy::IMAGE_ZOMBIE_NOTE2;
 
-bool Sexy::ExtractDelayLoad_ZombieNote2Resources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_ZombieNote2Resources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_ZOMBIE_NOTE2 = aMgr.GetImageThrow("IMAGE_ZOMBIE_NOTE2");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -563,18 +592,18 @@ bool Sexy::ExtractDelayLoad_ZombieNote2Resources(ResourceManager* theManager)
 }
 
 // DelayLoad_ZombieNote3 Resources
-Image* Sexy::IMAGE_ZOMBIE_NOTE3;
+Image *Sexy::IMAGE_ZOMBIE_NOTE3;
 
-bool Sexy::ExtractDelayLoad_ZombieNote3Resources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_ZombieNote3Resources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_ZOMBIE_NOTE3 = aMgr.GetImageThrow("IMAGE_ZOMBIE_NOTE3");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -582,18 +611,18 @@ bool Sexy::ExtractDelayLoad_ZombieNote3Resources(ResourceManager* theManager)
 }
 
 // DelayLoad_ZombieNote4 Resources
-Image* Sexy::IMAGE_ZOMBIE_NOTE4;
+Image *Sexy::IMAGE_ZOMBIE_NOTE4;
 
-bool Sexy::ExtractDelayLoad_ZombieNote4Resources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_ZombieNote4Resources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_ZOMBIE_NOTE4 = aMgr.GetImageThrow("IMAGE_ZOMBIE_NOTE4");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -601,18 +630,18 @@ bool Sexy::ExtractDelayLoad_ZombieNote4Resources(ResourceManager* theManager)
 }
 
 // DelayLoad_ZombieNoteHelp Resources
-Image* Sexy::IMAGE_ZOMBIE_NOTE_HELP;
+Image *Sexy::IMAGE_ZOMBIE_NOTE_HELP;
 
-bool Sexy::ExtractDelayLoad_ZombieNoteHelpResources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_ZombieNoteHelpResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_ZOMBIE_NOTE_HELP = aMgr.GetImageThrow("IMAGE_ZOMBIE_NOTE_HELP");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -620,22 +649,22 @@ bool Sexy::ExtractDelayLoad_ZombieNoteHelpResources(ResourceManager* theManager)
 }
 
 // DelayLoad_Zombiquarium Resources
-Image* Sexy::IMAGE_AQUARIUM1;
-Image* Sexy::IMAGE_WAVECENTER;
-Image* Sexy::IMAGE_WAVESIDE;
+Image *Sexy::IMAGE_AQUARIUM1;
+Image *Sexy::IMAGE_WAVECENTER;
+Image *Sexy::IMAGE_WAVESIDE;
 
-bool Sexy::ExtractDelayLoad_ZombiquariumResources(ResourceManager* theManager)
+bool Sexy::ExtractDelayLoad_ZombiquariumResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_AQUARIUM1 = aMgr.GetImageThrow("IMAGE_AQUARIUM1");
 		IMAGE_WAVECENTER = aMgr.GetImageThrow("IMAGE_WAVECENTER");
 		IMAGE_WAVESIDE = aMgr.GetImageThrow("IMAGE_WAVESIDE");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -643,22 +672,22 @@ bool Sexy::ExtractDelayLoad_ZombiquariumResources(ResourceManager* theManager)
 }
 
 // Init Resources
-Image* Sexy::IMAGE_BLANK;
-Image* Sexy::IMAGE_PARTNER_LOGO;
-Image* Sexy::IMAGE_POPCAP_LOGO;
+Image *Sexy::IMAGE_BLANK;
+Image *Sexy::IMAGE_PARTNER_LOGO;
+Image *Sexy::IMAGE_POPCAP_LOGO;
 
-bool Sexy::ExtractInitResources(ResourceManager* theManager)
+bool Sexy::ExtractInitResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_BLANK = aMgr.GetImageThrow("IMAGE_BLANK");
 		IMAGE_PARTNER_LOGO = aMgr.GetImageThrow("IMAGE_PARTNER_LOGO");
 		IMAGE_POPCAP_LOGO = aMgr.GetImageThrow("IMAGE_POPCAP_LOGO");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -666,21 +695,21 @@ bool Sexy::ExtractInitResources(ResourceManager* theManager)
 }
 
 // LoaderBar Resources
-Font* Sexy::FONT_BRIANNETOD16;
-Image* Sexy::IMAGE_LOADBAR_DIRT;
-Image* Sexy::IMAGE_LOADBAR_GRASS;
-Image* Sexy::IMAGE_PVZ_LOGO;
-Image* Sexy::IMAGE_REANIM_SODROLLCAP;
-Image* Sexy::IMAGE_TITLESCREEN;
+Font *Sexy::FONT_BRIANNETOD16;
+Image *Sexy::IMAGE_LOADBAR_DIRT;
+Image *Sexy::IMAGE_LOADBAR_GRASS;
+Image *Sexy::IMAGE_PVZ_LOGO;
+Image *Sexy::IMAGE_REANIM_SODROLLCAP;
+Image *Sexy::IMAGE_TITLESCREEN;
 int Sexy::SOUND_BUTTONCLICK;
 int Sexy::SOUND_LOADINGBAR_FLOWER;
 int Sexy::SOUND_LOADINGBAR_ZOMBIE;
 
-bool Sexy::ExtractLoaderBarResources(ResourceManager* theManager)
+bool Sexy::ExtractLoaderBarResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		FONT_BRIANNETOD16 = aMgr.GetFontThrow("FONT_BRIANNETOD16");
@@ -693,7 +722,7 @@ bool Sexy::ExtractLoaderBarResources(ResourceManager* theManager)
 		SOUND_LOADINGBAR_FLOWER = aMgr.GetSoundThrow("SOUND_LOADINGBAR_FLOWER");
 		SOUND_LOADINGBAR_ZOMBIE = aMgr.GetSoundThrow("SOUND_LOADINGBAR_ZOMBIE");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -701,30 +730,30 @@ bool Sexy::ExtractLoaderBarResources(ResourceManager* theManager)
 }
 
 // LoadingFonts Resources
-Font* Sexy::FONT_BRIANNETOD12;
-Font* Sexy::FONT_CONTINUUMBOLD14;
-Font* Sexy::FONT_CONTINUUMBOLD14OUTLINE;
-Font* Sexy::FONT_DWARVENTODCRAFT12;
-Font* Sexy::FONT_DWARVENTODCRAFT15;
-Font* Sexy::FONT_DWARVENTODCRAFT18;
-Font* Sexy::FONT_DWARVENTODCRAFT18BRIGHTGREENINSET;
-Font* Sexy::FONT_DWARVENTODCRAFT18GREENINSET;
-Font* Sexy::FONT_DWARVENTODCRAFT18YELLOW;
-Font* Sexy::FONT_DWARVENTODCRAFT24;
-Font* Sexy::FONT_DWARVENTODCRAFT36BRIGHTGREENINSET;
-Font* Sexy::FONT_DWARVENTODCRAFT36GREENINSET;
-Font* Sexy::FONT_HOUSEOFTERROR16;
-Font* Sexy::FONT_HOUSEOFTERROR20;
-Font* Sexy::FONT_HOUSEOFTERROR28;
-Image* Sexy::FONT_IMAGE_HOUSEOFTERROR28;
-Font* Sexy::FONT_PICO129;
-Font* Sexy::FONT_TINYBOLD;
+Font *Sexy::FONT_BRIANNETOD12;
+Font *Sexy::FONT_CONTINUUMBOLD14;
+Font *Sexy::FONT_CONTINUUMBOLD14OUTLINE;
+Font *Sexy::FONT_DWARVENTODCRAFT12;
+Font *Sexy::FONT_DWARVENTODCRAFT15;
+Font *Sexy::FONT_DWARVENTODCRAFT18;
+Font *Sexy::FONT_DWARVENTODCRAFT18BRIGHTGREENINSET;
+Font *Sexy::FONT_DWARVENTODCRAFT18GREENINSET;
+Font *Sexy::FONT_DWARVENTODCRAFT18YELLOW;
+Font *Sexy::FONT_DWARVENTODCRAFT24;
+Font *Sexy::FONT_DWARVENTODCRAFT36BRIGHTGREENINSET;
+Font *Sexy::FONT_DWARVENTODCRAFT36GREENINSET;
+Font *Sexy::FONT_HOUSEOFTERROR16;
+Font *Sexy::FONT_HOUSEOFTERROR20;
+Font *Sexy::FONT_HOUSEOFTERROR28;
+Image *Sexy::FONT_IMAGE_HOUSEOFTERROR28;
+Font *Sexy::FONT_PICO129;
+Font *Sexy::FONT_TINYBOLD;
 
-bool Sexy::ExtractLoadingFontsResources(ResourceManager* theManager)
+bool Sexy::ExtractLoadingFontsResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		FONT_BRIANNETOD12 = aMgr.GetFontThrow("FONT_BRIANNETOD12");
@@ -746,7 +775,7 @@ bool Sexy::ExtractLoadingFontsResources(ResourceManager* theManager)
 		FONT_PICO129 = aMgr.GetFontThrow("FONT_PICO129");
 		FONT_TINYBOLD = aMgr.GetFontThrow("FONT_TINYBOLD");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -754,347 +783,347 @@ bool Sexy::ExtractLoadingFontsResources(ResourceManager* theManager)
 }
 
 // LoadingImages Resources
-Image* Sexy::IMAGE_ALMANAC;
-Image* Sexy::IMAGE_ALMANAC_IMITATER;
-Image* Sexy::IMAGE_AWARDPICKUPGLOW;
-Image* Sexy::IMAGE_BEGHOULED_TWIST_OVERLAY;
-Image* Sexy::IMAGE_BRAIN;
-Image* Sexy::IMAGE_BUG_SPRAY;
-Image* Sexy::IMAGE_BUNGEECORD;
-Image* Sexy::IMAGE_BUNGEETARGET;
-Image* Sexy::IMAGE_BUTTON_DOWN_LEFT;
-Image* Sexy::IMAGE_BUTTON_DOWN_MIDDLE;
-Image* Sexy::IMAGE_BUTTON_DOWN_RIGHT;
-Image* Sexy::IMAGE_BUTTON_LEFT;
-Image* Sexy::IMAGE_BUTTON_MIDDLE;
-Image* Sexy::IMAGE_BUTTON_RIGHT;
-Image* Sexy::IMAGE_CARKEYS;
-Image* Sexy::IMAGE_CHOCOLATE;
-Image* Sexy::IMAGE_COBCANNON_POPCORN;
-Image* Sexy::IMAGE_COBCANNON_TARGET;
-Image* Sexy::IMAGE_COINBANK;
-Image* Sexy::IMAGE_CONVEYORBELT;
-Image* Sexy::IMAGE_CONVEYORBELT_BACKDROP;
-Image* Sexy::IMAGE_CRATER;
-Image* Sexy::IMAGE_CRATER_FADING;
-Image* Sexy::IMAGE_CRATER_ROOF_CENTER;
-Image* Sexy::IMAGE_CRATER_ROOF_LEFT;
-Image* Sexy::IMAGE_CRATER_WATER_DAY;
-Image* Sexy::IMAGE_CRATER_WATER_NIGHT;
-Image* Sexy::IMAGE_DIALOG_BIGBOTTOMLEFT;
-Image* Sexy::IMAGE_DIALOG_BIGBOTTOMMIDDLE;
-Image* Sexy::IMAGE_DIALOG_BIGBOTTOMRIGHT;
-Image* Sexy::IMAGE_DIALOG_BOTTOMLEFT;
-Image* Sexy::IMAGE_DIALOG_BOTTOMMIDDLE;
-Image* Sexy::IMAGE_DIALOG_BOTTOMRIGHT;
-Image* Sexy::IMAGE_DIALOG_CENTERLEFT;
-Image* Sexy::IMAGE_DIALOG_CENTERMIDDLE;
-Image* Sexy::IMAGE_DIALOG_CENTERRIGHT;
-Image* Sexy::IMAGE_DIALOG_HEADER;
-Image* Sexy::IMAGE_DIALOG_TOPLEFT;
-Image* Sexy::IMAGE_DIALOG_TOPMIDDLE;
-Image* Sexy::IMAGE_DIALOG_TOPRIGHT;
-Image* Sexy::IMAGE_DIRTBIG;
-Image* Sexy::IMAGE_DIRTSMALL;
-Image* Sexy::IMAGE_DOOMSHROOM_EXPLOSION_BASE;
-Image* Sexy::IMAGE_DUST_PUFFS;
-Image* Sexy::IMAGE_EDITBOX;
-Image* Sexy::IMAGE_FERTILIZER;
-Image* Sexy::IMAGE_FLAGMETER;
-Image* Sexy::IMAGE_FLAGMETERLEVELPROGRESS;
-Image* Sexy::IMAGE_FLAGMETERPARTS;
-Image* Sexy::IMAGE_ICE;
-Image* Sexy::IMAGE_ICETRAP;
-Image* Sexy::IMAGE_ICETRAP2;
-Image* Sexy::IMAGE_ICETRAP_PARTICLES;
-Image* Sexy::IMAGE_ICE_CAP;
-Image* Sexy::IMAGE_ICE_SPARKLES;
-Image* Sexy::IMAGE_ICON_POOLCLEANER;
-Image* Sexy::IMAGE_ICON_RAKE;
-Image* Sexy::IMAGE_ICON_ROOFCLEANER;
-Image* Sexy::IMAGE_IMITATERCLOUDS;
-Image* Sexy::IMAGE_IMITATERPUFFS;
-Image* Sexy::IMAGE_IMITATERSEED;
-Image* Sexy::IMAGE_IMITATERSEEDDISABLED;
-Image* Sexy::IMAGE_MELONPULT_PARTICLES;
-Image* Sexy::IMAGE_MINIGAME_TROPHY;
-Image* Sexy::IMAGE_MONEYBAG;
-Image* Sexy::IMAGE_MONEYBAG_HI_RES;
-Image* Sexy::IMAGE_NIGHT_GRAVE_GRAPHIC;
-Image* Sexy::IMAGE_OPTIONS_BACKTOGAMEBUTTON0;
-Image* Sexy::IMAGE_OPTIONS_BACKTOGAMEBUTTON2;
-Image* Sexy::IMAGE_OPTIONS_CHECKBOX0;
-Image* Sexy::IMAGE_OPTIONS_CHECKBOX1;
-Image* Sexy::IMAGE_OPTIONS_MENUBACK;
-Image* Sexy::IMAGE_OPTIONS_SLIDERKNOB2;
-Image* Sexy::IMAGE_OPTIONS_SLIDERSLOT;
-Image* Sexy::IMAGE_PACKET_PLANTS;
-Image* Sexy::IMAGE_PEA_PARTICLES;
-Image* Sexy::IMAGE_PEA_SHADOWS;
-Image* Sexy::IMAGE_PEA_SPLATS;
-Image* Sexy::IMAGE_PHONOGRAPH;
-Image* Sexy::IMAGE_PINATA;
-Image* Sexy::IMAGE_PLANTSHADOW;
-Image* Sexy::IMAGE_PLANTSHADOW2;
-Image* Sexy::IMAGE_PLANTSPEECHBUBBLE;
-Image* Sexy::IMAGE_POOL;
-Image* Sexy::IMAGE_POOLSPARKLY;
-Image* Sexy::IMAGE_POOL_BASE;
-Image* Sexy::IMAGE_POOL_BASE_NIGHT;
-Image* Sexy::IMAGE_POOL_CAUSTIC_EFFECT;
-Image* Sexy::IMAGE_POOL_NIGHT;
-Image* Sexy::IMAGE_POOL_SHADING;
-Image* Sexy::IMAGE_POOL_SHADING_NIGHT;
-Image* Sexy::IMAGE_POTATOMINE_PARTICLES;
-Image* Sexy::IMAGE_PRESENT;
-Image* Sexy::IMAGE_PRESENTOPEN;
-Image* Sexy::IMAGE_PROJECTILECACTUS;
-Image* Sexy::IMAGE_PROJECTILEPEA;
-Image* Sexy::IMAGE_PROJECTILESNOWPEA;
-Image* Sexy::IMAGE_PROJECTILE_STAR;
-Image* Sexy::IMAGE_PUFFSHROOM_PUFF1;
-Image* Sexy::IMAGE_RAIN;
-Image* Sexy::IMAGE_REANIM_CABBAGEPULT_CABBAGE;
-Image* Sexy::IMAGE_REANIM_COBCANNON_COB;
-Image* Sexy::IMAGE_REANIM_COINGLOW;
-Image* Sexy::IMAGE_REANIM_COIN_GOLD_DOLLAR;
-Image* Sexy::IMAGE_REANIM_COIN_SILVER_DOLLAR;
-Image* Sexy::IMAGE_REANIM_CORNPULT_BUTTER;
-Image* Sexy::IMAGE_REANIM_CORNPULT_BUTTER_SPLAT;
-Image* Sexy::IMAGE_REANIM_CORNPULT_KERNAL;
-Image* Sexy::IMAGE_REANIM_CRAZYDAVE_MOUTH1;
-Image* Sexy::IMAGE_REANIM_CRAZYDAVE_MOUTH4;
-Image* Sexy::IMAGE_REANIM_CRAZYDAVE_MOUTH5;
-Image* Sexy::IMAGE_REANIM_CRAZYDAVE_MOUTH6;
-Image* Sexy::IMAGE_REANIM_DIAMOND;
-Image* Sexy::IMAGE_REANIM_GARLIC_BODY2;
-Image* Sexy::IMAGE_REANIM_GARLIC_BODY3;
-Image* Sexy::IMAGE_REANIM_MELONPULT_MELON;
-Image* Sexy::IMAGE_REANIM_POT_TOP_DARK;
-Image* Sexy::IMAGE_REANIM_PUMPKIN_DAMAGE1;
-Image* Sexy::IMAGE_REANIM_PUMPKIN_DAMAGE3;
-Image* Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_BUTTON;
-Image* Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT;
-Image* Sexy::IMAGE_REANIM_SELECTORSCREEN_ALMANAC_SHADOW;
-Image* Sexy::IMAGE_REANIM_SELECTORSCREEN_BG;
-Image* Sexy::IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_BUTTON;
-Image* Sexy::IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_HIGHLIGHT;
-Image* Sexy::IMAGE_REANIM_SELECTORSCREEN_KEY_SHADOW;
-Image* Sexy::IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_BUTTON;
-Image* Sexy::IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_HIGHLIGHT;
-Image* Sexy::IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_BUTTON;
-Image* Sexy::IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_HIGHLIGHT;
-Image* Sexy::IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_BUTTON;
-Image* Sexy::IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_HIGHLIGHT;
-Image* Sexy::IMAGE_REANIM_SELECTORSCREEN_WOODSIGN2_PRESS;
-Image* Sexy::IMAGE_REANIM_STINKY_TURN3;
-Image* Sexy::IMAGE_REANIM_TALLNUT_CRACKED1;
-Image* Sexy::IMAGE_REANIM_TALLNUT_CRACKED2;
-Image* Sexy::IMAGE_REANIM_TREE_BG;
-Image* Sexy::IMAGE_REANIM_WALLNUT_BODY;
-Image* Sexy::IMAGE_REANIM_WALLNUT_CRACKED1;
-Image* Sexy::IMAGE_REANIM_WALLNUT_CRACKED2;
-Image* Sexy::IMAGE_REANIM_WINTERMELON_PROJECTILE;
-Image* Sexy::IMAGE_REANIM_ZENGARDEN_BUGSPRAY_BOTTLE;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BALLOON_OUTERARM_UPPER2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BOBSLED_OUTERARM_HAND;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BOBSLED_OUTERARM_UPPER2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BOSS_EYEGLOW_BLUE;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BOSS_FOOT_DAMAGE1;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BOSS_FOOT_DAMAGE2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BOSS_HEAD_DAMAGE1;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BOSS_HEAD_DAMAGE2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BOSS_ICEBALL;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BOSS_JAW_DAMAGE1;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BOSS_JAW_DAMAGE2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BOSS_MOUTHGLOW_BLUE;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_HAND_DAMAGE1;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_HAND_DAMAGE2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_THUMB_DAMAGE1;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_THUMB_DAMAGE2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BUCKET1;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BUCKET2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BUCKET3;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_BUNGI_HEAD_SCARED;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_CATAPULT_BASKETBALL;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_CATAPULT_POLE;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_CATAPULT_POLE_DAMAGE;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_CATAPULT_POLE_DAMAGE_WITHBALL;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_CATAPULT_POLE_WITHBALL;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_CATAPULT_SIDING_DAMAGE;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_CONE1;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_CONE2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_CONE3;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_DANCER_INNERARM_HAND;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_DIGGER_HARDHAT;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_DIGGER_HARDHAT2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_DIGGER_HARDHAT3;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_DIGGER_OUTERARM_UPPER2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_DIGGER_PICKAXE;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_DOLPHINRIDER_OUTERARM_UPPER2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_FLAG1;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_FLAG3;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_FOOTBALL_HELMET;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_FOOTBALL_HELMET2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_FOOTBALL_HELMET3;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_FOOTBALL_LEFTARM_HAND;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_FOOTBALL_LEFTARM_UPPER2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_BODY1_2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_BODY1_3;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_DUCKXING;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_FOOT2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_HEAD2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_HEAD2_REDEYE;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_HEAD_REDEYE;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_OUTERARM_LOWER2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_ZOMBIE;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_HEAD_GROSSOUT;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_HEAD_SUNGLASSES1;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_HEAD_SUNGLASSES2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_HEAD_SUNGLASSES3;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_HEAD_SUNGLASSES4;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_IMP_ARM1_BONE;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_IMP_ARM2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_JACKBOX_BOX;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_JACKBOX_OUTERARM_LOWER2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_JACKSON_OUTERARM_HAND;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_JACKSON_OUTERARM_UPPER2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_LADDER_1;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_LADDER_1_DAMAGE1;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_LADDER_1_DAMAGE2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_LADDER_5;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_LADDER_OUTERARM_UPPER2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_MUSTACHE2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_MUSTACHE3;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_OUTERARM_HAND;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_OUTERARM_UPPER2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_PAPER_LEFTARM_LOWER;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_PAPER_LEFTARM_UPPER2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_PAPER_MADHEAD;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_PAPER_PAPER2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_PAPER_PAPER3;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_POGO_OUTERARM_UPPER2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_POGO_STICK2DAMAGE1;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_POGO_STICK2DAMAGE2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_POGO_STICKDAMAGE1;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_POGO_STICKDAMAGE2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_POGO_STICKHANDS2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_POLEVAULTER_OUTERARM_UPPER2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_SCREENDOOR1;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_SCREENDOOR2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_SCREENDOOR3;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_SNORKLE_HEAD;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_SNORKLE_OUTERARM_UPPER2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_YETI_OUTERARM_HAND;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_YETI_OUTERARM_UPPER2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_ZAMBONI_1_DAMAGE1;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_ZAMBONI_1_DAMAGE2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_ZAMBONI_2_DAMAGE1;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_ZAMBONI_2_DAMAGE2;
-Image* Sexy::IMAGE_REANIM_ZOMBIE_ZAMBONI_WHEEL_FLAT;
-Image* Sexy::IMAGE_ROCKSMALL;
-Image* Sexy::IMAGE_SCARY_POT;
-Image* Sexy::IMAGE_SEEDBANK;
-Image* Sexy::IMAGE_SEEDCHOOSER_BACKGROUND;
-Image* Sexy::IMAGE_SEEDCHOOSER_BUTTON;
-Image* Sexy::IMAGE_SEEDCHOOSER_BUTTON2;
-Image* Sexy::IMAGE_SEEDCHOOSER_BUTTON2_GLOW;
-Image* Sexy::IMAGE_SEEDCHOOSER_BUTTON_DISABLED;
-Image* Sexy::IMAGE_SEEDCHOOSER_BUTTON_GLOW;
-Image* Sexy::IMAGE_SEEDCHOOSER_IMITATERADDON;
-Image* Sexy::IMAGE_SEEDPACKETFLASH;
-Image* Sexy::IMAGE_SEEDPACKETSILHOUETTE;
-Image* Sexy::IMAGE_SEEDPACKET_LARGER;
-Image* Sexy::IMAGE_SEEDS;
-Image* Sexy::IMAGE_SELECTORSCREEN_ALMANAC;
-Image* Sexy::IMAGE_SELECTORSCREEN_ALMANACHIGHLIGHT;
-Image* Sexy::IMAGE_SELECTORSCREEN_HELP1;
-Image* Sexy::IMAGE_SELECTORSCREEN_HELP2;
-Image* Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS;
-Image* Sexy::IMAGE_SELECTORSCREEN_OPTIONS1;
-Image* Sexy::IMAGE_SELECTORSCREEN_OPTIONS2;
-Image* Sexy::IMAGE_SELECTORSCREEN_QUIT1;
-Image* Sexy::IMAGE_SELECTORSCREEN_QUIT2;
-Image* Sexy::IMAGE_SELECTORSCREEN_STORE;
-Image* Sexy::IMAGE_SELECTORSCREEN_STOREHIGHLIGHT;
-Image* Sexy::IMAGE_SELECTORSCREEN_ZENGARDEN;
-Image* Sexy::IMAGE_SELECTORSCREEN_ZENGARDENHIGHLIGHT;
-Image* Sexy::IMAGE_SHOVEL;
-Image* Sexy::IMAGE_SHOVELBANK;
-Image* Sexy::IMAGE_SHOVEL_HI_RES;
-Image* Sexy::IMAGE_SLOTMACHINE_OVERLAY;
-Image* Sexy::IMAGE_SNOWFLAKES;
-Image* Sexy::IMAGE_SNOWPEA_PARTICLES;
-Image* Sexy::IMAGE_SNOWPEA_PUFF;
-Image* Sexy::IMAGE_SNOWPEA_SPLATS;
-Image* Sexy::IMAGE_SPOTLIGHT;
-Image* Sexy::IMAGE_SPOTLIGHT2;
-Image* Sexy::IMAGE_STAR_PARTICLES;
-Image* Sexy::IMAGE_STAR_SPLATS;
-Image* Sexy::IMAGE_STORE_SPEECHBUBBLE;
-Image* Sexy::IMAGE_STORE_SPEECHBUBBLE2;
-Image* Sexy::IMAGE_SUNBANK;
-Image* Sexy::IMAGE_SUNFLOWER_TROPHY;
-Image* Sexy::IMAGE_TACO;
-Image* Sexy::IMAGE_TOMBSTONES;
-Image* Sexy::IMAGE_TOMBSTONE_MOUNDS;
-Image* Sexy::IMAGE_TREEFOOD;
-Image* Sexy::IMAGE_TROPHY;
-Image* Sexy::IMAGE_TROPHY_HI_RES;
-Image* Sexy::IMAGE_VASE_CHUNKS;
-Image* Sexy::IMAGE_WALLNUTPARTICLESLARGE;
-Image* Sexy::IMAGE_WALLNUTPARTICLESSMALL;
-Image* Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE;
-Image* Sexy::IMAGE_WATERDROP;
-Image* Sexy::IMAGE_WATERINGCAN;
-Image* Sexy::IMAGE_WATERINGCANGOLD;
-Image* Sexy::IMAGE_WATERPARTICLE;
-Image* Sexy::IMAGE_WHITEPIXEL;
-Image* Sexy::IMAGE_WHITEWATER;
-Image* Sexy::IMAGE_WHITEWATER_SHADOW;
-Image* Sexy::IMAGE_WINTERMELON_PARTICLES;
-Image* Sexy::IMAGE_ZAMBONISMOKE;
-Image* Sexy::IMAGE_ZENSHOPBUTTON;
-Image* Sexy::IMAGE_ZENSHOPBUTTON_HIGHLIGHT;
-Image* Sexy::IMAGE_ZEN_GARDENGLOVE;
-Image* Sexy::IMAGE_ZEN_GOLDTOOLRETICLE;
-Image* Sexy::IMAGE_ZEN_MONEYSIGN;
-Image* Sexy::IMAGE_ZEN_NEED_ICONS;
-Image* Sexy::IMAGE_ZEN_NEXTGARDEN;
-Image* Sexy::IMAGE_ZEN_WHEELBARROW;
-Image* Sexy::IMAGE_ZOMBIEBACKUPDANCERHEAD;
-Image* Sexy::IMAGE_ZOMBIEBALLOONHEAD;
-Image* Sexy::IMAGE_ZOMBIEBOBSLEDHEAD;
-Image* Sexy::IMAGE_ZOMBIEDANCERHEAD;
-Image* Sexy::IMAGE_ZOMBIEDIGGERARM;
-Image* Sexy::IMAGE_ZOMBIEDIGGERHEAD;
-Image* Sexy::IMAGE_ZOMBIEDOLPHINRIDERHEAD;
-Image* Sexy::IMAGE_ZOMBIEFOOTBALLHEAD;
-Image* Sexy::IMAGE_ZOMBIEFUTUREGLASSES;
-Image* Sexy::IMAGE_ZOMBIEIMPHEAD;
-Image* Sexy::IMAGE_ZOMBIEJACKBOXARM;
-Image* Sexy::IMAGE_ZOMBIELADDERHEAD;
-Image* Sexy::IMAGE_ZOMBIEPOGO;
-Image* Sexy::IMAGE_ZOMBIEPOLEVAULTERHEAD;
-Image* Sexy::IMAGE_ZOMBIEYETIHEAD;
-Image* Sexy::IMAGE_ZOMBIE_BOBSLED1;
-Image* Sexy::IMAGE_ZOMBIE_BOBSLED2;
-Image* Sexy::IMAGE_ZOMBIE_BOBSLED3;
-Image* Sexy::IMAGE_ZOMBIE_BOBSLED4;
-Image* Sexy::IMAGE_ZOMBIE_BOBSLED_INSIDE;
-Image* Sexy::IMAGE_ZOMBIE_BOSS_FIREBALL_GROUNDPARTICLES;
-Image* Sexy::IMAGE_ZOMBIE_BOSS_FIREBALL_PARTICLES;
-Image* Sexy::IMAGE_ZOMBIE_BOSS_ICEBALL_GROUNDPARTICLES;
-Image* Sexy::IMAGE_ZOMBIE_BOSS_ICEBALL_PARTICLES;
-Image* Sexy::IMAGE_ZOMBIE_NOTE_SMALL;
-Image* Sexy::IMAGE_ZOMBIE_SEAWEED;
-Image* Sexy::IMAGE_ZOMBOSS_PARTICLES;
+Image *Sexy::IMAGE_ALMANAC;
+Image *Sexy::IMAGE_ALMANAC_IMITATER;
+Image *Sexy::IMAGE_AWARDPICKUPGLOW;
+Image *Sexy::IMAGE_BEGHOULED_TWIST_OVERLAY;
+Image *Sexy::IMAGE_BRAIN;
+Image *Sexy::IMAGE_BUG_SPRAY;
+Image *Sexy::IMAGE_BUNGEECORD;
+Image *Sexy::IMAGE_BUNGEETARGET;
+Image *Sexy::IMAGE_BUTTON_DOWN_LEFT;
+Image *Sexy::IMAGE_BUTTON_DOWN_MIDDLE;
+Image *Sexy::IMAGE_BUTTON_DOWN_RIGHT;
+Image *Sexy::IMAGE_BUTTON_LEFT;
+Image *Sexy::IMAGE_BUTTON_MIDDLE;
+Image *Sexy::IMAGE_BUTTON_RIGHT;
+Image *Sexy::IMAGE_CARKEYS;
+Image *Sexy::IMAGE_CHOCOLATE;
+Image *Sexy::IMAGE_COBCANNON_POPCORN;
+Image *Sexy::IMAGE_COBCANNON_TARGET;
+Image *Sexy::IMAGE_COINBANK;
+Image *Sexy::IMAGE_CONVEYORBELT;
+Image *Sexy::IMAGE_CONVEYORBELT_BACKDROP;
+Image *Sexy::IMAGE_CRATER;
+Image *Sexy::IMAGE_CRATER_FADING;
+Image *Sexy::IMAGE_CRATER_ROOF_CENTER;
+Image *Sexy::IMAGE_CRATER_ROOF_LEFT;
+Image *Sexy::IMAGE_CRATER_WATER_DAY;
+Image *Sexy::IMAGE_CRATER_WATER_NIGHT;
+Image *Sexy::IMAGE_DIALOG_BIGBOTTOMLEFT;
+Image *Sexy::IMAGE_DIALOG_BIGBOTTOMMIDDLE;
+Image *Sexy::IMAGE_DIALOG_BIGBOTTOMRIGHT;
+Image *Sexy::IMAGE_DIALOG_BOTTOMLEFT;
+Image *Sexy::IMAGE_DIALOG_BOTTOMMIDDLE;
+Image *Sexy::IMAGE_DIALOG_BOTTOMRIGHT;
+Image *Sexy::IMAGE_DIALOG_CENTERLEFT;
+Image *Sexy::IMAGE_DIALOG_CENTERMIDDLE;
+Image *Sexy::IMAGE_DIALOG_CENTERRIGHT;
+Image *Sexy::IMAGE_DIALOG_HEADER;
+Image *Sexy::IMAGE_DIALOG_TOPLEFT;
+Image *Sexy::IMAGE_DIALOG_TOPMIDDLE;
+Image *Sexy::IMAGE_DIALOG_TOPRIGHT;
+Image *Sexy::IMAGE_DIRTBIG;
+Image *Sexy::IMAGE_DIRTSMALL;
+Image *Sexy::IMAGE_DOOMSHROOM_EXPLOSION_BASE;
+Image *Sexy::IMAGE_DUST_PUFFS;
+Image *Sexy::IMAGE_EDITBOX;
+Image *Sexy::IMAGE_FERTILIZER;
+Image *Sexy::IMAGE_FLAGMETER;
+Image *Sexy::IMAGE_FLAGMETERLEVELPROGRESS;
+Image *Sexy::IMAGE_FLAGMETERPARTS;
+Image *Sexy::IMAGE_ICE;
+Image *Sexy::IMAGE_ICETRAP;
+Image *Sexy::IMAGE_ICETRAP2;
+Image *Sexy::IMAGE_ICETRAP_PARTICLES;
+Image *Sexy::IMAGE_ICE_CAP;
+Image *Sexy::IMAGE_ICE_SPARKLES;
+Image *Sexy::IMAGE_ICON_POOLCLEANER;
+Image *Sexy::IMAGE_ICON_RAKE;
+Image *Sexy::IMAGE_ICON_ROOFCLEANER;
+Image *Sexy::IMAGE_IMITATERCLOUDS;
+Image *Sexy::IMAGE_IMITATERPUFFS;
+Image *Sexy::IMAGE_IMITATERSEED;
+Image *Sexy::IMAGE_IMITATERSEEDDISABLED;
+Image *Sexy::IMAGE_MELONPULT_PARTICLES;
+Image *Sexy::IMAGE_MINIGAME_TROPHY;
+Image *Sexy::IMAGE_MONEYBAG;
+Image *Sexy::IMAGE_MONEYBAG_HI_RES;
+Image *Sexy::IMAGE_NIGHT_GRAVE_GRAPHIC;
+Image *Sexy::IMAGE_OPTIONS_BACKTOGAMEBUTTON0;
+Image *Sexy::IMAGE_OPTIONS_BACKTOGAMEBUTTON2;
+Image *Sexy::IMAGE_OPTIONS_CHECKBOX0;
+Image *Sexy::IMAGE_OPTIONS_CHECKBOX1;
+Image *Sexy::IMAGE_OPTIONS_MENUBACK;
+Image *Sexy::IMAGE_OPTIONS_SLIDERKNOB2;
+Image *Sexy::IMAGE_OPTIONS_SLIDERSLOT;
+Image *Sexy::IMAGE_PACKET_PLANTS;
+Image *Sexy::IMAGE_PEA_PARTICLES;
+Image *Sexy::IMAGE_PEA_SHADOWS;
+Image *Sexy::IMAGE_PEA_SPLATS;
+Image *Sexy::IMAGE_PHONOGRAPH;
+Image *Sexy::IMAGE_PINATA;
+Image *Sexy::IMAGE_PLANTSHADOW;
+Image *Sexy::IMAGE_PLANTSHADOW2;
+Image *Sexy::IMAGE_PLANTSPEECHBUBBLE;
+Image *Sexy::IMAGE_POOL;
+Image *Sexy::IMAGE_POOLSPARKLY;
+Image *Sexy::IMAGE_POOL_BASE;
+Image *Sexy::IMAGE_POOL_BASE_NIGHT;
+Image *Sexy::IMAGE_POOL_CAUSTIC_EFFECT;
+Image *Sexy::IMAGE_POOL_NIGHT;
+Image *Sexy::IMAGE_POOL_SHADING;
+Image *Sexy::IMAGE_POOL_SHADING_NIGHT;
+Image *Sexy::IMAGE_POTATOMINE_PARTICLES;
+Image *Sexy::IMAGE_PRESENT;
+Image *Sexy::IMAGE_PRESENTOPEN;
+Image *Sexy::IMAGE_PROJECTILECACTUS;
+Image *Sexy::IMAGE_PROJECTILEPEA;
+Image *Sexy::IMAGE_PROJECTILESNOWPEA;
+Image *Sexy::IMAGE_PROJECTILE_STAR;
+Image *Sexy::IMAGE_PUFFSHROOM_PUFF1;
+Image *Sexy::IMAGE_RAIN;
+Image *Sexy::IMAGE_REANIM_CABBAGEPULT_CABBAGE;
+Image *Sexy::IMAGE_REANIM_COBCANNON_COB;
+Image *Sexy::IMAGE_REANIM_COINGLOW;
+Image *Sexy::IMAGE_REANIM_COIN_GOLD_DOLLAR;
+Image *Sexy::IMAGE_REANIM_COIN_SILVER_DOLLAR;
+Image *Sexy::IMAGE_REANIM_CORNPULT_BUTTER;
+Image *Sexy::IMAGE_REANIM_CORNPULT_BUTTER_SPLAT;
+Image *Sexy::IMAGE_REANIM_CORNPULT_KERNAL;
+Image *Sexy::IMAGE_REANIM_CRAZYDAVE_MOUTH1;
+Image *Sexy::IMAGE_REANIM_CRAZYDAVE_MOUTH4;
+Image *Sexy::IMAGE_REANIM_CRAZYDAVE_MOUTH5;
+Image *Sexy::IMAGE_REANIM_CRAZYDAVE_MOUTH6;
+Image *Sexy::IMAGE_REANIM_DIAMOND;
+Image *Sexy::IMAGE_REANIM_GARLIC_BODY2;
+Image *Sexy::IMAGE_REANIM_GARLIC_BODY3;
+Image *Sexy::IMAGE_REANIM_MELONPULT_MELON;
+Image *Sexy::IMAGE_REANIM_POT_TOP_DARK;
+Image *Sexy::IMAGE_REANIM_PUMPKIN_DAMAGE1;
+Image *Sexy::IMAGE_REANIM_PUMPKIN_DAMAGE3;
+Image *Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_BUTTON;
+Image *Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT;
+Image *Sexy::IMAGE_REANIM_SELECTORSCREEN_ALMANAC_SHADOW;
+Image *Sexy::IMAGE_REANIM_SELECTORSCREEN_BG;
+Image *Sexy::IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_BUTTON;
+Image *Sexy::IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_HIGHLIGHT;
+Image *Sexy::IMAGE_REANIM_SELECTORSCREEN_KEY_SHADOW;
+Image *Sexy::IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_BUTTON;
+Image *Sexy::IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_HIGHLIGHT;
+Image *Sexy::IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_BUTTON;
+Image *Sexy::IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_HIGHLIGHT;
+Image *Sexy::IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_BUTTON;
+Image *Sexy::IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_HIGHLIGHT;
+Image *Sexy::IMAGE_REANIM_SELECTORSCREEN_WOODSIGN2_PRESS;
+Image *Sexy::IMAGE_REANIM_STINKY_TURN3;
+Image *Sexy::IMAGE_REANIM_TALLNUT_CRACKED1;
+Image *Sexy::IMAGE_REANIM_TALLNUT_CRACKED2;
+Image *Sexy::IMAGE_REANIM_TREE_BG;
+Image *Sexy::IMAGE_REANIM_WALLNUT_BODY;
+Image *Sexy::IMAGE_REANIM_WALLNUT_CRACKED1;
+Image *Sexy::IMAGE_REANIM_WALLNUT_CRACKED2;
+Image *Sexy::IMAGE_REANIM_WINTERMELON_PROJECTILE;
+Image *Sexy::IMAGE_REANIM_ZENGARDEN_BUGSPRAY_BOTTLE;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BALLOON_OUTERARM_UPPER2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BOBSLED_OUTERARM_HAND;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BOBSLED_OUTERARM_UPPER2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BOSS_EYEGLOW_BLUE;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BOSS_FOOT_DAMAGE1;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BOSS_FOOT_DAMAGE2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BOSS_HEAD_DAMAGE1;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BOSS_HEAD_DAMAGE2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BOSS_ICEBALL;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BOSS_JAW_DAMAGE1;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BOSS_JAW_DAMAGE2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BOSS_MOUTHGLOW_BLUE;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_HAND_DAMAGE1;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_HAND_DAMAGE2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_THUMB_DAMAGE1;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_THUMB_DAMAGE2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BUCKET1;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BUCKET2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BUCKET3;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_BUNGI_HEAD_SCARED;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_CATAPULT_BASKETBALL;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_CATAPULT_POLE;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_CATAPULT_POLE_DAMAGE;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_CATAPULT_POLE_DAMAGE_WITHBALL;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_CATAPULT_POLE_WITHBALL;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_CATAPULT_SIDING_DAMAGE;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_CONE1;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_CONE2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_CONE3;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_DANCER_INNERARM_HAND;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_DIGGER_HARDHAT;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_DIGGER_HARDHAT2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_DIGGER_HARDHAT3;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_DIGGER_OUTERARM_UPPER2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_DIGGER_PICKAXE;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_DOLPHINRIDER_OUTERARM_UPPER2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_FLAG1;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_FLAG3;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_FOOTBALL_HELMET;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_FOOTBALL_HELMET2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_FOOTBALL_HELMET3;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_FOOTBALL_LEFTARM_HAND;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_FOOTBALL_LEFTARM_UPPER2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_BODY1_2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_BODY1_3;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_DUCKXING;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_FOOT2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_HEAD2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_HEAD2_REDEYE;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_HEAD_REDEYE;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_OUTERARM_LOWER2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_GARGANTUAR_ZOMBIE;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_HEAD_GROSSOUT;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_HEAD_SUNGLASSES1;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_HEAD_SUNGLASSES2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_HEAD_SUNGLASSES3;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_HEAD_SUNGLASSES4;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_IMP_ARM1_BONE;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_IMP_ARM2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_JACKBOX_BOX;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_JACKBOX_OUTERARM_LOWER2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_JACKSON_OUTERARM_HAND;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_JACKSON_OUTERARM_UPPER2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_LADDER_1;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_LADDER_1_DAMAGE1;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_LADDER_1_DAMAGE2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_LADDER_5;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_LADDER_OUTERARM_UPPER2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_MUSTACHE2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_MUSTACHE3;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_OUTERARM_HAND;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_OUTERARM_UPPER2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_PAPER_LEFTARM_LOWER;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_PAPER_LEFTARM_UPPER2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_PAPER_MADHEAD;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_PAPER_PAPER2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_PAPER_PAPER3;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_POGO_OUTERARM_UPPER2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_POGO_STICK2DAMAGE1;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_POGO_STICK2DAMAGE2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_POGO_STICKDAMAGE1;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_POGO_STICKDAMAGE2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_POGO_STICKHANDS2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_POLEVAULTER_OUTERARM_UPPER2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_SCREENDOOR1;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_SCREENDOOR2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_SCREENDOOR3;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_SNORKLE_HEAD;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_SNORKLE_OUTERARM_UPPER2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_YETI_OUTERARM_HAND;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_YETI_OUTERARM_UPPER2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_ZAMBONI_1_DAMAGE1;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_ZAMBONI_1_DAMAGE2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_ZAMBONI_2_DAMAGE1;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_ZAMBONI_2_DAMAGE2;
+Image *Sexy::IMAGE_REANIM_ZOMBIE_ZAMBONI_WHEEL_FLAT;
+Image *Sexy::IMAGE_ROCKSMALL;
+Image *Sexy::IMAGE_SCARY_POT;
+Image *Sexy::IMAGE_SEEDBANK;
+Image *Sexy::IMAGE_SEEDCHOOSER_BACKGROUND;
+Image *Sexy::IMAGE_SEEDCHOOSER_BUTTON;
+Image *Sexy::IMAGE_SEEDCHOOSER_BUTTON2;
+Image *Sexy::IMAGE_SEEDCHOOSER_BUTTON2_GLOW;
+Image *Sexy::IMAGE_SEEDCHOOSER_BUTTON_DISABLED;
+Image *Sexy::IMAGE_SEEDCHOOSER_BUTTON_GLOW;
+Image *Sexy::IMAGE_SEEDCHOOSER_IMITATERADDON;
+Image *Sexy::IMAGE_SEEDPACKETFLASH;
+Image *Sexy::IMAGE_SEEDPACKETSILHOUETTE;
+Image *Sexy::IMAGE_SEEDPACKET_LARGER;
+Image *Sexy::IMAGE_SEEDS;
+Image *Sexy::IMAGE_SELECTORSCREEN_ALMANAC;
+Image *Sexy::IMAGE_SELECTORSCREEN_ALMANACHIGHLIGHT;
+Image *Sexy::IMAGE_SELECTORSCREEN_HELP1;
+Image *Sexy::IMAGE_SELECTORSCREEN_HELP2;
+Image *Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS;
+Image *Sexy::IMAGE_SELECTORSCREEN_OPTIONS1;
+Image *Sexy::IMAGE_SELECTORSCREEN_OPTIONS2;
+Image *Sexy::IMAGE_SELECTORSCREEN_QUIT1;
+Image *Sexy::IMAGE_SELECTORSCREEN_QUIT2;
+Image *Sexy::IMAGE_SELECTORSCREEN_STORE;
+Image *Sexy::IMAGE_SELECTORSCREEN_STOREHIGHLIGHT;
+Image *Sexy::IMAGE_SELECTORSCREEN_ZENGARDEN;
+Image *Sexy::IMAGE_SELECTORSCREEN_ZENGARDENHIGHLIGHT;
+Image *Sexy::IMAGE_SHOVEL;
+Image *Sexy::IMAGE_SHOVELBANK;
+Image *Sexy::IMAGE_SHOVEL_HI_RES;
+Image *Sexy::IMAGE_SLOTMACHINE_OVERLAY;
+Image *Sexy::IMAGE_SNOWFLAKES;
+Image *Sexy::IMAGE_SNOWPEA_PARTICLES;
+Image *Sexy::IMAGE_SNOWPEA_PUFF;
+Image *Sexy::IMAGE_SNOWPEA_SPLATS;
+Image *Sexy::IMAGE_SPOTLIGHT;
+Image *Sexy::IMAGE_SPOTLIGHT2;
+Image *Sexy::IMAGE_STAR_PARTICLES;
+Image *Sexy::IMAGE_STAR_SPLATS;
+Image *Sexy::IMAGE_STORE_SPEECHBUBBLE;
+Image *Sexy::IMAGE_STORE_SPEECHBUBBLE2;
+Image *Sexy::IMAGE_SUNBANK;
+Image *Sexy::IMAGE_SUNFLOWER_TROPHY;
+Image *Sexy::IMAGE_TACO;
+Image *Sexy::IMAGE_TOMBSTONES;
+Image *Sexy::IMAGE_TOMBSTONE_MOUNDS;
+Image *Sexy::IMAGE_TREEFOOD;
+Image *Sexy::IMAGE_TROPHY;
+Image *Sexy::IMAGE_TROPHY_HI_RES;
+Image *Sexy::IMAGE_VASE_CHUNKS;
+Image *Sexy::IMAGE_WALLNUTPARTICLESLARGE;
+Image *Sexy::IMAGE_WALLNUTPARTICLESSMALL;
+Image *Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE;
+Image *Sexy::IMAGE_WATERDROP;
+Image *Sexy::IMAGE_WATERINGCAN;
+Image *Sexy::IMAGE_WATERINGCANGOLD;
+Image *Sexy::IMAGE_WATERPARTICLE;
+Image *Sexy::IMAGE_WHITEPIXEL;
+Image *Sexy::IMAGE_WHITEWATER;
+Image *Sexy::IMAGE_WHITEWATER_SHADOW;
+Image *Sexy::IMAGE_WINTERMELON_PARTICLES;
+Image *Sexy::IMAGE_ZAMBONISMOKE;
+Image *Sexy::IMAGE_ZENSHOPBUTTON;
+Image *Sexy::IMAGE_ZENSHOPBUTTON_HIGHLIGHT;
+Image *Sexy::IMAGE_ZEN_GARDENGLOVE;
+Image *Sexy::IMAGE_ZEN_GOLDTOOLRETICLE;
+Image *Sexy::IMAGE_ZEN_MONEYSIGN;
+Image *Sexy::IMAGE_ZEN_NEED_ICONS;
+Image *Sexy::IMAGE_ZEN_NEXTGARDEN;
+Image *Sexy::IMAGE_ZEN_WHEELBARROW;
+Image *Sexy::IMAGE_ZOMBIEBACKUPDANCERHEAD;
+Image *Sexy::IMAGE_ZOMBIEBALLOONHEAD;
+Image *Sexy::IMAGE_ZOMBIEBOBSLEDHEAD;
+Image *Sexy::IMAGE_ZOMBIEDANCERHEAD;
+Image *Sexy::IMAGE_ZOMBIEDIGGERARM;
+Image *Sexy::IMAGE_ZOMBIEDIGGERHEAD;
+Image *Sexy::IMAGE_ZOMBIEDOLPHINRIDERHEAD;
+Image *Sexy::IMAGE_ZOMBIEFOOTBALLHEAD;
+Image *Sexy::IMAGE_ZOMBIEFUTUREGLASSES;
+Image *Sexy::IMAGE_ZOMBIEIMPHEAD;
+Image *Sexy::IMAGE_ZOMBIEJACKBOXARM;
+Image *Sexy::IMAGE_ZOMBIELADDERHEAD;
+Image *Sexy::IMAGE_ZOMBIEPOGO;
+Image *Sexy::IMAGE_ZOMBIEPOLEVAULTERHEAD;
+Image *Sexy::IMAGE_ZOMBIEYETIHEAD;
+Image *Sexy::IMAGE_ZOMBIE_BOBSLED1;
+Image *Sexy::IMAGE_ZOMBIE_BOBSLED2;
+Image *Sexy::IMAGE_ZOMBIE_BOBSLED3;
+Image *Sexy::IMAGE_ZOMBIE_BOBSLED4;
+Image *Sexy::IMAGE_ZOMBIE_BOBSLED_INSIDE;
+Image *Sexy::IMAGE_ZOMBIE_BOSS_FIREBALL_GROUNDPARTICLES;
+Image *Sexy::IMAGE_ZOMBIE_BOSS_FIREBALL_PARTICLES;
+Image *Sexy::IMAGE_ZOMBIE_BOSS_ICEBALL_GROUNDPARTICLES;
+Image *Sexy::IMAGE_ZOMBIE_BOSS_ICEBALL_PARTICLES;
+Image *Sexy::IMAGE_ZOMBIE_NOTE_SMALL;
+Image *Sexy::IMAGE_ZOMBIE_SEAWEED;
+Image *Sexy::IMAGE_ZOMBOSS_PARTICLES;
 
-bool Sexy::ExtractLoadingImagesResources(ResourceManager* theManager)
+bool Sexy::ExtractLoadingImagesResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		IMAGE_ALMANAC = aMgr.GetImageThrow("IMAGE_ALMANAC");
@@ -1216,19 +1245,28 @@ bool Sexy::ExtractLoadingImagesResources(ResourceManager* theManager)
 		IMAGE_REANIM_POT_TOP_DARK = aMgr.GetImageThrow("IMAGE_REANIM_POT_TOP_DARK");
 		IMAGE_REANIM_PUMPKIN_DAMAGE1 = aMgr.GetImageThrow("IMAGE_REANIM_PUMPKIN_DAMAGE1");
 		IMAGE_REANIM_PUMPKIN_DAMAGE3 = aMgr.GetImageThrow("IMAGE_REANIM_PUMPKIN_DAMAGE3");
-		IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_BUTTON = aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_BUTTON");
-		IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT = aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT");
+		IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_BUTTON =
+			aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_BUTTON");
+		IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT =
+			aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT");
 		IMAGE_REANIM_SELECTORSCREEN_ALMANAC_SHADOW = aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_ALMANAC_SHADOW");
 		IMAGE_REANIM_SELECTORSCREEN_BG = aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_BG");
-		IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_BUTTON = aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_BUTTON");
-		IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_HIGHLIGHT = aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_HIGHLIGHT");
+		IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_BUTTON =
+			aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_BUTTON");
+		IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_HIGHLIGHT =
+			aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_CHALLENGES_HIGHLIGHT");
 		IMAGE_REANIM_SELECTORSCREEN_KEY_SHADOW = aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_KEY_SHADOW");
-		IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_BUTTON = aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_BUTTON");
-		IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_HIGHLIGHT = aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_HIGHLIGHT");
+		IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_BUTTON =
+			aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_BUTTON");
+		IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_HIGHLIGHT =
+			aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_HIGHLIGHT");
 		IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_BUTTON = aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_BUTTON");
-		IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_HIGHLIGHT = aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_HIGHLIGHT");
-		IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_BUTTON = aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_BUTTON");
-		IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_HIGHLIGHT = aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_HIGHLIGHT");
+		IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_HIGHLIGHT =
+			aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_SURVIVAL_HIGHLIGHT");
+		IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_BUTTON =
+			aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_BUTTON");
+		IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_HIGHLIGHT =
+			aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_VASEBREAKER_HIGHLIGHT");
 		IMAGE_REANIM_SELECTORSCREEN_WOODSIGN2_PRESS = aMgr.GetImageThrow("IMAGE_REANIM_SELECTORSCREEN_WOODSIGN2_PRESS");
 		IMAGE_REANIM_STINKY_TURN3 = aMgr.GetImageThrow("IMAGE_REANIM_STINKY_TURN3");
 		IMAGE_REANIM_TALLNUT_CRACKED1 = aMgr.GetImageThrow("IMAGE_REANIM_TALLNUT_CRACKED1");
@@ -1251,10 +1289,14 @@ bool Sexy::ExtractLoadingImagesResources(ResourceManager* theManager)
 		IMAGE_REANIM_ZOMBIE_BOSS_JAW_DAMAGE1 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_BOSS_JAW_DAMAGE1");
 		IMAGE_REANIM_ZOMBIE_BOSS_JAW_DAMAGE2 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_BOSS_JAW_DAMAGE2");
 		IMAGE_REANIM_ZOMBIE_BOSS_MOUTHGLOW_BLUE = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_BOSS_MOUTHGLOW_BLUE");
-		IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_HAND_DAMAGE1 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_HAND_DAMAGE1");
-		IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_HAND_DAMAGE2 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_HAND_DAMAGE2");
-		IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_THUMB_DAMAGE1 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_THUMB_DAMAGE1");
-		IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_THUMB_DAMAGE2 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_THUMB_DAMAGE2");
+		IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_HAND_DAMAGE1 =
+			aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_HAND_DAMAGE1");
+		IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_HAND_DAMAGE2 =
+			aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_HAND_DAMAGE2");
+		IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_THUMB_DAMAGE1 =
+			aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_THUMB_DAMAGE1");
+		IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_THUMB_DAMAGE2 =
+			aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_BOSS_OUTERARM_THUMB_DAMAGE2");
 		IMAGE_REANIM_ZOMBIE_BUCKET1 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_BUCKET1");
 		IMAGE_REANIM_ZOMBIE_BUCKET2 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_BUCKET2");
 		IMAGE_REANIM_ZOMBIE_BUCKET3 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_BUCKET3");
@@ -1262,7 +1304,8 @@ bool Sexy::ExtractLoadingImagesResources(ResourceManager* theManager)
 		IMAGE_REANIM_ZOMBIE_CATAPULT_BASKETBALL = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_CATAPULT_BASKETBALL");
 		IMAGE_REANIM_ZOMBIE_CATAPULT_POLE = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_CATAPULT_POLE");
 		IMAGE_REANIM_ZOMBIE_CATAPULT_POLE_DAMAGE = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_CATAPULT_POLE_DAMAGE");
-		IMAGE_REANIM_ZOMBIE_CATAPULT_POLE_DAMAGE_WITHBALL = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_CATAPULT_POLE_DAMAGE_WITHBALL");
+		IMAGE_REANIM_ZOMBIE_CATAPULT_POLE_DAMAGE_WITHBALL =
+			aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_CATAPULT_POLE_DAMAGE_WITHBALL");
 		IMAGE_REANIM_ZOMBIE_CATAPULT_POLE_WITHBALL = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_CATAPULT_POLE_WITHBALL");
 		IMAGE_REANIM_ZOMBIE_CATAPULT_SIDING_DAMAGE = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_CATAPULT_SIDING_DAMAGE");
 		IMAGE_REANIM_ZOMBIE_CONE1 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_CONE1");
@@ -1274,7 +1317,8 @@ bool Sexy::ExtractLoadingImagesResources(ResourceManager* theManager)
 		IMAGE_REANIM_ZOMBIE_DIGGER_HARDHAT3 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_DIGGER_HARDHAT3");
 		IMAGE_REANIM_ZOMBIE_DIGGER_OUTERARM_UPPER2 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_DIGGER_OUTERARM_UPPER2");
 		IMAGE_REANIM_ZOMBIE_DIGGER_PICKAXE = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_DIGGER_PICKAXE");
-		IMAGE_REANIM_ZOMBIE_DOLPHINRIDER_OUTERARM_UPPER2 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_DOLPHINRIDER_OUTERARM_UPPER2");
+		IMAGE_REANIM_ZOMBIE_DOLPHINRIDER_OUTERARM_UPPER2 =
+			aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_DOLPHINRIDER_OUTERARM_UPPER2");
 		IMAGE_REANIM_ZOMBIE_FLAG1 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_FLAG1");
 		IMAGE_REANIM_ZOMBIE_FLAG3 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_FLAG3");
 		IMAGE_REANIM_ZOMBIE_FOOTBALL_HELMET = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_FOOTBALL_HELMET");
@@ -1289,7 +1333,8 @@ bool Sexy::ExtractLoadingImagesResources(ResourceManager* theManager)
 		IMAGE_REANIM_ZOMBIE_GARGANTUAR_HEAD2 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_GARGANTUAR_HEAD2");
 		IMAGE_REANIM_ZOMBIE_GARGANTUAR_HEAD2_REDEYE = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_GARGANTUAR_HEAD2_REDEYE");
 		IMAGE_REANIM_ZOMBIE_GARGANTUAR_HEAD_REDEYE = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_GARGANTUAR_HEAD_REDEYE");
-		IMAGE_REANIM_ZOMBIE_GARGANTUAR_OUTERARM_LOWER2 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_GARGANTUAR_OUTERARM_LOWER2");
+		IMAGE_REANIM_ZOMBIE_GARGANTUAR_OUTERARM_LOWER2 =
+			aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_GARGANTUAR_OUTERARM_LOWER2");
 		IMAGE_REANIM_ZOMBIE_GARGANTUAR_ZOMBIE = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_GARGANTUAR_ZOMBIE");
 		IMAGE_REANIM_ZOMBIE_HEAD_GROSSOUT = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_HEAD_GROSSOUT");
 		IMAGE_REANIM_ZOMBIE_HEAD_SUNGLASSES1 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_HEAD_SUNGLASSES1");
@@ -1322,7 +1367,8 @@ bool Sexy::ExtractLoadingImagesResources(ResourceManager* theManager)
 		IMAGE_REANIM_ZOMBIE_POGO_STICKDAMAGE1 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_POGO_STICKDAMAGE1");
 		IMAGE_REANIM_ZOMBIE_POGO_STICKDAMAGE2 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_POGO_STICKDAMAGE2");
 		IMAGE_REANIM_ZOMBIE_POGO_STICKHANDS2 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_POGO_STICKHANDS2");
-		IMAGE_REANIM_ZOMBIE_POLEVAULTER_OUTERARM_UPPER2 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_POLEVAULTER_OUTERARM_UPPER2");
+		IMAGE_REANIM_ZOMBIE_POLEVAULTER_OUTERARM_UPPER2 =
+			aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_POLEVAULTER_OUTERARM_UPPER2");
 		IMAGE_REANIM_ZOMBIE_SCREENDOOR1 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_SCREENDOOR1");
 		IMAGE_REANIM_ZOMBIE_SCREENDOOR2 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_SCREENDOOR2");
 		IMAGE_REANIM_ZOMBIE_SCREENDOOR3 = aMgr.GetImageThrow("IMAGE_REANIM_ZOMBIE_SCREENDOOR3");
@@ -1433,7 +1479,7 @@ bool Sexy::ExtractLoadingImagesResources(ResourceManager* theManager)
 		IMAGE_ZOMBIE_SEAWEED = aMgr.GetImageThrow("IMAGE_ZOMBIE_SEAWEED");
 		IMAGE_ZOMBOSS_PARTICLES = aMgr.GetImageThrow("IMAGE_ZOMBOSS_PARTICLES");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -1606,11 +1652,11 @@ int Sexy::SOUND_ZOMBIE_ENTERING_WATER;
 int Sexy::SOUND_ZOMBIE_FALLING_1;
 int Sexy::SOUND_ZOMBIE_FALLING_2;
 
-bool Sexy::ExtractLoadingSoundsResources(ResourceManager* theManager)
+bool Sexy::ExtractLoadingSoundsResources(ResourceManager *theManager)
 {
 	gNeedRecalcVariableToIdMap = true;
 
-	ResourceManager& aMgr = *theManager;
+	ResourceManager &aMgr = *theManager;
 	try
 	{
 		SOUND_AWOOGA = aMgr.GetSoundThrow("SOUND_AWOOGA");
@@ -1778,7 +1824,7 @@ bool Sexy::ExtractLoadingSoundsResources(ResourceManager* theManager)
 		SOUND_ZOMBIE_FALLING_1 = aMgr.GetSoundThrow("SOUND_ZOMBIE_FALLING_1");
 		SOUND_ZOMBIE_FALLING_2 = aMgr.GetSoundThrow("SOUND_ZOMBIE_FALLING_2");
 	}
-	catch (ResourceManagerException&)
+	catch (ResourceManagerException &)
 	{
 		return false;
 	}
@@ -1786,13 +1832,12 @@ bool Sexy::ExtractLoadingSoundsResources(ResourceManager* theManager)
 }
 
 // [Beta v0.1.1 Only]
-Image* Sexy::IMAGE_GOOGLYEYE;
-Image* Sexy::IMAGE_SQUIRREL;
+Image *Sexy::IMAGE_GOOGLYEYE;
+Image *Sexy::IMAGE_SQUIRREL;
 
-bool (*gExtractResourcesByName)(Sexy::ResourceManager* theResourceManager, const char* theName);
+bool (*gExtractResourcesByName)(Sexy::ResourceManager *theResourceManager, const char *theName);
 
-void* gResources[(int)Sexy::ResourceId::RESOURCE_ID_MAX] =
-{
+void *gResources[(int)Sexy::ResourceId::RESOURCE_ID_MAX] = {
 	/* Init：0x69E6B0 */
 	&Sexy::IMAGE_BLANK,
 	&Sexy::IMAGE_POPCAP_LOGO,
@@ -2460,7 +2505,7 @@ void* gResources[(int)Sexy::ResourceId::RESOURCE_ID_MAX] =
 	&Sexy::IMAGE_CREDITS_PLAYBUTTON,
 };
 
-Sexy::Image* Sexy::GetImageById(ResourceId theId)
+Sexy::Image *Sexy::GetImageById(ResourceId theId)
 {
 	if (gResources == nullptr)
 		return nullptr;
@@ -2473,60 +2518,59 @@ Sexy::Image* Sexy::GetImageById(ResourceId theId)
 		return nullptr;
 	}
 
-	void* entry = gResources[index];
+	void *entry = gResources[index];
 	if (entry == nullptr)
 	{
 		printf("Resource %d is null!\n", index);
 		return nullptr;
 	}
 
-	Sexy::Image* img = *(Sexy::Image**)entry;
+	Sexy::Image *img = *(Sexy::Image **)entry;
 	return img;
 }
 
-
-Sexy::Font* Sexy::GetFontById(ResourceId theId)
+Sexy::Font *Sexy::GetFontById(ResourceId theId)
 {
-	return *(Sexy::Font**)gResources[(int)theId];
+	return *(Sexy::Font **)gResources[(int)theId];
 }
 
 int Sexy::GetSoundById(ResourceId theId)
 {
-	return *(int*)gResources[(int)theId];
+	return *(int *)gResources[(int)theId];
 }
 
-Image*& Sexy::GetImageRefById(ResourceId theId)
+Image *&Sexy::GetImageRefById(ResourceId theId)
 {
-	return *(Image**)gResources[(int)theId];
+	return *(Image **)gResources[(int)theId];
 }
 
-Font*& Sexy::GetFontRefById(ResourceId theId)
+Font *&Sexy::GetFontRefById(ResourceId theId)
 {
-	return *(Font**)gResources[(int)theId];
+	return *(Font **)gResources[(int)theId];
 }
 
-int& Sexy::GetSoundRefById(ResourceId theId)
+int &Sexy::GetSoundRefById(ResourceId theId)
 {
-	return *(int*)gResources[(int)theId];
+	return *(int *)gResources[(int)theId];
 }
 
-Sexy::ResourceId Sexy::GetIdByImage(Image* theImage)
+Sexy::ResourceId Sexy::GetIdByImage(Image *theImage)
 {
 	return GetIdByVariable(theImage);
 }
 
-Sexy::ResourceId Sexy::GetIdByFont(Font* theFont)
+Sexy::ResourceId Sexy::GetIdByFont(Font *theFont)
 {
 	return GetIdByVariable(theFont);
 }
 
 Sexy::ResourceId Sexy::GetIdBySound(int theSound)
 {
-	return GetIdByVariable((void*)theSound);
+	return GetIdByVariable((void *)theSound);
 }
 
 //0x47FBC0
-Sexy::ResourceId Sexy::GetIdByVariable(void* theVariable)
+Sexy::ResourceId Sexy::GetIdByVariable(void *theVariable)
 {
 	static std::map<int, int> aMap;
 
@@ -2535,7 +2579,7 @@ Sexy::ResourceId Sexy::GetIdByVariable(void* theVariable)
 		gNeedRecalcVariableToIdMap = false;
 		aMap.clear();
 		for (int i = 0; i < (int)ResourceId::RESOURCE_ID_MAX; i++)
-			aMap[*(int*)gResources[i]] = i;
+			aMap[*(int *)gResources[i]] = i;
 	}
 
 	auto anIter = aMap.find((int)theVariable);

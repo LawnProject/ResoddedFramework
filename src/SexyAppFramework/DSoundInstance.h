@@ -13,46 +13,45 @@ class DSoundInstance : public SoundInstance
 {
 	friend class DSoundManager;
 
-protected:
-	DSoundManager*			mSoundManagerP;
-	LPDIRECTSOUNDBUFFER		mSourceSoundBuffer;
-	LPDIRECTSOUNDBUFFER		mSoundBuffer;
-	bool					mAutoRelease;
-	bool					mHasPlayed;
-	bool					mReleased;
+  protected:
+	DSoundManager *mSoundManagerP;
+	LPDIRECTSOUNDBUFFER mSourceSoundBuffer;
+	LPDIRECTSOUNDBUFFER mSoundBuffer;
+	bool mAutoRelease;
+	bool mHasPlayed;
+	bool mReleased;
 
-	int						mBasePan;
-	double					mBaseVolume;
+	int mBasePan;
+	double mBaseVolume;
 
-	int						mPan;
-	double					mVolume;	
+	int mPan;
+	double mVolume;
 
-	DWORD					mDefaultFrequency;
+	DWORD mDefaultFrequency;
 
-protected:
-	void					RehupVolume();
-	void					RehupPan();
+  protected:
+	void RehupVolume();
+	void RehupPan();
 
-public:
-	DSoundInstance(DSoundManager* theSoundManager, LPDIRECTSOUNDBUFFER theSourceSound);
-	virtual ~DSoundInstance();	
-	virtual void			Release();
-	
-	virtual void			SetBaseVolume(double theBaseVolume);
-	virtual void			SetBasePan(int theBasePan);
+  public:
+	DSoundInstance(DSoundManager *theSoundManager, LPDIRECTSOUNDBUFFER theSourceSound);
+	virtual ~DSoundInstance();
+	virtual void Release();
 
-	virtual void			SetVolume(double theVolume); 
-	virtual void			SetPan(int thePosition); //-hundredth db to +hundredth db = left to right	
-	virtual void			AdjustPitch(double theNumSteps);
+	virtual void SetBaseVolume(double theBaseVolume);
+	virtual void SetBasePan(int theBasePan);
 
-	virtual bool			Play(bool looping, bool autoRelease);
-	virtual void			Stop();
-	virtual bool			IsPlaying();
-	virtual bool			IsReleased();
-	virtual double			GetVolume();
+	virtual void SetVolume(double theVolume);
+	virtual void SetPan(int thePosition); //-hundredth db to +hundredth db = left to right
+	virtual void AdjustPitch(double theNumSteps);
 
+	virtual bool Play(bool looping, bool autoRelease);
+	virtual void Stop();
+	virtual bool IsPlaying();
+	virtual bool IsReleased();
+	virtual double GetVolume();
 };
 
-}
+} // namespace Sexy
 
 #endif //__DSOUNDINSTANCE_H__

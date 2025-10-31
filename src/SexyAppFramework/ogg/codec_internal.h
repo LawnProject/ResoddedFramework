@@ -26,26 +26,28 @@ typedef void vorbis_look_residue;
 typedef void vorbis_look_transform;
 
 /* mode ************************************************************/
-typedef struct {
-  int blockflag;
-  int windowtype;
-  int transformtype;
-  int mapping;
+typedef struct
+{
+	int blockflag;
+	int windowtype;
+	int transformtype;
+	int mapping;
 } vorbis_info_mode;
 
 typedef void vorbis_info_floor;
 typedef void vorbis_info_residue;
 typedef void vorbis_info_mapping;
 
-typedef struct private_state {
-  /* local lookup storage */
-  const void             *window[2];
+typedef struct private_state
+{
+	/* local lookup storage */
+	const void *window[2];
 
-  /* backend lookups are tied to the mode, not the backend or naked mapping */
-  int                     modebits;
-  vorbis_look_mapping   **mode;
+	/* backend lookups are tied to the mode, not the backend or naked mapping */
+	int modebits;
+	vorbis_look_mapping **mode;
 
-  ogg_int64_t sample_count;
+	ogg_int64_t sample_count;
 
 } private_state;
 
@@ -55,38 +57,39 @@ typedef struct private_state {
    etc).  
 *********************************************************************/
 
-typedef struct codec_setup_info {
+typedef struct codec_setup_info
+{
 
-  /* Vorbis supports only short and long blocks, but allows the
+	/* Vorbis supports only short and long blocks, but allows the
      encoder to choose the sizes */
 
-  long blocksizes[2];
+	long blocksizes[2];
 
-  /* modes are the primary means of supporting on-the-fly different
+	/* modes are the primary means of supporting on-the-fly different
      blocksizes, different channel mappings (LR or M/A),
      different residue backends, etc.  Each mode consists of a
      blocksize flag and a mapping (along with the mapping setup */
 
-  int        modes;
-  int        maps;
-  int        times;
-  int        floors;
-  int        residues;
-  int        books;
+	int modes;
+	int maps;
+	int times;
+	int floors;
+	int residues;
+	int books;
 
-  vorbis_info_mode       *mode_param[64];
-  int                     map_type[64];
-  vorbis_info_mapping    *map_param[64];
-  int                     time_type[64];
-  int                     floor_type[64];
-  vorbis_info_floor      *floor_param[64];
-  int                     residue_type[64];
-  vorbis_info_residue    *residue_param[64];
-  static_codebook        *book_param[256];
-  codebook               *fullbooks;
+	vorbis_info_mode *mode_param[64];
+	int map_type[64];
+	vorbis_info_mapping *map_param[64];
+	int time_type[64];
+	int floor_type[64];
+	vorbis_info_floor *floor_param[64];
+	int residue_type[64];
+	vorbis_info_residue *residue_param[64];
+	static_codebook *book_param[256];
+	codebook *fullbooks;
 
-  int    passlimit[32];     /* iteration limit per couple/quant pass */
-  int    coupling_passes;
+	int passlimit[32]; /* iteration limit per couple/quant pass */
+	int coupling_passes;
 } codec_setup_info;
 
 #endif
