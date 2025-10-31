@@ -137,7 +137,7 @@ DefField gReanimatorDefFields[] = {
 };  //0x69F184
 DefMap gReanimatorDefMap = { gReanimatorDefFields, sizeof(ReanimatorDefinition), ReanimatorDefinitionConstructor };  //0x69F1B4
 
-static DefLoadResPath gDefLoadResPaths[4] = { {"IMAGE_", ""}, {"IMAGE_", "particles\\"}, {"IMAGE_REANIM_", "reanim\\"}, {"IMAGE_REANIM_", "images\\"} };  //0x6A1A48
+static DefLoadResPath gDefLoadResPaths[4] = { {"IMAGE_", ""}, {"IMAGE_", "particles/"}, {"IMAGE_REANIM_", "reanim/"}, {"IMAGE_REANIM_", "images/"} };  //0x6A1A48
 
 //0x5155A0
 void* ParticleFieldConstructor(void* thePointer)
@@ -560,7 +560,7 @@ bool DefinitionReadCompiledFile(const SexyString& theCompiledFilePath, DefMap* t
 //0x444770
 SexyString DefinitionGetCompiledFilePathFromXMLFilePath(const SexyString& theXMLFilePath)
 {
-    return _S("compiled\\") + theXMLFilePath + _S(".compiled");
+    return _S("compiled/") + theXMLFilePath + _S(".compiled");
 }
 
 bool IsFileInPakFile(const SexyString& theFilePath)
