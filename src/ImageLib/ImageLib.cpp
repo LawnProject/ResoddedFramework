@@ -1,5 +1,3 @@
-#define XMD_H
-
 #include <windows.h>
 #include "ImageLib.h"
 #include <math.h>
@@ -186,29 +184,31 @@ Image *ImageLib::GetImage(const std::string &theFilename, bool lookForAlphaImage
 		anImage = GetImageBackend(aFilename, ".gif");
 
 	// Check for alpha images
-	Image *anAlphaImage = NULL;
-	if (lookForAlphaImage)
+	Image* anAlphaImage = NULL;
+	if(lookForAlphaImage)
 	{
 		// Check _ImageName
-		anAlphaImage = GetImage(theFilename.substr(0, aLastSlashPos + 1) + "_" +
-									theFilename.substr(aLastSlashPos + 1, theFilename.length() - aLastSlashPos - 1),
-								false);
+		anAlphaImage = GetImage(theFilename.substr(0, aLastSlashPos+1) + "_" +
+			theFilename.substr(aLastSlashPos+1, theFilename.length() - aLastSlashPos - 1), false);
 
 		// Check ImageName_
-		if (anAlphaImage == NULL)
+		if(anAlphaImage==NULL)
 			anAlphaImage = GetImage(theFilename + "_", false);
 	}
 
+
+
 	// Compose alpha channel with image
-	if (anAlphaImage != NULL)
+	if (anAlphaImage != NULL) 
 	{
 		if (anImage != NULL)
 		{
-			if ((anImage->mWidth == anAlphaImage->mWidth) && (anImage->mHeight == anAlphaImage->mHeight))
+			if ((anImage->mWidth == anAlphaImage->mWidth) &&
+				(anImage->mHeight == anAlphaImage->mHeight))
 			{
-				unsigned long *aBits1 = anImage->mBits;
-				unsigned long *aBits2 = anAlphaImage->mBits;
-				int aSize = anImage->mWidth * anImage->mHeight;
+				unsigned long* aBits1 = anImage->mBits;
+				unsigned long* aBits2 = anAlphaImage->mBits;
+				int aSize = anImage->mWidth*anImage->mHeight;
 
 				for (int i = 0; i < aSize; i++)
 				{
@@ -220,13 +220,13 @@ Image *ImageLib::GetImage(const std::string &theFilename, bool lookForAlphaImage
 
 			delete anAlphaImage;
 		}
-		else if (gAlphaComposeColor == 0xFFFFFF)
+		else if (gAlphaComposeColor==0xFFFFFF)
 		{
 			anImage = anAlphaImage;
 
-			unsigned long *aBits1 = anImage->mBits;
+			unsigned long* aBits1 = anImage->mBits;
 
-			int aSize = anImage->mWidth * anImage->mHeight;
+			int aSize = anImage->mWidth*anImage->mHeight;
 			for (int i = 0; i < aSize; i++)
 			{
 				*aBits1 = (0x00FFFFFF) | ((*aBits1 & 0xFF) << 24);
@@ -238,9 +238,9 @@ Image *ImageLib::GetImage(const std::string &theFilename, bool lookForAlphaImage
 			const int aColor = gAlphaComposeColor;
 			anImage = anAlphaImage;
 
-			unsigned long *aBits1 = anImage->mBits;
+			unsigned long* aBits1 = anImage->mBits;
 
-			int aSize = anImage->mWidth * anImage->mHeight;
+			int aSize = anImage->mWidth*anImage->mHeight;
 			for (int i = 0; i < aSize; i++)
 			{
 				*aBits1 = aColor | ((*aBits1 & 0xFF) << 24);
