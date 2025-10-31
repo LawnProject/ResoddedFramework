@@ -36,6 +36,7 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
     $<$<CONFIG:Release>:NDEBUG>
     _LIB
     DO_FIX_BUGS
+    _CRT_SECURE_NO_WARNINGS
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
