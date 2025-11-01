@@ -3248,7 +3248,7 @@ void Zombie::UpdateZombiquarium()
 			mVelZ = 0.0f;
 		}
 
-		if (mPosX > 550.0f || aVelX > 0.0f)
+		if (mPosX > 550.0f && aVelX > 0.0f)
 		{
 			mVelZ = PI;
 		}
