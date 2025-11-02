@@ -173,7 +173,10 @@ void TodTrace(const char *theFormat, ...)
 		}
 	}
 
-	OutputDebugStringA(aButter);
+	// @ThePixelMoon; why isn't this using printf already?
+	printf("%s", aButter);
+
+	//OutputDebugStringA(aButter);
 #endif
 }
 
