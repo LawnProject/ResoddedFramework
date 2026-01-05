@@ -4833,6 +4833,8 @@ void SexyAppBase::MakeWindow()
 	mHWnd = mWindow->GetHWND();
 	#endif
 
+	SDL_StartTextInput(mWindow->mInternalWindow);
+
 	if ((mPlayingDemoBuffer) || (mIsWindowed && !mFullScreenWindow)) //todo:replace
 	{
 		DWORD aWindowStyle = WS_CLIPCHILDREN | WS_POPUP | WS_BORDER | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
