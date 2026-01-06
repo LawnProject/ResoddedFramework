@@ -21,8 +21,8 @@ set(SKIP_INSTALL_ALL ON CACHE BOOL "Skip all install rules" FORCE)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "Disable building dll zlib" FORCE)
 
 add_subdirectory(thirdparty)
-add_subdirectory(src/SexyAppFramework)
 add_subdirectory(src/ImageLib)
 add_subdirectory(src/PakLib)
+add_subdirectory(src/SexyAppFramework)
 
 add_subdirectory(src/Lawn)

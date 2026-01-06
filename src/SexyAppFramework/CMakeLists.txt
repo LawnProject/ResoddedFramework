@@ -5,6 +5,9 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/*.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
+    "${CMAKE_SOURCE_DIR}/thirdparty/src/*.c"
+    "${CMAKE_SOURCE_DIR}/thirdparty/src/*.cpp"
+    "${CMAKE_SOURCE_DIR}/thirdparty/src/*.h"
 )
 
 # popcap...WHYYYY
@@ -30,7 +33,15 @@ add_library(${PROJECT_NAME} STATIC ${SOURCES})
 target_link_libraries(${PROJECT_NAME} PUBLIC 
     SDL3::SDL3-static
     zlibstatic
+    ImageLib
+    PakLib
 )
+
+if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/thirdparty/x64/bass.lib)
+else ()
+    target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/thirdparty/x86/bass.lib)
+endif()
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC
     WIN32
@@ -44,6 +55,7 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_SOURCE_DIR}/thirdparty/src"
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
