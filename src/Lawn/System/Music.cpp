@@ -195,7 +195,7 @@ void Music::SetupMusicFileForTune(MusicFile theMusicFile, MusicTune theMusicTune
 	}
 
 	HMUSIC aHMusic = GetBassMusicHandle(theMusicFile);
-	for (int aTrack = 0; aTrack < aTrackCount; aTrack++)
+	for (int aTrack = 0; aTrack <= aTrackCount; aTrack++)
 	{
 		int aVolume;
 		if (aTrack >= aTrackStart1 && aTrack <= aTrackEnd1)
@@ -220,8 +220,7 @@ void Music::LoadSong(MusicFile theMusicFile, const std::string &theFileName)
 	}
 	else
 	{
-		BASS_MusicSetAttribute(
-			GetBassMusicHandle(theMusicFile), BASS_MUSIC_ATTRIB_PSCALER, 4); // 设置音乐定位精确度属性
+		BASS_MusicSetAttribute(GetBassMusicHandle(theMusicFile), BASS_MUSIC_ATTRIB_PSCALER, 4); // 设置音乐定位精确度属性
 		TodHesitationTrace("song '%s'", theFileName.c_str());
 	}
 }
@@ -453,7 +452,6 @@ void Music::PlayMusic(MusicTune theMusicTune, int theOffset, int theDrumsOffset)
 			theOffset = 0;
 		PlayFromOffset(mCurMusicFileMain, theOffset, 1.0);
 		break;
-
 	default:
 		TOD_ASSERT(false);
 		break;

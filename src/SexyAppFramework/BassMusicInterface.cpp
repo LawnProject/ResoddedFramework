@@ -369,7 +369,7 @@ int BassMusicInterface::GetMusicOrder(int theSongId)
 	if (anItr != mMusicMap.end())
 	{
 		BassMusicInfo *aMusicInfo = &anItr->second;
-		int aPosition = BASS_ChannelGetPosition(aMusicInfo->GetHandle());
+		int aPosition = BASS_MusicGetOrderPosition(aMusicInfo->GetHandle());
 		return aPosition;
 	}
 	return -1;

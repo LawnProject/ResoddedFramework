@@ -6,3 +6,4 @@ build/
 .vs/
 savefiles/
 crash.txt
+Dist/*.dll
