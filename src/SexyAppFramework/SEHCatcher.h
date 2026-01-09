@@ -34,6 +34,23 @@ typedef DWORD(__stdcall *SYMGETMODULEBASEPROC)(HANDLE, DWORD);
 
 typedef BOOL(__stdcall *SYMGETSYMFROMADDRPROC)(HANDLE, DWORD, PDWORD, PIMAGEHLP_SYMBOL);
 
+//Oh i just hate windows sometimes
+
+#ifdef _WIN64
+#define Eip Rip
+#define Ebx Rbx
+#define Ecx Rcx
+#define Esi Rsi
+#define Esp Rsp
+#define Edi Rdi
+#define Ebp Rbp
+#define Eax Rax
+#define Edx Rdx
+
+#define SYMFUNCTIONTABLEACCESSPROC PFUNCTION_TABLE_ACCESS_ROUTINE64
+#define SYMGETMODULEBASEPROC PGET_MODULE_BASE_ROUTINE64
+#endif
+
 class SEHCatcher
 {
   public:

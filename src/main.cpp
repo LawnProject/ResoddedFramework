@@ -3,6 +3,8 @@
 #include "Sexy.TodLib/TodStringFile.h"
 #ifdef _DEBUG
 #include <zlib.h>
+#include <bass.h>
+#include <SDL3/SDL.h>
 #endif
 
 using namespace Sexy;
@@ -16,6 +18,8 @@ int main()
 {
 	//gHInstance = hInstance;
 #ifdef _DEBUG
+	printf("Using SDL version: %d\n", SDL_VERSION);
+	printf("Using BASS version: %d\n", BASS_GetVersion());
 	printf("Using zlib version: %s\n", zlibVersion());
 #endif
 

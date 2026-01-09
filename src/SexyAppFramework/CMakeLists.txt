@@ -87,3 +87,12 @@ foreach(FILE_PATH IN LISTS SOURCES)
 
     source_group("${GROUP_NAME}" FILES "${FILE_PATH}")
 endforeach()
+
+
+include(${CMAKE_SOURCE_DIR}/cmake/CMakeUtils.cmake)
+
+if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    copy_dll_post(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/thirdparty/x64/bass.dll)
+else ()
+   copy_dll_post(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/thirdparty/x86/bass.dll)
+endif()

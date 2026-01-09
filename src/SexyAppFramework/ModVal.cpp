@@ -122,8 +122,8 @@ static bool FindModValsInMemoryHelper(const char *theMem, DWORD theLength)
 		std::string aFileName = aPtr + 10; // skip SEXYMODVAL
 		if (ParseModValString(aFileName, &aCounter, &aLineNum))
 		{
-			if (aLineNum == 4105)
-				_asm nop;
+			//if (aLineNum == 4105)
+				//_asm nop; //Why??
 
 			FileMod &aFileMod = aMap[aFileName];
 			aFileMod.mMap[aCounter] = ModPointer(aPtr - 5, aLineNum);

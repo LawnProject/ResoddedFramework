@@ -12,6 +12,7 @@
 #include "../../SexyAppFramework/Dialog.h"
 #include "../../Sexy.TodLib/EffectSystem.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
+#include <SDL3/SDL_timer.h>
 
 static CreditsTiming gCreditsTiming[] = { //0x6A1AD8
 	{128.5f, CreditWordType::WORD_AW, 0, CreditBrainType::BRAIN_OFF},
@@ -1573,10 +1574,10 @@ void CreditScreen::TurnOffTongues(Reanimation *theReanim, int aParentTrack)
 //0x437FC0
 void TodsHackyUnprotectedPerfTimer::SetStartTime(int theTimeMillisecondsAgo)
 {
-	QueryPerformanceCounter(&mStart);
-	LARGE_INTEGER aFreq;
-	QueryPerformanceFrequency(&aFreq);
-	mStart.QuadPart += theTimeMillisecondsAgo * aFreq.QuadPart / -1000i64;
+	mStart = SDL_GetPerformanceFrequency();
+	uint64_t aFreq;
+	aFreq = SDL_GetPerformanceFrequency();
+	mStart += theTimeMillisecondsAgo * aFreq / -1000i64;
 }
 
 //0x438010

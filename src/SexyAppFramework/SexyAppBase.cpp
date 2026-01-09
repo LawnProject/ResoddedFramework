@@ -63,6 +63,10 @@ static bool gScreenSaverActive = false;
 #define SPI_GETSCREENSAVERRUNNING 114
 #endif
 
+#if _WIN64
+#define GWL_USERDATA GWLP_USERDATA
+#endif
+
 //HotSpot: 11 4
 //Size: 32 32
 unsigned char gFingerCursorData[] = {

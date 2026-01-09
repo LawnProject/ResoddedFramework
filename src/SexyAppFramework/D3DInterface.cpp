@@ -43,7 +43,7 @@ static void DisplayError(HRESULT theError, const char *theMsg)
 		if (aResult == IDABORT)
 			exit(0);
 		else if (aResult == IDRETRY)
-			_asm int 3;
+			__debugbreak();
 	}
 }
 
