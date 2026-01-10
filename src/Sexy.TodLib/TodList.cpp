@@ -25,17 +25,18 @@ void TodAllocator::Grow()
 	TOD_ASSERT(mGrowCount > 0);
 	TOD_ASSERT(mItemSize >= sizeof(void *));
 
-	void *aBlock = TodMalloc(mGrowCount * mItemSize + 4);
+	int size = mGrowCount * mItemSize + sizeof(void *);
+	void *aBlock = TodMalloc(size);
 	*(void **)aBlock = mBlockList;
 	mBlockList = aBlock;
 
 	void *aFreeList = mFreeList;
-	void *aItem = (void *)((uint)aBlock + 4);
+	void *aItem = (uint8_t *)aBlock + sizeof(void *);
 	for (int i = 0; i < mGrowCount; i++)
 	{
 		*(void **)aItem = aFreeList;
 		aFreeList = aItem;
-		aItem = (void *)((uint)aItem + mItemSize);
+		aItem = (uint8_t *)aItem + mItemSize;
 	}
 	mFreeList = aFreeList;
 }

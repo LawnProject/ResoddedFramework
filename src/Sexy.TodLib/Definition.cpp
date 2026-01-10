@@ -327,7 +327,7 @@ bool DefinitionLoadXML(const SexyString &theFileName, DefMap *theDefMap, void *t
 void SMemR(void *&_Src, void *_Dst, size_t _Size)
 {
 	memcpy(_Dst, _Src, _Size);
-	_Src = (void *)((unsigned int)_Src + _Size);
+	_Src = (void *)((uintptr_t)_Src + _Size);
 }
 //0x444020
 bool DefReadFromCacheArray(void *&theReadPtr, DefinitionArrayDef *theArray, DefMap *theDefMap)
@@ -516,7 +516,7 @@ void *DefinitionUncompressCompiledBuffer(void *theCompressedBuffer,
 	Bytef *aUncompressedBuffer = (Bytef *)DefinitionAlloc(aHeader->mUncompressedSize);
 	theCompressedBufferSize = aHeader->mUncompressedSize; //my addition
 	Bytef *aSrc =
-		(Bytef *)((int)theCompressedBuffer + sizeof(CompressedDefinitionHeader)); // 实际解压数据从第 3 个四字节开始
+		(Bytef *)theCompressedBuffer + sizeof(CompressedDefinitionHeader); // 实际解压数据从第 3 个四字节开始
 	int aResult = uncompress(
 		aUncompressedBuffer, (uLongf *)&theCompressedBufferSize, aSrc, sz - sizeof(CompressedDefinitionHeader));
 	TOD_ASSERT(aResult == Z_OK);
@@ -554,8 +554,7 @@ bool DefinitionReadCompiledFile(const SexyString &theCompiledFilePath, DefMap *t
 			delete[] aCompressedBuffer;
 			if (aUncompressedBuffer)
 			{
-				uint aDefHash = DefinitionCalcHash(
-					theDefMap); // Calculate the CRC check value, which will be used to detect the integrity of the data
+				uint aDefHash = DefinitionCalcHash(theDefMap); // Calculate the CRC check value, which will be used to detect the integrity of the data
 				if (aUncompressedSize <
 					theDefMap->mDefSize +
 						sizeof(
@@ -567,8 +566,7 @@ bool DefinitionReadCompiledFile(const SexyString &theCompiledFilePath, DefMap *t
 					void *aBufferPtr = aUncompressedBuffer;
 					uint aCashHash;
 					SMemR(aBufferPtr, &aCashHash, sizeof(uint)); //Read the CRC check value of the record
-					if (aCashHash !=
-						aDefHash) // Determine whether the check value is consistent, if it is inconsistent, the data is wrong
+					if (aCashHash != aDefHash) // Determine whether the check value is consistent, if it is inconsistent, the data is wrong
 						TodTrace(_S("Compiled file schema wrong: %s\n"), theCompiledFilePath.c_str());
 					else
 					{

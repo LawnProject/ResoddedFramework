@@ -171,8 +171,8 @@ bool DefinitionCompileFile(const SexyString theXMLFilePath,
 						   void *theDefinition);
 /*inline*/ void *DefinitionAlloc(int theSize);
 void *DefinitionUncompressCompiledBuffer(void *theCompressedBuffer,
-										 size_t theCompressedBufferSize,
-										 size_t &theUncompressedSize,
+										 uint theCompressedBufferSize,
+										 uint &theUncompressedSize,
 										 const SexyString &theCompiledFilePath);
 uint /*__cdecl*/ DefinitionCalcHashSymbolMap(int aSchemaHash, DefSymbol *theSymbolMap);
 uint /*__cdecl*/ DefinitionCalcHashDefMap(int aSchemaHash, DefMap *theDefMap, TodList<DefMap *> &theProgressMaps);
