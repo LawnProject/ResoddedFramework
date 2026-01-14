@@ -1338,6 +1338,7 @@ void SEHCatcher::ShowErrorDialog(const std::string &theErrorTitle, const std::st
 	DeleteObject(aCourierNewFont);
 }
 
+//TODO: Implement versions for the libraries we USE
 std::string SEHCatcher::GetSysInfo()
 {
 	std::string aDebugDump;
@@ -1373,14 +1374,6 @@ std::string SEHCatcher::GetSysInfo()
 		{
 			GetModuleFileNameA(aMod, aPath, 256);
 			aDebugDump += "DDraw Ver: " + mApp->GetProductVersion(aPath) + "\r\n";
-			FreeLibrary(aMod);
-		}
-
-		aMod = LoadLibraryA("dsound.dll");
-		if (aMod != NULL)
-		{
-			GetModuleFileNameA(aMod, aPath, 256);
-			aDebugDump += "DSound Ver: " + mApp->GetProductVersion(aPath) + "\r\n";
 			FreeLibrary(aMod);
 		}
 	}

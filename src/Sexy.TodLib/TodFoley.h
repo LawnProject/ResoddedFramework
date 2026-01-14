@@ -2,7 +2,7 @@
 #define __TODFOLEY_H__
 
 #include "../Resources.h"
-#include "../SexyAppFramework/DSoundInstance.h"
+#include "../SexyAppFramework/OpenALSoundInstance.h"
 using namespace Sexy;
 
 #define MAX_FOLEY_TYPES 110
@@ -152,13 +152,13 @@ extern FoleyParams gLawnFoleyParamArray[(int)FoleyType::NUM_FOLEY]; //0x69FAD0
 // ############################################################ 以下正式开始拟音音效相关声明 ############################################################
 // ######################################################################################################################################################
 
-class TodDSoundInstance : public DSoundInstance
+class TodSoundInstance : public OpenALSoundInstance
 {
 	friend class TodFoley;
 
   public:
-	TodDSoundInstance(DSoundManager *theSoundManager, LPDIRECTSOUNDBUFFER theSourceSound)
-		: DSoundInstance(theSoundManager, theSourceSound)
+	TodSoundInstance(OpenALSoundManager *theSoundManager, ALuint theSourceSound)
+		: OpenALSoundInstance(theSoundManager, theSourceSound)
 	{
 	}
 

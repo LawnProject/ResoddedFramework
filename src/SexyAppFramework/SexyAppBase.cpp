@@ -17,9 +17,7 @@
 #include "HTTPTransfer.h"
 #include "Dialog.h"
 #include "..\ImageLib\ImageLib.h"
-#include "DSoundManager.h"
 #include "OpenALSoundManager.h"
-#include "DSoundInstance.h"
 #include "OpenALSoundInstance.h"
 #include "Rect.h"
 #include "PropertiesParser.h"
@@ -53,7 +51,6 @@ SexyAppBase *Sexy::gSexyAppBase = NULL;
 SEHCatcher Sexy::gSEHCatcher;
 
 HMODULE gDDrawDLL = NULL;
-HMODULE gDSoundDLL = NULL;
 HMODULE gVersionDLL = NULL;
 
 //typedef struct { UINT cbSize; DWORD dwTime; } LASTINPUTINFO;
@@ -136,7 +133,6 @@ SexyAppBase::SexyAppBase()
 
 	gVersionDLL = LoadLibraryA("version.dll");
 	gDDrawDLL = LoadLibraryA("ddraw.dll");
-	gDSoundDLL = LoadLibraryA("dsound.dll");
 	gGetLastInputInfoFunc = (GetLastInputInfoFunc)GetProcAddress(GetModuleHandleA("user32.dll"), "GetLastInputInfo");
 
 	mMutex = NULL;
@@ -475,7 +471,6 @@ SexyAppBase::~SexyAppBase()
 		::CloseHandle(mMutex);
 
 	FreeLibrary(gDDrawDLL);
-	FreeLibrary(gDSoundDLL);
 	FreeLibrary(gVersionDLL);
 }
 
@@ -5654,7 +5649,7 @@ void SexyAppBase::Init()
 	if (mShutdown)
 		return;
 
-	if (gDDrawDLL == NULL || gDSoundDLL == NULL)
+	if (gDDrawDLL == NULL)
 	{
 		MessageBox(NULL,
 				   GetString("APP_REQUIRES_DIRECTX",
@@ -5803,7 +5798,6 @@ void SexyAppBase::Init()
 
 	if (mSoundManager == nullptr)
 		mSoundManager = new OpenALSoundManager();
-		//mSoundManager = new DSoundManager(mNoSoundNeeded ? NULL : mHWnd, mWantFMod);
 
 	SetSfxVolume(mSfxVolume);
 
