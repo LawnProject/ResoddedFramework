@@ -1,5 +1,5 @@
 #include "SharedImage.h"
-#include "DDImage.h"
+#include "GPUImage.h"
 #include "SexyAppBase.h"
 
 using namespace Sexy;
@@ -93,10 +93,10 @@ SharedImageRef::operator MemoryImage *()
 	if (mUnsharedImage != NULL)
 		return mUnsharedImage;
 	else
-		return (DDImage *)*this;
+		return (GPUImage *)*this;
 }
 
-SharedImageRef::operator DDImage *()
+SharedImageRef::operator GPUImage *()
 {
 	if (mSharedImage != NULL)
 		return mSharedImage->mImage;

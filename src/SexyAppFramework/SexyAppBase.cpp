@@ -8,10 +8,11 @@
 #include "Widget.h"
 #include "Debug.h"
 #include "KeyCodes.h"
-#include "DDInterface.h"
-#include "D3DInterface.h"
-#include "D3DTester.h"
-#include "DDImage.h"
+#include "Renderer.h"
+#if SEXY_USE_OPENGL
+#include "OpenGLRenderer.h"
+#endif
+#include "GPUImage.h"
 #include "Window.h"
 #include "MemoryImage.h"
 #include "HTTPTransfer.h"
@@ -101,7 +102,7 @@ unsigned char gDraggingCursorData[] = {
 	0x1f, 0xfc, 0x00, 0x00, 0x0f, 0xfc, 0x00, 0x00, 0x07, 0xf8, 0x00, 0x00, 0x03, 0xf8, 0x00, 0x00, 0x03, 0xf8, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-static DDImage *gFPSImage = NULL;
+static GPUImage *gFPSImage = NULL;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -170,8 +171,8 @@ SexyAppBase::SexyAppBase()
 	mAllowMonitorPowersave = true;
 	mWindow = nullptr;
 	mHWnd = NULL;
-	mDDInterface = NULL;
 	mMusicInterface = NULL;
+	mRenderer = nullptr;
 	mInvisHWnd = NULL;
 	mFrameTime = 10;
 	mNonDrawCount = 0;
@@ -383,7 +384,7 @@ SexyAppBase::~SexyAppBase()
 							.c_str(),
 						MB_YESNO | MB_ICONQUESTION);
 
-					mDDInterface->mIs3D = aResult == IDYES ? true : false;
+					//mRenderer->mIs3D = aResult == IDYES ? true : false;
 					if (aResult != IDYES)
 						writeToRegistry = false;
 				}
@@ -392,12 +393,12 @@ SexyAppBase::~SexyAppBase()
 			}
 		}
 
-		if (writeToRegistry)
-			RegistryWriteBoolean("Is3D", mDDInterface->mIs3D);
+		//if (writeToRegistry)
+			//RegistryWriteBoolean("Is3D", mDDInterface->mIs3D);
 	}
 
-	extern bool gD3DInterfacePreDrawError;
-	if (!showedMsgBox && gD3DInterfacePreDrawError && !IsScreenSaver())
+	extern bool gRenderingPreDrawError;
+	if (!showedMsgBox && gRenderingPreDrawError && !IsScreenSaver())
 	{
 		int aResult = MessageBox(
 			NULL,
@@ -447,7 +448,8 @@ SexyAppBase::~SexyAppBase()
 		mSharedImageMap.erase(aSharedImageItr++);
 	}
 
-	delete mDDInterface;
+	FT_Done_FreeType(mFreeTypeLib);
+	delete mRenderer;
 	delete mMusicInterface;
 	delete mSoundManager;
 
@@ -472,6 +474,7 @@ SexyAppBase::~SexyAppBase()
 
 	FreeLibrary(gDDrawDLL);
 	FreeLibrary(gVersionDLL);
+
 }
 
 static BOOL CALLBACK ChangeDisplayWindowEnumProc(HWND hwnd, LPARAM lParam)
@@ -1141,9 +1144,10 @@ void SexyAppBase::SetCursorImage(int theCursorNum, Image *theImage)
 
 void SexyAppBase::TakeScreenshot()
 {
-	if (mDDInterface == NULL || mDDInterface->mDrawSurface == NULL)
+	ClearUpdateBacklog();
+	//if (mDDInterface == NULL || mDDInterface->mDrawSurface == NULL)
 		return;
-
+	/*
 	// Get free image name
 	std::string anImageDir = GetAppDataFolder() + "_screenshots";
 	MkDir(anImageDir);
@@ -1172,11 +1176,11 @@ void SexyAppBase::TakeScreenshot()
 	// Capture screen
 	LPDIRECTDRAWSURFACE aSurface = mDDInterface->mDrawSurface;
 
-	// Temporarily set the mDrawSurface to NULL so DDImage::Check3D
+	// Temporarily set the mDrawSurface to NULL so GPUImage::Check3D
 	// returns false so we can lock the surface.
 	mDDInterface->mDrawSurface = NULL;
 
-	DDImage anImage(mDDInterface);
+	GPUImage anImage(mDDInterface);
 	anImage.SetSurface(aSurface);
 	anImage.GetBits();
 	anImage.DeleteDDSurface();
@@ -1229,7 +1233,6 @@ void SexyAppBase::TakeScreenshot()
 		CloseClipboard();
 	}*/
 
-	ClearUpdateBacklog();
 }
 
 void SexyAppBase::DumpProgramInfo()
@@ -1274,7 +1277,7 @@ void SexyAppBase::DumpProgramInfo()
 
 		int aNumPixels = aMemoryImage->mWidth * aMemoryImage->mHeight;
 
-		DDImage *aDDImage = dynamic_cast<DDImage *>(aMemoryImage);
+		GPUImage *aGPUImage = dynamic_cast<GPUImage *>(aMemoryImage);
 
 		int aBitsMemory = 0;
 		int aSurfaceMemory = 0;
@@ -1287,7 +1290,7 @@ void SexyAppBase::DumpProgramInfo()
 		int aMemorySize = 0;
 		if (aMemoryImage->mBits != NULL)
 			aBitsMemory = aNumPixels * 4;
-		if ((aDDImage != NULL) && (aDDImage->mSurface != NULL))
+		if ((aGPUImage != NULL) && (aGPUImage->mSurface != NULL))
 			aSurfaceMemory = aNumPixels * 4; // Assume 32bit screen...
 		if (aMemoryImage->mColorTable != NULL)
 			aPalletizedMemory = aNumPixels + 256 * 4;
@@ -1344,7 +1347,7 @@ void SexyAppBase::DumpProgramInfo()
 
 		int aNumPixels = aMemoryImage->mWidth * aMemoryImage->mHeight;
 
-		DDImage *aDDImage = dynamic_cast<DDImage *>(aMemoryImage);
+		GPUImage *aGPUImage = dynamic_cast<GPUImage *>(aMemoryImage);
 
 		int aMemorySize = aSortedItr->first;
 
@@ -1359,7 +1362,7 @@ void SexyAppBase::DumpProgramInfo()
 
 		if (aMemoryImage->mBits != NULL)
 			aBitsMemory = aNumPixels * 4;
-		if ((aDDImage != NULL) && (aDDImage->mSurface != NULL))
+		if ((aGPUImage != NULL) && (aGPUImage->mSurface != NULL))
 			aSurfaceMemory = aNumPixels * 4; // Assume 32bit screen...
 		if (aMemoryImage->mColorTable != NULL)
 			aPalletizedMemory = aNumPixels + 256 * 4;
@@ -1521,7 +1524,7 @@ double SexyAppBase::GetLoadingThreadProgress()
 		return 0.0;
 	if (mNumLoadingThreadTasks == 0)
 		return 0.0;
-	return min(mCompletedLoadingThreadTasks / (double)mNumLoadingThreadTasks, 1.0);
+	return std::min(mCompletedLoadingThreadTasks / (double)mNumLoadingThreadTasks, 1.0);
 }
 
 bool SexyAppBase::RegistryWrite(const std::string &theValueName, ulong theType, const uchar *theValue, ulong theLength)
@@ -2218,16 +2221,6 @@ void SexyAppBase::Shutdown()
 		if (mMusicInterface != NULL)
 			mMusicInterface->StopAllMusic();
 
-		if ((!mIsPhysWindowed) && (mDDInterface != NULL) && (mDDInterface->mDD != NULL))
-		{
-			mDDInterface->mDD->RestoreDisplayMode();
-		}
-
-		if (mHWnd != NULL)
-		{
-			ShowWindow(mHWnd, SW_HIDE);
-		}
-
 		RestoreScreenResolution();
 
 		if (mReadFromRegistry)
@@ -2335,10 +2328,10 @@ void SexyAppBase::Redraw(Rect *theClipRect)
 		return;
 
 	static DWORD aRetryTick = 0;
-	if (!mDDInterface->Redraw(theClipRect))
+	if (!mRenderer->Redraw(theClipRect))
 	{
-		extern bool gD3DInterfacePreDrawError;
-		gD3DInterfacePreDrawError = false; // this predraw error happens naturally when ddraw is failing
+		//extern bool gD3DInterfacePreDrawError;
+		//gD3DInterfacePreDrawError = false; // this predraw error happens naturally when ddraw is failing
 		if (!gIsFailing)
 		{
 			//gDebugStream << GetTickCount() << " Redraw failed!" << std::endl;
@@ -2377,7 +2370,7 @@ void SexyAppBase::Redraw(Rect *theClipRect)
 			int aResult = InitDDInterface();
 
 			//gDebugStream << GetTickCount() << " ReInit..." << std::endl;
-
+			/*
 			if ((mIsWindowed) && (aResult == DDInterface::RESULT_INVALID_COLORDEPTH))
 			{
 				//gDebugStream << GetTickCount() << "ReInit Invalid Colordepth" << std::endl;
@@ -2400,11 +2393,11 @@ void SexyAppBase::Redraw(Rect *theClipRect)
 				//Sleep(1000);
 
 				return;
-			}
+			}*/
 
 			ReInitImages();
 
-			mWidgetManager->mImage = mDDInterface->GetScreenImage();
+			mWidgetManager->mImage = mRenderer->GetScreenImage();
 			mWidgetManager->MarkAllDirty();
 
 			mLastTime = timeGetTime();
@@ -2435,12 +2428,12 @@ static void CalculateFPS()
 	static SysFont aFont(gSexyAppBase, "Tahoma", 8);
 	if (gFPSImage == NULL)
 	{
-		gFPSImage = new DDImage(gSexyAppBase->mDDInterface);
+		gFPSImage = gSexyAppBase->mRenderer->NewGPUImage();
 		gFPSImage->Create(50, aFont.GetHeight() + 4);
 		gFPSImage->SetImageMode(false, false);
 		gFPSImage->SetVolatile(true);
 		gFPSImage->mPurgeBits = false;
-		gFPSImage->mWantDDSurface = true;
+		gFPSImage->mWantSurface = true;
 		gFPSImage->PurgeBits();
 	}
 
@@ -2477,12 +2470,12 @@ static void FPSDrawCoords(int theX, int theY)
 	static SysFont aFont(gSexyAppBase, "Tahoma", 8);
 	if (gFPSImage == NULL)
 	{
-		gFPSImage = new DDImage(gSexyAppBase->mDDInterface);
+		gFPSImage = gSexyAppBase->mRenderer->NewGPUImage();
 		gFPSImage->Create(50, aFont.GetHeight() + 4);
 		gFPSImage->SetImageMode(false, false);
 		gFPSImage->SetVolatile(true);
 		gFPSImage->mPurgeBits = false;
-		gFPSImage->mWantDDSurface = true;
+		gFPSImage->mWantSurface = true;
 		gFPSImage->PurgeBits();
 	}
 
@@ -2497,7 +2490,7 @@ static void FPSDrawCoords(int theX, int theY)
 }
 
 ///////////////////////////// Demo TimeLeft Stuff
-static DDImage *gDemoTimeLeftImage = NULL;
+static GPUImage *gDemoTimeLeftImage = NULL;
 static void CalculateDemoTimeLeft()
 {
 	static SysFont aFont(gSexyAppBase, "Tahoma", 8);
@@ -2505,12 +2498,12 @@ static void CalculateDemoTimeLeft()
 
 	if (gDemoTimeLeftImage == NULL)
 	{
-		gDemoTimeLeftImage = new DDImage(gSexyAppBase->mDDInterface);
+		gDemoTimeLeftImage = gSexyAppBase->mRenderer->NewGPUImage();
 		gDemoTimeLeftImage->Create(50, aFont.GetHeight() + 4);
 		gDemoTimeLeftImage->SetImageMode(false, false);
 		gDemoTimeLeftImage->SetVolatile(true);
 		gDemoTimeLeftImage->mPurgeBits = false;
-		gDemoTimeLeftImage->mWantDDSurface = true;
+		gDemoTimeLeftImage->mWantSurface = true;
 		gDemoTimeLeftImage->PurgeBits();
 	}
 
@@ -2670,7 +2663,7 @@ bool SexyAppBase::DrawDirtyStuff()
 
 		if (mShowFPS)
 		{
-			Graphics g(mDDInterface->GetScreenImage());
+			Graphics g(mRenderer->GetScreenImage());
 			g.DrawImage(gFPSImage, mWidth - gFPSImage->GetWidth() - 10, mHeight - gFPSImage->GetHeight() - 10);
 
 			if (mPlayingDemoBuffer)
@@ -2682,8 +2675,8 @@ bool SexyAppBase::DrawDirtyStuff()
 		if (mWaitForVSync && mIsPhysWindowed && mSoftVSyncWait)
 		{
 			DWORD aTick = timeGetTime();
-			if (aTick - mLastDrawTick < mDDInterface->mMillisecondsPerFrame)
-				Sleep(mDDInterface->mMillisecondsPerFrame - (aTick - mLastDrawTick));
+			if (aTick - mLastDrawTick < mRenderer->mMillisecondsPerFrame)
+				Sleep(mRenderer->mMillisecondsPerFrame - (aTick - mLastDrawTick));
 		}
 
 		DWORD aPreScreenBltTime = timeGetTime();
@@ -2719,7 +2712,7 @@ bool SexyAppBase::DrawDirtyStuff()
 		{
 			int aTotalTime = aEndTime - aStartTime;
 
-			mNextDrawTick += 35 + max(aTotalTime, 15);
+			mNextDrawTick += 35 + std::max(aTotalTime, 15);
 
 			if ((int)(aEndTime - mNextDrawTick) >= 0)
 				mNextDrawTick = aEndTime;
@@ -2762,14 +2755,7 @@ void SexyAppBase::LogScreenSaverError(const std::string &theError)
 
 void SexyAppBase::BeginPopup()
 {
-	if (!mIsPhysWindowed)
-	{
-		if (mDDInterface && mDDInterface->mDD)
-		{
-			mDDInterface->mDD->FlipToGDISurface();
-			mNoDefer = true;
-		}
-	}
+
 }
 
 void SexyAppBase::EndPopup()
@@ -2931,7 +2917,8 @@ static INT_PTR CALLBACK MarkerListDialogProc(HWND hwnd, UINT msg, WPARAM wParam,
 
 			SexyString aStr = StrFormat(_S("%s (%02d:%02d:%02d)"), anItr->first.c_str(), anHours, aMinutes, aSeconds);
 			GetTextExtentPoint32(hDCListBox, aStr.c_str(), aStr.length(), &aSize);
-			dwExtent = max(aSize.cx + tm.tmAveCharWidth, (int)dwExtent);
+			dwExtent = aSize.cx + tm.tmAveCharWidth > (int)dwExtent ? aSize.cx + tm.tmAveCharWidth : (int)dwExtent;
+			
 			SendMessage(aListBox, LB_SETHORIZONTALEXTENT, dwExtent, 0);
 			LRESULT anIndex = SendMessage(aListBox, LB_ADDSTRING, 0, (LPARAM)aStr.c_str());
 			SendMessage(aListBox, LB_SETITEMDATA, anIndex, anItr->second);
@@ -3462,15 +3449,14 @@ void SexyAppBase::ProcessDemo()
 
 void SexyAppBase::ShowMemoryUsage()
 {
-	DWORD aTotal = 0;
-	DWORD aFree = 0;
+	uint32_t aTotal = 0;
+	uint32_t aFree = 0;
 
-	if (mDDInterface->mDD7 != NULL)
+	if (mRenderer != nullptr)
 	{
-		DDSCAPS2 aCaps;
-		ZeroMemory(&aCaps, sizeof(aCaps));
-		aCaps.dwCaps = DDSCAPS_VIDEOMEMORY;
-		mDDInterface->mDD7->GetAvailableVidMem(&aCaps, &aTotal, &aFree);
+		RenderingInfo anInfo = mRenderer->GetRenderingInfo();
+		aFree = anInfo.mFreeVideoMem;
+		aTotal = anInfo.mTotalVideoMem;
 	}
 
 	MemoryImageSet::iterator anItr = mMemoryImageSet.begin();
@@ -3557,7 +3543,7 @@ bool SexyAppBase::DebugKeyDown(int theKey)
 		}
 #endif
 	}
-	else if (theKey == SDLK_F3)
+	else if (theKey == KEYCODE_F3)
 	{
 		if (mWidgetManager->mKeyDown[KEYCODE_SHIFT])
 		{
@@ -3578,7 +3564,7 @@ bool SexyAppBase::DebugKeyDown(int theKey)
 			gForceDisplay = true;
 		}
 	}
-	else if (theKey == SDLK_F8)
+	else if (theKey == KEYCODE_F8)
 	{
 		if (mWidgetManager->mKeyDown[KEYCODE_SHIFT])
 		{
@@ -3594,7 +3580,7 @@ bool SexyAppBase::DebugKeyDown(int theKey)
 
 		return true;
 	}
-	else if (theKey == SDLK_F10)
+	else if (theKey == KEYCODE_F10)
 	{
 #ifndef RELEASEFINAL
 		if (mWidgetManager->mKeyDown[KEYCODE_CONTROL])
@@ -3615,7 +3601,7 @@ bool SexyAppBase::DebugKeyDown(int theKey)
 
 		return true;
 	}
-	else if (theKey == SDLK_F11)
+	else if (theKey == KEYCODE_F11)
 	{
 		if (mWidgetManager->mKeyDown[KEYCODE_SHIFT])
 			DumpProgramInfo();
@@ -3624,7 +3610,7 @@ bool SexyAppBase::DebugKeyDown(int theKey)
 
 		return true;
 	}
-	else if (theKey == SDLK_F2)
+	else if (theKey == KEYCODE_F2)
 	{
 		bool isPerfOn = !SexyPerf::IsPerfOn();
 		if (isPerfOn)
@@ -3899,7 +3885,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 
 					mLastUserInputTick = mLastTimerTime;
 
-					if (isDown && mDebugKeysEnabled && DebugKeyDown(key))
+					if (isDown && mDebugKeysEnabled && DebugKeyDown(GetKeyCodeFromSDLKeycode(key)))
 						break;
 
 					if (isDown)
@@ -4355,9 +4341,11 @@ void SexyAppBase::MakeWindow()
 	SDL_PropertiesID props = SDL_GetWindowProperties(mWindow->mInternalWindow);
 	SDL_SetPointerProperty(props, "sexyappframework.userdata", this);
 
-	if (mDDInterface == NULL)
+	if (mRenderer == nullptr)
 	{
-		mDDInterface = new DDInterface(this);
+#if SEXY_USE_OPENGL
+		mRenderer = new OpenGLRenderer(this);
+#endif
 
 		// Enable 3d setting
 		bool is3D = false;
@@ -4373,15 +4361,15 @@ void SexyAppBase::MakeWindow()
 			if (is3D)
 				mTest3D = true;
 
-			mDDInterface->mIs3D = is3D;
+			//mDDInterface->mIs3D = is3D;
 		}
 	}
 
 	int aResult = InitDDInterface();
 
-	if (mDDInterface->mD3DTester != NULL && mDDInterface->mD3DTester->ResultsChanged())
-		RegistryEraseValue(_S("Is3D"));
-
+	//if (mDDInterface->mD3DTester != NULL && mDDInterface->mD3DTester->ResultsChanged())
+		//RegistryEraseValue(_S("Is3D"));
+	/*
 	if ((mIsWindowed) && (aResult == DDInterface::RESULT_INVALID_COLORDEPTH))
 	{
 		if (mForceWindowed)
@@ -4421,7 +4409,7 @@ void SexyAppBase::MakeWindow()
 			DoExit(1);
 		}
 	}
-
+	*/
 	bool isActive = mActive;
 	mActive = GetActiveWindow() == mHWnd;
 
@@ -4441,7 +4429,7 @@ void SexyAppBase::MakeWindow()
 
 	ReInitImages();
 
-	mWidgetManager->mImage = mDDInterface->GetScreenImage();
+	mWidgetManager->mImage = mRenderer->GetScreenImage();
 	mWidgetManager->MarkAllDirty();
 
 	SetTimer(mHWnd, 100, mFrameTime, NULL);
@@ -4460,7 +4448,7 @@ void SexyAppBase::DeleteNativeImageData()
 
 void SexyAppBase::DeleteExtraImageData()
 {
-	AutoCrit anAutoCrit(mDDInterface->mCritSect);
+	AutoCrit anAutoCrit(mRenderer->mCritSect);
 	MemoryImageSet::iterator anItr = mMemoryImageSet.begin();
 	while (anItr != mMemoryImageSet.end())
 	{
@@ -4510,77 +4498,6 @@ void SexyAppBase::StartLoadingThread()
 		::SetThreadPriority(::GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
 		mLoadingThreadStarted = true;
 		_beginthread(LoadingThreadProcStub, 0, this);
-	}
-}
-void SexyAppBase::CursorThreadProc()
-{
-	::SetThreadPriority(::GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
-
-	POINT aLastCursorPos = {0, 0};
-	int aLastDrawCount = 0;
-
-	while (!mShutdown)
-	{
-		//		if (mProcessInTimer)
-		//			PostMessage(mHWnd,WM_TIMER,101,0);
-
-		POINT aCursorPos;
-
-		if (mPlayingDemoBuffer)
-		{
-			aCursorPos.x = mLastDemoMouseX;
-			aCursorPos.y = mLastDemoMouseY;
-		}
-		else
-		{
-			::GetCursorPos(&aCursorPos);
-			::ScreenToClient(mHWnd, &aCursorPos);
-		}
-
-		if (aLastDrawCount != mDrawCount)
-		{
-			// We did a draw so we may have committed a pending mNextCursorX/Y
-			aLastCursorPos.x = mDDInterface->mCursorX;
-			aLastCursorPos.y = mDDInterface->mCursorY;
-		}
-
-		if ((aCursorPos.x != aLastCursorPos.x) || (aCursorPos.y != aLastCursorPos.y))
-		{
-			DWORD aTimeNow = timeGetTime();
-			if (aTimeNow - mNextDrawTick > mDDInterface->mMillisecondsPerFrame + 5)
-			{
-				// Do the special drawing if we are rendering at less than full framerate
-				mDDInterface->SetCursorPos(aCursorPos.x, aCursorPos.y);
-				aLastCursorPos = aCursorPos;
-			}
-			else
-			{
-				// Set them up to get assigned in the next screen redraw
-				mDDInterface->mNextCursorX = aCursorPos.x;
-				mDDInterface->mNextCursorY = aCursorPos.y;
-			}
-		}
-
-		Sleep(10);
-	}
-
-	mCursorThreadRunning = false;
-}
-
-void SexyAppBase::CursorThreadProcStub(void *theArg)
-{
-	CoInitialize(NULL);
-	SexyAppBase *aSexyApp = (SexyAppBase *)theArg;
-	aSexyApp->CursorThreadProc();
-}
-
-void SexyAppBase::StartCursorThread()
-{
-	if (!mCursorThreadRunning)
-	{
-		mCursorThreadRunning = true;
-		::SetThreadPriority(::GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
-		_beginthread(CursorThreadProcStub, 0, this);
 	}
 }
 
@@ -4644,8 +4561,8 @@ void SexyAppBase::SetAlphaDisabled(bool isDisabled)
 	if (mAlphaDisabled != isDisabled)
 	{
 		mAlphaDisabled = isDisabled;
-		mDDInterface->SetVideoOnlyDraw(mAlphaDisabled);
-		mWidgetManager->mImage = mDDInterface->GetScreenImage();
+		mRenderer->SetVideoOnlyDraw(mAlphaDisabled);
+		mWidgetManager->mImage = mRenderer->GetScreenImage();
 		mWidgetManager->MarkAllDirty();
 	}
 }
@@ -4654,9 +4571,9 @@ void SexyAppBase::EnforceCursor()
 {
 	bool wantSysCursor = true;
 
-	if (mDDInterface == NULL)
+	if (mRenderer == NULL)
 		return;
-
+	/*
 	if ((mSEHOccured) || (!mMouseIn))
 	{
 		::SetCursor(::LoadCursor(NULL, IDC_ARROW));
@@ -4746,7 +4663,7 @@ void SexyAppBase::EnforceCursor()
 		// Don't hide the hardware cursor when playing back a demo buffer
 		//		if (!mPlayingDemoBuffer)
 		//			::ShowCursor(mSysCursor);
-	}
+	}*/	
 }
 
 void SexyAppBase::ProcessSafeDeleteList()
@@ -4775,10 +4692,10 @@ void SexyAppBase::UpdateFTimeAcc()
 	{
 		int aDeltaTime = aCurTime - mLastTimeCheck;
 
-		mUpdateFTimeAcc = min(mUpdateFTimeAcc + aDeltaTime, 200.0);
+		mUpdateFTimeAcc = std::min(mUpdateFTimeAcc + aDeltaTime, 200.0);
 
 		if (mRelaxUpdateBacklogCount > 0)
-			mRelaxUpdateBacklogCount = max(mRelaxUpdateBacklogCount - aDeltaTime, 0);
+			mRelaxUpdateBacklogCount = std::max(mRelaxUpdateBacklogCount - aDeltaTime, 0);
 	}
 
 	mLastTimeCheck = aCurTime;
@@ -4995,7 +4912,7 @@ bool SexyAppBase::Process(bool allowSleep)
 			//  too much to keep our timing tending toward occuring right after
 			//  redraws
 			if (isVSynched)
-				mUpdateFTimeAcc = max(mUpdateFTimeAcc - aFrameFTime - 0.2f, 0.0);
+				mUpdateFTimeAcc = std::max(mUpdateFTimeAcc - aFrameFTime - 0.2f, 0.0);
 			else
 				mUpdateFTimeAcc -= aFrameFTime;
 
@@ -5040,7 +4957,7 @@ bool SexyAppBase::Process(bool allowSleep)
 
 			ulong anEndTime = timeGetTime();
 			int anElapsedTime = (anEndTime - aStartTime) - aCumSleepTime;
-			int aLoadingYieldSleepTime = min(250, (anElapsedTime * 2) - aCumSleepTime);
+			int aLoadingYieldSleepTime = std::min(250, (anElapsedTime * 2) - aCumSleepTime);
 
 			if (aLoadingYieldSleepTime >= 0)
 			{
@@ -5178,15 +5095,16 @@ int SexyAppBase::InitDDInterface()
 {
 	PreDDInterfaceInitHook();
 	DeleteNativeImageData();
-	int aResult = mDDInterface->Init(mHWnd, mIsPhysWindowed);
+	int aResult = mRenderer->Init();
 	DemoSyncRefreshRate();
-	if (DDInterface::RESULT_OK == aResult)
+	if (true == aResult)
 	{
-		mScreenBounds.mX = (mWidth - mDDInterface->mWidth) / 2;
-		mScreenBounds.mY = (mHeight - mDDInterface->mHeight) / 2;
-		mScreenBounds.mWidth = mDDInterface->mWidth;
-		mScreenBounds.mHeight = mDDInterface->mHeight;
-		mWidgetManager->Resize(mScreenBounds, mDDInterface->mPresentationRect);
+		mScreenBounds.mX = (mWidth - mRenderer->mWidth) / 2;
+		mScreenBounds.mY = (mHeight - mRenderer->mHeight) / 2;
+		mScreenBounds.mWidth = mRenderer->mWidth;
+		mScreenBounds.mHeight = mRenderer->mHeight;
+		mRenderer->UpdateViewport();
+		mWidgetManager->Resize(mScreenBounds, mRenderer->mPresentationRect);
 		PostDDInterfaceInitHook();
 	}
 	return aResult;
@@ -5200,8 +5118,6 @@ void SexyAppBase::Start()
 {
 	if (mShutdown)
 		return;
-
-	StartCursorThread();
 
 	if (mAutoStartLoadingThread)
 		StartLoadingThread();
@@ -5649,6 +5565,16 @@ void SexyAppBase::Init()
 	if (mShutdown)
 		return;
 
+	if (!SDL_Init(SDL_INIT_VIDEO))
+	{
+		DoExit(0);
+	}
+
+	if (FT_Init_FreeType(&mFreeTypeLib))
+	{
+		DoExit(0);
+	}
+
 	if (gDDrawDLL == NULL)
 	{
 		MessageBox(NULL,
@@ -5906,14 +5832,14 @@ void SexyAppBase::EnableCustomCursors(bool enabled)
 	EnforceCursor();
 }
 
-Sexy::DDImage *SexyAppBase::GetImage(const std::string &theFileName, bool commitBits)
+Sexy::GPUImage *SexyAppBase::GetImage(const std::string &theFileName, bool commitBits)
 {
 	ImageLib::Image *aLoadedImage = ImageLib::GetImage(theFileName, true);
 
 	if (aLoadedImage == NULL)
 		return NULL;
 
-	DDImage *anImage = new DDImage(mDDInterface);
+	GPUImage *anImage = mRenderer->NewGPUImage();
 	anImage->mFilePath = theFileName;
 	anImage->SetBits(aLoadedImage->GetBits(), aLoadedImage->GetWidth(), aLoadedImage->GetHeight(), commitBits);
 	anImage->mFilePath = theFileName;
@@ -5922,7 +5848,7 @@ Sexy::DDImage *SexyAppBase::GetImage(const std::string &theFileName, bool commit
 	return anImage;
 }
 
-Sexy::DDImage *SexyAppBase::CreateCrossfadeImage(
+Sexy::GPUImage *SexyAppBase::CreateCrossfadeImage(
 	Sexy::Image *theImage1, const Rect &theRect1, Sexy::Image *theImage2, const Rect &theRect2, double theFadeFactor)
 {
 	MemoryImage *aMemoryImage1 = dynamic_cast<MemoryImage *>(theImage1);
@@ -5948,7 +5874,7 @@ Sexy::DDImage *SexyAppBase::CreateCrossfadeImage(
 	int aWidth = theRect1.mWidth;
 	int aHeight = theRect1.mHeight;
 
-	DDImage *anImage = new DDImage(mDDInterface);
+	GPUImage *anImage = mRenderer->NewGPUImage();
 	anImage->Create(aWidth, aHeight);
 
 	ulong *aDestBits = anImage->GetBits();
@@ -6046,14 +5972,14 @@ void SexyAppBase::ColorizeImage(Image *theImage, const Color &theColor)
 	aSrcMemoryImage->BitsChanged();
 }
 
-DDImage *SexyAppBase::CreateColorizedImage(Image *theImage, const Color &theColor)
+GPUImage *SexyAppBase::CreateColorizedImage(Image *theImage, const Color &theColor)
 {
 	MemoryImage *aSrcMemoryImage = dynamic_cast<MemoryImage *>(theImage);
 
 	if (aSrcMemoryImage == NULL)
 		return NULL;
 
-	DDImage *anImage = new DDImage(mDDInterface);
+	GPUImage *anImage = mRenderer->NewGPUImage();
 
 	anImage->Create(theImage->GetWidth(), theImage->GetHeight());
 
@@ -6118,9 +6044,9 @@ DDImage *SexyAppBase::CreateColorizedImage(Image *theImage, const Color &theColo
 	return anImage;
 }
 
-DDImage *SexyAppBase::CopyImage(Image *theImage, const Rect &theRect)
+GPUImage *SexyAppBase::CopyImage(Image *theImage, const Rect &theRect)
 {
-	DDImage *anImage = new DDImage(mDDInterface);
+	GPUImage *anImage = mRenderer->NewGPUImage();
 
 	anImage->Create(theRect.mWidth, theRect.mHeight);
 
@@ -6132,7 +6058,7 @@ DDImage *SexyAppBase::CopyImage(Image *theImage, const Rect &theRect)
 	return anImage;
 }
 
-DDImage *SexyAppBase::CopyImage(Image *theImage)
+GPUImage *SexyAppBase::CopyImage(Image *theImage)
 {
 	return CopyImage(theImage, Rect(0, 0, theImage->GetWidth(), theImage->GetHeight()));
 }
@@ -6203,8 +6129,8 @@ void SexyAppBase::RotateImageHue(Sexy::MemoryImage *theImage, int theDelta)
 		int g = (aPixel >> 8) & 0xff;
 		int b = aPixel & 0xff;
 
-		int maxval = max(r, max(g, b));
-		int minval = min(r, min(g, b));
+		int maxval = std::max(r, std::max(g, b));
+		int minval = std::min(r, std::min(g, b));
 		int h = 0;
 		int s = 0;
 		int l = (minval + maxval) / 2;
@@ -6349,8 +6275,8 @@ ulong SexyAppBase::HSLToRGB(int h, int s, int l)
 
 ulong SexyAppBase::RGBToHSL(int r, int g, int b)
 {
-	int maxval = max(r, max(g, b));
-	int minval = min(r, min(g, b));
+	int maxval = std::max(r, std::max(g, b));
+	int minval = std::min(r, std::min(g, b));
 	int hue = 0;
 	int saturation = 0;
 	int luminosity = (minval + maxval) / 2;
@@ -6394,7 +6320,7 @@ void SexyAppBase::RGBToHSL(const ulong *theSource, ulong *theDest, int theSize)
 
 void SexyAppBase::PrecacheAdditive(MemoryImage *theImage)
 {
-	theImage->GetRLAdditiveData(mDDInterface);
+	theImage->GetRLAdditiveData(mRenderer);
 }
 
 void SexyAppBase::PrecacheAlpha(MemoryImage *theImage)
@@ -6404,7 +6330,7 @@ void SexyAppBase::PrecacheAlpha(MemoryImage *theImage)
 
 void SexyAppBase::PrecacheNative(MemoryImage *theImage)
 {
-	theImage->GetNativeAlphaData(mDDInterface);
+	theImage->GetNativeAlphaData(mRenderer);
 }
 
 void SexyAppBase::PlaySample(int theSoundNum)
@@ -6499,13 +6425,13 @@ void SexyAppBase::SetMasterVolume(double theMasterVolume)
 
 void SexyAppBase::AddMemoryImage(MemoryImage *theMemoryImage)
 {
-	AutoCrit anAutoCrit(mDDInterface->mCritSect);
+	AutoCrit anAutoCrit(mRenderer->mCritSect);
 	mMemoryImageSet.insert(theMemoryImage);
 }
 
 void SexyAppBase::RemoveMemoryImage(MemoryImage *theMemoryImage)
 {
-	AutoCrit anAutoCrit(mDDInterface->mCritSect);
+	AutoCrit anAutoCrit(mRenderer->mCritSect);
 	MemoryImageSet::iterator anItr = mMemoryImageSet.find(theMemoryImage);
 	if (anItr != mMemoryImageSet.end())
 		mMemoryImageSet.erase(anItr);
@@ -6515,34 +6441,36 @@ void SexyAppBase::RemoveMemoryImage(MemoryImage *theMemoryImage)
 
 void SexyAppBase::Remove3DData(MemoryImage *theMemoryImage)
 {
-	if (mDDInterface)
-		mDDInterface->Remove3DData(theMemoryImage);
+	if (mRenderer)
+		mRenderer->Remove3DData(theMemoryImage);
 }
 
 bool SexyAppBase::Is3DAccelerated()
 {
-	return mDDInterface->mIs3D;
+	return true; //mRenderer->mIs3D; -I mean IT IS 3D accelerated
 }
 
 bool SexyAppBase::Is3DAccelerationSupported()
 {
-	if (mDDInterface->mD3DTester)
-		return mDDInterface->mD3DTester->Is3DSupported();
-	else
-		return false;
+	return true;
+	//if (mDDInterface->mD3DTester)
+		//return mDDInterface->mD3DTester->Is3DSupported();
+	//else
+		//return false;
 }
 
 bool SexyAppBase::Is3DAccelerationRecommended()
 {
-	if (mDDInterface->mD3DTester)
-		return mDDInterface->mD3DTester->Is3DRecommended();
-	else
-		return false;
+	return true;
+	//if (mDDInterface->mD3DTester)
+		//return mDDInterface->mD3DTester->Is3DRecommended();
+	//else
+		//return false;
 }
 
 void SexyAppBase::DemoSyncRefreshRate()
 {
-	mSyncRefreshRate = mDDInterface->mRefreshRate;
+	mSyncRefreshRate = mRenderer->mRefreshRate;
 
 	if (mRecordingDemoBuffer)
 	{
@@ -6557,16 +6485,16 @@ void SexyAppBase::DemoSyncRefreshRate()
 
 void SexyAppBase::Set3DAcclerated(bool is3D, bool reinit)
 {
-	if (mDDInterface->mIs3D == is3D)
+	// if (mRenderer->mIs3D == is3D)
 		return;
-
+	 //
 	mUserChanged3DSetting = true;
-	mDDInterface->mIs3D = is3D;
+	//mDDInterface->mIs3D = is3D;
 
 	if (reinit)
 	{
 		int aResult = InitDDInterface();
-
+		/*
 		if (is3D && aResult != DDInterface::RESULT_OK)
 		{
 			Set3DAcclerated(false, reinit);
@@ -6577,11 +6505,11 @@ void SexyAppBase::Set3DAcclerated(bool is3D, bool reinit)
 			Popup(GetString("FAILED_INIT_DIRECTDRAW", _S("Failed to initialize DirectDraw: ")) +
 				  StringToSexyString(DDInterface::ResultToString(aResult) + " " + mDDInterface->mErrorString));
 			DoExit(1);
-		}
+		}*/
 
 		ReInitImages();
 
-		mWidgetManager->mImage = mDDInterface->GetScreenImage();
+		mWidgetManager->mImage = mRenderer->GetScreenImage();
 		mWidgetManager->MarkAllDirty();
 	}
 }
@@ -6595,7 +6523,7 @@ SharedImageRef SexyAppBase::GetSharedImage(const std::string &theFileName, const
 	SharedImageRef aSharedImageRef;
 
 	{
-		AutoCrit anAutoCrit(mDDInterface->mCritSect);
+		AutoCrit anAutoCrit(mRenderer->mCritSect);
 		aResultPair = mSharedImageMap.insert(
 			SharedImageMap::value_type(SharedImageMap::key_type(anUpperFileName, anUpperVariant), SharedImage()));
 		aSharedImageRef = &aResultPair.first->second;
@@ -6608,7 +6536,7 @@ SharedImageRef SexyAppBase::GetSharedImage(const std::string &theFileName, const
 	{
 		// Pass in a '!' as the first char of the file name to create a new image
 		if ((theFileName.length() > 0) && (theFileName[0] == '!'))
-			aSharedImageRef.mSharedImage->mImage = new DDImage(mDDInterface);
+			aSharedImageRef.mSharedImage->mImage = mRenderer->NewGPUImage();
 		else
 			aSharedImageRef.mSharedImage->mImage = GetImage(theFileName, false);
 	}
@@ -6618,7 +6546,7 @@ SharedImageRef SexyAppBase::GetSharedImage(const std::string &theFileName, const
 
 void SexyAppBase::CleanSharedImages()
 {
-	AutoCrit anAutoCrit(mDDInterface->mCritSect);
+	AutoCrit anAutoCrit(mRenderer->mCritSect);
 
 	if (mCleanupSharedImages)
 	{

@@ -1,5 +1,7 @@
+#if SEXY_FLASH_SUPPORT
+
 #include "FlashWidget.h"
-#include "DDImage.h"
+#include "GPUImage.h"
 #include "SexyAppBase.h"
 #include "WidgetManager.h"
 #include "Debug.h"
@@ -991,7 +993,7 @@ void FlashWidget::RebuildImages()
 {
 	CleanupImages();
 
-	mImage = new DDImage(gSexyAppBase->mDDInterface);
+	mImage = new GPUImage(gSexyAppBase->mDDInterface);
 	mImage->Create(mWidth, mHeight);
 	mImage->SetImageMode(false, false);
 }
@@ -1331,3 +1333,6 @@ void FlashWidget::SysColorChanged()
 
 	MarkDirty();
 }
+
+
+#endif

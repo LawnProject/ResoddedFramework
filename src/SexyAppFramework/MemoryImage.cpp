@@ -7,8 +7,7 @@
 #include "Quantize.h"
 #include "PerfTimer.h"
 #include "SWTri.h"
-#include "D3DInterface.h"
-#include "DDInterface.h"
+#include "Renderer.h"
 
 #include <math.h>
 
@@ -46,7 +45,7 @@ MemoryImage::MemoryImage(const MemoryImage &theMemoryImage)
 
 	if ((theMemoryImage.mBits == NULL) && (theMemoryImage.mColorTable == NULL))
 	{
-		// Must be a DDImage with only a DDSurface
+		// Must be a GPUImage with only a GPU Surface
 		aNonConstMemoryImage->GetBits();
 		deleteBits = true;
 	}
@@ -855,7 +854,7 @@ void MemoryImage::SetVolatile(bool isVolatile)
 	mIsVolatile = isVolatile;
 }
 
-void *MemoryImage::GetNativeAlphaData(NativeDisplay *theDisplay)
+void *MemoryImage::GetNativeAlphaData(Renderer *theDisplay)
 {
 	if (mNativeAlphaData != NULL)
 		return mNativeAlphaData;
@@ -964,7 +963,7 @@ uchar *MemoryImage::GetRLAlphaData()
 	return mRLAlphaData;
 }
 
-uchar *MemoryImage::GetRLAdditiveData(NativeDisplay *theNative)
+uchar *MemoryImage::GetRLAdditiveData(Renderer *theNative)
 {
 	if (mRLAdditiveData == NULL)
 	{
@@ -1099,7 +1098,7 @@ void MemoryImage::PurgeBits()
 		if ((mBits == NULL) && (mColorIndices == NULL))
 			return;
 
-		GetNativeAlphaData((NativeDisplay *)gSexyAppBase->mDDInterface);
+		GetNativeAlphaData(gSexyAppBase->mRenderer);
 	}
 
 	delete[] mBits;
@@ -1229,7 +1228,7 @@ ulong *MemoryImage::GetBits()
 		}
 		else if (mNativeAlphaData != NULL)
 		{
-			NativeDisplay *aDisplay = (NativeDisplay *)gSexyAppBase->mDDInterface;
+			NativeDisplay *aDisplay = (NativeDisplay *)gSexyAppBase->mRenderer;
 
 			const int rMask = aDisplay->mRedMask;
 			const int gMask = aDisplay->mGreenMask;
@@ -1256,7 +1255,7 @@ ulong *MemoryImage::GetBits()
 				*(aDestPtr++) = (r << 16) | (g << 8) | (b) | (anAlpha << 24);
 			}
 		}
-		else if ((mD3DData == NULL) || (!mApp->mDDInterface->mD3DInterface->RecoverBits(this)))
+		else if ((mD3DData == NULL) || (!mApp->mRenderer->RecoverBits(this)))
 		{
 			ZeroMemory(mBits, aSize * sizeof(ulong));
 		}

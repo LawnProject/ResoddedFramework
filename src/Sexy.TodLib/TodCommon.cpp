@@ -8,13 +8,12 @@
 #include "../GameConstants.h"
 #include "../SexyAppFramework/Font.h"
 #include "../SexyAppFramework/Debug.h"
-#include "../SexyAppFramework/DDImage.h"
+#include "../SexyAppFramework/GPUImage.h"
 #include "../SexyAppFramework/Graphics.h"
 #include "../SexyAppFramework/ImageFont.h"
 #include "../SexyAppFramework/PerfTimer.h"
 #include "../SexyAppFramework/SexyMatrix.h"
-#include "../SexyAppFramework/DDInterface.h"
-#include "../SexyAppFramework/D3DInterface.h"
+#include "../SexyAppFramework/Renderer.h"
 
 //0x510BC0
 void Tod_SWTri_AddAllDrawTriFuncs()
@@ -857,12 +856,12 @@ void TodBltMatrix(Graphics *g,
 								 theSrcRect,
 								 g->mLinearBlend);
 	}
-	else if (DDImage::Check3D(g->mDestImage))
+	else if (GPUImage::Check3D(g->mDestImage))
 	{
 		theImage->mDrawn = true;
-		D3DInterface *aInterface = ((DDImage *)g->mDestImage)->mDDInterface->mD3DInterface;
+		Renderer *aInterface = ((GPUImage *)g->mDestImage)->mRenderer;
 		aInterface->BltTransformed(theImage,
-								   nullptr,
+								   theClipRect,
 								   theColor,
 								   theDrawMode,
 								   theSrcRect,
@@ -1291,7 +1290,7 @@ bool TodResourceManager::TodLoadNextResource()
 		{
 		case ResType_Image: {
 			ImageRes *anImageRes = (ImageRes *)aRes;
-			if ((DDImage *)anImageRes->mImage != nullptr)
+			if ((GPUImage *)anImageRes->mImage != nullptr)
 			{
 				mCurResGroupListItr++;
 				continue;

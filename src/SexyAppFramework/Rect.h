@@ -96,6 +96,11 @@ template <class _T> class TRect
 		return (mX == theRect.mX) && (mY == theRect.mY) && (mWidth == theRect.mWidth) && (mHeight == theRect.mHeight);
 	}
 
+	bool operator!=(const TRect<_T> &theRect) const
+	{
+		return (mX != theRect.mX) || (mY != theRect.mY) || (mWidth != theRect.mWidth) || (mHeight != theRect.mHeight);
+	}
+
 	RECT ToRECT() const
 	{
 		RECT aRect = {mX, mY, mX + mWidth, mY + mHeight};

@@ -3,10 +3,9 @@
 #include "../../Resources.h"
 #include "../../GameConstants.h"
 #include "../../Sexy.TodLib/TodDebug.h"
-#include "../../SexyAppFramework/DDImage.h"
+#include "../../SexyAppFramework/GPUImage.h"
 #include "../../SexyAppFramework/Graphics.h"
-#include "../../SexyAppFramework/DDInterface.h"
-#include "../../SexyAppFramework/D3DInterface.h"
+#include "../../SexyAppFramework/Renderer.h"
 
 //0x469A60
 void PoolEffect::PoolEffectInitialize()
@@ -233,20 +232,10 @@ void PoolEffect::PoolEffectDraw(Sexy::Graphics *g, bool theIsNight)
 	}
 
 	UpdateWaterEffect(g);
-	D3DInterface *anInterface = ((DDImage *)g->mDestImage)->mDDInterface->mD3DInterface;
-	anInterface->CheckDXError(anInterface->mD3DDevice->SetTextureStageState(
-								  0, D3DTEXTURESTAGESTATETYPE::D3DTSS_ADDRESSU, D3DTEXTUREADDRESS::D3DTADDRESS_WRAP),
-							  "DrawPool");
-	anInterface->CheckDXError(anInterface->mD3DDevice->SetTextureStageState(
-								  0, D3DTEXTURESTAGESTATETYPE::D3DTSS_ADDRESSV, D3DTEXTUREADDRESS::D3DTADDRESS_WRAP),
-							  "DrawPool");
+	Renderer *aRenderer = ((GPUImage *)g->mDestImage)->mRenderer;
+	aRenderer->mCurrentUVWrapMode = UV_WRAP;
 	g->DrawTrianglesTex(mCausticImage, aVertArray[2], 150);
-	anInterface->CheckDXError(anInterface->mD3DDevice->SetTextureStageState(
-								  0, D3DTEXTURESTAGESTATETYPE::D3DTSS_ADDRESSU, D3DTEXTUREADDRESS::D3DTADDRESS_CLAMP),
-							  "DrawPool");
-	anInterface->CheckDXError(anInterface->mD3DDevice->SetTextureStageState(
-								  0, D3DTEXTURESTAGESTATETYPE::D3DTSS_ADDRESSV, D3DTEXTUREADDRESS::D3DTADDRESS_CLAMP),
-							  "DrawPool");
+	aRenderer->mCurrentUVWrapMode = UV_CLAMP;
 }
 
 void PoolEffect::PoolEffectUpdate()

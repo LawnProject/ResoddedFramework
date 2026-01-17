@@ -30,4 +30,16 @@ FetchContent_Declare(
     GIT_TAG master
 )
 
-FetchContent_MakeAvailable(SDL3 zlib openal ogg vorbis)
+FetchContent_Declare(
+    glm
+    GIT_REPOSITORY https://github.com/g-truc/glm
+    GIT_TAG master
+)
+
+FetchContent_Declare(
+    freetype
+    GIT_REPOSITORY https://github.com/freetype/freetype
+    GIT_TAG master
+)
+
+FetchContent_MakeAvailable(SDL3 zlib openal ogg vorbis glm freetype)

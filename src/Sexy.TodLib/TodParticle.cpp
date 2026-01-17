@@ -4,7 +4,7 @@
 #include "EffectSystem.h"
 #include "../GameConstants.h"
 #include "../SexyAppFramework/Graphics.h"
-#include "../SexyAppFramework/D3DInterface.h"
+#include "../SexyAppFramework/Renderer.h"
 
 int gParticleDefCount;					  // [0x6A9F08]
 TodParticleDefinition *gParticleDefArray; // [0x6A9F0C]
@@ -174,7 +174,7 @@ bool TodParticleLoadADef(TodParticleDefinition *theParticleDef, const char *theP
 			FloatTrackSetDefault(aDef.mClipRight, 0.0f);
 			FloatTrackSetDefault(aDef.mAnimationRate, 0.0f);
 			if (aDef.mImage)
-				((MemoryImage *)aDef.mImage)->mD3DFlags |= D3DImageFlags::D3DImageFlag_MinimizeNumSubdivisions;
+				((MemoryImage *)aDef.mImage)->mD3DFlags |= ImageFlags::ImageFlag_MinimizeNumSubdivisions;
 		}
 		return true;
 	}

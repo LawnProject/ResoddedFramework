@@ -7,9 +7,8 @@
 #include "TodParticle.h"
 #include "EffectSystem.h"
 #include "../GameConstants.h"
-#include "../SexyAppFramework/DDImage.h"
-#include "../SexyAppFramework/DDInterface.h"
-#include "../SexyAppFramework/D3DInterface.h"
+#include "../SexyAppFramework/GPUImage.h"
+#include "../SexyAppFramework/Renderer.h"
 
 EffectSystem *gEffectSystem = nullptr; //[0x6A9EB8]
 
@@ -385,11 +384,11 @@ void TodTriangleGroup::DrawGroup(Graphics *g)
 			gTodTriangleDrawAdditive = true;
 		TodSandImageIfNeeded(mImage);
 
-		if (DDImage::Check3D(g->mDestImage))
+		if (GPUImage::Check3D(g->mDestImage))
 		{
-			DDImage *anImage = (DDImage *)g->mDestImage;
+			GPUImage *anImage = (GPUImage *)g->mDestImage;
 			mImage->mDrawn = true;
-			anImage->mDDInterface->mD3DInterface->DrawTrianglesTex(
+			anImage->mRenderer->DrawTrianglesTex(
 				mVertArray, mTriangleCount, Color::White, mDrawMode, mImage, 0.0f, 0.0f, g->mLinearBlend);
 		}
 		else

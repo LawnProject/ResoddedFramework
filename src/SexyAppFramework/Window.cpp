@@ -7,7 +7,8 @@ using namespace Sexy;
 Window::Window(SexyAppBase* theApp)
 {
     mApp = theApp;
-    mInternalWindow = SDL_CreateWindow(mApp->mTitle.c_str(), mApp->mWidth, mApp->mHeight, 0);
+
+	mInternalWindow = SDL_CreateWindow(mApp->mTitle.c_str(), mApp->mWidth, mApp->mHeight, SDL_WINDOW_OPENGL | (mApp->mIsWindowed ? 0 : SDL_WINDOW_FULLSCREEN));
 }
 
 Window::~Window()

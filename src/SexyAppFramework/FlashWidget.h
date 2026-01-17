@@ -1,3 +1,5 @@
+#if SEXY_FLASH_SUPPORT
+
 #ifndef __FLASHWIDGET_H__
 #define __FLASHWIDGET_H__
 
@@ -18,7 +20,7 @@ namespace Sexy
 class Image;
 class FlashSink;
 class MemoryImage;
-class DDImage;
+class GPUImage;
 class ControlSite;
 
 class FlashListener
@@ -62,7 +64,7 @@ class FlashWidget : public Widget
 	IOleInPlaceObjectWindowless *mWindowlessObject;
 
 	int mCOMCount;
-	DDImage *mImage;
+	GPUImage *mImage;
 	int mPauseCount;
 	bool mHasLostFocus;
 
@@ -125,3 +127,5 @@ class FlashWidget : public Widget
 } // namespace Sexy
 
 #endif //__FLASHWIDGET_H__
+
+#endif

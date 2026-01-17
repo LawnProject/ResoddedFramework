@@ -3,7 +3,7 @@
 #include "Graphics.h"
 #include "Image.h"
 #include "KeyCodes.h"
-#include "DDImage.h"
+#include "GPUImage.h"
 #include "SexyAppBase.h"
 #include "PerfTimer.h"
 #include "Debug.h"
@@ -422,10 +422,10 @@ bool WidgetManager::DrawScreen()
 	Graphics aScrG(mImage);
 	mCurG = &aScrG;
 
-	DDImage *aDDImage = dynamic_cast<DDImage *>(mImage);
+	GPUImage *aGPUImage = dynamic_cast<GPUImage *>(mImage);
 	bool surfaceLocked = false;
-	if (aDDImage != NULL)
-		surfaceLocked = aDDImage->LockSurface();
+	if (aGPUImage != NULL)
+		surfaceLocked = aGPUImage->LockSurface();
 
 	if (aDirtyCount > 0)
 	{
@@ -460,8 +460,8 @@ bool WidgetManager::DrawScreen()
 
 	FlushDeferredOverlayWidgets(0x7FFFFFFF);
 
-	if (aDDImage != NULL && surfaceLocked)
-		aDDImage->UnlockSurface();
+	if (aGPUImage != NULL && surfaceLocked)
+		aGPUImage->UnlockSurface();
 
 	mCurG = NULL;
 

@@ -10,6 +10,9 @@
 #include "CritSect.h"
 #include "SharedImage.h"
 #include "Ratio.h"
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 
 namespace ImageLib
 {
@@ -22,7 +25,7 @@ namespace Sexy
 class WidgetManager;
 class DDInterface;
 class Image;
-class DDImage;
+class GPUImage;
 class Widget;
 class SoundManager;
 class MusicInterface;
@@ -30,6 +33,7 @@ class MemoryImage;
 class HTTPTransfer;
 class Dialog;
 class Window;
+class Renderer;
 
 class ResourceManager;
 
@@ -179,7 +183,6 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	bool mNoDefer;
 	bool mFullScreenPageFlip;
 	bool mTabletPC;
-	DDInterface *mDDInterface;
 	bool mAlphaDisabled;
 	MusicInterface *mMusicInterface;
 	bool mReadFromRegistry;
@@ -206,6 +209,8 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	int mNonDrawCount;
 	int mFrameTime;
 
+	FT_Library mFreeTypeLib;
+	Renderer *mRenderer;
 	bool mIsDrawing;
 	bool mLastDrawWasEmpty;
 	bool mHasPendingDraw;
@@ -346,11 +351,6 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	virtual void LoadingThreadCompleted();
 	static void LoadingThreadProcStub(void *theArg);
 
-	// Cursor thread methods
-	void CursorThreadProc();
-	static void CursorThreadProcStub(void *theArg);
-	void StartCursorThread();
-
 	void WaitForLoadingThread();
 	void ProcessSafeDeleteList();
 	void RestoreScreenResolution();
@@ -448,7 +448,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	void SetCursor(int theCursorNum);
 	int GetCursor();
 	void EnableCustomCursors(bool enabled);
-	virtual DDImage *GetImage(const std::string &theFileName, bool commitBits = true);
+	virtual GPUImage *GetImage(const std::string &theFileName, bool commitBits = true);
 	virtual SharedImageRef GetSharedImage(const std::string &theFileName,
 										  const std::string &theVariant = "",
 										  bool *isNew = NULL);
@@ -459,12 +459,12 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	void PrecacheNative(MemoryImage *theImage);
 	void SetCursorImage(int theCursorNum, Image *theImage);
 
-	DDImage *CreateCrossfadeImage(
+	GPUImage *CreateCrossfadeImage(
 		Image *theImage1, const Rect &theRect1, Image *theImage2, const Rect &theRect2, double theFadeFactor);
 	void ColorizeImage(Image *theImage, const Color &theColor);
-	DDImage *CreateColorizedImage(Image *theImage, const Color &theColor);
-	DDImage *CopyImage(Image *theImage, const Rect &theRect);
-	DDImage *CopyImage(Image *theImage);
+	GPUImage *CreateColorizedImage(Image *theImage, const Color &theColor);
+	GPUImage *CopyImage(Image *theImage, const Rect &theRect);
+	GPUImage *CopyImage(Image *theImage);
 	void MirrorImage(Image *theImage);
 	void FlipImage(Image *theImage);
 	void RotateImageHue(Sexy::MemoryImage *theImage, int theDelta);

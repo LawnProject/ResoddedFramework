@@ -148,7 +148,7 @@ Board::Board(LawnApp *theApp)
 	mSukhbirMode = mApp->mSukhbirMode;
 	mShowShovel = false;
 	mToolTip = new ToolTipWidget();
-	mDebugFont = new SysFont("Arial Unicode MS", 10, true, false, false);
+	mDebugFont = new SysFont("arial", 10, true, false, false);
 	mAdvice = new MessageWidget(mApp);
 	mBackground = BackgroundType::BACKGROUND_1_DAY;
 	mMainCounter = 0;

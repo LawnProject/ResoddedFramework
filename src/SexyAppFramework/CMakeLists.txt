@@ -44,7 +44,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     SDL3::SDL3-static
     zlibstatic
     OpenAL::OpenAL
+    glm
     ogg
+    freetype
     Vorbis::vorbisfile
     Vorbis::vorbis
     ImageLib
@@ -65,6 +67,7 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
 
     # SAF specific
     USE_OGG_LIB
+    SEXY_USE_OPENGL
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

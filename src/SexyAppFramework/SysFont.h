@@ -2,6 +2,7 @@
 #define __SYSFONT_H__
 
 #include "Font.h"
+#include <freetype/freetype.h>
 
 namespace Sexy
 {
@@ -9,10 +10,22 @@ namespace Sexy
 class ImageFont;
 class SexyAppBase;
 
+struct TrueTypeGlyph
+{
+	int mWidth;
+	int mHeight;
+	int mBearingX;
+	int mBearingY;
+	int mAdvance;
+	void *mTexData; //backend dynamic, GLuint - OpenGL, etc
+};
+
+class TrueTypeData;
+
 class SysFont : public Font
 {
   public:
-	HFONT mHFont;
+	TrueTypeData* mTTData;
 	SexyAppBase *mApp;
 	bool mDrawShadow;
 	bool mSimulateBold;
@@ -46,6 +59,27 @@ class SysFont : public Font
 		Graphics *g, int theX, int theY, const SexyString &theString, const Color &theColor, const Rect &theClipRect);
 
 	virtual Font *Duplicate();
+
+};
+
+struct TrueTypeData
+{
+	std::map<char, TrueTypeGlyph> mGlyphs;
+	SysFont *mFont;
+	FT_Face mFace;
+	int mSize;
+	bool mIsDirty;
+
+	TrueTypeData(SysFont *theFontPtr, FT_Face &theFace, int theSize) : mFont(theFontPtr), mFace(theFace), mSize(theSize)
+	{
+		Init();
+	}
+
+	~TrueTypeData();
+
+	void Init();
+
+	TrueTypeGlyph GetGlyph(char &theChar);
 };
 
 } // namespace Sexy
