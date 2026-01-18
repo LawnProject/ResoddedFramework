@@ -1958,6 +1958,25 @@ void MemoryImage::BltTrianglesTex(Image *theTexture,
 	BitsChanged();
 }
 
+void MemoryImage::BltRawTexture(void* theTexture,
+	int theTexWidth,
+	int theTexHeight,
+	const Rect& theDestRect,
+	const Rect& theSrcRect,
+	const Rect& theClipRect,
+	const Color& theColor,
+	int theDrawMode)
+{
+
+	ulong *aNewPixels = mApp->mRenderer->GetBitsFromTexture(theTexture, theTexWidth, theTexHeight);
+
+	MemoryImage aTempImage;
+	aTempImage.SetBits(aNewPixels, 1, 1);
+	delete[] aNewPixels;
+	StretchBlt(&aTempImage, theDestRect, theSrcRect, theClipRect, theColor, theDrawMode, true);
+
+}
+
 bool MemoryImage::Palletize()
 {
 	CommitBits();

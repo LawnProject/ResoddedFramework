@@ -187,7 +187,14 @@ class MemoryImage : public Image
 								 float tx,
 								 float ty,
 								 bool blend);
-
+	virtual void BltRawTexture(void *theTexture,
+							int theTexWidth,
+							int theTexHeight,
+							const Rect &theDestRect,
+							const Rect &theSrcRect,
+							const Rect &theClipRect,
+							const Color &theColor,
+							int theDrawMode);
 	virtual void SetImageMode(bool hasTrans, bool hasAlpha);
 	virtual void SetVolatile(bool isVolatile);
 

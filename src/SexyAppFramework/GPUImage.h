@@ -120,6 +120,14 @@ class GPUImage : public MemoryImage
 								 float tx,
 								 float ty,
 								 bool blend);
+	virtual void BltRawTexture(void *theTexture,
+							   int theTexWidth,
+							   int theTexHeight,
+							   const Rect &theDestRect,
+							   const Rect &theSrcRect,
+							   const Rect &theClipRect,
+							   const Color &theColor,
+							   int theDrawMode);
 
 	virtual void BltMirror(
 		Image *theImage, int theX, int theY, const Rect &theSrcRect, const Color &theColor, int theDrawMode);
@@ -148,7 +156,7 @@ class GPUImage : public MemoryImage
 		double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode);
 	virtual void ImplDrawLineAA(
 		double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode);
-
+	virtual void ImplBltRawTexture(void *theTexture, int theTexWidth, int theTexHeight, const Rect &theDestRect, const Rect &theSrcRect, const Rect &theClipRect, const Color &theColor, int theDrawMode, bool fastStretch);
 
 	virtual bool Palletize();
 	virtual void PurgeBits();

@@ -56,6 +56,26 @@ void SysFont::Init(SexyAppBase *theApp,
 
 	mDrawShadow = false;
 	mSimulateBold = false;
+	mFontName = theFace;
+}
+
+void SysFont::Reinit()
+{
+	FT_Face aFontFace;
+	FT_Error anError = FT_New_Face(mApp->mFreeTypeLib, mFontName.c_str(), 0, &aFontFace);
+	if (anError)
+	{
+#if WIN32
+		anError = FT_New_Face(mApp->mFreeTypeLib, ("C:/Windows/Fonts/" + mFontName + ".ttf").c_str(), 0, &aFontFace);
+#endif
+	}
+	int aOldSize = mTTData->mSize;
+	delete mTTData;
+	mTTData = nullptr;
+	mTTData = new TrueTypeData(this, aFontFace, aOldSize);
+
+	mAscent = aFontFace->size->metrics.ascender >> 6;
+	mHeight = (aFontFace->size->metrics.ascender - aFontFace->size->metrics.descender) >> 6;
 }
 
 SysFont::SysFont(const SysFont &theSysFont)
@@ -105,41 +125,94 @@ void SysFont::DrawString(
 		int aDrawX = posX + aGlyph.mBearingX;
 		int aDrawY = posY - aGlyph.mBearingY;
 
-		if (mDrawShadow)
+		if (g->mDestImage != &Graphics::mStaticImage)
 		{
-			Color aShadowColor = Color(0, 0, 0, 0);
-			mApp->mRenderer->BltGlyph(
-				aGlyph.mTexData,
-				Rect(aDrawX + g->mTransX + 1, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
-				Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
-				theClipRect,
-				aShadowColor,
-				0);
 
-			if (mSimulateBold)
-				mApp->mRenderer->BltGlyph(
+			if (mDrawShadow)
+			{
+				Color aShadowColor = Color(0, 0, 0, 0);
+				g->mDestImage->BltRawTexture(
 					aGlyph.mTexData,
-					Rect(aDrawX + g->mTransX + 2, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
+					aGlyph.mWidth,
+					aGlyph.mHeight,
+					Rect(aDrawX + g->mTransX + 1, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
 					Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
 					theClipRect,
 					aShadowColor,
 					0);
+
+				if (mSimulateBold)
+					g->mDestImage->BltRawTexture(
+						aGlyph.mTexData,
+						aGlyph.mWidth,
+						aGlyph.mHeight,
+						Rect(aDrawX + g->mTransX + 2, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
+						Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
+						theClipRect,
+						aShadowColor,
+						0);
+			}
+
+			g->mDestImage->BltRawTexture(aGlyph.mTexData,
+										aGlyph.mWidth,
+										aGlyph.mHeight,
+										Rect(aDrawX, aDrawY, aGlyph.mWidth, aGlyph.mHeight),
+										Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
+										theClipRect,
+										theColor,
+										0);
+
+			if (mSimulateBold)
+				g->mDestImage->BltRawTexture(
+					aGlyph.mTexData,
+					aGlyph.mWidth,
+					aGlyph.mHeight,
+					Rect(aDrawX + g->mTransX + 1, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
+					Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
+					theClipRect,
+					theColor,
+					0);
+		}
+		else
+		{
+			if (mDrawShadow)
+			{
+				Color aShadowColor = Color(0, 0, 0, 0);
+				mApp->mRenderer->BltRawTexture(
+					aGlyph.mTexData,
+					Rect(aDrawX + g->mTransX + 1, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
+					Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
+					theClipRect,
+					aShadowColor,
+					0);
+
+				if (mSimulateBold)
+					mApp->mRenderer->BltRawTexture(
+						aGlyph.mTexData,
+						Rect(aDrawX + g->mTransX + 2, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
+						Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
+						theClipRect,
+						aShadowColor,
+						0);
+			}
+
+			mApp->mRenderer->BltRawTexture(aGlyph.mTexData,
+										   Rect(aDrawX, aDrawY, aGlyph.mWidth, aGlyph.mHeight),
+										   Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
+										   theClipRect,
+										   theColor,
+										   0);
+
+			if (mSimulateBold)
+				mApp->mRenderer->BltRawTexture(
+					aGlyph.mTexData,
+					Rect(aDrawX + g->mTransX + 1, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
+					Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
+					theClipRect,
+					theColor,
+					0);
 		}
 
-		mApp->mRenderer->BltGlyph(aGlyph.mTexData,
-								  Rect(aDrawX, aDrawY, aGlyph.mWidth, aGlyph.mHeight),
-								  Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
-								  theClipRect,
-								  theColor,
-								  0);
-
-		if (mSimulateBold)
-			mApp->mRenderer->BltGlyph(aGlyph.mTexData,
-				Rect(aDrawX + g->mTransX + 1, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
-								  Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
-								  theClipRect,
-								  theColor,
-								  0);
 		posX += aGlyph.mAdvance;
 	}
 }

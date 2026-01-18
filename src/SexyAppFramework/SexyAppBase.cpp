@@ -104,6 +104,8 @@ unsigned char gDraggingCursorData[] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 static GPUImage *gFPSImage = NULL;
 
+static SysFont* gDebugFont = nullptr;
+
 //////////////////////////////////////////////////////////////////////////
 
 typedef HRESULT(WINAPI *SHGetFolderPathFunc)(HWND, int, HANDLE, DWORD, LPTSTR);
@@ -447,6 +449,9 @@ SexyAppBase::~SexyAppBase()
 		delete aSharedImage->mImage;
 		mSharedImageMap.erase(aSharedImageItr++);
 	}
+
+	if (gDebugFont)
+		delete gDebugFont;
 
 	FT_Done_FreeType(mFreeTypeLib);
 	delete mRenderer;
@@ -2424,12 +2429,12 @@ static bool gForceDisplay = false;
 static void CalculateFPS()
 {
 	gFrameCount++;
-
-	static SysFont aFont(gSexyAppBase, "Tahoma", 8);
+	if (gDebugFont == nullptr)
+		gDebugFont = new SysFont(gSexyAppBase, "Tahoma", 10);
 	if (gFPSImage == NULL)
 	{
 		gFPSImage = gSexyAppBase->mRenderer->NewGPUImage();
-		gFPSImage->Create(50, aFont.GetHeight() + 4);
+		gFPSImage->Create(50, gDebugFont->GetHeight() + 4);
 		gFPSImage->SetImageMode(false, false);
 		gFPSImage->SetVolatile(true);
 		gFPSImage->mPurgeBits = false;
@@ -2452,14 +2457,12 @@ static void CalculateFPS()
 		gFrameCount = 0;
 
 		Graphics aDrawG(gFPSImage);
-		aDrawG.SetFont(&aFont);
+		aDrawG.SetFont(gDebugFont);
 		SexyString aFPS = StrFormat(_S("FPS: %d"), gFPSDisplay);
 		aDrawG.SetColor(0x000000);
 		aDrawG.FillRect(0, 0, gFPSImage->GetWidth(), gFPSImage->GetHeight());
 		aDrawG.SetColor(0xFFFFFF);
-		aDrawG.DrawString(aFPS, 2, aFont.GetAscent());
-		//gFPSImage->mKeepBits = false;
-		//gFPSImage->GenerateDDSurface();
+		aDrawG.DrawString(aFPS, 2, gDebugFont->GetAscent());
 		gFPSImage->mBitsChangedCount++;
 	}
 }
@@ -2467,11 +2470,12 @@ static void CalculateFPS()
 ///////////////////////////// FPS Stuff to draw mouse coords
 static void FPSDrawCoords(int theX, int theY)
 {
-	static SysFont aFont(gSexyAppBase, "Tahoma", 8);
+	if (gDebugFont == nullptr)
+		gDebugFont = new SysFont(gSexyAppBase, "Tahoma", 8);
 	if (gFPSImage == NULL)
 	{
 		gFPSImage = gSexyAppBase->mRenderer->NewGPUImage();
-		gFPSImage->Create(50, aFont.GetHeight() + 4);
+		gFPSImage->Create(50, gDebugFont->GetHeight() + 4);
 		gFPSImage->SetImageMode(false, false);
 		gFPSImage->SetVolatile(true);
 		gFPSImage->mPurgeBits = false;
@@ -2480,12 +2484,12 @@ static void FPSDrawCoords(int theX, int theY)
 	}
 
 	Graphics aDrawG(gFPSImage);
-	aDrawG.SetFont(&aFont);
+	aDrawG.SetFont(gDebugFont);
 	SexyString aFPS = StrFormat(_S("%d,%d"), theX, theY);
 	aDrawG.SetColor(0x000000);
 	aDrawG.FillRect(0, 0, gFPSImage->GetWidth(), gFPSImage->GetHeight());
 	aDrawG.SetColor(0xFFFFFF);
-	aDrawG.DrawString(aFPS, 2, aFont.GetAscent());
+	aDrawG.DrawString(aFPS, 2, gDebugFont->GetAscent());
 	gFPSImage->mBitsChangedCount++;
 }
 
@@ -2493,13 +2497,14 @@ static void FPSDrawCoords(int theX, int theY)
 static GPUImage *gDemoTimeLeftImage = NULL;
 static void CalculateDemoTimeLeft()
 {
-	static SysFont aFont(gSexyAppBase, "Tahoma", 8);
+	if (gDebugFont == nullptr)
+		gDebugFont = new SysFont(gSexyAppBase, "Tahoma", 8);
 	static DWORD aLastTick = 0;
 
 	if (gDemoTimeLeftImage == NULL)
 	{
 		gDemoTimeLeftImage = gSexyAppBase->mRenderer->NewGPUImage();
-		gDemoTimeLeftImage->Create(50, aFont.GetHeight() + 4);
+		gDemoTimeLeftImage->Create(50, gDebugFont->GetHeight() + 4);
 		gDemoTimeLeftImage->SetImageMode(false, false);
 		gDemoTimeLeftImage->SetVolatile(true);
 		gDemoTimeLeftImage->mPurgeBits = false;
@@ -2515,7 +2520,7 @@ static void CalculateDemoTimeLeft()
 
 	int aNumUpdatesLeft = gSexyAppBase->mDemoLength - gSexyAppBase->mUpdateCount;
 	Graphics aDrawG(gDemoTimeLeftImage);
-	aDrawG.SetFont(&aFont);
+	aDrawG.SetFont(gDebugFont);
 
 	int aTotalSeconds = aNumUpdatesLeft * gSexyAppBase->mFrameTime / 1000;
 	int aSeconds = aTotalSeconds % 60;
@@ -2526,7 +2531,7 @@ static void CalculateDemoTimeLeft()
 	aDrawG.SetColor(0x000000);
 	aDrawG.FillRect(0, 0, gDemoTimeLeftImage->GetWidth(), gDemoTimeLeftImage->GetHeight());
 	aDrawG.SetColor(0xFFFFFF);
-	aDrawG.DrawString(aFPS, 2, aFont.GetAscent());
+	aDrawG.DrawString(aFPS, 2, gDebugFont->GetAscent());
 	gDemoTimeLeftImage->mBitsChangedCount++;
 }
 

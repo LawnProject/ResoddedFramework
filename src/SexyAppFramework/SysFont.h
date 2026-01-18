@@ -27,6 +27,7 @@ class SysFont : public Font
   public:
 	TrueTypeData* mTTData;
 	SexyAppBase *mApp;
+	std::string mFontName;
 	bool mDrawShadow;
 	bool mSimulateBold;
 
@@ -38,6 +39,8 @@ class SysFont : public Font
 			  bool italics,
 			  bool underline,
 			  bool useDevCaps);
+
+	void Reinit();
 
   public:
 	SysFont(

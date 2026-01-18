@@ -159,6 +159,14 @@ class Image
 								  const Color &theColor,
 								  int theDrawMode,
 								  bool fastStretch);
+	virtual void BltRawTexture(void *theTexture,
+							   int theTexWidth,
+							   int theTexHeight,
+							   const Rect &theDestRect,
+							   const Rect &theSrcRect,
+							   const Rect &theClipRect,
+							   const Color &theColor,
+							   int theDrawMode);
 };
 
 } // namespace Sexy

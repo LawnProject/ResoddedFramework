@@ -4,6 +4,7 @@
 
 #include "GPUImage.h"
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 namespace Sexy
 {
@@ -25,6 +26,7 @@ class OpenGLImage : public GPUImage
 	
 	static GLuint gOpenGLImageVAO;
 	static GLuint gOpenGLImageVBO;
+	glm::mat4 mProjection;
 
 
   private:
@@ -45,6 +47,7 @@ class OpenGLImage : public GPUImage
 	virtual bool LockSurface();
 	virtual bool UnlockSurface();
 	void CreateImageBuffers();
+	void PreTextureDraw();
 	virtual void SetSurface(void *theSurface);
 
 	virtual ulong *GetBits();
@@ -103,6 +106,17 @@ class OpenGLImage : public GPUImage
 									  const Color &theColor,
 									  int theDrawMode,
 									  bool fastStretch);
+
+	virtual void ImplBltRawTexture(void *theTexture,
+								int theTexWidth,
+								int theTexHeight,
+								const Rect &theDestRect,
+								const Rect &theSrcRect,
+								const Rect &theClipRect,
+								const Color &theColor,
+								int theDrawMode,
+								bool fastStretch);
+
 
 	virtual void ImplDrawLine(
 		double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode);

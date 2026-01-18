@@ -63,6 +63,7 @@ namespace Sexy
 	{
 	  public:
 		GLuint mTexID;
+		bool mSourceIsFBO;
 		GLuint GetTextureID();
 
 		OpenGLTextureData();
@@ -84,7 +85,6 @@ namespace Sexy
 		GLShader *mDefaultShader;
 		glm::mat4 mProjection;
 		WrappingSamplers mSamplers;
-
 
 	  public:
 		OpenGLRenderer(SexyAppBase *theApp);
@@ -122,6 +122,7 @@ namespace Sexy
 
 		virtual bool CreateImageTexture(MemoryImage *theImage);
 		virtual bool RecoverBits(MemoryImage *theImage);
+		virtual ulong *GetBitsFromTexture(void *theTexture, int theWidth, int theHeight);
 
 		virtual void Blt(Image *theImage,
 						 float theX,
@@ -208,7 +209,7 @@ namespace Sexy
 							  int tx,
 							  int ty);
 
-		virtual void BltGlyph(void *theGlyphTexture,
+		virtual void BltRawTexture(void *theTexture,
 							  const Rect &theDestRect,
 							  const Rect &theSrcRect,
 							  const Rect &theClipRect,

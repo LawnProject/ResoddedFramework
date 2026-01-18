@@ -831,12 +831,7 @@ void TodBltMatrix(Graphics *g,
 {
 	float aOffsetX = 0.0f;
 	float aOffsetY = 0.0f;
-	if (gSexyAppBase->Is3DAccelerated())
-	{
-		aOffsetX -= 0.5f;
-		aOffsetY -= 0.5f;
-	}
-	else if (theDrawMode == Graphics::DRAWMODE_ADDITIVE)
+	if (theDrawMode == Graphics::DRAWMODE_ADDITIVE && !gSexyAppBase->Is3DAccelerated())
 	{
 		gTodTriangleDrawAdditive = true;
 	}

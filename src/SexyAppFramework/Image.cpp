@@ -342,3 +342,13 @@ void Image::StretchBltMirror(Image *theImage,
 							 bool fastStretch)
 {
 }
+void Image::BltRawTexture(void *theTexture,
+						   int theTexWidth,
+						   int theTexHeight,
+						   const Rect &theDestRect,
+						   const Rect &theSrcRect,
+						   const Rect &theClipRect,
+						   const Color &theColor,
+						   int theDrawMode)
+{
+}

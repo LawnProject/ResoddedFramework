@@ -110,6 +110,15 @@ void OpenGLRenderer::Cleanup()
 
 		delete (OpenGLTextureData *)anImage->mD3DData;
 		anImage->mD3DData = nullptr;
+
+		OpenGLImage *anNativeImage = dynamic_cast<OpenGLImage *>(anImage);
+		if (anNativeImage != nullptr && anNativeImage->mFBO != 0) //Delete the FBO incase the renderer resets
+		{
+			anNativeImage->DeleteSurface();
+			glDeleteTextures(1, &anNativeImage->mTexID);
+			glDeleteFramebuffers(1, &anNativeImage->mFBO);
+			anNativeImage->mFBO = 0;
+		}
 	}
 
 	mImageSet.clear();
@@ -119,14 +128,7 @@ void OpenGLRenderer::Cleanup()
 	{
 		SysFont *aFont = *anFontItr;
 
-		for (auto pair : aFont->mTTData->mGlyphs)
-			{
-				if (pair.second.mTexData != nullptr)
-				{
-					DeleteTexture(pair.second.mTexData);
-				}
-			}
-		aFont->mTTData->mGlyphs.clear();
+		aFont->Reinit();
 	}
 
 	mCommandBuffer.clear();
@@ -407,6 +409,15 @@ bool OpenGLRenderer::RecoverBits(MemoryImage *theImage)
 
 	return true;
 }
+ulong *OpenGLRenderer::GetBitsFromTexture(void *theTexture, int theWidth, int theHeight)
+{
+	ulong *aPixels = new ulong[theWidth * theHeight];
+	GLuint aTexID = *(GLuint *)theTexture;
+	glBindTexture(GL_TEXTURE_2D, aTexID);
+	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, aPixels);
+
+	return aPixels;
+}
 
 void OpenGLRenderer::DeleteTexture(void* theTexture)
 {
@@ -431,10 +442,13 @@ void *OpenGLRenderer::CreateTexture(void *thePixels, int theWidth, int theHeight
 OpenGLTextureData::OpenGLTextureData()
 {
 	mTexID = 0;
+	mSourceIsFBO = false;
 }
 
 void OpenGLTextureData::ReleaseTextures()
 {
+	if (mSourceIsFBO) //releasing is handled by the source
+		return;
 	if (mTexData != nullptr)
 	{
 		GLuint aTexID = GetTextureID();
@@ -464,12 +478,21 @@ void OpenGLTextureData::CreateTextures(MemoryImage* theImage, void* theRendererD
 	theImage->CommitBits();
 
 	bool createTexture = false;
+	mSourceIsFBO = false;
 
 	// only recreate the texture if the dimensions or image data have changed
 	if (mWidth != theImage->mWidth || mHeight != theImage->mHeight || mBitsChangedCount != theImage->mBitsChangedCount)
 	{
 		ReleaseTextures();
 		createTexture = true;
+	}
+
+	OpenGLImage *aNativeImage = dynamic_cast<OpenGLImage*>(theImage);
+	if (aNativeImage != nullptr && aNativeImage->mTexID != 0 && aNativeImage->mFBO != 0)
+	{
+		createTexture = false;
+		mTexID = aNativeImage->mTexID;
+		mSourceIsFBO = true;
 	}
 
 	int aWidth = theImage->GetWidth();
@@ -483,7 +506,7 @@ void OpenGLTextureData::CreateTextures(MemoryImage* theImage, void* theRendererD
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, aWidth, aHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, theImage->GetBits());
 
 	}
-	else if (mBitsChangedCount != theImage->mBitsChangedCount)
+	else if (mBitsChangedCount != theImage->mBitsChangedCount && !mSourceIsFBO)
 	{
 		void *bits = theImage->GetBits();
 		if (bits)
@@ -502,6 +525,8 @@ void OpenGLTextureData::CreateTextures(MemoryImage* theImage, void* theRendererD
 	mWidth = theImage->mWidth;
 	mHeight = theImage->mHeight;
 	mBitsChangedCount = theImage->mBitsChangedCount;
+	if (mTexData != nullptr)
+		delete mTexData;
 	mTexData = new GLuint(mTexID);
 }
 
@@ -856,8 +881,6 @@ void OpenGLRenderer::BltTransformed(Image *theImage,
 	glm::vec2 uv2 = {u1, v1};
 	glm::vec2 uv3 = {u0, v1};
 
-	if (theColor.mRed != 255)
-		int a = 0;
 	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
 						(float)theColor.mGreen / 255.0f,
 						(float)theColor.mBlue / 255.0f,
@@ -1081,14 +1104,14 @@ void OpenGLRenderer::FillPoly(const Point theVertices[],
 	}
 }
 
-void OpenGLRenderer::BltGlyph(void *theGlyphTexture,
+void OpenGLRenderer::BltRawTexture(void *theTexture,
 							  const Rect &theDestRect,
 							  const Rect &theSrcRect,
 							  const Rect &theClipRect,
 							  const Color &theColor,
 							  int theDrawMode)
 {
-	GLuint aTextureID = *(GLuint *)theGlyphTexture;
+	GLuint aTextureID = *(GLuint *)theTexture;
 
 	GLDrawCommand aCmd;
 	aCmd.mTextureID = aTextureID;

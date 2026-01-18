@@ -655,6 +655,42 @@ void GPUImage::StretchBltMirror(Image *theImage,
 	DeleteAllNonSurfaceData();
 }
 
+void GPUImage::ImplBltRawTexture(void* theTexture,
+	int theTexWidth,
+	int theTexHeight,
+	const Rect& theDestRect,
+	const Rect& theSrcRect,
+	const Rect& theClipRect,
+	const Color& theColor,
+	int theDrawMode,
+	bool fastStretch)
+{
+
+}
+
+void GPUImage::BltRawTexture(void *theTexture,
+							 int theTexWidth,
+							 int theTexHeight,
+							 const Rect &theDestRect,
+							 const Rect &theSrcRect,
+							 const Rect &theClipRect,
+							 const Color &theColor,
+							 int theDrawMode)
+{
+	CommitBits();
+
+	if (Check3D(this))
+	{
+		mRenderer->BltRawTexture(
+			theTexture, theDestRect, theSrcRect, theClipRect, theColor, theDrawMode);
+		return;
+	}
+
+	ImplBltRawTexture(theTexture, theTexWidth, theTexHeight, theDestRect, theSrcRect, theClipRect, theColor, theDrawMode, true);
+
+	DeleteAllNonSurfaceData();
+}
+
 bool GPUImage::Check3D(GPUImage *theImage)
 {
 	return theImage->mRenderer->mScreenImage == theImage;
