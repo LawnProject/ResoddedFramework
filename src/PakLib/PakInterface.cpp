@@ -251,7 +251,7 @@ int PakInterface::FSeek(PFILE *theFile, long theOffset, int theOrigin)
 }
 
 //0x5D8830
-int PakInterface::FTell(PFILE *theFile)
+long PakInterface::FTell(PFILE *theFile)
 {
 	if (theFile->mRecord != NULL)
 		return theFile->mPos;

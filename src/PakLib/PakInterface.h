@@ -44,7 +44,7 @@ typedef std::list<PakCollection> PakCollectionList;
 struct PFILE
 {
 	PakRecord *mRecord;
-	int mPos;
+	long mPos;
 	FILE *mFP;
 };
 
@@ -65,7 +65,7 @@ class PakInterfaceBase
 	}
 	virtual int FClose(PFILE *theFile) = 0;
 	virtual int FSeek(PFILE *theFile, long theOffset, int theOrigin) = 0;
-	virtual int FTell(PFILE *theFile) = 0;
+	virtual long FTell(PFILE *theFile) = 0;
 	virtual size_t FRead(void *thePtr, int theElemSize, int theCount, PFILE *theFile) = 0;
 	virtual int FGetC(PFILE *theFile) = 0;
 	virtual int UnGetC(int theChar, PFILE *theFile) = 0;
@@ -98,7 +98,7 @@ class PakInterface : public PakInterfaceBase
 	PFILE *FOpen(const char *theFileName, const char *theAccess);
 	int FClose(PFILE *theFile);
 	int FSeek(PFILE *theFile, long theOffset, int theOrigin);
-	int FTell(PFILE *theFile);
+	long FTell(PFILE *theFile);
 	size_t FRead(void *thePtr, int theElemSize, int theCount, PFILE *theFile);
 	int FGetC(PFILE *theFile);
 	int UnGetC(int theChar, PFILE *theFile);
@@ -173,7 +173,7 @@ static int p_fseek(PFILE *theFile, long theOffset, int theOrigin)
 	return fseek(theFile->mFP, theOffset, theOrigin);
 }
 
-static int p_ftell(PFILE *theFile)
+static long p_ftell(PFILE *theFile)
 {
 	if (GetPakPtr() != NULL)
 		return (*gPakInterfaceP)->FTell(theFile);

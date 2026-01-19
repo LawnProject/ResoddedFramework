@@ -474,6 +474,9 @@ GLuint OpenGLTextureData::GetTextureID()
 	
 void OpenGLTextureData::CreateTextures(MemoryImage* theImage, void* theRendererData)
 {
+	if (mSourceIsFBO)
+		return;
+
 	theImage->DeleteSWBuffers(); // we don't need the software buffers anymore
 	theImage->CommitBits();
 
