@@ -60,7 +60,6 @@ else ()
 endif()
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC
-    WIN32
     $<$<CONFIG:Debug>:DEBUG>
     $<$<CONFIG:Release>:NDEBUG>
     _LIB
@@ -69,6 +68,16 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
     USE_OGG_LIB
     SEXY_USE_OPENGL
 )
+
+if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+target_compile_definitions(${PROJECT_NAME} PUBLIC
+    SEXY_IS_X64
+)
+else ()
+target_compile_definitions(${PROJECT_NAME} PUBLIC
+    SEXY_IS_X86
+)
+endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"

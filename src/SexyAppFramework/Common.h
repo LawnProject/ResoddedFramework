@@ -167,6 +167,14 @@ std::string GetFullPath(const std::string &theRelPath);
 std::string GetPathFrom(const std::string &theRelPath, const std::string &theDir);
 bool AllowAllAccess(const std::string &theFileName);
 
+// Read memory and then move the pointer
+void SMemR(void *&_Src, void *_Dst, size_t _Size);
+void SMemRStr(void *&_Src, std::string &theString);
+
+// Write memory and then move the pointer
+void SMemW(void *&_Dst, const void *_Src, size_t _Size);
+void SMemWStr(void *&_Dst, const std::string &theString);
+
 inline void inlineUpper(std::string &theData)
 {
 	//std::transform(theData.begin(), theData.end(), theData.begin(), toupper);
