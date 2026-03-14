@@ -5,21 +5,21 @@
 #include <zlib.h>
 #include "../PakLib/PakInterface.h"
 #include "../SexyAppFramework/PerfTimer.h"
-#include "../SexyAppFramework/XMLParser.h"
+#include "../SexyAppFramework/XMLParser.h" 
 
 DefSymbol gTrailFlagDefSymbols[] = { //0x69E150
 	{0, "Loops"},
 	{-1, nullptr}};
 DefField gTrailDefFields[] = { //0x69E160
-	{"Image", 0x0, DefFieldType::DT_IMAGE, nullptr},
-	{"MaxPoints", 0x4, DefFieldType::DT_INT, nullptr},
-	{"MinPointDistance", 0x8, DefFieldType::DT_FLOAT, nullptr},
-	{"TrailFlags", 0xC, DefFieldType::DT_FLAGS, gTrailFlagDefSymbols},
-	{"WidthOverLength", 0x18, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"WidthOverTime", 0x20, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"AlphaOverLength", 0x28, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"AlphaOverTime", 0x30, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"TrailDuration", 0x10, DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"Image", offsetof(TrailDefinition, mImage), DefFieldType::DT_IMAGE, nullptr},
+	{"MaxPoints", offsetof(TrailDefinition, mMaxPoints), DefFieldType::DT_INT, nullptr},
+	{"MinPointDistance", offsetof(TrailDefinition, mMinPointDistance), DefFieldType::DT_FLOAT, nullptr},
+	{"TrailFlags", offsetof(TrailDefinition, mTrailFlags), DefFieldType::DT_FLAGS, gTrailFlagDefSymbols},
+	{"WidthOverLength", offsetof(TrailDefinition, mWidthOverLength), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"WidthOverTime", offsetof(TrailDefinition, mWidthOverTime), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"AlphaOverLength", offsetof(TrailDefinition, mAlphaOverLength), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"AlphaOverTime", offsetof(TrailDefinition, mAlphaOverTime), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"TrailDuration", offsetof(TrailDefinition, mTrailDuration), DefFieldType::DT_TRACK_FLOAT, nullptr},
 	{"", 0x0, DefFieldType::DT_INVALID, nullptr}};
 DefMap gTrailDefMap = {gTrailDefFields, sizeof(TrailDefinition), TrailDefinitionConstructor}; //0x69D98C
 
@@ -60,64 +60,64 @@ DefSymbol gParticleTypeSymbols[] = { //0x69E200
 
 DefField gParticleFieldDefFields[] = {
 	//0x69E2F8
-	{"FieldType", 0x0, DefFieldType::DT_ENUM, gParticleTypeSymbols},
-	{"x", 0x4, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"y", 0xC, DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"FieldType", offsetof(ParticleField, mFieldType), DefFieldType::DT_ENUM, gParticleTypeSymbols},
+	{"x", offsetof(ParticleField, mX), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"y", offsetof(ParticleField, mY), DefFieldType::DT_TRACK_FLOAT, nullptr},
 	{"", 0x0, DefFieldType::DT_INVALID, nullptr},
 };
 DefMap gParticleFieldDefMap = {gParticleFieldDefFields, sizeof(ParticleField), ParticleFieldConstructor}; //0x69E338
 
 DefField gEmitterDefFields[] = {
 	//0x69E350
-	{"Image", 0x0, DefFieldType::DT_IMAGE, nullptr},
-	{"ImageRow", 0x8, DefFieldType::DT_INT, nullptr},
-	{"ImageCol", 0x4, DefFieldType::DT_INT, nullptr},
-	{"ImageFrames", 0xC, DefFieldType::DT_INT, nullptr},
-	{"Animated", 0x10, DefFieldType::DT_INT, nullptr},
-	{"ParticleFlags", 0x14, DefFieldType::DT_FLAGS, gParticleFlagSymbols},
-	{"EmitterType", 0x18, DefFieldType::DT_ENUM, gEmitterTypeSymbols},
-	{"Name", 0x1C, DefFieldType::DT_STRING, nullptr},
-	{"SystemDuration", 0x24, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"OnDuration", 0x20, DefFieldType::DT_STRING, nullptr},
-	{"CrossFadeDuration", 0x2C, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"SpawnRate", 0x34, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"SpawnMinActive", 0x3C, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"SpawnMaxActive", 0x44, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"SpawnMaxLaunched", 0x4C, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"EmitterRadius", 0x54, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"EmitterOffsetX", 0x5C, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"EmitterOffsetY", 0x64, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"EmitterBoxX", 0x6C, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"EmitterBoxY", 0x74, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"EmitterPath", 0x8C, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"EmitterSkewX", 0x7C, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"EmitterSkewY", 0x84, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"ParticleDuration", 0x94, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"SystemRed", 0xAC, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"SystemGreen", 0xB4, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"SystemBlue", 0xBC, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"SystemAlpha", 0xC4, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"SystemBrightness", 0xCC, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"LaunchSpeed", 0x9C, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"LaunchAngle", 0xA4, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"Field", 0xD4, DefFieldType::DT_ARRAY, &gParticleFieldDefMap},
-	{"SystemField", 0xDC, DefFieldType::DT_ARRAY, &gParticleFieldDefMap},
-	{"ParticleRed", 0xE4, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"ParticleGreen", 0xEC, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"ParticleBlue", 0xF4, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"ParticleAlpha", 0xFC, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"ParticleBrightness", 0x104, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"ParticleSpinAngle", 0x10C, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"ParticleSpinSpeed", 0x114, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"ParticleScale", 0x11C, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"ParticleStretch", 0x124, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"CollisionReflect", 0x12C, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"CollisionSpin", 0x134, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"ClipTop", 0x13C, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"ClipBottom", 0x144, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"ClipLeft", 0x14C, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"ClipRight", 0x154, DefFieldType::DT_TRACK_FLOAT, nullptr},
-	{"AnimationRate", 0x15C, DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"Image", offsetof(TodEmitterDefinition, mImage), DefFieldType::DT_IMAGE, nullptr},
+	{"ImageRow", offsetof(TodEmitterDefinition, mImageRow), DefFieldType::DT_INT, nullptr},
+	{"ImageCol", offsetof(TodEmitterDefinition, mImageCol), DefFieldType::DT_INT, nullptr},
+	{"ImageFrames", offsetof(TodEmitterDefinition, mImageFrames), DefFieldType::DT_INT, nullptr},
+	{"Animated", offsetof(TodEmitterDefinition, mAnimated), DefFieldType::DT_INT, nullptr},
+	{"ParticleFlags", offsetof(TodEmitterDefinition, mParticleFlags), DefFieldType::DT_FLAGS, gParticleFlagSymbols},
+	{"EmitterType", offsetof(TodEmitterDefinition, mEmitterType), DefFieldType::DT_ENUM, gEmitterTypeSymbols},
+	{"Name", offsetof(TodEmitterDefinition, mName), DefFieldType::DT_STRING, nullptr},
+	{"SystemDuration", offsetof(TodEmitterDefinition, mSystemDuration), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"OnDuration", offsetof(TodEmitterDefinition, mOnDuration), DefFieldType::DT_STRING, nullptr},
+	{"CrossFadeDuration", offsetof(TodEmitterDefinition, mCrossFadeDuration), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"SpawnRate", offsetof(TodEmitterDefinition, mSpawnRate), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"SpawnMinActive", offsetof(TodEmitterDefinition, mSpawnMinActive), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"SpawnMaxActive", offsetof(TodEmitterDefinition, mSpawnMaxActive), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"SpawnMaxLaunched", offsetof(TodEmitterDefinition, mSpawnMaxLaunched), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"EmitterRadius", offsetof(TodEmitterDefinition, mEmitterRadius), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"EmitterOffsetX", offsetof(TodEmitterDefinition, mEmitterOffsetX), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"EmitterOffsetY", offsetof(TodEmitterDefinition, mEmitterOffsetY), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"EmitterBoxX", offsetof(TodEmitterDefinition, mEmitterBoxX), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"EmitterBoxY", offsetof(TodEmitterDefinition, mEmitterBoxY), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"EmitterPath", offsetof(TodEmitterDefinition, mEmitterPath), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"EmitterSkewX", offsetof(TodEmitterDefinition, mEmitterSkewX), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"EmitterSkewY", offsetof(TodEmitterDefinition, mEmitterSkewY), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"ParticleDuration", offsetof(TodEmitterDefinition, mParticleDuration), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"SystemRed", offsetof(TodEmitterDefinition, mSystemRed), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"SystemGreen", offsetof(TodEmitterDefinition, mSystemGreen), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"SystemBlue", offsetof(TodEmitterDefinition, mSystemBlue), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"SystemAlpha", offsetof(TodEmitterDefinition, mSystemAlpha), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"SystemBrightness", offsetof(TodEmitterDefinition, mSystemBrightness), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"LaunchSpeed", offsetof(TodEmitterDefinition, mLaunchSpeed), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"LaunchAngle", offsetof(TodEmitterDefinition, mLaunchAngle), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"Field", offsetof(TodEmitterDefinition, mParticleFields), DefFieldType::DT_ARRAY, &gParticleFieldDefMap},
+	{"SystemField", offsetof(TodEmitterDefinition, mSystemFields), DefFieldType::DT_ARRAY, &gParticleFieldDefMap},
+	{"ParticleRed", offsetof(TodEmitterDefinition, mParticleRed), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"ParticleGreen", offsetof(TodEmitterDefinition, mParticleGreen), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"ParticleBlue", offsetof(TodEmitterDefinition, mParticleBlue), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"ParticleAlpha", offsetof(TodEmitterDefinition, mParticleAlpha), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"ParticleBrightness", offsetof(TodEmitterDefinition, mParticleBrightness), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"ParticleSpinAngle", offsetof(TodEmitterDefinition, mParticleSpinAngle), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"ParticleSpinSpeed", offsetof(TodEmitterDefinition, mParticleSpinSpeed), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"ParticleScale", offsetof(TodEmitterDefinition, mParticleScale), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"ParticleStretch", offsetof(TodEmitterDefinition, mParticleStretch), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"CollisionReflect", offsetof(TodEmitterDefinition, mCollisionReflect), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"CollisionSpin", offsetof(TodEmitterDefinition, mCollisionSpin), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"ClipTop", offsetof(TodEmitterDefinition, mClipTop), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"ClipBottom", offsetof(TodEmitterDefinition, mClipBottom), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"ClipLeft", offsetof(TodEmitterDefinition, mClipLeft), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"ClipRight", offsetof(TodEmitterDefinition, mClipRight), DefFieldType::DT_TRACK_FLOAT, nullptr},
+	{"AnimationRate", offsetof(TodEmitterDefinition, mAnimationRate), DefFieldType::DT_TRACK_FLOAT, nullptr},
 	{"", 0x0, DefFieldType::DT_INVALID, nullptr},
 };
 DefMap gEmitterDefMap = {gEmitterDefFields, sizeof(TodEmitterDefinition), TodEmitterDefinitionConstructor}; //0x69E344
@@ -129,33 +129,34 @@ DefMap gParticleDefMap = {
 	gParticleDefFields, sizeof(TodParticleDefinition), TodParticleDefinitionConstructor}; //0x69E690
 
 DefField gReanimatorTransformDefFields[] = { //0x69F088
-	{"x", 0x0, DefFieldType::DT_FLOAT, nullptr},
-	{"y", 0x4, DefFieldType::DT_FLOAT, nullptr},
-	{"kx", 0x8, DefFieldType::DT_FLOAT, nullptr},
-	{"kx", 0xC, DefFieldType::DT_FLOAT, nullptr},
-	{"sx", 0x10, DefFieldType::DT_FLOAT, nullptr},
-	{"sx", 0x14, DefFieldType::DT_FLOAT, nullptr},
-	{"f", 0x18, DefFieldType::DT_FLOAT, nullptr},
-	{"a", 0x1C, DefFieldType::DT_FLOAT, nullptr},
-	{"i", 0x20, DefFieldType::DT_IMAGE, nullptr},
-	{"font", 0x24, DefFieldType::DT_FONT, nullptr},
-	{"text", 0x28, DefFieldType::DT_STRING, nullptr},
-	{"", 0x0, DefFieldType::DT_INVALID, nullptr}};
-DefMap gReanimatorTransformDefMap = {
-	gReanimatorTransformDefFields,
-	sizeof(ReanimatorTransform),
-}; //0x69F07C
+	{"x", offsetof(ReanimatorTransform, mTransX), DefFieldType::DT_FLOAT, nullptr},
+	{"y", offsetof(ReanimatorTransform, mTransY), DefFieldType::DT_FLOAT, nullptr},
+	{"kx", offsetof(ReanimatorTransform, mSkewX), DefFieldType::DT_FLOAT, nullptr},
+	{"ky", offsetof(ReanimatorTransform, mSkewY), DefFieldType::DT_FLOAT, nullptr},
+	{"sx", offsetof(ReanimatorTransform, mScaleX), DefFieldType::DT_FLOAT, nullptr},
+	{"sy", offsetof(ReanimatorTransform, mScaleY), DefFieldType::DT_FLOAT, nullptr},
+	{"f", offsetof(ReanimatorTransform, mFrame), DefFieldType::DT_FLOAT, nullptr},
+	{"a", offsetof(ReanimatorTransform, mAlpha), DefFieldType::DT_FLOAT, nullptr},
+	{"i", offsetof(ReanimatorTransform, mImage), DefFieldType::DT_IMAGE, nullptr},
+	{"font", offsetof(ReanimatorTransform, mFont), DefFieldType::DT_FONT, nullptr},
+	{"text", offsetof(ReanimatorTransform, mText), DefFieldType::DT_STRING, nullptr},
+	{"", 0x0, DefFieldType::DT_INVALID, nullptr}
+};
+DefMap gReanimatorTransformDefMap = { gReanimatorTransformDefFields, sizeof(ReanimatorTransform), ReanimatorTransformConstructor}; //0x69F07C
 
 DefField gReanimatorTrackDefFields[] = { //0x69F148
-	{"name", 0x0, DefFieldType::DT_STRING, nullptr},
-	{"t", 0x4, DefFieldType::DT_ARRAY, &gReanimatorTransformDefMap},
-	{"", 0x0, DefFieldType::DT_INVALID, nullptr}};
+	{"name", offsetof(ReanimatorTrack, mName), DefFieldType::DT_STRING, nullptr},
+	{"t", offsetof(ReanimatorTrack, mTransforms), DefFieldType::DT_ARRAY, &gReanimatorTransformDefMap},
+	{"", 0x0, DefFieldType::DT_INVALID, nullptr}
+};
 DefMap gReanimatorTrackDefMap = {
 	gReanimatorTrackDefFields, sizeof(ReanimatorTrack), ReanimatorTrackConstructor}; //0x69F178
 
-DefField gReanimatorDefFields[] = {{"track", 0x0, DefFieldType::DT_ARRAY, &gReanimatorTrackDefMap},
-								   {"fps", 0x8, DefFieldType::DT_FLOAT, nullptr},
-								   {"", 0x0, DefFieldType::DT_INVALID, nullptr}}; //0x69F184
+DefField gReanimatorDefFields[] = {
+	{"track", offsetof(ReanimatorDefinition, mTracks), DefFieldType::DT_ARRAY, &gReanimatorTrackDefMap},
+	{"fps", offsetof(ReanimatorDefinition, mFPS), DefFieldType::DT_FLOAT, nullptr},
+	{"", 0x0, DefFieldType::DT_INVALID, nullptr}
+}; //0x69F184
 DefMap gReanimatorDefMap = {
 	gReanimatorDefFields, sizeof(ReanimatorDefinition), ReanimatorDefinitionConstructor}; //0x69F1B4
 
@@ -265,11 +266,17 @@ void *ReanimatorDefinitionConstructor(void *thePointer)
 
 void *DefinitionAlloc(int theSize)
 {
-	void *aPtr = operator new[](theSize);
+	void *aPtr = new char[theSize]();
 	TOD_ASSERT(aPtr);
-	memset(aPtr, 0, theSize);
 	return aPtr;
 }
+
+void DefinitionFree(void* theMemory)
+{
+	delete[] theMemory;
+	theMemory = nullptr;
+}
+
 
 //0x443BE0
 bool DefinitionLoadImage(Image **theImage, const SexyString &theName)
@@ -324,11 +331,6 @@ bool DefinitionLoadXML(const SexyString &theFileName, DefMap *theDefMap, void *t
 	return DefinitionCompileAndLoad(theFileName, theDefMap, theDefinition);
 }
 
-void SMemR(void *&_Src, void *_Dst, size_t _Size)
-{
-	memcpy(_Dst, _Src, _Size);
-	_Src = (void *)((size_t)_Src + _Size);
-}
 //0x444020
 bool DefReadFromCacheArray(void *&theReadPtr, DefinitionArrayDef *theArray, DefMap *theDefMap)
 {
@@ -543,14 +545,14 @@ bool DefinitionReadCompiledFile(const SexyString &theCompiledFilePath, DefMap *t
 		if (aReadCompressedFailed) // Determine whether the reading is successful
 		{
 			TodTrace(_S("Failed to read compiled file: %s\n"), theCompiledFilePath.c_str());
-			delete[] aCompressedBuffer;
+			DefinitionFree(aCompressedBuffer);
 		}
 		else
 		{
 			size_t aUncompressedSize;
 			void *aUncompressedBuffer = DefinitionUncompressCompiledBuffer(
 				aCompressedBuffer, aCompressedSize, aUncompressedSize, theCompiledFilePath);
-			delete[] aCompressedBuffer;
+			DefinitionFree(aCompressedBuffer);
 			if (aUncompressedBuffer)
 			{
 				uint32_t aDefHash = DefinitionCalcHash(theDefMap); // Calculate the CRC check value, which will be used to detect the integrity of the data
@@ -577,14 +579,14 @@ bool DefinitionReadCompiledFile(const SexyString &theCompiledFilePath, DefMap *t
 						// Repair the wild pointer and flag data, and save the result of whether it is successful, and use it as the return value later
 						bool aResult = DefMapReadFromCache(aBufferPtr, theDefMap, theDefinition);
 						size_t aReadMemSize = (uint32_t)aBufferPtr - (uint32_t)aUncompressedBuffer;
-						delete[] aUncompressedBuffer;
+						DefinitionFree(aUncompressedBuffer);
 						if (aResult && aReadMemSize != aUncompressedSize)
 							TodTrace(_S("Compiled file wrong size: %s\n"), theCompiledFilePath.c_str());
 						return aResult;
 					}
 				}
 			}
-			delete[] aUncompressedBuffer;
+			DefinitionFree(aUncompressedBuffer);
 		}
 	}
 	return false;
@@ -637,7 +639,7 @@ void DefinitionFillWithDefaults(DefMap *theDefMap, void *theDefinition)
 	for (DefField *aField = theDefMap->mMapFields; *aField->mFieldName != '\0';
 		 aField++) // 遍历 theDefinition 的每一个成员变量
 		if (aField->mFieldType == DefFieldType::DT_STRING)
-			*(char **)((uint32_t)theDefinition + aField->mFieldOffset) =
+			*(char **)((uintptr_t)theDefinition + aField->mFieldOffset) =
 				""; // 将所有 char* 类型的成员变量赋值为空字符数组的指针
 }
 
@@ -771,7 +773,7 @@ bool DefinitionReadVector2Field(XMLParser *theXmlParser, SexyVector2 *theValue)
 bool DefinitionReadArrayField(XMLParser *theXmlParser, DefinitionArrayDef *theArray, DefField *theField)
 {
 	DefMap *aDefMap = (DefMap *)theField->mExtraData;
-
+	
 	if (theArray->mArrayCount == 0)
 	{
 		theArray->mArrayCount = 1;
@@ -781,12 +783,13 @@ bool DefinitionReadArrayField(XMLParser *theXmlParser, DefinitionArrayDef *theAr
 	{
 		// 当 theArray 中已存在元素，且元素的个数为 2 的整数次幂时
 		if (theArray->mArrayCount >= 1 &&
-			(theArray->mArrayCount == 1 || (theArray->mArrayCount & (theArray->mArrayCount - 1) == 0)))
+			(theArray->mArrayCount == 1 || (theArray->mArrayCount & (theArray->mArrayCount - 1)) == 0))
 		{
-			void *anOldData = theArray->mArrayData;
-			theArray->mArrayData = DefinitionAlloc(2 * theArray->mArrayCount * aDefMap->mDefSize);
-			memcpy(theArray->mArrayData, anOldData, theArray->mArrayCount * aDefMap->mDefSize);
-			delete[] anOldData;
+
+			void *anNewData = DefinitionAlloc(2 * theArray->mArrayCount * aDefMap->mDefSize);
+			memcpy(anNewData, theArray->mArrayData, theArray->mArrayCount * aDefMap->mDefSize);
+			DefinitionFree(theArray->mArrayData);
+			theArray->mArrayData = anNewData;
 		}
 		theArray->mArrayCount++;
 	}
@@ -896,14 +899,14 @@ bool DefinitionReadField(XMLParser *theXmlParser, DefMap *theDefMap, void *theDe
 
 	for (DefField *aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++)
 	{
-		void *pVar = (void *)((uint32_t)theDefinition + aField->mFieldOffset);
+		void *pVar = (void *)((uintptr_t)theDefinition + aField->mFieldOffset);
 		if (aField->mFieldType == DefFieldType::DT_FLAGS &&
 			DefinitionReadFlagField(theXmlParser, aXMLElement.mValue, nullptr, (DefSymbol *)aField->mExtraData))
 			return true;
 
 		if (stricmp(aXMLElement.mValue.c_str(), aField->mFieldName) == 0) // 判断 aXMLElement 定义的是否为该成员变量
 		{
-			bool aSuccess;
+			bool aSuccess = false;
 			switch (aField->mFieldType)
 			{
 			case DefFieldType::DT_INT:
@@ -1001,36 +1004,31 @@ bool DefinitionCompileFile(const SexyString theXMLFilePath,
 //0x4447F0 : (void* def, *defMap, string& xmlFilePath)  //esp -= 0xC
 bool DefinitionCompileAndLoad(const SexyString &theXMLFilePath, DefMap *theDefMap, void *theDefinition)
 {
-	//Changed to compile from in debug to this preprocessor
-#ifdef _COMPILEXML // 内测版执行的内容
-
+	SexyString aCompiledFilePath = DefinitionGetCompiledFilePathFromXMLFilePath(theXMLFilePath);
 	TodHesitationTrace(_S("predef"));
-	SexyString aCompiledFilePath = DefinitionGetCompiledFilePathFromXMLFilePath(theXMLFilePath);
-	if (DefinitionIsCompiled(theXMLFilePath) && DefinitionReadCompiledFile(aCompiledFilePath, theDefMap, theDefinition))
+	//Currently compiled definitions aren't supported at all on x64
+#if SEXY_IS_X86
+	try
 	{
-		TodHesitationTrace(_S("loaded %s"), aCompiledFilePath.c_str());
-		return true;
+		if (DefinitionReadCompiledFile(aCompiledFilePath, theDefMap, theDefinition))
+		{
+			TodHesitationTrace(_S("loaded %s"), aCompiledFilePath.c_str());
+			return true;
+		}
 	}
-	else
-	{
-		PerfTimer aTimer;
-		aTimer.Start();
-		bool aResult = DefinitionCompileFile(theXMLFilePath, aCompiledFilePath, theDefMap, theDefinition);
-		TodTrace(_S("compile %d ms:'%s'"), (int)aTimer.GetDuration(), aCompiledFilePath.c_str());
-		TodHesitationTrace(_S("compiled %s"), aCompiledFilePath.c_str());
+	catch (int anErrorCode) {}
+#endif
+
+	PerfTimer aTimer;
+	aTimer.Start();
+	bool aResult = DefinitionCompileFile(theXMLFilePath, aCompiledFilePath, theDefMap, theDefinition);
+	TodTrace(_S("compile %d ms:'%s'"), (int)aTimer.GetDuration(), aCompiledFilePath.c_str());
+	TodHesitationTrace(_S("compiled %s"), aCompiledFilePath.c_str());
+	if (aResult)
 		return aResult;
-	}
-
-#else // 原版执行的内容
-
-	SexyString aCompiledFilePath = DefinitionGetCompiledFilePathFromXMLFilePath(theXMLFilePath);
-	if (DefinitionReadCompiledFile(aCompiledFilePath, theDefMap, theDefinition))
-		return true;
 
 	TodErrorMessageBox(StrFormat(_S("missing resource %s"), aCompiledFilePath.c_str()).c_str(), _S("Error"));
 	exit(0);
-
-#endif
 }
 
 //0x4448E0
@@ -1104,8 +1102,7 @@ void DefinitionFreeArrayField(DefinitionArrayDef *theArray, DefMap *theDefMap)
 	for (int i = 0; i < theArray->mArrayCount; i++)
 		DefinitionFreeMap(theDefMap,
 						  (void *)((int)theArray->mArrayData + theDefMap->mDefSize * i)); // 最后一个参数表示 pData[i]
-	delete[] theArray->mArrayData;
-	theArray->mArrayData = nullptr;
+	DefinitionFree(theArray->mArrayData);
 }
 
 //0x444A90
