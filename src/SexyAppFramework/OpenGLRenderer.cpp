@@ -250,17 +250,15 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 	glBindVertexArray(mVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 
+	mDefaultShader->Use();
+	mDefaultShader->SetUniform("uProjection", mProjection);
+	glActiveTexture(GL_TEXTURE0);
 	for (const auto cmd : mCommandBuffer)
 	{
 		if (cmd.mVertices.size() > MAX_VERTICES)
 			continue; // Add a warning
 
 		ApplyBlendMode(cmd.mBlendMode);
-		GLShader *aShaderToUse;
-		if (cmd.mShader != nullptr)
-			aShaderToUse = cmd.mShader;
-		else
-			aShaderToUse = mDefaultShader;
 
 		glBindSampler(0, cmd.mUVWrapMode == UV_WRAP ? mSamplers.mWrap : mSamplers.mClamp);
 		if (cmd.mHasClipRect)
@@ -279,10 +277,8 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 		else
 			glDisable(GL_SCISSOR_TEST);
 
-		aShaderToUse->Use();
-		aShaderToUse->SetUniform("uProjection", mProjection);
-		aShaderToUse->SetUniform("uUseTexture", (cmd.mTextureID != 0));
-		glActiveTexture(GL_TEXTURE0);
+		mDefaultShader->SetUniform("uUseTexture", (cmd.mTextureID != 0));
+		
 		glBindTexture(GL_TEXTURE_2D, cmd.mTextureID);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, cmd.mVertices.size() * sizeof(Vertex), cmd.mVertices.data());
 		glDrawArrays(cmd.mPrimitiveType, 0, (GLsizei)cmd.mVertices.size());

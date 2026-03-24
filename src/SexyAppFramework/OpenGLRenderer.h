@@ -43,7 +43,6 @@ namespace Sexy
 		GLuint mTextureID;
 		BlendMode mBlendMode;
 		std::vector<Vertex> mVertices;
-		GLShader *mShader = nullptr;
 		bool mHasClipRect = false;
 		Rect mClipRect;
 		TextureUVWrapMode mUVWrapMode = UV_CLAMP;

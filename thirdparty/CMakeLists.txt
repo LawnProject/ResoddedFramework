@@ -15,7 +15,7 @@ FetchContent_Declare(
 FetchContent_Declare(
     openal
     GIT_REPOSITORY https://github.com/kcat/openal-soft
-    GIT_TAG master
+    GIT_TAG 1.25.1
 )
 
 FetchContent_Declare(
