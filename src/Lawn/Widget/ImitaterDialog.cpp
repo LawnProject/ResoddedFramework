@@ -117,7 +117,7 @@ void ImitaterDialog::ShowToolTip()
 	else if (aSeedType != mToolTipSeed)
 	{
 		RemoveToolTip();
-		uint aRecFlags = mApp->mSeedChooserScreen->SeedNotRecommendedToPick(aSeedType);
+		unsigned int aRecFlags = mApp->mSeedChooserScreen->SeedNotRecommendedToPick(aSeedType);
 		if (mApp->mSeedChooserScreen->SeedNotAllowedToPick(aSeedType)) // 如果不能携带
 		{
 			mToolTip->SetWarningText(_S("[NOT_ALLOWED_ON_THIS_LEVEL]"));

@@ -39,7 +39,7 @@ void MessageWidget::ClearLabel()
 {
 	if (mReanimType != ReanimationType::REANIM_NONE)
 	{
-		mDuration = min(mDuration, 100 + mSlideOffTime + 1);
+		mDuration = std::min(mDuration, 100 + mSlideOffTime + 1);
 	}
 	else
 	{
@@ -142,7 +142,7 @@ void MessageWidget::LayoutReanimText()
 			SexyString aLine(&mLabel[aOff], aLen);
 
 			aLineWidth[aCurLine] = aFont->StringWidth(aLine);
-			aMaxWidth = max(aMaxWidth, aLineWidth[aCurLine]);
+			aMaxWidth = std::max(aMaxWidth, aLineWidth[aCurLine]);
 			aCurLine++;
 		}
 	}

@@ -11,6 +11,7 @@
 #include "SharedImage.h"
 #include "Ratio.h"
 #include <ft2build.h>
+#include <SDL3/SDL_mouse.h>
 #include FT_FREETYPE_H
 
 
@@ -21,6 +22,34 @@ class Image;
 
 namespace Sexy
 {
+
+enum JSONRegistryType
+{
+	TYPE_UNKNOWN = -1,
+	TYPE_STRING = 0,
+	TYPE_INTEGER,
+	TYPE_BOOL,
+	TYPE_DATA,
+	TYPE_LAST
+};
+
+enum MsgBoxFlags
+{
+	MsgBox_OK = 0,
+	MsgBox_OKCANCEL = 1,
+	MsgBox_ABORTRETRYIGNORE = 2,
+	MsgBox_YESNOCANCEL = 3,
+	MsgBox_YESNO = 4,
+	MsgBox_RETRYCANCEL = 5,
+};
+
+struct MsgBoxData
+{
+	MsgBoxFlags mFlags;
+	const char *mTitle;
+	const char *mMessage;
+};
+
 
 class WidgetManager;
 class DDInterface;
@@ -48,7 +77,6 @@ typedef std::list<WidgetSafeDeleteInfo> WidgetSafeDeleteList;
 typedef std::set<MemoryImage *> MemoryImageSet;
 typedef std::map<int, Dialog *> DialogMap;
 typedef std::list<Dialog *> DialogList;
-typedef std::list<MSG> WindowsMessageList;
 typedef std::vector<std::string> StringVector;
 //typedef std::basic_string<TCHAR> tstring; // string of TCHARs
 
@@ -122,12 +150,10 @@ enum
 	UPDATESTATE_PROCESS_DONE
 };
 
-typedef std::map<HANDLE, int> HandleToIntMap;
-
 class SexyAppBase : public ButtonListener, public DialogListener
 {
   public:
-	ulong mRandSeed;
+	uint32_t mRandSeed;
 
 	std::string mCompanyName;
 	std::string mFullCompanyName;
@@ -153,16 +179,14 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	bool mStandardWordWrap;
 	bool mbAllowExtendedChars;
 
-	HANDLE mMutex;
 	bool mOnlyAllowOneCopyToRun;
-	UINT mNotifyGameMessage;
 	CritSect mCritSect;
 	bool mBetaValidate;
-	uchar mAdd8BitMaxTable[512];
+	uint8_t mAdd8BitMaxTable[512];
 	WidgetManager *mWidgetManager;
 	DialogMap mDialogMap;
 	DialogList mDialogList;
-	DWORD mPrimaryThreadId;
+	uint32_t mPrimaryThreadId;
 	bool mSEHOccured;
 	bool mShutdown;
 	bool mExitToTop;
@@ -173,13 +197,10 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	bool mForceWindowed;
 	bool mInitialized;
 	bool mProcessInTimer;
-	DWORD mTimeLoaded;
+	uint32_t mTimeLoaded;
 	Window* mWindow;
-	HWND mHWnd;
-	HWND mInvisHWnd;
 	bool mIsScreenSaver;
 	bool mAllowMonitorPowersave;
-	WindowsMessageList mDeferredMessages;
 	bool mNoDefer;
 	bool mFullScreenPageFlip;
 	bool mTabletPC;
@@ -189,13 +210,13 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	std::string mRegisterLink;
 	std::string mProductVersion;
 	Image *mCursorImages[NUM_CURSORS];
-	HCURSOR mOverrideCursor;
+	SDL_Cursor* mOverrideCursor;
 	bool mIsOpeningURL;
 	bool mShutdownOnURLOpen;
 	std::string mOpeningURL;
-	DWORD mOpeningURLTime;
-	DWORD mLastTimerTime;
-	DWORD mLastBigDelayTime;
+	uint32_t mOpeningURLTime;
+	uint32_t mLastTimerTime;
+	uint32_t mLastBigDelayTime;
 	double mUnmutedMusicVolume;
 	double mUnmutedSfxVolume;
 	int mMuteCount;
@@ -216,9 +237,9 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	bool mHasPendingDraw;
 	double mPendingUpdatesAcc;
 	double mUpdateFTimeAcc;
-	DWORD mLastTimeCheck;
-	DWORD mLastTime;
-	DWORD mLastUserInputTick;
+	uint32_t mLastTimeCheck;
+	uint32_t mLastTime;
+	uint32_t mLastUserInputTick;
 
 	int mSleepCount;
 	int mDrawCount;
@@ -230,14 +251,12 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	int mFastForwardToUpdateNum;
 	bool mFastForwardToMarker;
 	bool mFastForwardStep;
-	DWORD mLastDrawTick;
-	DWORD mNextDrawTick;
+	uint32_t mLastDrawTick;
+	uint32_t mNextDrawTick;
 	int mStepMode; // 0 = off, 1 = step, 2 = waiting for step
 
 	int mCursorNum;
 	SoundManager *mSoundManager;
-	HCURSOR mHandCursor;
-	HCURSOR mDraggingCursor;
 	WidgetSafeDeleteList mSafeDeleteList;
 	bool mMouseIn;
 	bool mRunning;
@@ -247,7 +266,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	bool mIsDisabled;
 	bool mHasFocus;
 	int mDrawTime;
-	ulong mFPSStartTick;
+	uint32_t mFPSStartTick;
 	int mFPSFlipCount;
 	int mFPSDirtyCount;
 	int mFPSTime;
@@ -288,7 +307,6 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	int mDemoCmdOrder;
 	int mDemoCmdBitPos;
 	bool mDemoLoadingComplete;
-	HandleToIntMap mHandleToIntMap; // For waiting on handles
 	int mCurHandleNum;
 
 	typedef std::pair<std::string, int> DemoMarker;
@@ -304,15 +322,15 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	bool mVSyncUpdates;
 	bool mVSyncBroken;
 	int mVSyncBrokenCount;
-	DWORD mVSyncBrokenTestStartTick;
-	DWORD mVSyncBrokenTestUpdates;
+	uint32_t mVSyncBrokenTestStartTick;
+	uint32_t mVSyncBrokenTestUpdates;
 	bool mWaitForVSync;
 	bool mSoftVSyncWait;
 	bool mUserChanged3DSetting;
 	bool mAutoEnable3D;
 	bool mTest3D;
-	DWORD mMinVidMemory3D;
-	DWORD mRecommendedVidMemory3D;
+	uint32_t mMinVidMemory3D;
+	uint32_t mRecommendedVidMemory3D;
 
 	bool mWidescreenAware;
 	Rect mScreenBounds;
@@ -327,10 +345,8 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	ResourceManager *mResourceManager;
 
 #ifdef ZYLOM
-	uint mZylomGameId;
+	unsigned int mZylomGameId;
 #endif
-
-	LONG mOldWndProc;
 
   protected:
 	void RehupFocus();
@@ -361,13 +377,19 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	void ShowMemoryUsage();
 
 	// Registry helpers
-	bool RegistryRead(const std::string &theValueName, ulong *theType, uchar *theValue, ulong *theLength);
+	bool RegistryRead(const std::string &theValueName,
+					  JSONRegistryType *theType,
+					  uint8_t *theValue,
+					  uint32_t *theLength);
 	bool RegistryReadKey(const std::string &theValueName,
-						 ulong *theType,
-						 uchar *theValue,
-						 ulong *theLength,
-						 HKEY theMainKey = HKEY_CURRENT_USER);
-	bool RegistryWrite(const std::string &theValueName, ulong theType, const uchar *theValue, ulong theLength);
+						 JSONRegistryType *theType,
+						 uint8_t *theValue,
+						 uint32_t *theLength,
+						 int theMainKey = 0);
+	bool RegistryWrite(const std::string &theValueName,
+					   JSONRegistryType theType,
+					   const uint8_t *theValue,
+					   uint32_t theLength);
 
 	// Demo recording helpers
 	void ProcessDemo();
@@ -377,7 +399,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	virtual ~SexyAppBase();
 
 	// Common overrides:
-	virtual MusicInterface *CreateMusicInterface(HWND theHWnd);
+	virtual MusicInterface *CreateMusicInterface();
 	virtual void InitHook();
 	virtual void ShutdownHook();
 	virtual void PreTerminate();
@@ -395,8 +417,8 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	// Public methods
 	virtual void BeginPopup();
 	virtual void EndPopup();
-	virtual int MsgBox(const std::string &theText, const std::string &theTitle = "Message", int theFlags = MB_OK);
-	virtual int MsgBox(const std::wstring &theText, const std::wstring &theTitle = L"Message", int theFlags = MB_OK);
+	virtual int MsgBox(const std::string &theText, const std::string &theTitle = "Message", int theFlags = 0);
+	virtual int MsgBox(const std::wstring &theText, const std::wstring &theTitle = L"Message", int theFlags = 0);
 	virtual void Popup(const std::string &theString);
 	virtual void Popup(const std::wstring &theString);
 	virtual void LogScreenSaverError(const std::string &theError);
@@ -468,10 +490,10 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	void MirrorImage(Image *theImage);
 	void FlipImage(Image *theImage);
 	void RotateImageHue(Sexy::MemoryImage *theImage, int theDelta);
-	ulong HSLToRGB(int h, int s, int l);
-	ulong RGBToHSL(int r, int g, int b);
-	void HSLToRGB(const ulong *theSource, ulong *theDest, int theSize);
-	void RGBToHSL(const ulong *theSource, ulong *theDest, int theSize);
+	uint32_t HSLToRGB(int h, int s, int l);
+	uint32_t RGBToHSL(int r, int g, int b);
+	void HSLToRGB(const uint32_t *theSource, uint32_t *theDest, int theSize);
+	void RGBToHSL(const uint32_t *theSource, uint32_t *theDest, int theSize);
 
 	void AddMemoryImage(MemoryImage *theMemoryImage);
 	void RemoveMemoryImage(MemoryImage *theMemoryImage);
@@ -501,7 +523,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 
 	virtual void GotFocus();
 	virtual void LostFocus();
-	virtual bool IsAltKeyUsed(WPARAM wParam);
+	virtual bool IsAltKeyUsed();
 	virtual bool DebugKeyDown(int theKey);
 	virtual bool DebugKeyDownAsync(int theKey, bool ctrlDown, bool altDown);
 	virtual void CloseRequestAsync();
@@ -554,20 +576,20 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	void DemoAssertStringEqual(const std::string &theString);
 	void DemoAssertIntEqual(int theInt);
 	void DemoAddMarker(const std::string &theString);
-	void DemoRegisterHandle(HANDLE theHandle);
-	void DemoWaitForHandle(HANDLE theHandle);
-	bool DemoCheckHandle(HANDLE theHandle);
+	void DemoRegisterHandle(void* theHandle);
+	void DemoWaitForHandle(void *theHandle);
+	bool DemoCheckHandle(void *theHandle);
 
 	// Registry access methods
 	bool RegistryGetSubKeys(const std::string &theKeyName, StringVector *theSubKeys);
 	bool RegistryReadString(const std::string &theValueName, std::string *theString);
 	bool RegistryReadInteger(const std::string &theValueName, int *theValue);
 	bool RegistryReadBoolean(const std::string &theValueName, bool *theValue);
-	bool RegistryReadData(const std::string &theValueName, uchar *theValue, ulong *theLength);
+	bool RegistryReadData(const std::string &theValueName, uint8_t *theValue, uint32_t *theLength);
 	bool RegistryWriteString(const std::string &theValueName, const std::string &theString);
 	bool RegistryWriteInteger(const std::string &theValueName, int theValue);
 	bool RegistryWriteBoolean(const std::string &theValueName, bool theValue);
-	bool RegistryWriteData(const std::string &theValueName, const uchar *theValue, ulong theLength);
+	bool RegistryWriteData(const std::string &theValueName, const uint8_t *theValue, uint32_t theLength);
 	bool RegistryEraseKey(const SexyString &theKeyName);
 	void RegistryEraseValue(const SexyString &theValueName);
 

@@ -9,7 +9,6 @@
 #include "Debug.h"
 
 using namespace Sexy;
-using namespace std;
 
 WidgetManager::WidgetManager(SexyAppBase *theApp)
 {
@@ -177,7 +176,7 @@ void WidgetManager::FlushDeferredOverlayWidgets(int theMaxPriority)
 	}
 }
 
-void WidgetManager::DoMouseUps(Widget *theWidget, ulong theDownCode)
+void WidgetManager::DoMouseUps(Widget *theWidget, uint32_t theDownCode)
 {
 	int aClickCountTable[3] = {1, -1, 3};
 	for (int i = 0; i < 3; i++)
@@ -395,7 +394,7 @@ void WidgetManager::DrawWidgetsTo(Graphics *g)
 bool WidgetManager::DrawScreen()
 {
 	SEXY_AUTO_PERF("WidgetManager::DrawScreen");
-	//DWORD start = timeGetTime();
+	//uint32_t start = timeGetTime();
 
 	ModalFlags aModalFlags;
 	InitModalFlags(&aModalFlags);

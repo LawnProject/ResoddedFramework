@@ -1,13 +1,13 @@
 {
 	PIXEL_TYPE* aDestPixels = &aBits[aY0*STRIDE + aX0];
-	ulong anErrAcc = (ulong)(fabs(theStartX - aX0)*fabs(theStartY - aY0) * 0x10000);
+	uint32_t anErrAcc = (uint32_t)(fabs(theStartX - aX0)*fabs(theStartY - aY0) * 0x10000);
 	if (dx >= dy) // mostly horizontal
 	{ 
-		//ulong anErrAdj = (((ulong)dy << 16) / (ulong)dx);
-		ulong anErrAdj = (ulong)(dyd / dxd * 0x10000);
+		//uint32_t anErrAdj = (((uint32_t)dy << 16) / (uint32_t)dx);
+		uint32_t anErrAdj = (uint32_t)(dyd / dxd * 0x10000);
 
-		uchar aWeight = 255 - (uchar)(anErrAcc >> 8);
-		uchar aWeight2 = (aWeight ^ 0xFF);
+		uint8_t aWeight = 255 - (uint8_t)(anErrAcc >> 8);
+		uint8_t aWeight2 = (aWeight ^ 0xFF);
 
 		int a = CALC_WEIGHT_A(aWeight);
 		int oma = 256 - a;
@@ -24,8 +24,8 @@
 			}
 			aDestPixels += aXinc;
 
-			uchar aWeight = 255 - (uchar)(anErrAcc >> 8);
-			uchar aWeight2 = (aWeight ^ 0xFF);
+			uint8_t aWeight = 255 - (uint8_t)(anErrAcc >> 8);
+			uint8_t aWeight2 = (aWeight ^ 0xFF);
 
 			dest = *aDestPixels;
 			a = CALC_WEIGHT_A(aWeight);
@@ -43,11 +43,11 @@
 	}
 	else // mostly vertical
 	{
-		//ulong anErrAdj = (ulong)(((ulong)dx << 16) / (ulong)dy);
-		ulong anErrAdj = (ulong)(dxd / dyd * 0x10000);
+		//uint32_t anErrAdj = (uint32_t)(((uint32_t)dx << 16) / (uint32_t)dy);
+		uint32_t anErrAdj = (uint32_t)(dxd / dyd * 0x10000);
 
-		uchar aWeight = 255 - (uchar)(anErrAcc >> 8);
-		uchar aWeight2 = (aWeight ^ 0xFF);
+		uint8_t aWeight = 255 - (uint8_t)(anErrAcc >> 8);
+		uint8_t aWeight2 = (aWeight ^ 0xFF);
 
 		int a = CALC_WEIGHT_A(aWeight);
 		int oma = 256 - a;
@@ -64,8 +64,8 @@
 			}
 			aDestPixels += STRIDE;
 
-			uchar aWeight = 255 - (uchar)(anErrAcc >> 8);
-			uchar aWeight2 = (aWeight ^ 0xFF);
+			uint8_t aWeight = 255 - (uint8_t)(anErrAcc >> 8);
+			uint8_t aWeight2 = (aWeight ^ 0xFF);
 
 			dest = *aDestPixels;
 			int a = CALC_WEIGHT_A(aWeight);
@@ -82,8 +82,8 @@
 		}
 	}
 	aDestPixels = &aBits[aY1*STRIDE + aX1];
-	uchar aWeight = 255 - (uchar)(anErrAcc >> 8);
-	uchar aWeight2 = (aWeight ^ 0xFF);
+	uint8_t aWeight = 255 - (uint8_t)(anErrAcc >> 8);
+	uint8_t aWeight2 = (aWeight ^ 0xFF);
 
 	int a = CALC_WEIGHT_A(aWeight);
 	int oma = 256 - a;

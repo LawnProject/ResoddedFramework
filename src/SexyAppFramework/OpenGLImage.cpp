@@ -39,7 +39,7 @@ OpenGLImage::~OpenGLImage()
 		glDeleteFramebuffers(1, &mFBO);
 }
 
-ulong *OpenGLImage::GetBits()
+uint32_t *OpenGLImage::GetBits()
 {
 	if (mBits == nullptr)
 	{
@@ -52,7 +52,7 @@ ulong *OpenGLImage::GetBits()
 		if (!LockSurface())
 			return nullptr;
 
-		mBits = new ulong[mWidth * mHeight + 1];
+		mBits = new uint32_t[mWidth * mHeight + 1];
 		mBits[mWidth * mHeight] = MEMORYCHECK_ID;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, mFBO);

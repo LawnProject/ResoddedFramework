@@ -42,7 +42,7 @@ class GPUImage : public MemoryImage
 										   int theSpanCount,
 										   const Color &theColor,
 										   int theDrawMode,
-										   const BYTE *theCoverage,
+										   const uint8_t *theCoverage,
 										   int theCoverX,
 										   int theCoverY,
 										   int theCoverWidth,

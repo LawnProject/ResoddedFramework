@@ -1,3 +1,5 @@
+#if SEXY_USE_DRM
+
 #ifndef __POPDRMCOMM_H__
 #define __POPDRMCOMM_H__
 
@@ -29,8 +31,8 @@ class PopDRMComm
 	bool mIsWindow;								//+0x10
 	HANDLE mEventHwnd;							//+0x14
 	HANDLE mEventThreadHwnd;					//+0x18
-	DWORD mEventThreadID;						//+0x1C
-	DWORD mCurrentThreadID;						//+0x20
+	uint32_t mEventThreadID;					//+0x1C
+	uint32_t mCurrentThreadID;					//+0x20
 	UINT mWindowMessage[PopCapDRM_NumMessages]; //+0x24
 	CRITICAL_SECTION mCritSect;					//+0x48
 
@@ -44,5 +46,8 @@ class PopDRMComm
 	bool DoIPC();	  //0x5D5D60
 	bool QueryData(); //0x5D5CB0
 };
+
+#endif
+
 
 #endif

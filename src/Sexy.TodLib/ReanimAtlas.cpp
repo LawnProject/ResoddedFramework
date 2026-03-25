@@ -38,7 +38,7 @@ MemoryImage *ReanimAtlasMakeBlankMemoryImage(int theWidth, int theHeight)
 	MemoryImage *aImage = new MemoryImage();
 
 	int aBitsCount = theWidth * theHeight;
-	aImage->mBits = new unsigned long[aBitsCount + 1];
+	aImage->mBits = new uint32_t[aBitsCount + 1];
 	aImage->mWidth = theWidth;
 	aImage->mHeight = theHeight;
 	aImage->mHasTrans = true;
@@ -89,8 +89,9 @@ int ReanimAtlas::PickAtlasWidth()
 	}
 
 	int aWidth = FloatRoundToInt(sqrt(totalArea)); // 假定为正方向区域时，正方向的边长
-	return GetClosestPowerOf2Above(min(
-		max(aWidth, aMaxWidth), 2048)); // 取“边长”和“最宽贴图的宽度”的较大值（且不超过 2048），并向上取至 2 的整数次幂
+	return GetClosestPowerOf2Above(
+		std::min(std::max(aWidth, aMaxWidth),
+			2048)); // 取“边长”和“最宽贴图的宽度”的较大值（且不超过 2048），并向上取至 2 的整数次幂
 }
 
 //0x470420
@@ -192,7 +193,7 @@ void ReanimAtlas::ArrangeImages(int &theAtlasWidth, int &theAtlasHeight)
 		*/
 
 		int aImageHeight = GetClosestPowerOf2Above(aImage->mY + aImage->mHeight);
-		theAtlasHeight = max(aImageHeight, theAtlasHeight);
+		theAtlasHeight = std::max(aImageHeight, theAtlasHeight);
 	}
 }
 

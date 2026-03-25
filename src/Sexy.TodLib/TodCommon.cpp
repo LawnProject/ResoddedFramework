@@ -657,10 +657,10 @@ void TodDrawStringMatrix(
 			}
 
 			Color aColor;
-			aColor.mRed = min(aLayer->mColorAdd.mRed + theColor.mRed * aLayer->mColorMult.mRed / 255, 255);
-			aColor.mGreen = min(aLayer->mColorAdd.mGreen + theColor.mGreen * aLayer->mColorMult.mGreen / 255, 255);
-			aColor.mBlue = min(aLayer->mColorAdd.mBlue + theColor.mBlue * aLayer->mColorMult.mBlue / 255, 255);
-			aColor.mAlpha = min(aLayer->mColorAdd.mAlpha + theColor.mAlpha * aLayer->mColorMult.mAlpha / 255, 255);
+			aColor.mRed = std::min(aLayer->mColorAdd.mRed + theColor.mRed * aLayer->mColorMult.mRed / 255, 255);
+			aColor.mGreen = std::min(aLayer->mColorAdd.mGreen + theColor.mGreen * aLayer->mColorMult.mGreen / 255, 255);
+			aColor.mBlue = std::min(aLayer->mColorAdd.mBlue + theColor.mBlue * aLayer->mColorMult.mBlue / 255, 255);
+			aColor.mAlpha = std::min(aLayer->mColorAdd.mAlpha + theColor.mAlpha * aLayer->mColorMult.mAlpha / 255, 255);
 			int anOrder = aCharData->mOrder + aLayer->mBaseOrder;
 
 			if (aCurPoolIdx >= POOL_SIZE)
@@ -680,7 +680,7 @@ void TodDrawStringMatrix(
 			//aRenderCommand->mUseAlphaCorrection = aLayer->mUseAlphaCorrection;
 			aRenderCommand->mNext = nullptr;
 
-			int anOrderIdx = min(max(anOrder + 128, 0), 255);
+			int anOrderIdx = std::min(std::max(anOrder + 128, 0), 255);
 			if (gRenderTail[anOrderIdx])
 			{
 				gRenderTail[anOrderIdx]->mNext = aRenderCommand;
@@ -1013,7 +1013,7 @@ void TodDrawImageCenterScaledF(
 }
 
 //0x512AC0
-unsigned long AverageNearByPixels(MemoryImage *theImage, unsigned long *thePixel, int x, int y)
+unsigned long AverageNearByPixels(MemoryImage *theImage, uint32_t *thePixel, int x, int y)
 {
 	int aRed = 0;
 	int aGreen = 0;
@@ -1048,11 +1048,11 @@ unsigned long AverageNearByPixels(MemoryImage *theImage, unsigned long *thePixel
 		return 0;
 
 	aRed /= aBitsCount;
-	aRed = min(aRed, 255);
+	aRed = std::min(aRed, 255);
 	aGreen /= aBitsCount;
-	aGreen = min(aGreen, 255);
+	aGreen = std::min(aGreen, 255);
 	aBlue /= aBitsCount;
-	aBlue = min(aBlue, 255);
+	aBlue = std::min(aBlue, 255);
 	return (aRed << 16) | (aGreen << 8) | (aBlue);
 }
 
@@ -1070,7 +1070,7 @@ void FixPixelsOnAlphaEdgeForBlending(Image *theImage)
 	PerfTimer aTimer;
 	aTimer.Start();
 
-	unsigned long *aBitsPtr = aImage->mBits;
+	uint32_t *aBitsPtr = aImage->mBits;
 	for (int y = 0; y < theImage->mHeight; y++)
 	{
 		for (int x = 0; x < theImage->mWidth; x++)
@@ -1085,7 +1085,7 @@ void FixPixelsOnAlphaEdgeForBlending(Image *theImage)
 	}
 	aImage->mBitsChangedCount++;
 
-	int aDuration = max(aTimer.GetDuration(), 0);
+	int aDuration = std::max(aTimer.GetDuration(), 0.0);
 	if (aDuration > 20)
 	{
 		TodTraceAndLog("LOADING:Long sanding '%s' %d ms on %s",
@@ -1205,7 +1205,7 @@ Color ColorsMultiply(const Color &theColor1, const Color &theColor2)
 }
 
 //0x513120
-bool TodLoadResources(const string &theGroup)
+bool TodLoadResources(const std::string &theGroup)
 {
 	return ((TodResourceManager *)gSexyAppBase->mResourceManager)->TodLoadResources(theGroup);
 }
@@ -1239,7 +1239,7 @@ bool TodResourceManager::TodLoadResources(const std::string &theGroup)
 
 	mLoadedGroups.insert(theGroup);
 
-	int aDuration = max(aTimer.GetDuration(), 0);
+	int aDuration = std::max(aTimer.GetDuration(), 0.0);
 	if (aDuration > 20)
 	{
 		TodTraceAndLog("LOADED: '%s' %d ms on %s", theGroup.c_str(), aDuration, gGetCurrentLevelName().c_str());

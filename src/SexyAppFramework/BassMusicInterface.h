@@ -2,6 +2,7 @@
 #define __BASSMUSICINTERFACE_H__
 
 #include "MusicInterface.h"
+#include "Window.h"
 #include <bass.h>
 
 namespace Sexy
@@ -22,7 +23,7 @@ class BassMusicInfo
   public:
 	BassMusicInfo();
 
-	DWORD GetHandle()
+	uint32_t GetHandle()
 	{
 		return mHMusic ? mHMusic : mHStream;
 	}
@@ -38,7 +39,7 @@ class BassMusicInterface : public MusicInterface
 	int mMusicLoadFlags;
 
   public:
-	BassMusicInterface(HWND theHWnd);
+	BassMusicInterface(Window* theWindow);
 	virtual ~BassMusicInterface();
 
 	virtual bool LoadMusic(int theSongId, const std::string &theFileName);

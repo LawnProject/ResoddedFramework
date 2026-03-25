@@ -1,3 +1,4 @@
+#if WIN32
 #ifndef __SEHCATHER_H__
 #define __SEHCATHER_H__
 
@@ -116,4 +117,5 @@ extern SEHCatcher gSEHCatcher;
 
 } // namespace Sexy
 
+#endif
 #endif

@@ -69,7 +69,7 @@ class ResourceManager
 		bool mMinimizeSubdivisions;
 		int mRows;
 		int mCols;
-		DWORD mAlphaColor;
+		uint32_t mAlphaColor;
 		AnimInfo mAnimInfo;
 
 		ImageRes()

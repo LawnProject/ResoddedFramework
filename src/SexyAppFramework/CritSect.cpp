@@ -1,20 +1,19 @@
 #pragma warning(disable : 4786)
 
 #include "CritSect.h"
-#include <windows.h>
 
 using namespace Sexy;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-CritSect::CritSect(void)
+CritSect::CritSect()
 {
-	InitializeCriticalSection(&mCriticalSection);
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-CritSect::~CritSect(void)
+CritSect::~CritSect()
 {
-	DeleteCriticalSection(&mCriticalSection);
+
 }

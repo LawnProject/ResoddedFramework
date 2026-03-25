@@ -12,7 +12,7 @@ class Image
 	int mWidth;
 	int mHeight;
 	int mNumChannels;
-	unsigned long *mBits;
+	uint32_t *mBits;
 
   public:
 	Image();
@@ -20,7 +20,7 @@ class Image
 
 	int GetWidth();
 	int GetHeight();
-	unsigned long *GetBits();
+	uint32_t *GetBits();
 };
 
 bool WriteImage(const std::string &theFileName,

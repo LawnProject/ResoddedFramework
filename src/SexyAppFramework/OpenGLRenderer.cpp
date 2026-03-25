@@ -395,7 +395,7 @@ bool OpenGLRenderer::RecoverBits(MemoryImage *theImage)
 		return false;
 
 	// Reverse the process: copy texture data to the image
-	ulong *aPixels = new ulong[aData->mWidth * aData->mHeight];
+	uint32_t *aPixels = new uint32_t[aData->mWidth * aData->mHeight];
 	GLuint aTexID = aData->GetTextureID();
 	glBindTexture(GL_TEXTURE_2D, aTexID);
 	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, aPixels);
@@ -405,9 +405,9 @@ bool OpenGLRenderer::RecoverBits(MemoryImage *theImage)
 
 	return true;
 }
-ulong *OpenGLRenderer::GetBitsFromTexture(void *theTexture, int theWidth, int theHeight)
+uint32_t *OpenGLRenderer::GetBitsFromTexture(void *theTexture, int theWidth, int theHeight)
 {
-	ulong *aPixels = new ulong[theWidth * theHeight];
+	uint32_t *aPixels = new uint32_t[theWidth * theHeight];
 	GLuint aTexID = *(GLuint *)theTexture;
 	glBindTexture(GL_TEXTURE_2D, aTexID);
 	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, aPixels);

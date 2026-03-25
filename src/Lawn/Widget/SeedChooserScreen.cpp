@@ -209,7 +209,7 @@ void SeedChooserScreen::CrazyDavePickSeeds()
 	for (SeedType aSeedType = SEED_PEASHOOTER; aSeedType < NUM_SEEDS_IN_CHOOSER; aSeedType = (SeedType)(aSeedType + 1))
 	{
 		aSeedArray[aSeedType].mItem = aSeedType;
-		uint aRecFlags = SeedNotRecommendedToPick(aSeedType);
+		unsigned int aRecFlags = SeedNotRecommendedToPick(aSeedType);
 		if ((aSeedType == SEED_GATLINGPEA && !mApp->mPlayerInfo->mPurchases[STORE_ITEM_PLANT_GATLINGPEA]) ||
 			!mApp->SeedTypeAvailable(aSeedType) || SeedNotAllowedToPick(aSeedType) || Plant::IsUpgrade(aSeedType) ||
 			aSeedType == SEED_IMITATER || aSeedType == SEED_UMBRELLA || aSeedType == SEED_BLOVER)
@@ -324,7 +324,7 @@ SeedChooserScreen::~SeedChooserScreen()
 //0x4845E0
 unsigned int SeedChooserScreen::SeedNotRecommendedToPick(SeedType theSeedType)
 {
-	uint aRecFlags = mBoard->SeedNotRecommendedForLevel(theSeedType);
+	unsigned int aRecFlags = mBoard->SeedNotRecommendedForLevel(theSeedType);
 	if (TestBit(aRecFlags, NOT_RECOMMENDED_NOCTURNAL) && PickedPlantType(SEED_INSTANT_COFFEE))
 		SetBit(aRecFlags, NOT_RECOMMENDED_NOCTURNAL, false);
 	return aRecFlags;
@@ -932,7 +932,7 @@ void SeedChooserScreen::ShowToolTip()
 			{
 				RemoveToolTip();
 				ChosenSeed &aChosenSeed = mChosenSeeds[aSeedType];
-				uint aRecFlags = SeedNotRecommendedToPick(aSeedType);
+				unsigned int aRecFlags = SeedNotRecommendedToPick(aSeedType);
 				if (SeedNotAllowedToPick(aSeedType))
 				{
 					mToolTip->SetWarningText(_S("[NOT_ALLOWED_ON_THIS_LEVEL]"));
@@ -1111,10 +1111,12 @@ void SeedChooserScreen::MouseDown(int x, int y, int theClickCount)
 										 _S("[GET_FULL_VERSION_NO_BUTTON]"),
 										 Dialog::BUTTONS_YES_NO) == Dialog::ID_YES)
 				{
+#if SEXY_USE_DRM
 					if (mApp->mDRM)
 					{
 						mApp->mDRM->BuyGame();
 					}
+#endif
 					mApp->DoBackToMain();
 				}
 			}

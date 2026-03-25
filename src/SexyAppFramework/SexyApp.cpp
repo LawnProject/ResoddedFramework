@@ -71,7 +71,7 @@ bool SexyApp::Validate(const std::string &theUserName, const std::string &theReg
 	/*BigInt n("42BF94023BBA6D040C8B81D9");
 	BigInt e("11");
 
-	ulong i;
+	uint32_t i;
 	std::string aDataString;
 	bool space = false;	
 	for (i = 0; i < theUserName.size(); i++)
@@ -134,7 +134,7 @@ void SexyApp::ReadFromRegistry()
 		{
 			for (;;)
 			{
-				ushort aLen;
+				unsigned short aLen;
 				if (fread(&aLen, 1, sizeof(short), fp) == 0)
 					break;
 
@@ -245,7 +245,7 @@ void SexyApp::WriteToRegistry()
 		{
 			for (;;)
 			{
-				ushort aLen;
+				unsigned short aLen;
 				if (fread(&aLen, 1, sizeof(short), fp) == 0)
 					break;
 
@@ -270,7 +270,7 @@ void SexyApp::WriteToRegistry()
 
 		if (fp != NULL)
 		{
-			ushort aLen = mProdName.length();
+			unsigned short aLen = mProdName.length();
 			fwrite(&aLen, 1, sizeof(short), fp);
 			fwrite(mProdName.c_str(), aLen, sizeof(char), fp);
 

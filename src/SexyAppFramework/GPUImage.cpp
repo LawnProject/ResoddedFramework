@@ -38,7 +38,7 @@ void GPUImage::FillScanLinesWithCoverage(Span *theSpans,
 										 int theSpanCount,
 										 const Color &theColor,
 										 int theDrawMode,
-										 const BYTE *theCoverage,
+										 const uint8_t *theCoverage,
 										 int theCoverX,
 										 int theCoverY,
 										 int theCoverWidth,
@@ -51,10 +51,10 @@ void GPUImage::FillScanLinesWithCoverage(Span *theSpans,
 	int r = l + theSpans[0].mWidth, b = t;
 	for (int i = 1; i < theSpanCount; ++i)
 	{
-		l = min(theSpans[i].mX, l);
-		r = max(theSpans[i].mX + theSpans[i].mWidth - 1, r);
-		t = min(theSpans[i].mY, t);
-		b = max(theSpans[i].mY + theSpans[i].mWidth - 1, b);
+		l = std::min(theSpans[i].mX, l);
+		r = std::max(theSpans[i].mX + theSpans[i].mWidth - 1, r);
+		t = std::min(theSpans[i].mY, t);
+		b = std::max(theSpans[i].mY + theSpans[i].mWidth - 1, b);
 	}
 	for (int i = 0; i < theSpanCount; ++i)
 	{
@@ -278,16 +278,16 @@ void GPUImage::DrawLine(double theStartX, double theStartY, double theEndX, doub
 
 	if (theStartY == theEndY)
 	{
-		int aStartX = min(theStartX, theEndX);
-		int aEndX = max(theStartX, theEndX);
+		int aStartX = std::min(theStartX, theEndX);
+		int aEndX = std::max(theStartX, theEndX);
 
 		FillRect(Rect(aStartX, theStartY, aEndX - aStartX + 1, theEndY - theStartY + 1), theColor, theDrawMode);
 		return;
 	}
 	else if (theStartX == theEndX)
 	{
-		int aStartY = min(theStartY, theEndY);
-		int aEndY = max(theStartY, theEndY);
+		int aStartY = std::min(theStartY, theEndY);
+		int aEndY = std::max(theStartY, theEndY);
 
 		FillRect(Rect(theStartX, aStartY, theEndX - theStartX + 1, aEndY - aStartY + 1), theColor, theDrawMode);
 		return;
@@ -322,16 +322,16 @@ void GPUImage::DrawLineAA(
 
 	if (theStartY == theEndY)
 	{
-		int aStartX = min(theStartX, theEndX);
-		int aEndX = max(theStartX, theEndX);
+		int aStartX = std::min(theStartX, theEndX);
+		int aEndX = std::max(theStartX, theEndX);
 
 		FillRect(Rect(aStartX, theStartY, aEndX - aStartX + 1, theEndY - theStartY + 1), theColor, theDrawMode);
 		return;
 	}
 	else if (theStartX == theEndX)
 	{
-		int aStartY = min(theStartY, theEndY);
-		int aEndY = max(theStartY, theEndY);
+		int aStartY = std::min(theStartY, theEndY);
+		int aEndY = std::max(theStartY, theEndY);
 
 		FillRect(Rect(theStartX, aStartY, theEndX - theStartX + 1, aEndY - aStartY + 1), theColor, theDrawMode);
 		return;

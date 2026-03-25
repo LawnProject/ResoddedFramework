@@ -129,9 +129,9 @@ namespace Sexy
 		GPUImage *mScreenImage;
 
 		int mRGBBits;
-		ulong mRedMask;
-		ulong mGreenMask;
-		ulong mBlueMask;
+		uint32_t mRedMask;
+		uint32_t mGreenMask;
+		uint32_t mBlueMask;
 		int mRedBits;
 		int mGreenBits;
 		int mBlueBits;
@@ -178,7 +178,7 @@ namespace Sexy
 
 		virtual bool CreateImageTexture(MemoryImage *theImage) = 0;
 		virtual bool RecoverBits(MemoryImage *theImage) = 0;
-		virtual ulong *GetBitsFromTexture(void *theTexture, int theWidth, int theHeight) = 0;
+		virtual uint32_t *GetBitsFromTexture(void *theTexture, int theWidth, int theHeight) = 0;
 
 		virtual void DeleteTexture(void *theTexture) = 0;
 		virtual void *CreateTexture(void *thePixels, int theWidth, int theHeight, RawPixelFormat thePixelFormat, int theAlignment = 4) = 0;

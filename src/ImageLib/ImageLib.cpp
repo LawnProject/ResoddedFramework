@@ -1,4 +1,3 @@
-#include <windows.h>
 #include "ImageLib.h"
 #include <math.h>
 #include <tchar.h>
@@ -37,7 +36,7 @@ int Image::GetHeight()
 	return mHeight;
 }
 
-unsigned long *Image::GetBits()
+uint32_t *Image::GetBits()
 {
 	return mBits;
 }
@@ -49,14 +48,14 @@ bool ImageLib::WriteImage(const std::string &theFileName,
 {
 	uint8_t *data = new uint8_t[theImage->mWidth * theImage->mHeight * theImage->mNumChannels];
 
-	unsigned long *aBits = theImage->GetBits();
+	uint32_t *aBits = theImage->GetBits();
 	int index = 0;
 
 	for (int j = 0; j < theImage->mHeight; ++j)
 	{
 		for (int i = 0; i < theImage->mWidth; ++i)
 		{
-			unsigned long px = aBits[j * theImage->mWidth + i];
+			uint32_t px = aBits[j * theImage->mWidth + i];
 			data[index++] = (px >> 16) & 0xFF; // R
 			data[index++] = (px >> 8) & 0xFF;  // G
 			data[index++] = (px) & 0xFF;	   // B
@@ -126,15 +125,15 @@ Image *ImageLib::GetImageBackend(const std::string &theFileName, const std::stri
 			free(delays);
 	}
 
-	unsigned long *aBits = new unsigned long[width * height];
+	uint32_t *aBits = new uint32_t[width * height];
 	for (int i = 0; i < width * height; ++i)
 	{
-		unsigned char *pixel = &stb_image[i * num_channels];
+		uint8_t *pixel = &stb_image[i * num_channels];
 
-		unsigned char r = pixel[0];
-		unsigned char g = pixel[1];
-		unsigned char b = pixel[2];
-		unsigned char a = (num_channels == 4) ? pixel[3] : 0xFF;
+		uint8_t r = pixel[0];
+		uint8_t g = pixel[1];
+		uint8_t b = pixel[2];
+		uint8_t a = (num_channels == 4) ? pixel[3] : 0xFF;
 
 		aBits[i] = (a << 24) | (r << 16) | (g << 8) | b;
 	}
@@ -156,7 +155,7 @@ Image *ImageLib::GetImage(const std::string &theFilename, bool lookForAlphaImage
 		lookForAlphaImage = false;
 
 	int aLastDotPos = theFilename.rfind('.');
-	int aLastSlashPos = max((int)theFilename.rfind('\\'), (int)theFilename.rfind('/'));
+	int aLastSlashPos = std::max((int)theFilename.rfind('\\'), (int)theFilename.rfind('/'));
 
 	std::string anExt;
 	std::string aFilename;
@@ -206,8 +205,8 @@ Image *ImageLib::GetImage(const std::string &theFilename, bool lookForAlphaImage
 			if ((anImage->mWidth == anAlphaImage->mWidth) &&
 				(anImage->mHeight == anAlphaImage->mHeight))
 			{
-				unsigned long* aBits1 = anImage->mBits;
-				unsigned long* aBits2 = anAlphaImage->mBits;
+				uint32_t *aBits1 = anImage->mBits;
+				uint32_t *aBits2 = anAlphaImage->mBits;
 				int aSize = anImage->mWidth*anImage->mHeight;
 
 				for (int i = 0; i < aSize; i++)
@@ -224,7 +223,7 @@ Image *ImageLib::GetImage(const std::string &theFilename, bool lookForAlphaImage
 		{
 			anImage = anAlphaImage;
 
-			unsigned long* aBits1 = anImage->mBits;
+			uint32_t *aBits1 = anImage->mBits;
 
 			int aSize = anImage->mWidth*anImage->mHeight;
 			for (int i = 0; i < aSize; i++)
@@ -238,7 +237,7 @@ Image *ImageLib::GetImage(const std::string &theFilename, bool lookForAlphaImage
 			const int aColor = gAlphaComposeColor;
 			anImage = anAlphaImage;
 
-			unsigned long* aBits1 = anImage->mBits;
+			uint32_t *aBits1 = anImage->mBits;
 
 			int aSize = anImage->mWidth*anImage->mHeight;
 			for (int i = 0; i < aSize; i++)

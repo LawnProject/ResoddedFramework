@@ -34,7 +34,6 @@ class SysFont : public Font
 	void Init(SexyAppBase *theApp,
 			  const std::string &theFace,
 			  int thePointSize,
-			  int theScript,
 			  bool bold,
 			  bool italics,
 			  bool underline,
@@ -48,7 +47,6 @@ class SysFont : public Font
 	SysFont(SexyAppBase *theApp,
 			const std::string &theFace,
 			int thePointSize,
-			int theScript = ANSI_CHARSET,
 			bool bold = false,
 			bool italics = false,
 			bool underline = false);

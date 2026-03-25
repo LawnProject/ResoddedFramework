@@ -480,7 +480,7 @@ void CutScene::PreloadResources()
 
 	PlaceStreetZombies();
 
-	mBoard->mPreloadTime = max(aTimer.GetDuration(), 0);
+	mBoard->mPreloadTime = std::max(aTimer.GetDuration(), 0.0);
 	TodTrace("preloading: %d ms", mBoard->mPreloadTime);
 	TodHesitationTrace("CutScene::PreloadResources");
 }
@@ -545,7 +545,7 @@ void CutScene::PlaceStreetZombies()
 		{
 			if (aZombieType != ZombieType::ZOMBIE_YETI && mBoard->mZombieAllowed[aZombieType])
 			{
-				aZombieTypeCount[aZombieType] = max(aZombieTypeCount[aZombieType], 1);
+				aZombieTypeCount[aZombieType] = std::max(aZombieTypeCount[aZombieType], 1);
 			}
 		}
 	}

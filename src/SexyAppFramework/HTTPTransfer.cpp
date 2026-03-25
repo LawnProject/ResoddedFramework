@@ -129,7 +129,7 @@ void HTTPTransfer::GetThreadProc()
 		Fail(RESULT_SOCKET_ERROR);
 
 	// Set non-blocking
-	ulong anIoctlVal = 1;
+	unsigned long anIoctlVal = 1;
 	ioctlsocket(mSocket, FIONBIO, &anIoctlVal);
 
 	if (!mExiting)
@@ -279,7 +279,7 @@ void HTTPTransfer::GetThreadProc()
 						}
 
 						// Chunk it in
-						int aCopyLen = min(aChunkLengthLeft, (int)aRecvStr.length() - aPos);
+						int aCopyLen = std::min(aChunkLengthLeft, (int)aRecvStr.length() - aPos);
 						if (aCopyLen > 0)
 						{
 							mContent += aRecvStr.substr(aPos, aCopyLen);
@@ -295,7 +295,7 @@ void HTTPTransfer::GetThreadProc()
 					{
 						if (aContentLengthLeft > 0)
 						{
-							int aCopyLen = min(aContentLengthLeft, (int)aRecvStr.length() - aPos);
+							int aCopyLen = std::min(aContentLengthLeft, (int)aRecvStr.length() - aPos);
 							mContent += aRecvStr.substr(aPos, aCopyLen);
 							aPos += aCopyLen;
 							aContentLengthLeft -= aCopyLen;

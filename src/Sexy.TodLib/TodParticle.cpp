@@ -289,7 +289,7 @@ void TodParticleEmitter::TodEmitterInitialize(float theX,
 		mSystemDuration = FloatTrackEvaluate(mEmitterDef->mSystemDuration, 0.0f, Sexy::Rand(1.0f));
 	else
 		mSystemDuration = FloatTrackEvaluate(mEmitterDef->mParticleDuration, 0.0f, 1.0f);
-	mSystemDuration = max(1, mSystemDuration);
+	mSystemDuration = std::max(1, mSystemDuration);
 
 	for (int i = 0; i < mEmitterDef->mSystemFieldCount; i++)
 	{
@@ -341,7 +341,7 @@ TodParticle *TodParticleEmitter::SpawnParticle(int theIndex, int theSpawnCount)
 	float aEmitterOffsetYInterp = Sexy::Rand(1.0f);
 	aParticle->mParticleDuration =
 		FloatTrackEvaluate(mEmitterDef->mParticleDuration, mSystemTimeValue, aParticleDurationInterp);
-	aParticle->mParticleDuration = max(1, aParticle->mParticleDuration); // 初始化粒子持续时间（至少为 1）
+	aParticle->mParticleDuration = std::max(1, aParticle->mParticleDuration); // 初始化粒子持续时间（至少为 1）
 	aParticle->mParticleAge = 0;
 	aParticle->mParticleEmitter = this;
 	aParticle->mParticleTimeValue = -1.0f;
@@ -797,7 +797,7 @@ bool TodParticleEmitter::CrossFadeParticle(TodParticle *theParticle, TodParticle
 		float aCrossFadeDurationInterp = Sexy::Rand(1);
 		int aCrossFadeDuration = FloatTrackEvaluate(
 			theToEmitter->mEmitterDef->mCrossFadeDuration, mSystemTimeValue, aCrossFadeDurationInterp);
-		theParticle->mCrossFadeDuration = max(1, aCrossFadeDuration); // 随机取得交叉混合的时长（至少 1 帧）
+		theParticle->mCrossFadeDuration = std::max(1, aCrossFadeDuration); // 随机取得交叉混合的时长（至少 1 帧）
 	}
 	if (!FloatTrackIsSet(theToEmitter->mEmitterDef->mParticleDuration))	  // 如果目标发射器未定义粒子持续时间
 		aToParticle->mParticleDuration = theParticle->mCrossFadeDuration; // 目标粒子的持续时间等于交叉混合的时间
@@ -1065,7 +1065,7 @@ void RenderParticle(Graphics *g,
 		aFrame = aImage->mNumCols - 1;
 
 	Rect aSrcRect(
-		aFrame * aCelWidth, min(aEmitterDef->mImageRow, aImage->mNumRows - 1) * aCelHeight, aCelWidth, aCelHeight);
+		aFrame * aCelWidth, std::min(aEmitterDef->mImageRow, aImage->mNumRows - 1) * aCelHeight, aCelWidth, aCelHeight);
 	float aClipTop = TodParticleEmitter::ParticleTrackEvaluate(
 		aEmitterDef->mClipTop, theParticle, ParticleTracks::TRACK_PARTICLE_CLIP_TOP);
 	float aClipBottom = TodParticleEmitter::ParticleTrackEvaluate(
@@ -1299,7 +1299,7 @@ void TodParticleEmitter::CrossFadeEmitter(TodParticleEmitter *theToEmitter)
 	float aCrossFadeDurationInterp = Sexy::Rand(1.0f);
 	mEmitterCrossFadeCountDown =
 		FloatTrackEvaluate(theToEmitter->mEmitterDef->mCrossFadeDuration, mSystemTimeValue, aCrossFadeDurationInterp);
-	mEmitterCrossFadeCountDown = max(1, mEmitterCrossFadeCountDown);
+	mEmitterCrossFadeCountDown = std::max(1, mEmitterCrossFadeCountDown);
 	mCrossFadeEmitterID = (ParticleEmitterID)mParticleSystem->mParticleHolder->mEmitters.DataArrayGetID(theToEmitter);
 	if (!FloatTrackIsSet(theToEmitter->mEmitterDef->mSystemDuration))
 		theToEmitter->mSystemDuration = mEmitterCrossFadeCountDown;

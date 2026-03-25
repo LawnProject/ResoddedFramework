@@ -1,6 +1,6 @@
 {		
 	
-	uchar* aWPtr = mRLAlphaData;
+	uint8_t* aWPtr = mRLAlphaData;
 	
 	if (mWidth==1)
 	{

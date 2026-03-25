@@ -584,7 +584,7 @@ void GridItem::UpdateScaryPot()
 		{
 			int aDiffX = abs(aPlant->mPlantCol - mGridX);
 			int aDiffY = abs(aPlant->mRow - mGridY);
-			if (max(aDiffX, aDiffY) <= 1)
+			if (std::max(aDiffX, aDiffY) <= 1)
 			{
 				if (mTransparentCounter < 50)
 				{

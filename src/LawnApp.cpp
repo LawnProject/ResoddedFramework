@@ -143,8 +143,10 @@ LawnApp::LawnApp()
 	mCrazyDaveBlinkCounter = 0;
 	mCrazyDaveBlinkReanimID = ReanimationID::REANIMATIONID_NULL;
 	mCrazyDaveMessageIndex = -1;
-	mBigArrowCursor = LoadCursor(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDC_CURSOR1));
+	//mBigArrowCursor = LoadCursor(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDC_CURSOR1));
+	#if SEXY_USE_DRM
 	mDRM = nullptr;
+	#endif
 }
 
 //0x44EDD0、0x44EDF0
@@ -309,12 +311,13 @@ void LawnApp::Shutdown()
 		FreeGlobalAllocators();
 		UpdateRegisterInfo();
 		SexyAppBase::Shutdown();
-
+		#if SEXY_USE_DRM
 		if (mDRM)
 		{
 			delete mDRM;
 		}
 		mDRM = nullptr;
+		#endif
 	}
 }
 
@@ -1687,7 +1690,7 @@ void LawnApp::LoadGroup(const char *theGroupName, int theGroupAveMsToLoad)
 	}
 
 	int aTotalGroupWeight = mResourceManager->GetNumResources(theGroupName) * theGroupAveMsToLoad;
-	int aGroupTime = max(aTimer.GetDuration(), 0);
+	int aGroupTime = std::max(aTimer.GetDuration(), 0.0);
 	TraceLoadGroup(theGroupName, aGroupTime, aTotalGroupWeight, theGroupAveMsToLoad);
 }
 
@@ -1730,7 +1733,7 @@ void LawnApp::LoadingThreadProc()
 	TodTrace("loading '%s' %d ms", "resources", (int)aTimer.GetDuration());
 
 	mMusic->MusicInit();
-	int aDuration = max(aTimer.GetDuration(), 0);
+	int aDuration = std::max(aTimer.GetDuration(), 0.0);
 	aTimer.Start();
 
 	mPoolEffect = new PoolEffect();
@@ -1749,14 +1752,14 @@ void LawnApp::LoadingThreadProc()
 	TodHesitationTrace("trail");
 
 	TodParticleLoadDefinitions(gLawnParticleArray, LENGTH(gLawnParticleArray));
-	aDuration = max(aTimer.GetDuration(), 0);
+	aDuration = std::max(aTimer.GetDuration(), 0.0);
 	aTimer.Start();
 
 	PreloadForUser();
 	if (mLoadingFailed || mShutdown || mCloseRequest)
 		return;
 
-	aDuration = max(aTimer.GetDuration(), 0);
+	aDuration = std::max(aTimer.GetDuration(), 0.0);
 	aTimer.Start();
 
 	GetNumPreloadingTasks();
@@ -1881,7 +1884,10 @@ void LawnApp::ButtonDepress(int theId)
 
 		case Dialogs::DIALOG_QUIT:
 			KillDialog(Dialogs::DIALOG_QUIT);
-			SendMessage(mHWnd, WM_CLOSE, NULL, NULL);
+			{
+				SDL_Event event = {SDL_EVENT_QUIT};
+				SDL_PushEvent(&event);
+			}
 			return;
 
 		case Dialogs::DIALOG_NAG:
@@ -2289,7 +2295,6 @@ bool LawnApp::UpdateApp()
 //0x453A70
 void LawnApp::CloseRequestAsync()
 {
-	mDeferredMessages.clear();
 	mExitToTop = true;
 	mCloseRequest = true;
 }
@@ -2326,7 +2331,7 @@ int LawnApp::GetSeedsAvailable()
 	}
 
 	SeedType aSeedTypeMax = GetAwardSeedForLevel(aLevel);
-	return min(49, aSeedTypeMax);
+	return std::min(49, (int)aSeedTypeMax);
 }
 
 //0x453B20
@@ -3190,9 +3195,11 @@ void LawnApp::PreloadForUser()
 	}
 }
 
+//Big TODO:  custom cursors
 //0x455930
 void LawnApp::EnforceCursor()
 {
+	/*
 	if (mSEHOccured || !mMouseIn)
 	{
 		::SetCursor(LoadCursor(NULL, IDC_ARROW));
@@ -3262,7 +3269,7 @@ void LawnApp::EnforceCursor()
 	default:
 		::SetCursor(LoadCursor(NULL, IDC_ARROW));
 		return;
-	}
+	}*/
 }
 
 //0x455AA0
@@ -3318,9 +3325,10 @@ bool LawnApp::IsTrialStageLocked()
 {
 	if (mDebugTrialLocked)
 		return true;
-
+	#if SEXY_USE_DRM
 	if (mDRM && mDRM->QueryData())
 		return false;
+	#endif
 
 	return mTrialType == TrialType::TRIALTYPE_STAGELOCKED;
 }
@@ -3328,6 +3336,7 @@ bool LawnApp::IsTrialStageLocked()
 //0x455CC0
 void LawnApp::InitHook()
 {
+	#if SEXY_USE_DRM
 #ifdef _DEBUG
 	mDRM = nullptr;
 #else
@@ -3343,6 +3352,7 @@ void LawnApp::InitHook()
 		mTrialType = TrialType::TRIALTYPE_NONE;
 	}
 #endif
+	#endif
 }
 
 //0x455E10

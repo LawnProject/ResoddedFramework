@@ -50,7 +50,7 @@ class OpenGLImage : public GPUImage
 	void PreTextureDraw();
 	virtual void SetSurface(void *theSurface);
 
-	virtual ulong *GetBits();
+	virtual uint32_t *GetBits();
 
 	virtual void ImplBlt(
 		Image *theImage, int theX, int theY, const Rect &theSrcRect, const Color &theColor, int theDrawMode);

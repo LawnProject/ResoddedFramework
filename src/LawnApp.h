@@ -102,8 +102,10 @@ class LawnApp : public SexyApp
 	int mCrazyDaveMessageIndex;			   //+0x850
 	SexyString mCrazyDaveMessageText;	   //+0x854
 	int mAppRandSeed;					   //+0x870
-	HICON mBigArrowCursor;				   //+0x874
+	//HICON mBigArrowCursor;				   //+0x874
+#if SEXY_USE_DRM
 	PopDRMComm *mDRM;					   //+0x878
+#endif
 	int mSessionID;						   //+0x87C
 	int mPlayTimeActiveSession;			   //+0x880
 	int mPlayTimeInactiveSession;		   //+0x884

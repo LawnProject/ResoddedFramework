@@ -51,7 +51,7 @@ static FileModMap &GetFileModMap()
 
 static const char *FindFileInStringTable(const std::string &theSearch,
 										 const char *theMem,
-										 DWORD theLength,
+										 uint32_t theLength,
 										 const char *theStartPos)
 {
 	const char *aFind = NULL;
@@ -104,7 +104,7 @@ static bool ParseModValString(std::string &theStr, int *theCounter = NULL, int *
 	return true;
 }
 
-static bool FindModValsInMemoryHelper(const char *theMem, DWORD theLength)
+static bool FindModValsInMemoryHelper(const char *theMem, uint32_t theLength)
 {
 	std::string aSearchStr = "SEXYMODVAL";
 

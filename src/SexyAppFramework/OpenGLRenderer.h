@@ -121,7 +121,7 @@ namespace Sexy
 
 		virtual bool CreateImageTexture(MemoryImage *theImage);
 		virtual bool RecoverBits(MemoryImage *theImage);
-		virtual ulong *GetBitsFromTexture(void *theTexture, int theWidth, int theHeight);
+		virtual uint32_t *GetBitsFromTexture(void *theTexture, int theWidth, int theHeight);
 
 		virtual void Blt(Image *theImage,
 						 float theX,

@@ -67,7 +67,7 @@ class FontData : public DescParser
 	SexyAppBase *mApp;
 
 	int mDefaultPointSize;
-	uchar mCharMap[256];
+	uint8_t mCharMap[256];
 	FontLayerList mFontLayerList;
 	FontLayerMap mFontLayerMap;
 

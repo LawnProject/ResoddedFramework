@@ -15,24 +15,22 @@ using namespace Sexy;
 
 SysFont::SysFont(const std::string &theFace, int thePointSize, bool bold, bool italics, bool underline)
 {
-	Init(gSexyAppBase, theFace, thePointSize, ANSI_CHARSET, bold, italics, underline, false);
+	Init(gSexyAppBase, theFace, thePointSize, bold, italics, underline, false);
 }
 
 SysFont::SysFont(SexyAppBase *theApp,
 				 const std::string &theFace,
 				 int thePointSize,
-				 int theScript,
 				 bool bold,
 				 bool italics,
 				 bool underline)
 {
-	Init(theApp, theFace, thePointSize, theScript, bold, italics, underline, true);
+	Init(theApp, theFace, thePointSize, bold, italics, underline, true);
 }
 
 void SysFont::Init(SexyAppBase *theApp,
 				   const std::string &theFace,
 				   int thePointSize,
-				   int theScript,
 				   bool bold,
 				   bool italics,
 				   bool underline,

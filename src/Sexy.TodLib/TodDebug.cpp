@@ -7,6 +7,7 @@
 #include <sstream>
 #include <chrono>
 #include <iomanip>
+#include <SDL3/SDL_messagebox.h>
 
 using namespace Sexy;
 
@@ -16,9 +17,8 @@ static char gDebugDataFolder[MAX_PATH];
 //0x514EA0
 void TodErrorMessageBox(const char *theMessage, const char *theTitle)
 {
-	HWND hWnd = (gSexyAppBase && gSexyAppBase->mHWnd) ? gSexyAppBase->mHWnd : GetActiveWindow();
 	TodTraceAndLog("%s.%s", theMessage, theTitle);
-	MessageBoxA(hWnd, theMessage, theTitle, MB_ICONEXCLAMATION);
+	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, theTitle, theMessage, nullptr);
 }
 
 void TodTraceMemory()

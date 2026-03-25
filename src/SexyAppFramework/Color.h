@@ -31,14 +31,14 @@ class Color
 	Color(int theRed, int theGreen, int theBlue);
 	Color(int theRed, int theGreen, int theBlue, int theAlpha);
 	Color(const SexyRGBA &theColor);
-	Color(const uchar *theElements);
+	Color(const uint8_t *theElements);
 	Color(const int *theElements);
 
 	int GetRed() const;
 	int GetGreen() const;
 	int GetBlue() const;
 	int GetAlpha() const;
-	ulong ToInt() const;
+	uint32_t ToInt() const;
 	SexyRGBA ToRGBA() const;
 
 	int &operator[](int theIdx);

@@ -52,9 +52,9 @@ MemoryImage::MemoryImage(const MemoryImage &theMemoryImage)
 
 	if (theMemoryImage.mBits != NULL)
 	{
-		mBits = new ulong[mWidth * mHeight + 1];
+		mBits = new uint32_t[mWidth * mHeight + 1];
 		mBits[mWidth * mHeight] = MEMORYCHECK_ID;
-		memcpy(mBits, theMemoryImage.mBits, (mWidth * mHeight + 1) * sizeof(ulong));
+		memcpy(mBits, theMemoryImage.mBits, (mWidth * mHeight + 1) * sizeof(uint32_t));
 	}
 	else
 		mBits = NULL;
@@ -68,16 +68,16 @@ MemoryImage::MemoryImage(const MemoryImage &theMemoryImage)
 
 	if (theMemoryImage.mColorTable != NULL)
 	{
-		mColorTable = new ulong[256];
-		memcpy(mColorTable, theMemoryImage.mColorTable, 256 * sizeof(ulong));
+		mColorTable = new uint32_t[256];
+		memcpy(mColorTable, theMemoryImage.mColorTable, 256 * sizeof(uint32_t));
 	}
 	else
 		mColorTable = NULL;
 
 	if (theMemoryImage.mColorIndices != NULL)
 	{
-		mColorIndices = new uchar[mWidth * mHeight];
-		memcpy(mColorIndices, theMemoryImage.mColorIndices, mWidth * mHeight * sizeof(uchar));
+		mColorIndices = new uint8_t[mWidth * mHeight];
+		memcpy(mColorIndices, theMemoryImage.mColorIndices, mWidth * mHeight * sizeof(uint8_t));
 	}
 	else
 		mColorIndices = NULL;
@@ -86,13 +86,13 @@ MemoryImage::MemoryImage(const MemoryImage &theMemoryImage)
 	{
 		if (theMemoryImage.mColorTable == NULL)
 		{
-			mNativeAlphaData = new ulong[mWidth * mHeight];
-			memcpy(mNativeAlphaData, theMemoryImage.mNativeAlphaData, mWidth * mHeight * sizeof(ulong));
+			mNativeAlphaData = new uint32_t[mWidth * mHeight];
+			memcpy(mNativeAlphaData, theMemoryImage.mNativeAlphaData, mWidth * mHeight * sizeof(uint32_t));
 		}
 		else
 		{
-			mNativeAlphaData = new ulong[256];
-			memcpy(mNativeAlphaData, theMemoryImage.mNativeAlphaData, 256 * sizeof(ulong));
+			mNativeAlphaData = new uint32_t[256];
+			memcpy(mNativeAlphaData, theMemoryImage.mNativeAlphaData, 256 * sizeof(uint32_t));
 		}
 	}
 	else
@@ -100,7 +100,7 @@ MemoryImage::MemoryImage(const MemoryImage &theMemoryImage)
 
 	if (theMemoryImage.mRLAlphaData != NULL)
 	{
-		mRLAlphaData = new uchar[mWidth * mHeight];
+		mRLAlphaData = new uint8_t[mWidth * mHeight];
 		memcpy(mRLAlphaData, theMemoryImage.mRLAlphaData, mWidth * mHeight);
 	}
 	else
@@ -108,7 +108,7 @@ MemoryImage::MemoryImage(const MemoryImage &theMemoryImage)
 
 	if (theMemoryImage.mRLAdditiveData != NULL)
 	{
-		mRLAdditiveData = new uchar[mWidth * mHeight];
+		mRLAdditiveData = new uint8_t[mWidth * mHeight];
 		memcpy(mRLAdditiveData, theMemoryImage.mRLAdditiveData, mWidth * mHeight);
 	}
 	else
@@ -178,25 +178,25 @@ void MemoryImage::BitsChanged()
 void MemoryImage::NormalDrawLine(
 	double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor)
 {
-	double aMinX = min(theStartX, theEndX);
-	double aMinY = min(theStartY, theEndY);
-	double aMaxX = max(theStartX, theEndX);
-	double aMaxY = max(theStartY, theEndY);
+	double aMinX = std::min(theStartX, theEndX);
+	double aMinY = std::min(theStartY, theEndY);
+	double aMaxX = std::max(theStartX, theEndX);
+	double aMaxY = std::max(theStartY, theEndY);
 
-	ulong aRMask = 0xFF0000;
-	ulong aGMask = 0x00FF00;
-	ulong aBMask = 0x0000FF;
-	ulong aRRoundAdd = aRMask >> 1;
-	ulong aGRoundAdd = aGMask >> 1;
-	ulong aBRoundAdd = aBMask >> 1;
+	uint32_t aRMask = 0xFF0000;
+	uint32_t aGMask = 0x00FF00;
+	uint32_t aBMask = 0x0000FF;
+	uint32_t aRRoundAdd = aRMask >> 1;
+	uint32_t aGRoundAdd = aGMask >> 1;
+	uint32_t aBRoundAdd = aBMask >> 1;
 
-	DWORD *aSurface = GetBits();
+	uint32_t *aSurface = GetBits();
 
 	if (true) //(mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 32)
 	{
 		if (theColor.mAlpha == 255)
 		{
-			ulong aColor = 0xFF000000 | ((((theColor.mRed * aRMask) + aRRoundAdd) >> 8) & aRMask) |
+			uint32_t aColor = 0xFF000000 | ((((theColor.mRed * aRMask) + aRRoundAdd) >> 8) & aRMask) |
 						   ((((theColor.mGreen * aGMask) + aGRoundAdd) >> 8) & aGMask) |
 						   ((((theColor.mBlue * aBMask) + aBRoundAdd) >> 8) & aBMask);
 
@@ -232,7 +232,7 @@ void MemoryImage::NormalDrawLine(
 					aRowAdd = -aRowAdd;
 				}
 
-				ulong *aDestPixels = ((ulong *)aSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
+				uint32_t *aDestPixels = ((uint32_t *)aSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
 				*aDestPixels = aColor;
 				aDestPixels++;
 
@@ -286,7 +286,7 @@ void MemoryImage::NormalDrawLine(
 					inc = -1;
 				}
 
-				ulong *aDestPixels = ((ulong *)aSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
+				uint32_t *aDestPixels = ((uint32_t *)aSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
 				*aDestPixels = aColor;
 				aDestPixels += aRowAdd;
 
@@ -323,7 +323,7 @@ void MemoryImage::NormalDrawLine(
 		}
 		else
 		{
-			ulong src = 0xFF000000 |
+			uint32_t src = 0xFF000000 |
 						((((((theColor.mRed * theColor.mAlpha + 0x80) >> 8) * aRMask) + aRRoundAdd) >> 8) & aRMask) |
 						((((((theColor.mGreen * theColor.mAlpha + 0x80) >> 8) * aGMask) + aGRoundAdd) >> 8) & aGMask) |
 						((((((theColor.mBlue * theColor.mAlpha + 0x80) >> 8) * aBMask) + aBRoundAdd) >> 8) & aBMask);
@@ -360,8 +360,8 @@ void MemoryImage::NormalDrawLine(
 					aRowAdd = -aRowAdd;
 				}
 
-				ulong *aDestPixels = ((ulong *)aSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
-				ulong dest = *aDestPixels;
+				uint32_t *aDestPixels = ((uint32_t *)aSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
+				uint32_t dest = *aDestPixels;
 				*(aDestPixels++) = src + (((((dest & aRMask) * oma) + aRRoundAdd) >> 8) & aRMask) +
 								   (((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
 								   (((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
@@ -418,8 +418,8 @@ void MemoryImage::NormalDrawLine(
 					inc = -1;
 				}
 
-				ulong *aDestPixels = ((ulong *)aSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
-				ulong dest = *aDestPixels;
+				uint32_t *aDestPixels = ((uint32_t *)aSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
+				uint32_t dest = *aDestPixels;
 				*aDestPixels = src + (((((dest & aRMask) * oma) + aRRoundAdd) >> 8) & aRMask) +
 							   (((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
 							   (((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
@@ -465,30 +465,30 @@ void MemoryImage::NormalDrawLine(
 void MemoryImage::AdditiveDrawLine(
 	double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor)
 {
-	double aMinX = min(theStartX, theEndX);
-	double aMinY = min(theStartY, theEndY);
-	double aMaxX = max(theStartX, theEndX);
-	double aMaxY = max(theStartY, theEndY);
+	double aMinX = std::min(theStartX, theEndX);
+	double aMinY = std::min(theStartY, theEndY);
+	double aMaxX = std::max(theStartX, theEndX);
+	double aMaxY = std::max(theStartY, theEndY);
 
-	ulong aRMask = 0xFF0000;
-	ulong aGMask = 0x00FF00;
-	ulong aBMask = 0x0000FF;
+	uint32_t aRMask = 0xFF0000;
+	uint32_t aGMask = 0x00FF00;
+	uint32_t aBMask = 0x0000FF;
 	int aRedShift = 16;
 	int aGreenShift = 8;
 	int aBlueShift = 0;
 
-	ulong aRRoundAdd = aRMask >> 1;
-	ulong aGRoundAdd = aGMask >> 1;
-	ulong aBRoundAdd = aBMask >> 1;
+	uint32_t aRRoundAdd = aRMask >> 1;
+	uint32_t aGRoundAdd = aGMask >> 1;
+	uint32_t aBRoundAdd = aBMask >> 1;
 
-	uchar *aMaxTable = mApp->mAdd8BitMaxTable;
-	DWORD *aSurface = GetBits();
+	uint8_t *aMaxTable = mApp->mAdd8BitMaxTable;
+	uint32_t *aSurface = GetBits();
 
 	if (true) //(mLockedSurfaceDesc.ddpfPixelFormat.dwRGBBitCount == 32)
 	{
-		ulong rc = ((theColor.mRed * theColor.mAlpha) / 255);
-		ulong gc = ((theColor.mGreen * theColor.mAlpha) / 255);
-		ulong bc = ((theColor.mBlue * theColor.mAlpha) / 255);
+		uint32_t rc = ((theColor.mRed * theColor.mAlpha) / 255);
+		uint32_t gc = ((theColor.mGreen * theColor.mAlpha) / 255);
+		uint32_t bc = ((theColor.mBlue * theColor.mAlpha) / 255);
 
 		double dv = theEndY - theStartY;
 		double dh = theEndX - theStartX;
@@ -522,8 +522,8 @@ void MemoryImage::AdditiveDrawLine(
 				aRowAdd = -aRowAdd;
 			}
 
-			ulong *aDestPixels = ((ulong *)aSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
-			ulong dest = *aDestPixels;
+			uint32_t *aDestPixels = ((uint32_t *)aSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
+			uint32_t dest = *aDestPixels;
 
 			int r = aMaxTable[((dest & aRMask) >> aRedShift) + rc];
 			int g = aMaxTable[((dest & aGMask) >> aGreenShift) + gc];
@@ -584,9 +584,9 @@ void MemoryImage::AdditiveDrawLine(
 				inc = -1;
 			}
 
-			ulong *aDestPixels = ((ulong *)aSurface) + ((int)theStartY * mWidth) + (int)theStartX;
+			uint32_t *aDestPixels = ((uint32_t *)aSurface) + ((int)theStartY * mWidth) + (int)theStartX;
 
-			ulong dest = *aDestPixels;
+			uint32_t dest = *aDestPixels;
 
 			int r = aMaxTable[((dest & aRMask) >> aRedShift) + rc];
 			int g = aMaxTable[((dest & aGMask) >> aGreenShift) + gc];
@@ -637,16 +637,16 @@ void MemoryImage::DrawLine(
 {
 	if (theStartY == theEndY)
 	{
-		int aStartX = min(theStartX, theEndX);
-		int aEndX = max(theStartX, theEndX);
+		int aStartX = std::min(theStartX, theEndX);
+		int aEndX = std::max(theStartX, theEndX);
 
 		FillRect(Rect(aStartX, theStartY, aEndX - aStartX + 1, theEndY - theStartY + 1), theColor, theDrawMode);
 		return;
 	}
 	else if (theStartX == theEndX)
 	{
-		int aStartY = min(theStartY, theEndY);
-		int aEndY = max(theStartY, theEndY);
+		int aStartY = std::min(theStartY, theEndY);
+		int aEndY = std::max(theStartY, theEndY);
 
 		FillRect(Rect(theStartX, aStartY, theEndX - theStartX + 1, aEndY - aStartY + 1), theColor, theDrawMode);
 		return;
@@ -668,8 +668,8 @@ void MemoryImage::DrawLine(
 void MemoryImage::NormalDrawLineAA(
 	double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor)
 {
-	ulong *aBits = GetBits();
-	ulong color = theColor.ToInt();
+	uint32_t *aBits = GetBits();
+	uint32_t color = theColor.ToInt();
 
 	int aX0 = (int)theStartX, aX1 = (int)theEndX;
 	int aY0 = (int)theStartY, aY1 = (int)theEndY;
@@ -701,7 +701,7 @@ void MemoryImage::NormalDrawLineAA(
 
 	if (theColor.mAlpha != 255)
 	{
-#define PIXEL_TYPE ulong
+#define PIXEL_TYPE uint32_t
 #define CALC_WEIGHT_A(w) (((w) * (theColor.mAlpha + 1)) >> 8)
 #define BLEND_PIXEL(p)                                                                                                 \
 	{                                                                                                                  \
@@ -723,7 +723,7 @@ void MemoryImage::NormalDrawLineAA(
 	}
 	else
 	{
-#define PIXEL_TYPE ulong
+#define PIXEL_TYPE uint32_t
 #define CALC_WEIGHT_A(w) (w)
 #define BLEND_PIXEL(p)                                                                                                 \
 	{                                                                                                                  \
@@ -757,16 +757,16 @@ void MemoryImage::DrawLineAA(
 {
 	if (theStartY == theEndY)
 	{
-		int aStartX = min(theStartX, theEndX);
-		int aEndX = max(theStartX, theEndX);
+		int aStartX = std::min(theStartX, theEndX);
+		int aEndX = std::max(theStartX, theEndX);
 
 		FillRect(Rect(aStartX, theStartY, aEndX - aStartX + 1, theEndY - theStartY + 1), theColor, theDrawMode);
 		return;
 	}
 	else if (theStartX == theEndX)
 	{
-		int aStartY = min(theStartY, theEndY);
-		int aEndY = max(theStartY, theEndY);
+		int aStartY = std::min(theStartY, theEndY);
+		int aEndY = std::max(theStartY, theEndY);
 
 		FillRect(Rect(theStartX, aStartY, theEndX - theStartX + 1, aEndY - aStartY + 1), theColor, theDrawMode);
 		return;
@@ -799,11 +799,11 @@ void MemoryImage::CommitBits()
 			mHasAlpha = false;
 
 			int aSize = mWidth * mHeight;
-			ulong *ptr = mBits;
+			uint32_t *ptr = mBits;
 
 			for (int i = 0; i < aSize; i++)
 			{
-				uchar anAlpha = (uchar)(*ptr++ >> 24);
+				uint8_t anAlpha = (uint8_t)(*ptr++ >> 24);
 
 				if (anAlpha == 0)
 					mHasTrans = true;
@@ -817,11 +817,11 @@ void MemoryImage::CommitBits()
 			mHasAlpha = false;
 
 			int aSize = 256;
-			ulong *ptr = mColorTable;
+			uint32_t *ptr = mColorTable;
 
 			for (int i = 0; i < aSize; i++)
 			{
-				uchar anAlpha = (uchar)(*ptr++ >> 24);
+				uint8_t anAlpha = (uint8_t)(*ptr++ >> 24);
 
 				if (anAlpha == 0)
 					mHasTrans = true;
@@ -875,21 +875,21 @@ void *MemoryImage::GetNativeAlphaData(Renderer *theDisplay)
 
 	if (mColorTable == NULL)
 	{
-		ulong *aSrcPtr = GetBits();
+		uint32_t *aSrcPtr = GetBits();
 
-		ulong *anAlphaData = new ulong[mWidth * mHeight];
+		uint32_t *anAlphaData = new uint32_t[mWidth * mHeight];
 
-		ulong *aDestPtr = anAlphaData;
+		uint32_t *aDestPtr = anAlphaData;
 		int aSize = mWidth * mHeight;
 		for (int i = 0; i < aSize; i++)
 		{
-			ulong val = *(aSrcPtr++);
+			uint32_t val = *(aSrcPtr++);
 
 			int anAlpha = val >> 24;
 
-			ulong r = ((val & 0xFF0000) * (anAlpha + 1)) >> 8;
-			ulong g = ((val & 0x00FF00) * (anAlpha + 1)) >> 8;
-			ulong b = ((val & 0x0000FF) * (anAlpha + 1)) >> 8;
+			uint32_t r = ((val & 0xFF0000) * (anAlpha + 1)) >> 8;
+			uint32_t g = ((val & 0x00FF00) * (anAlpha + 1)) >> 8;
+			uint32_t b = ((val & 0x0000FF) * (anAlpha + 1)) >> 8;
 
 			*(aDestPtr++) = (((r >> rRightShift) << rLeftShift) & rMask) |
 							(((g >> gRightShift) << gLeftShift) & gMask) |
@@ -900,19 +900,19 @@ void *MemoryImage::GetNativeAlphaData(Renderer *theDisplay)
 	}
 	else
 	{
-		ulong *aSrcPtr = mColorTable;
+		uint32_t *aSrcPtr = mColorTable;
 
-		ulong *anAlphaData = new ulong[256];
+		uint32_t *anAlphaData = new uint32_t[256];
 
 		for (int i = 0; i < 256; i++)
 		{
-			ulong val = *(aSrcPtr++);
+			uint32_t val = *(aSrcPtr++);
 
 			int anAlpha = val >> 24;
 
-			ulong r = ((val & 0xFF0000) * (anAlpha + 1)) >> 8;
-			ulong g = ((val & 0x00FF00) * (anAlpha + 1)) >> 8;
-			ulong b = ((val & 0x0000FF) * (anAlpha + 1)) >> 8;
+			uint32_t r = ((val & 0xFF0000) * (anAlpha + 1)) >> 8;
+			uint32_t g = ((val & 0x00FF00) * (anAlpha + 1)) >> 8;
+			uint32_t b = ((val & 0x0000FF) * (anAlpha + 1)) >> 8;
 
 			anAlphaData[i] = (((r >> rRightShift) << rLeftShift) & rMask) |
 							 (((g >> gRightShift) << gLeftShift) & gMask) |
@@ -925,19 +925,19 @@ void *MemoryImage::GetNativeAlphaData(Renderer *theDisplay)
 	return mNativeAlphaData;
 }
 
-uchar *MemoryImage::GetRLAlphaData()
+uint8_t *MemoryImage::GetRLAlphaData()
 {
 	CommitBits();
 
 	if (mRLAlphaData == NULL)
 	{
-		mRLAlphaData = new uchar[mWidth * mHeight];
+		mRLAlphaData = new uint8_t[mWidth * mHeight];
 
 		if (mColorTable == NULL)
 		{
-			ulong *aSrcPtr;
+			uint32_t *aSrcPtr;
 			if (mNativeAlphaData != NULL)
-				aSrcPtr = (ulong *)mNativeAlphaData;
+				aSrcPtr = (uint32_t *)mNativeAlphaData;
 			else
 				aSrcPtr = GetBits();
 
@@ -949,8 +949,8 @@ uchar *MemoryImage::GetRLAlphaData()
 		}
 		else
 		{
-			uchar *aSrcPtr = mColorIndices;
-			ulong *aColorTable = mColorTable;
+			uint8_t *aSrcPtr = mColorIndices;
+			uint32_t *aColorTable = mColorTable;
 
 #define NEXT_SRC_COLOR (aColorTable[*(aSrcPtr++)])
 
@@ -963,18 +963,18 @@ uchar *MemoryImage::GetRLAlphaData()
 	return mRLAlphaData;
 }
 
-uchar *MemoryImage::GetRLAdditiveData(Renderer *theNative)
+uint8_t *MemoryImage::GetRLAdditiveData(Renderer *theNative)
 {
 	if (mRLAdditiveData == NULL)
 	{
 		if (mColorTable == NULL)
 		{
-			ulong *aBits = (ulong *)GetNativeAlphaData(theNative);
+			uint32_t *aBits = (uint32_t *)GetNativeAlphaData(theNative);
 
-			mRLAdditiveData = new uchar[mWidth * mHeight];
+			mRLAdditiveData = new uint8_t[mWidth * mHeight];
 
-			uchar *aWPtr = mRLAdditiveData;
-			ulong *aRPtr = aBits;
+			uint8_t *aWPtr = mRLAdditiveData;
+			uint32_t *aRPtr = aBits;
 
 			if (mWidth == 1)
 			{
@@ -1024,12 +1024,12 @@ uchar *MemoryImage::GetRLAdditiveData(Renderer *theNative)
 		}
 		else
 		{
-			ulong *aNativeColorTable = (ulong *)GetNativeAlphaData(theNative);
+			uint32_t *aNativeColorTable = (uint32_t *)GetNativeAlphaData(theNative);
 
-			mRLAdditiveData = new uchar[mWidth * mHeight];
+			mRLAdditiveData = new uint8_t[mWidth * mHeight];
 
-			uchar *aWPtr = mRLAdditiveData;
-			uchar *aRPtr = mColorIndices;
+			uint8_t *aWPtr = mRLAdditiveData;
+			uint8_t *aRPtr = mColorIndices;
 
 			if (mWidth == 1)
 			{
@@ -1162,7 +1162,7 @@ void MemoryImage::DeleteNativeData()
 	mRLAdditiveData = NULL;
 }
 
-void MemoryImage::SetBits(ulong *theBits, int theWidth, int theHeight, bool commitBits)
+void MemoryImage::SetBits(uint32_t *theBits, int theWidth, int theHeight, bool commitBits)
 {
 	if (theBits != mBits)
 	{
@@ -1175,11 +1175,11 @@ void MemoryImage::SetBits(ulong *theBits, int theWidth, int theHeight, bool comm
 		if (theWidth != mWidth || theHeight != mHeight)
 		{
 			delete[] mBits;
-			mBits = new ulong[theWidth * theHeight + 1];
+			mBits = new uint32_t[theWidth * theHeight + 1];
 			mWidth = theWidth;
 			mHeight = theHeight;
 		}
-		memcpy(mBits, theBits, mWidth * mHeight * sizeof(ulong));
+		memcpy(mBits, theBits, mWidth * mHeight * sizeof(uint32_t));
 		mBits[mWidth * mHeight] = MEMORYCHECK_ID;
 
 		BitsChanged();
@@ -1203,13 +1203,13 @@ void MemoryImage::Create(int theWidth, int theHeight)
 	BitsChanged();
 }
 
-ulong *MemoryImage::GetBits()
+uint32_t *MemoryImage::GetBits()
 {
 	if (mBits == NULL)
 	{
 		int aSize = mWidth * mHeight;
 
-		mBits = new ulong[aSize + 1];
+		mBits = new uint32_t[aSize + 1];
 		mBits[aSize] = MEMORYCHECK_ID;
 
 		if (mColorTable != NULL)
@@ -1238,26 +1238,26 @@ ulong *MemoryImage::GetBits()
 			const int gLeftShift = aDisplay->mGreenShift + (aDisplay->mGreenBits);
 			const int bLeftShift = aDisplay->mBlueShift + (aDisplay->mBlueBits);
 
-			ulong *aDestPtr = mBits;
-			ulong *aSrcPtr = mNativeAlphaData;
+			uint32_t *aDestPtr = mBits;
+			uint32_t *aSrcPtr = mNativeAlphaData;
 
 			int aSize = mWidth * mHeight;
 			for (int i = 0; i < aSize; i++)
 			{
-				ulong val = *(aSrcPtr++);
+				uint32_t val = *(aSrcPtr++);
 
 				int anAlpha = val >> 24;
 
-				ulong r = (((((val & rMask) << 8) / (anAlpha + 1)) & rMask) << 8) >> rLeftShift;
-				ulong g = (((((val & gMask) << 8) / (anAlpha + 1)) & gMask) << 8) >> gLeftShift;
-				ulong b = (((((val & bMask) << 8) / (anAlpha + 1)) & bMask) << 8) >> bLeftShift;
+				uint32_t r = (((((val & rMask) << 8) / (anAlpha + 1)) & rMask) << 8) >> rLeftShift;
+				uint32_t g = (((((val & gMask) << 8) / (anAlpha + 1)) & gMask) << 8) >> gLeftShift;
+				uint32_t b = (((((val & bMask) << 8) / (anAlpha + 1)) & bMask) << 8) >> bLeftShift;
 
 				*(aDestPtr++) = (r << 16) | (g << 8) | (b) | (anAlpha << 24);
 			}
 		}
 		else if ((mD3DData == NULL) || (!mApp->mRenderer->RecoverBits(this)))
 		{
-			ZeroMemory(mBits, aSize * sizeof(ulong));
+			memset(mBits, 0, aSize * sizeof(uint32_t));
 		}
 	}
 
@@ -1266,9 +1266,9 @@ ulong *MemoryImage::GetBits()
 
 void MemoryImage::FillRect(const Rect &theRect, const Color &theColor, int theDrawMode)
 {
-	ulong src = theColor.ToInt();
+	uint32_t src = theColor.ToInt();
 
-	ulong *aBits = GetBits();
+	uint32_t *aBits = GetBits();
 
 	int oldAlpha = src >> 24;
 
@@ -1276,7 +1276,7 @@ void MemoryImage::FillRect(const Rect &theRect, const Color &theColor, int theDr
 	{
 		for (int aRow = theRect.mY; aRow < theRect.mY + theRect.mHeight; aRow++)
 		{
-			ulong *aDestPixels = &aBits[aRow * mWidth + theRect.mX];
+			uint32_t *aDestPixels = &aBits[aRow * mWidth + theRect.mX];
 
 			for (int i = 0; i < theRect.mWidth; i++)
 				*aDestPixels++ = src;
@@ -1286,11 +1286,11 @@ void MemoryImage::FillRect(const Rect &theRect, const Color &theColor, int theDr
 	{
 		for (int aRow = theRect.mY; aRow < theRect.mY + theRect.mHeight; aRow++)
 		{
-			ulong *aDestPixels = &aBits[aRow * mWidth + theRect.mX];
+			uint32_t *aDestPixels = &aBits[aRow * mWidth + theRect.mX];
 
 			for (int i = 0; i < theRect.mWidth; i++)
 			{
-				ulong dest = *aDestPixels;
+				uint32_t dest = *aDestPixels;
 
 				int aDestAlpha = dest >> 24;
 				int aNewDestAlpha = aDestAlpha + ((255 - aDestAlpha) * oldAlpha) / 255;
@@ -1319,11 +1319,11 @@ void MemoryImage::FillRect(const Rect &theRect, const Color &theColor, int theDr
 
 void MemoryImage::ClearRect(const Rect &theRect)
 {
-	ulong *aBits = GetBits();
+	uint32_t *aBits = GetBits();
 
 	for (int aRow = theRect.mY; aRow < theRect.mY + theRect.mHeight; aRow++)
 	{
-		ulong *aDestPixels = &aBits[aRow * mWidth + theRect.mX];
+		uint32_t *aDestPixels = &aBits[aRow * mWidth + theRect.mX];
 
 		for (int i = 0; i < theRect.mWidth; i++)
 			*aDestPixels++ = 0;
@@ -1334,7 +1334,7 @@ void MemoryImage::ClearRect(const Rect &theRect)
 
 void MemoryImage::Clear()
 {
-	ulong *ptr = GetBits();
+	uint32_t *ptr = GetBits();
 	if (ptr != NULL)
 	{
 		for (int i = 0; i < mWidth * mHeight; i++)
@@ -1350,16 +1350,16 @@ void MemoryImage::AdditiveBlt(Image *theImage, int theX, int theY, const Rect &t
 
 	MemoryImage *aSrcMemoryImage = dynamic_cast<MemoryImage *>(theImage);
 
-	uchar *aMaxTable = mApp->mAdd8BitMaxTable;
+	uint8_t *aMaxTable = mApp->mAdd8BitMaxTable;
 
 	if (aSrcMemoryImage != NULL)
 	{
 		if (aSrcMemoryImage->mColorTable == NULL)
 		{
-			ulong *aSrcBits = aSrcMemoryImage->GetBits();
+			uint32_t *aSrcBits = aSrcMemoryImage->GetBits();
 
 #define NEXT_SRC_COLOR (*(aSrcPtr++))
-#define SRC_TYPE ulong
+#define SRC_TYPE uint32_t
 
 #include "MI_AdditiveBlt.inc"
 
@@ -1368,11 +1368,11 @@ void MemoryImage::AdditiveBlt(Image *theImage, int theX, int theY, const Rect &t
 		}
 		else
 		{
-			ulong *aColorTable = aSrcMemoryImage->mColorTable;
-			uchar *aSrcBits = aSrcMemoryImage->mColorIndices;
+			uint32_t *aColorTable = aSrcMemoryImage->mColorTable;
+			uint8_t *aSrcBits = aSrcMemoryImage->mColorIndices;
 
 #define NEXT_SRC_COLOR (aColorTable[*(aSrcPtr++)])
-#define SRC_TYPE uchar
+#define SRC_TYPE uint8_t
 
 #include "MI_AdditiveBlt.inc"
 
@@ -1394,12 +1394,12 @@ void MemoryImage::NormalBlt(Image *theImage, int theX, int theY, const Rect &the
 	{
 		if (aSrcMemoryImage->mColorTable == NULL)
 		{
-			ulong *aSrcPixelsRow =
-				((ulong *)aSrcMemoryImage->GetBits()) + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
+			uint32_t *aSrcPixelsRow =
+				((uint32_t *)aSrcMemoryImage->GetBits()) + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
 
 #define NEXT_SRC_COLOR (*(aSrcPtr++))
 #define READ_SRC_COLOR (*(aSrcPtr))
-#define EACH_ROW ulong *aSrcPtr = aSrcPixelsRow
+#define EACH_ROW uint32_t *aSrcPtr = aSrcPixelsRow
 
 #include "MI_NormalBlt.inc"
 
@@ -1409,12 +1409,12 @@ void MemoryImage::NormalBlt(Image *theImage, int theX, int theY, const Rect &the
 		}
 		else
 		{
-			ulong *aColorTable = aSrcMemoryImage->mColorTable;
-			uchar *aSrcPixelsRow = aSrcMemoryImage->mColorIndices + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
+			uint32_t *aColorTable = aSrcMemoryImage->mColorTable;
+			uint8_t *aSrcPixelsRow = aSrcMemoryImage->mColorIndices + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
 
 #define NEXT_SRC_COLOR (aColorTable[*(aSrcPtr++)])
 #define READ_SRC_COLOR (aColorTable[*(aSrcPtr)])
-#define EACH_ROW uchar *aSrcPtr = aSrcPixelsRow
+#define EACH_ROW uint8_t *aSrcPtr = aSrcPixelsRow
 
 #include "MI_NormalBlt.inc"
 
@@ -1583,15 +1583,15 @@ void MemoryImage::BltRotated(Image *theImage,
 		return;
 
 	MemoryImage *aMemoryImage = dynamic_cast<MemoryImage *>(theImage);
-	uchar *aMaxTable = mApp->mAdd8BitMaxTable;
+	uint8_t *aMaxTable = mApp->mAdd8BitMaxTable;
 
 	if (aMemoryImage != NULL)
 	{
 		if (aMemoryImage->mColorTable == NULL)
 		{
-			ulong *aSrcBits = aMemoryImage->GetBits() + theSrcRect.mX + theSrcRect.mY * theSrcRect.mWidth;
+			uint32_t *aSrcBits = aMemoryImage->GetBits() + theSrcRect.mX + theSrcRect.mY * theSrcRect.mWidth;
 
-#define SRC_TYPE ulong
+#define SRC_TYPE uint32_t
 #define READ_COLOR(ptr) (*(ptr))
 
 			if (theDrawMode == Graphics::DRAWMODE_NORMAL)
@@ -1608,10 +1608,10 @@ void MemoryImage::BltRotated(Image *theImage,
 		}
 		else
 		{
-			ulong *aColorTable = aMemoryImage->mColorTable;
-			uchar *aSrcBits = aMemoryImage->mColorIndices + theSrcRect.mX + theSrcRect.mY * theSrcRect.mWidth;
+			uint32_t *aColorTable = aMemoryImage->mColorTable;
+			uint8_t *aSrcBits = aMemoryImage->mColorIndices + theSrcRect.mX + theSrcRect.mY * theSrcRect.mWidth;
 
-#define SRC_TYPE uchar
+#define SRC_TYPE uint8_t
 #define READ_COLOR(ptr) (aColorTable[*(ptr)])
 
 			if (theDrawMode == Graphics::DRAWMODE_NORMAL)
@@ -1639,7 +1639,7 @@ void MemoryImage::SlowStretchBlt(
 	// This thing was a pain to write.  I bet i could have gotten something just as good
 	// from some Graphics Gems book.
 
-	ulong *aDestEnd = GetBits() + (mWidth * mHeight);
+	uint32_t *aDestEnd = GetBits() + (mWidth * mHeight);
 
 	MemoryImage *aSrcMemoryImage = dynamic_cast<MemoryImage *>(theImage);
 
@@ -1647,9 +1647,9 @@ void MemoryImage::SlowStretchBlt(
 	{
 		if (aSrcMemoryImage->mColorTable == NULL)
 		{
-			ulong *aSrcBits = aSrcMemoryImage->GetBits();
+			uint32_t *aSrcBits = aSrcMemoryImage->GetBits();
 
-#define SRC_TYPE ulong
+#define SRC_TYPE uint32_t
 #define READ_COLOR(ptr) (*(ptr))
 
 #include "MI_SlowStretchBlt.inc"
@@ -1659,10 +1659,10 @@ void MemoryImage::SlowStretchBlt(
 		}
 		else
 		{
-			ulong *aColorTable = aSrcMemoryImage->mColorTable;
-			uchar *aSrcBits = aSrcMemoryImage->mColorIndices;
+			uint32_t *aColorTable = aSrcMemoryImage->mColorTable;
+			uint8_t *aSrcBits = aSrcMemoryImage->mColorIndices;
 
-#define SRC_TYPE uchar
+#define SRC_TYPE uint8_t
 #define READ_COLOR(ptr) (aColorTable[*(ptr)])
 
 #include "MI_SlowStretchBlt.inc"
@@ -1685,8 +1685,8 @@ void MemoryImage::FastStretchBlt(
 
 	if (aSrcMemoryImage != NULL)
 	{
-		ulong *aDestPixelsRow = ((ulong *)GetBits()) + (theDestRect.mY * mWidth) + theDestRect.mX;
-		ulong *aSrcPixelsRow = (ulong *)aSrcMemoryImage->GetBits();
+		uint32_t *aDestPixelsRow = ((uint32_t *)GetBits()) + (theDestRect.mY * mWidth) + theDestRect.mX;
+		uint32_t *aSrcPixelsRow = (uint32_t *)aSrcMemoryImage->GetBits();
 		;
 
 		double aSrcY = theSrcRect.mY;
@@ -1700,16 +1700,16 @@ void MemoryImage::FastStretchBlt(
 			{
 				double aSrcX = theSrcRect.mX;
 
-				ulong *aDestPixels = aDestPixelsRow;
+				uint32_t *aDestPixels = aDestPixelsRow;
 
 				for (int x = 0; x < theDestRect.mWidth; x++)
 				{
 					aSrcX += anAddX;
 
-					ulong *aSrcPixels = aSrcPixelsRow + ((int)aSrcX) + (aSrcMemoryImage->mWidth * ((int)aSrcY));
-					ulong src = *aSrcPixels;
+					uint32_t *aSrcPixels = aSrcPixelsRow + ((int)aSrcX) + (aSrcMemoryImage->mWidth * ((int)aSrcY));
+					uint32_t src = *aSrcPixels;
 
-					ulong dest = *aDestPixels;
+					uint32_t dest = *aDestPixels;
 
 					int a = src >> 24;
 
@@ -1820,7 +1820,7 @@ void MemoryImage::BltMatrix(Image *theImage,
 {
 	theImage->mDrawn = true;
 
-	DWORD *aSurface = GetBits();
+	uint32_t *aSurface = GetBits();
 	int aPitch = mWidth * 4;
 	int aFormat = 0x8888;
 	if (mForcedMode && !mHasAlpha && !mHasTrans)
@@ -1884,28 +1884,28 @@ void MemoryImage::FillScanLinesWithCoverage(Span *theSpans,
 											int theSpanCount,
 											const Color &theColor,
 											int theDrawMode,
-											const BYTE *theCoverage,
+											const uint8_t *theCoverage,
 											int theCoverX,
 											int theCoverY,
 											int theCoverWidth,
 											int theCoverHeight)
 {
-	ulong *theBits = GetBits();
-	ulong src = theColor.ToInt();
+	uint32_t *theBits = GetBits();
+	uint32_t src = theColor.ToInt();
 	for (int i = 0; i < theSpanCount; ++i)
 	{
 		Span *aSpan = &theSpans[i];
 		int x = aSpan->mX - theCoverX;
 		int y = aSpan->mY - theCoverY;
 
-		ulong *aDestPixels = &theBits[aSpan->mY * mWidth + aSpan->mX];
-		const BYTE *aCoverBits = &theCoverage[y * theCoverWidth + x];
+		uint32_t *aDestPixels = &theBits[aSpan->mY * mWidth + aSpan->mX];
+		const uint8_t *aCoverBits = &theCoverage[y * theCoverWidth + x];
 		for (int w = 0; w < aSpan->mWidth; ++w)
 		{
 			int cover = *aCoverBits++ + 1;
 			int a = (cover * theColor.mAlpha) >> 8;
 			int oma;
-			ulong dest = *aDestPixels;
+			uint32_t dest = *aDestPixels;
 
 			if (a > 0)
 			{
@@ -1936,7 +1936,7 @@ void MemoryImage::BltTrianglesTex(Image *theTexture,
 {
 	theTexture->mDrawn = true;
 
-	DWORD *aSurface = GetBits();
+	uint32_t *aSurface = GetBits();
 
 	int aPitch = mWidth * 4;
 	int aFormat = 0x8888;
@@ -1968,7 +1968,7 @@ void MemoryImage::BltRawTexture(void* theTexture,
 	int theDrawMode)
 {
 
-	ulong *aNewPixels = mApp->mRenderer->GetBitsFromTexture(theTexture, theTexWidth, theTexHeight);
+	uint32_t *aNewPixels = mApp->mRenderer->GetBitsFromTexture(theTexture, theTexWidth, theTexHeight);
 
 	MemoryImage aTempImage;
 	aTempImage.SetBits(aNewPixels, 1, 1);
@@ -1989,8 +1989,8 @@ bool MemoryImage::Palletize()
 	if (mBits == NULL)
 		return false;
 
-	mColorIndices = new uchar[mWidth * mHeight];
-	mColorTable = new ulong[256];
+	mColorIndices = new uint8_t[mWidth * mHeight];
+	mColorTable = new uint32_t[256];
 
 	if (!Quantize8Bit(mBits, mWidth, mHeight, mColorIndices, mColorTable))
 	{

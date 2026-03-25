@@ -1,3 +1,4 @@
+#if SEXY_USE_DRM
 #include "PopDRMComm.h"
 
 //0x5D5AC0
@@ -128,3 +129,5 @@ bool PopDRMComm::DoIPC()
 	return false;
 #endif
 }
+
+#endif

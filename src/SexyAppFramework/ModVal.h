@@ -1,3 +1,5 @@
+#if WIN32
+
 #ifndef __MODVAL_H__
 #define __MODVAL_H__
 
@@ -70,3 +72,5 @@ void AddModValEnum(const std::string &theEnumName, int theVal);
 } // namespace Sexy
 
 #endif //__MODVAL_H__
+
+#endif

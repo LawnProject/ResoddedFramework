@@ -1283,8 +1283,10 @@ void StoreScreen::MouseDown(int x, int y, int theClickCount)
 				mWaitForDialog = false;
 				if (aResult == ID_OK)
 				{
+					#if SEXY_USE_DRM
 					if (mApp->mDRM)
 						mApp->mDRM->BuyGame();
+					#endif
 				}
 			}
 			else if (!IsItemSoldOut(aItemType) && !IsItemUnavailable(aItemType) && !IsComingSoon(aItemType))

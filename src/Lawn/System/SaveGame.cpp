@@ -52,12 +52,12 @@ void SaveGameContext::SyncBytes(void *theDest, int theReadSize)
 		}
 		else
 		{
-			mBuffer.ReadBytes((uchar *)theDest, theReadSize);
+			mBuffer.ReadBytes((uint8_t *)theDest, theReadSize);
 		}
 	}
 	else
 	{
-		mBuffer.WriteBytes((uchar *)theDest, theReadSize);
+		mBuffer.WriteBytes((uint8_t *)theDest, theReadSize);
 	}
 }
 

@@ -14,11 +14,17 @@ BassMusicInfo::BassMusicInfo()
 	mHStream = NULL;
 }
 
-BassMusicInterface::BassMusicInterface(HWND theHWnd)
+BassMusicInterface::BassMusicInterface(Window *theWindow)
 {
-
 	BOOL success;
-	success = BASS_Init(1, 44100, 0, theHWnd, NULL);
+	#if WIN32
+	SDL_PropertiesID props = SDL_GetWindowProperties(theWindow->mInternalWindow);
+	HWND aHWND = NULL;
+	SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, aHWND);
+	success = BASS_Init(1, 44100, 0, aHWND, NULL);
+	#else
+	success = BASS_Init(1, 44100, 0, NULL, NULL);
+	#endif
 	BASS_SetConfig(BASS_CONFIG_BUFFER, 2000);
 	BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
 
@@ -53,7 +59,7 @@ bool BassMusicInterface::LoadMusic(int theSongId, const std::string &theFileName
 	int aSize = p_ftell(aFP);
 	p_fseek(aFP, 0, SEEK_SET);
 
-	uchar *aData = new uchar[aSize];
+	uint8_t *aData = new uint8_t[aSize];
 	p_fread(aData, 1, aSize, aFP);
 	p_fclose(aFP);
 
@@ -301,7 +307,7 @@ void BassMusicInterface::SetSongMaxVolume(int theSongId, double theMaxVolume)
 		BassMusicInfo *aMusicInfo = &anItr->second;
 
 		aMusicInfo->mVolumeCap = theMaxVolume;
-		aMusicInfo->mVolume = min(aMusicInfo->mVolume, theMaxVolume);
+		aMusicInfo->mVolume = std::min(aMusicInfo->mVolume, theMaxVolume);
 		BASS_ChannelSetAttribute(aMusicInfo->GetHandle(), BASS_ATTRIB_VOL, aMusicInfo->mVolume * 100);
 	}
 }

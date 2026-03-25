@@ -12,6 +12,18 @@
 #undef _UNICODE
 #undef UNICODE
 
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
+#ifdef max
+#undef max
+#endif
+
+#ifdef min
+#undef min
+#endif
+
 #include <string>
 #include <vector>
 #include <set>
@@ -24,6 +36,10 @@
 #include <shellapi.h>
 #include <mmsystem.h>
 #include "ModVal.h"
+
+#ifdef LoadImage
+#undef LoadImage // Windows, i fucking hate you -Electr0Gunner
+#endif
 
 #ifdef _USE_WIDE_STRING
 
@@ -93,12 +109,6 @@ typedef std::string SexyString;
 
 #define LENGTH(anyarray) (sizeof(anyarray) / sizeof(anyarray[0]))
 
-typedef unsigned char uchar;
-typedef unsigned short ushort;
-typedef unsigned int uint;
-typedef unsigned long ulong;
-typedef __int64 int64;
-
 typedef std::map<std::string, std::string> DefinesMap;
 typedef std::map<std::wstring, std::wstring> WStringWStringMap;
 typedef SexyString::value_type SexyChar;
@@ -107,15 +117,14 @@ typedef SexyString::value_type SexyChar;
 namespace Sexy
 {
 
-const ulong SEXY_RAND_MAX = 0x7FFFFFFF;
+const uint32_t SEXY_RAND_MAX = 0x7FFFFFFF;
 
 extern bool gDebug;
-extern HINSTANCE gHInstance;
 
 int Rand();
 int Rand(int range);
 float Rand(float range);
-void SRand(ulong theSeed);
+void SRand(uint32_t theSeed);
 extern std::string vformat(const char *fmt, va_list argPtr);
 extern std::wstring vformat(const wchar_t *fmt, va_list argPtr);
 extern std::string StrFormat(const char *fmt...);
@@ -161,7 +170,7 @@ std::string GetFileName(const std::string &thePath, bool noExtension = false);
 std::string GetFileDir(const std::string &thePath, bool withSlash = false);
 std::string RemoveTrailingSlash(const std::string &theDirectory);
 std::string AddTrailingSlash(const std::string &theDirectory, bool backSlash = false);
-time_t GetFileDate(const std::string &theFileName);
+uint64_t GetFileDate(const std::string &theFileName);
 std::string GetCurDir();
 std::string GetFullPath(const std::string &theRelPath);
 std::string GetPathFrom(const std::string &theRelPath, const std::string &theDir);

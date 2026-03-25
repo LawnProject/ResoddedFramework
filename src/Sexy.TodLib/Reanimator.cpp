@@ -348,7 +348,7 @@ void ReanimationCreateAtlas(ReanimatorDefinition *theDefinition, ReanimationType
 	aAtlas->ReanimAtlasCreate(theDefinition);
 
 	TodHesitationTrace("atlas '%s'", aParam.mReanimFileName);
-	int aDuration = max(aTimer.GetDuration(), 0);
+	int aDuration = std::max(aTimer.GetDuration(), 0.0);
 	if (aDuration > 20 && theReanimationType != ReanimationType::REANIM_NONE) //（仅内测版）创建时间过长的报告
 		TodTraceAndLog(
 			"LOADING:Long atlas '%s' %d ms on %s", aParam.mReanimFileName, aDuration, gGetCurrentLevelName().c_str());

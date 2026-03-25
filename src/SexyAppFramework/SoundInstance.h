@@ -1,7 +1,6 @@
 #ifndef __SOUNDINSTANCE_H__
 #define __SOUNDINSTANCE_H__
 
-#include <windows.h>
 #include "Common.h"
 
 namespace Sexy

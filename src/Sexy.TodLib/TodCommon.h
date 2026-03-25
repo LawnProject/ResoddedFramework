@@ -11,7 +11,7 @@ class Graphics;
 class SexyMatrix;
 class SexyVector2;
 }; // namespace Sexy
-using namespace std;
+
 using namespace Sexy;
 
 #define D3DIMAGEFLAG_SANDING 0x1000
@@ -201,14 +201,14 @@ Color GetFlashingColor(int theCounter, int theFlashTime);
 Color ColorsMultiply(const Color &theColor1, const Color &theColor2);
 Color ColorAdd(const Color &theColor1, const Color &theColor2);
 
-inline void SetBit(uint &theNum, int theIdx, bool theValue = true)
+inline void SetBit(unsigned int &theNum, int theIdx, bool theValue = true)
 {
 	if (theValue)
 		theNum |= 1 << theIdx;
 	else
 		theNum &= ~(1 << theIdx);
 }
-inline bool TestBit(uint theNum, int theIdx)
+inline bool TestBit(unsigned int theNum, int theIdx)
 {
 	return theNum & (1 << theIdx);
 }

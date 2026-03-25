@@ -39,10 +39,10 @@ template <class _T> class TRect
 
 	TRect<_T> Intersection(const TRect<_T> &theTRect) const
 	{
-		_T x1 = max(mX, theTRect.mX);
-		_T x2 = min(mX + mWidth, theTRect.mX + theTRect.mWidth);
-		_T y1 = max(mY, theTRect.mY);
-		_T y2 = min(mY + mHeight, theTRect.mY + theTRect.mHeight);
+		_T x1 = std::max(mX, theTRect.mX);
+		_T x2 = std::min(mX + mWidth, theTRect.mX + theTRect.mWidth);
+		_T y1 = std::max(mY, theTRect.mY);
+		_T y2 = std::min(mY + mHeight, theTRect.mY + theTRect.mHeight);
 		if (((x2 - x1) < 0) || ((y2 - y1) < 0))
 			return TRect<_T>(0, 0, 0, 0);
 		else
@@ -101,11 +101,6 @@ template <class _T> class TRect
 		return (mX != theRect.mX) || (mY != theRect.mY) || (mWidth != theRect.mWidth) || (mHeight != theRect.mHeight);
 	}
 
-	RECT ToRECT() const
-	{
-		RECT aRect = {mX, mY, mX + mWidth, mY + mHeight};
-		return aRect;
-	}
 };
 
 typedef TRect<int> Rect;

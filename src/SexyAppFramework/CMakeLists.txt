@@ -17,6 +17,7 @@ set(EXCLUDE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/SWTri_DrawTriangleInc2.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/SWTri_GetTexel.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/SWTri_Loop.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/SWTri_Loop.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/SWTri_Pixel555.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/SWTri_Pixel565.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/SWTri_Pixel888.cpp"

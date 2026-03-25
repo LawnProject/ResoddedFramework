@@ -1,10 +1,7 @@
 #pragma once
 
 #include <SDL3/SDL.h>
-
-#ifdef WIN32
-#include "windows.h"
-#endif
+#include "Common.h"
 
 namespace Sexy
 {

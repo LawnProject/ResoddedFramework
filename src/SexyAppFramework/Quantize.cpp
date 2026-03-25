@@ -5,14 +5,14 @@
 using namespace Sexy;
 
 bool Sexy::Quantize8Bit(
-	const ulong *theSrcBits, int theWidth, int theHeight, uchar *theDestColorIndices, ulong *theDestColorTable)
+	const uint32_t *theSrcBits, int theWidth, int theHeight, uint8_t *theDestColorIndices, uint32_t *theDestColorTable)
 {
 	int aSize = theWidth * theHeight;
 
 	int aColorTableSize = 0;
 
-	ulong aSearchTable[256];
-	uchar aTranslationTable[256]; // From search table to color table
+	uint32_t aSearchTable[256];
+	uint8_t aTranslationTable[256]; // From search table to color table
 
 	if (aSize > 0)
 	{
@@ -25,7 +25,7 @@ bool Sexy::Quantize8Bit(
 
 	for (int anIdx = 1; anIdx < aSize; anIdx++)
 	{
-		ulong aColor = theSrcBits[anIdx];
+		uint32_t aColor = theSrcBits[anIdx];
 
 		int aLeftPos = 0;
 		int aRightPos = aColorTableSize - 1;
@@ -33,7 +33,7 @@ bool Sexy::Quantize8Bit(
 
 		for (;;)
 		{
-			ulong aCheckColor = aSearchTable[aMiddlePos];
+			uint32_t aCheckColor = aSearchTable[aMiddlePos];
 
 			if (aColor < aCheckColor)
 				aRightPos = aMiddlePos - 1;
@@ -57,12 +57,12 @@ bool Sexy::Quantize8Bit(
 				// Insert color into the table
 				memmove(aSearchTable + anInsertPos + 1,
 						aSearchTable + anInsertPos,
-						(aColorTableSize - anInsertPos) * sizeof(ulong));
+						(aColorTableSize - anInsertPos) * sizeof(uint8_t));
 				aSearchTable[anInsertPos] = aColor;
 
 				memmove(aTranslationTable + anInsertPos + 1,
 						aTranslationTable + anInsertPos,
-						(aColorTableSize - anInsertPos) * sizeof(uchar));
+						(aColorTableSize - anInsertPos) * sizeof(uint8_t));
 				aTranslationTable[anInsertPos] = aColorTableSize;
 
 				theDestColorTable[aColorTableSize] = aColor;

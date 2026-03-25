@@ -2,6 +2,7 @@
 #define _H_CritSect
 
 #include "Common.h"
+#include <mutex>
 
 class CritSync;
 
@@ -11,7 +12,7 @@ namespace Sexy
 class CritSect
 {
   private:
-	CRITICAL_SECTION mCriticalSection;
+	std::recursive_mutex mCriticalSection;
 	friend class AutoCrit;
 
   public:

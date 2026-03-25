@@ -1,7 +1,6 @@
 #ifndef __SOUNDMANAGER_H__
 #define __SOUNDMANAGER_H__
 
-#include <windows.h>
 #include "Common.h"
 
 namespace Sexy
@@ -41,7 +40,7 @@ class SoundManager
 	virtual void SetMasterVolume(double theVolume) = NULL;
 
 	virtual void Flush() = NULL;
-	virtual void SetCooperativeWindow(HWND theHWnd, bool isWindowed) = NULL;
+	virtual void SetCooperativeWindow(bool isWindowed) = NULL;
 	virtual void StopAllSounds() = NULL;
 	virtual int GetFreeSoundId() = NULL;
 	virtual int GetNumSounds() = NULL;

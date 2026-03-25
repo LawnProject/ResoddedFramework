@@ -1,6 +1,8 @@
 #include "Common.h"
 #include "MTRand.h"
 #include "Debug.h"
+#include <filesystem>
+#include <chrono>
 #include <direct.h>
 #include <io.h>
 #include <sys/types.h>
@@ -10,12 +12,17 @@
 
 #include "PerfTimer.h"
 
-HINSTANCE Sexy::gHInstance;
 bool Sexy::gDebug = false;
 static Sexy::MTRand gMTRand;
 namespace Sexy
 {
-std::string gAppDataFolder = "";
+#ifdef _WIN32
+std::string gAppDataFolder = std::filesystem::path(std::getenv("LOCALAPPDATA")).string() + "/";
+#elif __APPLE__
+std::string gAppDataFolder = std::filesystem::path(std::getenv("HOME")).string() + "/Library/Application Support/";
+#else
+std::string gAppDataFolder = std::filesystem::path(std::getenv("HOME")).string() + "/.config/";
+#endif
 }
 
 int Sexy::Rand()
@@ -33,7 +40,7 @@ float Sexy::Rand(float range)
 	return gMTRand.Next(range);
 }
 
-void Sexy::SRand(ulong theSeed)
+void Sexy::SRand(uint32_t theSeed)
 {
 	gMTRand.SRand(theSeed);
 }
@@ -99,14 +106,7 @@ void Sexy::SetAppDataFolder(const std::string &thePath)
 {
 	if (CheckForVista())
 	{
-		std::string aPath = thePath;
-		if (!aPath.empty())
-		{
-			if (aPath[aPath.length() - 1] != '\\' && aPath[aPath.length() - 1] != '/')
-				aPath += '\\';
-		}
-
-		Sexy::gAppDataFolder = aPath;
+		Sexy::gAppDataFolder = thePath;
 	}
 }
 
@@ -787,7 +787,7 @@ void Sexy::MkDir(const std::string &theDir)
 
 std::string Sexy::GetFileName(const std::string &thePath, bool noExtension)
 {
-	int aLastSlash = max((int)thePath.rfind('\\'), (int)thePath.rfind('/'));
+	int aLastSlash = std::max((int)thePath.rfind('\\'), (int)thePath.rfind('/'));
 
 	if (noExtension)
 	{
@@ -804,7 +804,7 @@ std::string Sexy::GetFileName(const std::string &thePath, bool noExtension)
 
 std::string Sexy::GetFileDir(const std::string &thePath, bool withSlash)
 {
-	int aLastSlash = max((int)thePath.rfind('\\'), (int)thePath.rfind('/'));
+	int aLastSlash = std::max((int)thePath.rfind('\\'), (int)thePath.rfind('/'));
 
 	if (aLastSlash == -1)
 		return "";
@@ -841,27 +841,11 @@ std::string Sexy::AddTrailingSlash(const std::string &theDirectory, bool backSla
 		return "";
 }
 
-time_t Sexy::GetFileDate(const std::string &theFileName)
+uint64_t Sexy::GetFileDate(const std::string &theFileName)
 {
-	time_t aFileDate = 0;
-
-	WIN32_FIND_DATAA aFindData;
-	HANDLE aFindHandle = ::FindFirstFileA(theFileName.c_str(), &aFindData);
-
-	if (aFindHandle != INVALID_HANDLE_VALUE)
-	{
-		FILETIME aFileTime = aFindData.ftLastWriteTime;
-
-		//FileTimeToUnixTime(&aFileTime, &aFileDate, FALSE);
-
-		LONGLONG ll = (__int64)aFileTime.dwHighDateTime << 32;
-		ll = ll + aFileTime.dwLowDateTime - 116444736000000000;
-		aFileDate = (time_t)(ll / 10000000);
-
-		FindClose(aFindHandle);
-	}
-
-	return aFileDate;
+	auto ftime = std::filesystem::last_write_time(theFileName);
+	auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(ftime - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now());
+	return std::chrono::system_clock::to_time_t(sctp);
 }
 
 std::string Sexy::vformat(const char *fmt, va_list argPtr)
@@ -1035,7 +1019,7 @@ std::string Sexy::XMLDecodeString(const std::string &theString)
 	int aUTF8Len = 0;
 	int aUTF8CurVal = 0;
 
-	for (ulong i = 0; i < theString.length(); i++)
+	for (uint32_t i = 0; i < theString.length(); i++)
 	{
 		char c = theString[i];
 
@@ -1078,7 +1062,7 @@ std::wstring Sexy::XMLDecodeString(const std::wstring &theString)
 	int aUTF8Len = 0;
 	int aUTF8CurVal = 0;
 
-	for (ulong i = 0; i < theString.length(); i++)
+	for (uint32_t i = 0; i < theString.length(); i++)
 	{
 		wchar_t c = theString[i];
 
@@ -1120,7 +1104,7 @@ std::string Sexy::XMLEncodeString(const std::string &theString)
 
 	bool hasSpace = false;
 
-	for (ulong i = 0; i < theString.length(); i++)
+	for (uint32_t i = 0; i < theString.length(); i++)
 	{
 		char c = theString[i];
 
@@ -1181,7 +1165,7 @@ std::wstring Sexy::XMLEncodeString(const std::wstring &theString)
 
 	bool hasSpace = false;
 
-	for (ulong i = 0; i < theString.length(); i++)
+	for (uint32_t i = 0; i < theString.length(); i++)
 	{
 		wchar_t c = theString[i];
 

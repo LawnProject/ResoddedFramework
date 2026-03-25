@@ -11,7 +11,7 @@ extern bool gOptimizeSoftwareDrawing;
 namespace Sexy
 {
 
-const ulong MEMORYCHECK_ID = 0x4BEEFADE;
+const uint32_t MEMORYCHECK_ID = 0x4BEEFADE;
 
 class Renderer;
 class SexyAppBase;
@@ -19,13 +19,13 @@ class SexyAppBase;
 class MemoryImage : public Image
 {
   public:
-	ulong *mBits;
+	uint32_t *mBits;
 	int mBitsChangedCount;
 	void *mD3DData;
-	DWORD mD3DFlags; // see D3DInterface.h for possible values
+	uint32_t mD3DFlags; // see D3DInterface.h for possible values
 
-	ulong *mColorTable;
-	uchar *mColorIndices;
+	uint32_t *mColorTable;
+	uint8_t *mColorIndices;
 
 	bool mForcedMode;
 	bool mHasTrans;
@@ -34,9 +34,9 @@ class MemoryImage : public Image
 	bool mPurgeBits;
 	bool mWantPal;
 
-	ulong *mNativeAlphaData;
-	uchar *mRLAlphaData;
-	uchar *mRLAdditiveData;
+	uint32_t *mNativeAlphaData;
+	uint8_t *mRLAlphaData;
+	uint8_t *mRLAdditiveData;
 
 	bool mBitsChanged;
 	SexyAppBase *mApp;
@@ -46,8 +46,8 @@ class MemoryImage : public Image
 
   public:
 	virtual void *GetNativeAlphaData(Renderer *theNative);
-	virtual uchar *GetRLAlphaData();
-	virtual uchar *GetRLAdditiveData(Renderer *theNative);
+	virtual uint8_t *GetRLAlphaData();
+	virtual uint8_t *GetRLAdditiveData(Renderer *theNative);
 	virtual void PurgeBits();
 	virtual void DeleteSWBuffers();
 	virtual void Delete3DBuffers();
@@ -119,7 +119,7 @@ class MemoryImage : public Image
 								   int theSpanCount,
 								   const Color &theColor,
 								   int theDrawMode,
-								   const BYTE *theCoverage,
+								   const uint8_t *theCoverage,
 								   int theCoverX,
 								   int theCoverY,
 								   int theCoverWidth,
@@ -132,9 +132,9 @@ class MemoryImage : public Image
 	virtual ~MemoryImage();
 
 	virtual void Clear();
-	virtual void SetBits(ulong *theBits, int theWidth, int theHeight, bool commitBits = true);
+	virtual void SetBits(uint32_t *theBits, int theWidth, int theHeight, bool commitBits = true);
 	virtual void Create(int theWidth, int theHeight);
-	virtual ulong *GetBits();
+	virtual uint32_t *GetBits();
 
 	virtual void FillRect(const Rect &theRect, const Color &theColor, int theDrawMode);
 	virtual void ClearRect(const Rect &theRect);

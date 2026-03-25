@@ -43,7 +43,7 @@ std::string DescParser::Unquote(const std::string &theQuotedString)
 		std::string aLiteralString;
 		bool lastWasQuote = false;
 
-		for (ulong i = 0; i < theQuotedString.length(); i++)
+		for (uint32_t i = 0; i < theQuotedString.length(); i++)
 		{
 			if (theQuotedString[i] == aQuoteChar)
 			{
@@ -69,7 +69,7 @@ bool DescParser::GetValues(ListDataElement *theSource, ListDataElement *theValue
 {
 	theValues->mElementVector.clear();
 
-	for (ulong aSourceNum = 0; aSourceNum < theSource->mElementVector.size(); aSourceNum++)
+	for (uint32_t aSourceNum = 0; aSourceNum < theSource->mElementVector.size(); aSourceNum++)
 	{
 		if (theSource->mElementVector[aSourceNum]->mIsList)
 		{
@@ -123,7 +123,7 @@ std::string DescParser::DataElementToString(DataElement *theDataElement)
 
 		std::string aString = "(";
 
-		for (ulong i = 0; i < aListDataElement->mElementVector.size(); i++)
+		for (uint32_t i = 0; i < aListDataElement->mElementVector.size(); i++)
 		{
 			if (i != 0)
 				aString += ", ";
@@ -212,7 +212,7 @@ bool DescParser::DataToStringVector(DataElement *theSource, StringVector *theStr
 		aValues = (ListDataElement *)aDataElement;
 	}
 
-	for (ulong i = 0; i < aValues->mElementVector.size(); i++)
+	for (uint32_t i = 0; i < aValues->mElementVector.size(); i++)
 	{
 		if (aValues->mElementVector[i]->mIsList)
 		{
@@ -255,7 +255,7 @@ bool DescParser::DataToIntVector(DataElement *theSource, IntVector *theIntVector
 	if (!DataToStringVector(theSource, &aStringVector))
 		return false;
 
-	for (ulong i = 0; i < aStringVector.size(); i++)
+	for (uint32_t i = 0; i < aStringVector.size(); i++)
 	{
 		int aIntVal;
 		if (!StringToInt(aStringVector[i], &aIntVal))
@@ -275,7 +275,7 @@ bool DescParser::DataToDoubleVector(DataElement *theSource, DoubleVector *theDou
 	if (!DataToStringVector(theSource, &aStringVector))
 		return false;
 
-	for (ulong i = 0; i < aStringVector.size(); i++)
+	for (uint32_t i = 0; i < aStringVector.size(); i++)
 	{
 		double aDoubleVal;
 		if (!StringToDouble(aStringVector[i], &aDoubleVal))
