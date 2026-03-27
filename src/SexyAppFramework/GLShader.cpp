@@ -28,7 +28,10 @@ bool GLShader::LoadFromSource(const std::string &vertexSrc, const std::string &f
 
 	GLint success;
 	glGetProgramiv(mProgramID, GL_LINK_STATUS, &success);
-	// TODO: ADD SUCCESS CHECK
+	if (success != GL_TRUE)
+	{
+		return false;
+	}
 
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);

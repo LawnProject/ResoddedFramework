@@ -803,26 +803,203 @@ bool DefinitionReadArrayField(XMLParser *theXmlParser, DefinitionArrayDef *theAr
 	return false;
 }
 
+DefSymbol gDefTrackEaseSymbols[] = {
+	{TodCurves::CURVE_EASE_IN_OUT_WEAK, "EaseInOutWeak"},
+	{TodCurves::CURVE_FAST_IN_OUT_WEAK, "FastInOutWeak"},
+	{TodCurves::CURVE_EASE_IN_OUT, "EaseInOut"},
+	{TodCurves::CURVE_FAST_IN_OUT, "FastInOut"},
+	{TodCurves::CURVE_EASE_IN, "EaseIn"},
+	{TodCurves::CURVE_EASE_OUT, "EaseOut"},
+	{TodCurves::CURVE_EASE_SIN_WAVE, "EaseSinWave"},
+	{TodCurves::CURVE_BOUNCE_FAST_MIDDLE, "BounceFastMiddle"},
+	{TodCurves::CURVE_BOUNCE_SLOW_MIDDLE, "BounceSlowMiddle"},
+	{TodCurves::CURVE_BOUNCE, "Bounce"},
+	{TodCurves::CURVE_SIN_WAVE, "SinWave"},
+	{TodCurves::CURVE_LINEAR, "Linear"},
+};
+
+// Read FloatTrackField from Definition XML
+// Implementation originally by @Patoke, tweaked by @Electr0Gunner
 bool DefinitionReadFloatTrackField(XMLParser *theXmlParser, FloatParameterTrack *theTrack)
 {
-	/*
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    */
+	SexyString aStringValue;
+
+	if (!DefinitionReadXMLString(theXmlParser, aStringValue))
+		return false;
+
+	float aValue = 0;
+	int aLen = 0;
+
+	const char *aStringChars = aStringValue.c_str();
+	size_t anIdx = 0;
+
+	theTrack->mCountNodes = 0;
+
+	std::vector<FloatParameterTrackNode> aFloatTrackVec = std::vector<FloatParameterTrackNode>();
+	FloatParameterTrackNode aTrackNode = FloatParameterTrackNode();
+	while (true)
+	{
+		if (anIdx >= aStringValue.length())
+		{
+			return false;
+		}
+		if (aStringChars[anIdx] == '\0')
+			goto _m_break; // No empty strings allowed
+
+		aTrackNode.mTime = -1;
+		aTrackNode.mCurveType = TodCurves::CURVE_LINEAR;
+		aTrackNode.mDistribution = TodCurves::CURVE_LINEAR;
+
+		if (aStringChars[anIdx] == '[')
+		{
+			// <range>
+			anIdx++;
+			if (sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen) != 1)
+				return false; // mLowValue
+			anIdx += aLen;
+			aTrackNode.mLowValue = aValue;
+			aTrackNode.mHighValue = aValue;
+			if (aStringChars[anIdx] != ']')
+			{
+				anIdx++; // space (' ')
+				// <curve>
+				for (size_t i = 0; i < sizeof(gDefTrackEaseSymbols) / sizeof(gDefTrackEaseSymbols[0]); ++i)
+				{
+					size_t aStrLen = strlen(gDefTrackEaseSymbols[i].mSymbolName);
+					if (strncmp(gDefTrackEaseSymbols[i].mSymbolName, aStringChars + anIdx, aStrLen) ==
+						0) // could be the distribution?
+					{
+						aTrackNode.mDistribution = (TodCurves)gDefTrackEaseSymbols[i].mSymbolValue;
+						anIdx += aStrLen + 1; // Accounts for space (' '), expressions never end with a curve
+						break;
+					}
+				}
+				switch (sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen)) // mHighValue
+				{
+				case 1: // Float read successfully
+					anIdx += aLen;
+					aTrackNode.mHighValue = aValue;
+					break;
+				case 0: // No float to read just continue
+					break;
+				default: // Something bad happened, panic!
+					return false;
+				}
+			}
+			if (aStringChars[anIdx] != ']')
+				return false; // Invalid format
+			anIdx++;
+			if (aStringChars[anIdx] == '\0')
+				goto _m_break; // Done!
+
+			if (aStringChars[anIdx] == ',')
+			{
+				anIdx++;
+				if (sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen) != 1)
+					return false; // mTime
+				anIdx += aLen;
+				aTrackNode.mTime = aValue * 0.01;
+			}
+			if (aStringChars[anIdx] == '\0')
+				goto _m_break; // Done!
+			anIdx++;
+		}
+		else
+		{
+			// <norange>
+			if (sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen) != 1)
+				return false; // mLow/HighValue
+			anIdx += aLen;
+			aTrackNode.mLowValue = aValue;
+			aTrackNode.mHighValue = aValue;
+
+			if (aStringChars[anIdx] == '\0')
+				goto _m_break; // Done!
+
+			if (aStringChars[anIdx] == ',')
+			{
+				anIdx++;
+				if (sexysscanf(aStringChars + anIdx, "%f%n", &aValue, &aLen) != 1)
+					return false; // mTime
+				anIdx += aLen;
+				aTrackNode.mTime = aValue * 0.01;
+			}
+			if (aStringChars[anIdx] == '\0')
+				goto _m_break; // Done!
+			anIdx++;
+			// <curve>
+			for (size_t i = 0; i < sizeof(gDefTrackEaseSymbols) / sizeof(gDefTrackEaseSymbols[0]); ++i)
+			{
+				size_t aStrLen = strlen(gDefTrackEaseSymbols[i].mSymbolName);
+				if (strncmp(gDefTrackEaseSymbols[i].mSymbolName, aStringChars + anIdx, aStrLen) == 0) // mCurveType
+				{
+					aTrackNode.mCurveType = (TodCurves)gDefTrackEaseSymbols[i].mSymbolValue;
+					anIdx += aStrLen;
+					if (aStringChars[anIdx] == '\0')
+						goto _m_break; // Done!
+					anIdx++;
+					break;
+				}
+			}
+		}
+
+		aFloatTrackVec.push_back(aTrackNode);
+	}
+_m_break:
+	aFloatTrackVec.push_back(aTrackNode);
+
+	// Search forward for a timestamp:
+	size_t aBaseIdx = 0;
+	anIdx = 0;
+	float high = 0.0;
+	float low = 0.0;
+	do
+	{
+		for (anIdx = aBaseIdx; anIdx < aFloatTrackVec.size(); ++anIdx)
+		{
+			if (aFloatTrackVec[anIdx].mTime >= 0.0)
+			{
+				// Found a timestamp!
+				high = aFloatTrackVec[anIdx].mTime;
+				goto _m_found; // Since we break out anIdx isn't incremented.
+			}
+		}
+		// Didn't find another value, we're finished.
+		// Since we did break, anIdx == aFloatTrackVec.size(), which means final value is set
+		high = 1.0;
+	_m_found:
+		// Going backwards set previous timestamps
+		for (size_t i = aBaseIdx; i < anIdx; ++i)
+		{ // Iterate up to anIdx - 1
+			float interp;
+			if (((anIdx - 1) - aBaseIdx) != 0)
+				interp = ((float)(i - aBaseIdx)) / ((float)((anIdx - 1) - aBaseIdx));
+			else if (aBaseIdx == 0)
+				interp = 0.0;
+			else
+				interp = 1.0;
+			aFloatTrackVec[i].mTime = high * interp + low * (1 - interp);
+		}
+		// Start again
+		aBaseIdx = anIdx + 1;
+		low = high;
+	} while (aBaseIdx < aFloatTrackVec.size());
+
+
+	size_t alloc_size = aFloatTrackVec.size() * sizeof(FloatParameterTrackNode);
+	theTrack->mNodes = (FloatParameterTrackNode *)DefinitionAlloc(alloc_size);
+	if (!theTrack->mNodes)
+		return false;
+
+	::memcpy(theTrack->mNodes, aFloatTrackVec.data(), alloc_size);
+	theTrack->mCountNodes = aFloatTrackVec.size();
+
 	return true;
 }
 
 bool DefinitionReadFlagField(XMLParser *theXmlParser,
 							 const SexyString &theElementName,
-							 uint32_t *theResultValue,
+							 uintptr_t *theResultValue,
 							 DefSymbol *theSymbolMap)
 {
 	int aValue;
@@ -885,9 +1062,15 @@ bool DefinitionReadField(XMLParser *theXmlParser, DefMap *theDefMap, void *theDe
 		return false;
 
 	XMLElement aXMLElement;
-	if (!theXmlParser->NextElement(&aXMLElement) || aXMLElement.mType == XMLElement::TYPE_END) // 读取下一个 XML 元素
+
+	if (!theXmlParser->NextElement(&aXMLElement))
 	{
-		*theDone = true; // 没有下一个元素则表示读取完成
+		*theDone = true; //We finished the file
+		return true;
+	}
+	if (aXMLElement.mType == XMLElement::TYPE_END)
+	{
+		*theDone = true; //We reached the end of the field
 		return true;
 	}
 	if (aXMLElement.mType !=
@@ -901,7 +1084,8 @@ bool DefinitionReadField(XMLParser *theXmlParser, DefMap *theDefMap, void *theDe
 	{
 		void *pVar = (void *)((uintptr_t)theDefinition + aField->mFieldOffset);
 		if (aField->mFieldType == DefFieldType::DT_FLAGS &&
-			DefinitionReadFlagField(theXmlParser, aXMLElement.mValue, nullptr, (DefSymbol *)aField->mExtraData))
+			DefinitionReadFlagField(
+				theXmlParser, aXMLElement.mValue, (uintptr_t *)pVar, (DefSymbol *)aField->mExtraData))
 			return true;
 
 		if (stricmp(aXMLElement.mValue.c_str(), aField->mFieldName) == 0) // 判断 aXMLElement 定义的是否为该成员变量
@@ -1111,13 +1295,15 @@ void DefinitionFreeMap(DefMap *theDefMap, void *theDefinition)
 	// 根据 theDefMap 遍历 theDefinition 的每个成员变量
 	for (DefField *aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++)
 	{
-		void *aVar = (void *)((int)theDefinition + aField->mFieldOffset); // 指向该成员变量的指针
+		void *aVar = (void *)((uintptr_t)theDefinition + aField->mFieldOffset); // 指向该成员变量的指针
 		switch (aField->mFieldType)
 		{
-		case DefFieldType::DT_STRING:
+		case DefFieldType::DT_STRING: //TODO: URGENT, fix this memory leak on closing. I need to find a new way to delete the string from memory.
+			/*
 			if (**(char **)aVar != '\0')
 				delete[] *(char **)aVar; // 释放字符数组
-			*(char **)aVar = nullptr;
+			
+			*(char **)aVar = nullptr;*/
 			break;
 		case DefFieldType::DT_ARRAY:
 			DefinitionFreeArrayField((DefinitionArrayDef *)aVar, (DefMap *)aField->mExtraData);
