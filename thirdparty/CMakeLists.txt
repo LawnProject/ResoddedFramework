@@ -38,7 +38,7 @@ FetchContent_Declare(
 
 FetchContent_Declare(
     freetype
-    GIT_REPOSITORY https://github.com/freetype/freetype
+    GIT_REPOSITORY https://gitlab.freedesktop.org/freetype/freetype
     GIT_TAG master
 )
 

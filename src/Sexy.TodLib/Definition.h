@@ -159,7 +159,7 @@ bool DefinitionReadArrayField(XMLParser *theXmlParser, DefinitionArrayDef *theAr
 bool DefinitionReadFloatTrackField(XMLParser *theXmlParser, FloatParameterTrack *theTrack);
 bool DefinitionReadFlagField(XMLParser *theXmlParser,
 							 const SexyString &theElementName,
-							 uint32_t *theResultValue,
+							 uintptr_t *theResultValue,
 							 DefSymbol *theSymbolMap);
 bool DefinitionReadImageField(XMLParser *theXmlParser, Image **theImage);
 bool DefinitionReadFontField(XMLParser *theXmlParser, Font **theFont);
