@@ -1,13 +1,24 @@
 <table>
   <tr>
     <td><img src=".github/icon.png" width="76" height="76"></td>
-    <td><h2>Gardener's Decomp</h2></td>
+    <td><h2>ResoddedFramework</h2></td>
   </tr>
 </table>
 
-A recon(struction) of PvZ, which aims to add more features...than usual.
+A reconstruction of PvZ, which aims to add more features...than usual.
 
 ## Features
-- STB_Image instead of plain old libpng,jpeg,etc
-- Updated ZLib
-- CMake Support
+
+### High Priority
+- Documentation (UNFINISHED)
+- JSON Settings, replacing the registry (Implemented)
+- Window Resizing (UNFINISHED)
+- Advanced Options (UNIMPLEMENTED)
+- Language Support, along with UTF-8 Strings (UNIMPLEMENTED)
+- ResourceGen V2 (NOT STARTED)
+- MP3/OGG/FLAC Music with loop points (UNIMPLEMENTED)
+- Controller Support (Unimplemented)
+### Low Priority
+- Multi-platform support (NOT STARTED)
+- Separate mod .PAK
+- Update Checker
