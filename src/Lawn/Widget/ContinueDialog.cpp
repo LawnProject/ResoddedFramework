@@ -12,33 +12,33 @@ ContinueDialog::ContinueDialog(LawnApp *theApp)
 	: LawnDialog(theApp,
 				 Dialogs::DIALOG_CONTINUE,
 				 true,
-				 _S("CONTINUE GAME?" /*[CONTINUE_GAME_HEADER]*/),
-				 _S(""),
-				 _S("CANCEL" /*[DIALOG_BUTTON_CANCEL]*/),
+				 "CONTINUE GAME?" /*[CONTINUE_GAME_HEADER]*/,
+				 "",
+				 "CANCEL" /*[DIALOG_BUTTON_CANCEL]*/,
 				 Dialog::BUTTONS_FOOTER)
 {
 	if (theApp->IsAdventureMode())
 	{
 		mDialogLines =
-			_S("Do you want to continue your current game or restart the level?" /*[CONTINUE_GAME_OR_RESTART]*/);
+			"Do you want to continue your current game or restart the level?" /*[CONTINUE_GAME_OR_RESTART]*/;
 		mContinueButton =
-			MakeButton(ContinueDialog::ContinueDialog_Continue, this, _S("Continue" /*[CONTINUE_BUTTON]*/));
+			MakeButton(ContinueDialog::ContinueDialog_Continue, this, "Continue" /*[CONTINUE_BUTTON]*/);
 		mNewGameButton =
-			MakeButton(ContinueDialog::ContinueDialog_NewGame, this, _S("Restart Level" /*[RESTART_BUTTON]*/));
+			MakeButton(ContinueDialog::ContinueDialog_NewGame, this, "Restart Level" /*[RESTART_BUTTON]*/);
 	}
 	else
 	{
-		mDialogLines = _S("Do you want to continue your current game or start a new game?" /*[CONTINUE_GAME]*/);
+		mDialogLines = "Do you want to continue your current game or start a new game?" /*[CONTINUE_GAME]*/;
 		mContinueButton =
-			MakeButton(ContinueDialog::ContinueDialog_Continue, this, _S("Continue" /*[CONTINUE_BUTTON]*/));
-		mNewGameButton = MakeButton(ContinueDialog::ContinueDialog_NewGame, this, _S("New Game" /*[NEW_GAME_BUTTON]*/));
+			MakeButton(ContinueDialog::ContinueDialog_Continue, this, "Continue" /*[CONTINUE_BUTTON]*/);
+		mNewGameButton = MakeButton(ContinueDialog::ContinueDialog_NewGame, this, "New Game" /*[NEW_GAME_BUTTON]*/);
 	}
 
 	mTallBottom = true;
 	CalcSize(10, 60);
 }
 
-//0x4333D0¡¢0x4333F0
+//0x4333D0ï¿½ï¿½0x4333F0
 ContinueDialog::~ContinueDialog()
 {
 	delete mContinueButton;
@@ -133,11 +133,11 @@ void ContinueDialog::ButtonDepress(int theId)
 			LawnDialog *aDialog =
 				(LawnDialog *)mApp->DoDialog(Dialogs::DIALOG_RESTARTCONFIRM,
 											 true,
-											 _S("Restart Level?" /*[RESTART_LEVEL_HEADER]*/),
-											 _S("Are you sure that you want to restart the level?" /*[RESTART_LEVEL]*/),
-											 _S(""),
+											 "Restart Level?" /*[RESTART_LEVEL_HEADER]*/,
+											 "Are you sure that you want to restart the level?" /*[RESTART_LEVEL]*/,
+											 "",
 											 Dialog::BUTTONS_OK_CANCEL);
-			aDialog->mLawnYesButton->mLabel = TodStringTranslate(_S("[RESTART_BUTTON]"));
+			aDialog->mLawnYesButton->mLabel = TodStringTranslate("[RESTART_BUTTON]");
 			//aDialog->CalcSize(0, 0);
 		}
 		else
@@ -145,11 +145,11 @@ void ContinueDialog::ButtonDepress(int theId)
 			LawnDialog *aDialog =
 				(LawnDialog *)mApp->DoDialog(Dialogs::DIALOG_RESTARTCONFIRM,
 											 true,
-											 _S("New Game?" /*[NEW_GAME_HEADER]*/),
-											 _S("Are you sure that you want to start a new game?" /*[NEW_GAME]*/),
-											 _S(""),
+											 "New Game?" /*[NEW_GAME_HEADER]*/,
+											 "Are you sure that you want to start a new game?" /*[NEW_GAME]*/,
+											 "",
 											 Dialog::BUTTONS_OK_CANCEL);
-			aDialog->mLawnYesButton->mLabel = TodStringTranslate(_S("[NEW_GAME_BUTTON]"));
+			aDialog->mLawnYesButton->mLabel = TodStringTranslate("[NEW_GAME_BUTTON]");
 			//aDialog->CalcSize(0, 0);
 		}
 	}

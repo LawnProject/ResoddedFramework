@@ -20,7 +20,7 @@ class XMLParam
 typedef std::map<SexyString, SexyString> XMLParamMap;
 typedef std::list<XMLParamMap::iterator> XMLParamMapIteratorList;
 
-typedef std::vector<wchar_t> XMLParserBuffer;
+typedef std::vector<char> XMLParserBuffer;
 
 class XMLElement
 {
@@ -55,7 +55,7 @@ class XMLParser
 	bool mAllowComments;
 	XMLParserBuffer mBufferedText;
 	SexyString mSection;
-	bool (XMLParser::*mGetCharFunc)(wchar_t *theChar, bool *error);
+	bool (XMLParser::*mGetCharFunc)(char *theChar, bool *error);
 	bool mForcedEncodingType;
 	bool mFirstChar;
 	bool mByteSwap;
@@ -66,11 +66,11 @@ class XMLParser
 
 	bool AddAttribute(XMLElement *theElement, const SexyString &aAttributeKey, const SexyString &aAttributeValue);
 
-	bool GetAsciiChar(wchar_t *theChar, bool *error);
-	bool GetUTF8Char(wchar_t *theChar, bool *error);
-	bool GetUTF16Char(wchar_t *theChar, bool *error);
-	bool GetUTF16LEChar(wchar_t *theChar, bool *error);
-	bool GetUTF16BEChar(wchar_t *theChar, bool *error);
+	bool GetAsciiChar(char *theChar, bool *error);
+	bool GetUTF8Char(char *theChar, bool *error);
+	bool GetUTF16Char(char *theChar, bool *error);
+	bool GetUTF16LEChar(char *theChar, bool *error);
+	bool GetUTF16BEChar(char *theChar, bool *error);
 
   public:
 	enum XMLEncodingType
@@ -88,7 +88,6 @@ class XMLParser
 
 	void SetEncodingType(XMLEncodingType theEncoding);
 	bool OpenFile(const std::string &theFilename);
-	void SetStringSource(const std::wstring &theString);
 	void SetStringSource(const std::string &theString);
 	bool NextElement(XMLElement *theElement);
 	SexyString GetErrorText();

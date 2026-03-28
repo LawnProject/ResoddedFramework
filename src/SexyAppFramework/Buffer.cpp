@@ -187,34 +187,35 @@ std::string Buffer::ToWebString() const
 	return aString;
 }
 
-std::wstring Buffer::UTF8ToWideString() const
+bool Buffer::ToUTF8String(std::string *theString) const
 {
+	if (!theString)
+		return false;
+
 	const char *aData = (const char *)GetDataPtr();
 	int aLen = GetDataLen();
 
-	bool firstChar = true;
-
-	std::wstring aString;
-	aString.reserve(aLen); // worst case
-	while (aLen > 0)
+	if (!aData || aLen <= 0)
 	{
-		wchar_t aChar;
-		int aConsumed = GetUTF8Char(&aData, aLen, &aChar);
-		if (aConsumed == 0)
-			break;
-		aLen -= aConsumed;
-
-		if (firstChar)
-		{
-			firstChar = false;
-			if (aChar == 0xFEFF)
-				continue;
-		}
-
-		aString += aChar;
+		theString->clear();
+		return true;
 	}
-	return aString;
+
+	if (aLen >= 3 && memcmp(aData, "\xEF\xBB\xBF", 3) == 0)
+	{
+		// UTF-8 BOM: strip it
+		*theString = std::string(aData + 3, aLen - 3);
+		return true;
+	}
+	else
+	{
+		// no BOM: just copy as-is
+		*theString = std::string(aData, aLen);
+	}
+	
+	return false;
 }
+
 
 void Buffer::FromWebString(const std::string &theString)
 {

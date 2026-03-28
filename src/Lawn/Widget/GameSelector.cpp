@@ -261,7 +261,7 @@ GameSelector::GameSelector(LawnApp *theApp)
 	TodHesitationTrace("gameselectorinit");
 }
 
-//0x449D00¡¢0x449D20
+//0x449D00ï¿½ï¿½0x449D20
 GameSelector::~GameSelector()
 {
 	if (mAdventureButton)
@@ -401,7 +401,7 @@ void GameSelector::SyncProfile(bool theShowLoading)
 	{
 		mLoading = true;
 
-		mApp->DoDialog(Dialogs::DIALOG_MESSAGE, true, _S("Loading..."), _S(""), _S(""), Dialog::BUTTONS_NONE);
+		mApp->DoDialog(Dialogs::DIALOG_MESSAGE, true, "Loading...", "", "", Dialog::BUTTONS_NONE);
 		mApp->DrawDirtyStuff();
 		mApp->PreloadForUser();
 		mApp->KillDialog(Dialogs::DIALOG_MESSAGE);
@@ -496,7 +496,7 @@ void GameSelector::Draw(Graphics *g)
 	if (mApp->mPlayerInfo && mApp->mPlayerInfo->mName.size() && mSelectorState != SelectorAnimState::SELECTOR_OPEN &&
 		mSelectorState != SelectorAnimState::SELECTOR_NEW_USER)
 	{
-		SexyString aWelcomeStr = mApp->mPlayerInfo->mName + _S('!');
+		SexyString aWelcomeStr = mApp->mPlayerInfo->mName + '!';
 
 		int aSignIdx = aSelectorReanim->FindTrackIndex("woodsign1");
 		SexyTransform2D aOverlayMatrix;
@@ -556,8 +556,8 @@ void GameSelector::DrawOverlay(Graphics *g)
 		float aTransSubX = aTransAreaX;
 		float aTransSubY = aTransAreaY;
 
-		int aStage = ClampInt((mLevel - 1) / 10 + 1, 1, 6); // ´ó¹Ø
-		int aSub = mLevel - (aStage - 1) * 10;				// Ð¡¹Ø
+		int aStage = ClampInt((mLevel - 1) / 10 + 1, 1, 6); // ï¿½ï¿½ï¿½
+		int aSub = mLevel - (aStage - 1) * 10;				// Ð¡ï¿½ï¿½
 		if (mApp->IsTrialStageLocked() && (mLevel >= 25 || mApp->HasFinishedAdventure()))
 		{
 			aStage = 3;
@@ -586,7 +586,7 @@ void GameSelector::DrawOverlay(Graphics *g)
 						 aTransAreaX + 486.0f,
 						 aTransAreaY + 125.0f,
 						 aStage,
-						 0); // »æÖÆ´ó¹ØÊý
+						 0); // ï¿½ï¿½ï¿½Æ´ï¿½ï¿½ï¿½ï¿½
 		if (aSub < 10)
 		{
 			TodDrawImageCelF(
@@ -625,9 +625,9 @@ void GameSelector::DrawOverlay(Graphics *g)
 		g->SetColor(Color(200, 200, 200));
 
 		if (gIsPartnerBuild)
-			g->DrawString(_S("PRESS/PARTNER PREVIEW BUILD: DO NOT DISTRIBUTE"), 27, 594);
+			g->DrawString("PRESS/PARTNER PREVIEW BUILD: DO NOT DISTRIBUTE", 27, 594);
 		else
-			g->DrawString(_S("BETA BUILD: DO NOT DISTRIBUTE"), 27, 594);
+			g->DrawString("BETA BUILD: DO NOT DISTRIBUTE", 27, 594);
 	}
 
 	mToolTip->Draw(g);
@@ -648,15 +648,15 @@ void GameSelector::UpdateTooltip()
 			if (mApp->EarnedGoldTrophy())
 			{
 				mToolTip->SetLabel(LawnApp::Pluralize(mApp->mPlayerInfo->mFinishedAdventure,
-													  _S("[GOLD_SUNFLOWER_TOOLTIP]"),
-													  _S("[GOLD_SUNFLOWER_TOOLTIP_PLURAL]")));
+													  "[GOLD_SUNFLOWER_TOOLTIP]",
+													  "[GOLD_SUNFLOWER_TOOLTIP_PLURAL]"));
 				mToolTip->mX = 32;
 				mToolTip->mY = 510;
 				mToolTip->mVisible = true;
 			}
 			else
 			{
-				mToolTip->SetLabel(_S("[SILVER_SUNFLOWER_TOOLTIP]"));
+				mToolTip->SetLabel("[SILVER_SUNFLOWER_TOOLTIP]");
 				mToolTip->mX = 20;
 				mToolTip->mY = 495;
 				mToolTip->mVisible = true;
@@ -778,10 +778,10 @@ void GameSelector::Update()
 				mApp->mPlayerInfo->mNeedsMessageOnGameSelector = 0;
 				mApp->WriteCurrentUserConfig();
 				mApp->LawnMessageBox(Dialogs::DIALOG_MESSAGE,
-									 _S("[ADVENTURE_COMPLETE_HEADER]"),
-									 _S("[ADVENTURE_COMPLETE_BODY]"),
-									 _S("[DIALOG_BUTTON_OK]"),
-									 _S(""),
+									 "[ADVENTURE_COMPLETE_HEADER]",
+									 "[ADVENTURE_COMPLETE_BODY]",
+									 "[DIALOG_BUTTON_OK]",
+									 "",
 									 Dialog::BUTTONS_FOOTER);
 			}
 		}
@@ -1006,7 +1006,7 @@ void GameSelector::KeyChar(char theChar)
 
 	if ((gIsPartnerBuild || mApp->mDebugKeysEnabled) && theChar == 'u' && mApp->mPlayerInfo)
 	{
-		TodTraceAndLog(_S("Selector cheat key '%c'"), theChar);
+		TodTraceAndLog("Selector cheat key '%c'", theChar);
 
 		mApp->mPlayerInfo->mFinishedAdventure = 2;
 		mApp->mPlayerInfo->AddCoins(50000);
@@ -1027,7 +1027,7 @@ void GameSelector::KeyChar(char theChar)
 
 	if (mApp->mDebugKeysEnabled)
 	{
-		TodTraceAndLog(_S("Selector cheat key '%c'"), theChar);
+		TodTraceAndLog("Selector cheat key '%c'", theChar);
 		if (theChar == 'c' || theChar == 'C')
 		{
 			mMinigamesLocked = false;
@@ -1082,10 +1082,10 @@ void GameSelector::ClickedAdventure()
 	if (mApp->IsTrialStageLocked() && (mLevel >= 25 || mApp->HasFinishedAdventure()))
 	{
 		if (mApp->LawnMessageBox(Dialogs::DIALOG_MESSAGE,
-								 _S("[REPLAY_LEVEL_HEADER]"),
-								 _S("[REPLAY_LEVEL_BODY]"),
-								 _S("[DIALOG_BUTTON_YES]"),
-								 _S("[DIALOG_BUTTON_NO]"),
+								 "[REPLAY_LEVEL_HEADER]",
+								 "[REPLAY_LEVEL_BODY]",
+								 "[DIALOG_BUTTON_YES]",
+								 "[DIALOG_BUTTON_NO]",
 								 Dialog::BUTTONS_YES_NO) == Dialog::ID_NO)
 			return;
 
@@ -1131,30 +1131,30 @@ void GameSelector::ButtonDepress(int theId)
 	if (theId == GameSelector::GameSelector_Minigame && mMinigamesLocked)
 	{
 		mApp->LawnMessageBox(Dialogs::DIALOG_MESSAGE,
-							 _S("[MODE_LOCKED]"),
-							 _S("[MINIGAME_LOCKED_MESSAGE]"),
-							 _S("[DIALOG_BUTTON_OK]"),
-							 _S(""),
+							 "[MODE_LOCKED]",
+							 "[MINIGAME_LOCKED_MESSAGE]",
+							 "[DIALOG_BUTTON_OK]",
+							 "",
 							 Dialog::BUTTONS_FOOTER);
 		return;
 	}
 	if (theId == GameSelector::GameSelector_Puzzle && mPuzzleLocked)
 	{
 		mApp->LawnMessageBox(Dialogs::DIALOG_MESSAGE,
-							 _S("[MODE_LOCKED]"),
-							 _S("[PUZZLE_LOCKED_MESSAGE]"),
-							 _S("[DIALOG_BUTTON_OK]"),
-							 _S(""),
+							 "[MODE_LOCKED]",
+							 "[PUZZLE_LOCKED_MESSAGE]",
+							 "[DIALOG_BUTTON_OK]",
+							 "",
 							 Dialog::BUTTONS_FOOTER);
 		return;
 	}
 	if (theId == GameSelector::GameSelector_Survival && mSurvivalLocked)
 	{
 		mApp->LawnMessageBox(Dialogs::DIALOG_MESSAGE,
-							 _S("[MODE_LOCKED]"),
-							 _S("[SURVIVAL_LOCKED_MESSAGE]"),
-							 _S("[DIALOG_BUTTON_OK]"),
-							 _S(""),
+							 "[MODE_LOCKED]",
+							 "[SURVIVAL_LOCKED_MESSAGE]",
+							 "[DIALOG_BUTTON_OK]",
+							 "",
 							 Dialog::BUTTONS_FOOTER);
 		return;
 	}
@@ -1220,14 +1220,14 @@ void GameSelector::AddPreviewProfiles()
 {
 	PlayerInfo *aProfile;
 
-	aProfile = mApp->mProfileMgr->AddProfile(_S("2 Night"));
+	aProfile = mApp->mProfileMgr->AddProfile("2 Night");
 	if (aProfile)
 	{
 		aProfile->mLevel = 11;
 		aProfile->SaveDetails();
 	}
 
-	aProfile = mApp->mProfileMgr->AddProfile(_S("3 Pool"));
+	aProfile = mApp->mProfileMgr->AddProfile("3 Pool");
 	if (aProfile)
 	{
 		aProfile->mLevel = 21;
@@ -1237,7 +1237,7 @@ void GameSelector::AddPreviewProfiles()
 		aProfile->SaveDetails();
 	}
 
-	aProfile = mApp->mProfileMgr->AddProfile(_S("4 Fog"));
+	aProfile = mApp->mProfileMgr->AddProfile("4 Fog");
 	if (aProfile)
 	{
 		aProfile->mLevel = 31;
@@ -1249,7 +1249,7 @@ void GameSelector::AddPreviewProfiles()
 		aProfile->SaveDetails();
 	}
 
-	aProfile = mApp->mProfileMgr->AddProfile(_S("5 Roof"));
+	aProfile = mApp->mProfileMgr->AddProfile("5 Roof");
 	if (aProfile)
 	{
 		aProfile->mLevel = 41;
@@ -1262,7 +1262,7 @@ void GameSelector::AddPreviewProfiles()
 		aProfile->SaveDetails();
 	}
 
-	aProfile = mApp->mProfileMgr->AddProfile(_S("Complete"));
+	aProfile = mApp->mProfileMgr->AddProfile("Complete");
 	if (aProfile)
 	{
 		aProfile->mLevel = 1;
@@ -1277,7 +1277,7 @@ void GameSelector::AddPreviewProfiles()
 		aProfile->SaveDetails();
 	}
 
-	aProfile = mApp->mProfileMgr->AddProfile(_S("Full Unlock"));
+	aProfile = mApp->mProfileMgr->AddProfile("Full Unlock");
 	if (aProfile)
 	{
 		aProfile->mLevel = 1;

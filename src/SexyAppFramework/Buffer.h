@@ -40,7 +40,7 @@ class Buffer
 	void SetData(uint8_t *thePtr, int theCount);
 
 	std::string ToWebString() const;
-	std::wstring UTF8ToWideString() const;
+	bool ToUTF8String(std::string *theString) const;
 	uint8_t ReadByte() const;
 	int ReadNumBits(int theBits, bool isSigned) const;
 	bool ReadBoolean() const;

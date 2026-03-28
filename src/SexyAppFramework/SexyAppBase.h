@@ -43,14 +43,6 @@ enum MsgBoxFlags
 	MsgBox_RETRYCANCEL = 5,
 };
 
-struct MsgBoxData
-{
-	MsgBoxFlags mFlags;
-	const char *mTitle;
-	const char *mMessage;
-};
-
-
 class WidgetManager;
 class DDInterface;
 class Image;
@@ -82,7 +74,6 @@ typedef std::vector<std::string> StringVector;
 
 typedef std::map<std::string, SexyString> StringSexyStringMap;
 typedef std::map<std::string, std::string> StringStringMap;
-typedef std::map<std::string, std::wstring> StringWStringMap;
 typedef std::map<std::string, bool> StringBoolMap;
 typedef std::map<std::string, int> StringIntMap;
 typedef std::map<std::string, double> StringDoubleMap;
@@ -337,7 +328,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	bool mEnableWindowAspect;
 	Ratio mWindowAspect;
 
-	StringWStringMap mStringProperties;
+	StringStringMap mStringProperties;
 	StringBoolMap mBoolProperties;
 	StringIntMap mIntProperties;
 	StringDoubleMap mDoubleProperties;
@@ -418,9 +409,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	virtual void BeginPopup();
 	virtual void EndPopup();
 	virtual int MsgBox(const std::string &theText, const std::string &theTitle = "Message", int theFlags = 0);
-	virtual int MsgBox(const std::wstring &theText, const std::wstring &theTitle = L"Message", int theFlags = 0);
 	virtual void Popup(const std::string &theString);
-	virtual void Popup(const std::wstring &theString);
 	virtual void LogScreenSaverError(const std::string &theError);
 	virtual void SafeDeleteWidget(Widget *theWidget);
 
@@ -562,7 +551,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	void SetBoolean(const std::string &theId, bool theValue);
 	void SetInteger(const std::string &theId, int theValue);
 	void SetDouble(const std::string &theId, double theValue);
-	void SetString(const std::string &theId, const std::wstring &theValue);
+	void SetString(const std::string &theId, const std::string &theValue);
 
 	// Demo access methods
 	bool PrepareDemoCommand(bool required);

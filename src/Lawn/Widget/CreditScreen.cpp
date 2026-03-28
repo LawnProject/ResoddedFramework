@@ -322,13 +322,13 @@ CreditScreen::CreditScreen(LawnApp *theApp)
 	mCreditsPhaseCounter = 0;
 	mDrawBrain = false;
 
-	mMainMenuButton = MakeButton(CreditScreen::Credits_Button_MainMenu, this, _S("[CREDITS_MAIN_MENU_BUTTON]"));
+	mMainMenuButton = MakeButton(CreditScreen::Credits_Button_MainMenu, this, "[CREDITS_MAIN_MENU_BUTTON]");
 	mMainMenuButton->Resize(298, 554, 209, 46);
 	mMainMenuButton->SetVisible(false);
 
 	mReplayButton = MakeNewButton(CreditScreen::Credits_Button_Replay,
 								  this,
-								  _S("[CREDITS_REPLAY_BUTTON]"),
+								  "[CREDITS_REPLAY_BUTTON]",
 								  FONT_HOUSEOFTERROR16,
 								  IMAGE_CREDITS_PLAYBUTTON,
 								  nullptr,
@@ -728,7 +728,7 @@ void CreditScreen::DrawOverlay(Graphics *g)
 void CreditScreen::DrawFinalCredits(Graphics *g)
 {
 	TodDrawString(g,
-				  _S("[CREDITS_GAMENAME]"),
+				  "[CREDITS_GAMENAME]",
 				  BOARD_WIDTH / 2,
 				  60,
 				  FONT_HOUSEOFTERROR28,
@@ -737,35 +737,35 @@ void CreditScreen::DrawFinalCredits(Graphics *g)
 
 	Rect aRectNames1(405, 90, 200, 200);
 	TodDrawStringWrapped(g,
-						 _S("[CREDITS_NAMES1]"),
+						 "[CREDITS_NAMES1]",
 						 aRectNames1,
 						 FONT_HOUSEOFTERROR16,
 						 Color::White,
 						 DrawStringJustification::DS_ALIGN_LEFT);
 	Rect aRectRoles1(190, 90, 200, 200);
 	TodDrawStringWrapped(g,
-						 _S("[CREDITS_ROLES1]"),
+						 "[CREDITS_ROLES1]",
 						 aRectRoles1,
 						 FONT_HOUSEOFTERROR16,
 						 Color::White,
 						 DrawStringJustification::DS_ALIGN_RIGHT);
 	Rect aRectNames2(340, 280, 450, 250);
 	TodDrawStringWrapped(g,
-						 _S("[CREDITS_NAMES2]"),
+						 "[CREDITS_NAMES2]",
 						 aRectNames2,
 						 FONT_HOUSEOFTERROR16,
 						 Color::White,
 						 DrawStringJustification::DS_ALIGN_LEFT);
 	Rect aRectRoles2(30, 280, 300, 250);
 	TodDrawStringWrapped(g,
-						 _S("[CREDITS_ROLES2]"),
+						 "[CREDITS_ROLES2]",
 						 aRectRoles2,
 						 FONT_HOUSEOFTERROR16,
 						 Color::White,
 						 DrawStringJustification::DS_ALIGN_RIGHT);
 
 	TodDrawString(g,
-				  _S("[CREDITS_THANKS]"),
+				  "[CREDITS_THANKS]",
 				  BOARD_WIDTH / 2,
 				  530,
 				  FONT_HOUSEOFTERROR16,
@@ -1704,75 +1704,75 @@ void CreditScreen::KeyChar(SexyChar theChar)
 	if (mCreditsPaused || !mApp->mDebugKeysEnabled)
 		return;
 
-	if (theChar == _S('1'))
+	if (theChar == '1')
 	{
 		CreditScreen::JumpToFrame(CreditsPhase::CREDITS_MAIN1, 0.0f);
 	}
-	else if (theChar == _S('2'))
+	else if (theChar == '2')
 	{
 		CreditScreen::JumpToFrame(CreditsPhase::CREDITS_MAIN1, 128.0f);
 	}
-	else if (theChar == _S('3'))
+	else if (theChar == '3')
 	{
 		CreditScreen::JumpToFrame(CreditsPhase::CREDITS_MAIN1, 144.0f);
 	}
-	else if (theChar == _S('4'))
+	else if (theChar == '4')
 	{
 		CreditScreen::JumpToFrame(CreditsPhase::CREDITS_MAIN1, 272.0f);
 	}
-	else if (theChar == _S('5'))
+	else if (theChar == '5')
 	{
 		CreditScreen::JumpToFrame(CreditsPhase::CREDITS_MAIN1, 304.0f);
 	}
-	else if (theChar == _S('6'))
+	else if (theChar == '6')
 	{
 		CreditScreen::JumpToFrame(CreditsPhase::CREDITS_MAIN1, 340.0f);
 	}
-	else if (theChar == _S('7'))
+	else if (theChar == '7')
 	{
 		CreditScreen::JumpToFrame(CreditsPhase::CREDITS_MAIN1, 368.0f);
 	}
-	else if (theChar == _S('q'))
+	else if (theChar == 'q')
 	{
 		CreditScreen::JumpToFrame(CreditsPhase::CREDITS_MAIN2, 0.0f);
 	}
-	else if (theChar == _S('w'))
+	else if (theChar == 'w')
 	{
 		CreditScreen::JumpToFrame(CreditsPhase::CREDITS_MAIN2, 124.0f);
 	}
-	else if (theChar == _S('e'))
+	else if (theChar == 'e')
 	{
 		CreditScreen::JumpToFrame(CreditsPhase::CREDITS_MAIN2, 188.0f);
 	}
-	else if (theChar == _S('r'))
+	else if (theChar == 'r')
 	{
 		CreditScreen::JumpToFrame(CreditsPhase::CREDITS_MAIN2, 248.0f);
 	}
-	else if (theChar == _S('t'))
+	else if (theChar == 't')
 	{
 		CreditScreen::JumpToFrame(CreditsPhase::CREDITS_MAIN2, 320.0f);
 	}
-	else if (theChar == _S('a'))
+	else if (theChar == 'a')
 	{
 		CreditScreen::JumpToFrame(CreditsPhase::CREDITS_MAIN3, 0.0f);
 	}
-	else if (theChar == _S('s'))
+	else if (theChar == 's')
 	{
 		CreditScreen::JumpToFrame(CreditsPhase::CREDITS_MAIN3, 124.0f);
 	}
-	else if (theChar == _S('d'))
+	else if (theChar == 'd')
 	{
 		CreditScreen::JumpToFrame(CreditsPhase::CREDITS_MAIN3, 216.0f);
 	}
-	else if (theChar == _S('f'))
+	else if (theChar == 'f')
 	{
 		CreditScreen::JumpToFrame(CreditsPhase::CREDITS_MAIN3, 240.0f);
 	}
-	else if (theChar == _S('g'))
+	else if (theChar == 'g')
 	{
 		CreditScreen::JumpToFrame(CreditsPhase::CREDITS_MAIN3, 324.0f);
 	}
-	else if (theChar == _S('n'))
+	else if (theChar == 'n')
 	{
 		mDontSync = !mDontSync;
 	}
@@ -1791,10 +1791,10 @@ void CreditScreen::PauseCredits()
 	mApp->mMusic->GameMusicPause(true);
 
 	if (mApp->LawnMessageBox(Dialogs::DIALOG_MESSAGE,
-							 _S("[CREDITS_PAUSE_HEADER]"),
-							 _S("[CREDITS_PAUSE_BODY]"),
-							 _S("[CREDITS_RESUME_BUTTON]"),
-							 _S("[MAIN_MENU_BUTTON]"),
+							 "[CREDITS_PAUSE_HEADER]",
+							 "[CREDITS_PAUSE_BODY]",
+							 "[CREDITS_RESUME_BUTTON]",
+							 "[MAIN_MENU_BUTTON]",
 							 Dialog::BUTTONS_YES_NO) == Dialog::ID_NO)
 	{
 		mApp->KillCreditScreen();

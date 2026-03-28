@@ -158,7 +158,7 @@ void Tod_SWTri_AddAllDrawTriFuncs()
 //0x5114E0
 SexyString TodGetCurrentLevelName()
 {
-	return _S("Unknown level");
+	return "Unknown level";
 }
 
 //0x511510
@@ -1414,7 +1414,7 @@ SexyString TodReplaceNumberString(const SexyString &theText, const SexyChar *the
 	int aPos = aFinalString.find(theStringToFind);
 	if (aPos != SexyString::npos)
 	{
-		SexyString aNumberString = StrFormat(_S("%d"), theNumber);
+		SexyString aNumberString = StrFormat("%d", theNumber);
 		aFinalString.replace(aPos, strlen(theStringToFind), aNumberString);
 	}
 

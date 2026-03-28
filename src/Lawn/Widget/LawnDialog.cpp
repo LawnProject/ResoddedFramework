@@ -19,7 +19,7 @@ LawnDialog::LawnDialog(LawnApp *theApp,
 					   const SexyString &theDialogLines,
 					   const SexyString &theDialogFooter,
 					   int theButtonMode)
-	: Dialog(nullptr, nullptr, theId, isModal, theDialogHeader, theDialogLines, _S(""), BUTTONS_NONE)
+	: Dialog(nullptr, nullptr, theId, isModal, theDialogHeader, theDialogLines, "", BUTTONS_NONE)
 {
 	mApp = theApp;
 	mButtonDelay = -1;
@@ -38,13 +38,13 @@ LawnDialog::LawnDialog(LawnApp *theApp,
 
 	if (theButtonMode == 1)
 	{
-		mLawnYesButton = MakeButton(1000, this, _S("Yes" /*[BUTTON_YES]*/));
-		mLawnNoButton = MakeButton(1001, this, _S("No" /*[BUTTON_NO]*/));
+		mLawnYesButton = MakeButton(1000, this, "Yes" /*[BUTTON_YES]*/);
+		mLawnNoButton = MakeButton(1001, this, "No" /*[BUTTON_NO]*/);
 	}
 	else if (theButtonMode == 2)
 	{
-		mLawnYesButton = MakeButton(1000, this, _S("Ok" /*[BUTTON_OK]*/));
-		mLawnNoButton = MakeButton(1001, this, _S("Cancel" /*[BUTTON_CANCEL]*/));
+		mLawnYesButton = MakeButton(1000, this, "Ok" /*[BUTTON_OK]*/);
+		mLawnNoButton = MakeButton(1001, this, "Cancel" /*[BUTTON_CANCEL]*/);
 	}
 	else if (theButtonMode == 3)
 	{
@@ -475,10 +475,10 @@ void ReanimationWidget::Update()
 //0x457BC0
 GameOverDialog::GameOverDialog(const SexyString &theMessage, bool theShowChallengeName)
 	: LawnDialog(
-		  gLawnApp, Dialogs::DIALOG_GAME_OVER, true, _S("[GAME_OVER]"), theMessage, _S(""), Dialog::BUTTONS_FOOTER)
+		  gLawnApp, Dialogs::DIALOG_GAME_OVER, true, "[GAME_OVER]", theMessage, "", Dialog::BUTTONS_FOOTER)
 {
 	mMenuButton = nullptr;
-	mLawnYesButton->SetLabel(_S("[TRY_AGAIN]"));
+	mLawnYesButton->SetLabel("[TRY_AGAIN]");
 	if (theShowChallengeName)
 	{
 		mDialogHeader = TodStringTranslate(mApp->GetCurrentChallengeDef().mChallengeName);
@@ -492,7 +492,7 @@ GameOverDialog::GameOverDialog(const SexyString &theMessage, bool theShowChallen
 	mApp->CenterDialog(this, mWidth, mHeight);
 	mClip = false;
 
-	mMenuButton = MakeButton(1, this, _S("[MAIN_MENU_BUTTON]"));
+	mMenuButton = MakeButton(1, this, "[MAIN_MENU_BUTTON]");
 	mMenuButton->Resize(635 - mX, -10 - mY, 163, 46);
 
 	gLawnApp->mBoard->mShowShovel = false;

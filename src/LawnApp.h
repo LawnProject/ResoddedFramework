@@ -345,7 +345,7 @@ class LawnApp : public SexyApp
 	void CrazyDaveDoneHanding();
 	inline SexyString GetCurrentLevelName()
 	{
-		return _S("Unknown");
+		return "Unknown";
 	}
 	/*inline*/ int TrophiesNeedForGoldSunflower();
 	/*inline*/ int GetCurrentChallengeIndex();

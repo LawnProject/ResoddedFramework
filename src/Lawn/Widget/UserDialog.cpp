@@ -19,9 +19,9 @@ UserDialog::UserDialog(LawnApp *theApp)
 	: LawnDialog(theApp,
 				 Dialogs::DIALOG_USERDIALOG,
 				 true,
-				 _S("WHO ARE YOU?" /*[WHO_ARE_YOU]*/),
-				 _S(""),
-				 _S(""),
+				 "WHO ARE YOU?" /*[WHO_ARE_YOU]*/,
+				 "",
+				 "",
 				 Dialog::BUTTONS_OK_CANCEL)
 {
 	mVerticalCenterText = false;
@@ -31,8 +31,8 @@ UserDialog::UserDialog(LawnApp *theApp)
 	mUserList->mJustify = ListWidget::JUSTIFY_CENTER;
 	mUserList->mItemHeight = 24;
 
-	mRenameButton = MakeButton(UserDialog::UserDialog_RenameUser, this, _S("Rename" /*[RENAME_BUTTON]*/));
-	mDeleteButton = MakeButton(UserDialog::UserDialog_DeleteUser, this, _S("Delete" /*[DELETE_BUTTON]*/));
+	mRenameButton = MakeButton(UserDialog::UserDialog_RenameUser, this, "Rename" /*[RENAME_BUTTON]*/);
+	mDeleteButton = MakeButton(UserDialog::UserDialog_DeleteUser, this, "Delete" /*[DELETE_BUTTON]*/);
 
 	mNumUsers = 0;
 	if (theApp->mPlayerInfo)
@@ -55,7 +55,7 @@ UserDialog::UserDialog(LawnApp *theApp)
 
 	if (mNumUsers < 8)
 	{
-		mUserList->AddLine(_S("(Create a New User)" /*[CREATE_NEW_USER]*/), false);
+		mUserList->AddLine("(Create a New User)" /*[CREATE_NEW_USER]*/, false);
 	}
 
 	mTallBottom = true;
@@ -120,7 +120,7 @@ SexyString UserDialog::GetSelName()
 {
 	if (mUserList->mSelectIdx < 0 || mUserList->mSelectIdx >= mNumUsers)
 	{
-		return _S("");
+		return "";
 	}
 	return mUserList->GetStringAt(mUserList->mSelectIdx);
 }
@@ -144,7 +144,7 @@ void UserDialog::FinishDeleteUser()
 	mNumUsers--;
 	if (mNumUsers == 7)
 	{
-		mUserList->AddLine(_S("(Create a New User)" /*[CREATE_NEW_USER]*/), false);
+		mUserList->AddLine("(Create a New User)" /*[CREATE_NEW_USER]*/, false);
 	}
 }
 

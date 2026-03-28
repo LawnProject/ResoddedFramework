@@ -670,13 +670,13 @@ void Coin::UpdateCollected()
 				if (mType == CoinType::COIN_PRESENT_MINIGAMES)
 				{
 					// 注：此处的 theMessageStyle 参数，原版中为 MESSAGE_STYLE_HINT_TALL_UNLOCKMESSAGE，内测版中为 MESSAGE_STYLE_HINT_TALL_8SECONDS
-					mBoard->DisplayAdvice(_S("[UNLOCKED_MINIGAMES]"),
+					mBoard->DisplayAdvice("[UNLOCKED_MINIGAMES]",
 										  MessageStyle::MESSAGE_STYLE_HINT_TALL_UNLOCKMESSAGE,
 										  AdviceType::ADVICE_UNLOCKED_MODE);
 				}
 				else if (mType == CoinType::COIN_PRESENT_PUZZLE_MODE)
 				{
-					mBoard->DisplayAdvice(_S("[UNLOCKED_PUZZLE_MODE]"),
+					mBoard->DisplayAdvice("[UNLOCKED_PUZZLE_MODE]",
 										  MessageStyle::MESSAGE_STYLE_HINT_TALL_UNLOCKMESSAGE,
 										  AdviceType::ADVICE_UNLOCKED_MODE);
 				}
@@ -1058,13 +1058,13 @@ void Coin::Collect()
 		if (mApp->mZenGarden->IsZenGardenFull(false))
 		{
 			mBoard->DisplayAdvice(
-				_S("[DIALOG_ZEN_GARDEN_FULL]"), MessageStyle::MESSAGE_STYLE_HINT_FAST, AdviceType::ADVICE_NONE);
+				"[DIALOG_ZEN_GARDEN_FULL]", MessageStyle::MESSAGE_STYLE_HINT_FAST, AdviceType::ADVICE_NONE);
 		}
 		else
 		{
 			mBoard->mPottedPlantsCollected++;
 			mBoard->DisplayAdvice(
-				_S("[ADVICE_FOUND_PLANT]"), MessageStyle::MESSAGE_STYLE_HINT_FAST, AdviceType::ADVICE_NONE);
+				"[ADVICE_FOUND_PLANT]", MessageStyle::MESSAGE_STYLE_HINT_FAST, AdviceType::ADVICE_NONE);
 			mApp->AddTodParticle(
 				mPosX + 30.0f, mPosY + 30.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_PRESENT_PICKUP);
 			mApp->mZenGarden->AddPottedPlant(&mPottedPlantSpec);
@@ -1134,7 +1134,7 @@ void Coin::Collect()
 		if (mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_CHOCOLATE] < PURCHASE_COUNT_OFFSET)
 		{
 			mBoard->DisplayAdvice(
-				_S("[ADVICE_FOUND_CHOCOLATE]"), MessageStyle::MESSAGE_STYLE_HINT_TALL_FAST, AdviceType::ADVICE_NONE);
+				"[ADVICE_FOUND_CHOCOLATE]", MessageStyle::MESSAGE_STYLE_HINT_TALL_FAST, AdviceType::ADVICE_NONE);
 			mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_CHOCOLATE] = PURCHASE_COUNT_OFFSET + 1;
 		}
 		else
@@ -1284,7 +1284,7 @@ void Coin::Collect()
 		(mType == CoinType::COIN_GOLD || mType == CoinType::COIN_SILVER))
 	{
 		mBoard->DisplayAdvice(
-			_S("[ADVICE_CLICKED_ON_COIN]"), MessageStyle::MESSAGE_STYLE_HINT_FAST, AdviceType::ADVICE_CLICKED_ON_COIN);
+			"[ADVICE_CLICKED_ON_COIN]", MessageStyle::MESSAGE_STYLE_HINT_FAST, AdviceType::ADVICE_CLICKED_ON_COIN);
 	}
 }
 

@@ -8,9 +8,9 @@ NewUserDialog::NewUserDialog(LawnApp *theApp, bool isRename)
 	: LawnDialog(theApp,
 				 isRename ? Dialogs::DIALOG_RENAMEUSER : Dialogs::DIALOG_CREATEUSER,
 				 true,
-				 isRename ? _S("RENAME USER" /*[RENAME_USER]*/) : _S("NEW USER" /*[NEW_USER]*/),
-				 _S("Please enter your name:" /*[PLEASE_ENTER_NAME]*/),
-				 _S("[DIALOG_BUTTON_OK]"),
+				 isRename ? "RENAME USER" /*[RENAME_USER]*/ : "NEW USER" /*[NEW_USER]*/,
+				 "Please enter your name:" /*[PLEASE_ENTER_NAME]*/,
+				 "[DIALOG_BUTTON_OK]",
 				 Dialog::BUTTONS_OK_CANCEL)
 {
 	mApp = theApp;
@@ -71,31 +71,31 @@ void NewUserDialog::EditWidgetText(int theId, const SexyString &theString)
 //0x45D9F0
 bool NewUserDialog::AllowChar(int, SexyChar theChar)
 {
-	return isalnum(theChar) || theChar == _S(' ');
+	return isalnum(theChar) || theChar == ' ';
 }
 
 //0x45DA20
 SexyString NewUserDialog::GetName()
 {
 	SexyString aString;
-	SexyChar aLastChar = _S(' ');
+	SexyChar aLastChar = ' ';
 
 	for (int i = 0; i < mNameEditWidget->mString.size(); i++)
 	{
 		SexyChar aChar = mNameEditWidget->mString[i];
-		if (aChar != _S(' '))
+		if (aChar != ' ')
 		{
 			aString.append(1, aChar);
 		}
 		else if (aChar != aLastChar)
 		{
-			aString.append(1, _S(' '));
+			aString.append(1, ' ');
 		}
 
 		aLastChar = aChar;
 	}
 
-	if (aString.size() && aString[aString.size() - 1] == _S(' '))
+	if (aString.size() && aString[aString.size() - 1] == ' ')
 	{
 		aString.resize(aString.size() - 1);
 	}

@@ -136,12 +136,12 @@ void TodLogString(const char *theMsg)
 	FILE *f = fopen(gLogFileName, "a");
 	if (f == nullptr)
 	{
-		OutputDebugString(_S("Failed to open log file\n"));
+		OutputDebugString("Failed to open log file\n");
 	}
 
 	if (fwrite(theMsg, strlen(theMsg), 1, f) != 1)
 	{
-		OutputDebugString(_S("Failed to write to log file\n"));
+		OutputDebugString("Failed to write to log file\n");
 	}
 
 	// @ThePixelMoon; why isn't this using printf already?

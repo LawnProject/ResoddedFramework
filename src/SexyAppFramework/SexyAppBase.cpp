@@ -54,7 +54,6 @@ SexyAppBase *Sexy::gSexyAppBase = NULL;
 
 SEHCatcher Sexy::gSEHCatcher;
 
-HMODULE gDDrawDLL = NULL;
 HMODULE gVersionDLL = NULL;
 
 //typedef struct { UINT cbSize; DWORD dwTime; } LASTINPUTINFO;
@@ -138,7 +137,6 @@ SexyAppBase::SexyAppBase()
 	gSexyAppBase = this;
 
 	gVersionDLL = LoadLibraryA("version.dll");
-	gDDrawDLL = LoadLibraryA("ddraw.dll");
 	gGetLastInputInfoFunc = (GetLastInputInfoFunc)GetProcAddress(GetModuleHandleA("user32.dll"), "GetLastInputInfo");
 
 #ifdef _DEBUG
@@ -158,7 +156,7 @@ SexyAppBase::SexyAppBase()
 	mTimeLoaded = GetTickCount();
 	mSEHOccured = false;
 	mProdName = "Product";
-	mTitle = _S("SexyApp");
+	mTitle = "SexyApp";
 	mShutdown = false;
 	mExitToTop = false;
 	mWidth = 640;
@@ -286,17 +284,17 @@ SexyAppBase::SexyAppBase()
 		mAdd8BitMaxTable[i] = 255;
 
 	// Set default strings.  Init could read in overrides from partner.xml
-	SetString("DIALOG_BUTTON_OK", L"OK");
-	SetString("DIALOG_BUTTON_CANCEL", L"CANCEL");
+	SetString("DIALOG_BUTTON_OK", "OK");
+	SetString("DIALOG_BUTTON_CANCEL", "CANCEL");
 
-	SetString("UPDATE_CHECK_TITLE", L"Update Check");
-	SetString("UPDATE_CHECK_BODY", L"Checking if there are any updates available for this product ...");
+	SetString("UPDATE_CHECK_TITLE", "Update Check");
+	SetString("UPDATE_CHECK_BODY", "Checking if there are any updates available for this product ...");
 
-	SetString("UP_TO_DATE_TITLE", L"Up to Date");
-	SetString("UP_TO_DATE_BODY", L"There are no updates available for this product at this time.");
-	SetString("NEW_VERSION_TITLE", L"New Version");
+	SetString("UP_TO_DATE_TITLE", "Up to Date");
+	SetString("UP_TO_DATE_BODY", "There are no updates available for this product at this time.");
+	SetString("NEW_VERSION_TITLE", "New Version");
 	SetString("NEW_VERSION_BODY",
-			  L"There is an update available for this product.  Would you like to visit the web site to download it?");
+			  "There is an update available for this product.  Would you like to visit the web site to download it?");
 
 	mDemoPrefix = "sexyapp";
 	mDemoFileName = mDemoPrefix + ".dmo";
@@ -371,20 +369,23 @@ SexyAppBase::~SexyAppBase()
 				if (Is3DAccelerated())
 				{
 					showedMsgBox = true;
-					int aResult = MessageBox(
-						NULL,
-						GetString("HARDWARE_ACCEL_SWITCHED_ON",
-								  _S("Hardware Acceleration was switched on during this session.\r\n")
-									  _S("If this resulted in slower performance, it should be switched off.\r\n")
-										  _S("Would you like to keep Hardware Acceleration switched on?"))
-							.c_str(),
-						(StringToSexyString(mCompanyName) + _S(" ") +
-						 GetString("HARDWARE_ACCEL_CONFIRMATION", _S("Hardware Acceleration Confirmation")))
-							.c_str(),
-						MB_YESNO | MB_ICONQUESTION);
+
+					SDL_MessageBoxButtonData buttons[] = {{SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes"},
+														  {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "No"}};
+					SDL_MessageBoxData msgBoxData;
+					msgBoxData.flags = MsgBox_YESNO;
+					msgBoxData.title = GetString("HARDWARE_ACCEL_SWITCHED_ON",
+												  "Hardware Acceleration was switched on during this session.\nIf this "
+												  "resulted in slower performance,it should be switched off.\nWould "
+												  "you like to keep Hardware Acceleration switched on?").c_str();
+					msgBoxData.message = (mCompanyName + " " + GetString("HARDWARE_ACCEL_CONFIRMATION", "Hardware Acceleration Confirmation")).c_str();
+					msgBoxData.buttons = buttons;
+					msgBoxData.numbuttons = 2;
+					int aResult;
+					SDL_ShowMessageBox(&msgBoxData, &aResult);
 
 					//mRenderer->mIs3D = aResult == IDYES ? true : false;
-					if (aResult != IDYES)
+					if (aResult)
 						writeToRegistry = false;
 				}
 				else
@@ -399,19 +400,24 @@ SexyAppBase::~SexyAppBase()
 	extern bool gRenderingPreDrawError;
 	if (!showedMsgBox && gRenderingPreDrawError && !IsScreenSaver())
 	{
-		int aResult = MessageBox(
-			NULL,
-			GetString("HARDWARE_ACCEL_NOT_WORKING",
-					  _S("Hardware Acceleration may not have been working correctly during this session.\r\n")
-						  _S("If you noticed graphics problems, you may want to turn off Hardware Acceleration.\r\n")
-							  _S("Would you like to keep Hardware Acceleration switched on?"))
-				.c_str(),
-			(StringToSexyString(mCompanyName) + _S(" ") +
-			 GetString("HARDWARE_ACCEL_CONFIRMATION", _S("Hardware Acceleration Confirmation")))
-				.c_str(),
-			MB_YESNO | MB_ICONQUESTION);
 
-		if (aResult == IDNO)
+		SDL_MessageBoxButtonData buttons[] = {{SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes"},
+											  {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "No"}};
+		SDL_MessageBoxData msgBoxData;
+		msgBoxData.flags = MsgBox_YESNO;
+		msgBoxData.title =GetString("HARDWARE_ACCEL_NOT_WORKING",
+						"Hardware Acceleration may not have been working correctly during this session.\n"
+						"If you noticed graphics problems, you may want to turn off Hardware Acceleration.\n"
+						"Would you like to keep Hardware Acceleration switched on?").c_str();
+		msgBoxData.message =
+			(mCompanyName + " " + GetString("HARDWARE_ACCEL_CONFIRMATION", "Hardware Acceleration Confirmation"))
+				.c_str();
+		msgBoxData.buttons = buttons;
+		msgBoxData.numbuttons = 2;
+		int aResult;
+		SDL_ShowMessageBox(&msgBoxData, &aResult);
+
+		if (aResult == 1)
 			RegistryWriteBoolean("Is3D", false);
 	}
 
@@ -460,7 +466,6 @@ SexyAppBase::~SexyAppBase()
 
 	WriteDemoBuffer();
 
-	FreeLibrary(gDDrawDLL);
 	FreeLibrary(gVersionDLL);
 
 }
@@ -1415,45 +1420,45 @@ void SexyAppBase::DumpProgramInfo()
 
 		aDumpStream << "<TD>"
 					<< SexyStringToString(
-						   ((aBitsMemory != 0) ? _S("mBits<BR>") + CommaSeperate(aBitsMemory) : _S("&nbsp;")))
+						   ((aBitsMemory != 0) ? "mBits<BR>" + CommaSeperate(aBitsMemory) : "&nbsp;"))
 					<< "</TD>" << std::endl;
 		aDumpStream << "<TD>"
 					<< SexyStringToString(((aPalletizedMemory != 0)
-											   ? _S("Palletized<BR>") + CommaSeperate(aPalletizedMemory)
-											   : _S("&nbsp;")))
+											   ? "Palletized<BR>" + CommaSeperate(aPalletizedMemory)
+											   : "&nbsp;"))
 					<< "</TD>" << std::endl;
 		aDumpStream << "<TD>"
 					<< SexyStringToString(
-						   ((aSurfaceMemory != 0) ? _S("DDSurface<BR>") + CommaSeperate(aSurfaceMemory) : _S("&nbsp;")))
+						   ((aSurfaceMemory != 0) ? "DDSurface<BR>" + CommaSeperate(aSurfaceMemory) : "&nbsp;"))
 					<< "</TD>" << std::endl;
 		aDumpStream << "<TD>"
 					<< SexyStringToString(((aMemoryImage->mD3DData != NULL)
-											   ? _S("Texture<BR>") + StringToSexyString(aTextureFormatName) +
-													 _S("<BR>") + CommaSeperate(aTextureMemory)
-											   : _S("&nbsp;")))
+											   ? "Texture<BR>" + StringToSexyString(aTextureFormatName) +
+													 "<BR>" + CommaSeperate(aTextureMemory)
+											   : "&nbsp;"))
 					<< "</TD>" << std::endl;
 
-		aDumpStream << "<TD>" << SexyStringToString(((aMemoryImage->mIsVolatile) ? _S("Volatile") : _S("&nbsp;")))
+		aDumpStream << "<TD>" << SexyStringToString(((aMemoryImage->mIsVolatile) ? "Volatile" : "&nbsp;"))
 					<< "</TD>" << std::endl;
-		aDumpStream << "<TD>" << SexyStringToString(((aMemoryImage->mForcedMode) ? _S("Forced") : _S("&nbsp;")))
+		aDumpStream << "<TD>" << SexyStringToString(((aMemoryImage->mForcedMode) ? "Forced" : "&nbsp;"))
 					<< "</TD>" << std::endl;
-		aDumpStream << "<TD>" << SexyStringToString(((aMemoryImage->mHasAlpha) ? _S("HasAlpha") : _S("&nbsp;")))
+		aDumpStream << "<TD>" << SexyStringToString(((aMemoryImage->mHasAlpha) ? "HasAlpha" : "&nbsp;"))
 					<< "</TD>" << std::endl;
-		aDumpStream << "<TD>" << SexyStringToString(((aMemoryImage->mHasTrans) ? _S("HasTrans") : _S("&nbsp;")))
+		aDumpStream << "<TD>" << SexyStringToString(((aMemoryImage->mHasTrans) ? "HasTrans" : "&nbsp;"))
 					<< "</TD>" << std::endl;
 		aDumpStream << "<TD>"
 					<< SexyStringToString(((aNativeAlphaMemory != 0)
-											   ? _S("NativeAlpha<BR>") + CommaSeperate(aNativeAlphaMemory)
-											   : _S("&nbsp;")))
+											   ? "NativeAlpha<BR>" + CommaSeperate(aNativeAlphaMemory)
+											   : "&nbsp;"))
 					<< "</TD>" << std::endl;
 		aDumpStream << "<TD>"
 					<< SexyStringToString(
-						   ((aRLAlphaMemory != 0) ? _S("RLAlpha<BR>") + CommaSeperate(aRLAlphaMemory) : _S("&nbsp;")))
+						   ((aRLAlphaMemory != 0) ? "RLAlpha<BR>" + CommaSeperate(aRLAlphaMemory) : "&nbsp;"))
 					<< "</TD>" << std::endl;
 		aDumpStream << "<TD>"
 					<< SexyStringToString(((aRLAdditiveMemory != 0)
-											   ? _S("RLAdditive<BR>") + CommaSeperate(aRLAdditiveMemory)
-											   : _S("&nbsp;")))
+											   ? "RLAdditive<BR>" + CommaSeperate(aRLAdditiveMemory)
+											   : "&nbsp;"))
 					<< "</TD>" << std::endl;
 		aDumpStream << "<TD>" << (aMemoryImage->mFilePath.empty() ? "&nbsp;" : aMemoryImage->mFilePath) << "</TD>"
 					<< std::endl;
@@ -2312,7 +2317,7 @@ void SexyAppBase::Redraw(Rect *theClipRect)
 			{
 				if (mForceWindowed)
 				{
-					Popup(GetString("PLEASE_SET_COLOR_DEPTH", _S("Please set your desktop color depth to 16 bit.")));
+					Popup(GetString("PLEASE_SET_COLOR_DEPTH", "Please set your desktop color depth to 16 bit."));
 					Shutdown();
 					return;
 				}
@@ -2408,7 +2413,7 @@ static void CalculateFPS()
 
 		Graphics aDrawG(gFPSImage);
 		aDrawG.SetFont(gDebugFont);
-		SexyString aFPS = StrFormat(_S("FPS: %d"), gFPSDisplay);
+		SexyString aFPS = StrFormat("FPS: %d", gFPSDisplay);
 		aDrawG.SetColor(0x000000);
 		aDrawG.FillRect(0, 0, gFPSImage->GetWidth(), gFPSImage->GetHeight());
 		aDrawG.SetColor(0xFFFFFF);
@@ -2435,7 +2440,7 @@ static void FPSDrawCoords(int theX, int theY)
 
 	Graphics aDrawG(gFPSImage);
 	aDrawG.SetFont(gDebugFont);
-	SexyString aFPS = StrFormat(_S("%d,%d"), theX, theY);
+	SexyString aFPS = StrFormat("%d,%d", theX, theY);
 	aDrawG.SetColor(0x000000);
 	aDrawG.FillRect(0, 0, gFPSImage->GetWidth(), gFPSImage->GetHeight());
 	aDrawG.SetColor(0xFFFFFF);
@@ -2477,7 +2482,7 @@ static void CalculateDemoTimeLeft()
 	int aMinutes = (aTotalSeconds / 60) % 60;
 	int anHours = (aTotalSeconds / 3600);
 
-	SexyString aFPS = StrFormat(_S("%02d:%02d:%02d"), anHours, aMinutes, aSeconds);
+	SexyString aFPS = StrFormat("%02d:%02d:%02d", anHours, aMinutes, aSeconds);
 	aDrawG.SetColor(0x000000);
 	aDrawG.FillRect(0, 0, gDemoTimeLeftImage->GetWidth(), gDemoTimeLeftImage->GetHeight());
 	aDrawG.SetColor(0xFFFFFF);
@@ -2651,9 +2656,9 @@ bool SexyAppBase::DrawDirtyStuff()
 		{
 			uint32_t aTickNow = GetTickCount();
 
-			OutputDebugString(StrFormat(_S("Theoretical FPS: %d\r\n"), (int) (mFPSCount * 1000 / mFPSTime)).c_str());
-			OutputDebugString(StrFormat(_S("Actual      FPS: %d\r\n"), (mFPSFlipCount * 1000) / max((aTickNow - mFPSStartTick), 1)).c_str());
-			OutputDebugString(StrFormat(_S("Dirty Rate     : %d\r\n"), (mFPSDirtyCount * 1000) / max((aTickNow - mFPSStartTick), 1)).c_str());
+			OutputDebugString(StrFormat("Theoretical FPS: %d\r\n", (int) (mFPSCount * 1000 / mFPSTime)).c_str());
+			OutputDebugString(StrFormat("Actual      FPS: %d\r\n", (mFPSFlipCount * 1000) / max((aTickNow - mFPSStartTick), 1)).c_str());
+			OutputDebugString(StrFormat("Dirty Rate     : %d\r\n", (mFPSDirtyCount * 1000) / max((aTickNow - mFPSStartTick), 1)).c_str());
 
 			mFPSTime = 0;
 			mFPSCount = 0;
@@ -2734,37 +2739,21 @@ int SexyAppBase::MsgBox(const std::string &theText, const std::string &theTitle,
 	{
 		LogScreenSaverError(theText);
 		return 0;
-	}
-
-	MsgBoxData msgBoxData;
-	msgBoxData.mFlags = static_cast<MsgBoxFlags>(theFlags);
-	msgBoxData.mTitle = theTitle.c_str();
-	msgBoxData.mMessage = theText.c_str();
+	}//todo flags for bttns
 
 	BeginPopup();
+
+	SDL_MessageBoxButtonData buttons[] = {{SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes"},
+											{SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "No"}};
+	SDL_MessageBoxData msgBoxData;
+	msgBoxData.flags = theFlags;
+	msgBoxData.title = theTitle.c_str();
+	msgBoxData.message = theText.c_str();
+	msgBoxData.buttons = buttons;
+	msgBoxData.numbuttons = 2;
 	int aResult;
-	SDL_ShowMessageBox(reinterpret_cast<const SDL_MessageBoxData *>(&msgBoxData), &aResult);
-	EndPopup();
+	SDL_ShowMessageBox(&msgBoxData, &aResult);
 
-	return aResult;
-}
-
-int SexyAppBase::MsgBox(const std::wstring &theText, const std::wstring &theTitle, int theFlags)
-{
-	if (IsScreenSaver())
-	{
-		//LogScreenSaverError(theText);
-		return 0;
-	}
-
-	MsgBoxData msgBoxData;
-	msgBoxData.mFlags = static_cast<MsgBoxFlags>(theFlags);
-	msgBoxData.mTitle = "fuck, i hate wstring"; //theTitle.c_str();
-	msgBoxData.mMessage = "I really do";		//theText.c_str();
-
-	BeginPopup();
-	int aResult;
-	SDL_ShowMessageBox(reinterpret_cast<const SDL_MessageBoxData *>(&msgBoxData), &aResult);
 	EndPopup();
 
 	return aResult;
@@ -2783,24 +2772,6 @@ void SexyAppBase::Popup(const std::string &theString)
 		SDL_ShowSimpleMessageBox(static_cast<SDL_MessageBoxFlags>(MsgBox_OK),
 								 GetString("FATAL_ERROR", "FATAL ERROR").c_str(),
 								 theString.c_str(),
-								 mWindow->mInternalWindow);
-
-	EndPopup();
-}
-
-void SexyAppBase::Popup(const std::wstring &theString)
-{
-	if (IsScreenSaver())
-	{
-		LogScreenSaverError(WStringToString(theString));
-		return;
-	}
-
-	BeginPopup();
-	if (!mShutdown)
-		SDL_ShowSimpleMessageBox(static_cast<SDL_MessageBoxFlags>(MsgBox_OK),
-								 GetString("FATAL_ERROR", "FATAL ERROR").c_str(),
-								 "What should i do with WString", //theString.c_str(),
 								 mWindow->mInternalWindow);
 
 	EndPopup();
@@ -2846,7 +2817,7 @@ static intptr_t CALLBACK MarkerListDialogProc(HWND hwnd, UINT msg, WPARAM wParam
 			int aMinutes = (aTotalSeconds / 60) % 60;
 			int anHours = (aTotalSeconds / 3600);
 
-			SexyString aStr = StrFormat(_S("%s (%02d:%02d:%02d)"), anItr->first.c_str(), anHours, aMinutes, aSeconds);
+			SexyString aStr = StrFormat("%s (%02d:%02d:%02d)", anItr->first.c_str(), anHours, aMinutes, aSeconds);
 			GetTextExtentPoint32(hDCListBox, aStr.c_str(), aStr.length(), &aSize);
 			dwExtent = aSize.cx + tm.tmAveCharWidth > (int)dwExtent ? aSize.cx + tm.tmAveCharWidth : (int)dwExtent;
 			
@@ -4298,13 +4269,13 @@ void SexyAppBase::MakeWindow()
 	int aResult = InitDDInterface();
 
 	//if (mDDInterface->mD3DTester != NULL && mDDInterface->mD3DTester->ResultsChanged())
-		//RegistryEraseValue(_S("Is3D"));
+		//RegistryEraseValue("Is3D");
 	/*
 	if ((mIsWindowed) && (aResult == DDInterface::RESULT_INVALID_COLORDEPTH))
 	{
 		if (mForceWindowed)
 		{
-			Popup(GetString("PLEASE_SET_COLOR_DEPTH", _S("Please set your desktop color depth to 16 bit.")));
+			Popup(GetString("PLEASE_SET_COLOR_DEPTH", "Please set your desktop color depth to 16 bit."));
 			DoExit(1);
 		}
 		else
@@ -4334,7 +4305,7 @@ void SexyAppBase::MakeWindow()
 		}
 		else
 		{
-			Popup(GetString("FAILED_INIT_DIRECTDRAW", _S("Failed to initialize DirectDraw: ")) +
+			Popup(GetString("FAILED_INIT_DIRECTDRAW", "Failed to initialize DirectDraw: ") +
 				  StringToSexyString(DDInterface::ResultToString(aResult) + " " + mDDInterface->mErrorString));
 			DoExit(1);
 		}
@@ -4641,7 +4612,7 @@ bool SexyAppBase::Process(bool allowSleep)
 	/*DWORD aTimeNow = GetTickCount();
 	if (aTimeNow - aLastCheck >= 10000)
 	{
-		OutputDebugString(StrFormat(_S("FUpdates: %d\n"), aNumCalls).c_str());
+		OutputDebugString(StrFormat("FUpdates: %d\n", aNumCalls).c_str());
 		aLastCheck = aTimeNow;
 		aNumCalls = 0;
 	}*/
@@ -5114,7 +5085,7 @@ bool SexyAppBase::LoadProperties(const std::string &theFileName, bool required, 
 			return true;
 		else
 		{
-			Popup(GetString("UNABLE_OPEN_PROPERTIES", _S("Unable to open properties file ")) +
+			Popup(GetString("UNABLE_OPEN_PROPERTIES", "Unable to open properties file ") +
 				  StringToSexyString(theFileName));
 			return false;
 		}
@@ -5123,7 +5094,7 @@ bool SexyAppBase::LoadProperties(const std::string &theFileName, bool required, 
 	{
 		if (!CheckSignature(aBuffer, theFileName))
 		{
-			Popup(GetString("PROPERTIES_SIG_FAILED", _S("Signature check failed on ")) +
+			Popup(GetString("PROPERTIES_SIG_FAILED", "Signature check failed on ") +
 				  StringToSexyString(theFileName + "'"));
 			return false;
 		}
@@ -5225,21 +5196,21 @@ double SexyAppBase::GetDouble(const std::string &theId, double theDefault)
 
 SexyString SexyAppBase::GetString(const std::string &theId)
 {
-	StringWStringMap::iterator anItr = mStringProperties.find(theId);
+	StringStringMap::iterator anItr = mStringProperties.find(theId);
 	DBG_ASSERTE(anItr != mStringProperties.end());
 
 	if (anItr != mStringProperties.end())
-		return WStringToSexyString(anItr->second);
+		return anItr->second;
 	else
-		return _S("");
+		return "";
 }
 
 SexyString SexyAppBase::GetString(const std::string &theId, const SexyString &theDefault)
 {
-	StringWStringMap::iterator anItr = mStringProperties.find(theId);
+	StringStringMap::iterator anItr = mStringProperties.find(theId);
 
 	if (anItr != mStringProperties.end())
-		return WStringToSexyString(anItr->second);
+		return anItr->second;
 	else
 		return theDefault;
 }
@@ -5255,10 +5226,10 @@ StringVector SexyAppBase::GetStringVector(const std::string &theId)
 		return StringVector();
 }
 
-void SexyAppBase::SetString(const std::string &theId, const std::wstring &theValue)
+void SexyAppBase::SetString(const std::string &theId, const std::string &theValue)
 {
-	std::pair<StringWStringMap::iterator, bool> aPair =
-		mStringProperties.insert(StringWStringMap::value_type(theId, theValue));
+	std::pair<StringStringMap::iterator, bool> aPair =
+		mStringProperties.insert(StringStringMap::value_type(theId, theValue));
 	if (!aPair.second) // Found it, change value
 		aPair.first->second = theValue;
 }
@@ -5444,7 +5415,7 @@ void SexyAppBase::HandleCmdLineParam(const std::string &theParamName, const std:
 	}
 	else
 	{
-		Popup(GetString("INVALID_COMMANDLINE_PARAM", _S("Invalid command line parameter: ")) +
+		Popup(GetString("INVALID_COMMANDLINE_PARAM", "Invalid command line parameter: ") +
 			  StringToSexyString(theParamName));
 		DoExit(0);
 	}
@@ -5500,18 +5471,6 @@ void SexyAppBase::Init()
 		DoExit(0);
 	}
 
-	if (gDDrawDLL == NULL)
-	{
-		MessageBox(NULL,
-				   GetString("APP_REQUIRES_DIRECTX",
-							 _S("This application requires DirectX to run.  You can get DirectX at "
-								"http://www.microsoft.com/directx"))
-					   .c_str(),
-				   GetString("YOU_NEED_DIRECTX", _S("You need DirectX")).c_str(),
-				   MB_OK | MB_ICONERROR);
-		DoExit(0);
-	}
-
 	InitPropertiesHook();
 	ReadFromRegistry();
 
@@ -5527,8 +5486,11 @@ void SexyAppBase::Init()
 
 	gPakInterface->AddPakFile("main.pak");
 
+	//Allow multiple instances if debug
+	#if !DEBUG
 	if (!std::filesystem::create_directory(mProdName + "_lock"))
 		HandleGameAlreadyRunning();
+	#endif
 
 	mRandSeed = GetTickCount();
 	SRand(mRandSeed);
@@ -6338,7 +6300,7 @@ void SexyAppBase::Set3DAcclerated(bool is3D, bool reinit)
 		}
 		else if (aResult != DDInterface::RESULT_OK)
 		{
-			Popup(GetString("FAILED_INIT_DIRECTDRAW", _S("Failed to initialize DirectDraw: ")) +
+			Popup(GetString("FAILED_INIT_DIRECTDRAW", "Failed to initialize DirectDraw: ") +
 				  StringToSexyString(DDInterface::ResultToString(aResult) + " " + mDDInterface->mErrorString));
 			DoExit(1);
 		}*/

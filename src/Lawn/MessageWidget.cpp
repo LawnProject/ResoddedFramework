@@ -13,9 +13,9 @@ MessageWidget::MessageWidget(LawnApp *theApp)
 {
 	mApp = theApp;
 	mDuration = 0;
-	mLabel[0] = _S('\0');
+	mLabel[0] = '\0';
 	mMessageStyle = MessageStyle::MESSAGE_STYLE_OFF;
-	mLabelNext[0] = _S('\0');
+	mLabelNext[0] = '\0';
 	mMessageStyleNext = MessageStyle::MESSAGE_STYLE_OFF;
 	mSlideOffTime = 100;
 	memset(mTextReanimID, (int)ReanimationID::REANIMATIONID_NULL, MAX_MESSAGE_LENGTH);
@@ -134,7 +134,7 @@ void MessageWidget::LayoutReanimText()
 	float aLineWidth[MAX_REANIM_LINES];
 	for (int aPos = 0; aPos <= aLabelLen; aPos++)
 	{
-		if (aPos == aLabelLen || mLabel[aPos] == _S('\n'))
+		if (aPos == aLabelLen || mLabel[aPos] == '\n')
 		{
 			TOD_ASSERT(aCurLine < MAX_REANIM_LINES);
 
@@ -162,7 +162,7 @@ void MessageWidget::LayoutReanimText()
 		mTextReanimID[aPos] = mApp->ReanimationGetID(aReanimText);
 
 		aCurPosX += aFont->CharWidth(mLabel[aPos]); // 坐标调整至下一个文字的位置
-		if (mLabel[aPos] == _S('\n'))				// 换行处理
+		if (mLabel[aPos] == '\n')				// 换行处理
 		{
 			aCurLine++;
 			TOD_ASSERT(aCurLine < MAX_REANIM_LINES);
@@ -444,8 +444,8 @@ void MessageWidget::Draw(Graphics *g)
 			{
 				int aFlags = mApp->mBoard->GetNumWavesPerSurvivalStage() * mApp->mBoard->mChallenge->mSurvivalStage /
 							 mApp->mBoard->GetNumWavesPerFlag();
-				SexyString aFlagStr = mApp->Pluralize(aFlags, _S("[ONE_FLAG]"), _S("[COUNT_FLAGS]"));
-				SexyString aSubStr = TodReplaceString(_S("[FLAGS_COMPLETED]"), _S("{FLAGS}"), aFlagStr);
+				SexyString aFlagStr = mApp->Pluralize(aFlags, "[ONE_FLAG]", "[COUNT_FLAGS]");
+				SexyString aSubStr = TodReplaceString("[FLAGS_COMPLETED]", "{FLAGS}", aFlagStr);
 			}
 
 			if (aSubStr.size() > 0)

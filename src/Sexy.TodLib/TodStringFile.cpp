@@ -125,7 +125,7 @@ bool TodStringListReadItems(const char *theFileText)
 			return false;
 
 		std::string aNameUpper = Sexy::StringToUpper(aName);
-		gSexyAppBase->SetString(aNameUpper, Sexy::StringToWString(aValue));
+		gSexyAppBase->SetString(aNameUpper, aValue);
 	}
 }
 
@@ -171,14 +171,14 @@ void TodStringListLoad(const char *theFileName)
 SexyString TodStringListFind(const SexyString &theName)
 {
 	std::string aNameString = Sexy::SexyStringToString(theName);
-	StringWStringMap::iterator anItr = gSexyAppBase->mStringProperties.find(aNameString);
+	StringStringMap::iterator anItr = gSexyAppBase->mStringProperties.find(aNameString);
 	if (anItr != gSexyAppBase->mStringProperties.end())
 	{
-		return Sexy::WStringToSexyString(anItr->second);
+		return anItr->second;
 	}
 	else
 	{
-		return Sexy::StrFormat(_S("<Missing %s>"), theName.c_str());
+		return Sexy::StrFormat("<Missing %s>", theName.c_str());
 	}
 }
 

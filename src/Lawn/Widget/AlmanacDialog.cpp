@@ -18,7 +18,7 @@ bool gZombieDefeated[NUM_ZOMBIE_TYPES] = {false};
 
 //0x401010
 AlmanacDialog::AlmanacDialog(LawnApp *theApp)
-	: LawnDialog(theApp, DIALOG_ALMANAC, true, _S("Almanac"), _S(""), _S(""), BUTTONS_NONE)
+	: LawnDialog(theApp, DIALOG_ALMANAC, true, "Almanac", "", "", BUTTONS_NONE)
 {
 	mApp = (LawnApp *)gSexyAppBase;
 	mOpenPage = ALMANAC_PAGE_INDEX;
@@ -33,7 +33,7 @@ AlmanacDialog::AlmanacDialog(LawnApp *theApp)
 	LawnDialog::Resize(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
 
 	mCloseButton = new GameButton(AlmanacDialog::ALMANAC_BUTTON_CLOSE);
-	mCloseButton->SetLabel(_S("[CLOSE_BUTTON]"));
+	mCloseButton->SetLabel("[CLOSE_BUTTON]");
 	mCloseButton->mButtonImage = Sexy::IMAGE_ALMANAC_CLOSEBUTTON;
 	mCloseButton->mOverImage = Sexy::IMAGE_ALMANAC_CLOSEBUTTONHIGHLIGHT;
 	mCloseButton->mDownImage = nullptr;
@@ -47,7 +47,7 @@ AlmanacDialog::AlmanacDialog(LawnApp *theApp)
 	mCloseButton->mTextOffsetY = 1;
 
 	mIndexButton = new GameButton(AlmanacDialog::ALMANAC_BUTTON_INDEX);
-	mIndexButton->SetLabel(_S("[ALMANAC_INDEX]"));
+	mIndexButton->SetLabel("[ALMANAC_INDEX]");
 	mIndexButton->mButtonImage = Sexy::IMAGE_ALMANAC_INDEXBUTTON;
 	mIndexButton->mOverImage = Sexy::IMAGE_ALMANAC_INDEXBUTTONHIGHLIGHT;
 	mIndexButton->mDownImage = nullptr;
@@ -60,7 +60,7 @@ AlmanacDialog::AlmanacDialog(LawnApp *theApp)
 	mIndexButton->mTextOffsetY = 1;
 
 	mPlantButton = new GameButton(AlmanacDialog::ALMANAC_BUTTON_PLANT);
-	mPlantButton->SetLabel(_S("[VIEW_PLANTS]"));
+	mPlantButton->SetLabel("[VIEW_PLANTS]");
 	mPlantButton->mButtonImage = Sexy::IMAGE_SEEDCHOOSER_BUTTON;
 	mPlantButton->mOverImage = nullptr;
 	mPlantButton->mDownImage = nullptr;
@@ -74,7 +74,7 @@ AlmanacDialog::AlmanacDialog(LawnApp *theApp)
 	mPlantButton->mParentWidget = this;
 
 	mZombieButton = new GameButton(AlmanacDialog::ALMANAC_BUTTON_ZOMBIE);
-	mZombieButton->SetLabel(_S("[VIEW_ZOMBIES]"));
+	mZombieButton->SetLabel("[VIEW_ZOMBIES]");
 	mZombieButton->Resize(487, 345, 210, 48);
 	mZombieButton->mDrawStoneButton = true;
 	mZombieButton->mParentWidget = this;
@@ -268,7 +268,7 @@ void AlmanacDialog::DrawIndex(Graphics *g)
 {
 	g->DrawImage(Sexy::IMAGE_ALMANAC_INDEXBACK, 0, 0);
 	TodDrawString(g,
-				  _S("[SUBURBAN_ALMANAC_INDEX]"),
+				  "[SUBURBAN_ALMANAC_INDEX]",
 				  BOARD_WIDTH / 2,
 				  60,
 				  Sexy::FONT_HOUSEOFTERROR28,
@@ -294,7 +294,7 @@ void AlmanacDialog::DrawPlants(Graphics *g)
 {
 	g->DrawImage(Sexy::IMAGE_ALMANAC_PLANTBACK, 0, 0);
 	TodDrawString(g,
-				  _S("[SUBURBAN_ALMANAC_PLANTS]"),
+				  "[SUBURBAN_ALMANAC_PLANTS]",
 				  BOARD_WIDTH / 2,
 				  48,
 				  Sexy::FONT_HOUSEOFTERROR20,
@@ -360,7 +360,7 @@ void AlmanacDialog::DrawPlants(Graphics *g)
 	g->DrawImage(Sexy::IMAGE_ALMANAC_PLANTCARD, 459, 86);
 	PlantDefinition &aPlantDef = GetPlantDefinition(mSelectedSeed);
 	SexyString aName = Plant::GetNameString(mSelectedSeed, SEED_NONE);
-	SexyString aDescriptionName = StrFormat(_S("[%s_DESCRIPTION]"), aPlantDef.mPlantName);
+	SexyString aDescriptionName = StrFormat("[%s_DESCRIPTION]", aPlantDef.mPlantName);
 	TodDrawString(g, aName, 617, 288, Sexy::FONT_DWARVENTODCRAFT18YELLOW, Color::White, DS_ALIGN_CENTER);
 	TodDrawStringWrapped(
 		g, aDescriptionName, Rect(485, 309, 258, 230), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_LEFT);
@@ -368,16 +368,16 @@ void AlmanacDialog::DrawPlants(Graphics *g)
 	if (mSelectedSeed != SeedType::SEED_IMITATER)
 	{
 		SexyString aCostStr = TodReplaceString(
-			StrFormat(_S("{KEYWORD}{COST}:{STAT} %d"), aPlantDef.mSeedCost), _S("{COST}"), _S("[COST]"));
+			StrFormat("{KEYWORD}{COST}:{STAT} %d", aPlantDef.mSeedCost),"{COST}", "[COST]");
 		TodDrawStringWrapped(
 			g, aCostStr, Rect(485, 520, 134, 50), Sexy::FONT_BRIANNETOD12, Color::White, DS_ALIGN_LEFT);
 
-		SexyString aRechargeStr = TodReplaceString(_S("{KEYWORD}{WAIT_TIME}:{STAT}{WAIT_TIME_LENGTH}"),
-												   _S("{WAIT_TIME_LENGTH}"),
-												   aPlantDef.mRefreshTime == 750	? _S("[WAIT_TIME_SHORT]")
-												   : aPlantDef.mRefreshTime == 3000 ? _S("[WAIT_TIME_LONG]")
-																					: _S("[WAIT_TIME_VERY_LONG]"));
-		aRechargeStr = TodReplaceString(aRechargeStr, _S("{WAIT_TIME}"), _S("[WAIT_TIME]"));
+		SexyString aRechargeStr = TodReplaceString("{KEYWORD}{WAIT_TIME}:{STAT}{WAIT_TIME_LENGTH}",
+												   "{WAIT_TIME_LENGTH}",
+												   aPlantDef.mRefreshTime == 750	? "[WAIT_TIME_SHORT]"
+												   : aPlantDef.mRefreshTime == 3000 ? "[WAIT_TIME_LONG]"
+																					: "[WAIT_TIME_VERY_LONG]");
+		aRechargeStr = TodReplaceString(aRechargeStr, "{WAIT_TIME}", "[WAIT_TIME]");
 		TodDrawStringWrapped(
 			g, aRechargeStr, Rect(600, 520, 139, 50), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_RIGHT);
 	}
@@ -388,7 +388,7 @@ void AlmanacDialog::DrawZombies(Graphics *g)
 {
 	g->DrawImage(Sexy::IMAGE_ALMANAC_ZOMBIEBACK, 0, 0);
 	TodDrawString(g,
-				  _S("[SUBURBAN_ALMANAC_ZOMBIES]"),
+				  "[SUBURBAN_ALMANAC_ZOMBIES]",
 				  BOARD_WIDTH / 2,
 				  54,
 				  Sexy::FONT_DWARVENTODCRAFT24,
@@ -544,7 +544,7 @@ void AlmanacDialog::DrawZombies(Graphics *g)
 	g->DrawImage(Sexy::IMAGE_ALMANAC_ZOMBIECARD, 455, 78);
 
 	ZombieDefinition &aZombieDef = GetZombieDefinition(mSelectedZombie);
-	SexyString aName = ZombieHasSilhouette(mSelectedZombie) ? _S("???") : StrFormat(_S("[%s]"), aZombieDef.mZombieName);
+	SexyString aName = ZombieHasSilhouette(mSelectedZombie) ? "???" : StrFormat("[%s]", aZombieDef.mZombieName);
 	TodDrawString(
 		g, aName, 613, 362, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color(190, 255, 235, 255), DS_ALIGN_CENTER);
 
@@ -552,12 +552,12 @@ void AlmanacDialog::DrawZombies(Graphics *g)
 	DrawStringJustification aAlign;
 	if (ZombieHasDescription(mSelectedZombie))
 	{
-		aDescription = TodStringTranslate(StrFormat(_S("[%s_DESCRIPTION]"), aZombieDef.mZombieName));
+		aDescription = TodStringTranslate(StrFormat("[%s_DESCRIPTION]", aZombieDef.mZombieName));
 		aAlign = DS_ALIGN_LEFT;
 	}
 	else
 	{
-		aDescription = _S("[NOT_ENCOUNTERED_YET]");
+		aDescription = "[NOT_ENCOUNTERED_YET]";
 		aAlign = DS_ALIGN_CENTER_VERTICAL_MIDDLE;
 	}
 	for (TodStringListFormat &aFormat : gLawnStringFormats)

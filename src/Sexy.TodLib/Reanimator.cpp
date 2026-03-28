@@ -1189,7 +1189,7 @@ void ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsP
 //0x473750
 void ReanimatorLoadDefinitions(ReanimationParams *theReanimationParamArray, int theReanimationParamArraySize)
 {
-	TodHesitationBracket aHesitation(_S("ReanimatorLoadDefinitions"));
+	TodHesitationBracket aHesitation("ReanimatorLoadDefinitions");
 	TOD_ASSERT(!gReanimationParamArray && !gReanimatorDefArray);
 	gReanimationParamArraySize = theReanimationParamArraySize;
 	gReanimationParamArray = theReanimationParamArray;

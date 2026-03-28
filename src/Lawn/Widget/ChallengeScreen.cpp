@@ -18,223 +18,223 @@ ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	 ChallengePage::CHALLENGE_PAGE_SURVIVAL,
 	 0,
 	 0,
-	 _S("[SURVIVAL_DAY_NORMAL]")},
+	 "[SURVIVAL_DAY_NORMAL]"},
 	{GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_2,
 	 1,
 	 ChallengePage::CHALLENGE_PAGE_SURVIVAL,
 	 0,
 	 1,
-	 _S("[SURVIVAL_NIGHT_NORMAL]")},
+	 "[SURVIVAL_NIGHT_NORMAL]"},
 	{GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_3,
 	 2,
 	 ChallengePage::CHALLENGE_PAGE_SURVIVAL,
 	 0,
 	 2,
-	 _S("[SURVIVAL_POOL_NORMAL]")},
+	 "[SURVIVAL_POOL_NORMAL]"},
 	{GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_4,
 	 3,
 	 ChallengePage::CHALLENGE_PAGE_SURVIVAL,
 	 0,
 	 3,
-	 _S("[SURVIVAL_FOG_NORMAL]")},
+	 "[SURVIVAL_FOG_NORMAL]"},
 	{GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_5,
 	 4,
 	 ChallengePage::CHALLENGE_PAGE_SURVIVAL,
 	 0,
 	 4,
-	 _S("[SURVIVAL_ROOF_NORMAL]")},
+	 "[SURVIVAL_ROOF_NORMAL]"},
 	{GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_1,
 	 5,
 	 ChallengePage::CHALLENGE_PAGE_SURVIVAL,
 	 1,
 	 0,
-	 _S("[SURVIVAL_DAY_HARD]")},
+	 "[SURVIVAL_DAY_HARD]"},
 	{GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_2,
 	 6,
 	 ChallengePage::CHALLENGE_PAGE_SURVIVAL,
 	 1,
 	 1,
-	 _S("[SURVIVAL_NIGHT_HARD]")},
+	 "[SURVIVAL_NIGHT_HARD]"},
 	{GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_3,
 	 7,
 	 ChallengePage::CHALLENGE_PAGE_SURVIVAL,
 	 1,
 	 2,
-	 _S("[SURVIVAL_POOL_HARD]")},
+	 "[SURVIVAL_POOL_HARD]"},
 	{GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_4,
 	 8,
 	 ChallengePage::CHALLENGE_PAGE_SURVIVAL,
 	 1,
 	 3,
-	 _S("[SURVIVAL_FOG_HARD]")},
+	 "[SURVIVAL_FOG_HARD]"},
 	{GameMode::GAMEMODE_SURVIVAL_HARD_STAGE_5,
 	 9,
 	 ChallengePage::CHALLENGE_PAGE_SURVIVAL,
 	 1,
 	 4,
-	 _S("[SURVIVAL_ROOF_HARD]")},
+	 "[SURVIVAL_ROOF_HARD]"},
 	{GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_1,
 	 10,
 	 ChallengePage::CHALLENGE_PAGE_LIMBO,
 	 3,
 	 0,
-	 _S("[SURVIVAL_DAY_ENDLESS]")},
+	 "[SURVIVAL_DAY_ENDLESS]"},
 	{GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_2,
 	 10,
 	 ChallengePage::CHALLENGE_PAGE_LIMBO,
 	 3,
 	 1,
-	 _S("[SURVIVAL_NIGHT_ENDLESS]")},
+	 "[SURVIVAL_NIGHT_ENDLESS]"},
 	{GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_3,
 	 10,
 	 ChallengePage::CHALLENGE_PAGE_SURVIVAL,
 	 2,
 	 2,
-	 _S("[SURVIVAL_POOL_ENDLESS]")},
+	 "[SURVIVAL_POOL_ENDLESS]"},
 	{GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_4,
 	 10,
 	 ChallengePage::CHALLENGE_PAGE_LIMBO,
 	 3,
 	 2,
-	 _S("[SURVIVAL_FOG_ENDLESS]")},
+	 "[SURVIVAL_FOG_ENDLESS]"},
 	{GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_5,
 	 10,
 	 ChallengePage::CHALLENGE_PAGE_LIMBO,
 	 3,
 	 3,
-	 _S("[SURVIVAL_ROOF_ENDLESS]")},
-	{GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS, 0, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 0, 0, _S("[WAR_AND_PEAS]")},
+	 "[SURVIVAL_ROOF_ENDLESS]"},
+	{GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS, 0, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 0, 0, "[WAR_AND_PEAS]"},
 	{GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING,
 	 6,
 	 ChallengePage::CHALLENGE_PAGE_CHALLENGE,
 	 0,
 	 1,
-	 _S("[WALL_NUT_BOWLING]")},
-	{GameMode::GAMEMODE_CHALLENGE_SLOT_MACHINE, 2, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 0, 2, _S("[SLOT_MACHINE]")},
+	 "[WALL_NUT_BOWLING]"},
+	{GameMode::GAMEMODE_CHALLENGE_SLOT_MACHINE, 2, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 0, 2, "[SLOT_MACHINE]"},
 	{GameMode::GAMEMODE_CHALLENGE_RAINING_SEEDS,
 	 3,
 	 ChallengePage::CHALLENGE_PAGE_CHALLENGE,
 	 0,
 	 3,
-	 _S("[ITS_RAINING_SEEDS]")},
-	{GameMode::GAMEMODE_CHALLENGE_BEGHOULED, 1, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 0, 4, _S("[BEGHOULED]")},
-	{GameMode::GAMEMODE_CHALLENGE_INVISIGHOUL, 8, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 1, 0, _S("[INVISIGHOUL]")},
-	{GameMode::GAMEMODE_CHALLENGE_SEEING_STARS, 5, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 1, 1, _S("[SEEING_STARS]")},
-	{GameMode::GAMEMODE_CHALLENGE_ZOMBIQUARIUM, 7, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 1, 2, _S("[ZOMBIQUARIUM]")},
+	 "[ITS_RAINING_SEEDS]"},
+	{GameMode::GAMEMODE_CHALLENGE_BEGHOULED, 1, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 0, 4, "[BEGHOULED]"},
+	{GameMode::GAMEMODE_CHALLENGE_INVISIGHOUL, 8, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 1, 0, "[INVISIGHOUL]"},
+	{GameMode::GAMEMODE_CHALLENGE_SEEING_STARS, 5, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 1, 1, "[SEEING_STARS]"},
+	{GameMode::GAMEMODE_CHALLENGE_ZOMBIQUARIUM, 7, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 1, 2, "[ZOMBIQUARIUM]"},
 	{GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST,
 	 20,
 	 ChallengePage::CHALLENGE_PAGE_CHALLENGE,
 	 1,
 	 3,
-	 _S("[BEGHOULED_TWIST]")},
+	 "[BEGHOULED_TWIST]"},
 	{GameMode::GAMEMODE_CHALLENGE_LITTLE_TROUBLE,
 	 12,
 	 ChallengePage::CHALLENGE_PAGE_CHALLENGE,
 	 1,
 	 4,
-	 _S("[LITTLE_TROUBLE]")},
+	 "[LITTLE_TROUBLE]"},
 	{GameMode::GAMEMODE_CHALLENGE_PORTAL_COMBAT,
 	 15,
 	 ChallengePage::CHALLENGE_PAGE_CHALLENGE,
 	 2,
 	 0,
-	 _S("[PORTAL_COMBAT]")},
+	 "[PORTAL_COMBAT]"},
 	{GameMode::GAMEMODE_CHALLENGE_COLUMN,
 	 4,
 	 ChallengePage::CHALLENGE_PAGE_CHALLENGE,
 	 2,
 	 1,
-	 _S("[COLUMN_AS_YOU_SEE_EM]")},
+	 "[COLUMN_AS_YOU_SEE_EM]"},
 	{GameMode::GAMEMODE_CHALLENGE_BOBSLED_BONANZA,
 	 17,
 	 ChallengePage::CHALLENGE_PAGE_CHALLENGE,
 	 2,
 	 2,
-	 _S("[BOBSLED_BONANZA]")},
-	{GameMode::GAMEMODE_CHALLENGE_SPEED, 18, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 2, 3, _S("[ZOMBIES_ON_SPEED]")},
+	 "[BOBSLED_BONANZA]"},
+	{GameMode::GAMEMODE_CHALLENGE_SPEED, 18, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 2, 3, "[ZOMBIES_ON_SPEED]"},
 	{GameMode::GAMEMODE_CHALLENGE_WHACK_A_ZOMBIE,
 	 16,
 	 ChallengePage::CHALLENGE_PAGE_CHALLENGE,
 	 2,
 	 4,
-	 _S("[WHACK_A_ZOMBIE]")},
-	{GameMode::GAMEMODE_CHALLENGE_LAST_STAND, 21, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 3, 0, _S("[LAST_STAND]")},
+	 "[WHACK_A_ZOMBIE]"},
+	{GameMode::GAMEMODE_CHALLENGE_LAST_STAND, 21, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 3, 0, "[LAST_STAND]"},
 	{GameMode::GAMEMODE_CHALLENGE_WAR_AND_PEAS_2,
 	 0,
 	 ChallengePage::CHALLENGE_PAGE_CHALLENGE,
 	 3,
 	 1,
-	 _S("[WAR_AND_PEAS_2]")},
+	 "[WAR_AND_PEAS_2]"},
 	{GameMode::GAMEMODE_CHALLENGE_WALLNUT_BOWLING_2,
 	 6,
 	 ChallengePage::CHALLENGE_PAGE_CHALLENGE,
 	 3,
 	 2,
-	 _S("[WALL_NUT_BOWLING_EXTREME]")},
-	{GameMode::GAMEMODE_CHALLENGE_POGO_PARTY, 14, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 3, 3, _S("[POGO_PARTY]")},
-	{GameMode::GAMEMODE_CHALLENGE_FINAL_BOSS, 19, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 3, 4, _S("[FINAL_BOSS]")},
+	 "[WALL_NUT_BOWLING_EXTREME]"},
+	{GameMode::GAMEMODE_CHALLENGE_POGO_PARTY, 14, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 3, 3, "[POGO_PARTY]"},
+	{GameMode::GAMEMODE_CHALLENGE_FINAL_BOSS, 19, ChallengePage::CHALLENGE_PAGE_CHALLENGE, 3, 4, "[FINAL_BOSS]"},
 	{GameMode::GAMEMODE_CHALLENGE_ART_CHALLENGE_WALLNUT,
 	 0,
 	 ChallengePage::CHALLENGE_PAGE_LIMBO,
 	 0,
 	 0,
-	 _S("[ART_CHALLENGE_WALL_NUT]")},
-	{GameMode::GAMEMODE_CHALLENGE_SUNNY_DAY, 1, ChallengePage::CHALLENGE_PAGE_LIMBO, 0, 1, _S("[SUNNY_DAY]")},
-	{GameMode::GAMEMODE_CHALLENGE_RESODDED, 2, ChallengePage::CHALLENGE_PAGE_LIMBO, 0, 2, _S("[UNSODDED]")},
-	{GameMode::GAMEMODE_CHALLENGE_BIG_TIME, 3, ChallengePage::CHALLENGE_PAGE_LIMBO, 0, 3, _S("[BIG_TIME]")},
+	 "[ART_CHALLENGE_WALL_NUT]"},
+	{GameMode::GAMEMODE_CHALLENGE_SUNNY_DAY, 1, ChallengePage::CHALLENGE_PAGE_LIMBO, 0, 1, "[SUNNY_DAY]"},
+	{GameMode::GAMEMODE_CHALLENGE_RESODDED, 2, ChallengePage::CHALLENGE_PAGE_LIMBO, 0, 2, "[UNSODDED]"},
+	{GameMode::GAMEMODE_CHALLENGE_BIG_TIME, 3, ChallengePage::CHALLENGE_PAGE_LIMBO, 0, 3, "[BIG_TIME]"},
 	{GameMode::GAMEMODE_CHALLENGE_ART_CHALLENGE_SUNFLOWER,
 	 4,
 	 ChallengePage::CHALLENGE_PAGE_LIMBO,
 	 0,
 	 4,
-	 _S("[ART_CHALLENGE_SUNFLOWER]")},
-	{GameMode::GAMEMODE_CHALLENGE_AIR_RAID, 5, ChallengePage::CHALLENGE_PAGE_LIMBO, 1, 0, _S("[AIR_RAID]")},
-	{GameMode::GAMEMODE_CHALLENGE_ICE, 6, ChallengePage::CHALLENGE_PAGE_LIMBO, 1, 1, _S("[ICE_LEVEL]")},
-	{GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN, 7, ChallengePage::CHALLENGE_PAGE_LIMBO, 1, 2, _S("[ZEN_GARDEN]")},
-	{GameMode::GAMEMODE_CHALLENGE_HIGH_GRAVITY, 8, ChallengePage::CHALLENGE_PAGE_LIMBO, 1, 3, _S("[HIGH_GRAVITY]")},
-	{GameMode::GAMEMODE_CHALLENGE_GRAVE_DANGER, 11, ChallengePage::CHALLENGE_PAGE_LIMBO, 1, 4, _S("[GRAVE_DANGER]")},
-	{GameMode::GAMEMODE_CHALLENGE_SHOVEL, 10, ChallengePage::CHALLENGE_PAGE_LIMBO, 2, 0, _S("[CAN_YOU_DIG_IT]")},
+	 "[ART_CHALLENGE_SUNFLOWER]"},
+	{GameMode::GAMEMODE_CHALLENGE_AIR_RAID, 5, ChallengePage::CHALLENGE_PAGE_LIMBO, 1, 0, "[AIR_RAID]"},
+	{GameMode::GAMEMODE_CHALLENGE_ICE, 6, ChallengePage::CHALLENGE_PAGE_LIMBO, 1, 1, "[ICE_LEVEL]"},
+	{GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN, 7, ChallengePage::CHALLENGE_PAGE_LIMBO, 1, 2, "[ZEN_GARDEN]"},
+	{GameMode::GAMEMODE_CHALLENGE_HIGH_GRAVITY, 8, ChallengePage::CHALLENGE_PAGE_LIMBO, 1, 3, "[HIGH_GRAVITY]"},
+	{GameMode::GAMEMODE_CHALLENGE_GRAVE_DANGER, 11, ChallengePage::CHALLENGE_PAGE_LIMBO, 1, 4, "[GRAVE_DANGER]"},
+	{GameMode::GAMEMODE_CHALLENGE_SHOVEL, 10, ChallengePage::CHALLENGE_PAGE_LIMBO, 2, 0, "[CAN_YOU_DIG_IT]"},
 	{GameMode::GAMEMODE_CHALLENGE_STORMY_NIGHT,
 	 13,
 	 ChallengePage::CHALLENGE_PAGE_LIMBO,
 	 2,
 	 1,
-	 _S("[DARK_STORMY_NIGHT]")},
-	{GameMode::GAMEMODE_CHALLENGE_BUNGEE_BLITZ, 9, ChallengePage::CHALLENGE_PAGE_LIMBO, 2, 2, _S("[BUNGEE_BLITZ]")},
-	{GameMode::GAMEMODE_CHALLENGE_SQUIRREL, 10, ChallengePage::CHALLENGE_PAGE_LIMBO, 2, 3, _S("Squirrel")},
-	{GameMode::GAMEMODE_TREE_OF_WISDOM, 10, ChallengePage::CHALLENGE_PAGE_LIMBO, 2, 4, _S("Tree Of Wisdom")},
-	{GameMode::GAMEMODE_SCARY_POTTER_1, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 0, 0, _S("[SCARY_POTTER_1]")},
-	{GameMode::GAMEMODE_SCARY_POTTER_2, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 0, 1, _S("[SCARY_POTTER_2]")},
-	{GameMode::GAMEMODE_SCARY_POTTER_3, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 0, 2, _S("[SCARY_POTTER_3]")},
-	{GameMode::GAMEMODE_SCARY_POTTER_4, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 0, 3, _S("[SCARY_POTTER_4]")},
-	{GameMode::GAMEMODE_SCARY_POTTER_5, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 0, 4, _S("[SCARY_POTTER_5]")},
-	{GameMode::GAMEMODE_SCARY_POTTER_6, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 1, 0, _S("[SCARY_POTTER_6]")},
-	{GameMode::GAMEMODE_SCARY_POTTER_7, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 1, 1, _S("[SCARY_POTTER_7]")},
-	{GameMode::GAMEMODE_SCARY_POTTER_8, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 1, 2, _S("[SCARY_POTTER_8]")},
-	{GameMode::GAMEMODE_SCARY_POTTER_9, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 1, 3, _S("[SCARY_POTTER_9]")},
+	 "[DARK_STORMY_NIGHT]"},
+	{GameMode::GAMEMODE_CHALLENGE_BUNGEE_BLITZ, 9, ChallengePage::CHALLENGE_PAGE_LIMBO, 2, 2, "[BUNGEE_BLITZ]"},
+	{GameMode::GAMEMODE_CHALLENGE_SQUIRREL, 10, ChallengePage::CHALLENGE_PAGE_LIMBO, 2, 3, "Squirrel"},
+	{GameMode::GAMEMODE_TREE_OF_WISDOM, 10, ChallengePage::CHALLENGE_PAGE_LIMBO, 2, 4, "Tree Of Wisdom"},
+	{GameMode::GAMEMODE_SCARY_POTTER_1, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 0, 0, "[SCARY_POTTER_1]"},
+	{GameMode::GAMEMODE_SCARY_POTTER_2, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 0, 1, "[SCARY_POTTER_2]"},
+	{GameMode::GAMEMODE_SCARY_POTTER_3, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 0, 2, "[SCARY_POTTER_3]"},
+	{GameMode::GAMEMODE_SCARY_POTTER_4, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 0, 3, "[SCARY_POTTER_4]"},
+	{GameMode::GAMEMODE_SCARY_POTTER_5, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 0, 4, "[SCARY_POTTER_5]"},
+	{GameMode::GAMEMODE_SCARY_POTTER_6, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 1, 0, "[SCARY_POTTER_6]"},
+	{GameMode::GAMEMODE_SCARY_POTTER_7, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 1, 1, "[SCARY_POTTER_7]"},
+	{GameMode::GAMEMODE_SCARY_POTTER_8, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 1, 2, "[SCARY_POTTER_8]"},
+	{GameMode::GAMEMODE_SCARY_POTTER_9, 10, ChallengePage::CHALLENGE_PAGE_PUZZLE, 1, 3, "[SCARY_POTTER_9]"},
 	{GameMode::GAMEMODE_SCARY_POTTER_ENDLESS,
 	 10,
 	 ChallengePage::CHALLENGE_PAGE_PUZZLE,
 	 1,
 	 4,
-	 _S("[SCARY_POTTER_ENDLESS]")},
-	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_1, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 2, 0, _S("[I_ZOMBIE_1]")},
-	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_2, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 2, 1, _S("[I_ZOMBIE_2]")},
-	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_3, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 2, 2, _S("[I_ZOMBIE_3]")},
-	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_4, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 2, 3, _S("[I_ZOMBIE_4]")},
-	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_5, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 2, 4, _S("[I_ZOMBIE_5]")},
-	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_6, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 3, 0, _S("[I_ZOMBIE_6]")},
-	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_7, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 3, 1, _S("[I_ZOMBIE_7]")},
-	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_8, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 3, 2, _S("[I_ZOMBIE_8]")},
-	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_9, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 3, 3, _S("[I_ZOMBIE_9]")},
+	 "[SCARY_POTTER_ENDLESS]"},
+	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_1, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 2, 0, "[I_ZOMBIE_1]"},
+	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_2, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 2, 1, "[I_ZOMBIE_2]"},
+	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_3, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 2, 2, "[I_ZOMBIE_3]"},
+	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_4, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 2, 3, "[I_ZOMBIE_4]"},
+	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_5, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 2, 4, "[I_ZOMBIE_5]"},
+	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_6, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 3, 0, "[I_ZOMBIE_6]"},
+	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_7, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 3, 1, "[I_ZOMBIE_7]"},
+	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_8, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 3, 2, "[I_ZOMBIE_8]"},
+	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_9, 11, ChallengePage::CHALLENGE_PAGE_PUZZLE, 3, 3, "[I_ZOMBIE_9]"},
 	{GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS,
 	 11,
 	 ChallengePage::CHALLENGE_PAGE_PUZZLE,
 	 3,
 	 4,
-	 _S("[I_ZOMBIE_ENDLESS]")},
-	{GameMode::GAMEMODE_UPSELL, 10, ChallengePage::CHALLENGE_PAGE_LIMBO, 3, 4, _S("Upsell")},
-	{GameMode::GAMEMODE_INTRO, 10, ChallengePage::CHALLENGE_PAGE_LIMBO, 2, 3, _S("Intro")}};
+	 "[I_ZOMBIE_ENDLESS]"},
+	{GameMode::GAMEMODE_UPSELL, 10, ChallengePage::CHALLENGE_PAGE_LIMBO, 3, 4, "Upsell"},
+	{GameMode::GAMEMODE_INTRO, 10, ChallengePage::CHALLENGE_PAGE_LIMBO, 2, 3, "Intro"}};
 
 //0x42DAE0
 ChallengeScreen::ChallengeScreen(LawnApp *theApp, ChallengePage thePage)
@@ -252,7 +252,7 @@ ChallengeScreen::ChallengeScreen(LawnApp *theApp, ChallengePage thePage)
 
 	mBackButton = MakeNewButton(ChallengeScreen::ChallengeScreen_Back,
 								this,
-								_S("[BACK_TO_MENU]"),
+								"[BACK_TO_MENU]",
 								nullptr,
 								Sexy::IMAGE_SEEDCHOOSER_BUTTON2,
 								Sexy::IMAGE_SEEDCHOOSER_BUTTON2_GLOW,
@@ -269,9 +269,9 @@ ChallengeScreen::ChallengeScreen(LawnApp *theApp, ChallengePage thePage)
 		aPageButton->mDoFinger = true;
 		mPageButton[aPageIdx] = aPageButton;
 		if (aPageIdx == CHALLENGE_PAGE_LIMBO)
-			aPageButton->mLabel = TodStringTranslate(_S("Limbo Page"));
+			aPageButton->mLabel = TodStringTranslate("Limbo Page");
 		else
-			aPageButton->mLabel = TodReplaceNumberString(_S("[PAGE_X]"), _S("{PAGE}"), aPageIdx);
+			aPageButton->mLabel = TodReplaceNumberString("[PAGE_X]", "{PAGE}", aPageIdx);
 		aPageButton->mButtonImage = Sexy::IMAGE_BLANK;
 		aPageButton->mOverImage = Sexy::IMAGE_BLANK;
 		aPageButton->mDownImage = Sexy::IMAGE_BLANK;
@@ -596,7 +596,7 @@ void ChallengeScreen::DrawButton(Graphics *g, int theChallengeIndex)
 			if (aChallengeButton->mDisabled ||
 				(theChallengeIndex == mUnlockChallengeIndex && mUnlockState == UNLOCK_SHAKING))
 			{
-				aName = _S("?");
+				aName = "?";
 			}
 
 			int aNameLen = aName.size();
@@ -609,24 +609,28 @@ void ChallengeScreen::DrawButton(Graphics *g, int theChallengeIndex)
 				// 先尝试在名称字符串的后半段取空格以将字符串分隔为两行，若后半段中无空格则在整个字符串中寻找空格
 				int aHalfPos =
 					(mPageIndex == CHALLENGE_PAGE_SURVIVAL && !aChallengeButton->mDisabled) ? 7 : (aNameLen / 2 - 1);
-				const SexyChar *aSpacedChar = _S(aName.c_str() + aHalfPos, _S(' '));
+				const SexyChar *aSpacedChar = strchr(aName.c_str() + aHalfPos, ' ');
+				if (aSpacedChar == nullptr)
+				{
+					aSpacedChar = strchr(aName.c_str(), ' ');
+				}
 				while (aSpacedChar[0] != ' ')
 				{
 					aHalfPos++;
-					aSpacedChar = _S(aName.c_str() + aHalfPos, _S(' '));
+					aSpacedChar = aName.c_str() + aHalfPos, ' ';
 					if (aSpacedChar[0] == '\0')
 					{
 						aHalfPos--;
-						aSpacedChar = _S(aName.c_str() + aHalfPos, _S(' '));
+						aSpacedChar = aName.c_str() + aHalfPos, ' ';
 						break;
 					}
 				}
 				aHalfPos--;
-				aSpacedChar = _S(aName.c_str() + aHalfPos, _S(' '));
+				aSpacedChar = aName.c_str() + aHalfPos, ' ';
 
 				if (aSpacedChar == nullptr)
 				{
-					aSpacedChar = _S(aName.c_str(), _S(' '));
+					aSpacedChar = aName.c_str(), ' ';
 				}
 
 				// 分别计算取得两行文本的长度
@@ -683,7 +687,7 @@ void ChallengeScreen::DrawButton(Graphics *g, int theChallengeIndex)
 				}
 				else if (mApp->IsEndlessScaryPotter(aDef.mChallengeMode) || mApp->IsEndlessIZombie(aDef.mChallengeMode))
 				{
-					SexyString aAchievement = mApp->Pluralize(aRecord, _S("[ONE_FLAG]"), _S("[COUNT_FLAGS]"));
+					SexyString aAchievement = mApp->Pluralize(aRecord, "[ONE_FLAG]", "[COUNT_FLAGS]");
 					TodDrawString(g,
 								  aAchievement,
 								  aPosX + 48,
@@ -701,7 +705,7 @@ void ChallengeScreen::DrawButton(Graphics *g, int theChallengeIndex)
 				}
 				else if (mApp->IsSurvivalEndless(aDef.mChallengeMode))
 				{
-					SexyString aAchievement = TodReplaceNumberString(_S("[LONGEST_STREAK]"), _S("{STREAK}"), aRecord);
+					SexyString aAchievement = TodReplaceNumberString("[LONGEST_STREAK]", "{STREAK}", aRecord);
 					Rect aRect(aPosX, aPosY + 15, 96, 200);
 					TodDrawStringWrapped(
 						g, aAchievement, aRect, Sexy::FONT_CONTINUUMBOLD14OUTLINE, Color::White, DS_ALIGN_CENTER);
@@ -727,9 +731,9 @@ void ChallengeScreen::Draw(Graphics *g)
 	g->SetLinearBlend(true);
 	g->DrawImage(Sexy::IMAGE_CHALLENGE_BACKGROUND, 0, 0);
 
-	SexyString aTitleString = mPageIndex == CHALLENGE_PAGE_SURVIVAL ? _S("[PICK_AREA]")
-							  : mPageIndex == CHALLENGE_PAGE_PUZZLE ? _S("[SCARY_POTTER]")
-																	: _S("[PICK_CHALLENGE]");
+	SexyString aTitleString = mPageIndex == CHALLENGE_PAGE_SURVIVAL ? "[PICK_AREA]"
+							  : mPageIndex == CHALLENGE_PAGE_PUZZLE ? "[SCARY_POTTER]"
+																	: "[PICK_CHALLENGE]";
 	TodDrawString(g, aTitleString, 400, 58, Sexy::FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
 
 	int aTrophiesGot = mApp->GetNumTrophies(mPageIndex);
@@ -739,7 +743,7 @@ void ChallengeScreen::Draw(Graphics *g)
 																  : 0;
 	if (aTrophiesTotal > 0)
 	{
-		SexyString aTrophyString = StrFormat(_S("%d/%d"), aTrophiesGot, aTrophiesTotal);
+		SexyString aTrophyString = StrFormat("%d/%d", aTrophiesGot, aTrophiesTotal);
 		TodDrawString(g, aTrophyString, 739, 73, Sexy::FONT_DWARVENTODCRAFT12, Color(255, 240, 0), DS_ALIGN_CENTER);
 	}
 	TodDrawImageScaledF(g, Sexy::IMAGE_TROPHY, 718, 26, 0.5f, 0.5f);
@@ -864,40 +868,40 @@ void ChallengeScreen::UpdateToolTip()
 					{
 						if (!mApp->HasFinishedAdventure() && aDef.mChallengeMode == GAMEMODE_SCARY_POTTER_4)
 						{
-							aLabel = _S("[FINISH_ADVENTURE_TOOLTIP]");
+							aLabel = "[FINISH_ADVENTURE_TOOLTIP]";
 						}
 						else
 						{
-							aLabel = _S("[ONE_MORE_SCARY_POTTER_TOOLTIP]");
+							aLabel = "[ONE_MORE_SCARY_POTTER_TOOLTIP]";
 						}
 					}
 					else if (IsIZombieLevel(aDef.mChallengeMode))
 					{
 						if (!mApp->HasFinishedAdventure() && aDef.mChallengeMode == GAMEMODE_PUZZLE_I_ZOMBIE_4)
 						{
-							aLabel = _S("[FINISH_ADVENTURE_TOOLTIP]");
+							aLabel = "[FINISH_ADVENTURE_TOOLTIP]";
 						}
 						else
 						{
-							aLabel = _S("[ONE_MORE_IZOMBIE_TOOLTIP]");
+							aLabel = "[ONE_MORE_IZOMBIE_TOOLTIP]";
 						}
 					}
 				}
 				else if (!mApp->HasFinishedAdventure() || mApp->IsTrialStageLocked())
 				{
-					aLabel = _S("[FINISH_ADVENTURE_TOOLTIP]");
+					aLabel = "[FINISH_ADVENTURE_TOOLTIP]";
 				}
 				else if (mApp->IsSurvivalEndless(aDef.mChallengeMode))
 				{
-					aLabel = _S("[10_SURVIVAL_TOOLTIP]");
+					aLabel = "[10_SURVIVAL_TOOLTIP]";
 				}
 				else if (mPageIndex == CHALLENGE_PAGE_SURVIVAL)
 				{
-					aLabel = _S("[ONE_MORE_SURVIVAL_TOOLTIP]");
+					aLabel = "[ONE_MORE_SURVIVAL_TOOLTIP]";
 				}
 				else if (mPageIndex == CHALLENGE_PAGE_CHALLENGE)
 				{
-					aLabel = _S("[ONE_MORE_CHALLENGE_TOOLTIP]");
+					aLabel = "[ONE_MORE_CHALLENGE_TOOLTIP]";
 				}
 				else
 					continue;
