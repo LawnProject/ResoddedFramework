@@ -1,13 +1,13 @@
-<table>
-  <tr>
-    <td><img src=".github/icon.png" width="76" height="76"></td>
-    <td><h2>ResoddedFramework</h2></td>
-  </tr>
-</table>
+# How To Use
+## Installation
+To use ResoddedFramework you require CMake.
+Note: This isn't a tutorial on how to use CMake, please learn how to use it with your IDE of choice.
+1. Open the root folder containing **CMakeLists.txt**
+2. Wait for the cache to build
+3. Compile
+4. Start modding
 
-A reconstruction of PvZ, which aims to add more features...than usual.
-
-## Features
+# Roadmap
 
 ### High Priority
 - Documentation (UNFINISHED)
@@ -20,5 +20,21 @@ A reconstruction of PvZ, which aims to add more features...than usual.
 - Controller Support (Unimplemented)
 ### Low Priority
 - Multi-platform support (NOT STARTED)
-- Separate mod .PAK
+- Separate mod resources (.pak + folders)
 - Update Checker
+
+# Credits
+
+### Main
+
+- Electr0Gunner -> Lead programmer
+
+### Special Thanks
+
+- niqkidd -> Name of the project
+- Patoke -> Creator of [re-plants-vs-zombies](https://github.com/Patoke/re-plants-vs-zombies), a huge source of reference for Sexy.TodLib
+- The original team behind the 0.9.9 decompilation
+
+### Acknowledgements
+- PopCap -> Franchise and Open-Source Engine
+- Teams behind SDL, OpenAL-soft, Freetype, BASS, and other dependencies.
