@@ -2,6 +2,11 @@
 #include <fstream>
 #include <vector>
 
+#if __clang__
+#define stricmp _stricmp
+#endif
+
+
 typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned long ulong;

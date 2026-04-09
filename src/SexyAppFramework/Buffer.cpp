@@ -28,8 +28,8 @@ static void GenerateCRCTable(void)
 {
 	bCrcTableGenerated = true;
 
-	register int i, j;
-	register unsigned long crc_accum;
+	int i, j;
+	unsigned long crc_accum;
 	for (i = 0; i < 256; i++)
 	{
 		crc_accum = ((unsigned long)i << 24);
@@ -52,7 +52,7 @@ static unsigned long UpdateCRC(unsigned long crc_accum, const char *data_blk_ptr
 	if (!bCrcTableGenerated)
 		GenerateCRCTable();
 
-	register int i, j;
+	int i, j;
 	for (j = 0; j < data_blk_size; j++)
 	{
 		i = ((int)(crc_accum >> 24) ^ *data_blk_ptr++) & 0xff;

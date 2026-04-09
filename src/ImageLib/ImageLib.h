@@ -2,6 +2,7 @@
 #define __IMAGELIB_H__
 
 #include <string>
+#include <cstdint>
 
 namespace ImageLib
 {
