@@ -610,27 +610,29 @@ void ChallengeScreen::DrawButton(Graphics *g, int theChallengeIndex)
 				int aHalfPos =
 					(mPageIndex == CHALLENGE_PAGE_SURVIVAL && !aChallengeButton->mDisabled) ? 7 : (aNameLen / 2 - 1);
 				const SexyChar *aSpacedChar = strchr(aName.c_str() + aHalfPos, ' ');
+
 				if (aSpacedChar == nullptr)
 				{
 					aSpacedChar = strchr(aName.c_str(), ' ');
 				}
+
 				while (aSpacedChar[0] != ' ')
 				{
 					aHalfPos++;
-					aSpacedChar = aName.c_str() + aHalfPos, ' ';
+					aSpacedChar = strchr(aName.c_str() + aHalfPos, ' ');
 					if (aSpacedChar[0] == '\0')
 					{
 						aHalfPos--;
-						aSpacedChar = aName.c_str() + aHalfPos, ' ';
+						aSpacedChar = strchr(aName.c_str() + aHalfPos, ' ');
 						break;
 					}
 				}
 				aHalfPos--;
-				aSpacedChar = aName.c_str() + aHalfPos, ' ';
+				aSpacedChar = strchr(aName.c_str() + aHalfPos, ' ');
 
 				if (aSpacedChar == nullptr)
 				{
-					aSpacedChar = aName.c_str(), ' ';
+					aSpacedChar = strchr(aName.c_str(), ' ');
 				}
 
 				// 分别计算取得两行文本的长度

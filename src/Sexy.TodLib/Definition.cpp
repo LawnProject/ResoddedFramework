@@ -271,7 +271,7 @@ void *DefinitionAlloc(int theSize)
 	return aPtr;
 }
 
-void DefinitionFree(void* theMemory)
+void DefinitionFree(void* &theMemory)
 {
 	delete[] theMemory;
 	theMemory = nullptr;
@@ -732,15 +732,8 @@ bool DefinitionReadStringField(XMLParser *theXmlParser, char **theValue)
 	if (!DefinitionReadXMLString(theXmlParser, aStringValue))
 		return false;
 
-	if (aStringValue.size() == 0)
-	{
-		*theValue = "";
-	}
-	else
-	{
-		*theValue = (char *)DefinitionAlloc(aStringValue.size());
-		strcpy(*theValue, aStringValue.c_str());
-	}
+	*theValue = (char *)DefinitionAlloc(aStringValue.size() + 1);
+	strcpy(*theValue, aStringValue.c_str());
 	return true;
 }
 
@@ -985,14 +978,16 @@ _m_break:
 		low = high;
 	} while (aBaseIdx < aFloatTrackVec.size());
 
-
-	size_t alloc_size = aFloatTrackVec.size() * sizeof(FloatParameterTrackNode);
-	theTrack->mNodes = (FloatParameterTrackNode *)DefinitionAlloc(alloc_size);
-	if (!theTrack->mNodes)
-		return false;
-
-	memcpy(theTrack->mNodes, aFloatTrackVec.data(), alloc_size);
 	theTrack->mCountNodes = aFloatTrackVec.size();
+	if (theTrack->mCountNodes > 0)
+	{
+		theTrack->mNodes = new FloatParameterTrackNode[theTrack->mCountNodes];
+		std::memcpy(theTrack->mNodes, aFloatTrackVec.data(), theTrack->mCountNodes * sizeof(FloatParameterTrackNode));
+	}
+	else
+	{
+		theTrack->mNodes = nullptr;
+	}
 
 	return true;
 }
@@ -1285,7 +1280,7 @@ void DefinitionFreeArrayField(DefinitionArrayDef *theArray, DefMap *theDefMap)
 {
 	for (int i = 0; i < theArray->mArrayCount; i++)
 		DefinitionFreeMap(theDefMap,
-						  (void *)((int)theArray->mArrayData + theDefMap->mDefSize * i)); // 最后一个参数表示 pData[i]
+			(void *)((uintptr_t)theArray->mArrayData + theDefMap->mDefSize * i)); // 最后一个参数表示 pData[i]
 	DefinitionFree(theArray->mArrayData);
 }
 
@@ -1298,12 +1293,13 @@ void DefinitionFreeMap(DefMap *theDefMap, void *theDefinition)
 		void *aVar = (void *)((uintptr_t)theDefinition + aField->mFieldOffset); // 指向该成员变量的指针
 		switch (aField->mFieldType)
 		{
-		case DefFieldType::DT_STRING: //TODO: URGENT, fix this memory leak on closing. I need to find a new way to delete the string from memory.
-			/*
-			if (**(char **)aVar != '\0')
-				delete[] *(char **)aVar; // 释放字符数组
+		case DefFieldType::DT_STRING:
 			
-			*(char **)aVar = nullptr;*/
+			char *aStr = *(char **)aVar;
+			if (*aStr != '\0')
+				delete[] aStr; // 释放字符数组
+			
+			*(char **)aVar = nullptr;
 			break;
 		case DefFieldType::DT_ARRAY:
 			DefinitionFreeArrayField((DefinitionArrayDef *)aVar, (DefMap *)aField->mExtraData);
