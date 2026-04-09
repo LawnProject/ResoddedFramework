@@ -42,7 +42,13 @@ class TodSmoothArray
 	float mSecondLastPicked;
 };
 
-/*inline*/ int TodPickFromArray(const int *theArray, int theCount);
+template <typename T>
+T TodPickFromArray(const T *theArray, int theCount)
+{
+	TOD_ASSERT(theCount > 0);
+	return theArray[Sexy::Rand(theCount)];
+}
+
 int TodPickFromWeightedArray(const TodWeightedArray *theArray, int theCount);
 TodWeightedArray *TodPickArrayItemFromWeightedArray(const TodWeightedArray *theArray, int theCount);
 TodWeightedGridArray *TodPickFromWeightedGridArray(const TodWeightedGridArray *theArray, int theCount);

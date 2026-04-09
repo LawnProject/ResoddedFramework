@@ -172,12 +172,6 @@ bool TodAppCloseRequest()
 	return false;
 }
 
-int TodPickFromArray(const int *theArray, int theCount)
-{
-	TOD_ASSERT(theCount > 0);
-	return theCount > 0 ? theArray[Sexy::Rand(theCount)] : 0;
-}
-
 int TodPickFromWeightedArray(const TodWeightedArray *theArray, int theCount)
 {
 	return TodPickArrayItemFromWeightedArray(theArray, theCount)->mItem;
