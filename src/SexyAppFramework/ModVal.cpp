@@ -40,7 +40,7 @@ typedef std::map<std::string, int> StringToIntMap;
 typedef std::map<std::string, FileMod> FileModMap;
 
 static StringToIntMap gStringToIntMap;
-time_t gLastFileTime = 0;
+uint64_t gLastFileTime = 0;
 const char *gSampleString = NULL; // for finding the others
 
 static FileModMap &GetFileModMap()
@@ -451,7 +451,7 @@ bool Sexy::ReparseModValues()
 	{
 		char anEXEName[256];
 		GetModuleFileNameA(NULL, anEXEName, 256);
-		gLastFileTime = GetFileDate(anEXEName);
+		gLastFileTime = GetLastWriteFileDate(anEXEName);
 
 		FindModValsInMemory();
 	}
@@ -471,7 +471,7 @@ bool Sexy::ReparseModValues()
 		ModStorageMap &aModMap = aFileMod.mMap;
 		std::string aFileName = aFileModItr->first;
 
-		time_t aThisTime = GetFileDate(aFileName);
+		uint64_t aThisTime = GetLastWriteFileDate(aFileName);
 		if (aThisTime > gLastFileTime)
 		{
 			gLastFileTime = aThisTime;

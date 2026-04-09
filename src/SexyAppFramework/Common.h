@@ -31,12 +31,18 @@
 #include <list>
 #include <algorithm>
 #include <cstdlib>
+#include <cstdint>
 #include <utf8.h>
 
 #include <windows.h>
 #include <shellapi.h>
 #include <mmsystem.h>
 #include "ModVal.h"
+
+#if __clang__
+#define stricmp _stricmp
+#endif
+
 
 #ifdef LoadImage
 #undef LoadImage // Windows, i fucking hate you -Electr0Gunner
@@ -110,7 +116,7 @@ std::string GetFileName(const std::string &thePath, bool noExtension = false);
 std::string GetFileDir(const std::string &thePath, bool withSlash = false);
 std::string RemoveTrailingSlash(const std::string &theDirectory);
 std::string AddTrailingSlash(const std::string &theDirectory, bool backSlash = false);
-uint64_t GetFileDate(const std::string &theFileName);
+uint64_t GetLastWriteFileDate(const std::string &theFileName);
 std::string GetCurDir();
 std::string GetFullPath(const std::string &theRelPath);
 std::string GetPathFrom(const std::string &theRelPath, const std::string &theDir);

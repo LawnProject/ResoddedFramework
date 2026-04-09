@@ -991,7 +991,7 @@ _m_break:
 	if (!theTrack->mNodes)
 		return false;
 
-	::memcpy(theTrack->mNodes, aFloatTrackVec.data(), alloc_size);
+	memcpy(theTrack->mNodes, aFloatTrackVec.data(), alloc_size);
 	theTrack->mCountNodes = aFloatTrackVec.size();
 
 	return true;
@@ -1309,10 +1309,13 @@ void DefinitionFreeMap(DefMap *theDefMap, void *theDefinition)
 			DefinitionFreeArrayField((DefinitionArrayDef *)aVar, (DefMap *)aField->mExtraData);
 			break;
 		case DefFieldType::DT_TRACK_FLOAT:
-			if (((FloatParameterTrack *)aVar)->mCountNodes != 0)
-				delete[] ((FloatParameterTrack *)aVar)->mNodes; // 释放浮点参数轨道的节点
-			((FloatParameterTrack *)aVar)->mNodes = nullptr;
+		{
+			FloatParameterTrack* aCastedField = (FloatParameterTrack *)aVar;
+			if (aCastedField->mCountNodes != 0)
+				delete[] aCastedField->mNodes; // 释放浮点参数轨道的节点
+			aCastedField->mNodes = nullptr;
 			break;
+		}
 		}
 	}
 }

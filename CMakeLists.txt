@@ -1,5 +1,5 @@
 # CMakeLists.txt
-cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.28 FATAL_ERROR)
 project(GardenersDecomp LANGUAGES C CXX)
 
 # Enable Hot Reload for MSVC compilers if supported.
@@ -28,6 +28,7 @@ set(SDL_SHARED OFF CACHE BOOL "" FORCE)
 
 set(LIBTYPE "STATIC" CACHE BOOL "" FORCE)
 set(ALSOFT_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(ALSOFT_ENABLE_MODULES OFF CACHE BOOL "Disable OpenAL Soft C++20 modules")
 
 set(FT_DISABLE_BZIP2 ON CACHE BOOL "Disable support of bzip2 compressed fonts." FORCE)
 set(FT_DISABLE_PNG ON CACHE BOOL "Disable support of PNG compressed OpenType embedded bitmaps." FORCE)

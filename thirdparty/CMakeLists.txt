@@ -43,8 +43,4 @@ FetchContent_Declare(
 )
 
 
-FetchContent_MakeAvailable(SDL3 zlib openal ogg vorbis glm)
-
-add_library(ZLIB::ZLIB ALIAS zlibstatic)
-
-FetchContent_MakeAvailable(freetype)
+FetchContent_MakeAvailable(SDL3 zlib openal ogg vorbis glm freetype)

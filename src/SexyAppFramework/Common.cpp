@@ -643,7 +643,7 @@ std::string Sexy::AddTrailingSlash(const std::string &theDirectory, bool backSla
 		return "";
 }
 
-uint64_t Sexy::GetFileDate(const std::string &theFileName)
+uint64_t Sexy::GetLastWriteFileDate(const std::string &theFileName)
 {
 	auto ftime = std::filesystem::last_write_time(theFileName);
 	auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(ftime - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now());

@@ -265,7 +265,7 @@ bool EditWidget::IsPartOfWord(SexyChar theChar)
 {
 	return (((theChar >= 'A') && (theChar <= 'Z')) || ((theChar >= 'a') && (theChar <= 'z')) ||
 			((theChar >= '0') && (theChar <= '9')) ||
-			(((unsigned int)theChar >= (unsigned int)(L'À')) && ((unsigned int)theChar <= (unsigned int)(L'ÿ'))) ||
+			/*(((unsigned int)theChar >= (unsigned int)(L'À')) && ((unsigned int)theChar <= (unsigned int)(L'ÿ'))) ||*/ //todo:add after utf8 impl
 			(theChar == '_'));
 }
 
