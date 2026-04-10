@@ -1294,13 +1294,16 @@ void DefinitionFreeMap(DefMap *theDefMap, void *theDefinition)
 		switch (aField->mFieldType)
 		{
 		case DefFieldType::DT_STRING:
-			
+		{
 			char *aStr = *(char **)aVar;
+			if (aStr == nullptr)
+				continue;
 			if (*aStr != '\0')
 				delete[] aStr; // 释放字符数组
-			
+
 			*(char **)aVar = nullptr;
 			break;
+		}
 		case DefFieldType::DT_ARRAY:
 			DefinitionFreeArrayField((DefinitionArrayDef *)aVar, (DefMap *)aField->mExtraData);
 			break;

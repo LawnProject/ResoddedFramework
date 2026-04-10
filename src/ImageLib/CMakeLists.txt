@@ -21,6 +21,7 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_SOURCE_DIR}/thirdparty/src"
 )
 
 foreach(FILE_PATH IN LISTS SOURCES)

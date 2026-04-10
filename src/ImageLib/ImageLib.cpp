@@ -9,8 +9,6 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
 
-//#include "jpeg2000/jasper.h"
-
 using namespace ImageLib;
 
 Image::Image()
@@ -18,7 +16,7 @@ Image::Image()
 	mWidth = 0;
 	mHeight = 0;
 	mNumChannels = 0;
-	mBits = NULL;
+	mBits = nullptr;
 }
 
 Image::~Image()
@@ -113,17 +111,18 @@ Image *ImageLib::GetImageBackend(const std::string &theFileName, const std::stri
 	unsigned char *stb_image;
 	if (theExtension != ".gif")
 	{
-		stb_image = stbi_load_from_memory(data.data(), fileSize, &width, &height, &num_channels, 0);
+		stb_image = stbi_load_from_memory(data.data(), fileSize, &width, &height, &num_channels, 4);
 		frame_count = 0;
 	}
 	else
 	{
 		stb_image =
-			stbi_load_gif_from_memory(data.data(), fileSize, &delays, &width, &height, &frame_count, &num_channels, 0);
+			stbi_load_gif_from_memory(data.data(), fileSize, &delays, &width, &height, &frame_count, &num_channels, 4);
 
 		if (delays)
 			free(delays);
 	}
+	num_channels = 4;
 
 	uint32_t *aBits = new uint32_t[width * height];
 	for (int i = 0; i < width * height; ++i)
@@ -133,9 +132,9 @@ Image *ImageLib::GetImageBackend(const std::string &theFileName, const std::stri
 		uint8_t r = pixel[0];
 		uint8_t g = pixel[1];
 		uint8_t b = pixel[2];
-		uint8_t a = (num_channels == 4) ? pixel[3] : 0xFF;
+		uint8_t a = num_channels == 4 ? pixel[3] : 0xFF;
 
-		aBits[i] = (a << 24) | (r << 16) | (g << 8) | b;
+		aBits[i] = (a << 24) | (b << 16) | (g << 8) | r; //swap to ABGR
 	}
 
 	Image *anImage = new Image();

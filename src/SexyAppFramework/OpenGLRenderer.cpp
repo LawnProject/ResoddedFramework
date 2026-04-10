@@ -502,7 +502,11 @@ void OpenGLTextureData::CreateTextures(MemoryImage* theImage, void* theRendererD
 		glGenTextures(1, &mTexID);
 		glBindTexture(GL_TEXTURE_2D, mTexID);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, aWidth, aHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, theImage->GetBits());
+		GLenum aTargetFormat = GL_RGBA8;
+		if (theImage->mD3DFlags & ImageFlag_UseA4R4G4B4)
+			aTargetFormat = GL_RGBA4;
+
+		glTexImage2D(GL_TEXTURE_2D, 0, aTargetFormat, aWidth, aHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, theImage->GetBits());
 
 	}
 	else if (mBitsChangedCount != theImage->mBitsChangedCount && !mSourceIsFBO)
@@ -513,7 +517,7 @@ void OpenGLTextureData::CreateTextures(MemoryImage* theImage, void* theRendererD
 			glGenTextures(1, &mTexID);
 			glBindTexture(GL_TEXTURE_2D, mTexID);
 
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, aWidth, aHeight, GL_BGRA, GL_UNSIGNED_BYTE, bits);
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, aWidth, aHeight, GL_RGBA8, GL_UNSIGNED_BYTE, bits);
 		}
 		else
 		{
