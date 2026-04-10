@@ -281,14 +281,14 @@ void DefinitionFree(void* &theMemory)
 //0x443BE0
 bool DefinitionLoadImage(Image **theImage, const SexyString &theName)
 {
-	// 当贴图文件路径不存在时，无须获取贴图
+	// If the texture file path does not exist, there is no need to obtain the texture.
 	if (theName.size() == 0)
 	{
 		*theImage = nullptr;
 		return true;
 	}
 
-	// 尝试借助资源管理器，从 XML 中加载贴图
+	// Try using File Explorer to load textures from XML.
 	Image *anImage = (Image *)gSexyAppBase->mResourceManager->LoadImage(theName);
 	if (anImage)
 	{
@@ -296,7 +296,7 @@ bool DefinitionLoadImage(Image **theImage, const SexyString &theName)
 		return true;
 	}
 
-	// 从可能的贴图路径中手动加载贴图
+	// Manually load textures from possible texture paths.
 	for (const DefLoadResPath &aLoadResPath : gDefLoadResPaths)
 	{
 		int aNameLen = theName.size();
@@ -501,7 +501,7 @@ void *DefinitionUncompressCompiledBuffer(void *theCompressedBuffer,
 										 const SexyString &theCompiledFilePath)
 {
 	auto sz = theCompressedBufferSize;
-	// theCompressedBuffer 的前两个四字节存有特殊数据，此处检测其长度是否足够 8 字节（即 2 个四字节）
+	// theCompressedBuffer The first two four-byte bytes contain special data, and this check verifies whether its length is sufficient for 8 bytes (i.e., 2 four-byte bytes).
 	if (theCompressedBufferSize < 8)
 	{
 		TodTrace("Compile def too small", theCompiledFilePath.c_str());
@@ -571,10 +571,10 @@ bool DefinitionReadCompiledFile(const SexyString &theCompiledFilePath, DefMap *t
 						TodTrace("Compiled file schema wrong: %s\n", theCompiledFilePath.c_str());
 					else
 					{
-						// ☆ Officially started reading definition data ☆
+						//  Officially started reading definition data 
 						// Roughly read the definition data of the original type of theDefinition for the first time, and gulp all the recorded data into theDefinition.
 						// At this time, all the data of theDefinition's original non-pointer type will be read correctly, but the variables of its pointer type will be read and assigned as wild pointers.
-						// / The problem of these wild pointers will be fixed in DefMapReadFromCache() with the help of the corresponding DEFIELD's MEXTRDATA in the future
+						// The problem of these wild pointers will be fixed in DefMapReadFromCache() with the help of the corresponding DefField's mExtraData in the future
 						SMemR(aBufferPtr, theDefinition, theDefMap->mDefSize);
 						// Repair the wild pointer and flag data, and save the result of whether it is successful, and use it as the return value later
 						bool aResult = DefMapReadFromCache(aBufferPtr, theDefMap, theDefinition);
@@ -602,7 +602,7 @@ bool IsFileInPakFile(const SexyString &theFilePath)
 {
 	PFILE *pFile = p_fopen(theFilePath.c_str(), "rb");
 	bool aIsInPak =
-		pFile && !pFile->mFP; // 通过 mPakRecordMap.find 找到并打开的文件，其 mFP 为空指针（因为不是从实际文件中打开的）
+		pFile && !pFile->mFP; // The file found and opened by mPakRecordMap.find has a null pointer mFP (because it was not opened from an actual file).
 	if (pFile)
 	{
 		p_fclose(pFile);
@@ -635,12 +635,12 @@ bool DefinitionIsCompiled(const SexyString &theXMLFilePath)
 
 void DefinitionFillWithDefaults(DefMap *theDefMap, void *theDefinition)
 {
-	memset(theDefinition, NULL, theDefMap->mDefSize); // 将 theDefinition 初始化填充为 0
+	memset(theDefinition, NULL, theDefMap->mDefSize); // Initialize theDefinition to 0.
 	for (DefField *aField = theDefMap->mMapFields; *aField->mFieldName != '\0';
-		 aField++) // 遍历 theDefinition 的每一个成员变量
+		 aField++) // Iterate through each member variable of theDefinition
 		if (aField->mFieldType == DefFieldType::DT_STRING)
 			*(char **)((uintptr_t)theDefinition + aField->mFieldOffset) =
-				""; // 将所有 char* 类型的成员变量赋值为空字符数组的指针
+				""; // Assign all char* member variables to pointers to empty character arrays.
 }
 
 void DefinitionXmlError(XMLParser *theXmlParser, const char *theFormat, ...)
@@ -658,27 +658,27 @@ void DefinitionXmlError(XMLParser *theXmlParser, const char *theFormat, ...)
 bool DefinitionReadXMLString(XMLParser *theXmlParser, SexyString &theValue)
 {
 	XMLElement aXMLElement;
-	if (!theXmlParser->NextElement(&aXMLElement)) // 读取下一个 XML 元素
+	if (!theXmlParser->NextElement(&aXMLElement)) // Read the next XML element
 	{
 		DefinitionXmlError(theXmlParser, "Missing element value");
 		return false;
 	}
-	if (aXMLElement.mType == XMLElement::TYPE_END) // 读取到结束标签则结束处理
+	if (aXMLElement.mType == XMLElement::TYPE_END) // Processing ends when the end tag is read.
 		return true;
-	else if (aXMLElement.mType != XMLElement::TYPE_ELEMENT) // 除结束标签外，正常情况下，此处读取到的应是定义的正片内容
+	else if (aXMLElement.mType != XMLElement::TYPE_ELEMENT) // Apart from the closing tag, under normal circumstances, the content read here should be the defined main text.
 	{
 		DefinitionXmlError(theXmlParser, "unknown element type");
 		return false;
 	}
 
-	theValue = aXMLElement.mValue; // ☆ 赋值出参
+	theValue = aXMLElement.mValue; // Assigning values ​​to output parameters
 
-	if (!theXmlParser->NextElement(&aXMLElement)) // 继续读取下一个 XML 元素
+	if (!theXmlParser->NextElement(&aXMLElement)) // Continue reading the next XML element
 	{
 		DefinitionXmlError(theXmlParser, "Can't read element end");
 		return false;
 	}
-	if (aXMLElement.mType != XMLElement::TYPE_END) // 正常情况下，此处读取到的应是结束标签
+	if (aXMLElement.mType != XMLElement::TYPE_END) // Normally, what should be read here is the end tag.
 	{
 		DefinitionXmlError(theXmlParser, "Missing element end");
 		return false;
@@ -774,7 +774,7 @@ bool DefinitionReadArrayField(XMLParser *theXmlParser, DefinitionArrayDef *theAr
 	}
 	else
 	{
-		// 当 theArray 中已存在元素，且元素的个数为 2 的整数次幂时
+		// When theArray already contains elements, and the number of elements is a power of 2.
 		if (theArray->mArrayCount >= 1 &&
 			(theArray->mArrayCount == 1 || (theArray->mArrayCount & (theArray->mArrayCount - 1)) == 0))
 		{
@@ -1069,7 +1069,7 @@ bool DefinitionReadField(XMLParser *theXmlParser, DefMap *theDefMap, void *theDe
 		return true;
 	}
 	if (aXMLElement.mType !=
-		XMLElement::TYPE_START) // 正常情况下，此处读取到的应是开始标签，而其他内容在后续的相应函数中读取
+		XMLElement::TYPE_START) // Normally, the start tag should be read here, while other content is read in subsequent corresponding functions.
 	{
 		DefinitionXmlError(theXmlParser, "Missing element start");
 		return false;
@@ -1083,7 +1083,7 @@ bool DefinitionReadField(XMLParser *theXmlParser, DefMap *theDefMap, void *theDe
 				theXmlParser, aXMLElement.mValue, (uintptr_t *)pVar, (DefSymbol *)aField->mExtraData))
 			return true;
 
-		if (stricmp(aXMLElement.mValue.c_str(), aField->mFieldName) == 0) // 判断 aXMLElement 定义的是否为该成员变量
+		if (stricmp(aXMLElement.mValue.c_str(), aField->mFieldName) == 0) // Determine if aXMLElement is defined as the member variable.
 		{
 			bool aSuccess = false;
 			switch (aField->mFieldType)
@@ -1127,16 +1127,16 @@ bool DefinitionReadField(XMLParser *theXmlParser, DefMap *theDefMap, void *theDe
 		}
 	}
 	DefinitionXmlError(
-		theXmlParser, "Ignoring unknown element '%s'", aXMLElement.mValue.c_str()); // aXMLElement 未定义任何成员变量时
+		theXmlParser, "Ignoring unknown element '%s'", aXMLElement.mValue.c_str()); // When no member variables are defined in aXMLElement
 	return false;
 }
 
 bool DefinitionLoadMap(XMLParser *theXmlParser, DefMap *theDefMap, void *theDefinition)
 {
 	if (theDefMap->mConstructorFunc)
-		theDefMap->mConstructorFunc(theDefinition); // 利用构造函数构造 theDefinition
+		theDefMap->mConstructorFunc(theDefinition); // Construct theDefinition using the constructor
 	else
-		DefinitionFillWithDefaults(theDefMap, theDefinition); // 以默认值填充 theDefinition
+		DefinitionFillWithDefaults(theDefMap, theDefinition); // TheDefinition is populated with the default value.
 
 	bool aDone = false;
 	while (!aDone)
@@ -1147,18 +1147,7 @@ bool DefinitionLoadMap(XMLParser *theXmlParser, DefMap *theDefMap, void *theDefi
 
 bool DefinitionWriteCompiledFile(const SexyString &theCompiledFilePath, DefMap *theDefMap, void *theDefinition)
 {
-	/*
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    ####################################################################################################
-    */
+	//todo: implement
 	return true;
 }
 
@@ -1216,17 +1205,17 @@ float FloatTrackEvaluate(FloatParameterTrack &theTrack, float theTimeValue, floa
 	if (theTrack.mCountNodes == 0)
 		return 0.0f;
 
-	if (theTimeValue < theTrack.mNodes[0].mTime) // 如果当前时间小于第一个节点的开始时间
+	if (theTimeValue < theTrack.mNodes[0].mTime) // If the current time is less than the start time of the first node
 		return TodCurveEvaluate(
 			theInterp, theTrack.mNodes[0].mLowValue, theTrack.mNodes[0].mHighValue, theTrack.mNodes[0].mDistribution);
 
 	for (int i = 1; i < theTrack.mCountNodes; i++)
 	{
 		FloatParameterTrackNode *aNodeNxt = &theTrack.mNodes[i];
-		if (theTimeValue <= aNodeNxt->mTime) // 寻找首个开始时间大于当前时间的节点
+		if (theTimeValue <= aNodeNxt->mTime) // Find the first node whose start time is greater than the current time.
 		{
 			FloatParameterTrackNode *aNodeCur = &theTrack.mNodes[i - 1];
-			// 计算当前时间在〔当前节点至下一节点〕的过程中的进度
+			// Calculate the progress from the current node to the next node at the current time.
 			float aTimeFraction = (theTimeValue - aNodeCur->mTime) / (aNodeNxt->mTime - aNodeCur->mTime);
 			float aLeftValue =
 				TodCurveEvaluate(theInterp, aNodeCur->mLowValue, aNodeCur->mHighValue, aNodeCur->mDistribution);
@@ -1237,16 +1226,16 @@ float FloatTrackEvaluate(FloatParameterTrack &theTrack, float theTimeValue, floa
 	}
 
 	FloatParameterTrackNode *aLastNode =
-		&theTrack.mNodes[theTrack.mCountNodes - 1]; // 如果当前时间大于最后一个节点的开始时间
+		&theTrack.mNodes[theTrack.mCountNodes - 1]; // If the current time is greater than the start time of the last node
 	return TodCurveEvaluate(theInterp, aLastNode->mLowValue, aLastNode->mHighValue, aLastNode->mDistribution);
 }
 
 //0x4449F0
 void FloatTrackSetDefault(FloatParameterTrack &theTrack, float theValue)
 {
-	if (theTrack.mNodes == nullptr && theValue != 0.0f) // 确保该参数轨道无节点（未被赋值过）且给定的默认值不为 0
+	if (theTrack.mNodes == nullptr && theValue != 0.0f) // Ensure that this parameter has no nodes (has not been assigned a value) and that the given default value is not 0.
 	{
-		theTrack.mCountNodes = 1; // 默认参数轨道有且仅有 1 个节点
+		theTrack.mCountNodes = 1; // The default parameter track has exactly one node.
 		FloatParameterTrackNode *aNode = (FloatParameterTrackNode *)DefinitionAlloc(sizeof(FloatParameterTrackNode));
 		theTrack.mNodes = aNode;
 		aNode->mTime = 0.0f;
@@ -1264,7 +1253,7 @@ bool FloatTrackIsSet(const FloatParameterTrack &theTrack)
 
 bool FloatTrackIsConstantZero(FloatParameterTrack &theTrack)
 {
-	// 当轨道无节点，或仅存在一个节点且该节点的最大、最小值均为 0 时，认为该轨道上的值恒为零
+	// When a track has no nodes, or has only one node whose maximum and minimum values ​​are both 0, the values ​​on that track are considered to be always zero.
 	return theTrack.mCountNodes == 0 ||
 		   (theTrack.mCountNodes == 1 && theTrack.mNodes[0].mLowValue == 0.0f && theTrack.mNodes[0].mHighValue == 0.0f);
 }
@@ -1280,17 +1269,17 @@ void DefinitionFreeArrayField(DefinitionArrayDef *theArray, DefMap *theDefMap)
 {
 	for (int i = 0; i < theArray->mArrayCount; i++)
 		DefinitionFreeMap(theDefMap,
-			(void *)((uintptr_t)theArray->mArrayData + theDefMap->mDefSize * i)); // 最后一个参数表示 pData[i]
+			(void *)((uintptr_t)theArray->mArrayData + theDefMap->mDefSize * i)); // The last parameter represents pData[i].
 	DefinitionFree(theArray->mArrayData);
 }
 
 //0x444A90
 void DefinitionFreeMap(DefMap *theDefMap, void *theDefinition)
 {
-	// 根据 theDefMap 遍历 theDefinition 的每个成员变量
+	// Iterate through each member variable of theDefinition using theDefMap.
 	for (DefField *aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++)
 	{
-		void *aVar = (void *)((uintptr_t)theDefinition + aField->mFieldOffset); // 指向该成员变量的指针
+		void *aVar = (void *)((uintptr_t)theDefinition + aField->mFieldOffset); // pointer to this member variable
 		switch (aField->mFieldType)
 		{
 		case DefFieldType::DT_STRING:
@@ -1299,7 +1288,7 @@ void DefinitionFreeMap(DefMap *theDefMap, void *theDefinition)
 			if (aStr == nullptr)
 				continue;
 			if (*aStr != '\0')
-				delete[] aStr; // 释放字符数组
+				delete[] aStr; // Release character array
 
 			*(char **)aVar = nullptr;
 			break;
@@ -1311,7 +1300,7 @@ void DefinitionFreeMap(DefMap *theDefMap, void *theDefinition)
 		{
 			FloatParameterTrack* aCastedField = (FloatParameterTrack *)aVar;
 			if (aCastedField->mCountNodes != 0)
-				delete[] aCastedField->mNodes; // 释放浮点参数轨道的节点
+				delete[] aCastedField->mNodes; // Release the node of the floating-point parameter track
 			aCastedField->mNodes = nullptr;
 			break;
 		}

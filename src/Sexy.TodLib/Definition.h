@@ -22,124 +22,129 @@ enum class DefFieldType : int
 };
 
 /*
-    [为通俗理解以下内容，在此规定]
-        “用于存储其他类的定义数据”的类，称为定义数据类，记作 _DefClass。相应地，将被 _DefClass 定义的类记作 _Class。
-        例如，ReanimatorDefinition 作为 Reanimation 类（动画类）的定义数据类，TodParticleDefinition 作为 TodParticleSystem 类（粒子系统类）的定义数据类等。
+	[For clarity, the following is defined as follows]
+
+	A class used to store definition data for other classes is called a definition data class, denoted by _DefClass. 
+	Correspondingly, the class defined by _DefClass is denoted by _Class.
+
+	For example, 
+	ReanimatorDefinition serves as the definition data class for the Reanimation class (an animation class)
+	TodParticleDefinition serves as the definition data class for the TodParticleSystem class (a particle system class), etc.
 */
 
 // ====================================================================================================
-// ★ 【定义标志】
+// Define the mark
 // ----------------------------------------------------------------------------------------------------
-// 对于按标志位判断的（/枚举类型的）数据，一个 DefSymbol 记录其一个标志位上的（/一个枚举项的）值。
+// For data of an enumeration type determined by a flag bit, a DefSymbol records the value of one of its flag bits (of an enumeration item).
 // ====================================================================================================
 class DefSymbol
 {
   public:
-	int mSymbolValue;		 //+0x0：标志位上的值或枚举项对应的数值，若为 -1 则表示不存在该项
-	const char *mSymbolName; //+0x4：标志位或枚举项的名称，为空指针时表示不存在该项，故被作为读取结束的标志
+	int mSymbolValue;		 // The value of the flag bit or the numerical value corresponding to the enumeration item; if it is -1, it means that the item does not exist.
+	const char *mSymbolName; // The flag or the name of the enumeration item, when a null pointer indicates that the item does not exist, is used as a marker to indicate the end of the read.
 };
-//extern DefSymbol gParticleFlagSymbols[];  //0x69E290
-//extern DefSymbol gEmitterTypeSymbols[];  //0x69E260
-//extern DefSymbol gParticleTypeSymbols[];  //0x69E200
+extern DefSymbol gParticleFlagSymbols[];
+extern DefSymbol gEmitterTypeSymbols[];
+extern DefSymbol gParticleTypeSymbols[];
 
 // ====================================================================================================
-// ★ 【结构字段】
+// Structure Fields
 // ----------------------------------------------------------------------------------------------------
-// 结构字段记录了一个类中的一个的成员变量（_MemVar）的数据和其在所处类中的结构。
+// The structure field records the data of a member variable (_MemVar) in a class and its structure within the class.
 // ====================================================================================================
 class DefField
 {
   public:
-	const char *mFieldName;	 //+0x0：指向 _MemVar 的名称。指向空字符数组时表示无此变量，故被作为读取结束的标志
-	int mFieldOffset;		 //+0x4：_MemVar 在所处类中的偏移量（结合汇编理解）
-	DefFieldType mFieldType; //+0x8：*_MemVar 的数据存储类型，不同类型的数据的读取方式也有所不同
-	void *mExtraData;		 //+0xC：额外数据。用于对 *_MemVar 中包含的指针变量进行深拷贝。
-	// 若 _MemVar 为指向其他定义数据的指针型变量，则 mExtraData 为指向 _MemVar 所定义的类的定义结构图的指针；
-	// 若 _MemVar 为标志或枚举类型的数据，则 mExtraData 为指向其各标志数据的 DefSymbol 数组的指针；否则，mExtraData 为空指针。
-	// 虽然借助一个 _DefClass 类的定义结构图就已经可以通过相关函数读取该 _DefClass 的全部数据（即进行浅拷贝），
-	// 但是 _DefClass 中的部分指针变量指向的数据仍然需要进一步依靠相应类型的定义结构图进行递归读取（即进行深拷贝）。
-	// 即：通过层层嵌套的定义结构图，将原本含有层级关系的各类型变量指针“展开”，直到当前变量的数据中已经不存在可以“展开”的指针为止，递归读取结束。
+	const char *mFieldName;	 // The name of _MemVar. Pointing to an empty character array indicates that this variable does not exist, and is therefore used as a marker to indicate the end of reading.
+	int mFieldOffset;		 // Offset within the class (understand in conjunction with assembly language)
+	DefFieldType mFieldType; // *_MemVar The data storage type varies, and the reading method also differs for different types of data.
+	void *mExtraData;		 // Additional data. Used for deep copying pointer variables contained in *_MemVar.
+	// If _MemVar is a pointer variable pointing to other defined data, then mExtraData is a pointer to the definition structure diagram of the class defined by _MemVar;
+	// If _MemVar is data of a flag or enumeration type, then mExtraData is a pointer to an array of DefSymbol arrays for each of its flag data; otherwise, mExtraData is a null pointer.
+	// Although by using the definition structure diagram of a _DefClass class, it is possible to read all the data of the _DefClass through relevant functions (i.e., perform a shallow copy).
+	// However, the data pointed to by some pointer variables in _DefClass still needs to be recursively read (i.e., deep copied) based on the definition structure diagram of the corresponding type.
+	// In other words, by using a nested definition structure diagram, the pointers of various types of variables that originally had hierarchical relationships are "expanded" until there are no pointers in the current variable's data that can be "expanded", at which point the recursive reading ends.
 };
 
 // ====================================================================================================
-// ★ 【定义结构图】
+// Define the structure diagram
 // ----------------------------------------------------------------------------------------------------
-// 定义结构图描述了一种定义数据类（_DefClass）中定义数据的存储格式和读取方式，类似于“_DefDefClass”。
+// The definition structure diagram describes the storage format and retrieval method of defined data in a defined data class (_DefClass), similar to "_DefDefClass".
 // ====================================================================================================
 class DefMap
 {
   public:
 	DefField
-		*mMapFields; //+0x0：结构字段的数组，记录 _DefClass 类中的各成员变量在 _DefClass 中的结构（每项记录一种结构）
-	int mDefSize;	 //+0x4：一个 _DefClass 实例所占用的内存大小，也即后续初次读取时的读取长度，一般为 sizeof(_DefClass)
-	void *(*mConstructorFunc)(void *); //+0x8：_DefClass 类型实例的构造函数的指针
+		*mMapFields; // An array of structure fields, recording the structure of each member variable in the _DefClass class within _DefClass (each record represents one structure).
+	int mDefSize;	 // The memory size occupied by a _DefClass instance, which is also the length of the initial read, is typically sizeof(_DefClass).
+	void *(*mConstructorFunc)(void *); // A pointer to the constructor of an instance of type _DefClass.
 };
 
-void *__cdecl TodParticleDefinitionConstructor(void *thePointer); //0x5155A0
-void *__cdecl TodEmitterDefinitionConstructor(void *thePointer);  //0x5155C0
-void *__cdecl ParticleFieldConstructor(void *thePointer);		  //0x515620
-void *__cdecl TrailDefinitionConstructor(void *thePointer);		  //0x51B7F0
-void *__cdecl ReanimatorTransformConstructor(void *thePointer);	  //0x471570
-void *__cdecl ReanimatorTrackConstructor(void *thePointer);		  //0x4715B0
-void *__cdecl ReanimatorDefinitionConstructor(void *thePointer);  //0x4715D0
+void *__cdecl TodParticleDefinitionConstructor(void *thePointer);
+void *__cdecl TodEmitterDefinitionConstructor(void *thePointer);
+void *__cdecl ParticleFieldConstructor(void *thePointer);
+void *__cdecl TrailDefinitionConstructor(void *thePointer);
+void *__cdecl ReanimatorTransformConstructor(void *thePointer);
+void *__cdecl ReanimatorTrackConstructor(void *thePointer);
+void *__cdecl ReanimatorDefinitionConstructor(void *thePointer);
 
-//extern DefField gParticleFieldDefFields[];  //0x69E2F8
-extern DefMap gParticleFieldDefMap; //0x69E338
-//
-//extern DefField gEmitterDefFields[];  //0x69E350
-extern DefMap gEmitterDefMap; //0x69E344
-//
-//extern DefField gParticleDefFields[];  //0x69E670
-extern DefMap gParticleDefMap; //0x69E690
-//
-extern DefMap gTrailDefMap; //0x69D98C
-//
-//extern DefField gReanimatorTransformDefFields[];  //0x69F088
-extern DefMap gReanimatorTransformDefMap; //0x69F07C
-//
-//extern DefField gReanimatorTrackDefFields[];  //0x69F148
-extern DefMap gReanimatorTrackDefMap; //0x69F178
-//
-//extern DefField gReanimatorDefFields[];  //0x69F184
-extern DefMap gReanimatorDefMap; //0x69F1B4
+extern DefField gParticleFieldDefFields[];
+extern DefMap gParticleFieldDefMap;
+
+extern DefField gEmitterDefFields[];
+extern DefMap gEmitterDefMap;
+
+extern DefField gParticleDefFields[];
+extern DefMap gParticleDefMap;
+
+extern DefMap gTrailDefMap;
+
+extern DefField gReanimatorTransformDefFields[];
+extern DefMap gReanimatorTransformDefMap;
+
+extern DefField gReanimatorTrackDefFields[];
+extern DefMap gReanimatorTrackDefMap;
+
+extern DefField gReanimatorDefFields[];
+extern DefMap gReanimatorDefMap;
 
 // ====================================================================================================
-// ★ 【定义数组】
+// Define array
 // ----------------------------------------------------------------------------------------------------
-// 一个定义数组对应一种指针类型变量指向的类型。
+// One array of definitions corresponds to one type of pointer variable that points to.
 // ====================================================================================================
 class DefinitionArrayDef
 {
   public:
-	void *mArrayData; //+0x0：由若干个特定定义数据类型的实例构成的数组，例如动画定义中的“轨道”定义
-	int mArrayCount;  //+0x4：数组的大小，例如动画定义中的“轨道”数量或粒子系统定义中的“发射器”数量
-	// 定义数据类中的一个“数组（指针） + 数量”的组合，在读取时将被 DefField 视作一个 DefinitionArrayDef 结构
-	// 例如 TodParticleDefinition 下的 *mEmitterDefs 和 mEmitterDefCount、以及 TodEmitterDefinition 下的 *mParticleFields 和 mParticleFieldCount 等。
-	// 在读取时，作为 mArrayCount 的一项数据总是能在初次读取时就被正确读取（因为是整数类型），故其也会在后续 mArrayData 的修复过程中成为校验参考
+	void *mArrayData; // An array consisting of instances of a specific defined data type, such as the "track" definition in an animation definition.
+	int mArrayCount;  // The size of the array, such as the number of "tracks" in an animation definition or the number of "emitters" in a particle system definition.
+	// Define a combination of "array (pointer) + quantity" in the data class, which will be treated as a DefinitionArrayDef structure by DefField when read.
+	// For example, *mEmitterDefs and mEmitterDefCount under TodParticleDefinition, and *mParticleFields and mParticleFieldCount under TodEmitterDefinition.
+	// During reading, data items in mArrayCount are always correctly read on the first read (because they are integers), and therefore will also serve as a verification reference during the subsequent repair process of mArrayData.
 };
 
 // ====================================================================================================
-// ★ 【压缩定义数据头】
+// Compress definition data header
 // ----------------------------------------------------------------------------------------------------
-// 在压缩数据前添加一个压缩定义数据头，记录校验缓存值及原始数据长度，用于在解压时检测数据完整性。
+// Add a compression definition header before the compressed data to record the verification cache value and the original data length, which is used to check data integrity during decompression.
 // ====================================================================================================
 class CompressedDefinitionHeader
 {
   public:
-	unsigned int mCookie;			 //+0x0：用于压缩校验的缓存值
-	unsigned long mUncompressedSize; //+0x4：未压缩数据的长度
+	unsigned int mCookie;			 // Cache values ​​used for compression verification
+	unsigned long mUncompressedSize; // Length of uncompressed data
 };
 
 // ====================================================================================================
-// ★ 【定义路径】
+// Define path
 // ----------------------------------------------------------------------------------------------------
-// 定义路径在一种贴图前缀与该前缀的贴图存放的文件夹路径之间建立关联。
+// Define a path to establish an association between a texture prefix and the folder path where the textures with that prefix are stored.
 // ====================================================================================================
 class DefLoadResPath
 {
   public:
-	const char *mPrefix;	//+0x0：贴图的前缀，如“IMAGE_"
-	const char *mDirectory; //+0x4：前缀对应的贴图所在文件夹，如“images\”
+	const char *mPrefix;	// Image prefixes, such as "IMAGE_"
+	const char *mDirectory; // The folder containing the textures corresponding to the prefix, such as "images\".
 };
 
 SexyString /*__cdecl*/ DefinitionGetCompiledFilePathFromXMLFilePath(const SexyString &theXMLFilePath);
@@ -171,8 +176,8 @@ bool DefinitionCompileFile(const SexyString theXMLFilePath,
 						   void *theDefinition);
 /*inline*/ void *DefinitionAlloc(int theSize);
 void *DefinitionUncompressCompiledBuffer(void *theCompressedBuffer,
-										 uint32_t theCompressedBufferSize,
-										 uint32_t &theUncompressedSize,
+										 size_t theCompressedBufferSize,
+										 size_t &theUncompressedSize,
 										 const SexyString &theCompiledFilePath);
 uint32_t /*__cdecl*/ DefinitionCalcHashSymbolMap(int aSchemaHash, DefSymbol *theSymbolMap);
 uint32_t /*__cdecl*/ DefinitionCalcHashDefMap(int aSchemaHash, DefMap *theDefMap, TodList<DefMap *> &theProgressMaps);
