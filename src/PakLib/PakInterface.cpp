@@ -1,15 +1,11 @@
 #include "PakInterface.h"
 #include <fstream>
 #include <vector>
+#include <cinttypes>
 
 #if __clang__
 #define stricmp _stricmp
 #endif
-
-
-typedef unsigned char uchar;
-typedef unsigned short ushort;
-typedef unsigned long ulong;
 
 enum
 {
@@ -30,25 +26,74 @@ static std::string StringToUpper(const std::string &theString)
 
 PakInterface::PakInterface()
 {
-	if (GetPakPtr() == NULL)
-		gPakInterfaceP = this;
+	if (gPakInterface == NULL)
+		gPakInterface = this;
 }
 
 PakInterface::~PakInterface()
 {
 }
 
+
+static void FixFileName(const char *theFileName, char *theUpperName)
+{
+	if ((theFileName[0] != 0) && (theFileName[1] == ':'))
+	{
+		char aDir[256];
+		std::string aWorkingDir = std::filesystem::current_path().string();
+		std::snprintf(aDir, sizeof(aDir), "%s", aWorkingDir.c_str());
+		int aLen = strlen(aDir);
+		aDir[aLen++] = '/';
+		aDir[aLen] = 0;
+
+		if (strnicmp(aDir, theFileName, aLen) == 0)
+			theFileName += aLen;
+	}
+
+	bool lastSlash = false;
+	const char *aSrc = theFileName;
+	char *aDest = theUpperName;
+
+	for (;;)
+	{
+		char c = *(aSrc++);
+
+		if ((c == '\\') || (c == '/'))
+		{
+			if (!lastSlash)
+				*(aDest++) = '/';
+			lastSlash = true;
+		}
+		else if ((c == '.') && (lastSlash) && (*aSrc == '.'))
+		{
+			// We have a '/..' on our hands
+			aDest--;
+			while ((aDest > theUpperName + 1) && (*(aDest - 1) != '\\'))
+				--aDest;
+			aSrc++;
+		}
+		else
+		{
+			*(aDest++) = toupper((uint8_t)c);
+			if (c == 0)
+				break;
+			lastSlash = false;
+		}
+	}
+}
+
+
 bool PakInterface::AddPakFile(const std::string &theFileName)
 {
 	std::ifstream aFile(theFileName, std::ios::binary | std::ios::ate);
 	if (!aFile)
 		return false;
-	
 
 	int aFileSize = aFile.tellg();
+	aFile.seekg(0, std::ios::beg);
 
 	std::vector<uint8_t> buffer(aFileSize);
-	if (!aFile.read(reinterpret_cast<char *>(buffer.data()), aFileSize))
+	if (!aFile.read(reinterpret_cast<char *>(buffer.data()), static_cast<std::streamsize>(aFileSize)))
 		return false;
 
 	mPakCollectionList.push_back(PakCollection());
@@ -68,16 +113,16 @@ bool PakInterface::AddPakFile(const std::string &theFileName)
 	if (aFP == NULL)
 		return false;
 
-	ulong aMagic = 0;
-	FRead(&aMagic, sizeof(ulong), 1, aFP);
+	uint32_t aMagic = 0;
+	FRead(&aMagic, sizeof(uint32_t), 1, aFP);
 	if (aMagic != 0xBAC04AC0)
 	{
 		FClose(aFP);
 		return false;
 	}
 
-	ulong aVersion = 0;
-	FRead(&aVersion, sizeof(ulong), 1, aFP);
+	uint32_t aVersion = 0;
+	FRead(&aVersion, sizeof(uint32_t), 1, aFP);
 	if (aVersion > 0)
 	{
 		FClose(aFP);
@@ -88,12 +133,12 @@ bool PakInterface::AddPakFile(const std::string &theFileName)
 
 	for (;;)
 	{
-		uchar aFlags = 0;
+		uint8_t aFlags = 0;
 		int aCount = FRead(&aFlags, 1, 1, aFP);
 		if ((aFlags & FILEFLAGS_END) || (aCount == 0))
 			break;
 
-		uchar aNameWidth = 0;
+		uint8_t aNameWidth = 0;
 		char aName[256];
 		FRead(&aNameWidth, 1, 1, aFP);
 		FRead(aName, 1, aNameWidth, aFP);
@@ -101,17 +146,25 @@ bool PakInterface::AddPakFile(const std::string &theFileName)
 
 		int aSrcSize = 0;
 		FRead(&aSrcSize, sizeof(int), 1, aFP);
-		//FILETIME aFileTime;
-		//FRead(&aFileTime, sizeof(FILETIME), 1, aFP);
+		int64_t aFileTime;
+		FRead(&aFileTime, sizeof(int64_t), 1, aFP);
+		
+		for (int i = 0; i < aNameWidth; i++) //windows....
+		{
+			if (aName[i] == '\\')
+				aName[i] = '/';
+		}
+		char anUpperName[256];
+		FixFileName(aName, anUpperName);
 
 		PakRecordMap::iterator aRecordItr =
 			mPakRecordMap.insert(PakRecordMap::value_type(StringToUpper(aName), PakRecord())).first;
 		PakRecord *aPakRecord = &(aRecordItr->second);
 		aPakRecord->mCollection = aPakCollection;
-		aPakRecord->mFileName = aName;
+		aPakRecord->mFileName = anUpperName;
 		aPakRecord->mStartPos = aPos;
 		aPakRecord->mSize = aSrcSize;
-		//aPakRecord->mFileTime = aFileTime;
+		aPakRecord->mFileTime = aFileTime;
 
 		aPos += aSrcSize;
 	}
@@ -139,6 +192,7 @@ PFILE *PakInterface::FOpen(const char *theFileName, const char *anAccess)
 	if ((stricmp(anAccess, "r") == 0) || (stricmp(anAccess, "rb") == 0) || (stricmp(anAccess, "rt") == 0))
 	{
 		char anUpperName[256];
+		FixFileName(theFileName, anUpperName);
 
 		PakRecordMap::iterator anItr = mPakRecordMap.find(anUpperName);
 		if (anItr != mPakRecordMap.end())
@@ -208,8 +262,8 @@ size_t PakInterface::FRead(void *thePtr, int theElemSize, int theCount, PFILE *t
 		int aSizeBytes = std::min(1l * theElemSize * theCount, theFile->mRecord->mSize - theFile->mPos);
 
 		// 取得在整个 pak 中开始读取的位置的指针
-		uchar *src = theFile->mRecord->mCollection->mData.data() + theFile->mRecord->mStartPos + theFile->mPos;
-		uchar *dest = (uchar *)thePtr;
+		uint8_t *src = theFile->mRecord->mCollection->mData.data() + theFile->mRecord->mStartPos + theFile->mPos;
+		uint8_t *dest = (uint8_t *)thePtr;
 		for (int i = 0; i < aSizeBytes; i++)
 			*(dest++) = (*src++) ^ 0xF7; // 'Decrypt'
 		theFile->mPos += aSizeBytes;	 // 读取完成后，移动当前读取位置的指针
@@ -231,7 +285,7 @@ int PakInterface::FGetC(PFILE *theFile)
 				*((char *)theFile->mRecord->mCollection->mData.data() + theFile->mRecord->mStartPos + theFile->mPos++) ^
 				0xF7;
 			if (aChar != '\r')
-				return (uchar)aChar;
+				return (uint8_t)aChar;
 		}
 	}
 

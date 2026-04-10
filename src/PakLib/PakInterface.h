@@ -117,17 +117,10 @@ class PakInterface : public PakInterfaceBase
 
 extern PakInterface *gPakInterface;
 
-static PakInterfaceBase* gPakInterfaceP = NULL;
-
-static PakInterfaceBase *GetPakPtr()
-{
-	return gPakInterfaceP;
-}
-
 static PFILE *p_fopen(const char *theFileName, const char *theAccess)
 {
-	if (GetPakPtr() != NULL)
-		return gPakInterfaceP->FOpen(theFileName, theAccess);
+	if (gPakInterface != NULL)
+		return gPakInterface->FOpen(theFileName, theAccess);
 	FILE *aFP = fopen(theFileName, theAccess);
 	if (aFP == NULL)
 		return NULL;
@@ -137,11 +130,11 @@ static PFILE *p_fopen(const char *theFileName, const char *theAccess)
 	aPFile->mFP = aFP;
 	return aPFile;
 }
-
+/*
 static PFILE *p_fopen(const wchar_t *theFileName, const wchar_t *theAccess)
 {
-	if (GetPakPtr() != NULL)
-		return gPakInterfaceP->FOpen(theFileName, theAccess);
+	if (gPakInterface != NULL)
+		return gPakInterface->FOpen(theFileName, theAccess);
 	FILE *aFP = _wfopen(theFileName, theAccess);
 	if (aFP == NULL)
 		return NULL;
@@ -151,11 +144,11 @@ static PFILE *p_fopen(const wchar_t *theFileName, const wchar_t *theAccess)
 	aPFile->mFP = aFP;
 	return aPFile;
 }
-
+*/
 static int p_fclose(PFILE *theFile)
 {
-	if (GetPakPtr() != NULL)
-		return gPakInterfaceP->FClose(theFile);
+	if (gPakInterface != NULL)
+		return gPakInterface->FClose(theFile);
 	int aResult = fclose(theFile->mFP);
 	delete theFile;
 	return aResult;
@@ -163,22 +156,22 @@ static int p_fclose(PFILE *theFile)
 
 static int p_fseek(PFILE *theFile, long theOffset, int theOrigin)
 {
-	if (GetPakPtr() != NULL)
-		return gPakInterfaceP->FSeek(theFile, theOffset, theOrigin);
+	if (gPakInterface != NULL)
+		return gPakInterface->FSeek(theFile, theOffset, theOrigin);
 	return fseek(theFile->mFP, theOffset, theOrigin);
 }
 
 static long p_ftell(PFILE *theFile)
 {
-	if (GetPakPtr() != NULL)
-		return gPakInterfaceP->FTell(theFile);
+	if (gPakInterface != NULL)
+		return gPakInterface->FTell(theFile);
 	return ftell(theFile->mFP);
 }
 
 static size_t p_fread(void *thePtr, int theSize, int theCount, PFILE *theFile)
 {
-	if (GetPakPtr() != NULL)
-		return gPakInterfaceP->FRead(thePtr, theSize, theCount, theFile);
+	if (gPakInterface != NULL)
+		return gPakInterface->FRead(thePtr, theSize, theCount, theFile);
 	return fread(thePtr, theSize, theCount, theFile->mFP);
 }
 
@@ -191,36 +184,36 @@ static size_t p_fwrite(const void *thePtr, int theSize, int theCount, PFILE *the
 
 static int p_fgetc(PFILE *theFile)
 {
-	if (GetPakPtr() != NULL)
-		return gPakInterfaceP->FGetC(theFile);
+	if (gPakInterface != NULL)
+		return gPakInterface->FGetC(theFile);
 	return fgetc(theFile->mFP);
 }
 
 static int p_ungetc(int theChar, PFILE *theFile)
 {
-	if (GetPakPtr() != NULL)
-		return gPakInterfaceP->UnGetC(theChar, theFile);
+	if (gPakInterface != NULL)
+		return gPakInterface->UnGetC(theChar, theFile);
 	return ungetc(theChar, theFile->mFP);
 }
 
 static char *p_fgets(char *thePtr, int theSize, PFILE *theFile)
 {
-	if (GetPakPtr() != NULL)
-		return gPakInterfaceP->FGetS(thePtr, theSize, theFile);
+	if (gPakInterface != NULL)
+		return gPakInterface->FGetS(thePtr, theSize, theFile);
 	return fgets(thePtr, theSize, theFile->mFP);
 }
-
+/*
 static wchar_t *p_fgets(wchar_t *thePtr, int theSize, PFILE *theFile)
 {
-	if (GetPakPtr() != NULL)
-		return gPakInterfaceP->FGetS(thePtr, theSize, theFile);
+	if (gPakInterface != NULL)
+		return gPakInterface->FGetS(thePtr, theSize, theFile);
 	return fgetws(thePtr, theSize, theFile->mFP);
 }
-
+*/
 static int p_feof(PFILE *theFile)
 {
-	if (GetPakPtr() != NULL)
-		return gPakInterfaceP->FEof(theFile);
+	if (gPakInterface != NULL)
+		return gPakInterface->FEof(theFile);
 	return feof(theFile->mFP);
 }
 #endif //__PAKINTERFACE_H__
