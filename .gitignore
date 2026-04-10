@@ -7,4 +7,6 @@ out/
 .vs/
 savefiles/
 crash.txt
-Dist/*.dll
+
+#The game export folder
+Dist/
