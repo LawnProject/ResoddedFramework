@@ -2,6 +2,7 @@
 #define __TODDEFINITION_H__
 
 #include <string>
+#include "CompiledDefinition.h"
 #include "TodList.h"
 #include "Reanimator.h"
 #include "TodParticle.h"
@@ -121,18 +122,6 @@ class DefinitionArrayDef
 	// Define a combination of "array (pointer) + quantity" in the data class, which will be treated as a DefinitionArrayDef structure by DefField when read.
 	// For example, *mEmitterDefs and mEmitterDefCount under TodParticleDefinition, and *mParticleFields and mParticleFieldCount under TodEmitterDefinition.
 	// During reading, data items in mArrayCount are always correctly read on the first read (because they are integers), and therefore will also serve as a verification reference during the subsequent repair process of mArrayData.
-};
-
-// ====================================================================================================
-// Compress definition data header
-// ----------------------------------------------------------------------------------------------------
-// Add a compression definition header before the compressed data to record the verification cache value and the original data length, which is used to check data integrity during decompression.
-// ====================================================================================================
-class CompressedDefinitionHeader
-{
-  public:
-	unsigned int mCookie;			 // Cache values ​​used for compression verification
-	unsigned long mUncompressedSize; // Length of uncompressed data
 };
 
 // ====================================================================================================
