@@ -37,6 +37,8 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
     _LIB
     DO_FIX_BUGS
     _CRT_SECURE_NO_WARNINGS
+
+    LAWN_DEBUG_TOOLS
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC

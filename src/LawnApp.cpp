@@ -47,6 +47,10 @@
 #include "SexyAppFramework/Dialog.h"
 #include "SexyAppFramework/resource.h"
 
+#if LAWN_DEBUG_TOOLS
+#include "Lawn/Debug/DebuggerWindow.h"
+#endif
+
 bool gIsPartnerBuild = false;
 bool gSlowMo = false;		 //0x6A9EAA
 bool gFastMo = false;		 //0x6A9EAB
@@ -147,11 +151,21 @@ LawnApp::LawnApp()
 	#if SEXY_USE_DRM
 	mDRM = nullptr;
 	#endif
+
+#if LAWN_DEBUG_TOOLS
+	mDebugWindow = nullptr;
+#endif
+
 }
 
 //0x44EDD0、0x44EDF0
 LawnApp::~LawnApp()
 {
+#if LAWN_DEBUG_TOOLS
+	if (mDebugWindow)
+		delete mDebugWindow;
+#endif
+
 	if (mBoard)
 	{
 		WriteCurrentUserConfig();
@@ -1359,7 +1373,18 @@ void LawnApp::Start()
 //0x4522C0
 bool LawnApp::DebugKeyDown(int theKey)
 {
-	return SexyAppBase::DebugKeyDown(theKey);
+	if (theKey == KEYCODE_F1)
+	{
+#if LAWN_DEBUG_TOOLS
+		if (mDebugWindow == nullptr)
+			mDebugWindow = new DebuggerWindow(this);
+		else
+			mDebugWindow->mEnabled = !mDebugWindow->mEnabled;
+#endif
+		
+	}
+	else
+		return SexyAppBase::DebugKeyDown(theKey);
 }
 
 //0x4522E0

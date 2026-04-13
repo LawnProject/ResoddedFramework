@@ -12,6 +12,9 @@
 #if SEXY_USE_OPENGL
 #include "OpenGLRenderer.h"
 #endif
+#if SEXY_USE_IMGUI
+#include "ImGui/ImGuiManager.h"
+#endif
 #include "GPUImage.h"
 #include "Window.h"
 #include "MemoryImage.h"
@@ -171,6 +174,9 @@ SexyAppBase::SexyAppBase()
 	mAllowMonitorPowersave = true;
 	mWindow = nullptr;
 	mMusicInterface = NULL;
+#if SEXY_USE_IMGUI
+	mImGuiManager = nullptr;
+#endif
 	mRenderer = nullptr;
 	mFrameTime = 10;
 	mNonDrawCount = 0;
@@ -373,12 +379,15 @@ SexyAppBase::~SexyAppBase()
 					SDL_MessageBoxButtonData buttons[] = {{SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes"},
 														  {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "No"}};
 					SDL_MessageBoxData msgBoxData;
-					msgBoxData.flags = MsgBox_YESNO;
+					msgBoxData.flags = SDL_MESSAGEBOX_WARNING;
 					msgBoxData.title = GetString("HARDWARE_ACCEL_SWITCHED_ON",
 												  "Hardware Acceleration was switched on during this session.\nIf this "
 												  "resulted in slower performance,it should be switched off.\nWould "
 												  "you like to keep Hardware Acceleration switched on?").c_str();
-					msgBoxData.message = (mCompanyName + " " + GetString("HARDWARE_ACCEL_CONFIRMATION", "Hardware Acceleration Confirmation")).c_str();
+					std::string aMessage =
+						(mCompanyName + " " +
+						 GetString("HARDWARE_ACCEL_CONFIRMATION", "Hardware Acceleration Confirmation"));
+					msgBoxData.message = aMessage.c_str();
 					msgBoxData.buttons = buttons;
 					msgBoxData.numbuttons = 2;
 					int aResult;
@@ -404,7 +413,7 @@ SexyAppBase::~SexyAppBase()
 		SDL_MessageBoxButtonData buttons[] = {{SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes"},
 											  {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "No"}};
 		SDL_MessageBoxData msgBoxData;
-		msgBoxData.flags = MsgBox_YESNO;
+		msgBoxData.flags = SDL_MESSAGEBOX_WARNING;
 		msgBoxData.title =GetString("HARDWARE_ACCEL_NOT_WORKING",
 						"Hardware Acceleration may not have been working correctly during this session.\n"
 						"If you noticed graphics problems, you may want to turn off Hardware Acceleration.\n"
@@ -449,6 +458,9 @@ SexyAppBase::~SexyAppBase()
 		delete gDebugFont;
 
 	FT_Done_FreeType(mFreeTypeLib);
+#if SEXY_USE_IMGUI
+	delete mImGuiManager;
+#endif
 	delete mRenderer;
 	delete mMusicInterface;
 	delete mSoundManager;
@@ -2293,6 +2305,10 @@ void SexyAppBase::Redraw(Rect *theClipRect)
 	if (gScreenSaverActive)
 		return;
 
+#if SEXY_USE_IMGUI
+	mImGuiManager->Frame();
+#endif
+
 	static uint32_t aRetryTick = 0;
 	if (!mRenderer->Redraw(theClipRect))
 	{
@@ -2769,7 +2785,7 @@ void SexyAppBase::Popup(const std::string &theString)
 
 	BeginPopup();
 	if (!mShutdown)
-		SDL_ShowSimpleMessageBox(static_cast<SDL_MessageBoxFlags>(MsgBox_OK),
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
 								 GetString("FATAL_ERROR", "FATAL ERROR").c_str(),
 								 theString.c_str(),
 								 mWindow->mInternalWindow);
@@ -3549,6 +3565,9 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
+#if SEXY_USE_IMGUI
+		ImGui_ImplSDL3_ProcessEvent(&event);
+#endif
 		if ((mRecordingDemoBuffer) && (!mShutdown))
 		{
 			switch (event.type)
@@ -5010,6 +5029,14 @@ int SexyAppBase::InitDDInterface()
 		mWidgetManager->Resize(mScreenBounds, mRenderer->mPresentationRect);
 		PostDDInterfaceInitHook();
 	}
+
+#if SEXY_USE_IMGUI
+	if (mImGuiManager != nullptr)
+	{
+		mImGuiManager->Init();
+	}
+#endif
+	
 	return aResult;
 }
 
@@ -5465,6 +5492,10 @@ void SexyAppBase::Init()
 	{
 		DoExit(0);
 	}
+
+#if SEXY_USE_IMGUI
+	mImGuiManager = new ImGuiManager(this);
+#endif
 
 	if (FT_Init_FreeType(&mFreeTypeLib))
 	{
