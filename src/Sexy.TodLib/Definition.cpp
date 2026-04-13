@@ -6,11 +6,13 @@
 #include "../PakLib/PakInterface.h"
 #include "../SexyAppFramework/PerfTimer.h"
 #include "../SexyAppFramework/XMLParser.h" 
+#include <fstream>
+#include "OriginalCompiledDefinition.h"
 
-DefSymbol gTrailFlagDefSymbols[] = { //0x69E150
+DefSymbol gTrailFlagDefSymbols[] = {
 	{0, "Loops"},
 	{-1, nullptr}};
-DefField gTrailDefFields[] = { //0x69E160
+DefField gTrailDefFields[] = {
 	{"Image", offsetof(TrailDefinition, mImage), DefFieldType::DT_IMAGE, nullptr},
 	{"MaxPoints", offsetof(TrailDefinition, mMaxPoints), DefFieldType::DT_INT, nullptr},
 	{"MinPointDistance", offsetof(TrailDefinition, mMinPointDistance), DefFieldType::DT_FLOAT, nullptr},
@@ -21,9 +23,9 @@ DefField gTrailDefFields[] = { //0x69E160
 	{"AlphaOverTime", offsetof(TrailDefinition, mAlphaOverTime), DefFieldType::DT_TRACK_FLOAT, nullptr},
 	{"TrailDuration", offsetof(TrailDefinition, mTrailDuration), DefFieldType::DT_TRACK_FLOAT, nullptr},
 	{"", 0x0, DefFieldType::DT_INVALID, nullptr}};
-DefMap gTrailDefMap = {gTrailDefFields, sizeof(TrailDefinition), TrailDefinitionConstructor}; //0x69D98C
+DefMap gTrailDefMap = {gTrailDefFields, sizeof(TrailDefinition), TrailDefinitionConstructor};
 
-DefSymbol gParticleFlagSymbols[] = { //0x69E290
+DefSymbol gParticleFlagSymbols[] = {
 	{0, "RandomLaunchSpin"},
 	{1, "AlignLaunchSpin"},
 	{2, "AlignToPixel"},
@@ -37,14 +39,14 @@ DefSymbol gParticleFlagSymbols[] = { //0x69E290
 	{10, "SoftwareOnly"},
 	{11, "HardwareOnly"},
 	{-1, nullptr}};
-DefSymbol gEmitterTypeSymbols[] = { //0x69E260
+DefSymbol gEmitterTypeSymbols[] = {
 	{0, "Circle"},
 	{1, "Box"},
 	{2, "BoxPath"},
 	{3, "CirclePath"},
 	{4, "CircleEvenSpacing"},
 	{-1, nullptr}};
-DefSymbol gParticleTypeSymbols[] = { //0x69E200
+DefSymbol gParticleTypeSymbols[] = {
 	{1, "Friction"},
 	{2, "Acceleration"},
 	{3, "Attractor"},
@@ -59,16 +61,14 @@ DefSymbol gParticleTypeSymbols[] = { //0x69E200
 	{-1, nullptr}};
 
 DefField gParticleFieldDefFields[] = {
-	//0x69E2F8
 	{"FieldType", offsetof(ParticleField, mFieldType), DefFieldType::DT_ENUM, gParticleTypeSymbols},
 	{"x", offsetof(ParticleField, mX), DefFieldType::DT_TRACK_FLOAT, nullptr},
 	{"y", offsetof(ParticleField, mY), DefFieldType::DT_TRACK_FLOAT, nullptr},
 	{"", 0x0, DefFieldType::DT_INVALID, nullptr},
 };
-DefMap gParticleFieldDefMap = {gParticleFieldDefFields, sizeof(ParticleField), ParticleFieldConstructor}; //0x69E338
+DefMap gParticleFieldDefMap = {gParticleFieldDefFields, sizeof(ParticleField), ParticleFieldConstructor};
 
 DefField gEmitterDefFields[] = {
-	//0x69E350
 	{"Image", offsetof(TodEmitterDefinition, mImage), DefFieldType::DT_IMAGE, nullptr},
 	{"ImageRow", offsetof(TodEmitterDefinition, mImageRow), DefFieldType::DT_INT, nullptr},
 	{"ImageCol", offsetof(TodEmitterDefinition, mImageCol), DefFieldType::DT_INT, nullptr},
@@ -120,15 +120,15 @@ DefField gEmitterDefFields[] = {
 	{"AnimationRate", offsetof(TodEmitterDefinition, mAnimationRate), DefFieldType::DT_TRACK_FLOAT, nullptr},
 	{"", 0x0, DefFieldType::DT_INVALID, nullptr},
 };
-DefMap gEmitterDefMap = {gEmitterDefFields, sizeof(TodEmitterDefinition), TodEmitterDefinitionConstructor}; //0x69E344
+DefMap gEmitterDefMap = {gEmitterDefFields, sizeof(TodEmitterDefinition), TodEmitterDefinitionConstructor};
 
-DefField gParticleDefFields[] = { //0x69E670
+DefField gParticleDefFields[] = {
 	{"Emitter", 0x0, DefFieldType::DT_ARRAY, &gEmitterDefMap},
 	{"", 0x0, DefFieldType::DT_INVALID, nullptr}};
 DefMap gParticleDefMap = {
-	gParticleDefFields, sizeof(TodParticleDefinition), TodParticleDefinitionConstructor}; //0x69E690
+	gParticleDefFields, sizeof(TodParticleDefinition), TodParticleDefinitionConstructor};
 
-DefField gReanimatorTransformDefFields[] = { //0x69F088
+DefField gReanimatorTransformDefFields[] = {
 	{"x", offsetof(ReanimatorTransform, mTransX), DefFieldType::DT_FLOAT, nullptr},
 	{"y", offsetof(ReanimatorTransform, mTransY), DefFieldType::DT_FLOAT, nullptr},
 	{"kx", offsetof(ReanimatorTransform, mSkewX), DefFieldType::DT_FLOAT, nullptr},
@@ -142,28 +142,27 @@ DefField gReanimatorTransformDefFields[] = { //0x69F088
 	{"text", offsetof(ReanimatorTransform, mText), DefFieldType::DT_STRING, nullptr},
 	{"", 0x0, DefFieldType::DT_INVALID, nullptr}
 };
-DefMap gReanimatorTransformDefMap = { gReanimatorTransformDefFields, sizeof(ReanimatorTransform), ReanimatorTransformConstructor}; //0x69F07C
+DefMap gReanimatorTransformDefMap = { gReanimatorTransformDefFields, sizeof(ReanimatorTransform), ReanimatorTransformConstructor};
 
-DefField gReanimatorTrackDefFields[] = { //0x69F148
+DefField gReanimatorTrackDefFields[] = {
 	{"name", offsetof(ReanimatorTrack, mName), DefFieldType::DT_STRING, nullptr},
 	{"t", offsetof(ReanimatorTrack, mTransforms), DefFieldType::DT_ARRAY, &gReanimatorTransformDefMap},
 	{"", 0x0, DefFieldType::DT_INVALID, nullptr}
 };
 DefMap gReanimatorTrackDefMap = {
-	gReanimatorTrackDefFields, sizeof(ReanimatorTrack), ReanimatorTrackConstructor}; //0x69F178
+	gReanimatorTrackDefFields, sizeof(ReanimatorTrack), ReanimatorTrackConstructor};
 
 DefField gReanimatorDefFields[] = {
 	{"track", offsetof(ReanimatorDefinition, mTracks), DefFieldType::DT_ARRAY, &gReanimatorTrackDefMap},
 	{"fps", offsetof(ReanimatorDefinition, mFPS), DefFieldType::DT_FLOAT, nullptr},
 	{"", 0x0, DefFieldType::DT_INVALID, nullptr}
-}; //0x69F184
+};
 DefMap gReanimatorDefMap = {
-	gReanimatorDefFields, sizeof(ReanimatorDefinition), ReanimatorDefinitionConstructor}; //0x69F1B4
+	gReanimatorDefFields, sizeof(ReanimatorDefinition), ReanimatorDefinitionConstructor};
 
 static DefLoadResPath gDefLoadResPaths[4] = {
-	{"IMAGE_", ""}, {"IMAGE_", "particles/"}, {"IMAGE_REANIM_", "reanim/"}, {"IMAGE_REANIM_", "images/"}}; //0x6A1A48
+	{"IMAGE_", ""}, {"IMAGE_", "particles/"}, {"IMAGE_REANIM_", "reanim/"}, {"IMAGE_REANIM_", "images/"}};
 
-//0x5155A0
 void *ParticleFieldConstructor(void *thePointer)
 {
 	if (thePointer)
@@ -177,7 +176,6 @@ void *ParticleFieldConstructor(void *thePointer)
 	return thePointer;
 }
 
-//0x5155C0
 void *TodEmitterDefinitionConstructor(void *thePointer)
 {
 	if (thePointer)
@@ -195,7 +193,6 @@ void *TodEmitterDefinitionConstructor(void *thePointer)
 	return thePointer;
 }
 
-//0x515620
 void *TodParticleDefinitionConstructor(void *thePointer)
 {
 	if (thePointer)
@@ -219,7 +216,6 @@ void *TrailDefinitionConstructor(void *thePointer)
 	return thePointer;
 }
 
-//0x471570
 void *ReanimatorTransformConstructor(void *thePointer)
 {
 	if (thePointer)
@@ -239,7 +235,6 @@ void *ReanimatorTransformConstructor(void *thePointer)
 	return thePointer;
 }
 
-//0x4715B0
 void *ReanimatorTrackConstructor(void *thePointer)
 {
 	if (thePointer)
@@ -251,7 +246,6 @@ void *ReanimatorTrackConstructor(void *thePointer)
 	return thePointer;
 }
 
-//0x4715D0
 void *ReanimatorDefinitionConstructor(void *thePointer)
 {
 	if (thePointer)
@@ -278,7 +272,6 @@ void DefinitionFree(void* &theMemory)
 }
 
 
-//0x443BE0
 bool DefinitionLoadImage(Image **theImage, const SexyString &theName)
 {
 	// If the texture file path does not exist, there is no need to obtain the texture.
@@ -318,7 +311,6 @@ bool DefinitionLoadImage(Image **theImage, const SexyString &theName)
 	return false;
 }
 
-//0x443F60
 bool DefinitionLoadFont(Font **theFont, const SexyString &theName)
 {
 	Font *aFont = gSexyAppBase->mResourceManager->LoadFont(SexyStringToString(theName));
@@ -331,31 +323,28 @@ bool DefinitionLoadXML(const SexyString &theFileName, DefMap *theDefMap, void *t
 	return DefinitionCompileAndLoad(theFileName, theDefMap, theDefinition);
 }
 
-//0x444020
 bool DefReadFromCacheArray(void *&theReadPtr, DefinitionArrayDef *theArray, DefMap *theDefMap)
 {
-	int aDefSize;
-	SMemR(theReadPtr, &aDefSize, sizeof(int)); // 先读取一个整数表示 theDefMap 描述的定义结构类的大小
-	if (aDefSize != theDefMap->mDefSize)	   // 比较其与当前给出的定义结构图声明的大小是否一致
-	{
-		TodTrace("cache has old def: array size");
-		return false;
-	}
-	if (theArray->mArrayCount == 0) // 如果类中没有实例，则无需读取
+	uint32_t anArraySize;
+	SMemR(theReadPtr, &anArraySize, sizeof(uint32_t)); // Read the amount of elements in the array
+	theArray->mArrayCount = anArraySize;
+	if (theArray->mArrayCount == 0) // If there are no instances of the class, then there is no need to read them.
 		return true;
 
-	int aArraySize = aDefSize * theArray->mArrayCount;
-	void *pData = DefinitionAlloc(aArraySize); // 申请内存并初始化填充为 0
+	uint32_t aArraySize = theDefMap->mDefSize * theArray->mArrayCount;
+	void *pData = DefinitionAlloc(aArraySize); // Allocate memory and initialize it with 0.
 	theArray->mArrayData = pData;
-	SMemR(theReadPtr, pData, aArraySize); // 仍然是粗略读取全部数据，然后再根据 theDefMap 的结构字段数组修复指针
 	for (int i = 0; i < theArray->mArrayCount; i++)
-		if (!DefMapReadFromCache(
-				theReadPtr, theDefMap, (void *)((int)pData + theDefMap->mDefSize * i))) // 最后一个参数表示 pData[i]
+	{
+
+		void *element = (uint8_t *)pData + theDefMap->mDefSize * i;
+		if (!DefMapReadFromCache(theReadPtr, theDefMap, element)) // The last parameter represents pData[i].
 			return false;
+	}
+
 	return true;
 }
 
-//0x4440B0
 bool DefReadFromCacheFloatTrack(void *&theReadPtr, FloatParameterTrack *theTrack)
 {
 	int &aCountNodes = theTrack->mCountNodes;
@@ -369,12 +358,34 @@ bool DefReadFromCacheFloatTrack(void *&theReadPtr, FloatParameterTrack *theTrack
 	}
 	return true;
 }
+bool DefReadFromCacheInt(void*& theReadPtr, int* theInt)
+{
+	int aValue;
+	SMemR(theReadPtr, &aValue, sizeof(int));
+	*theInt = aValue;
+	return true;
+}
 
-//0x444110
+bool DefReadFromCacheFloat(void*& theReadPtr, float* theFloat)
+{
+	float aValue;
+	SMemR(theReadPtr, &aValue, sizeof(float));
+	*theFloat = aValue;
+	return true;
+}
+
+bool DefReadFromCacheFlag(void *&theReadPtr, uint32_t *theFlag)
+{
+	uint32_t aValue;
+	SMemR(theReadPtr, &aValue, sizeof(uint32_t));
+	*theFlag = aValue;
+	return true;
+}
+
 bool DefReadFromCacheString(void *&theReadPtr, char **theString)
 {
-	int aLen;
-	SMemR(theReadPtr, &aLen, sizeof(int));
+	uint32_t aLen;
+	SMemR(theReadPtr, &aLen, sizeof(uint32_t));
 	TOD_ASSERT(aLen >= 0 && aLen <= 100000);
 	if (aLen == 0)
 		*theString = "";
@@ -388,7 +399,14 @@ bool DefReadFromCacheString(void *&theReadPtr, char **theString)
 	return true;
 }
 
-//0x444180
+bool DefReadFromCacheVector2(void *&theReadPtr, SexyVector2 *theVector)
+{
+	SexyVector2 aValue;
+	SMemR(theReadPtr, &aValue, sizeof(SexyVector2));
+	*theVector = aValue;
+	return true;
+}
+
 bool DefReadFromCacheImage(void *&theReadPtr, Image **theImage)
 {
 	int aLen;
@@ -401,7 +419,6 @@ bool DefReadFromCacheImage(void *&theReadPtr, Image **theImage)
 	return aImageName[0] == '\0' || DefinitionLoadImage(theImage, aImageName);
 }
 
-//0x444220
 bool DefReadFromCacheFont(void *&theReadPtr, Font **theFont)
 {
 	int aLen;
@@ -414,18 +431,30 @@ bool DefReadFromCacheFont(void *&theReadPtr, Font **theFont)
 	return aFontName[0] == '\0' || DefinitionLoadFont(theFont, aFontName);
 }
 
-//0x4442C0
 bool DefMapReadFromCache(void *&theReadPtr, DefMap *theDefMap, void *theDefinition)
 {
 	// 分别确认每一个成员变量，并修复其中的指针类型和标志类型的变量
 	for (DefField *aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++)
 	{
 		bool aSucceed = true;
-		void *aDest = (void *)((int)theDefinition + aField->mFieldOffset); // 指向该成员变量的指针
+		void *aDest = (void *)((uintptr_t)theDefinition + aField->mFieldOffset); // 指向该成员变量的指针
 		switch (aField->mFieldType)
 		{
+		case DefFieldType::DT_ENUM:
+		case DefFieldType::DT_INT:
+			aSucceed = DefReadFromCacheInt(theReadPtr, (int *)aDest);
+			break;
+		case DefFieldType::DT_FLOAT:
+			aSucceed = DefReadFromCacheFloat(theReadPtr, (float *)aDest);
+			break;
+		case DefFieldType::DT_FLAGS:
+			aSucceed = DefReadFromCacheFlag(theReadPtr, (uint32_t *)aDest);
+			break;
 		case DefFieldType::DT_STRING:
 			aSucceed = DefReadFromCacheString(theReadPtr, (char **)aDest);
+			break;
+		case DefFieldType::DT_VECTOR2:
+			aSucceed = DefReadFromCacheVector2(theReadPtr, (SexyVector2 *)aDest);
 			break;
 		case DefFieldType::DT_ARRAY:
 			aSucceed = DefReadFromCacheArray(theReadPtr, (DefinitionArrayDef *)aDest, (DefMap *)aField->mExtraData);
@@ -447,7 +476,6 @@ bool DefMapReadFromCache(void *&theReadPtr, DefMap *theDefMap, void *theDefiniti
 	return true;
 }
 
-//0x444380
 uint32_t DefinitionCalcHashSymbolMap(int aSchemaHash, DefSymbol *theSymbolMap)
 {
 	while (theSymbolMap->mSymbolName != nullptr)
@@ -459,7 +487,6 @@ uint32_t DefinitionCalcHashSymbolMap(int aSchemaHash, DefSymbol *theSymbolMap)
 	return aSchemaHash;
 }
 
-//0x4443D0
 uint32_t DefinitionCalcHashDefMap(int aSchemaHash, DefMap *theDefMap, TodList<DefMap *> &theProgressMaps)
 {
 	for (TodListNode<DefMap *> *aNode = theProgressMaps.mHead; aNode != nullptr; aNode = aNode->mNext)
@@ -486,7 +513,6 @@ uint32_t DefinitionCalcHashDefMap(int aSchemaHash, DefMap *theDefMap, TodList<De
 	return aSchemaHash;
 }
 
-//0x444490
 uint32_t DefinitionCalcHash(DefMap *theDefMap)
 {
 	TodList<DefMap *> aProgressMaps;
@@ -494,105 +520,89 @@ uint32_t DefinitionCalcHash(DefMap *theDefMap)
 	return aResult;
 }
 
-//0x444500 : UnCompress(&theUncompressedSize, theCompressedBufferSize, esi = *theCompressedBuffer)
-void *DefinitionUncompressCompiledBuffer(void *theCompressedBuffer,
+void *DefinitionUncompressCompiledBuffer(const CompiledDefinitionHeader *aHeader,
+										 void *theCompressedBuffer,
 										 size_t theCompressedBufferSize,
-										 size_t &theUncompressedSize,
 										 const SexyString &theCompiledFilePath)
 {
 	auto sz = theCompressedBufferSize;
-	// theCompressedBuffer The first two four-byte bytes contain special data, and this check verifies whether its length is sufficient for 8 bytes (i.e., 2 four-byte bytes).
+	
 	if (theCompressedBufferSize < 8)
 	{
 		TodTrace("Compile def too small", theCompiledFilePath.c_str());
 		return nullptr;
 	}
-	// 将 theCompressedBuffer 的前两个四字节视为一个 CompressedDefinitionHeader
-	CompressedDefinitionHeader *aHeader = (CompressedDefinitionHeader *)theCompressedBuffer;
-	if (aHeader->mCookie != 0xDEADFED4L)
-	{
-		TodTrace("Compiled fire cookie wrong: %s\n", theCompiledFilePath.c_str());
-		return nullptr;
-	}
+
 	Bytef *aUncompressedBuffer = (Bytef *)DefinitionAlloc(aHeader->mUncompressedSize);
-	theCompressedBufferSize = aHeader->mUncompressedSize; //my addition
-	Bytef *aSrc =
-		(Bytef *)theCompressedBuffer + sizeof(CompressedDefinitionHeader); // 实际解压数据从第 3 个四字节开始
-	int aResult = uncompress(
-		aUncompressedBuffer, (uLongf *)&theCompressedBufferSize, aSrc, sz - sizeof(CompressedDefinitionHeader));
+	theCompressedBufferSize = aHeader->mUncompressedSize;
+	int aResult = uncompress(aUncompressedBuffer,
+							 (uLongf *)&theCompressedBufferSize,
+							 (Bytef *)theCompressedBuffer,
+							 sz);
 	TOD_ASSERT(aResult == Z_OK);
 	TOD_ASSERT(theCompressedBufferSize == aHeader->mUncompressedSize);
-	theUncompressedSize = aHeader->mUncompressedSize;
 	return aUncompressedBuffer;
 }
 
-//0x444560 : (void* def, *defMap, eax = string& compiledFilePath)  //esp -= 8
 bool DefinitionReadCompiledFile(const SexyString &theCompiledFilePath, DefMap *theDefMap, void *theDefinition)
 {
+	CompiledDefinitionFile aCompiledFile;
+
 	PerfTimer aTimer;
 	aTimer.Start();
-	PFILE *pFile = p_fopen(theCompiledFilePath.c_str(), "rb");
+	FILE *pFile = fopen(theCompiledFilePath.c_str(), "rb");
 	if (pFile)
 	{
-		p_fseek(pFile, 0, 2);					 // Move the pointer to the read location to the end of the file
-		size_t aCompressedSize = p_ftell(pFile); // The offset obtained at this time is the size of the entire file
-		p_fseek(pFile, 0, 0); // Then move the pointer to the read position back to the beginning of the file
-		void *aCompressedBuffer = DefinitionAlloc(aCompressedSize);
-		// Read the file, and determine whether the actual read size is the complete file size, if it is not equal, it is determined that the read failed
-		bool aReadCompressedFailed =
-			p_fread(aCompressedBuffer, sizeof(char), aCompressedSize, pFile) != aCompressedSize;
-		p_fclose(pFile);		   // Close the resource file stream and free up the memory occupied by pFile
-		if (aReadCompressedFailed) // Determine whether the reading is successful
+		fseek(pFile, 0, 2);
+		size_t aFileSize = ftell(pFile);
+		fseek(pFile, 0, 0);
+		aCompiledFile.mData.resize(aFileSize);
+		bool aReadCompressedFailed = fread(aCompiledFile.mData.data(), sizeof(uint8_t), aFileSize, pFile) != aFileSize;
+		fclose(pFile);
+		if (aReadCompressedFailed)
 		{
 			TodTrace("Failed to read compiled file: %s\n", theCompiledFilePath.c_str());
-			DefinitionFree(aCompressedBuffer);
+			return false;
+		}
+
+		if (aCompiledFile.isValid())
+		{
+			const CompiledDefinitionHeader *aHeader = aCompiledFile.GetHeader();
+			if (aHeader->mDataOffset > aFileSize)
+			{
+				TodTrace("Data Offset is larger then file size: %s\n", theCompiledFilePath.c_str());
+				return false;
+			}
+			size_t aCompressedSize = aFileSize - aHeader->mDataOffset;
+
+			void *aDataPtr = (void *)aCompiledFile.GetCompressedData();
+			void *anUncompressedData =
+				DefinitionUncompressCompiledBuffer(aHeader, aDataPtr, aCompressedSize, theCompiledFilePath);
+
+			if (anUncompressedData == nullptr)
+			{
+				TodTrace("Failed to uncompress: %s\n", theCompiledFilePath.c_str());
+				return false;
+			}
+
+			bool aResult = DefMapReadFromCache(anUncompressedData, theDefMap, theDefinition);
+
+			return aResult;
 		}
 		else
 		{
-			size_t aUncompressedSize;
-			void *aUncompressedBuffer = DefinitionUncompressCompiledBuffer(
-				aCompressedBuffer, aCompressedSize, aUncompressedSize, theCompiledFilePath);
-			DefinitionFree(aCompressedBuffer);
-			if (aUncompressedBuffer)
-			{
-				uint32_t aDefHash = DefinitionCalcHash(theDefMap); // Calculate the CRC check value, which will be used to detect the integrity of the data
-				if (aUncompressedSize <
-					theDefMap->mDefSize +
-						sizeof(
-							uint32_t)) // Detect whether the length of the decompressed data is sufficient for the length of "define data + a check value to record data"
-					TodTrace("Compiled file size too small: %s\n", theCompiledFilePath.c_str());
-				else
-				{
-					// A pointer to copy a copy of the decompressed data is used to move when reading, and the original pointer will be used to calculate the size of the read area and delete[] operations in the future.
-					void *aBufferPtr = aUncompressedBuffer;
-					uint32_t aCashHash;
-					SMemR(aBufferPtr, &aCashHash, sizeof(uint32_t)); //Read the CRC check value of the record
-					if (aCashHash != aDefHash) // Determine whether the check value is consistent, if it is inconsistent, the data is wrong
-						TodTrace("Compiled file schema wrong: %s\n", theCompiledFilePath.c_str());
-					else
-					{
-						//  Officially started reading definition data 
-						// Roughly read the definition data of the original type of theDefinition for the first time, and gulp all the recorded data into theDefinition.
-						// At this time, all the data of theDefinition's original non-pointer type will be read correctly, but the variables of its pointer type will be read and assigned as wild pointers.
-						// The problem of these wild pointers will be fixed in DefMapReadFromCache() with the help of the corresponding DefField's mExtraData in the future
-						SMemR(aBufferPtr, theDefinition, theDefMap->mDefSize);
-						// Repair the wild pointer and flag data, and save the result of whether it is successful, and use it as the return value later
-						bool aResult = DefMapReadFromCache(aBufferPtr, theDefMap, theDefinition);
-						size_t aReadMemSize = (uint32_t)aBufferPtr - (uint32_t)aUncompressedBuffer;
-						DefinitionFree(aUncompressedBuffer);
-						if (aResult && aReadMemSize != aUncompressedSize)
-							TodTrace("Compiled file wrong size: %s\n", theCompiledFilePath.c_str());
-						return aResult;
-					}
-				}
-			}
-			DefinitionFree(aUncompressedBuffer);
+#if SEXY_IS_X86
+			return LegacyDefinition::DefinitionReadCompiledFile(theCompiledFilePath, theDefMap, theDefinition);
+#else
+			return false;
+#endif
 		}
+		
 	}
+
 	return false;
 }
 
-//0x444770
 SexyString DefinitionGetCompiledFilePathFromXMLFilePath(const SexyString &theXMLFilePath)
 {
 	return "compiled/" + theXMLFilePath + ".compiled";
@@ -636,11 +646,9 @@ bool DefinitionIsCompiled(const SexyString &theXMLFilePath)
 void DefinitionFillWithDefaults(DefMap *theDefMap, void *theDefinition)
 {
 	memset(theDefinition, NULL, theDefMap->mDefSize); // Initialize theDefinition to 0.
-	for (DefField *aField = theDefMap->mMapFields; *aField->mFieldName != '\0';
-		 aField++) // Iterate through each member variable of theDefinition
-		if (aField->mFieldType == DefFieldType::DT_STRING)
-			*(char **)((uintptr_t)theDefinition + aField->mFieldOffset) =
-				""; // Assign all char* member variables to pointers to empty character arrays.
+	for (DefField *aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++) // Iterate through each member variable of theDefinition
+		if (aField->mFieldType == DefFieldType::DT_STRING) 
+			*(char **)((uintptr_t)theDefinition + aField->mFieldOffset) = ""; // Assign all char* member variables to pointers to empty character arrays.
 }
 
 void DefinitionXmlError(XMLParser *theXmlParser, const char *theFormat, ...)
@@ -1145,9 +1153,174 @@ bool DefinitionLoadMap(XMLParser *theXmlParser, DefMap *theDefMap, void *theDefi
 	return true;
 }
 
+void DefWriteToCacheFlag(DefinitionCompiler *theWritePtr, uint32_t *theValue)
+{
+	if (theValue == nullptr)
+	{
+		theWritePtr->Write(0);
+		return;
+	}
+	
+}
+
+void DefWriteToCacheString(DefinitionCompiler *theWritePtr, const char *theValue)
+{
+	if (theValue == nullptr)
+	{
+		theWritePtr->Write(0);
+		return;
+	}
+	uint32_t aLen = (uint32_t)strlen(theValue);
+	theWritePtr->Write(aLen);
+	if (aLen > 0)
+		theWritePtr->Write(theValue, aLen);
+}
+
+void DefWriteToCacheImage(DefinitionCompiler *theWritePtr, Image **theValue)
+{
+	std::string aImageName{};
+	if ((*theValue) != nullptr)
+		TodFindImagePath(*theValue, &aImageName);
+
+	uint32_t aImageSize = aImageName.length();
+	theWritePtr->Write(aImageSize);
+	if (aImageSize > 0)
+		theWritePtr->Write(aImageName.data(), aImageSize);
+}
+
+void DefWriteToCacheFont(DefinitionCompiler *theWritePtr, Font **theValue)
+{
+	std::string aFontName{};
+	if ((*theValue) != nullptr)
+		TodFindFontPath(*theValue, &aFontName);
+
+	uint32_t aFontSize = aFontName.length();
+	theWritePtr->Write(aFontSize);
+	if (aFontSize > 0)
+		theWritePtr->Write(aFontName.data(), aFontSize);
+}
+
+void DefWriteToCacheArray(DefinitionCompiler *theWritePtr, DefinitionArrayDef *theValue, DefMap *theDefMap)
+{
+	if (theValue == nullptr)
+	{
+		theWritePtr->Write(0);
+		return;
+	}
+	theWritePtr->Write(theValue->mArrayCount);
+	for (uint32_t i = 0; i < theValue->mArrayCount; i++)
+	{
+		void *elem = (uint8_t *)theValue->mArrayData + i * theDefMap->mDefSize;
+		DefMapWriteToCache(theWritePtr, theDefMap, elem);
+	}
+
+}
+
+void DefWriteToCacheFloatTrack(DefinitionCompiler *theWritePtr, FloatParameterTrack *theValue)
+{
+	if (theValue == nullptr)
+	{
+		theWritePtr->Write(0);
+		return;
+	}
+	theWritePtr->Write(theValue->mCountNodes);
+	if (theValue->mCountNodes > 0)
+	{
+		theWritePtr->Write(theValue->mNodes, theValue->mCountNodes * sizeof(FloatParameterTrackNode));
+	}
+}
+
+void DefWriteToCacheVector2(DefinitionCompiler *theWritePtr, SexyVector2 *theValue)
+{
+	if (theValue == nullptr)
+	{
+		theWritePtr->Write(SexyVector2(0, 0));
+		return;
+	}
+	theWritePtr->Write(theValue);
+}
+
+void DefMapWriteToCache(DefinitionCompiler *theWritePtr, DefMap *theDefMap, void *theDefinition)
+{
+	for (DefField *aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++)
+	{
+		void *aSrc = (void *)((uintptr_t)theDefinition + aField->mFieldOffset);
+		switch (aField->mFieldType)
+		{
+		case DefFieldType::DT_ENUM:
+		case DefFieldType::DT_INT:
+		{
+			int value = *(int *)aSrc;
+			theWritePtr->Write(value);
+			break;
+		}
+		case DefFieldType::DT_FLOAT:
+		{
+			float value = *(float *)aSrc;
+			theWritePtr->Write(value);
+			break;
+		}
+		case DefFieldType::DT_FLAGS:
+			theWritePtr->Write(*(uint32_t *)aSrc);
+			break;
+		case DefFieldType::DT_VECTOR2:
+			DefWriteToCacheVector2(theWritePtr, (SexyVector2 *)aSrc);
+			break;
+
+		case DefFieldType::DT_STRING:
+			DefWriteToCacheString(theWritePtr, *(char **)aSrc);
+			break;
+
+		case DefFieldType::DT_ARRAY:
+			DefWriteToCacheArray(theWritePtr, (DefinitionArrayDef *)aSrc, (DefMap *)aField->mExtraData);
+			break;
+
+		case DefFieldType::DT_TRACK_FLOAT:
+			DefWriteToCacheFloatTrack(theWritePtr, (FloatParameterTrack *)aSrc);
+			break;
+
+		case DefFieldType::DT_IMAGE:
+			DefWriteToCacheImage(theWritePtr, (Image **)aSrc);
+			break;
+
+		case DefFieldType::DT_FONT:
+			DefWriteToCacheFont(theWritePtr, (Font **)aSrc);
+			break;
+
+		default:
+			break;
+		}
+	}
+}
+
 bool DefinitionWriteCompiledFile(const SexyString &theCompiledFilePath, DefMap *theDefMap, void *theDefinition)
 {
-	//todo: implement
+	CompiledDefinitionHeader aHeader;
+	aHeader.mCookie = COMPILED_DEFINITION_MAGIC;
+	DefinitionCompiler aCompiler;
+	DefMapWriteToCache(&aCompiler, theDefMap, theDefinition);
+	aHeader.mUncompressedSize = (uint32_t)aCompiler.mBuffer.size();
+	aHeader.mDataOffset = sizeof(CompiledDefinitionHeader);
+
+
+	uLongf aCompressedSize = compressBound(aCompiler.mBuffer.size());
+	void *aCompressedData = DefinitionAlloc(aCompressedSize);
+	int res = compress(
+		(Bytef *)aCompressedData, &aCompressedSize, (Bytef *)aCompiler.mBuffer.data(), aHeader.mUncompressedSize);
+
+	if (res != Z_OK)
+	{
+		TodTrace("Failed to compress file: %s\nZLib Error: %d", theCompiledFilePath.c_str(), res);
+		DefinitionFree(aCompressedData);
+		return false;
+	}
+	std::filesystem::path path(theCompiledFilePath.c_str());
+	std::filesystem::create_directories(path.parent_path());
+	std::ofstream anOut(path.c_str(), std::ios::binary);
+	anOut.write((char *)&aHeader, sizeof(aHeader));
+	anOut.write((char *)aCompressedData, aCompressedSize);
+
+	DefinitionFree(aCompressedData);
 	return true;
 }
 
@@ -1169,13 +1342,11 @@ bool DefinitionCompileFile(const SexyString theXMLFilePath,
 	return true;
 }
 
-//0x4447F0 : (void* def, *defMap, string& xmlFilePath)  //esp -= 0xC
 bool DefinitionCompileAndLoad(const SexyString &theXMLFilePath, DefMap *theDefMap, void *theDefinition)
 {
 	SexyString aCompiledFilePath = DefinitionGetCompiledFilePathFromXMLFilePath(theXMLFilePath);
 	TodHesitationTrace("predef");
-	//Currently compiled definitions aren't supported at all on x64
-#if SEXY_IS_X86
+	
 	try
 	{
 		if (DefinitionReadCompiledFile(aCompiledFilePath, theDefMap, theDefinition))
@@ -1185,7 +1356,6 @@ bool DefinitionCompileAndLoad(const SexyString &theXMLFilePath, DefMap *theDefMa
 		}
 	}
 	catch (int anErrorCode) {}
-#endif
 
 	PerfTimer aTimer;
 	aTimer.Start();
@@ -1199,7 +1369,6 @@ bool DefinitionCompileAndLoad(const SexyString &theXMLFilePath, DefMap *theDefMa
 	exit(0);
 }
 
-//0x4448E0
 float FloatTrackEvaluate(FloatParameterTrack &theTrack, float theTimeValue, float theInterp)
 {
 	if (theTrack.mCountNodes == 0)
@@ -1230,7 +1399,6 @@ float FloatTrackEvaluate(FloatParameterTrack &theTrack, float theTimeValue, floa
 	return TodCurveEvaluate(theInterp, aLastNode->mLowValue, aLastNode->mHighValue, aLastNode->mDistribution);
 }
 
-//0x4449F0
 void FloatTrackSetDefault(FloatParameterTrack &theTrack, float theValue)
 {
 	if (theTrack.mNodes == nullptr && theValue != 0.0f) // Ensure that this parameter has no nodes (has not been assigned a value) and that the given default value is not 0.
@@ -1258,13 +1426,11 @@ bool FloatTrackIsConstantZero(FloatParameterTrack &theTrack)
 		   (theTrack.mCountNodes == 1 && theTrack.mNodes[0].mLowValue == 0.0f && theTrack.mNodes[0].mHighValue == 0.0f);
 }
 
-//0x5167F0
 float FloatTrackEvaluateFromLastTime(FloatParameterTrack &theTrack, float theTimeValue, float theInterp)
 {
 	return theTimeValue < 0.0f ? 0.0f : FloatTrackEvaluate(theTrack, theTimeValue, theInterp);
 }
 
-//0x444A50
 void DefinitionFreeArrayField(DefinitionArrayDef *theArray, DefMap *theDefMap)
 {
 	for (int i = 0; i < theArray->mArrayCount; i++)
@@ -1273,7 +1439,6 @@ void DefinitionFreeArrayField(DefinitionArrayDef *theArray, DefMap *theDefMap)
 	DefinitionFree(theArray->mArrayData);
 }
 
-//0x444A90
 void DefinitionFreeMap(DefMap *theDefMap, void *theDefinition)
 {
 	// Iterate through each member variable of theDefinition using theDefMap.

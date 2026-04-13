@@ -1333,6 +1333,11 @@ bool TodResourceManager::TodLoadNextResource()
 	return false;
 }
 
+bool TodFindFontPath(Font *theFont, std::string *thePath)
+{
+	return ((TodResourceManager *)gSexyAppBase->mResourceManager)->FindFontPath(theFont, thePath);
+}
+
 bool TodFindImagePath(Image *theImage, std::string *thePath)
 {
 	return ((TodResourceManager *)gSexyAppBase->mResourceManager)->FindImagePath(theImage, thePath);
@@ -1345,6 +1350,21 @@ bool TodResourceManager::FindImagePath(Image *theImage, std::string *thePath)
 		ImageRes *aImageRes = (ImageRes *)anItr->second;
 		Image *aImage = (Image *)aImageRes->mImage;
 		if (aImage == theImage)
+		{
+			*thePath = anItr->first;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool TodResourceManager::FindFontPath(Font *theFont, std::string *thePath)
+{
+	for (auto anItr = mFontMap.begin(); anItr != mFontMap.end(); anItr++)
+	{
+		FontRes *aFontRes = (FontRes *)anItr->second;
+		Font *aFont = (Font *)aFontRes->mImage;
+		if (aFont == theFont)
 		{
 			*thePath = anItr->first;
 			return true;

@@ -1,4 +1,4 @@
-#ifndef __TODDEFINITION_H__
+﻿#ifndef __TODDEFINITION_H__
 #define __TODDEFINITION_H__
 
 #include <string>
@@ -163,20 +163,33 @@ bool DefinitionCompileFile(const SexyString theXMLFilePath,
 						   const SexyString &theCompiledFilePath,
 						   DefMap *theDefMap,
 						   void *theDefinition);
-/*inline*/ void *DefinitionAlloc(int theSize);
-void *DefinitionUncompressCompiledBuffer(void *theCompressedBuffer,
+void *DefinitionAlloc(int theSize);
+void DefinitionFree(void *&theMemory);
+void *DefinitionUncompressCompiledBuffer(const CompiledDefinitionHeader *aHeader,
+										 void *theCompressedBuffer,
 										 size_t theCompressedBufferSize,
-										 size_t &theUncompressedSize,
 										 const SexyString &theCompiledFilePath);
 uint32_t /*__cdecl*/ DefinitionCalcHashSymbolMap(int aSchemaHash, DefSymbol *theSymbolMap);
 uint32_t /*__cdecl*/ DefinitionCalcHashDefMap(int aSchemaHash, DefMap *theDefMap, TodList<DefMap *> &theProgressMaps);
 uint32_t /*__cdecl*/ DefinitionCalcHash(DefMap *theDefMap);
+bool DefReadFromCacheInt(void *&theReadPtr, int *theInt);
+bool DefReadFromCacheFloat(void *&theReadPtr, float *theFloat);
+bool DefReadFromCacheFlag(void *&theReadPtr, uint32_t *theFlag);
 bool DefReadFromCacheString(void *&theReadPtr, char **theString);
+bool DefReadFromCacheVector2(void *&theReadPtr, SexyVector2 *theVector);
 bool DefReadFromCacheArray(void *&theReadPtr, DefinitionArrayDef *theArray, DefMap *theDefMap);
 bool DefReadFromCacheImage(void *&theReadPtr, Image **theImage);
 bool DefReadFromCacheFont(void *&theReadPtr, Font **theFont);
 bool DefReadFromCacheFloatTrack(void *&theReadPtr, FloatParameterTrack *theTrack);
 bool DefMapReadFromCache(void *&theReadPtr, DefMap *theDefMap, void *theDefinition);
+
+void DefWriteToCacheString(DefinitionCompiler *theReadPtr, char **theString);
+void DefWriteToCacheArray(DefinitionCompiler *theReadPtr, DefinitionArrayDef *theArray, DefMap *theDefMap);
+void DefWriteToCacheImage(DefinitionCompiler *theReadPtr, Image **theImage);
+void DefWriteToCacheFont(DefinitionCompiler *theReadPtr, Font **theFont);
+void DefWriteToCacheFloatTrack(DefinitionCompiler *theReadPtr, FloatParameterTrack *theTrack);
+void DefMapWriteToCache(DefinitionCompiler *theReadPtr, DefMap *theDefMap, void *theDefinition);
+
 bool DefinitionCompileAndLoad(const SexyString &theXMLFilePath, DefMap *theDefMap, void *theDefinition);
 bool DefinitionLoadMap(XMLParser *theXmlParser, DefMap *theDefMap, void *theDefinition);
 bool DefinitionLoadImage(Image **theImage, const SexyString &theName);

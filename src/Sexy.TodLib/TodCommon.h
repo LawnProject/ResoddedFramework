@@ -61,6 +61,7 @@ int TodPickFromSmoothArray(TodSmoothArray *theArray, int theCount);
 class TodResourceManager : public ResourceManager
 {
   public:
+	bool FindFontPath(Font *theFont, std::string *thePath);
 	bool FindImagePath(Image *theImage, std::string *thePath);
 	void AddImageToMap(SharedImageRef *theImage, const std::string &thePath);
 	bool TodLoadNextResource();
@@ -71,6 +72,7 @@ class TodResourceManager : public ResourceManager
 /*inline*/ bool TodLoadNextResource();
 void TodAddImageToMap(SharedImageRef *theImage, const std::string &thePath);
 bool TodFindImagePath(Image *theImage, std::string *thePath);
+bool TodFindFontPath(Font *theFont, std::string *thePath);
 
 // #################################################################################################### //
 
