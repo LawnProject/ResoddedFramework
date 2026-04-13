@@ -202,12 +202,12 @@ bool OpenALSoundManager::LoadOGGSound(unsigned int theSfxID, const std::string &
 		return false;
 	}
 
-	int aLenBytes = static_cast<int>(ov_pcm_total(&vf, -1) * anInfo->channels * 2);
+	ogg_int64_t aLenBytes = static_cast<ogg_int64_t>(ov_pcm_total(&vf, -1) * anInfo->channels * 2);
 
 	char *aBuf = new char[aLenBytes];
 
 	char *aPtr = aBuf;
-	int aNumBytes = aLenBytes;
+	ogg_int64_t aNumBytes = aLenBytes;
 	while (aNumBytes > 0)
 	{
 		long ret = ov_read(&vf, aPtr, aNumBytes, 0, 2, 1, &current_section);
