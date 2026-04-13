@@ -22,7 +22,7 @@ using namespace Sexy;
 
 struct TodWeightedArray
 {
-	int mItem;
+	uintptr_t mItem;
 	int mWeight;
 };
 
@@ -36,7 +36,7 @@ struct TodWeightedGridArray
 class TodSmoothArray
 {
   public:
-	int mItem;
+	uintptr_t mItem;
 	float mWeight;
 	float mLastPicked;
 	float mSecondLastPicked;

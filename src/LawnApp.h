@@ -4,6 +4,10 @@
 #include "ConstEnums.h"
 #include "SexyAppFramework/SexyApp.h"
 
+#ifndef SEXY_USE_IMGUI
+#undef LAWN_DEBUG_TOOLS
+#endif
+
 class Board;
 class GameSelector;
 class ChallengeDefinition;
@@ -27,6 +31,9 @@ class ChallengeScreen;
 class StoreScreen;
 class AlmanacDialog;
 class TypingCheck;
+#if LAWN_DEBUG_TOOLS
+class DebuggerWindow;
+#endif
 
 namespace Sexy
 {
@@ -105,6 +112,9 @@ class LawnApp : public SexyApp
 	//HICON mBigArrowCursor;				   //+0x874
 #if SEXY_USE_DRM
 	PopDRMComm *mDRM;					   //+0x878
+#endif
+#if LAWN_DEBUG_TOOLS
+	DebuggerWindow *mDebugWindow;
 #endif
 	int mSessionID;						   //+0x87C
 	int mPlayTimeActiveSession;			   //+0x880

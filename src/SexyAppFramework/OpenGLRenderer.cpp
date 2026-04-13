@@ -8,6 +8,9 @@
 #include "SysFont.h"
 #include <SDL3/SDL.h>
 #include <glm/gtc/matrix_transform.hpp>
+#if SEXY_USE_IMGUI
+#include "ImGui/ImGuiManager.h"
+#endif
 
 using namespace Sexy;
 
@@ -239,7 +242,6 @@ bool OpenGLRenderer::InitBuffers()
 bool gRenderingPreDrawError = false;
 bool OpenGLRenderer::Redraw(Rect *theClipRect)
 {
-
 	if (mCommandBuffer.empty())
 		return !gRenderingPreDrawError;
 
@@ -286,7 +288,9 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-
+#if SEXY_USE_IMGUI
+	mApp->mImGuiManager->Flush();
+#endif
 	mCommandBuffer.clear();
 	SDL_GL_SwapWindow(mApp->mWindow->mInternalWindow);
 

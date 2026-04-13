@@ -58,6 +58,7 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
     # SAF specific
     USE_OGG_LIB
     SEXY_USE_OPENGL
+    SEXY_USE_IMGUI
 )
 
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)

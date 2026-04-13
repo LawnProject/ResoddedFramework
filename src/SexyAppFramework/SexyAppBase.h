@@ -33,16 +33,6 @@ enum JSONRegistryType
 	TYPE_LAST
 };
 
-enum MsgBoxFlags
-{
-	MsgBox_OK = 0,
-	MsgBox_OKCANCEL = 1,
-	MsgBox_ABORTRETRYIGNORE = 2,
-	MsgBox_YESNOCANCEL = 3,
-	MsgBox_YESNO = 4,
-	MsgBox_RETRYCANCEL = 5,
-};
-
 class WidgetManager;
 class DDInterface;
 class Image;
@@ -55,6 +45,9 @@ class HTTPTransfer;
 class Dialog;
 class Window;
 class Renderer;
+#if SEXY_USE_IMGUI
+class ImGuiManager;
+#endif
 
 class ResourceManager;
 
@@ -223,6 +216,9 @@ class SexyAppBase : public ButtonListener, public DialogListener
 
 	FT_Library mFreeTypeLib;
 	Renderer *mRenderer;
+#if SEXY_USE_IMGUI
+	ImGuiManager *mImGuiManager;
+#endif
 	bool mIsDrawing;
 	bool mLastDrawWasEmpty;
 	bool mHasPendingDraw;
