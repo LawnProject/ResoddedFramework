@@ -3567,6 +3567,8 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 	{
 #if SEXY_USE_IMGUI
 		ImGui_ImplSDL3_ProcessEvent(&event);
+		if (ImGui::GetIO().WantCaptureMouse)
+			break;
 #endif
 		if ((mRecordingDemoBuffer) && (!mShutdown))
 		{
@@ -3870,6 +3872,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 		//Demo independent events.
 		switch (event.type)
 		{
+			case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
 			case SDL_EVENT_QUIT:
 				// This should short-circuit all demo calls, otherwise we will get
 				//  all sorts of weird asserts because we are changing
