@@ -3845,7 +3845,11 @@ void Plant::UpdateShooting()
 		{
 			Reanimation *aHeadBackReanim = mApp->ReanimationTryToGet(mHeadReanimID2);
 			Reanimation *aHeadFrontReanim = mApp->ReanimationTryToGet(mHeadReanimID);
-			if (aHeadFrontReanim->mLoopType == ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD && mLaunchCounter <= 1)
+			if (aHeadFrontReanim->mLoopType == ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD 
+#ifdef DO_FIX_BUGS 
+				&& mLaunchCounter <= 1 
+#endif 
+				)
 			{
 				Fire(nullptr, mRow, PlantWeapon::WEAPON_PRIMARY);
 			}
