@@ -5541,6 +5541,29 @@ void Zombie::DrawBungeeReanim(Graphics *g, const ZombieDrawPosition &theDrawPos)
 			}
 
 			aPlant->Draw(&aPlantGraphics);
+#ifdef DO_FIX_BUGS
+
+			if (aPlant->mSleepingReanimID != ReanimationID::REANIMATIONID_NULL)
+			{
+				Reanimation *aSleepReanim = mApp->ReanimationTryToGet(aPlant->mSleepingReanimID);
+				if (aSleepReanim != nullptr)
+				{
+					aSleepReanim->mRenderOrder = mRenderOrder + 2;
+					float aPosX = aPlantGraphics.mTransX + 50.0f;
+					float aPosY = aPlantGraphics.mTransY + 40.0f;
+					if (aPlant->mSeedType == SeedType::SEED_FUMESHROOM)
+						aPosX += 12.0f;
+					else if (aPlant->mSeedType == SeedType::SEED_SCAREDYSHROOM)
+						aPosY -= 20.0f;
+					else if (aPlant->mSeedType == SeedType::SEED_GLOOMSHROOM)
+						aPosY -= 12.0f;
+
+					aSleepReanim->mOverlayMatrix.m12 = aPosY;
+				}
+			}
+
+#endif // DO_FIX_BUGS
+
 		}
 	}
 
