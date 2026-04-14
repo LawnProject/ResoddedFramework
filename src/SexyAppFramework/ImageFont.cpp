@@ -1533,7 +1533,7 @@ void ImageFont::DrawStringEx(Graphics *g,
 								255);
 
 			int anOrder = anActiveFontLayer->mBaseFontLayer->mBaseOrder +
-						  anActiveFontLayer->mBaseFontLayer->mCharData[(uint8_t)aChar].mOrder;
+						  anActiveFontLayer->mBaseFontLayer->GetCharData(aChar)->mOrder;
 
 			if (aCurPoolIdx >= POOL_SIZE)
 				break;
