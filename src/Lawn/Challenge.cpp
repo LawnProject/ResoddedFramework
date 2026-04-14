@@ -2963,7 +2963,7 @@ void Challenge::GraveDangerSpawnRandomGrave()
 		{
 			if (mBoard->CanAddGraveStoneAt(aCol, aRow))
 			{
-				aPicks[aPickCount].mWeight = mBoard->GetTopPlantAt(aCol, aRow, TOPPLANT_ANY) ? 100000 : 1;
+				aPicks[aPickCount].mWeight = mBoard->GetTopPlantAt(aCol, aRow, TOPPLANT_ANY) ? 1 : 100000;
 				aPicks[aPickCount].mX = aCol;
 				aPicks[aPickCount].mY = aRow;
 				aPickCount++;
