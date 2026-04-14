@@ -108,7 +108,7 @@ Image *ImageLib::GetImageBackend(const std::string &theFileName, const std::stri
 
 	int width, height, num_channels, frame_count;
 	int *delays;
-	unsigned char *stb_image;
+	uint8_t *stb_image;
 	if (theExtension != ".gif")
 	{
 		stb_image = stbi_load_from_memory(data.data(), fileSize, &width, &height, &num_channels, 4);
@@ -122,6 +122,7 @@ Image *ImageLib::GetImageBackend(const std::string &theFileName, const std::stri
 		if (delays)
 			free(delays);
 	}
+
 	num_channels = 4;
 
 	uint32_t *aBits = new uint32_t[width * height];
@@ -134,8 +135,10 @@ Image *ImageLib::GetImageBackend(const std::string &theFileName, const std::stri
 		uint8_t b = pixel[2];
 		uint8_t a = num_channels == 4 ? pixel[3] : 0xFF;
 
-		aBits[i] = (a << 24) | (b << 16) | (g << 8) | r; //swap to ABGR
+		aBits[i] = (a << 24) | (r << 16) | (g << 8) | b;
 	}
+
+
 
 	Image *anImage = new Image();
 	anImage->mWidth = width;

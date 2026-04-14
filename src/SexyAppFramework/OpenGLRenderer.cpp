@@ -500,17 +500,20 @@ void OpenGLTextureData::CreateTextures(MemoryImage* theImage, void* theRendererD
 
 	int aWidth = theImage->GetWidth();
 	int aHeight = theImage->GetHeight();
-
 	if (createTexture)
 	{
 		glGenTextures(1, &mTexID);
 		glBindTexture(GL_TEXTURE_2D, mTexID);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		GLenum aTargetFormat = GL_RGBA8;
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
 		if (theImage->mD3DFlags & ImageFlag_UseA4R4G4B4)
-			aTargetFormat = GL_RGBA4;
-
-		glTexImage2D(GL_TEXTURE_2D, 0, aTargetFormat, aWidth, aHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, theImage->GetBits());
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, aWidth, aHeight, 0, GL_BGRA, GL_UNSIGNED_SHORT_4_4_4_4_REV, theImage->GetBits());
+		else
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, aWidth, aHeight, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, theImage->GetBits());
+		
 
 	}
 	else if (mBitsChangedCount != theImage->mBitsChangedCount && !mSourceIsFBO)
@@ -518,10 +521,9 @@ void OpenGLTextureData::CreateTextures(MemoryImage* theImage, void* theRendererD
 		void *bits = theImage->GetBits();
 		if (bits)
 		{
-			glGenTextures(1, &mTexID);
 			glBindTexture(GL_TEXTURE_2D, mTexID);
-
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, aWidth, aHeight, GL_RGBA8, GL_UNSIGNED_BYTE, bits);
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, aWidth, aHeight, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, bits);
 		}
 		else
 		{
