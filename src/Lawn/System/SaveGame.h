@@ -37,7 +37,7 @@ class SaveGameContext
   public:
 	inline int ByteLeftToRead()
 	{
-		return (mBuffer.mDataBitSize - mBuffer.mReadBitPos + 7) / 8;
+		return mBuffer.mDataBitSize - mBuffer.mReadBitPos;
 	}
 	void SyncBytes(void *theDest, int theReadSize);
 	void SyncInt(int &theInt);

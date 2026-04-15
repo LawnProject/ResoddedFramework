@@ -21,7 +21,7 @@ class OpenALSoundInstance : public SoundInstance
 	bool mHasPlayed;
 	bool mReleased;
 
-	int mBasePan;
+	float mBasePan;
 	double mBaseVolume;
 
 	int mPan;
@@ -39,10 +39,10 @@ class OpenALSoundInstance : public SoundInstance
 	virtual void Release();
 
 	virtual void SetBaseVolume(double theBaseVolume);
-	virtual void SetBasePan(int theBasePan);
+	virtual void SetBasePan(float theBasePan);
 
 	virtual void SetVolume(double theVolume);
-	virtual void SetPan(int thePosition); //-hundredth db to +hundredth db = left to right
+	virtual void SetPan(float thePosition);
 	virtual void AdjustPitch(double theNumSteps);
 
 	virtual bool Play(bool looping, bool autoRelease);

@@ -24,10 +24,11 @@ static unsigned int SAVE_FILE_DATE =
 //0x4813D0
 void SaveGameContext::SyncBytes(void *theDest, int theReadSize)
 {
+	TOD_ASSERT(mBuffer.mReadBitPos % 8 == 0);
 	int aReadSize = theReadSize;
 	if (mReading)
 	{
-		if ((unsigned long)ByteLeftToRead() < 4)
+		if ((unsigned long)ByteLeftToRead() < sizeof(int))
 		{
 			mFailed = true;
 		}
@@ -66,7 +67,7 @@ void SaveGameContext::SyncInt(int &theInt)
 {
 	if (mReading)
 	{
-		if ((unsigned long)ByteLeftToRead() < 4)
+		if (ByteLeftToRead() < 4)
 		{
 			mFailed = true;
 		}

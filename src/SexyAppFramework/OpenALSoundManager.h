@@ -16,10 +16,10 @@ class OpenALSoundManager : public SoundManager
   protected:
 	ALuint mSourceSounds[MAX_SOURCE_SOUNDS];
 	std::string mSourceFileNames[MAX_SOURCE_SOUNDS];
-	//LPDIRECTSOUNDBUFFER mPrimaryBuffer;
+
 	uint32_t mSourceDataSizes[MAX_SOURCE_SOUNDS];
 	double mBaseVolumes[MAX_SOURCE_SOUNDS];
-	int mBasePans[MAX_SOURCE_SOUNDS];
+	float mBasePans[MAX_SOURCE_SOUNDS];
 	OpenALSoundInstance *mPlayingSounds[MAX_CHANNELS];
 	double mMasterVolume;
 	uint64_t mLastReleaseTick;
@@ -51,7 +51,7 @@ class OpenALSoundManager : public SoundManager
 
 	virtual void SetVolume(double theVolume);
 	virtual bool SetBaseVolume(unsigned int theSfxID, double theBaseVolume);
-	virtual bool SetBasePan(unsigned int theSfxID, int theBasePan);
+	virtual bool SetBasePan(unsigned int theSfxID, float theBasePan);
 
 	virtual SoundInstance *GetSoundInstance(unsigned int theSfxID);
 

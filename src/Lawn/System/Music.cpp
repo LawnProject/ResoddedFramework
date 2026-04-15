@@ -13,7 +13,7 @@ using namespace Sexy;
 Music::Music()
 {
 	mApp = (LawnApp *)gSexyAppBase;
-	mMusicInterface = gSexyAppBase->mMusicInterface;
+	mMusicInterface = mApp->mMusicInterface;
 	mCurMusicTune = MusicTune::MUSIC_TUNE_NONE;
 	mCurMusicFileMain = MusicFile::MUSIC_FILE_NONE;
 	mCurMusicFileDrums = MusicFile::MUSIC_FILE_NONE;
@@ -39,7 +39,7 @@ bool Music::TodLoadMusic(MusicFile theMusicFile, const std::string &theFileName)
 {
 	HMUSIC aHMusic = NULL;
 	HSTREAM aStream = NULL;
-	BassMusicInterface *aBass = (BassMusicInterface *)mApp->mMusicInterface;
+	BassMusicInterface *aBass = (BassMusicInterface *)mMusicInterface;
 	std::string anExt;
 
 	int aDot = theFileName.rfind('.');
@@ -255,7 +255,7 @@ void Music::MusicInit()
 void Music::MusicLoadCreditsSong()
 {
 #ifndef _DEBUG
-	BassMusicInterface *aBass = (BassMusicInterface *)mApp->mMusicInterface;
+	BassMusicInterface *aBass = (BassMusicInterface *)mMusicInterface;
 	if (aBass->mMusicMap.find((int)MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN) ==
 		aBass->mMusicMap.end()) // 如果尚未加载
 		LoadSong(MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN, "sounds/ZombiesOnYourLawn.ogg");
@@ -291,7 +291,7 @@ void Music::StopAllMusic()
 //0x45AC20
 HMUSIC Music::GetBassMusicHandle(MusicFile theMusicFile)
 {
-	BassMusicInterface *aBass = (BassMusicInterface *)mApp->mMusicInterface;
+	BassMusicInterface *aBass = (BassMusicInterface *)mMusicInterface;
 	auto anItr = aBass->mMusicMap.find((int)theMusicFile);
 	TOD_ASSERT(anItr != aBass->mMusicMap.end());
 	return anItr->second.mHMusic;
@@ -300,9 +300,7 @@ HMUSIC Music::GetBassMusicHandle(MusicFile theMusicFile)
 //0x45AC70
 void Music::PlayFromOffset(MusicFile theMusicFile, int theOffset, double theVolume)
 {
-	if (mApp == nullptr)
-		mApp = (LawnApp *)gSexyApp;
-	BassMusicInterface *aBass = (BassMusicInterface *)mApp->mMusicInterface;
+	BassMusicInterface *aBass = (BassMusicInterface *)mMusicInterface;
 	auto anItr = aBass->mMusicMap.find((int)theMusicFile);
 	TOD_ASSERT(anItr != aBass->mMusicMap.end());
 	BassMusicInfo *aMusicInfo = &anItr->second;
@@ -488,7 +486,7 @@ void Music::PlayMusic(MusicTune theMusicTune, int theOffset, int theDrumsOffset)
 unsigned long Music::GetMusicOrder(MusicFile theMusicFile)
 {
 	TOD_ASSERT(theMusicFile != MusicFile::MUSIC_FILE_NONE);
-	return ((BassMusicInterface *)mApp->mMusicInterface)->GetMusicOrder((int)theMusicFile);
+	return ((BassMusicInterface *)mMusicInterface)->GetMusicOrder((int)theMusicFile);
 }
 
 //0x45B1B0
