@@ -47,7 +47,11 @@ void OpenALSoundInstance::RehupVolume()
 void OpenALSoundInstance::RehupPan()
 {
 	if (mSoundSource != AL_NONE)
-		alSource3f(mSoundSource, AL_POSITION, mBasePan + mPan, 0, 0);
+	{
+		alSourcei(mSoundSource, AL_SOURCE_RELATIVE, AL_TRUE);
+		alSource3f(mSoundSource, AL_POSITION, mBasePan + mPan, 0, -1.0f);
+	}
+		
 }
 
 void OpenALSoundInstance::Release()
@@ -62,7 +66,7 @@ void OpenALSoundInstance::SetVolume(double theVolume)
 	RehupVolume();
 }
 
-void OpenALSoundInstance::SetPan(int thePosition)
+void OpenALSoundInstance::SetPan(float thePosition)
 {
 	mPan = thePosition;
 	RehupPan();
@@ -74,7 +78,7 @@ void OpenALSoundInstance::SetBaseVolume(double theBaseVolume)
 	RehupVolume();
 }
 
-void OpenALSoundInstance::SetBasePan(int theBasePan)
+void OpenALSoundInstance::SetBasePan(float theBasePan)
 {
 	mBasePan = theBasePan;
 	RehupPan();
@@ -87,7 +91,7 @@ bool OpenALSoundInstance::Play(bool looping, bool autoRelease)
 	mHasPlayed = true;
 	mAutoRelease = autoRelease;
 
-	if (mSoundSource == NULL)
+	if (mSoundSource == AL_NONE)
 	{
 		return false;
 	}
@@ -102,8 +106,8 @@ void OpenALSoundInstance::Stop()
 {
 	if (mSoundSource != AL_NONE)
 	{
-		alSourcef(mSoundSource, AL_SEC_OFFSET, 0);
 		alSourceStop(mSoundSource);
+		alSourcef(mSoundSource, AL_SEC_OFFSET, 0);
 		mAutoRelease = false;
 	}
 }

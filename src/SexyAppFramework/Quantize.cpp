@@ -62,7 +62,7 @@ bool Sexy::Quantize8Bit(
 
 				memmove(aTranslationTable + anInsertPos + 1,
 						aTranslationTable + anInsertPos,
-						(aColorTableSize - anInsertPos) * sizeof(uint32_t));
+						(aColorTableSize - anInsertPos) * sizeof(uint8_t));
 				aTranslationTable[anInsertPos] = aColorTableSize;
 
 				theDestColorTable[aColorTableSize] = aColor;

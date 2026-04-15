@@ -16,18 +16,18 @@ OpenALSoundManager::OpenALSoundManager()
 	if (!mAudioDevice)
 	{
 		std::string anErrorString = getErrorString(alGetError());
-		//todo: message or smth
+		printf("%s\n", anErrorString.c_str());
 		return;
 	}
 
-	mContext = alcCreateContext(mAudioDevice, NULL);
+	ALCint attrs[] = {ALC_FREQUENCY, 44100, 0};
+	mContext = alcCreateContext(mAudioDevice, attrs);
 	if (!alcMakeContextCurrent(mContext))
 	{
 		std::string anErrorString = getErrorString(alGetError());
-		//todo: message or smth
+		printf("%s\n", anErrorString.c_str());
 		return;
 	}
-
 	for (int i = 0; i < MAX_SOURCE_SOUNDS; i++)
 	{
 		mSourceSounds[i] = AL_NONE;
@@ -105,6 +105,15 @@ int OpenALSoundManager::FindFreeChannel()
 	return -1;
 }
 
+int Sexy::OpenALSoundManager::VolumeToDB(double theVolume)
+{
+	int aVol = (int)((log10(1 + theVolume * 9) - 1.0) * 2333);
+	if (aVol < -2000)
+		aVol = -10000;
+
+	return aVol;
+}
+
 SoundInstance *OpenALSoundManager::GetSoundInstance(unsigned int theSfxID)
 {
 	if (theSfxID > MAX_SOURCE_SOUNDS || mAudioDevice == nullptr)
@@ -160,7 +169,7 @@ static int p_fseek64_wrap(PFILE *f, ogg_int64_t off, int whence)
 {
 	if (f == NULL)
 		return (-1);
-	return p_fseek(f, (long)off, whence);
+	return p_fseek(f, off, whence);
 }
 
 int ov_pak_open(PFILE *f, OggVorbis_File *vf, char *initial, long ibytes)
@@ -176,7 +185,7 @@ int ov_pak_open(PFILE *f, OggVorbis_File *vf, char *initial, long ibytes)
 bool OpenALSoundManager::LoadOGGSound(unsigned int theSfxID, const std::string &theFilename)
 {
 	OggVorbis_File vf;
-	int current_section;
+	int current_section = 0;
 
 	PFILE *aFile = p_fopen(theFilename.c_str(), "rb");
 	if (!aFile)
@@ -202,7 +211,7 @@ bool OpenALSoundManager::LoadOGGSound(unsigned int theSfxID, const std::string &
 		return false;
 	}
 
-	ogg_int64_t aLenBytes = static_cast<ogg_int64_t>(ov_pcm_total(&vf, -1) * anInfo->channels * 2);
+	ogg_int64_t aLenBytes = ov_pcm_total(&vf, -1) * anInfo->channels * sizeof(int16_t);
 
 	char *aBuf = new char[aLenBytes];
 
@@ -210,7 +219,7 @@ bool OpenALSoundManager::LoadOGGSound(unsigned int theSfxID, const std::string &
 	ogg_int64_t aNumBytes = aLenBytes;
 	while (aNumBytes > 0)
 	{
-		long ret = ov_read(&vf, aPtr, aNumBytes, 0, 2, 1, &current_section);
+		long ret = ov_read(&vf, aPtr, std::min(aNumBytes, (int64_t)4096), 0, 2, 1, &current_section);
 
 		if (ret == 0)
 			break;
@@ -229,7 +238,8 @@ bool OpenALSoundManager::LoadOGGSound(unsigned int theSfxID, const std::string &
 	}
 	ALuint aBuffer;
 	alGenBuffers(1, &aBuffer);
-	alBufferData(aBuffer, format, aBuf, aLenBytes, anInfo->rate);
+	ogg_int64_t aDecodedBytes = aLenBytes - aNumBytes;
+	alBufferData(aBuffer, format, aBuf, aDecodedBytes, anInfo->rate);
 
 	mSourceSounds[theSfxID] = aBuffer;
 
@@ -260,18 +270,19 @@ bool OpenALSoundManager::LoadMP3Sound(unsigned int theSfxID, const std::string &
 	int aSize = p_ftell(aPakFile);
 	p_fseek(aPakFile, 0, SEEK_SET);
 	void *aData = operator new[](aSize);
-	p_fread(aData, sizeof(char), aSize, aPakFile);
+	p_fread(aData, sizeof(uint8_t), aSize, aPakFile);
 	p_fclose(aPakFile);
 
 	drmp3 aMP3;
 	if (!drmp3_init_memory(&aMP3, aData, aSize, nullptr))
 	{
+		delete[] aData;
 		return false;
 	}
 
 	aSize = aMP3.totalPCMFrameCount * aMP3.channels * sizeof(drmp3_int32);
-	float* pDecodedInterleavedPCMFrames = (float* )malloc(aSize);
-	size_t numberOfSamplesActuallyDecoded = drmp3_read_pcm_frames_f32(&aMP3, aMP3.totalPCMFrameCount, pDecodedInterleavedPCMFrames);
+	int16_t *pDecodedInterleavedPCMFrames = (int16_t *)malloc(aSize);
+	uint64_t numberOfSamplesActuallyDecoded = drmp3_read_pcm_frames_s16(&aMP3, aMP3.totalPCMFrameCount, pDecodedInterleavedPCMFrames);
 
 	ALuint buffer;
 	alGenBuffers(1, &buffer);
@@ -286,6 +297,7 @@ bool OpenALSoundManager::LoadMP3Sound(unsigned int theSfxID, const std::string &
 
 	free(pDecodedInterleavedPCMFrames);
 	drmp3_uninit(&aMP3);
+	delete[] aData;
 
 	return true;
 }
@@ -353,22 +365,17 @@ bool OpenALSoundManager::LoadFLACSound(unsigned int theSfxID, const std::string 
 	p_fread(aData, sizeof(char), aSize, aPakFile);
 	p_fclose(aPakFile);
 
-	drflac aFLAC;
-	//if (!drflac_open_memory(&aWAV, aData, aSize, nullptr))
-	//{
-		//return false;
-	//}
-	drflac_open_memory(aData, aSize, nullptr);
+	drflac *aFLAC = drflac_open_memory(aData, aSize, nullptr);
 
-	aSize = aFLAC.totalPCMFrameCount * aFLAC.channels * sizeof(drwav_int32);
+	aSize = aFLAC->totalPCMFrameCount * aFLAC->channels * sizeof(drwav_int32);
 	drwav_int32 *pDecodedInterleavedPCMFrames = (drflac_int32 *)malloc(aSize);
 	size_t numberOfSamplesActuallyDecoded =
-		drflac_read_pcm_frames_s32(&aFLAC, aFLAC.totalPCMFrameCount, pDecodedInterleavedPCMFrames);
+		drflac_read_pcm_frames_s32(aFLAC, aFLAC->totalPCMFrameCount, pDecodedInterleavedPCMFrames);
 
 	ALuint buffer;
 	alGenBuffers(1, &buffer);
 	alBufferData(buffer,
-				 aFLAC.channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16,
+				 aFLAC->channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16,
 				 pDecodedInterleavedPCMFrames,
 				 aSize,
 				 numberOfSamplesActuallyDecoded);
@@ -471,7 +478,7 @@ bool OpenALSoundManager::SetBaseVolume(unsigned int theSfxID, double theBaseVolu
 	return true;
 }
 
-bool OpenALSoundManager::SetBasePan(unsigned int theSfxID, int theBasePan)
+bool OpenALSoundManager::SetBasePan(unsigned int theSfxID, float theBasePan)
 {
 	if ((theSfxID < 0) || (theSfxID >= MAX_SOURCE_SOUNDS))
 		return false;
