@@ -19,7 +19,7 @@ int main()
 	//gHInstance = hInstance;
 #ifdef _DEBUG
 	printf("Using SDL version: %d\n", SDL_VERSION);
-	printf("Using BASS version: %d\n", BASS_GetVersion());
+	printf("Using BASS version: %s\n", BASSVERSIONTEXT);
 	printf("Using zlib version: %s\n", zlibVersion());
 #endif
 

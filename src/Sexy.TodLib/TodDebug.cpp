@@ -1,4 +1,3 @@
-#include <time.h>
 #include "TodDebug.h"
 #include "TodCommon.h"
 #include "../SexyAppFramework/Debug.h"
@@ -280,8 +279,8 @@ void TodAssertInitForApp()
 	aOss << std::put_time(&aLocalTime, "%d-%m-%Y-%H.%M");
 	std::string aTimestamp = aOss.str();
 
-	MkDir(/*GetAppDataFolder() +*/ "savefiles/logs");
-	std::string aRelativeUserPath = /*GetAppDataFolder() +*/ "savefiles/logs/";
+	MkDir("logs");
+	std::string aRelativeUserPath = "logs/";
 	strcpy(gDebugDataFolder, GetFullPath(aRelativeUserPath).c_str());
 	strcpy(gLogFileName, gDebugDataFolder);
 	std::string aFormatted = StrFormat("log-%s.txt", aTimestamp.c_str());

@@ -13,18 +13,12 @@ using namespace Sexy;
 ImGuiManager::ImGuiManager(SexyAppBase *theApp)
 {
 	mApp = theApp;
-	ImGui::CreateContext();
-	ImGuiIO &io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-	(void)io;
-	ImGui::StyleColorsDark();
+	mHasInitiated = false;
 }
 
 ImGuiManager::~ImGuiManager()
 {
 	Reset();
-	ImGui_ImplSDL3_Shutdown();
-	ImGui::DestroyContext();
 }
 
 void ImGuiManager::Frame()
@@ -80,12 +74,16 @@ void ImGuiManager::Flush()
 
 void ImGuiManager::Reset()
 {
+	mHasInitiated = false;
+
 	switch (mApp->mRenderer->mCurrentBackend)
 	{
 		case RenderingBackend::BACKEND_OPENGL: 
 		{
 #if SEXY_USE_OPENGL
 			ImGui_ImplOpenGL3_Shutdown();
+			ImGui_ImplSDL3_Shutdown();
+			ImGui::DestroyContext();
 			break;
 #endif
 			default:
@@ -97,6 +95,13 @@ void ImGuiManager::Reset()
 
 void ImGuiManager::Init()
 {
+	if (mHasInitiated)
+		Reset();
+	ImGui::CreateContext();
+	ImGuiIO &io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	(void)io;
+	ImGui::StyleColorsDark();
 	switch (mApp->mRenderer->mCurrentBackend)
 	{
 		case RenderingBackend::BACKEND_OPENGL:
@@ -114,6 +119,7 @@ void ImGuiManager::Init()
 			break;
 		}
 	}
+	mHasInitiated = true;
 }
 
 

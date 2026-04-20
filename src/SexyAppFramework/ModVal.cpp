@@ -1,6 +1,11 @@
+
 #include "ModVal.h"
 #include "Common.h"
 #include <fstream>
+#if WIN32
+
+#include <WinUser.h>
+#include <memoryapi.h>
 
 struct ModStorage
 {
@@ -697,3 +702,6 @@ bool Sexy::ReparseModValues()
 
 	return true;
 }
+
+
+#endif

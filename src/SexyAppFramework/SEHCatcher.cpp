@@ -202,7 +202,7 @@ static bool StrToLongHex(const std::string &aString, DWORD *theValue)
 
 void SEHCatcher::GetSymbolsFromMapFile(std::string &theDebugDump)
 {
-	DWORD aTick = GetTickCount();
+	DWORD aTick = GetTicks();
 	WIN32_FIND_DATAA aFindData;
 	HANDLE aFindHandle = FindFirstFileA("*.map", &aFindData);
 	if (aFindHandle == INVALID_HANDLE_VALUE)

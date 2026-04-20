@@ -171,6 +171,8 @@ namespace Sexy
 			return mScreenImage;
 		}
 
+		virtual uint32_t *CaptureFrameBuffer() = 0;
+
 		virtual void UpdateViewport() = 0;
 		virtual bool Init() = 0;
 

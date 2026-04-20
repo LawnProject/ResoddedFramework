@@ -1,4 +1,3 @@
-#include <time.h>
 #include "ZenGarden.h"
 #include "BoardInclude.h"
 #include "System/Music.h"
@@ -312,7 +311,7 @@ void Board::TryToSaveGame()
 			return;
 		}
 
-		MkDir(/*GetAppDataFolder() */ +"savefiles/userdata");
+		MkDir(GetAppDataFolder() + "savefiles");
 		mApp->mMusic->GameMusicPause(true);
 		LawnSaveGame(this, aFileName);
 		mApp->ClearUpdateBacklog();
@@ -335,7 +334,7 @@ void Board::SaveGame(const std::string &theFileName)
 
 void Board::ResetFPSStats()
 {
-	uint32_t aTickCount = GetTickCount();
+	uint32_t aTickCount = GetTicks();
 	mStartDrawTime = aTickCount;
 	mIntervalDrawTime = aTickCount;
 	mDrawCount = 1;
@@ -7985,7 +7984,7 @@ void Board::Draw(Graphics *g)
 
 	if (mDrawCount && mCutScene->mPreloaded)
 	{
-		int aTickCount = GetTickCount();
+		int aTickCount = GetTicks();
 		int aIntervalDraws = mDrawCount - mIntervalDrawCountStart;
 		int aInterval = aTickCount - mIntervalDrawTime;
 		if (aInterval > 10000)

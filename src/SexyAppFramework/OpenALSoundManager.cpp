@@ -425,6 +425,13 @@ bool OpenALSoundManager::LoadAUSound(unsigned int theSfxID, const std::string &t
 	return true;
 }
 
+bool Sexy::OpenALSoundManager::WriteWAV(unsigned int theSfxID,
+										const std::string &theFilename,
+										const std::string &theDepFile)
+{
+	return false;
+}
+
 int OpenALSoundManager::LoadSound(const std::string &theFilename)
 {
 	int i;
@@ -523,6 +530,11 @@ void OpenALSoundManager::ReleaseChannels()
 			delete mPlayingSounds[i];
 			mPlayingSounds[i] = nullptr;
 		}
+}
+
+bool Sexy::OpenALSoundManager::GetTheFileTime(const std::string &theDepFile, uint64_t *theFileTime)
+{
+	return false;
 }
 
 void OpenALSoundManager::ReleaseFreeChannels()

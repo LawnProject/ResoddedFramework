@@ -4,6 +4,20 @@
 #pragma warning(disable : 4786)
 #pragma warning(disable : 4503)
 
+//Libray Headers Start
+
+#include <SDL3/SDL_timer.h>
+#include <utf8.h>
+
+//Libray Headers End
+
+// Platform Headers Start
+
+#if WIN32
+#include <windows.h>
+#include <shellapi.h>
+#include <mmsystem.h>
+
 #undef _WIN32_WINNT
 #undef WIN32_LEAN_AND_MEAN
 
@@ -16,6 +30,12 @@
 #define NOMINMAX
 #endif
 
+#ifdef LoadImage
+#undef LoadImage // Windows, i fucking hate you -Electr0Gunner
+#endif
+
+#endif
+
 #ifdef max
 #undef max
 #endif
@@ -23,6 +43,10 @@
 #ifdef min
 #undef min
 #endif
+
+// Platform Headers End
+
+// STL Headers Start
 
 #include <string>
 #include <vector>
@@ -32,20 +56,16 @@
 #include <algorithm>
 #include <cstdlib>
 #include <cstdint>
-#include <utf8.h>
 
-#include <windows.h>
-#include <shellapi.h>
-#include <mmsystem.h>
+// STL Headers End
+
 #include "ModVal.h"
+
+// SexyString Start
 
 #if __clang__
 #define stricmp _stricmp
-#endif
-
-
-#ifdef LoadImage
-#undef LoadImage // Windows, i fucking hate you -Electr0Gunner
+#define strnicmp _strnicmp
 #endif
 
 typedef std::string SexyString;
@@ -57,12 +77,7 @@ typedef std::string SexyString;
 #define sexysscanf sscanf
 #define sexyatoi atoi
 #define sexystrcpy strcpy
-/*
-#define SexyStringToStringFast(x) (x)
-#define SexyStringToWStringFast(x) StringToWString(x)
-#define StringToSexyStringFast(x) (x)
-#define WStringToSexyStringFast(x) WStringToString(x)
-*/
+
 #define LONG_BIGE_TO_NATIVE(l)                                                                                         \
 	(((l >> 24) & 0xFF) | ((l >> 8) & 0xFF00) | ((l << 8) & 0xFF0000) | ((l << 24) & 0xFF000000))
 #define WORD_BIGE_TO_NATIVE(w) (((w >> 8) & 0xFF) | ((w << 8) & 0xFF00))
@@ -74,6 +89,8 @@ typedef std::string SexyString;
 typedef std::map<std::string, std::string> DefinesMap;
 typedef SexyString::value_type SexyChar;
 #define HAS_SEXYCHAR
+
+// SexyString End
 
 namespace Sexy
 {
@@ -88,8 +105,6 @@ float Rand(float range);
 void SRand(uint32_t theSeed);
 extern std::string vformat(const char *fmt, va_list argPtr);
 extern std::string StrFormat(const char *fmt...);
-bool CheckFor98Mill();
-bool CheckForVista();
 std::string GetAppDataFolder();
 void SetAppDataFolder(const std::string &thePath);
 std::string URLEncode(const std::string &theString);
@@ -121,6 +136,8 @@ std::string GetCurDir();
 std::string GetFullPath(const std::string &theRelPath);
 std::string GetPathFrom(const std::string &theRelPath, const std::string &theDir);
 bool AllowAllAccess(const std::string &theFileName);
+
+uint64_t GetTicks();
 
 // Read memory and then move the pointer
 void SMemR(void *&_Src, void *_Dst, size_t _Size);

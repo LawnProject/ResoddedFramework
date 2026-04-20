@@ -325,7 +325,7 @@ TodParticle *TodParticleEmitter::SpawnParticle(int theIndex, int theSpawnCount)
 		return nullptr;
 	}
 
-	register TodParticle *aParticle = aDataArray.DataArrayAlloc();
+	TodParticle *aParticle = aDataArray.DataArrayAlloc();
 	TOD_ASSERT(mEmitterDef->mParticleFieldCount <= MAX_PARTICLE_FIELDS);
 	for (int i = 0; i < mEmitterDef->mParticleFieldCount; i++)
 	{
@@ -891,8 +891,8 @@ float CrossFadeLerp(float theFrom, float theTo, bool theFromIsSet, bool theToIsS
 //0x5176A0
 bool TodParticleEmitter::GetRenderParams(TodParticle *theParticle, ParticleRenderParams *theParams)
 {
-	register TodParticleEmitter *aEmitter = theParticle->mParticleEmitter;
-	register TodEmitterDefinition *aDef = aEmitter->mEmitterDef;
+	TodParticleEmitter *aEmitter = theParticle->mParticleEmitter;
+	TodEmitterDefinition *aDef = aEmitter->mEmitterDef;
 
 	// 颜色。对于每一色彩通道，当系统对应轨道、粒子对应轨道和对应覆写中任一有定义时，认为该通道已设定。
 	theParams->mRedIsSet = false;
@@ -1037,7 +1037,7 @@ void RenderParticle(Graphics *g,
 					TodTriangleGroup *theTriangleGroup)
 {
 	TodParticleEmitter *aEmitter = theParticle->mParticleEmitter;
-	register TodEmitterDefinition *aEmitterDef = aEmitter->mEmitterDef;
+	TodEmitterDefinition *aEmitterDef = aEmitter->mEmitterDef;
 	Image *aImage = aEmitter->mImageOverride != nullptr
 						? aEmitter->mImageOverride
 						: aEmitterDef->mImage; // 优先使用覆写贴图，无覆写贴图则使用定义的贴图

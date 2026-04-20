@@ -28,21 +28,25 @@
 #include "PerfTimer.h"
 #include "MTRand.h"
 #include "ModVal.h"
-#include <process.h>
-#include <direct.h>
+
 #include <fstream>
-#include <time.h>
-#include <math.h>
-#include <regstr.h>
+
 #include "SysFont.h"
 #include "ResourceManager.h"
 #include "BassMusicInterface.h"
 #include "AutoCrit.h"
-#include "Debug.h"
 #include "../PakLib/PakInterface.h"
 #include <string>
-#include <shlobj.h>
 
+#if WIN32
+
+#include <math.h>
+#include <regstr.h>
+#include <shlobj.h>
+#include <direct.h>
+#include <process.h>
+
+#endif
 #include "memmgr.h"
 
 #include <json.hpp>
@@ -55,13 +59,14 @@ const int DEMO_VERSION = 2;
 
 SexyAppBase *Sexy::gSexyAppBase = NULL;
 
+
+#if WIN32
+
 SEHCatcher Sexy::gSEHCatcher;
 
 HMODULE gVersionDLL = NULL;
+#endif
 
-//typedef struct { UINT cbSize; DWORD dwTime; } LASTINPUTINFO;
-typedef BOOL(WINAPI *GetLastInputInfoFunc)(LASTINPUTINFO *plii);
-GetLastInputInfoFunc gGetLastInputInfoFunc = NULL;
 static bool gScreenSaverActive = false;
 
 #ifndef SPI_GETSCREENSAVERRUNNING
@@ -113,34 +118,13 @@ static SysFont* gDebugFont = nullptr;
 
 //////////////////////////////////////////////////////////////////////////
 
-typedef HRESULT(WINAPI *SHGetFolderPathFunc)(HWND, int, HANDLE, DWORD, LPTSTR);
-void *GetSHGetFolderPath(const char *theDLL, HMODULE *theMod)
-{
-	HMODULE aMod = LoadLibrary(theDLL);
-	SHGetFolderPathFunc aFunc = NULL;
-
-	if (aMod != NULL)
-	{
-		*((void **)&aFunc) = (void *)GetProcAddress(aMod, "SHGetFolderPathA");
-		if (aFunc == NULL)
-		{
-			FreeLibrary(aMod);
-			aMod = NULL;
-		}
-	}
-
-	*theMod = aMod;
-	return aFunc;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
 SexyAppBase::SexyAppBase()
 {
 	gSexyAppBase = this;
 
+#if WIN32
 	gVersionDLL = LoadLibraryA("version.dll");
-	gGetLastInputInfoFunc = (GetLastInputInfoFunc)GetProcAddress(GetModuleHandleA("user32.dll"), "GetLastInputInfo");
+#endif
 
 #ifdef _DEBUG
 	mOnlyAllowOneCopyToRun = false;
@@ -156,7 +140,7 @@ SexyAppBase::SexyAppBase()
 
 	mNoDefer = false;
 	mFullScreenPageFlip = true; // should we page flip in fullscreen?
-	mTimeLoaded = GetTickCount();
+	mTimeLoaded = SDL_GetTicks();
 	mSEHOccured = false;
 	mProdName = "Product";
 	mTitle = "SexyApp";
@@ -246,7 +230,7 @@ SexyAppBase::SexyAppBase()
 	mMuteOnLostFocus = true;
 	mCurHandleNum = 0;
 	mFPSTime = 0;
-	mFPSStartTick = GetTickCount();
+	mFPSStartTick = SDL_GetTicks();
 	mFPSFlipCount = 0;
 	mFPSCount = 0;
 	mFPSDirtyCount = 0;
@@ -330,7 +314,11 @@ SexyAppBase::SexyAppBase()
 	else
 		mTabletPC = false;
 
+	#if WIN32
+
 	gSEHCatcher.mApp = this;
+
+	#endif
 
 	//std::wifstream stringsFile(_wfopen(L".\\properties\\fstrings", L"rb"));
 	//
@@ -478,8 +466,10 @@ SexyAppBase::~SexyAppBase()
 
 	WriteDemoBuffer();
 
+	
+#if WIN32
 	FreeLibrary(gVersionDLL);
-
+#endif
 }
 
 static BOOL CALLBACK ChangeDisplayWindowEnumProc(HWND hwnd, LPARAM lParam)
@@ -1077,7 +1067,7 @@ bool SexyAppBase::OpenURL(const std::string &theURL, bool shutdownOnOpen)
 		mShutdownOnURLOpen = shutdownOnOpen;
 		mIsOpeningURL = true;
 		mOpeningURL = theURL;
-		mOpeningURLTime = GetTickCount();
+		mOpeningURLTime = SDL_GetTicks();
 
 		if ((int)ShellExecuteA(NULL, "open", theURL.c_str(), NULL, NULL, SW_SHOWNORMAL) > 32)
 		{
@@ -1160,93 +1150,36 @@ void SexyAppBase::SetCursorImage(int theCursorNum, Image *theImage)
 void SexyAppBase::TakeScreenshot()
 {
 	ClearUpdateBacklog();
-	//if (mDDInterface == NULL || mDDInterface->mDrawSurface == NULL)
+	if (mRenderer == nullptr)
 		return;
-	/*
+	
 	// Get free image name
-	std::string anImageDir = GetAppDataFolder() + "_screenshots";
+	std::string anImageDir = "screenshots";
 	MkDir(anImageDir);
 	anImageDir += "/";
 
-	WIN32_FIND_DATAA aData;
 	int aMaxId = 0;
 	std::string anImagePrefix = "image";
-	HANDLE aHandle = FindFirstFileA((anImageDir + "*.png").c_str(), &aData);
-	if (aHandle != INVALID_HANDLE_VALUE)
+
+	std::string anImageName = anImageDir + anImagePrefix + StrFormat("%d", aMaxId);
+	
+	while (true)
 	{
-		do
-		{
-			int aNum = 0;
-			if (sscanf(aData.cFileName, (anImagePrefix + "%d.png").c_str(), &aNum) == 1)
-			{
-				if (aNum > aMaxId)
-					aMaxId = aNum;
-			}
+		anImageName = anImageDir + anImagePrefix + StrFormat("%d", aMaxId);
 
-		} while (FindNextFileA(aHandle, &aData));
-		FindClose(aHandle);
+		if (!std::filesystem::exists(anImageName + ".png"))
+			break;
+
+		++aMaxId;
 	}
-	std::string anImageName = anImageDir + anImagePrefix + StrFormat("%d.png", aMaxId + 1);
-
-	// Capture screen
-	LPDIRECTDRAWSURFACE aSurface = mDDInterface->mDrawSurface;
-
-	// Temporarily set the mDrawSurface to NULL so GPUImage::Check3D
-	// returns false so we can lock the surface.
-	mDDInterface->mDrawSurface = NULL;
-
-	GPUImage anImage(mDDInterface);
-	anImage.SetSurface(aSurface);
-	anImage.GetBits();
-	anImage.DeleteDDSurface();
-	mDDInterface->mDrawSurface = aSurface;
-
-	if (anImage.mBits == NULL)
-		return;
-
+	
 	// Write image
 	ImageLib::Image aSaveImage;
-	aSaveImage.mBits = anImage.mBits;
-	aSaveImage.mWidth = anImage.mWidth;
-	aSaveImage.mHeight = anImage.mHeight;
+	aSaveImage.mBits = mRenderer->CaptureFrameBuffer();
+	aSaveImage.mWidth = mRenderer->mPresentationRect.mWidth;
+	aSaveImage.mHeight = mRenderer->mPresentationRect.mHeight;
+	aSaveImage.mNumChannels = 4;
 	ImageLib::WriteImage(anImageName, &aSaveImage, ".png");
-	aSaveImage.mBits = NULL;
-
-	/*
-	keybd_event(VK_MENU,0,0,0);
-    keybd_event(VK_SNAPSHOT,0,0,0);
-    keybd_event(VK_MENU,0,KEYEVENTF_KEYUP,0);
-	if (OpenClipboard(mHWnd))
-	{
-		HBITMAP aBitmap = (HBITMAP)GetClipboardData(CF_BITMAP);
-		if (aBitmap!=NULL)
-		{
-			BITMAP anObject;
-			ZeroMemory(&anObject,sizeof(anObject));
-			GetObject(aBitmap,sizeof(anObject),&anObject);
-
-			BITMAPINFO anInfo;
-			ZeroMemory(&anInfo,sizeof(anInfo));
-			BITMAPINFOHEADER &aHeader = anInfo.bmiHeader;
-			aHeader.biBitCount = 32;
-			aHeader.biPlanes = 1;
-			aHeader.biHeight = -abs(anObject.bmHeight);
-			aHeader.biWidth = abs(anObject.bmWidth);
-			aHeader.biSize = sizeof(aHeader);
-			aHeader.biSizeImage = aHeader.biHeight*aHeader.biWidth*4;
-			ImageLib::Image aSaveImage;
-			aSaveImage.mBits = new DWORD[abs(anObject.bmWidth*anObject.bmHeight)];
-			aSaveImage.mWidth = abs(anObject.bmWidth);
-			aSaveImage.mHeight = abs(anObject.bmHeight);
-
-			HDC aDC = GetDC(NULL);
-			if (GetDIBits(aDC,aBitmap,0,aSaveImage.mHeight,aSaveImage.mBits,&anInfo,DIB_RGB_COLORS))
-				ImageLib::WritePNGImage(anImageName, &aSaveImage);
-
-			ReleaseDC(NULL,aDC);
-		}
-		CloseClipboard();
-	}*/
 
 }
 
@@ -1254,12 +1187,7 @@ void SexyAppBase::DumpProgramInfo()
 {
 	Deltree(GetAppDataFolder() + "_dump");
 
-	for (;;)
-	{
-		if (mkdir((GetAppDataFolder() + "_dump").c_str()))
-			break;
-		Sleep(100);
-	}
+	MkDir(GetAppDataFolder() + "_dump");
 
 	std::fstream aDumpStream((GetAppDataFolder() + "_dump\\imagelist.html").c_str(), std::ios::out);
 
@@ -2139,7 +2067,7 @@ void SexyAppBase::SEHOccured()
 
 std::string SexyAppBase::GetGameSEHInfo()
 {
-	int aSecLoaded = (GetTickCount() - mTimeLoaded) / 1000;
+	int aSecLoaded = (SDL_GetTicks() - mTimeLoaded) / 1000;
 
 	char aTimeStr[16];
 	sprintf(aTimeStr, "%02d:%02d:%02d", (aSecLoaded / 60 / 60), (aSecLoaded / 60) % 60, aSecLoaded % 60);
@@ -2316,11 +2244,11 @@ void SexyAppBase::Redraw(Rect *theClipRect)
 		//gD3DInterfacePreDrawError = false; // this predraw error happens naturally when ddraw is failing
 		if (!gIsFailing)
 		{
-			//gDebugStream << GetTickCount() << " Redraw failed!" << std::endl;
+			//gDebugStream << SDL_GetTicks() << " Redraw failed!" << std::endl;
 			gIsFailing = true;
 		}
 
-		uint32_t aTick = GetTickCount();
+		uint32_t aTick = SDL_GetTicks();
 		if ((mActive || (aTick - aRetryTick > 1000 && mIsPhysWindowed)) && (!mMinimized))
 		{
 			aRetryTick = aTick;
@@ -2345,11 +2273,11 @@ void SexyAppBase::Redraw(Rect *theClipRect)
 
 			int aResult = InitDDInterface();
 
-			//gDebugStream << GetTickCount() << " ReInit..." << std::endl;
+			//gDebugStream << SDL_GetTicks() << " ReInit..." << std::endl;
 			/*
 			if ((mIsWindowed) && (aResult == DDInterface::RESULT_INVALID_COLORDEPTH))
 			{
-				//gDebugStream << GetTickCount() << "ReInit Invalid Colordepth" << std::endl;
+				//gDebugStream << SDL_GetTicks() << "ReInit Invalid Colordepth" << std::endl;
 				if (!mActive) // don't switch to full screen if not active app
 					return;
 
@@ -2364,7 +2292,7 @@ void SexyAppBase::Redraw(Rect *theClipRect)
 			}
 			else if (aResult != DDInterface::RESULT_OK)
 			{
-				//gDebugStream << GetTickCount() << " ReInit Failed" << std::endl;
+				//gDebugStream << SDL_GetTicks() << " ReInit Failed" << std::endl;
 				//Fail("Failed to initialize DirectDraw");
 				//Sleep(1000);
 
@@ -2383,7 +2311,7 @@ void SexyAppBase::Redraw(Rect *theClipRect)
 	{
 		if (gIsFailing)
 		{
-			//gDebugStream << GetTickCount() << " Redraw succeeded" << std::endl;
+			//gDebugStream << SDL_GetTicks() << " Redraw succeeded" << std::endl;
 			gIsFailing = false;
 			aRetryTick = 0;
 		}
@@ -2483,7 +2411,7 @@ static void CalculateDemoTimeLeft()
 		gDemoTimeLeftImage->PurgeBits();
 	}
 
-	uint32_t aTick = GetTickCount();
+	uint32_t aTick = SDL_GetTicks();
 	if (aTick - aLastTick < 1000 / gSexyAppBase->mUpdateMultiplier)
 		return;
 
@@ -2510,7 +2438,7 @@ static void UpdateScreenSaverInfo(uint32_t theTick)
 {
 	if (gSexyAppBase->IsScreenSaver() || !gSexyAppBase->mIsPhysWindowed)
 		return;
-
+	/*
 	// Get screen saver timeout
 	static uint32_t aPeriodicTick = 0;
 	static uint32_t aScreenSaverTimeout = 60000;
@@ -2569,7 +2497,7 @@ static void UpdateScreenSaverInfo(uint32_t theTick)
 		}
 	}
 	else if (anIdleTime > aScreenSaverTimeout)
-		gScreenSaverActive = true;
+		gScreenSaverActive = true;*/
 }
 
 bool SexyAppBase::DrawDirtyStuff()
@@ -2670,7 +2598,7 @@ bool SexyAppBase::DrawDirtyStuff()
 #ifdef _DEBUG
 		/*if (mFPSTime >= 5000) // Show FPS about every 5 seconds
 		{
-			uint32_t aTickNow = GetTickCount();
+			uint32_t aTickNow = SDL_GetTicks();
 
 			OutputDebugString(StrFormat("Theoretical FPS: %d\r\n", (int) (mFPSCount * 1000 / mFPSTime)).c_str());
 			OutputDebugString(StrFormat("Actual      FPS: %d\r\n", (mFPSFlipCount * 1000) / max((aTickNow - mFPSStartTick), 1)).c_str());
@@ -2724,7 +2652,7 @@ void SexyAppBase::LogScreenSaverError(const std::string &theError)
 	FILE *aFile = fopen("ScrError.txt", aFlag);
 	if (aFile != NULL)
 	{
-		fprintf(aFile, "%s %s %u\n", theError.c_str(), _strtime(aBuf), GetTickCount());
+		fprintf(aFile, "%s %s %u\n", theError.c_str(), _strtime(aBuf), SDL_GetTicks());
 		fclose(aFile);
 	}
 }
@@ -4082,7 +4010,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 			case WM_TIMER:
 				if ((!gInAssert) && (!mSEHOccured) && (mRunning))
 				{
-					DWORD aTimeNow = GetTickCount();
+					DWORD aTimeNow = SDL_GetTicks();
 					if (aTimeNow - mLastTimerTime > 500)
 						mLastBigDelayTime = aTimeNow;
 
@@ -4405,7 +4333,7 @@ void SexyAppBase::LoadingThreadProcStub(void *theArg)
 	aSexyApp->LoadingThreadProc();
 
 	char aStr[256];
-	sprintf(aStr, "Resource Loading Time: %d\r\n", (GetTickCount() - aSexyApp->mTimeLoaded));
+	sprintf(aStr, "Resource Loading Time: %d\r\n", (SDL_GetTicks() - aSexyApp->mTimeLoaded));
 	OutputDebugStringA(aStr);
 
 	aSexyApp->mLoadingThreadCompleted = true;
@@ -4631,7 +4559,7 @@ void SexyAppBase::UpdateFTimeAcc()
 
 bool SexyAppBase::Process(bool allowSleep)
 {
-	/*DWORD aTimeNow = GetTickCount();
+	/*DWORD aTimeNow = SDL_GetTicks();
 	if (aTimeNow - aLastCheck >= 10000)
 	{
 		OutputDebugString(StrFormat("FUpdates: %d\n", aNumCalls).c_str());
@@ -4669,7 +4597,7 @@ bool SexyAppBase::Process(bool allowSleep)
 				Mute(true);
 			}
 
-			static uint32_t aTick = GetTickCount();
+			static uint32_t aTick = SDL_GetTicks();
 			while (mUpdateCount < mFastForwardToUpdateNum || mFastForwardToMarker)
 			{
 				ClearUpdateBacklog();
@@ -4713,11 +4641,11 @@ bool SexyAppBase::Process(bool allowSleep)
 				if (aLastUpdateCount == mUpdateCount)
 					return true;
 
-				uint32_t aNewTick = GetTickCount();
+				uint32_t aNewTick = SDL_GetTicks();
 				if (aNewTick - aTick >= 1000 || mFastForwardStep) // let the app draw some
 				{
 					mFastForwardStep = false;
-					aTick = GetTickCount();
+					aTick = SDL_GetTicks();
 					DrawDirtyStuff();
 					return true;
 				}
@@ -5505,6 +5433,14 @@ void SexyAppBase::Init()
 		DoExit(0);
 	}
 
+	std::string aDataPath = GetAppDataFolder() + mFullCompanyName + "\\" + mProdName;
+	SetAppDataFolder(aDataPath + "/");
+	MkDir(aDataPath);
+	if (mDemoFileName.length() < 2 || (mDemoFileName[1] != ':' && mDemoFileName[2] != '/'))
+	{
+		mDemoFileName = GetAppDataFolder() + mDemoFileName;
+	}
+
 	InitPropertiesHook();
 	ReadFromRegistry();
 
@@ -5516,7 +5452,7 @@ void SexyAppBase::Init()
 
 	// Change directory
 	if (!ChangeDirHook(mChangeDirTo.c_str()))
-		chdir(mChangeDirTo.c_str());
+		std::filesystem::current_path(mChangeDirTo);
 
 	gPakInterface->AddPakFile("main.pak");
 
@@ -5526,7 +5462,7 @@ void SexyAppBase::Init()
 		HandleGameAlreadyRunning();
 	#endif
 
-	mRandSeed = GetTickCount();
+	mRandSeed = SDL_GetTicks();
 	SRand(mRandSeed);
 
 	// Set up demo recording stuff
@@ -5541,7 +5477,7 @@ void SexyAppBase::Init()
 		}
 	}
 
-	srand(GetTickCount());
+	srand(SDL_GetTicks());
 
 	// Let app do something before showing window, or switching to fullscreen mode
 	// NOTE: Moved call to PreDisplayHook above mIsWindowed and GetSystemsMetrics

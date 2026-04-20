@@ -93,6 +93,28 @@ bool OpenGLRenderer::Init()
 	return aResult;
 }
 
+uint32_t *OpenGLRenderer::CaptureFrameBuffer()
+{
+	uint32_t *thePixels = new uint32_t[mPresentationRect.mWidth * mPresentationRect.mHeight];
+	glReadPixels(mPresentationRect.mX,
+				 mPresentationRect.mY,
+				 mPresentationRect.mWidth,
+				 mPresentationRect.mHeight,
+				 GL_BGRA,
+				 GL_UNSIGNED_BYTE,
+				 thePixels);
+	for (int y = 0; y < mPresentationRect.mHeight / 2; ++y)
+	{
+		uint32_t *row = thePixels + y * mPresentationRect.mWidth;
+		uint32_t *opp = thePixels + (mPresentationRect.mHeight - 1 - y) * mPresentationRect.mWidth;
+
+		for (int x = 0; x < mPresentationRect.mWidth; ++x)
+			std::swap(row[x], opp[x]);
+	}
+
+	return thePixels;
+}
+
 void OpenGLRenderer::Cleanup()
 {
 	mSceneBegun = false;
@@ -192,12 +214,13 @@ bool OpenGLRenderer::InitGLContext()
 	}
 
 	SDL_GL_MakeCurrent(mApp->mWindow->mInternalWindow, mContext);
-
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+	glEnable(GL_MULTISAMPLE);
 	mDefaultShader = new GLShader();
 	mDefaultShader->LoadFromSource(gVertexShaderSrc, gFragmentShaderSrc);
 
 	SetVideoOnlyDraw(false);
-
 	return true;
 }
 

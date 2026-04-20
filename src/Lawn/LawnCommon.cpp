@@ -1,4 +1,3 @@
-#include <time.h>
 #include "Board.h"
 #include "Plant.h"
 #include "../LawnApp.h"
@@ -120,7 +119,7 @@ Checkbox *MakeNewCheckbox(int theId, CheckboxListener *theListener, bool theDefa
 //0x4568D0
 std::string GetSavedGameName(GameMode theGameMode, int theProfileId)
 {
-	return /*GetAppDataFolder() +*/ StrFormat("savefiles/userdata/game%d_%d.dat", theProfileId, (int)theGameMode);
+	return GetAppDataFolder() + StrFormat("savefiles/game%d_%d.dat", theProfileId, (int)theGameMode);
 }
 
 //0x456980

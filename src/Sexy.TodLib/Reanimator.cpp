@@ -1163,10 +1163,9 @@ void ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsP
 	{
 		if (gAppHasUsedCheatKeys())
 			TodTraceAndLog(
-				"Cheater failed to preload '%s' on %s", aReanimParams->mReanimFileName, gGetCurrentLevelName());
+				"Cheater failed to preload '%s' on %s", aReanimParams->mReanimFileName, gGetCurrentLevelName().c_str());
 		else
-			TodTraceAndLog(
-				"Non-cheater failed to preload '%s' on %s", aReanimParams->mReanimFileName, gGetCurrentLevelName());
+			TodTraceAndLog("Non-cheater failed to preload '%s' on %s", aReanimParams->mReanimFileName, gGetCurrentLevelName().c_str());
 	} // < 以上部分仅内测版执行 >
 
 	PerfTimer aTimer;

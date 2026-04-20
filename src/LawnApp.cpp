@@ -1,4 +1,3 @@
-#include <time.h>
 #include "LawnApp.h"
 #include "Lawn/Board.h"
 #include "Lawn/Plant.h"
@@ -1580,7 +1579,7 @@ void LawnApp::UpdatePlayTimeStats()
 {
 	static int aLastTime = -1;
 
-	int aTickCount = GetTickCount();
+	int aTickCount = GetTicks();
 	int aSession = (aTickCount - aLastTime) / 1000;
 
 	if (mPlayerInfo && !mPlayerInfo->mHasUsedCheatKeys && !mDebugKeysEnabled && mTodCheatKeys)

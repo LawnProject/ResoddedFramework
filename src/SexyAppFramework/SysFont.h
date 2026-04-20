@@ -29,7 +29,10 @@ class SysFont : public Font
 	SexyAppBase *mApp;
 	std::string mFontName;
 	bool mDrawShadow;
-	bool mSimulateBold;
+	bool mBold;
+	bool mItalic;
+	bool mUnderlined;
+
 
 	void Init(SexyAppBase *theApp,
 			  const std::string &theFace,

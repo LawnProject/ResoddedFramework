@@ -74,19 +74,42 @@ void DebuggerWindow::Update()
 					}
 					else
 					{
-						if (ImGui::BeginTabItem("Challenge"))
+						if (mApp->mGameMode == GameMode::GAMEMODE_ADVENTURE)
 						{
-							ImGui::Text("Current Challenge: %s", TodStringTranslate(mApp->GetCurrentChallengeDef().mChallengeName).c_str());
-							ImGui::SeparatorText("Waves");
+							if (ImGui::BeginTabItem("Adventure"))
+							{
+								ImGui::Text("Current Level: %s",  mApp->GetStageString(mApp->mBoard->mLevel).c_str());
+								ImGui::SeparatorText("Waves");
 
-							ImGui::Text("Wave Count: %d", mApp->mBoard->mNumWaves);
-							ImGui::Text("Flag Count: %d", mApp->mBoard->mNumWaves / mApp->mBoard->GetNumWavesPerFlag());
+								ImGui::Text("Wave Count: %d", mApp->mBoard->mNumWaves);
+								ImGui::Text("Flag Count: %d",
+											mApp->mBoard->mNumWaves / mApp->mBoard->GetNumWavesPerFlag());
 
-							ImGui::Text("Current Wave: %d", mApp->mBoard->mCurrentWave);
-							ImGui::Text("Current Flag: %d", mApp->mBoard->mCurrentWave / mApp->mBoard->GetNumWavesPerFlag());
+								ImGui::Text("Current Wave: %d", mApp->mBoard->mCurrentWave);
+								ImGui::Text("Current Flag: %d",
+											mApp->mBoard->mCurrentWave / mApp->mBoard->GetNumWavesPerFlag());
 
+								ImGui::EndTabItem();
+							}
+						}
+						else
+						{
+							if (ImGui::BeginTabItem("Challenge"))
+							{
+								ImGui::Text("Current Challenge: %s",
+											TodStringTranslate(mApp->GetCurrentChallengeDef().mChallengeName).c_str());
+								ImGui::SeparatorText("Waves");
 
-							ImGui::EndTabItem();
+								ImGui::Text("Wave Count: %d", mApp->mBoard->mNumWaves);
+								ImGui::Text("Flag Count: %d",
+											mApp->mBoard->mNumWaves / mApp->mBoard->GetNumWavesPerFlag());
+
+								ImGui::Text("Current Wave: %d", mApp->mBoard->mCurrentWave);
+								ImGui::Text("Current Flag: %d",
+											mApp->mBoard->mCurrentWave / mApp->mBoard->GetNumWavesPerFlag());
+
+								ImGui::EndTabItem();
+							}
 						}
 						if (ImGui::BeginTabItem("Zombies"))
 						{

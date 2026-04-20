@@ -3,12 +3,14 @@
 #include "Debug.h"
 #include <filesystem>
 #include <chrono>
+#if WIN32
 #include <direct.h>
 #include <io.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
 #include <aclapi.h>
+#endif
 
 #include "PerfTimer.h"
 
@@ -45,58 +47,6 @@ void Sexy::SRand(uint32_t theSeed)
 	gMTRand.SRand(theSeed);
 }
 
-bool Sexy::CheckFor98Mill()
-{
-	static bool needOsCheck = true;
-	static bool is98Mill = false;
-
-	if (needOsCheck)
-	{
-		bool invalid = false;
-		OSVERSIONINFOEXA osvi;
-		ZeroMemory(&osvi, sizeof(OSVERSIONINFOEXA));
-
-		osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEXA);
-		if (GetVersionExA((LPOSVERSIONINFOA)&osvi) == 0)
-		{
-			osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOA);
-			if (GetVersionExA((LPOSVERSIONINFOA)&osvi) == 0)
-				return false;
-		}
-
-		needOsCheck = false;
-		is98Mill = osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS; // let's check Win95, 98, *AND* ME.
-	}
-
-	return is98Mill;
-}
-
-bool Sexy::CheckForVista()
-{
-	static bool needOsCheck = true;
-	static bool isVista = false;
-
-	if (needOsCheck)
-	{
-		bool invalid = false;
-		OSVERSIONINFOEXA osvi;
-		ZeroMemory(&osvi, sizeof(OSVERSIONINFOEXA));
-
-		osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEXA);
-		if (GetVersionExA((LPOSVERSIONINFOA)&osvi) == 0)
-		{
-			osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOA);
-			if (GetVersionExA((LPOSVERSIONINFOA)&osvi) == 0)
-				return false;
-		}
-
-		needOsCheck = false;
-		isVista = osvi.dwMajorVersion >= 6;
-	}
-
-	return isVista;
-}
-
 std::string Sexy::GetAppDataFolder()
 {
 	return Sexy::gAppDataFolder;
@@ -104,10 +54,7 @@ std::string Sexy::GetAppDataFolder()
 
 void Sexy::SetAppDataFolder(const std::string &thePath)
 {
-	if (CheckForVista())
-	{
-		Sexy::gAppDataFolder = thePath;
-	}
+	Sexy::gAppDataFolder = thePath;
 }
 
 std::string Sexy::URLEncode(const std::string &theString)
@@ -317,8 +264,7 @@ SexyString Sexy::CommaSeperate(int theValue)
 
 std::string Sexy::GetCurDir()
 {
-	char aDir[256];
-	return _getcwd(aDir, sizeof(aDir));
+	return std::filesystem::current_path().string();
 }
 
 std::string Sexy::GetFullPath(const std::string &theRelPath)
@@ -427,6 +373,8 @@ std::string Sexy::GetPathFrom(const std::string &theRelPath, const std::string &
 
 bool Sexy::AllowAllAccess(const std::string &theFileName)
 {
+#if WIN32
+
 	HMODULE aLib = LoadLibraryA("advapi32.dll");
 	if (aLib == NULL)
 		return false;
@@ -508,6 +456,15 @@ bool Sexy::AllowAllAccess(const std::string &theFileName)
 
 	FreeLibrary(aLib);
 	return result;
+#else
+	return false;
+#endif // WIN32
+	
+}
+
+uint64_t Sexy::GetTicks()
+{
+	return SDL_GetTicks();
 }
 
 bool Sexy::Deltree(const std::string &thePath)
@@ -519,72 +476,19 @@ bool Sexy::Deltree(const std::string &thePath)
 	if (aSourceDir.length() < 2)
 		return false;
 
-	if ((aSourceDir[aSourceDir.length() - 1] != '\\') || (aSourceDir[aSourceDir.length() - 1] != '/'))
-		aSourceDir += "\\";
-
-	WIN32_FIND_DATAA aFindData;
-
-	HANDLE aFindHandle = FindFirstFileA((aSourceDir + "*.*").c_str(), &aFindData);
-	if (aFindHandle == INVALID_HANDLE_VALUE)
-		return false;
-
-	do
-	{
-		if ((aFindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
-		{
-			if ((strcmp(aFindData.cFileName, ".") != 0) && (strcmp(aFindData.cFileName, "..") != 0))
-			{
-				// Follow the directory
-				if (!Deltree(aSourceDir + aFindData.cFileName))
-					success = false;
-			}
-		}
-		else
-		{
-			std::string aFullName = aSourceDir + aFindData.cFileName;
-			if (!DeleteFileA(aFullName.c_str()))
-				success = false;
-		}
-	} while (FindNextFileA(aFindHandle, &aFindData));
-	FindClose(aFindHandle);
-
-	if (rmdir(thePath.c_str()) == 0)
-		success = false;
+	success = std::filesystem::remove_all(aSourceDir);
 
 	return success;
 }
 
 bool Sexy::FileExists(const std::string &theFileName)
 {
-	WIN32_FIND_DATAA aFindData;
-
-	HANDLE aFindHandle = FindFirstFileA(theFileName.c_str(), &aFindData);
-	if (aFindHandle == INVALID_HANDLE_VALUE)
-		return false;
-
-	FindClose(aFindHandle);
-	return true;
+	return std::filesystem::exists(theFileName);
 }
 
 void Sexy::MkDir(const std::string &theDir)
 {
-	std::string aPath = theDir;
-
-	int aCurPos = 0;
-	for (;;)
-	{
-		int aSlashPos = aPath.find_first_of("\\/", aCurPos);
-		if (aSlashPos == -1)
-		{
-			_mkdir(aPath.c_str());
-			break;
-		}
-
-		aCurPos = aSlashPos + 1;
-
-		std::string aCurPath = aPath.substr(0, aSlashPos);
-		_mkdir(aCurPath.c_str());
-	}
+	std::filesystem::create_directories(theDir);
 }
 
 std::string Sexy::GetFileName(const std::string &thePath, bool noExtension)

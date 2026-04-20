@@ -33,7 +33,7 @@ class OpenALSoundManager : public SoundManager
 	bool LoadWAVSound(unsigned int theSfxID, const std::string &theFilename);
 	bool LoadAUSound(unsigned int theSfxID, const std::string &theFilename);
 	bool WriteWAV(unsigned int theSfxID, const std::string &theFilename, const std::string &theDepFile);
-	bool GetTheFileTime(const std::string &theDepFile, FILETIME *theFileTime);
+	bool GetTheFileTime(const std::string &theDepFile, uint64_t *theFileTime);
 	void ReleaseFreeChannels();
 
   public:

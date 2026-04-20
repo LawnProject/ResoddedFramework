@@ -84,7 +84,7 @@ void PlayerInfo::LoadDetails()
 	try
 	{
 		Buffer aBuffer;
-		std::string aFileName = /*GetAppDataFolder() +*/ StrFormat("savefiles/userdata/user%d.dat", mId);
+		std::string aFileName = GetAppDataFolder() + StrFormat("savefiles/user%d.dat", mId);
 		if (!gSexyAppBase->ReadBufferFromFile(aFileName, &aBuffer, false))
 		{
 			return;
@@ -110,15 +110,15 @@ void PlayerInfo::SaveDetails()
 	DataSync aSync(aWriter);
 	SyncDetails(aSync);
 
-	MkDir(/*GetAppDataFolder() + */ "savefiles/userdata");
-	std::string aFileName = /*GetAppDataFolder() +*/ StrFormat("savefiles/userdata/user%d.dat", mId);
+	MkDir(GetAppDataFolder() + "savefiles");
+	std::string aFileName = GetAppDataFolder() + StrFormat("savefiles/user%d.dat", mId);
 	gSexyAppBase->WriteBytesToFile(aFileName, aWriter.GetDataPtr(), aWriter.GetDataLen());
 }
 
 //0x469810
 void PlayerInfo::DeleteUserFiles()
 {
-	std::string aFilename = /*GetAppDataFolder() +*/ StrFormat("savefiles/userdata/user%d.dat", mId);
+	std::string aFilename = GetAppDataFolder() + StrFormat("savefiles/user%d.dat", mId);
 	gSexyAppBase->EraseFile(aFilename);
 
 	for (int i = 0; i < (int)GameMode::NUM_GAME_MODES; i++)

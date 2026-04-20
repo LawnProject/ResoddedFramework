@@ -4,8 +4,6 @@
 #include "AutoCrit.h"
 #include "CritSect.h"
 
-#include <time.h>
-
 #include "memmgr.h"
 
 extern bool gInAssert = false;
@@ -161,8 +159,8 @@ void SexyDumpUnfreed()
 	time_t aTime = time(NULL);
 	sprintf(buf, "Memory Leak Report for %s\n", asctime(localtime(&aTime)));
 	fprintf(f, buf);
-	OutputDebugString("\n");
-	OutputDebugString(buf);
+	printf("\n");
+	printf(buf);
 	for (i = gSexyAllocMap.begin(); i != gSexyAllocMap.end(); i++)
 	{
 		sprintf(buf,
@@ -171,7 +169,7 @@ void SexyDumpUnfreed()
 				i->second.line,
 				i->second.size,
 				i->second.size > 1 ? "s" : "");
-		OutputDebugString(buf);
+		printf(buf);
 		fprintf(f, buf);
 
 #ifdef SEXY_DUMP_LEAKED_MEM
@@ -231,9 +229,9 @@ void SexyDumpUnfreed()
 
 	sprintf(buf, "-----------------------------------------------------------\n");
 	fprintf(f, buf);
-	OutputDebugString(buf);
+	printf(buf);
 	sprintf(buf, "Total Unfreed: %d bytes (%dKB)\n\n", totalSize, totalSize / 1024);
-	OutputDebugString(buf);
+	printf(buf);
 	fprintf(f, buf);
 }
 
@@ -246,5 +244,5 @@ void OutputDebug(const SexyChar *fmt...)
 	std::string result = vformat(fmt, argList);
 	va_end(argList);
 
-	OutputDebugStringA(result.c_str());
+	printf(result.c_str());
 }

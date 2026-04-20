@@ -253,12 +253,12 @@ void OpenGLImage::ImplFillRect(const Rect &theRect, const Color &theColor, int t
 
 	std::vector<Vertex> aVertices;
 
-	aVertices.push_back({p0, {}, aColor});
-	aVertices.push_back({p1, {}, aColor});
-	aVertices.push_back({p2, {}, aColor});
-	aVertices.push_back({p2, {}, aColor});
-	aVertices.push_back({p3, {}, aColor});
-	aVertices.push_back({p0, {}, aColor});
+	aVertices.push_back({p0, {0, 0}, aColor});
+	aVertices.push_back({p1, {0, 0}, aColor});
+	aVertices.push_back({p2, {0, 0}, aColor});
+	aVertices.push_back({p2, {0, 0}, aColor});
+	aVertices.push_back({p3, {0, 0}, aColor});
+	aVertices.push_back({p0, {0, 0}, aColor});
 
 	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
 
@@ -279,7 +279,34 @@ void OpenGLImage::ImplFillRect(const Rect &theRect, const Color &theColor, int t
 void OpenGLImage::ImplDrawLine(
 	double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
 {
+	PreTextureDraw();
 
+	glm::vec2 p0 = {theStartX, theStartY};
+	glm::vec2 p1 = {theEndX, theEndY};
+
+	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
+						(float)theColor.mGreen / 255.0f,
+						(float)theColor.mBlue / 255.0f,
+						(float)theColor.mAlpha / 255.0f};
+
+	std::vector<Vertex> aVertices;
+
+	aVertices.push_back({p0, {}, aColor});
+	aVertices.push_back({p1, {}, aColor});
+
+	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
+
+	aShaderToUse->Use();
+	aShaderToUse->SetUniform("uProjection", mProjection);
+	aShaderToUse->SetUniform("uUseTexture", 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
+	glDrawArrays(GL_LINES, 0, (GLsizei)aVertices.size());
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void OpenGLImage::ImplDrawLineAA(

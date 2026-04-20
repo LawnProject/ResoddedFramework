@@ -3,6 +3,10 @@
 #include <SDL3/SDL.h>
 #include "Common.h"
 
+#if WIN32
+#include <windef.h>
+#endif
+
 namespace Sexy
 {
     class SexyAppBase;
@@ -16,7 +20,7 @@ namespace Sexy
         Window(SexyAppBase* theApp);
         ~Window();
 
-        #ifdef WIN32
+        #if WIN32
             HWND GetHWND();
         #endif
     };

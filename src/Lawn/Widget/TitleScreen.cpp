@@ -69,7 +69,7 @@ void TitleScreen::Draw(Graphics *g)
 
 		if (!mDrawnYet)
 		{
-			TodTraceAndLog("First Draw Time: %d ms\n", GetTickCount() - mApp->mTimeLoaded);
+			TodTraceAndLog("First Draw Time: %d ms\n", GetTicks() - mApp->mTimeLoaded);
 			TodHesitationTrace("TitleScreen First Draw");
 			mDrawnYet = true;
 		}

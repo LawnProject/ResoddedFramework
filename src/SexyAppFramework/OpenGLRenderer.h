@@ -104,6 +104,8 @@ namespace Sexy
 			return new OpenGLImage(this);
 		}
 
+		virtual uint32_t *CaptureFrameBuffer();
+
 		virtual void Cleanup();
 
 		virtual bool PreDraw();

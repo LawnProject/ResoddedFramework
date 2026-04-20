@@ -7,9 +7,12 @@
 #include "Renderer.h"
 #include "WidgetManager.h"
 #include <stdlib.h>
+#include FT_OUTLINE_H
+#include FT_SYNTHESIS_H
 #if SEXY_USE_OPENGL
 #include "OpenGLRenderer.h"
 #endif
+
 
 using namespace Sexy;
 
@@ -38,6 +41,9 @@ void SysFont::Init(SexyAppBase *theApp,
 {
 	mApp = theApp;
 	mApp->mRenderer->mSysFonts.insert(this);
+	mBold = bold;
+	mItalic = italics;
+	mUnderlined = underline;
 
 	FT_Face aFontFace;
 	FT_Error anError = FT_New_Face(mApp->mFreeTypeLib, theFace.c_str(), 0, &aFontFace);
@@ -47,19 +53,25 @@ void SysFont::Init(SexyAppBase *theApp,
 		anError = FT_New_Face(mApp->mFreeTypeLib, ("C:/Windows/Fonts/" + theFace + ".ttf").c_str(), 0, &aFontFace);
 		#endif
 	}
+	if (mItalic)
+	{
+		FT_Matrix matrix = {1 << 16, 0.3 * (1 << 16), 0, 1 << 16};
+		FT_Set_Transform(aFontFace, &matrix, nullptr);
+	}
+
 	mTTData = new TrueTypeData(this, aFontFace, thePointSize);
 
     mAscent = aFontFace->size->metrics.ascender >> 6;
 	mHeight = (aFontFace->size->metrics.ascender - aFontFace->size->metrics.descender) >> 6;
 
 	mDrawShadow = false;
-	mSimulateBold = false;
 	mFontName = theFace;
 }
 
 void SysFont::Reinit()
 {
 	FT_Face aFontFace;
+	bool aPrevFlags = mTTData->mFace->style_flags;
 	FT_Error anError = FT_New_Face(mApp->mFreeTypeLib, mFontName.c_str(), 0, &aFontFace);
 	if (anError)
 	{
@@ -67,6 +79,9 @@ void SysFont::Reinit()
 		anError = FT_New_Face(mApp->mFreeTypeLib, ("C:/Windows/Fonts/" + mFontName + ".ttf").c_str(), 0, &aFontFace);
 #endif
 	}
+
+	aFontFace->style_flags = aPrevFlags;
+
 	int aOldSize = mTTData->mSize;
 	delete mTTData;
 	mTTData = nullptr;
@@ -82,9 +97,11 @@ SysFont::SysFont(const SysFont &theSysFont)
 	mHeight = theSysFont.mHeight;
 	mAscent = theSysFont.mAscent;
 	mTTData = theSysFont.mTTData;
+	mTTData->mFont = this;
+	mBold = theSysFont.mBold;
+	mItalic = theSysFont.mItalic;
 
 	mDrawShadow = false;
-	mSimulateBold = false;
 }
 
 SysFont::~SysFont()
@@ -116,7 +133,7 @@ void SysFont::DrawString(
 { 
 	int posX = theX;
 	int posY = theY;
-
+	int underlineY = posY - ((mTTData->mFace->underline_position * mTTData->mFace->size->metrics.y_scale) >> 16 >> 6);
 	for (char c : theString)
 	{
 		TrueTypeGlyph aGlyph = mTTData->GetGlyph(c);
@@ -125,7 +142,6 @@ void SysFont::DrawString(
 
 		if (g->mDestImage != &Graphics::mStaticImage)
 		{
-
 			if (mDrawShadow)
 			{
 				Color aShadowColor = Color(0, 0, 0, 0);
@@ -138,17 +154,6 @@ void SysFont::DrawString(
 					theClipRect,
 					aShadowColor,
 					0);
-
-				if (mSimulateBold)
-					g->mDestImage->BltRawTexture(
-						aGlyph.mTexData,
-						aGlyph.mWidth,
-						aGlyph.mHeight,
-						Rect(aDrawX + g->mTransX + 2, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
-						Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
-						theClipRect,
-						aShadowColor,
-						0);
 			}
 
 			g->mDestImage->BltRawTexture(aGlyph.mTexData,
@@ -160,16 +165,6 @@ void SysFont::DrawString(
 										theColor,
 										0);
 
-			if (mSimulateBold)
-				g->mDestImage->BltRawTexture(
-					aGlyph.mTexData,
-					aGlyph.mWidth,
-					aGlyph.mHeight,
-					Rect(aDrawX + g->mTransX + 1, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
-					Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
-					theClipRect,
-					theColor,
-					0);
 		}
 		else
 		{
@@ -184,14 +179,6 @@ void SysFont::DrawString(
 					aShadowColor,
 					0);
 
-				if (mSimulateBold)
-					mApp->mRenderer->BltRawTexture(
-						aGlyph.mTexData,
-						Rect(aDrawX + g->mTransX + 2, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
-						Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
-						theClipRect,
-						aShadowColor,
-						0);
 			}
 
 			mApp->mRenderer->BltRawTexture(aGlyph.mTexData,
@@ -200,18 +187,21 @@ void SysFont::DrawString(
 										   theClipRect,
 										   theColor,
 										   0);
-
-			if (mSimulateBold)
-				mApp->mRenderer->BltRawTexture(
-					aGlyph.mTexData,
-					Rect(aDrawX + g->mTransX + 1, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
-					Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
-					theClipRect,
-					theColor,
-					0);
 		}
 
 		posX += aGlyph.mAdvance;
+	}
+	if (g->mDestImage != &Graphics::mStaticImage)
+	{
+		if (mUnderlined)
+			g->mDestImage->DrawLine(theX, underlineY, StringWidth(theString), underlineY, theColor, 0);
+	}
+	else
+	{
+		if (mUnderlined)
+			mApp->mRenderer->DrawLine(
+				theX + g->mTransX + 1, underlineY, StringWidth(theString), underlineY, theColor, 0);
+
 	}
 }
 
@@ -260,6 +250,11 @@ TrueTypeGlyph TrueTypeData::GetGlyph(char &theChar)
 		//idk
 	}
 
+	if (mFont->mBold)
+	{
+		FT_GlyphSlot_Embolden(mFace->glyph);
+	}
+
 	FT_Bitmap &aBitmap = mFace->glyph->bitmap;
 
 	aGlyph.mWidth = aBitmap.width;
@@ -268,10 +263,14 @@ TrueTypeGlyph TrueTypeData::GetGlyph(char &theChar)
 	aGlyph.mBearingY = mFace->glyph->bitmap_top;
 	aGlyph.mAdvance = mFace->glyph->advance.x >> 6;
 	uint32_t *aConvertedPixels = new uint32_t[aGlyph.mWidth * aGlyph.mHeight];
-	for (int i = 0; i < aGlyph.mWidth * aGlyph.mHeight; i++)
+	int i = 0;
+	for (int y = 0; y < aGlyph.mHeight; y++)
 	{
-		uint8_t anAlpha = mFace->glyph->bitmap.buffer[i];
-		aConvertedPixels[i] = (anAlpha << 24) | 0x00FFFFFF;
+		for (int x = 0; x < aGlyph.mWidth; x++)
+		{
+			uint8_t anAlpha = aBitmap.buffer[y * aBitmap.pitch + x];
+			aConvertedPixels[i++] = (anAlpha << 24) | 0x00FFFFFF;
+		}
 	}
 	aGlyph.mTexData = mFont->mApp->mRenderer->CreateTexture(aConvertedPixels, aGlyph.mWidth, aGlyph.mHeight, RawPixelFormat::RAW_FORMAT_RGBA, 1);
 	delete[] aConvertedPixels;

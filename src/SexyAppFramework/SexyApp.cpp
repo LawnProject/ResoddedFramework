@@ -3,7 +3,7 @@
 //#include "..\Crypt\RegKey.h"
 #include "SEHCatcher.h"
 //#include "InternetManager.h"
-#include <time.h>
+
 #include <fstream>
 #include <direct.h>
 //#include "BetaSupport.h"
@@ -123,13 +123,9 @@ void SexyApp::ReadFromRegistry()
 		mTimesPlayed = 0;
 		mTimesExecuted = 0;
 
-		char aFileName[256];
-		GetWindowsDirectory(aFileName, 256);
-		if (aFileName[strlen(aFileName) - 1] != '\\')
-			strcat(aFileName, "\\");
-		strcat(aFileName, "popcinfo.dat");
+		std::string aFilename = GetAppDataFolder() + "popcinfo.dat";
 
-		FILE *fp = fopen(aFileName, "rb");
+		FILE *fp = fopen(aFilename.c_str(), "rb");
 		if (fp != NULL)
 		{
 			for (;;)
@@ -305,7 +301,7 @@ bool SexyApp::OpenHTMLTemplate(const std::string &theTemplateFile, const Defines
 
 	if (!anInStream.is_open())
 		return false;
-
+	/*
 	WIN32_FIND_DATA aFindData;
 	HANDLE aHandle = FindFirstFile("temp\\tpl*.html", &aFindData);
 	if (aHandle != NULL)
@@ -337,8 +333,10 @@ bool SexyApp::OpenHTMLTemplate(const std::string &theTemplateFile, const Defines
 
 		anOutStream << aNewString.c_str() << std::endl;
 	}
-
+	
 	return OpenURL(GetFullPath(anOutFilename));
+	*/
+	return false;
 }
 
 bool SexyApp::OpenRegisterPage(DefinesMap theStatsMap)

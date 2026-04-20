@@ -1041,7 +1041,7 @@ bool DefinitionReadImageField(XMLParser *theXmlParser, Image **theImage)
 		return true;
 
 	std::string aMessgae = StrFormat(
-		"Failed to find image '%s' in %s", aStringValue.c_str(), theXmlParser->GetFileName());
+		"Failed to find image '%s' in %s", aStringValue.c_str(), theXmlParser->GetFileName().c_str());
 	TodErrorMessageBox(aMessgae.c_str(), "Missing image");
 }
 
@@ -1054,8 +1054,7 @@ bool DefinitionReadFontField(XMLParser *theXmlParser, Font **theFont)
 	if (DefinitionLoadFont(theFont, aStringValue))
 		return true;
 
-	std::string aMessgae = StrFormat(
-		"Failed to find font '%s' in %s", aStringValue.c_str(), theXmlParser->GetFileName());
+	std::string aMessgae = StrFormat("Failed to find font '%s' in %s", aStringValue.c_str(), theXmlParser->GetFileName().c_str());
 	TodErrorMessageBox(aMessgae.c_str(), "Missing font");
 }
 

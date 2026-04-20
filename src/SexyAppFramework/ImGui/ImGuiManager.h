@@ -29,6 +29,7 @@ class ImGuiManager
 
 	public:
 	  std::vector<ImGuiWindow*> mWindows;
+	  bool mHasInitiated;
 
 	private:
 	SexyAppBase *mApp;
