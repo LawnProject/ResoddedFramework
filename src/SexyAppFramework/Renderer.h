@@ -55,7 +55,9 @@ namespace Sexy
 	enum RenderingBackend
 	{
 		BACKEND_NONE = 0,
+#if SEXY_USE_OPENGL
 		BACKEND_OPENGL,
+#endif
 	};
 
 	const std::map<RenderingBackend, std::string> gRenderBackends = 
@@ -284,6 +286,8 @@ namespace Sexy
 						int ty) = 0;
 
 		virtual void BltRawTexture(void *theTexture,
+							int theTexWidth,
+							int theTexHeight,
 							const Rect &theDestRect,
 							const Rect &theSrcRect,
 							const Rect &theClipRect,

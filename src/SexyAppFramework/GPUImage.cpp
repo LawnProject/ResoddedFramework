@@ -682,7 +682,7 @@ void GPUImage::BltRawTexture(void *theTexture,
 	if (Check3D(this))
 	{
 		mRenderer->BltRawTexture(
-			theTexture, theDestRect, theSrcRect, theClipRect, theColor, theDrawMode);
+			theTexture, theTexWidth, theTexHeight, theDestRect, theSrcRect, theClipRect, theColor, theDrawMode);
 		return;
 	}
 

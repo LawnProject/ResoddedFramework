@@ -59,7 +59,7 @@ void SysFont::Init(SexyAppBase *theApp,
 		FT_Set_Transform(aFontFace, &matrix, nullptr);
 	}
 
-	mTTData = new TrueTypeData(this, aFontFace, thePointSize);
+	mFontData = new TrueTypeData(this, aFontFace, thePointSize);
 
     mAscent = aFontFace->size->metrics.ascender >> 6;
 	mHeight = (aFontFace->size->metrics.ascender - aFontFace->size->metrics.descender) >> 6;
@@ -71,7 +71,7 @@ void SysFont::Init(SexyAppBase *theApp,
 void SysFont::Reinit()
 {
 	FT_Face aFontFace;
-	bool aPrevFlags = mTTData->mFace->style_flags;
+	bool aPrevFlags = mFontData->mFace->style_flags;
 	FT_Error anError = FT_New_Face(mApp->mFreeTypeLib, mFontName.c_str(), 0, &aFontFace);
 	if (anError)
 	{
@@ -82,10 +82,10 @@ void SysFont::Reinit()
 
 	aFontFace->style_flags = aPrevFlags;
 
-	int aOldSize = mTTData->mSize;
-	delete mTTData;
-	mTTData = nullptr;
-	mTTData = new TrueTypeData(this, aFontFace, aOldSize);
+	int aOldSize = mFontData->mSize;
+	delete mFontData;
+	mFontData = nullptr;
+	mFontData = new TrueTypeData(this, aFontFace, aOldSize);
 
 	mAscent = aFontFace->size->metrics.ascender >> 6;
 	mHeight = (aFontFace->size->metrics.ascender - aFontFace->size->metrics.descender) >> 6;
@@ -96,8 +96,8 @@ SysFont::SysFont(const SysFont &theSysFont)
 	mApp = theSysFont.mApp;
 	mHeight = theSysFont.mHeight;
 	mAscent = theSysFont.mAscent;
-	mTTData = theSysFont.mTTData;
-	mTTData->mFont = this;
+	mFontData = theSysFont.mFontData;
+	mFontData->mFont = this;
 	mBold = theSysFont.mBold;
 	mItalic = theSysFont.mItalic;
 
@@ -106,8 +106,8 @@ SysFont::SysFont(const SysFont &theSysFont)
 
 SysFont::~SysFont()
 {
-	if (mTTData)
-		delete mTTData;
+	if (mFontData)
+		delete mFontData;
 	mApp->mRenderer->mSysFonts.erase(this);
 }
 
@@ -122,8 +122,8 @@ int SysFont::StringWidth(const SexyString &theString)
     int aWidth = 0;
 	for (char c : theString)
 	{
-		TrueTypeGlyph g = mTTData->GetGlyph(c);
-		aWidth += g.mAdvance;
+		
+		aWidth += mFontData->mAtlas.mGlyphs[c].mAdvance;
 	}
 	return aWidth;
 }
@@ -133,10 +133,10 @@ void SysFont::DrawString(
 { 
 	int posX = theX;
 	int posY = theY;
-	int underlineY = posY - ((mTTData->mFace->underline_position * mTTData->mFace->size->metrics.y_scale) >> 16 >> 6);
+	int underlineY = posY - ((mFontData->mFace->underline_position * mFontData->mFace->size->metrics.y_scale) >> 16 >> 6);
 	for (char c : theString)
 	{
-		TrueTypeGlyph aGlyph = mTTData->GetGlyph(c);
+		GlpyhAtlasEntry aGlyph = mFontData->mAtlas.mGlyphs[c];
 		int aDrawX = posX + aGlyph.mBearingX;
 		int aDrawY = posY - aGlyph.mBearingY;
 
@@ -146,21 +146,22 @@ void SysFont::DrawString(
 			{
 				Color aShadowColor = Color(0, 0, 0, 0);
 				g->mDestImage->BltRawTexture(
-					aGlyph.mTexData,
+					mFontData->mAtlas.mAtlas,
 					aGlyph.mWidth,
 					aGlyph.mHeight,
 					Rect(aDrawX + g->mTransX + 1, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
-					Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
+					Rect(aGlyph.mX, aGlyph.mY, aGlyph.mWidth, aGlyph.mHeight),
 					theClipRect,
 					aShadowColor,
 					0);
 			}
 
-			g->mDestImage->BltRawTexture(aGlyph.mTexData,
-										aGlyph.mWidth,
-										aGlyph.mHeight,
+			g->mDestImage->BltRawTexture(
+										mFontData->mAtlas.mAtlas,
+										mFontData->mAtlas.mWidth,
+										mFontData->mAtlas.mHeight,
 										Rect(aDrawX, aDrawY, aGlyph.mWidth, aGlyph.mHeight),
-										Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
+										Rect(aGlyph.mX, aGlyph.mY, aGlyph.mWidth, aGlyph.mHeight),
 										theClipRect,
 										theColor,
 										0);
@@ -172,21 +173,26 @@ void SysFont::DrawString(
 			{
 				Color aShadowColor = Color(0, 0, 0, 0);
 				mApp->mRenderer->BltRawTexture(
-					aGlyph.mTexData,
+					mFontData->mAtlas.mAtlas,
+					mFontData->mAtlas.mWidth,
+					mFontData->mAtlas.mHeight,
 					Rect(aDrawX + g->mTransX + 1, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
-					Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
+					Rect(aGlyph.mX, aGlyph.mY, aGlyph.mWidth, aGlyph.mHeight),
 					theClipRect,
 					aShadowColor,
 					0);
 
 			}
 
-			mApp->mRenderer->BltRawTexture(aGlyph.mTexData,
-										   Rect(aDrawX, aDrawY, aGlyph.mWidth, aGlyph.mHeight),
-										   Rect(0, 0, aGlyph.mWidth, aGlyph.mHeight),
-										   theClipRect,
-										   theColor,
-										   0);
+			mApp->mRenderer->BltRawTexture(
+						mFontData->mAtlas.mAtlas,
+						mFontData->mAtlas.mWidth,
+						mFontData->mAtlas.mHeight,
+						Rect(aDrawX + g->mTransX + 1, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
+						Rect(aGlyph.mX, aGlyph.mY, aGlyph.mWidth, aGlyph.mHeight),
+						theClipRect,
+						theColor,
+						0);
 		}
 
 		posX += aGlyph.mAdvance;
@@ -212,70 +218,73 @@ Font *SysFont::Duplicate()
 void TrueTypeData::Init()
 {
 	FT_Set_Pixel_Sizes(mFace, 0, mSize);
-	for (auto pair : mGlyphs)
+	if (mAtlas.mAtlas != nullptr)
 	{
-		if (pair.second.mTexData != nullptr)
-		{
-			mFont->mApp->mRenderer->DeleteTexture(pair.second.mTexData);
-		}
+		mFont->mApp->mRenderer->DeleteTexture(mAtlas.mAtlas);
 	}
-	mGlyphs.clear();
+	mAtlas.mGlyphs.clear();
+
+	char aStartChar = ' ';
+	char anEndChar = '~';
+	int aLastX = 0;
+	int aLastY = 0;
+	uint32_t *anAtlasPixels = new uint32_t[mAtlas.mWidth * mAtlas.mHeight]; //TODO: RESIZE TO FIT ALL CHARACTERS PROPERLY
+	for (char aSetupChar = aStartChar; aSetupChar <= anEndChar; aSetupChar++)
+	{
+		GlpyhAtlasEntry aGlyph;
+
+		if (!FT_Load_Char(mFace, aSetupChar, FT_LOAD_RENDER))
+		{
+			//idk
+		}
+
+		if (mFont->mBold)
+		{
+			FT_GlyphSlot_Embolden(mFace->glyph);
+		}
+
+		FT_Bitmap &aBitmap = mFace->glyph->bitmap;
+
+		aGlyph.mX = aLastX;
+		aGlyph.mY = aLastY;
+		aGlyph.mWidth = aBitmap.width;
+		aGlyph.mHeight = aBitmap.rows;
+		aGlyph.mBearingX = mFace->glyph->bitmap_left;
+		aGlyph.mBearingY = mFace->glyph->bitmap_top;
+		aGlyph.mAdvance = mFace->glyph->advance.x >> 6;
+		aLastX += aGlyph.mWidth + mAtlas.mPadding;
+		uint32_t *aConvertedPixels = new uint32_t[aGlyph.mWidth * aGlyph.mHeight];
+		int i = 0;
+		for (int y = 0; y < aGlyph.mHeight; y++)
+		{
+			for (int x = 0; x < aGlyph.mWidth; x++)
+			{
+				uint8_t anAlpha = aBitmap.buffer[y * aBitmap.pitch + x];
+				aConvertedPixels[i++] = (anAlpha << 24) | 0x00FFFFFF;
+			}
+		}
+
+		for (int y = 0; y < aGlyph.mHeight; ++y)
+		{
+			uint32_t *aDest = anAtlasPixels + (aGlyph.mY + y) * mAtlas.mWidth + aGlyph.mX;
+			uint32_t *aSrc = aConvertedPixels + y * aGlyph.mWidth;
+
+			memcpy(aDest, aSrc, aGlyph.mWidth * sizeof(uint32_t));
+		}
+
+		delete[] aConvertedPixels;
+
+		mAtlas.mGlyphs[aSetupChar] = aGlyph;
+	}
+	mAtlas.mAtlas = mFont->mApp->mRenderer->CreateTexture(anAtlasPixels, mAtlas.mWidth, mAtlas.mHeight, RawPixelFormat::RAW_FORMAT_RGBA, 1);
 }
 
 TrueTypeData::~TrueTypeData()
 {
-	for (auto pair : mGlyphs)
+	if (mAtlas.mAtlas != nullptr)
 	{
-		if (pair.second.mTexData != nullptr)
-		{
-			mFont->mApp->mRenderer->DeleteTexture(pair.second.mTexData);
-		}
+		mFont->mApp->mRenderer->DeleteTexture(mAtlas.mAtlas);
 	}
-	mGlyphs.clear();
+	mAtlas.mGlyphs.clear();
 	FT_Done_Face(mFace);
-}
-
-TrueTypeGlyph TrueTypeData::GetGlyph(char &theChar)
-{
-	auto it = mGlyphs.find(theChar);
-	if (it != mGlyphs.end())
-	{
-		return it->second;
-	}
-
-	TrueTypeGlyph aGlyph;
-
-	if (!FT_Load_Char(mFace, theChar, FT_LOAD_RENDER))
-	{
-		//idk
-	}
-
-	if (mFont->mBold)
-	{
-		FT_GlyphSlot_Embolden(mFace->glyph);
-	}
-
-	FT_Bitmap &aBitmap = mFace->glyph->bitmap;
-
-	aGlyph.mWidth = aBitmap.width;
-	aGlyph.mHeight = aBitmap.rows;
-	aGlyph.mBearingX = mFace->glyph->bitmap_left;
-	aGlyph.mBearingY = mFace->glyph->bitmap_top;
-	aGlyph.mAdvance = mFace->glyph->advance.x >> 6;
-	uint32_t *aConvertedPixels = new uint32_t[aGlyph.mWidth * aGlyph.mHeight];
-	int i = 0;
-	for (int y = 0; y < aGlyph.mHeight; y++)
-	{
-		for (int x = 0; x < aGlyph.mWidth; x++)
-		{
-			uint8_t anAlpha = aBitmap.buffer[y * aBitmap.pitch + x];
-			aConvertedPixels[i++] = (anAlpha << 24) | 0x00FFFFFF;
-		}
-	}
-	aGlyph.mTexData = mFont->mApp->mRenderer->CreateTexture(aConvertedPixels, aGlyph.mWidth, aGlyph.mHeight, RawPixelFormat::RAW_FORMAT_RGBA, 1);
-	delete[] aConvertedPixels;
-
-	mGlyphs.insert(std::pair<char, TrueTypeGlyph>(theChar, aGlyph));
-
-	return aGlyph;
 }
