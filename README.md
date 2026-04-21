@@ -7,21 +7,28 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 3. Compile
 4. Start modding
 
+## THIS GUIDE WILL BE REWORKED
+
 # Roadmap
 
 ### High Priority
-- Documentation (UNFINISHED)
-- JSON Settings, replacing the registry (Implemented)
-- Window Resizing (UNFINISHED)
-- Advanced Options (UNIMPLEMENTED)
-- Language Support, along with UTF-8 Strings (UNIMPLEMENTED)
-- ResourceGen V2 (NOT STARTED)
-- MP3/OGG/FLAC Music with loop points (UNIMPLEMENTED)
-- Controller Support (Unimplemented)
+- Reworked Rendering - 60%
+
+- JSON Settings, replacing the registry - 100%
+- ResourceGen V2 ([In Development](https://github.com/LawnProject/ResourceGen)) - %
+- Documentation - 1%
+
+
+- Window Resizing - 0%
+- Advanced Options - 0%
+- Language Support, along with UTF-8 Strings - 0%
+
+- MP3/OGG/FLAC Music with loop points - 0%
+- Controller Support - 0%
 ### Low Priority
-- Multi-platform support (NOT STARTED)
-- Separate mod resources (.pak + folders)
-- Update Checker
+- Multi-platform support - 5%
+- Separate mod resources (.pak + folders) - 0%
+- Update Checker - 0%
 
 # Credits
 

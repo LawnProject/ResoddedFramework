@@ -24,6 +24,8 @@ namespace Sexy
 		UV_CLAMP,
 	};
 
+	//TODO: remove the useless ones, add new ones, reimplement useful ones
+
 	enum ImageFlags
 	{
 			// subdivide image into fewest possible textures (may use more memory)

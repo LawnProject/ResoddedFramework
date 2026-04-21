@@ -33,7 +33,11 @@ OpenGLImage::OpenGLImage() : GPUImage(gSexyAppBase->mRenderer)
 OpenGLImage::~OpenGLImage()
 {
 	if (mTexID != 0)
+	{
 		glDeleteTextures(1, &mTexID);
+		OpenGLRenderer::gGLTextureCount--;
+	}
+		
 
 	if (mFBO != 0)
 		glDeleteFramebuffers(1, &mFBO);
@@ -113,7 +117,7 @@ bool OpenGLImage::GenerateSurface()
 
 	if (!LockSurface())
 		return false;
-
+	
 	glGenTextures(1, &mTexID);
 	glBindTexture(GL_TEXTURE_2D, mTexID);
 
@@ -124,7 +128,7 @@ bool OpenGLImage::GenerateSurface()
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, mWidth, mHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, mBits);
 	glGenerateMipmap(GL_TEXTURE_2D);
-
+	OpenGLRenderer::gGLTextureCount++;
 	mSurface = new GLuint(mTexID);
 
 	UnlockSurface();
@@ -183,7 +187,7 @@ void OpenGLImage::CreateImageBuffers()
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glBindTexture(GL_TEXTURE_2D, 0);
-
+	OpenGLRenderer::gGLTextureCount++;
 	glGenFramebuffers(1, &mFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexID, 0);
