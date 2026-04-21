@@ -213,6 +213,8 @@ namespace Sexy
 							  int ty);
 
 		virtual void BltRawTexture(void *theTexture,
+							  int theTexWidth,
+							  int theTexHeight,
 							  const Rect &theDestRect,
 							  const Rect &theSrcRect,
 							  const Rect &theClipRect,

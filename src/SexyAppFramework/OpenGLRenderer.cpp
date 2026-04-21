@@ -1141,6 +1141,8 @@ void OpenGLRenderer::FillPoly(const Point theVertices[],
 }
 
 void OpenGLRenderer::BltRawTexture(void *theTexture,
+							  int theTexWidth,
+							  int theTexHeight,
 							  const Rect &theDestRect,
 							  const Rect &theSrcRect,
 							  const Rect &theClipRect,
@@ -1160,10 +1162,10 @@ void OpenGLRenderer::BltRawTexture(void *theTexture,
 	glm::vec2 p2 = {theDestRect.mX + theDestRect.mWidth, theDestRect.mY + theDestRect.mHeight};
 	glm::vec2 p3 = {theDestRect.mX, theDestRect.mY + theDestRect.mHeight};
 
-	float u0 = (float)theSrcRect.mX / (float)theSrcRect.mWidth;
-	float v0 = (float)theSrcRect.mY / (float)theSrcRect.mHeight;
-	float u1 = (float)(theSrcRect.mX + theSrcRect.mWidth) / (float)theSrcRect.mWidth;
-	float v1 = (float)(theSrcRect.mY + theSrcRect.mHeight) / (float)theSrcRect.mHeight;
+	float u0 = (float)theSrcRect.mX / (float)theTexWidth;
+	float v0 = (float)theSrcRect.mY / (float)theTexHeight;
+	float u1 = (float)(theSrcRect.mX + theSrcRect.mWidth) / (float)theTexWidth;
+	float v1 = (float)(theSrcRect.mY + theSrcRect.mHeight) / (float)theTexHeight;
 
 	glm::vec2 uv0 = {u0, v0};
 	glm::vec2 uv1 = {u1, v0};

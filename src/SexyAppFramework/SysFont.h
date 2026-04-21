@@ -2,6 +2,7 @@
 #define __SYSFONT_H__
 
 #include "Font.h"
+#include <unordered_map>
 #include <freetype/freetype.h>
 
 namespace Sexy
@@ -10,22 +11,32 @@ namespace Sexy
 class ImageFont;
 class SexyAppBase;
 
-struct TrueTypeGlyph
+struct GlpyhAtlasEntry
 {
+	int mX;
+	int mY;
 	int mWidth;
 	int mHeight;
 	int mBearingX;
 	int mBearingY;
 	int mAdvance;
-	void *mTexData; //backend dynamic, GLuint - OpenGL, etc
 };
+struct GlyphAtlas
+{
+	int mPadding = 1;
+	int mWidth = 1024;
+	int mHeight = 1024;
+	void *mAtlas = nullptr; // void* to put data for other renderers
+	std::unordered_map<uint32_t, GlpyhAtlasEntry> mGlyphs;
+};
+
 
 class TrueTypeData;
 
 class SysFont : public Font
 {
   public:
-	TrueTypeData* mTTData;
+	TrueTypeData* mFontData;
 	SexyAppBase *mApp;
 	std::string mFontName;
 	bool mDrawShadow;
@@ -68,7 +79,7 @@ class SysFont : public Font
 
 struct TrueTypeData
 {
-	std::map<char, TrueTypeGlyph> mGlyphs;
+	GlyphAtlas mAtlas;
 	SysFont *mFont;
 	FT_Face mFace;
 	int mSize;
@@ -82,8 +93,6 @@ struct TrueTypeData
 	~TrueTypeData();
 
 	void Init();
-
-	TrueTypeGlyph GetGlyph(char &theChar);
 };
 
 } // namespace Sexy
