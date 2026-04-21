@@ -52,6 +52,8 @@ void main() {
 }
 )glsl";
 
+int OpenGLRenderer::gGLTextureCount = 0;
+
 OpenGLRenderer::OpenGLRenderer(SexyAppBase *theApp) : Renderer(theApp)
 {
 	mRGBBits = 32;
@@ -346,7 +348,7 @@ RenderingInfo OpenGLRenderer::GetRenderingInfo()
 	RenderingInfo anInfo;
 	anInfo.mFreeVideoMem = 0;
 	anInfo.mTotalVideoMem = 0;
-	anInfo.mNumTextures = 0;
+	anInfo.mNumTextures = gGLTextureCount;
 	return anInfo;
 }
 
@@ -446,6 +448,7 @@ void OpenGLRenderer::DeleteTexture(void* theTexture)
 {
 	glDeleteTextures(1, (GLuint *)theTexture);
 	delete (GLuint *)theTexture;
+	gGLTextureCount--;
 }
 
 void *OpenGLRenderer::CreateTexture(void *thePixels, int theWidth, int theHeight, RawPixelFormat thePixelFormat, int theAlignment)
@@ -455,7 +458,7 @@ void *OpenGLRenderer::CreateTexture(void *thePixels, int theWidth, int theHeight
 	glBindTexture(GL_TEXTURE_2D, aTexID);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, theAlignment);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, theWidth, theHeight, 0, thePixelFormat == RAW_FORMAT_R ? GL_RED : GL_BGRA, GL_UNSIGNED_BYTE, thePixels);
-
+	gGLTextureCount++;
 	GLuint *aTexPtr = new GLuint(aTexID);
 	return aTexPtr;
 }
@@ -532,12 +535,13 @@ void OpenGLTextureData::CreateTextures(MemoryImage* theImage, void* theRendererD
 
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-		if (theImage->mD3DFlags & ImageFlag_UseA4R4G4B4)
+		if (theImage->mGPUFlags & ImageFlag_UseA4R4G4B4)
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, aWidth, aHeight, 0, GL_BGRA, GL_UNSIGNED_SHORT_4_4_4_4_REV, theImage->GetBits());
 		else
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, aWidth, aHeight, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, theImage->GetBits());
+		mPixelFormat = theImage->mGPUFlags & ImageFlag_UseA4R4G4B4 ? PixelFormat_A4R4G4B4 : PixelFormat_A8R8G8B8;
 		
-
+		OpenGLRenderer::gGLTextureCount++;
 	}
 	else if (mBitsChangedCount != theImage->mBitsChangedCount && !mSourceIsFBO)
 	{

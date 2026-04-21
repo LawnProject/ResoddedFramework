@@ -2690,6 +2690,7 @@ int SexyAppBase::MsgBox(const std::string &theText, const std::string &theTitle,
 	SDL_MessageBoxButtonData buttons[] = {{SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes"},
 											{SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "No"}};
 	SDL_MessageBoxData msgBoxData;
+	msgBoxData.window = nullptr;
 	msgBoxData.flags = theFlags;
 	msgBoxData.title = theTitle.c_str();
 	msgBoxData.message = theText.c_str();
@@ -3303,12 +3304,14 @@ void SexyAppBase::ProcessDemo()
 
 void SexyAppBase::ShowMemoryUsage()
 {
+	uint32_t aNumTextures = 0;
 	uint32_t aTotal = 0;
 	uint32_t aFree = 0;
 
 	if (mRenderer != nullptr)
 	{
 		RenderingInfo anInfo = mRenderer->GetRenderingInfo();
+		aNumTextures = anInfo.mNumTextures;
 		aFree = anInfo.mFreeVideoMem;
 		aTotal = anInfo.mTotalVideoMem;
 	}
@@ -3343,28 +3346,30 @@ void SexyAppBase::ShowMemoryUsage()
 		aDesc = "Supported";
 	else
 		aDesc = "Unsupported";
+	
+	aStr += StrFormat("Current Rendering Backend: %s\n", gRenderBackends.find(mRenderer->mCurrentBackend)->second.c_str(), aDesc);
+	aStr += StrFormat("3D-Mode is %s (3D is %s on this system)\n\n", Is3DAccelerated() ? "On" : "Off", aDesc);
 
-	aStr += StrFormat("3D-Mode is %s (3D is %s on this system)\r\n\r\n", Is3DAccelerated() ? "On" : "Off", aDesc);
-
-	aStr += StrFormat("Num Images: %d\r\n", (int)mMemoryImageSet.size());
-	aStr += StrFormat("Num Sounds: %d\r\n", mSoundManager->GetNumSounds());
-	aStr += StrFormat("Video Memory: %s/%s KB\r\n",
+	aStr += StrFormat("Num Images: %d\n", (int)mMemoryImageSet.size());
+	aStr += StrFormat("Num Sounds: %d\n", mSoundManager->GetNumSounds());
+	aStr += StrFormat("Video Memory: %s/%s KB\n",
 					  SexyStringToString(CommaSeperate((aTotal - aFree) / 1024)).c_str(),
 					  SexyStringToString(CommaSeperate(aTotal / 1024)).c_str());
-	aStr += StrFormat("Texture Memory: %s KB\r\n", CommaSeperate(aTextureMemory / 1024).c_str());
+	aStr += StrFormat("Texture Memory: %s KB\n", CommaSeperate(aTextureMemory / 1024).c_str());
+	aStr += StrFormat("Num Textures: %d \n\n", aNumTextures);
 
 	FormatUsage aUsage = aFormatMap[PixelFormat_A8R8G8B8];
 	aStr += StrFormat(
-		"A8R8G8B8: %d - %s KB\r\n", aUsage.first, SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
+		"A8R8G8B8: %d - %s KB\n", aUsage.first, SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
 	aUsage = aFormatMap[PixelFormat_A4R4G4B4];
 	aStr += StrFormat(
-		"A4R4G4B4: %d - %s KB\r\n", aUsage.first, SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
+		"A4R4G4B4: %d - %s KB\n", aUsage.first, SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
 	aUsage = aFormatMap[PixelFormat_R5G6B5];
 	aStr += StrFormat(
-		"R5G6B5: %d - %s KB\r\n", aUsage.first, SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
+		"R5G6B5: %d - %s KB\n", aUsage.first, SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
 	aUsage = aFormatMap[PixelFormat_Palette8];
 	aStr += StrFormat(
-		"Palette8: %d - %s KB\r\n", aUsage.first, SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
+		"Palette8: %d - %s KB\n", aUsage.first, SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
 
 	MsgBox(aStr, "Video Stats", MB_OK);
 	mLastTime = timeGetTime();

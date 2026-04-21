@@ -37,7 +37,7 @@ MemoryImage::MemoryImage(const MemoryImage &theMemoryImage)
 	: Image(theMemoryImage), mApp(theMemoryImage.mApp), mHasAlpha(theMemoryImage.mHasAlpha),
 	  mHasTrans(theMemoryImage.mHasTrans), mBitsChanged(theMemoryImage.mBitsChanged),
 	  mIsVolatile(theMemoryImage.mIsVolatile), mPurgeBits(theMemoryImage.mPurgeBits), mWantPal(theMemoryImage.mWantPal),
-	  mD3DFlags(theMemoryImage.mD3DFlags), mBitsChangedCount(theMemoryImage.mBitsChangedCount), mD3DData(NULL)
+	  mGPUFlags(theMemoryImage.mGPUFlags), mBitsChangedCount(theMemoryImage.mBitsChangedCount), mD3DData(NULL)
 {
 	bool deleteBits = false;
 
@@ -145,7 +145,7 @@ void MemoryImage::Init()
 	mIsVolatile = false;
 
 	mD3DData = NULL;
-	mD3DFlags = 0;
+	mGPUFlags = 0;
 	mBitsChangedCount = 0;
 
 	mPurgeBits = false;

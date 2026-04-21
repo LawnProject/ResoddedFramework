@@ -85,6 +85,8 @@ namespace Sexy
 		glm::mat4 mProjection;
 		WrappingSamplers mSamplers;
 
+		static int gGLTextureCount;
+
 	  public:
 		OpenGLRenderer(SexyAppBase *theApp);
 		virtual ~OpenGLRenderer();

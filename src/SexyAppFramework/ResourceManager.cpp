@@ -772,13 +772,13 @@ bool ResourceManager::DoLoadImage(ImageRes *theRes)
 	}
 
 	if (theRes->mA4R4G4B4)
-		aGPUImage->mD3DFlags |= ImageFlag_UseA4R4G4B4;
+		aGPUImage->mGPUFlags |= ImageFlag_UseA4R4G4B4;
 
 	if (theRes->mA8R8G8B8)
-		aGPUImage->mD3DFlags |= ImageFlag_UseA8R8G8B8;
+		aGPUImage->mGPUFlags |= ImageFlag_UseA8R8G8B8;
 
 	if (theRes->mMinimizeSubdivisions)
-		aGPUImage->mD3DFlags |= ImageFlag_MinimizeNumSubdivisions;
+		aGPUImage->mGPUFlags |= ImageFlag_MinimizeNumSubdivisions;
 
 	if (theRes->mAnimInfo.mAnimType != AnimType_None)
 		aGPUImage->mAnimInfo = new AnimInfo(theRes->mAnimInfo);
