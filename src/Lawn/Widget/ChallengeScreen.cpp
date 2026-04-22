@@ -689,6 +689,15 @@ void ChallengeScreen::DrawButton(Graphics *g, int theChallengeIndex)
 				}
 				else if (mApp->IsEndlessScaryPotter(aDef.mChallengeMode) || mApp->IsEndlessIZombie(aDef.mChallengeMode))
 				{
+					SexyString aAchievement = TodReplaceNumberString("[LONGEST_STREAK]", "{STREAK}", aRecord);
+					Rect aRect(aPosX, aPosY + 15, 96, 200);
+					TodDrawStringWrapped(
+						g, aAchievement, aRect, Sexy::FONT_CONTINUUMBOLD14OUTLINE, Color::White, DS_ALIGN_CENTER);
+					TodDrawStringWrapped(
+						g, aAchievement, aRect, Sexy::FONT_CONTINUUMBOLD14, Color(255, 0, 0), DS_ALIGN_CENTER);
+				}
+				else if (mApp->IsSurvivalEndless(aDef.mChallengeMode))
+				{
 					SexyString aAchievement = mApp->Pluralize(aRecord, "[ONE_FLAG]", "[COUNT_FLAGS]");
 					TodDrawString(g,
 								  aAchievement,
@@ -704,15 +713,6 @@ void ChallengeScreen::DrawButton(Graphics *g, int theChallengeIndex)
 								  Sexy::FONT_CONTINUUMBOLD14,
 								  Color(255, 0, 0),
 								  DS_ALIGN_CENTER);
-				}
-				else if (mApp->IsSurvivalEndless(aDef.mChallengeMode))
-				{
-					SexyString aAchievement = TodReplaceNumberString("[LONGEST_STREAK]", "{STREAK}", aRecord);
-					Rect aRect(aPosX, aPosY + 15, 96, 200);
-					TodDrawStringWrapped(
-						g, aAchievement, aRect, Sexy::FONT_CONTINUUMBOLD14OUTLINE, Color::White, DS_ALIGN_CENTER);
-					TodDrawStringWrapped(
-						g, aAchievement, aRect, Sexy::FONT_CONTINUUMBOLD14, Color(255, 0, 0), DS_ALIGN_CENTER);
 				}
 			}
 			else if (aChallengeButton->mDisabled)
@@ -746,7 +746,7 @@ void ChallengeScreen::Draw(Graphics *g)
 	if (aTrophiesTotal > 0)
 	{
 		SexyString aTrophyString = StrFormat("%d/%d", aTrophiesGot, aTrophiesTotal);
-		TodDrawString(g, aTrophyString, 739, 73, Sexy::FONT_DWARVENTODCRAFT12, Color(255, 240, 0), DS_ALIGN_CENTER);
+		TodDrawString(g, aTrophyString, 739, 73, Sexy::FONT_DWARVENTODCRAFT15, Color(255, 240, 0), DS_ALIGN_CENTER);
 	}
 	TodDrawImageScaledF(g, Sexy::IMAGE_TROPHY, 718, 26, 0.5f, 0.5f);
 
