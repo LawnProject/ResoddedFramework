@@ -4755,11 +4755,11 @@ void Zombie::UpdateYuckyFace()
 
 		if (aCanGoDown && !aCanGoUp)
 		{
-			SetRow(mRow - 1);
+			SetRow(mRow + 1);
 		}
 		else if (!aCanGoDown && aCanGoUp)
 		{
-			SetRow(mRow + 1);
+			SetRow(mRow - 1);
 		}
 		else if (aCanGoDown && aCanGoUp)
 		{
