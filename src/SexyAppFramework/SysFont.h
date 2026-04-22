@@ -24,7 +24,7 @@ struct GlpyhAtlasEntry
 struct GlyphAtlas
 {
 	int mPadding = 1;
-	int mWidth = 1024;
+	int mWidth = 4096;
 	int mHeight = 1024;
 	void *mAtlas = nullptr; // void* to put data for other renderers
 	std::unordered_map<uint32_t, GlpyhAtlasEntry> mGlyphs;

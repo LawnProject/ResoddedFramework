@@ -53,6 +53,7 @@ void SysFont::Init(SexyAppBase *theApp,
 		anError = FT_New_Face(mApp->mFreeTypeLib, ("C:/Windows/Fonts/" + theFace + ".ttf").c_str(), 0, &aFontFace);
 		#endif
 	}
+	FT_Select_Charmap(aFontFace, FT_ENCODING_UNICODE);
 	if (mItalic)
 	{
 		FT_Matrix matrix = {1 << 16, 0.3 * (1 << 16), 0, 1 << 16};
@@ -134,8 +135,12 @@ void SysFont::DrawString(
 	int posX = theX;
 	int posY = theY;
 	int underlineY = posY - ((mFontData->mFace->underline_position * mFontData->mFace->size->metrics.y_scale) >> 16 >> 6);
-	for (char c : theString)
+	
+	auto it = theString.begin();
+	auto end = theString.end();
+	while (it != end)
 	{
+		uint32_t c = utf8::next(it, end);
 		GlpyhAtlasEntry aGlyph = mFontData->mAtlas.mGlyphs[c];
 		int aDrawX = posX + aGlyph.mBearingX;
 		int aDrawY = posY - aGlyph.mBearingY;
@@ -224,20 +229,24 @@ void TrueTypeData::Init()
 	}
 	mAtlas.mGlyphs.clear();
 
-	char aStartChar = ' ';
-	char anEndChar = '~';
-	int aLastX = 0;
-	int aLastY = 0;
+	int aLastX = mAtlas.mPadding;
+	int aLastY = mAtlas.mPadding;
+	int aRowHeight = 0;
 	uint32_t *anAtlasPixels = new uint32_t[mAtlas.mWidth * mAtlas.mHeight]; //TODO: RESIZE TO FIT ALL CHARACTERS PROPERLY
-	for (char aSetupChar = aStartChar; aSetupChar <= anEndChar; aSetupChar++)
+	std::vector<uint32_t> aWantedChar;
+
+	for (char c = ' '; c <= '~'; c++)
+		aWantedChar.push_back(c);
+	for (uint32_t c = 0x00A0; c < 0x024F; c++)
+		aWantedChar.push_back(c);
+	for (uint32_t aSetupChar : aWantedChar)
 	{
 		GlpyhAtlasEntry aGlyph;
-
 		if (!FT_Load_Char(mFace, aSetupChar, FT_LOAD_RENDER))
 		{
 			//idk
 		}
-
+		
 		if (mFont->mBold)
 		{
 			FT_GlyphSlot_Embolden(mFace->glyph);
@@ -252,6 +261,13 @@ void TrueTypeData::Init()
 		aGlyph.mBearingX = mFace->glyph->bitmap_left;
 		aGlyph.mBearingY = mFace->glyph->bitmap_top;
 		aGlyph.mAdvance = mFace->glyph->advance.x >> 6;
+		if (aLastX + aGlyph.mWidth + mAtlas.mPadding > mAtlas.mWidth)
+		{
+			aLastX = mAtlas.mPadding;
+			aLastY += aRowHeight + mAtlas.mPadding;
+			aRowHeight = 0;
+		}
+		aRowHeight = std::max(aRowHeight, aGlyph.mHeight);
 		aLastX += aGlyph.mWidth + mAtlas.mPadding;
 		uint32_t *aConvertedPixels = new uint32_t[aGlyph.mWidth * aGlyph.mHeight];
 		int i = 0;
