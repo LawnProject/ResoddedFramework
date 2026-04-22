@@ -2239,9 +2239,6 @@ void Zombie::UpdateZombieGargantuar()
 		return;
 	}
 
-#ifdef DO_FIX_BUGS
-	bool doSmash = FindZombieTarget();
-#else
 	bool doSmash = false;
 	if (FindPlantTarget(ZombieAttackType::ATTACKTYPE_CHEW))
 	{
@@ -2261,6 +2258,11 @@ void Zombie::UpdateZombieGargantuar()
 		{
 			doSmash = true;
 		}
+	}
+#ifdef DO_FIX_BUGS
+	else if (mMindControlled)
+	{
+		doSmash = FindZombieTarget();
 	}
 #endif
 

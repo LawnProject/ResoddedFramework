@@ -577,7 +577,7 @@ void DrawSeedPacket(Graphics *g,
 			aCostStr = StrFormat("%d", Plant::GetCost(theSeedType, theImitaterType));
 		}
 
-		Font *aTextFont = Sexy::FONT_BRIANNETOD12;
+		Font *aTextFont = Sexy::FONT_PICO129;
 		int aTextOffsetX = 32 - aTextFont->StringWidth(aCostStr);
 		int aTextOffsetY = aTextFont->GetAscent() + 54;
 		if (g->mScaleX == 1.0f && g->mScaleY == 1.0f)
