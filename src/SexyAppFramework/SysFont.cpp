@@ -277,6 +277,8 @@ void TrueTypeData::Init()
 		mAtlas.mGlyphs[aSetupChar] = aGlyph;
 	}
 	mAtlas.mAtlas = mFont->mApp->mRenderer->CreateTexture(anAtlasPixels, mAtlas.mWidth, mAtlas.mHeight, RawPixelFormat::RAW_FORMAT_RGBA, 1);
+
+	delete[] anAtlasPixels;
 }
 
 TrueTypeData::~TrueTypeData()
