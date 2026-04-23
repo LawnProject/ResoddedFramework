@@ -1,4 +1,4 @@
-#include "Common.h"
+﻿#include "Common.h"
 #include "MTRand.h"
 #include "Debug.h"
 #include <filesystem>
@@ -462,6 +462,125 @@ bool Sexy::AllowAllAccess(const std::string &theFileName)
 	
 }
 
+SexyString Sexy::SexyStringFromChar(SexyChar theChar)
+{
+	SexyString theString;
+	utf8::append(theChar, theString);
+	return theString;
+}
+
+SexyString Sexy::SexyCharToString(const SexyChar *theChars, int theLength)
+{
+	return SexyCharToString(theChars, 0, theLength);
+}
+
+SexyString Sexy::SexyCharToString(const SexyChar *theChars, int theStart, int theEnd)
+{
+	SexyString aOut;
+	for (int i = theStart; i < theEnd; i++)
+		utf8::append(theChars[i], aOut);
+	return aOut;
+}
+
+SexyString Sexy::ANSIToUTF8(const SexyString &theString)
+{
+	SexyString aFixedText;
+	aFixedText.reserve(theString.size());
+	for (unsigned char c : theString)
+	{
+		if (c < 0x80)
+			aFixedText += c;
+		else
+		{
+			uint32_t aCodepoint = 0;
+			switch (c)
+			{
+			case 0x80:
+				aCodepoint = 0x20AC;
+				break;
+			case 0x82:
+				aCodepoint = 0x201A;
+				break;
+			case 0x83:
+				aCodepoint = 0x0192;
+				break;
+			case 0x84:
+				aCodepoint = 0x201E;
+				break;
+			case 0x85:
+				aCodepoint = 0x2026;
+				break;
+			case 0x86:
+				aCodepoint = 0x2020;
+				break;
+			case 0x87:
+				aCodepoint = 0x2021;
+				break;
+			case 0x88:
+				aCodepoint = 0x02C6;
+				break;
+			case 0x89:
+				aCodepoint = 0x2030;
+				break;
+			case 0x8A:
+				aCodepoint = 0x0160;
+				break;
+			case 0x8B:
+				aCodepoint = 0x2039;
+				break;
+			case 0x8C:
+				aCodepoint = 0x0152;
+				break;
+			case 0x91:
+				aCodepoint = 0x2018;
+				break;
+			case 0x92:
+				aCodepoint = 0x2019;
+				break;
+			case 0x93:
+				aCodepoint = 0x201C;
+				break;
+			case 0x94:
+				aCodepoint = 0x201D;
+				break;
+			case 0x95:
+				aCodepoint = 0x2022;
+				break;
+			case 0x96:
+				aCodepoint = 0x2013;
+				break;
+			case 0x97:
+				aCodepoint = 0x2014;
+				break;
+			case 0x98:
+				aCodepoint = 0x02DC;
+				break;
+			case 0x99:
+				aCodepoint = 0x2122;
+				break;
+			case 0x9A:
+				aCodepoint = 0x0161;
+				break;
+			case 0x9B:
+				aCodepoint = 0x203A;
+				break;
+			case 0x9C:
+				aCodepoint = 0x0153;
+				break;
+			case 0x9F:
+				aCodepoint = 0x0178;
+				break;
+			default:
+				aCodepoint = c;
+				break;
+			}
+			utf8::append(aCodepoint, aFixedText);
+		}
+	}
+
+	return aFixedText;
+}
+
 uint64_t Sexy::GetTicks()
 {
 	return SDL_GetTicks();
@@ -845,4 +964,12 @@ void Sexy::SMemWStr(void *&_Dst, const std::string &theString)
 	size_t aStrLen = theString.size();
 	SMemW(_Dst, &aStrLen, sizeof(aStrLen));
 	SMemW(_Dst, theString.c_str(), aStrLen);
+}
+
+size_t Sexy::StringLength(const SexyChar *theString)
+{
+	size_t aLen = 0;
+	while (theString[aLen] != 0)
+		aLen++;
+	return aLen;
 }

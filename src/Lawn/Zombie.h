@@ -413,7 +413,7 @@ class ZombieDefinition
 	int mStartingLevel;
 	int mFirstAllowedWave;
 	int mPickWeight;
-	const SexyChar *mZombieName;
+	const SexyCharByte *mZombieName;
 };
 extern ZombieDefinition gZombieDefs[NUM_ZOMBIE_TYPES]; //0x69DA80
 

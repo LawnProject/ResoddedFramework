@@ -121,9 +121,12 @@ ImageFont *SysFont::CreateImageFont()
 int SysFont::StringWidth(const SexyString &theString)
 { 
     int aWidth = 0;
-	for (char c : theString)
+	auto it = theString.begin();
+	auto end = theString.end();
+	while (it != end)
 	{
-		
+		uint32_t c = utf8::next(it, end);
+
 		aWidth += mFontData->mAtlas.mGlyphs[c].mAdvance;
 	}
 	return aWidth;

@@ -198,14 +198,14 @@ SexyString TodStringTranslate(const SexyChar *theString)
 {
 	if (theString != nullptr)
 	{
-		int aLen = strlen(theString);
+		int aLen = sizeof(theString) / sizeof(theString[0]);
 		if (aLen >= 3 && theString[0] == '[')
 		{
-			SexyString aName(theString, 1, aLen - 2); // 取“[”与“]”中间的部分
+			SexyString aName = SexyCharToString(theString, 1, aLen - 2);
 			return TodStringListFind(aName);
 		}
 		else
-			return theString;
+			return SexyCharToString(theString, aLen);
 	}
 	else
 		return "";

@@ -5,18 +5,23 @@
 #include "DescParser.h"
 #include "SharedImage.h"
 
+#include <unordered_map>
+
 namespace Sexy
 {
 
 class SexyAppBase;
 class Image;
 
+template <typename T>
+using GlyphMap = std::unordered_map<uint32_t, T>;
+
 class CharData
 {
   public:
 	Rect mImageRect;
 	Point mOffset;
-	char mKerningOffsets[256];
+	GlyphMap<int> mKerningOffsets;
 	int mWidth;
 	int mOrder;
 
@@ -32,7 +37,7 @@ class FontLayer
 	FontData *mFontData;
 	StringVector mRequiredTags;
 	StringVector mExcludedTags;
-	CharData mCharData[256];
+	GlyphMap<CharData> mCharData;
 	Color mColorMult;
 	Color mColorAdd;
 	SharedImageRef mImage;
@@ -67,7 +72,7 @@ class FontData : public DescParser
 	SexyAppBase *mApp;
 
 	int mDefaultPointSize;
-	uint8_t mCharMap[256];
+	GlyphMap<uint32_t> mCharMap;
 	FontLayerList mFontLayerList;
 	FontLayerMap mFontLayerMap;
 
@@ -99,7 +104,7 @@ class ActiveFontLayer
 
 	Image *mScaledImage;
 	bool mOwnsImage;
-	Rect mScaledCharImageRects[256];
+	GlyphMap<Rect> mScaledCharImageRects;
 
   public:
 	ActiveFontLayer();
@@ -144,7 +149,7 @@ class ImageFont : public Font
 							  const Rect *theClipRect,
 							  RectList *theDrawnAreas,
 							  int *theWidth);
-	SexyChar GetMappedChar(char value);
+	SexyChar GetMappedChar(uint32_t value);
 
   public:
 	ImageFont(SexyAppBase *theSexyApp, const std::string &theFontDescFileName);
@@ -156,8 +161,8 @@ class ImageFont : public Font
 	ImageFont(Image *theFontImage, const std::string &theFontDescFileName);
 	//ImageFont(const ImageFont& theImageFont, Image* theImage);
 
-	virtual int CharWidth(char theChar);
-	virtual int CharWidthKern(char theChar, char thePrevChar);
+	virtual int CharWidth(uint32_t theChar);
+	virtual int CharWidthKern(uint32_t theChar, uint32_t thePrevChar);
 	virtual int StringWidth(const SexyString &theString);
 	virtual void DrawString(
 		Graphics *g, int theX, int theY, const SexyString &theString, const Color &theColor, const Rect &theClipRect);

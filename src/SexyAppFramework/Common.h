@@ -87,8 +87,28 @@ typedef std::string SexyString;
 #define LENGTH(anyarray) (sizeof(anyarray) / sizeof(anyarray[0]))
 
 typedef std::map<std::string, std::string> DefinesMap;
-typedef SexyString::value_type SexyChar;
+typedef uint32_t SexyChar;
+typedef SexyString::value_type SexyCharByte;
 #define HAS_SEXYCHAR
+
+inline SexyString operator+(SexyChar c, const SexyString &s)
+{
+	SexyString aStringOfChar = "";
+
+	utf8::append(c, aStringOfChar);
+
+	return aStringOfChar + s;
+}
+
+inline SexyString operator+(const SexyString &s, SexyChar c)
+{
+	SexyString aString = s;
+
+	utf8::append(c, aString);
+
+	return aString;
+}
+
 
 // SexyString End
 
@@ -136,6 +156,12 @@ std::string GetCurDir();
 std::string GetFullPath(const std::string &theRelPath);
 std::string GetPathFrom(const std::string &theRelPath, const std::string &theDir);
 bool AllowAllAccess(const std::string &theFileName);
+
+SexyString SexyStringFromChar(SexyChar theChar);
+SexyString SexyCharToString(const SexyChar *theChars, int theLength);
+SexyString SexyCharToString(const SexyChar *theChars, int theStart, int theEnd);
+SexyString ANSIToUTF8(const SexyString &theString);
+size_t StringLength(const SexyChar *theString);
 
 uint64_t GetTicks();
 

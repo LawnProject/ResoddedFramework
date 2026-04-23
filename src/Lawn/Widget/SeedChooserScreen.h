@@ -89,7 +89,7 @@ class SeedChooserScreen : public Widget
 	void LandFlyingSeed(ChosenSeed &theChosenSeed);
 	void UpdateCursor();
 	virtual void Update();
-	/*inline*/ bool DisplayRepickWarningDialog(const SexyChar *theMessage);
+	/*inline*/ bool DisplayRepickWarningDialog(const SexyString &theMessage);
 	bool FlyersAreComming();
 	bool FlyProtectionCurrentlyPlanted();
 	bool CheckSeedUpgrade(SeedType theSeedTypeTo, SeedType theSeedTypeFrom);

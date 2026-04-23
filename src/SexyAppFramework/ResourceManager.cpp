@@ -334,7 +334,7 @@ bool ResourceManager::ParseImageResource(XMLElement &theElement)
 	AnimType anAnimType = AnimType_None;
 	if (anItr != theElement.mAttributes.end())
 	{
-		const SexyChar *aType = anItr->second.c_str();
+		const SexyCharByte *aType = anItr->second.c_str();
 
 		if (sexystricmp(aType, "none") == 0)
 			anAnimType = AnimType_None;

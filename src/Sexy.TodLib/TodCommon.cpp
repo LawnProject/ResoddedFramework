@@ -593,13 +593,21 @@ void TodDrawStringMatrix(
 	aFont->Prepare();
 	int aCurXPos = 0;
 	int aCurPoolIdx = 0;
-	for (int aCharNum = 0; aCharNum < (int)aFinalString.size(); aCharNum++)
+	auto it = theString.begin();
+	auto end = theString.end();
+
+	while (it != end)
 	{
-		SexyChar aChar = aFont->GetMappedChar(aFinalString[aCharNum]);
+		uint32_t aCodepoint = utf8::next(it, end);
+
+		SexyChar aChar = aFont->GetMappedChar(aCodepoint);
 		SexyChar aNextChar = '\0';
-		if (aCharNum < (int)aFinalString.size() - 1)
+		auto aCopy = it;
+		if (aCopy != end)
 		{
-			aNextChar = aFont->GetMappedChar(aFinalString[aCharNum + 1]);
+			uint32_t aNextPoint = utf8::next(aCopy, end);
+
+			aNextChar = aFont->GetMappedChar(aNextPoint);
 		}
 
 		int aMaxXPos = aCurXPos;
@@ -1007,7 +1015,7 @@ void TodDrawImageCenterScaledF(
 }
 
 //0x512AC0
-unsigned long AverageNearByPixels(MemoryImage *theImage, uint32_t *thePixel, int x, int y)
+uint32_t AverageNearByPixels(MemoryImage *theImage, uint32_t *thePixel, int x, int y)
 {
 	int aRed = 0;
 	int aGreen = 0;
@@ -1407,7 +1415,7 @@ void FreeGlobalAllocators()
 
 //0x513660
 SexyString TodReplaceString(const SexyString &theText,
-							const SexyChar *theStringToFind,
+							const SexyString &theStringToFind,
 							const SexyString &theStringToSubstitute)
 {
 	SexyString aFinalString = TodStringTranslate(theText);
@@ -1415,21 +1423,21 @@ SexyString TodReplaceString(const SexyString &theText,
 	if (aPos != SexyString::npos)
 	{
 		SexyString aFinalStringToSubstitute = TodStringTranslate(theStringToSubstitute);
-		aFinalString.replace(aPos, strlen(theStringToFind), aFinalStringToSubstitute);
+		aFinalString.replace(aPos, theStringToFind.size(), aFinalStringToSubstitute);
 	}
 
 	return aFinalString;
 }
 
 //0x513720
-SexyString TodReplaceNumberString(const SexyString &theText, const SexyChar *theStringToFind, int theNumber)
+SexyString TodReplaceNumberString(const SexyString &theText, const SexyString &theStringToFind, int theNumber)
 {
 	SexyString aFinalString = TodStringTranslate(theText);
 	int aPos = aFinalString.find(theStringToFind);
 	if (aPos != SexyString::npos)
 	{
 		SexyString aNumberString = StrFormat("%d", theNumber);
-		aFinalString.replace(aPos, strlen(theStringToFind), aNumberString);
+		aFinalString.replace(aPos, theStringToFind.size(), aNumberString);
 	}
 
 	return aFinalString;

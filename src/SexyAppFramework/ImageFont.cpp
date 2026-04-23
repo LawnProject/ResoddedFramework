@@ -112,12 +112,9 @@ FontLayer::FontLayer(const FontLayer &theFontLayer)
 	  mAscentPadding(theFontLayer.mAscentPadding), mHeight(theFontLayer.mHeight),
 	  mDefaultHeight(theFontLayer.mDefaultHeight), mColorMult(theFontLayer.mColorMult),
 	  mColorAdd(theFontLayer.mColorAdd), mLineSpacingOffset(theFontLayer.mLineSpacingOffset),
-	  mBaseOrder(theFontLayer.mBaseOrder)
+	  mBaseOrder(theFontLayer.mBaseOrder), mCharData(theFontLayer.mCharData)
 {
-	uint32_t i;
 
-	for (i = 0; i < 256; i++)
-		mCharData[i] = theFontLayer.mCharData[i];
 }
 CharData *FontLayer::GetCharData(SexyChar value)
 {
@@ -131,9 +128,6 @@ FontData::FontData()
 	mApp = NULL;
 	mRefCount = 0;
 	mDefaultPointSize = 0;
-
-	for (uint32_t i = 0; i < 256; i++)
-		mCharMap[i] = (uint8_t)i;
 }
 
 FontData::~FontData()
@@ -369,7 +363,7 @@ bool FontData::HandleCommand(const ListDataElement &theParams)
 					{
 						if ((aFromVector[aMapIdx].length() == 1) && (aToVector[aMapIdx].length() == 1))
 						{
-							mCharMap[(uint8_t)aFromVector[aMapIdx][0]] = (uint8_t)aToVector[aMapIdx][0];
+							mCharMap[(uint32_t)aFromVector[aMapIdx][0]] = (uint32_t)aToVector[aMapIdx][0];
 						}
 						else
 							invalidParamFormat = true;
@@ -721,9 +715,15 @@ bool FontData::HandleCommand(const ListDataElement &theParams)
 				{
 					for (uint32_t i = 0; i < aCharsVector.size(); i++)
 					{
-						if (aCharsVector[i].length() == 1)
+						if (utf8::is_valid(aCharsVector[i]))
 						{
-							aLayer->mCharData[(uint8_t)aCharsVector[i][0]].mWidth = aCharWidthsVector[i];
+							std::string aCharStr = aCharsVector[i];
+							auto it = aCharStr.begin();
+							auto end = aCharStr.end();
+							uint32_t aCodepoint = 0;
+							while (it != end)
+								aCodepoint = utf8::next(it, end);
+							aLayer->mCharData[aCodepoint].mWidth = aCharWidthsVector[i];
 						}
 						else
 							invalidParamFormat = true;
@@ -785,7 +785,7 @@ bool FontData::HandleCommand(const ListDataElement &theParams)
 						{
 							IntVector aRectElement;
 
-							if ((aCharsVector[i].length() == 1) &&
+							if (utf8::is_valid(aCharsVector[i]) &&
 								(DataToIntVector(aRectList.mElementVector[i], &aRectElement)) &&
 								(aRectElement.size() == 4))
 
@@ -798,8 +798,13 @@ bool FontData::HandleCommand(const ListDataElement &theParams)
 									Error("Image rectangle out of bounds");
 									return false;
 								}
-
-								aLayer->mCharData[(uint8_t)aCharsVector[i][0]].mImageRect = aRect;
+								std::string aCharStr = aCharsVector[i];
+								auto it = aCharStr.begin();
+								auto end = aCharStr.end();
+								uint32_t aCodepoint = 0;
+								while (it != end)
+									aCodepoint = utf8::next(it, end);
+								aLayer->mCharData[aCodepoint].mImageRect = aRect;
 								;
 							}
 							else
@@ -807,12 +812,10 @@ bool FontData::HandleCommand(const ListDataElement &theParams)
 						}
 
 						aLayer->mDefaultHeight = 0;
-						for (int aCharNum = 0; aCharNum < 256; aCharNum++)
-							if (aLayer->mCharData[aCharNum].mImageRect.mHeight +
-									aLayer->mCharData[aCharNum].mOffset.mY >
-								aLayer->mDefaultHeight)
-								aLayer->mDefaultHeight = aLayer->mCharData[aCharNum].mImageRect.mHeight +
-														 aLayer->mCharData[aCharNum].mOffset.mY;
+						for (auto &it : aLayer->mCharData)
+							if (aLayer->mCharData[it.first].mImageRect.mHeight + aLayer->mCharData[it.first].mOffset.mY > aLayer->mDefaultHeight)
+								aLayer->mDefaultHeight = aLayer->mCharData[it.first].mImageRect.mHeight +
+														 aLayer->mCharData[it.first].mOffset.mY;
 					}
 					else
 					{
@@ -847,10 +850,16 @@ bool FontData::HandleCommand(const ListDataElement &theParams)
 					{
 						IntVector aRectElement;
 
-						if ((aCharsVector[i].length() == 1) &&
+						if (utf8::is_valid(aCharsVector[i]) &&
 							(DataToIntVector(aRectList.mElementVector[i], &aRectElement)) && (aRectElement.size() == 2))
 						{
-							aLayer->mCharData[(uint8_t)aCharsVector[i][0]].mOffset =
+							std::string aCharStr = aCharsVector[i];
+							auto it = aCharStr.begin();
+							auto end = aCharStr.end();
+							uint32_t aCodepoint = 0;
+							while (it != end)
+								aCodepoint = utf8::next(it, end);
+							aLayer->mCharData[aCodepoint].mOffset =
 								Point(aRectElement[0], aRectElement[1]);
 						}
 						else
@@ -884,7 +893,7 @@ bool FontData::HandleCommand(const ListDataElement &theParams)
 					{
 						if (aPairsVector[i].length() == 2)
 						{
-							aLayer->mCharData[(uint8_t)aPairsVector[i][0]].mKerningOffsets[(uint8_t)aPairsVector[i][1]] =
+							aLayer->mCharData[aPairsVector[i][0]].mKerningOffsets[aPairsVector[i][1]] =
 								anOffsetsVector[i];
 						}
 						else
@@ -937,9 +946,15 @@ bool FontData::HandleCommand(const ListDataElement &theParams)
 				{
 					for (uint32_t i = 0; i < aCharsVector.size(); i++)
 					{
-						if (aCharsVector[i].length() == 1)
+						if (utf8::is_valid(aCharsVector[i]))
 						{
-							aLayer->mCharData[(uint8_t)aCharsVector[i][0]].mOrder = aCharOrdersVector[i];
+							std::string aCharStr = aCharsVector[i];
+							auto it = aCharStr.begin();
+							auto end = aCharStr.end();
+							uint32_t aCodepoint = 0;
+							while (it != end)
+								aCodepoint = utf8::next(it, end);
+							aLayer->mCharData[aCodepoint].mOrder = aCharOrdersVector[i];
 						}
 						else
 							invalidParamFormat = true;
@@ -1045,8 +1060,8 @@ bool FontData::LoadLegacy(Image *theFontImage, const std::string &theFontDescFil
 		if (aChar == 0)
 			break;
 
-		aFontLayer->mCharData[(uint8_t)aChar].mImageRect = Rect(aCharPos, 0, aWidth, aFontLayer->mImage->GetHeight());
-		aFontLayer->mCharData[(uint8_t)aChar].mWidth = aWidth;
+		aFontLayer->mCharData[aChar].mImageRect = Rect(aCharPos, 0, aWidth, aFontLayer->mImage->GetHeight());
+		aFontLayer->mCharData[aChar].mWidth = aWidth;
 
 		aCharPos += aWidth;
 	}
@@ -1077,13 +1092,10 @@ ActiveFontLayer::ActiveFontLayer()
 
 ActiveFontLayer::ActiveFontLayer(const ActiveFontLayer &theActiveFontLayer)
 	: mBaseFontLayer(theActiveFontLayer.mBaseFontLayer), mScaledImage(theActiveFontLayer.mScaledImage),
-	  mOwnsImage(theActiveFontLayer.mOwnsImage)
+	  mOwnsImage(theActiveFontLayer.mOwnsImage), mScaledCharImageRects(theActiveFontLayer.mScaledCharImageRects)
 {
 	if (mOwnsImage)
 		mScaledImage = (Sexy::Image *)mBaseFontLayer->mFontData->mApp->CopyImage(mScaledImage);
-
-	for (int aCharNum = 0; aCharNum < 256; aCharNum++)
-		mScaledCharImageRects[aCharNum] = theActiveFontLayer.mScaledCharImageRects[aCharNum];
 }
 
 ActiveFontLayer::~ActiveFontLayer()
@@ -1220,8 +1232,8 @@ void ImageFont::GenerateActiveFontLayers()
 
 					// Use the specified point size
 
-					for (int aCharNum = 0; aCharNum < 256; aCharNum++)
-						anActiveFontLayer->mScaledCharImageRects[aCharNum] = aFontLayer->mCharData[aCharNum].mImageRect;
+					for (auto &it : aFontLayer->mCharData)
+						anActiveFontLayer->mScaledCharImageRects[it.first] = it.second.mImageRect; //glyph code and data
 				}
 				else
 				{
@@ -1232,23 +1244,22 @@ void ImageFont::GenerateActiveFontLayers()
 					}
 
 					// Resize font elements
-					int aCharNum;
 
 					MemoryImage *aMemoryImage = new MemoryImage(mFontData->mApp);
 
 					int aCurX = 0;
 					int aMaxHeight = 0;
 
-					for (aCharNum = 0; aCharNum < 256; aCharNum++)
+					for (auto &it : aFontLayer->mCharData)
 					{
-						Rect *anOrigRect = &aFontLayer->mCharData[aCharNum].mImageRect;
+						Rect *anOrigRect = &it.second.mImageRect;
 
 						Rect aScaledRect(aCurX,
 										 0,
 										 (int)((anOrigRect->mWidth * aPointSize) / aLayerPointSize),
 										 (int)((anOrigRect->mHeight * aPointSize) / aLayerPointSize));
 
-						anActiveFontLayer->mScaledCharImageRects[aCharNum] = aScaledRect;
+						anActiveFontLayer->mScaledCharImageRects[it.first] = aScaledRect;
 
 						if (aScaledRect.mHeight > aMaxHeight)
 							aMaxHeight = aScaledRect.mHeight;
@@ -1265,12 +1276,12 @@ void ImageFont::GenerateActiveFontLayers()
 
 					Graphics g(aMemoryImage);
 
-					for (aCharNum = 0; aCharNum < 256; aCharNum++)
+					for (auto &it : aFontLayer->mCharData)
 					{
 						if ((Image *)aFontLayer->mImage != NULL)
 							g.DrawImage(aFontLayer->mImage,
-										anActiveFontLayer->mScaledCharImageRects[aCharNum],
-										aFontLayer->mCharData[aCharNum].mImageRect);
+										anActiveFontLayer->mScaledCharImageRects[it.first],
+										it.second.mImageRect);
 					}
 
 					if (mForceScaledImagesWhite)
@@ -1321,10 +1332,13 @@ void ImageFont::GenerateActiveFontLayers()
 int ImageFont::StringWidth(const SexyString &theString)
 {
 	int aWidth = 0;
-	char aPrevChar = 0;
-	for (int i = 0; i < (int)theString.length(); i++)
+	uint32_t aPrevChar = 0;
+	auto it = theString.begin();
+	auto end = theString.end();
+	while (it != end)
 	{
-		char aChar = theString[i];
+		uint32_t aChar = utf8::next(it, end);
+
 		aWidth += CharWidthKern(aChar, aPrevChar);
 		aPrevChar = aChar;
 	}
@@ -1332,16 +1346,17 @@ int ImageFont::StringWidth(const SexyString &theString)
 	return aWidth;
 }
 
-int ImageFont::CharWidthKern(char theChar, char thePrevChar)
+int ImageFont::CharWidthKern(uint32_t theChar, uint32_t thePrevChar)
 {
 	Prepare();
 
 	int aMaxXPos = 0;
 	double aPointSize = mPointSize * mScale;
 
-	theChar = mFontData->mCharMap[(uint8_t)theChar];
-	if (thePrevChar != 0)
-		thePrevChar = mFontData->mCharMap[(uint8_t)thePrevChar];
+	if (mFontData->mCharMap.find(theChar) != mFontData->mCharMap.end())
+		theChar = mFontData->mCharMap[theChar];
+	if (thePrevChar != 0 && mFontData->mCharMap.find(thePrevChar) != mFontData->mCharMap.end())
+		thePrevChar = mFontData->mCharMap[thePrevChar];
 
 	ActiveFontLayerList::iterator anItr = mActiveLayerList.begin();
 	while (anItr != mActiveLayerList.end())
@@ -1357,13 +1372,13 @@ int ImageFont::CharWidthKern(char theChar, char thePrevChar)
 
 		if (aLayerPointSize == 0)
 		{
-			aCharWidth = anActiveFontLayer->mBaseFontLayer->mCharData[(uint8_t)theChar].mWidth * mScale;
+			aCharWidth = anActiveFontLayer->mBaseFontLayer->mCharData[theChar].mWidth * mScale;
 
 			if (thePrevChar != 0)
 			{
 				aSpacing =
 					(anActiveFontLayer->mBaseFontLayer->mSpacing +
-					 anActiveFontLayer->mBaseFontLayer->mCharData[(uint8_t)thePrevChar].mKerningOffsets[(uint8_t)theChar]) *
+					 anActiveFontLayer->mBaseFontLayer->mCharData[thePrevChar].mKerningOffsets[theChar]) *
 					mScale;
 			}
 			else
@@ -1372,13 +1387,13 @@ int ImageFont::CharWidthKern(char theChar, char thePrevChar)
 		else
 		{
 			aCharWidth =
-				(anActiveFontLayer->mBaseFontLayer->mCharData[(uint8_t)theChar].mWidth * aPointSize / aLayerPointSize);
+				(anActiveFontLayer->mBaseFontLayer->mCharData[theChar].mWidth * aPointSize / aLayerPointSize);
 
 			if (thePrevChar != 0)
 			{
 				aSpacing =
 					(anActiveFontLayer->mBaseFontLayer->mSpacing +
-					 anActiveFontLayer->mBaseFontLayer->mCharData[(uint8_t)thePrevChar].mKerningOffsets[(uint8_t)theChar]) *
+					 anActiveFontLayer->mBaseFontLayer->mCharData[thePrevChar].mKerningOffsets[theChar]) *
 					aPointSize / aLayerPointSize;
 			}
 			else
@@ -1396,7 +1411,7 @@ int ImageFont::CharWidthKern(char theChar, char thePrevChar)
 	return aMaxXPos;
 }
 
-int ImageFont::CharWidth(char theChar)
+int ImageFont::CharWidth(uint32_t theChar)
 {
 	return CharWidthKern(theChar, 0);
 }
@@ -1448,14 +1463,24 @@ void ImageFont::DrawStringEx(Graphics *g,
 
 	int aCurXPos = theX;
 	int aCurPoolIdx = 0;
+	auto it = theString.begin();
+	auto end = theString.end();
 
-	for (uint32_t aCharNum = 0; aCharNum < theString.length(); aCharNum++)
+	uint32_t aPrevCode = 0;
+
+	while (it != end)
 	{
-		char aChar = mFontData->mCharMap[(uint8_t)theString[aCharNum]];
+		uint32_t aCodePoint = utf8::next(it, end);
 
-		char aNextChar = 0;
-		if (aCharNum < theString.length() - 1)
-			aNextChar = mFontData->mCharMap[(uint8_t)theString[aCharNum + 1]];
+		uint32_t aChar = GetMappedChar(aCodePoint);
+
+		uint32_t aNextChar = 0;
+		auto itCopy = it;
+
+		if (itCopy != end)
+			aNextChar = utf8::next(itCopy, end);
+
+		aPrevCode = aCodePoint;
 
 		int aMaxXPos = aCurXPos;
 
@@ -1480,17 +1505,17 @@ void ImageFont::DrawStringEx(Graphics *g,
 			if (aScale == 1.0)
 			{
 				anImageX = aLayerXPos + anActiveFontLayer->mBaseFontLayer->mOffset.mX +
-						   anActiveFontLayer->mBaseFontLayer->mCharData[(uint8_t)aChar].mOffset.mX;
+						   anActiveFontLayer->mBaseFontLayer->mCharData[aChar].mOffset.mX;
 				anImageY =
 					theY - (anActiveFontLayer->mBaseFontLayer->mAscent - anActiveFontLayer->mBaseFontLayer->mOffset.mY -
-							anActiveFontLayer->mBaseFontLayer->mCharData[(uint8_t)aChar].mOffset.mY);
-				aCharWidth = anActiveFontLayer->mBaseFontLayer->mCharData[(uint8_t)aChar].mWidth;
+							anActiveFontLayer->mBaseFontLayer->mCharData[aChar].mOffset.mY);
+				aCharWidth = anActiveFontLayer->mBaseFontLayer->mCharData[aChar].mWidth;
 
 				if (aNextChar != 0)
 				{
 					aSpacing =
 						anActiveFontLayer->mBaseFontLayer->mSpacing +
-						anActiveFontLayer->mBaseFontLayer->mCharData[(uint8_t)aChar].mKerningOffsets[(uint8_t)aNextChar];
+						anActiveFontLayer->mBaseFontLayer->mCharData[aChar].mKerningOffsets[aNextChar];
 				}
 				else
 					aSpacing = 0;
@@ -1498,19 +1523,19 @@ void ImageFont::DrawStringEx(Graphics *g,
 			else
 			{
 				anImageX = aLayerXPos + (int)((anActiveFontLayer->mBaseFontLayer->mOffset.mX +
-											   anActiveFontLayer->mBaseFontLayer->mCharData[(uint8_t)aChar].mOffset.mX) *
+											   anActiveFontLayer->mBaseFontLayer->mCharData[aChar].mOffset.mX) *
 											  aScale);
 				anImageY = theY - (int)((anActiveFontLayer->mBaseFontLayer->mAscent -
 										 anActiveFontLayer->mBaseFontLayer->mOffset.mY -
-										 anActiveFontLayer->mBaseFontLayer->mCharData[(uint8_t)aChar].mOffset.mY) *
+										 anActiveFontLayer->mBaseFontLayer->mCharData[aChar].mOffset.mY) *
 										aScale);
-				aCharWidth = (anActiveFontLayer->mBaseFontLayer->mCharData[(uint8_t)aChar].mWidth * aScale);
+				aCharWidth = (anActiveFontLayer->mBaseFontLayer->mCharData[aChar].mWidth * aScale);
 
 				if (aNextChar != 0)
 				{
 					aSpacing = (int)((anActiveFontLayer->mBaseFontLayer->mSpacing +
-									  anActiveFontLayer->mBaseFontLayer->mCharData[(uint8_t)aChar]
-										  .mKerningOffsets[(uint8_t)aNextChar]) *
+									  anActiveFontLayer->mBaseFontLayer->mCharData[aChar]
+										  .mKerningOffsets[aNextChar]) *
 									 aScale);
 				}
 				else
@@ -1543,10 +1568,10 @@ void ImageFont::DrawStringEx(Graphics *g,
 			aRenderCommand->mColor = aColor;
 			aRenderCommand->mDest[0] = anImageX;
 			aRenderCommand->mDest[1] = anImageY;
-			aRenderCommand->mSrc[0] = anActiveFontLayer->mScaledCharImageRects[(uint8_t)aChar].mX;
-			aRenderCommand->mSrc[1] = anActiveFontLayer->mScaledCharImageRects[(uint8_t)aChar].mY;
-			aRenderCommand->mSrc[2] = anActiveFontLayer->mScaledCharImageRects[(uint8_t)aChar].mWidth;
-			aRenderCommand->mSrc[3] = anActiveFontLayer->mScaledCharImageRects[(uint8_t)aChar].mHeight;
+			aRenderCommand->mSrc[0] = anActiveFontLayer->mScaledCharImageRects[aChar].mX;
+			aRenderCommand->mSrc[1] = anActiveFontLayer->mScaledCharImageRects[aChar].mY;
+			aRenderCommand->mSrc[2] = anActiveFontLayer->mScaledCharImageRects[aChar].mWidth;
+			aRenderCommand->mSrc[3] = anActiveFontLayer->mScaledCharImageRects[aChar].mHeight;
 			aRenderCommand->mMode = anActiveFontLayer->mBaseFontLayer->mDrawMode;
 			aRenderCommand->mNext = NULL;
 
@@ -1579,8 +1604,8 @@ void ImageFont::DrawStringEx(Graphics *g,
 			{
 				Rect aDestRect = Rect(anImageX,
 									  anImageY,
-									  anActiveFontLayer->mScaledCharImageRects[(uint8_t)aChar].mWidth,
-									  anActiveFontLayer->mScaledCharImageRects[(uint8_t)aChar].mHeight);
+									  anActiveFontLayer->mScaledCharImageRects[aChar].mWidth,
+									  anActiveFontLayer->mScaledCharImageRects[aChar].mHeight);
 
 				theDrawnAreas->push_back(aDestRect);
 
@@ -1673,9 +1698,12 @@ void ImageFont::DrawStringEx(Graphics *g,
 	g->SetColorizeImages(colorizeImages);
 }
 
-SexyChar ImageFont::GetMappedChar(char value)
+SexyChar ImageFont::GetMappedChar(uint32_t value)
 {
-	return this->mFontData->mCharMap[value];
+	if (mFontData->mCharMap.find(value) != mFontData->mCharMap.end())
+		return mFontData->mCharMap[value];
+	else
+		return value;
 }
 
 void ImageFont::DrawString(

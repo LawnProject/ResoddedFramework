@@ -529,6 +529,7 @@ bool DescParser::LoadDescriptor(const std::string &theFileName)
 				}
 			}
 		}
+		mCurrentLine = ANSIToUTF8(mCurrentLine); //fix encoding cause fuck windows!!!
 
 		if (mCurrentLine.length() > 0)
 		{

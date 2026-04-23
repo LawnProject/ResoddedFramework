@@ -314,14 +314,14 @@ class LawnApp : public SexyApp
 	void PreloadForUser();
 	int GetNumPreloadingTasks();
 	int LawnMessageBox(int theDialogId,
-					   const SexyChar *theHeaderName,
-					   const SexyChar *theLinesName,
-					   const SexyChar *theButton1Name,
-					   const SexyChar *theButton2Name,
+					   const SexyString &theHeaderName,
+					   const SexyString &theLinesName,
+					   const SexyString &theButton1Name,
+					   const SexyString &theButton2Name,
 					   int theButtonMode);
 	void ShowCreditScreen();
 	void KillCreditScreen();
-	static SexyString Pluralize(int theCount, const SexyChar *theSingular, const SexyChar *thePlural);
+	static SexyString Pluralize(int theCount, const SexyString &theSingular, const SexyString &thePlural);
 	int GetNumTrophies(ChallengePage thePage);
 	/*inline*/ bool EarnedGoldTrophy();
 	inline bool IsRegistered()

@@ -263,10 +263,7 @@ void EditWidget::EnforceMaxPixels()
 
 bool EditWidget::IsPartOfWord(SexyChar theChar)
 {
-	return (((theChar >= 'A') && (theChar <= 'Z')) || ((theChar >= 'a') && (theChar <= 'z')) ||
-			((theChar >= '0') && (theChar <= '9')) ||
-			/*(((unsigned int)theChar >= (unsigned int)(L'À')) && ((unsigned int)theChar <= (unsigned int)(L'ÿ'))) ||*/ //todo:add after utf8 impl
-			(theChar == '_'));
+	return utf8::is_valid(SexyStringFromChar(theChar));
 }
 
 void EditWidget::ProcessKey(KeyCode theKey, SexyChar theChar)
@@ -323,13 +320,20 @@ void EditWidget::ProcessKey(KeyCode theKey, SexyChar theChar)
 		{
 			SexyString aString;
 
-			for (uint32_t i = 0; i < aBaseString.length(); i++)
+			auto it = aBaseString.begin();
+			auto end = aBaseString.end();
+
+			while (it != end)
 			{
-				if ((aBaseString[i] == '\r') || (aBaseString[i] == '\n'))
+				uint32_t aCodepoint = utf8::next(it, end);
+
+				if (aCodepoint == '\r' || aCodepoint == '\n')
 					break;
 
-				if (mFont->CharWidth(aBaseString[i]) != 0 && mEditListener->AllowChar(mId, aBaseString[i]))
-					aString += aBaseString[i];
+				if (mFont->CharWidth(aCodepoint) != 0 && mEditListener->AllowChar(mId, aCodepoint))
+				{
+					utf8::append(aCodepoint, aString);
+				}
 			}
 
 			if (mHilitePos == -1)
@@ -475,16 +479,9 @@ void EditWidget::ProcessKey(KeyCode theKey, SexyChar theChar)
 	}
 	else
 	{
-		SexyString aString = SexyString(1, theChar);
-		unsigned int uTheChar = (unsigned int)theChar;
-		unsigned int range = 127;
-		if (gSexyAppBase->mbAllowExtendedChars)
-		{
-			range = 255;
-		}
+		SexyString aCharString = SexyStringFromChar(theChar);
 
-		if ((uTheChar >= 32) && (uTheChar <= range) && (mFont->StringWidth(aString) > 0) &&
-			mEditListener->AllowChar(mId, theChar))
+		if (utf8::is_valid(aCharString) && (mFont->StringWidth(aCharString) > 0) && mEditListener->AllowChar(mId, theChar))
 		{
 			if ((mHilitePos != -1) && (mHilitePos != mCursorPos))
 			{
@@ -499,7 +496,7 @@ void EditWidget::ProcessKey(KeyCode theKey, SexyChar theChar)
 			else
 			{
 				// Insert character where cursor is
-				mString = mString.substr(0, mCursorPos) + SexyString(1, theChar) + mString.substr(mCursorPos);
+				mString = mString.substr(0, mCursorPos) + aCharString + mString.substr(mCursorPos);
 
 				if (mCursorPos != mLastModifyIdx + 1)
 					bigChange = true;
