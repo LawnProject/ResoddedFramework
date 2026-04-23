@@ -3754,7 +3754,10 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 				case SDL_EVENT_TEXT_INPUT: {
 					mLastUserInputTick = mLastTimerTime;
 
-					SexyChar aChar = event.text.text[0]; // assumes UTF-8 safe
+					const char *it = event.text.text;
+					const char *end = event.text.text + strlen(event.text.text);
+
+					uint32_t aChar = utf8::next(it, end);
 
 					mWidgetManager->KeyChar((SexyChar)aChar);
 					break;

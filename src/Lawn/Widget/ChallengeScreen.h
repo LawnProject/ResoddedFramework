@@ -67,7 +67,7 @@ class ChallengeDefinition
 	ChallengePage mPage;
 	int mRow;
 	int mCol;
-	const SexyChar *mChallengeName;
+	const SexyCharByte *mChallengeName;
 };
 extern ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES];
 

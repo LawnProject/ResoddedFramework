@@ -58,13 +58,33 @@ void MessageWidget::SetLabel(const SexyString &theNewLabel, MessageStyle theMess
 	if (mReanimType != ReanimationType::REANIM_NONE && mDuration > 0)
 	{
 		mMessageStyleNext = theMessageStyle;
-		strcpy(mLabelNext, aLabel.c_str());
+		size_t count = 0;
+
+		auto it = aLabel.begin();
+		auto end = aLabel.end();
+
+		while (it != end && count < MAX_MESSAGE_LENGTH - 1)
+		{
+			mLabelNext[count++] = utf8::next(it, end);
+		}
+
+		mLabelNext[count] = '\0';
 		ClearLabel();
 	}
 	else
 	{
 		ClearReanim();
-		strcpy(mLabel, aLabel.c_str());
+		size_t count = 0;
+
+		auto it = aLabel.begin();
+		auto end = aLabel.end();
+
+		while (it != end && count < MAX_MESSAGE_LENGTH - 1)
+		{
+			mLabel[count++] = utf8::next(it, end);
+		}
+
+		mLabel[count] = '\0';
 		mMessageStyle = theMessageStyle;
 		mReanimType = ReanimationType::REANIM_NONE;
 
@@ -129,6 +149,7 @@ void MessageWidget::LayoutReanimText()
 	int aCurLine = 0, aCurPos = 0;
 	Font *aFont = GetFont();
 	int aLabelLen = strlen(mLabel);
+	
 	mSlideOffTime = aLabelLen + 100;
 
 	float aLineWidth[MAX_REANIM_LINES];
@@ -141,7 +162,12 @@ void MessageWidget::LayoutReanimText()
 			int aLen = aPos - aCurPos;
 			int aOff = aCurPos;
 			aCurPos = aPos + 1;
-			SexyString aLine(&mLabel[aOff], aLen);
+			SexyString aLine;
+
+			for (int i = 0; i < aLen; i++)
+			{
+				utf8::append(mLabel[aOff + i], aLine);
+			}
 
 			aLineWidth[aCurLine] = aFont->StringWidth(aLine);
 			aMaxWidth = std::max(aMaxWidth, aLineWidth[aCurLine]);
@@ -423,18 +449,31 @@ void MessageWidget::Draw(Graphics *g)
 			g->FillRect(aRect);
 
 			aRect.mY += aTextOffsetY;
-			TodDrawStringWrapped(
-				g, mLabel, aRect, aFont, aColor, DrawStringJustification::DS_ALIGN_CENTER_VERTICAL_MIDDLE);
+			TodDrawStringWrapped(g,
+								 mLabel,
+								 aRect,
+								 aFont,
+								 aColor,
+								 DrawStringJustification::DS_ALIGN_CENTER_VERTICAL_MIDDLE);
 		}
 		else
 		{
 			Rect aRect(aPosX - mApp->mBoard->mX - BOARD_WIDTH / 2, aPosY - aFont->mAscent, BOARD_WIDTH, BOARD_HEIGHT);
 			if (aOutlineFont)
 			{
-				TodDrawStringWrapped(
-					g, mLabel, aRect, aOutlineFont, aOutlineColor, DrawStringJustification::DS_ALIGN_CENTER);
+				TodDrawStringWrapped(g,
+									 mLabel,
+									 aRect,
+									 aOutlineFont,
+									 aOutlineColor,
+									 DrawStringJustification::DS_ALIGN_CENTER);
 			}
-			TodDrawStringWrapped(g, mLabel, aRect, aFont, aColor, DrawStringJustification::DS_ALIGN_CENTER);
+			TodDrawStringWrapped(g,
+								 mLabel,
+								 aRect,
+								 aFont,
+								 aColor,
+								 DrawStringJustification::DS_ALIGN_CENTER);
 		}
 
 		if (mMessageStyle == MessageStyle::MESSAGE_STYLE_HOUSE_NAME)

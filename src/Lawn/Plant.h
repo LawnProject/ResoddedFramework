@@ -317,7 +317,7 @@ class PlantDefinition
 	int mRefreshTime;				  //+0x14
 	PlantSubClass mSubClass;		  //+0x18
 	int mLaunchRate;				  //+0x1C
-	const SexyChar *mPlantName;		  //+0x20
+	const SexyCharByte *mPlantName;		  //+0x20
 };
 extern PlantDefinition gPlantDefs[SeedType::NUM_SEED_TYPES];
 

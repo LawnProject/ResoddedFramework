@@ -589,7 +589,7 @@ void SeedChooserScreen::Update()
 }
 
 //0x485340
-bool SeedChooserScreen::DisplayRepickWarningDialog(const SexyChar *theMessage)
+bool SeedChooserScreen::DisplayRepickWarningDialog(const SexyString &theMessage)
 {
 	return mApp->LawnMessageBox(Dialogs::DIALOG_CHOOSER_WARNING,
 								"[DIALOG_WARNING]",

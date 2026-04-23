@@ -155,13 +155,13 @@ void TodBltMatrix(Graphics *g,
 void TodMarkImageForSanding(Image *theImage);
 void TodSandImageIfNeeded(Image *theImage);
 void FixPixelsOnAlphaEdgeForBlending(Image *theImage);
-unsigned long AverageNearByPixels(MemoryImage *theImage, unsigned long *thePixel, int x, int y);
+uint32_t AverageNearByPixels(MemoryImage *theImage, uint32_t *thePixel, int x, int y);
 void Tod_SWTri_AddAllDrawTriFuncs();
 
 SexyString TodReplaceString(const SexyString &theText,
-							const SexyChar *theStringToFind,
+							const SexyString &theStringToFind,
 							const SexyString &theStringToSubstitute);
-SexyString TodReplaceNumberString(const SexyString &theText, const SexyChar *theStringToFind, int theNumber);
+SexyString TodReplaceNumberString(const SexyString &theText, const SexyString &theStringToFind, int theNumber);
 int TodSnprintf(char *theBuffer, int theSize, const char *theFormat, ...);
 int TodVsnprintf(char *theBuffer, int theSize, const char *theFormat, va_list theArgList);
 

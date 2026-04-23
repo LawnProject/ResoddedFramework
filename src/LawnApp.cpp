@@ -751,10 +751,10 @@ void LawnApp::DoPauseDialog()
 
 //0x4504B0
 int LawnApp::LawnMessageBox(int theDialogId,
-							const SexyChar *theHeaderName,
-							const SexyChar *theLinesName,
-							const SexyChar *theButton1Name,
-							const SexyChar *theButton2Name,
+							const SexyString &theHeaderName,
+							const SexyString &theLinesName,
+							const SexyString &theButton1Name,
+							const SexyString &theButton2Name,
 							int theButtonMode)
 {
 	Widget *aOldFocus = mWidgetManager->mFocusWidget;
@@ -3220,7 +3220,7 @@ void LawnApp::PreloadForUser()
 }
 
 //0x455AA0
-SexyString LawnApp::Pluralize(int theCount, const SexyChar *theSingular, const SexyChar *thePlural)
+SexyString LawnApp::Pluralize(int theCount, const SexyString &theSingular, const SexyString &thePlural)
 {
 	if (theCount == 1)
 	{

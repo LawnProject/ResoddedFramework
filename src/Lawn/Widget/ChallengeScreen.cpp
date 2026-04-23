@@ -609,44 +609,20 @@ void ChallengeScreen::DrawButton(Graphics *g, int theChallengeIndex)
 				// 先尝试在名称字符串的后半段取空格以将字符串分隔为两行，若后半段中无空格则在整个字符串中寻找空格
 				int aHalfPos =
 					(mPageIndex == CHALLENGE_PAGE_SURVIVAL && !aChallengeButton->mDisabled) ? 7 : (aNameLen / 2 - 1);
-				const SexyChar *aSpacedChar = strchr(aName.c_str() + aHalfPos, ' ');
+				size_t aSpacePos = aName.find(' ', aHalfPos);
 
-				if (aSpacedChar == nullptr)
+				if (aSpacePos == std::string::npos)
 				{
-					aSpacedChar = strchr(aName.c_str(), ' ');
+					aSpacePos = aName.find(' ', aHalfPos);
 				}
 
-				while (aSpacedChar[0] != ' ')
+				if (aSpacePos == std::string::npos)
 				{
-					aHalfPos++;
-					aSpacedChar = strchr(aName.c_str() + aHalfPos, ' ');
-					if (aSpacedChar[0] == '\0')
-					{
-						aHalfPos--;
-						aSpacedChar = strchr(aName.c_str() + aHalfPos, ' ');
-						break;
-					}
-				}
-				aHalfPos--;
-				aSpacedChar = strchr(aName.c_str() + aHalfPos, ' ');
-
-				if (aSpacedChar == nullptr)
-				{
-					aSpacedChar = strchr(aName.c_str(), ' ');
+					aSpacePos = aName.find(' ');
 				}
 
-				// 分别计算取得两行文本的长度
-				int aLine1Len = aNameLen;
-				int aLine2Len = 0;
-				if (aSpacedChar != nullptr)
-				{
-					aLine1Len = aSpacedChar - aName.c_str();
-					aLine2Len = aNameLen - aLine1Len - 1;
-				}
-
-				// 分别绘制两行文本字符串
-				auto topStr = aName.substr(0, aLine1Len + 1);
-				auto botStr = aName.substr(aLine1Len + 1, aLine2Len);
+				auto topStr = aName.substr(0, aSpacePos);
+				auto botStr = aName.substr(aSpacePos + 1);
 				if (botStr.empty())
 				{
 					TodDrawString(
@@ -656,7 +632,7 @@ void ChallengeScreen::DrawButton(Graphics *g, int theChallengeIndex)
 				{
 					TodDrawString(
 						g, topStr, aPosX + 52, aPosY + 88, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
-					if (aLine2Len > 0)
+					if (!botStr.empty())
 					{
 						TodDrawString(
 							g, botStr, aPosX + 52, aPosY + 102, Sexy::FONT_BRIANNETOD12, aTextColor, DS_ALIGN_CENTER);
