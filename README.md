@@ -21,7 +21,7 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 
 - Window Resizing - 0%
 - Advanced Options - 0%
-- Language Support, along with UTF-8 Strings - 0%
+- UTF-8 Support - 100%
 
 - MP3/OGG/FLAC Music with loop points - 0%
 - Controller Support - 0%
