@@ -133,8 +133,7 @@ SexyAppBase::SexyAppBase()
 #endif
 
 	// Extract product version
-	char aPath[_MAX_PATH];
-	GetModuleFileNameA(NULL, aPath, 256);
+	std::string aPath = std::filesystem::current_path().string();
 	mProductVersion = GetProductVersion(aPath);
 	mChangeDirTo = GetFileDir(aPath);
 
@@ -402,13 +401,15 @@ SexyAppBase::~SexyAppBase()
 											  {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "No"}};
 		SDL_MessageBoxData msgBoxData;
 		msgBoxData.flags = SDL_MESSAGEBOX_WARNING;
-		msgBoxData.title =GetString("HARDWARE_ACCEL_NOT_WORKING",
-						"Hardware Acceleration may not have been working correctly during this session.\n"
-						"If you noticed graphics problems, you may want to turn off Hardware Acceleration.\n"
-						"Would you like to keep Hardware Acceleration switched on?").c_str();
-		msgBoxData.message =
-			(mCompanyName + " " + GetString("HARDWARE_ACCEL_CONFIRMATION", "Hardware Acceleration Confirmation"))
-				.c_str();
+		std::string anAntiDangle1 =
+			GetString("HARDWARE_ACCEL_NOT_WORKING",
+					  "Hardware Acceleration may not have been working correctly during this session.\n"
+					  "If you noticed graphics problems, you may want to turn off Hardware Acceleration.\n"
+					  "Would you like to keep Hardware Acceleration switched on?");
+		msgBoxData.title = anAntiDangle1.c_str();
+		std::string anAntiDangle2 = mCompanyName + " " + GetString("HARDWARE_ACCEL_CONFIRMATION", "Hardware Acceleration Confirmation");
+		msgBoxData.message = anAntiDangle2.c_str();
+			
 		msgBoxData.buttons = buttons;
 		msgBoxData.numbuttons = 2;
 		int aResult;
@@ -2687,15 +2688,38 @@ int SexyAppBase::MsgBox(const std::string &theText, const std::string &theTitle,
 
 	BeginPopup();
 
-	SDL_MessageBoxButtonData buttons[] = {{SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes"},
-											{SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "No"}};
+	std::vector<SDL_MessageBoxButtonData> aButtonVec;
+
+	uint32_t aConvertedFlags = 0;
+	if (theFlags & SexyMessageBoxFlags::MESSAGEBOX_ERROR)
+		aConvertedFlags |= SDL_MESSAGEBOX_ERROR;                    
+	else if (theFlags & SexyMessageBoxFlags::MESSAGEBOX_WARNING)
+		aConvertedFlags |= SDL_MESSAGEBOX_WARNING;                    
+	else
+		aConvertedFlags |= MESSAGEBOX_INFORMATION;      
+
+	if (theFlags & SexyMessageBoxFlags::MESSAGEBOX_BUTTONS_RIGHT_TO_LEFT) 
+		aConvertedFlags |= SDL_MESSAGEBOX_BUTTONS_RIGHT_TO_LEFT;  
+	else
+		aConvertedFlags |= SDL_MESSAGEBOX_BUTTONS_LEFT_TO_RIGHT;      
+
+	if (theFlags & SexyMessageBoxFlags::MESSAGEBOX_BTN_OK)
+		aButtonVec.push_back({SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Ok"});
+	if (theFlags & SexyMessageBoxFlags::MESSAGEBOX_BTN_CANCEL) 
+		aButtonVec.push_back({SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel"});
+	if (theFlags & SexyMessageBoxFlags::MESSAGEBOX_BTN_YES) 
+		aButtonVec.push_back({SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes"});
+	if (theFlags & SexyMessageBoxFlags::MESSAGEBOX_BTN_NO) 
+		aButtonVec.push_back({SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "No"});
+
+
 	SDL_MessageBoxData msgBoxData;
 	msgBoxData.window = nullptr;
-	msgBoxData.flags = theFlags;
+	msgBoxData.flags = aConvertedFlags;
 	msgBoxData.title = theTitle.c_str();
 	msgBoxData.message = theText.c_str();
-	msgBoxData.buttons = buttons;
-	msgBoxData.numbuttons = 2;
+	msgBoxData.buttons = aButtonVec.data();
+	msgBoxData.numbuttons = aButtonVec.size();
 	int aResult;
 	SDL_ShowMessageBox(&msgBoxData, &aResult);
 
@@ -3371,7 +3395,7 @@ void SexyAppBase::ShowMemoryUsage()
 	aStr += StrFormat(
 		"Palette8: %d - %s KB\n", aUsage.first, SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
 
-	MsgBox(aStr, "Video Stats", MB_OK);
+	MsgBox(aStr, "Video Stats", MESSAGEBOX_BTN_OK);
 	mLastTime = timeGetTime();
 }
 
@@ -3424,7 +3448,7 @@ bool SexyAppBase::DebugKeyDown(int theKey)
 
 			char aBuf[512];
 			sprintf(aBuf, "3D-Mode: %s", Is3DAccelerated() ? "ON" : "OFF");
-			MsgBox(aBuf, "Mode Switch", MB_OK);
+			MsgBox(aBuf, "Mode Switch", MESSAGEBOX_BTN_OK);
 			mLastTime = timeGetTime();
 		}
 		else
@@ -3474,7 +3498,7 @@ bool SexyAppBase::DebugKeyDown(int theKey)
 		else
 		{
 			SexyPerf::EndPerf();
-			MsgBox(SexyPerf::GetResults().c_str(), "Perf Results", MB_OK);
+			MsgBox(SexyPerf::GetResults().c_str(), "Perf Results", MESSAGEBOX_BTN_OK);
 			ClearUpdateBacklog();
 		}
 	}
@@ -5479,11 +5503,11 @@ void SexyAppBase::Init()
 
 	gPakInterface->AddPakFile("main.pak");
 
-	//Allow multiple instances if debug
-	#if !DEBUG
-	if (!std::filesystem::create_directory(mProdName + "_lock"))
-		HandleGameAlreadyRunning();
-	#endif
+	if (mOnlyAllowOneCopyToRun)
+	{
+		if (!std::filesystem::create_directory(mProdName + "_lock"))
+			HandleGameAlreadyRunning();
+	}
 
 	mRandSeed = SDL_GetTicks();
 	SRand(mRandSeed);
@@ -5587,6 +5611,7 @@ void SexyAppBase::HandleGameAlreadyRunning()
 {
 	if (mOnlyAllowOneCopyToRun)
 	{
+		Popup("You can only run one instance of this game");
 		DoExit(0);
 	}
 }
