@@ -360,10 +360,12 @@ void AlmanacDialog::DrawPlants(Graphics *g)
 	g->DrawImage(Sexy::IMAGE_ALMANAC_PLANTCARD, 459, 86);
 	PlantDefinition &aPlantDef = GetPlantDefinition(mSelectedSeed);
 	SexyString aName = Plant::GetNameString(mSelectedSeed, SEED_NONE);
+
+	SexyString aHeaderName = StrFormat("[%s_DESCRIPTION_HEADER]", aPlantDef.mPlantName);
 	SexyString aDescriptionName = StrFormat("[%s_DESCRIPTION]", aPlantDef.mPlantName);
 	TodDrawString(g, aName, 617, 288, Sexy::FONT_DWARVENTODCRAFT18YELLOW, Color::White, DS_ALIGN_CENTER);
-	TodDrawStringWrapped(
-		g, aDescriptionName, Rect(485, 309, 258, 230), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_LEFT);
+	int aDistanceHeader = TodDrawStringWrappedHelper(g, TodStringTranslate(aHeaderName), Rect(485, 309, 258, 230), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_LEFT, true);
+	TodDrawStringWrapped(g, aDescriptionName, Rect(485, 309 + aDistanceHeader, 258, 230), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_LEFT);
 
 	if (mSelectedSeed != SeedType::SEED_IMITATER)
 	{
@@ -549,10 +551,14 @@ void AlmanacDialog::DrawZombies(Graphics *g)
 		g, aName, 613, 362, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color(190, 255, 235, 255), DS_ALIGN_CENTER);
 
 	SexyString aDescription;
+	SexyString aHeaderName;
 	DrawStringJustification aAlign;
 	if (ZombieHasDescription(mSelectedZombie))
 	{
 		aDescription = TodStringTranslate(StrFormat("[%s_DESCRIPTION]", aZombieDef.mZombieName));
+		if (mZombie->mZombieType != ZombieType::ZOMBIE_ZAMBONI)
+			aHeaderName = TodStringTranslate(StrFormat("[%s_DESCRIPTION_HEADER]", aZombieDef.mZombieName)); // Sooo, cause he has a LONG description, they removed the header, why PopCap.... -Electr0Gunner
+
 		aAlign = DS_ALIGN_LEFT;
 	}
 	else
@@ -576,7 +582,14 @@ void AlmanacDialog::DrawZombies(Graphics *g)
 			}
 		}
 	}
-	TodDrawStringWrapped(g, aDescription, Rect(484, 377, 258, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), aAlign);
+
+	int aDistanceHeader = 0;
+	if (mZombie->mZombieType != ZombieType::ZOMBIE_ZAMBONI)
+		aDistanceHeader = TodDrawStringWrappedHelper(
+			g, aHeaderName, Rect(484, 377, 258, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_LEFT, true);
+	else
+		aDistanceHeader = -15;
+	TodDrawStringWrapped(g, aDescription, Rect(484, 377 + aDistanceHeader, 258, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), aAlign);
 }
 
 //0x403810
