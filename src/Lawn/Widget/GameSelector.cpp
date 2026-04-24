@@ -584,20 +584,20 @@ void GameSelector::DrawOverlay(Graphics *g)
 		TodDrawImageCelF(g,
 						 Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS,
 						 aTransAreaX + 486.0f,
-						 aTransAreaY + 125.0f,
+						 aTransAreaY + 47.0f,
 						 aStage,
-						 0); // ���ƴ����
+						 0);
 		if (aSub < 10)
 		{
 			TodDrawImageCelF(
-				g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransSubX + 504.0f, aTransSubY + 128.0f, aSub, 0);
+				g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransSubX + 509.0f, aTransSubY + 50.0f, aSub, 0);
 		}
 		else if (aSub == 10)
 		{
 			TodDrawImageCelF(
-				g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransSubX + 504.0f, aTransSubY + 128.0f, 1, 0);
+				g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransSubX + 509.0f, aTransSubY + 50.0f, 1, 0);
 			TodDrawImageCelF(
-				g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransSubX + 513.0f, aTransSubY + 129.0f, 0, 0);
+				g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransSubX + 518.0f, aTransSubY + 51.0f, 0, 0);
 		}
 		g->SetColorizeImages(false);
 	}

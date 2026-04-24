@@ -1,4 +1,9 @@
 # How To Use
+
+## What do you need?
+1. Copy of Plants vs. Zombies Game of the Year Edition (assets)
+2. todo: add the rest
+
 ## Installation
 To use ResoddedFramework you require CMake.
 Note: This isn't a tutorial on how to use CMake, please learn how to use it with your IDE of choice.
