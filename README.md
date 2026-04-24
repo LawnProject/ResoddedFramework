@@ -19,7 +19,7 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 - Documentation - 1%
 
 
-- Window Resizing - 0%
+- Window Resizing - 50%
 - Advanced Options - 0%
 - UTF-8 Support - 100%
 

@@ -3673,6 +3673,16 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 					{
 						int x = event.motion.x;
 						int y = event.motion.y;
+						float aScaleX = ((float)mRenderer->mPresentationRect.mWidth / (float)mRenderer->mWidth);
+						float aScaleY = ((float)mRenderer->mPresentationRect.mHeight / (float)mRenderer->mHeight);
+
+						if (!(x >= mRenderer->mPresentationRect.mX && x < mRenderer->mPresentationRect.mX + mRenderer->mPresentationRect.mWidth &&
+							y >= mRenderer->mPresentationRect.mY && y < mRenderer->mPresentationRect.mY + mRenderer->mPresentationRect.mHeight))
+						{
+							break;
+						}
+						x = (x - mRenderer->mPresentationRect.mX) / aScaleX; 
+						y = (y - mRenderer->mPresentationRect.mY) / aScaleY; 
 						mWidgetManager->RemapMouse(x, y);
 						mLastUserInputTick = mLastTimerTime;
 						mWidgetManager->MouseMove(x, y);
@@ -3705,7 +3715,18 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 
 						int x = event.button.x;
 						int y = event.button.y;
+						float aScaleX = ((float)mRenderer->mPresentationRect.mWidth / (float)mRenderer->mWidth);
+						float aScaleY = ((float)mRenderer->mPresentationRect.mHeight / (float)mRenderer->mHeight);
 
+						if (!(x >= mRenderer->mPresentationRect.mX &&
+							  x < mRenderer->mPresentationRect.mX + mRenderer->mPresentationRect.mWidth &&
+							  y >= mRenderer->mPresentationRect.mY &&
+							  y < mRenderer->mPresentationRect.mY + mRenderer->mPresentationRect.mHeight))
+						{
+							break;
+						}
+						x = (x - mRenderer->mPresentationRect.mX) / aScaleX;
+						y = (y - mRenderer->mPresentationRect.mY) / aScaleY; 
 						mWidgetManager->RemapMouse(x, y);
 
 						mLastUserInputTick = mLastTimerTime;
@@ -3765,7 +3786,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 				case SDL_EVENT_WINDOW_MOVED:
 				{
 					SDL_Window* theTargetWindow = SDL_GetWindowFromEvent(&event);
-					if (mWindow->mInternalWindow != theTargetWindow && mIsWindowed)
+					if (mWindow->mInternalWindow == theTargetWindow && mIsWindowed)
 					{
 						mPreferredX = event.window.data1;
 						mPreferredY = event.window.data2;
@@ -3775,7 +3796,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 				case SDL_EVENT_WINDOW_RESIZED:
 				{
 					SDL_Window* theTargetWindow = SDL_GetWindowFromEvent(&event);
-					if (mWindow->mInternalWindow != theTargetWindow && !mShutdown && (SDL_GetWindowFlags(mWindow->mInternalWindow) & SDL_WINDOW_MINIMIZED != mMinimized))
+					if (mWindow->mInternalWindow == theTargetWindow && !mShutdown)
 					{
 						mMinimized = SDL_GetWindowFlags(mWindow->mInternalWindow) & SDL_WINDOW_MINIMIZED;
 
@@ -3793,6 +3814,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 							mWidgetManager->MarkAllDirty();
 						}
 						RehupFocus();
+						mRenderer->UpdateViewport();
 					}
 					break;
 				}
