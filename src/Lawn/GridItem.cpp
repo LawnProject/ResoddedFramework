@@ -459,8 +459,12 @@ void GridItem::DrawSquirrel(Graphics *g)
 	{
 		aXPos += TodAnimateCurve(50, 0, mGridItemCounter, -80, 0, TodCurves::CURVE_EASE_IN);
 	}
-	if (IMAGE_SQUIRREL != 0) // no need to render nothing
+
+	// GOTY doesn't have the Squirrel inside of the Resources.xml
+	/*
+	if (IMAGE_SQUIRREL != 0)
 		g->DrawImage(IMAGE_SQUIRREL, aXPos, aYPos);
+	*/
 }
 
 //0x44E090

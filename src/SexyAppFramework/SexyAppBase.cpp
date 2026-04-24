@@ -3673,16 +3673,12 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 					{
 						int x = event.motion.x;
 						int y = event.motion.y;
-						float aScaleX = ((float)mRenderer->mPresentationRect.mWidth / (float)mRenderer->mWidth);
-						float aScaleY = ((float)mRenderer->mPresentationRect.mHeight / (float)mRenderer->mHeight);
 
 						if (!(x >= mRenderer->mPresentationRect.mX && x < mRenderer->mPresentationRect.mX + mRenderer->mPresentationRect.mWidth &&
-							y >= mRenderer->mPresentationRect.mY && y < mRenderer->mPresentationRect.mY + mRenderer->mPresentationRect.mHeight))
+							y >= mRenderer->mPresentationRect.mY && y < mRenderer->mPresentationRect.mY + mRenderer->mPresentationRect.mHeight && x > 0 && y > 0))
 						{
 							break;
 						}
-						x = (x - mRenderer->mPresentationRect.mX) / aScaleX; 
-						y = (y - mRenderer->mPresentationRect.mY) / aScaleY; 
 						mWidgetManager->RemapMouse(x, y);
 						mLastUserInputTick = mLastTimerTime;
 						mWidgetManager->MouseMove(x, y);
@@ -3715,18 +3711,14 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 
 						int x = event.button.x;
 						int y = event.button.y;
-						float aScaleX = ((float)mRenderer->mPresentationRect.mWidth / (float)mRenderer->mWidth);
-						float aScaleY = ((float)mRenderer->mPresentationRect.mHeight / (float)mRenderer->mHeight);
-
 						if (!(x >= mRenderer->mPresentationRect.mX &&
 							  x < mRenderer->mPresentationRect.mX + mRenderer->mPresentationRect.mWidth &&
 							  y >= mRenderer->mPresentationRect.mY &&
-							  y < mRenderer->mPresentationRect.mY + mRenderer->mPresentationRect.mHeight))
+							  y < mRenderer->mPresentationRect.mY + mRenderer->mPresentationRect.mHeight && x > 0 &&
+							  y > 0))
 						{
 							break;
 						}
-						x = (x - mRenderer->mPresentationRect.mX) / aScaleX;
-						y = (y - mRenderer->mPresentationRect.mY) / aScaleY; 
 						mWidgetManager->RemapMouse(x, y);
 
 						mLastUserInputTick = mLastTimerTime;
@@ -3815,6 +3807,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 						}
 						RehupFocus();
 						mRenderer->UpdateViewport();
+						mWidgetManager->Resize(mScreenBounds, mRenderer->mPresentationRect);
 					}
 					break;
 				}
