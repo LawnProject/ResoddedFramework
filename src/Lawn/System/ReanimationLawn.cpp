@@ -332,6 +332,27 @@ MemoryImage *ReanimatorCache::MakeCachedZombieFrame(ZombieType theZombieType)
 		}
 		aReanim.Draw(&aMemoryGraphics);
 	}
+	else if (theZombieType == ZombieType::ZOMBIE_DANCER)
+	{
+		Reanimation aReanim;
+		aPosX += 8;
+		aPosY += 32;
+
+		aReanim.ReanimationInitializeType(aPosX, aPosY, aZombieDef.mReanimationType);
+		aReanim.PlayReanim("anim_moonwalk", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0, 24.0f);
+		aReanim.Draw(&aMemoryGraphics);
+	}
+	else if (theZombieType == ZombieType::ZOMBIE_BACKUP_DANCER)
+	{
+		Reanimation aReanim;
+		aPosX += 8;
+		aPosY += 32;
+
+		aReanim.ReanimationInitializeType(aPosX, aPosY, aZombieDef.mReanimationType);
+		aReanim.PlayReanim("anim_armraise", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0, 24.0f);
+		aReanim.mAnimTime = 0.5f;
+		aReanim.Draw(&aMemoryGraphics);
+	}
 	else if (aZombieDef.mReanimationType == ReanimationType::REANIM_BOSS)
 	{
 		Reanimation aReanim;

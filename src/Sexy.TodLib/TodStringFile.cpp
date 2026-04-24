@@ -150,9 +150,10 @@ bool TodStringListReadFile(const char *theFileName)
 		aSuccess = false;
 	}
 	aFileText[aSize] = '\0';
+	std::string aFixedContent = ANSIToUTF8(aFileText);
 	if (aSuccess)
 	{
-		aSuccess = TodStringListReadItems(aFileText);
+		aSuccess = TodStringListReadItems(aFixedContent.c_str());
 	}
 	p_fclose(pFile); // 关闭文件流
 	delete[] aFileText;
@@ -313,7 +314,7 @@ int TodWriteString(Graphics *g,
 				aXOffset += aFont->StringWidth(aString);					 // 横向偏移值加上绘制的字符串的宽度
 				aString.assign("");											 // 清空字符串
 				TodWriteStringSetFormat(aFormatStart + 1, theCurrentFormat); // 根据当前控制字符调整格式
-				Font *aFont = *theCurrentFormat.mNewFont;
+				aFont = *theCurrentFormat.mNewFont;
 			}
 		}
 		else

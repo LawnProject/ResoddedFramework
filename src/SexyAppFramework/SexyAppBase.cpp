@@ -305,14 +305,6 @@ SexyAppBase::SexyAppBase()
 
 	mPrimaryThreadId = 0;
 
-	if (GetSystemMetrics(86)) // check for tablet pc
-	{
-		mTabletPC = true;
-		mFullScreenPageFlip = false; // so that tablet keyboard can show up
-	}
-	else
-		mTabletPC = false;
-
 	#if WIN32
 
 	gSEHCatcher.mApp = this;
@@ -1573,8 +1565,7 @@ void SexyAppBase::WriteToRegistry()
 }
 
 bool SexyAppBase::RegistryEraseKey(const SexyString &_theKeyName)
-{ /*
-	std::string theKeyName = SexyStringToStringFast(_theKeyName);
+{ 
 	if (mRegKey.length() == 0)
 		return false;
 
@@ -1592,29 +1583,34 @@ bool SexyAppBase::RegistryEraseKey(const SexyString &_theKeyName)
 		return mDemoBuffer.ReadNumBits(1, false) != 0;
 	}
 
-	std::string aKeyName = RemoveTrailingSlash("SOFTWARE\\" + mRegKey) + "\\" + theKeyName;
+	std::filesystem::path keyPath = GetAppDataFolder() + _theKeyName + "/registry.json";
 
-	int aResult = RegDeleteKeyA(HKEY_CURRENT_USER, aKeyName.c_str());
-	if (aResult != ERROR_SUCCESS)
+	if (std::filesystem::exists(keyPath))
 	{
+		std::error_code anError;
+		std::filesystem::remove(keyPath, anError);
+		if (anError)
+		{
+			if (mRecordingDemoBuffer)
+			{
+				WriteDemoTimingBlock();
+				mDemoBuffer.WriteNumBits(0, 1);
+				mDemoBuffer.WriteNumBits(DEMO_REGISTRY_ERASE, 5);
+				mDemoBuffer.WriteNumBits(0, 1); // failure
+			}
+
+			return false;
+		}
+
 		if (mRecordingDemoBuffer)
 		{
 			WriteDemoTimingBlock();
 			mDemoBuffer.WriteNumBits(0, 1);
 			mDemoBuffer.WriteNumBits(DEMO_REGISTRY_ERASE, 5);
-			mDemoBuffer.WriteNumBits(0, 1); // failure
+			mDemoBuffer.WriteNumBits(1, 1); // success
 		}
-
-		return false;
+		return true;
 	}
-
-	if (mRecordingDemoBuffer)
-	{
-		WriteDemoTimingBlock();
-		mDemoBuffer.WriteNumBits(0, 1);
-		mDemoBuffer.WriteNumBits(DEMO_REGISTRY_ERASE, 5);
-		mDemoBuffer.WriteNumBits(1, 1); // success
-	}*/
 
 	return false;
 }
@@ -2241,11 +2237,10 @@ void SexyAppBase::Redraw(Rect *theClipRect)
 	static uint32_t aRetryTick = 0;
 	if (!mRenderer->Redraw(theClipRect))
 	{
-		//extern bool gD3DInterfacePreDrawError;
-		//gD3DInterfacePreDrawError = false; // this predraw error happens naturally when ddraw is failing
+		extern bool gRenderingPreDrawError;
+		gRenderingPreDrawError = false; // something wrong happened!!!
 		if (!gIsFailing)
 		{
-			//gDebugStream << SDL_GetTicks() << " Redraw failed!" << std::endl;
 			gIsFailing = true;
 		}
 
@@ -2256,9 +2251,11 @@ void SexyAppBase::Redraw(Rect *theClipRect)
 
 			mWidgetManager->mImage = NULL;
 
+			SDL_DisplayID aPrimaryDisplay = SDL_GetPrimaryDisplay();
+			const SDL_DisplayMode *aMode = SDL_GetCurrentDisplayMode(aPrimaryDisplay);
+
 			// Re-check resolution at this point, because we hit here when you change your resolution.
-			if (((mWidth >= GetSystemMetrics(SM_CXFULLSCREEN)) || (mHeight >= GetSystemMetrics(SM_CYFULLSCREEN))) &&
-				(mIsWindowed))
+			if ((mWidth >= aMode->w || mHeight >= aMode->h) && mIsWindowed)
 			{
 				if (mForceWindowed)
 				{
@@ -2736,12 +2733,15 @@ void SexyAppBase::Popup(const std::string &theString)
 		return;
 	}
 
+	SDL_Window* aInternalWindow = nullptr;
+	if (mWindow != nullptr)
+		aInternalWindow = mWindow->mInternalWindow;
+
 	BeginPopup();
 	if (!mShutdown)
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
 								 GetString("FATAL_ERROR", "FATAL ERROR").c_str(),
-								 theString.c_str(),
-								 mWindow->mInternalWindow);
+								 theString.c_str(), aInternalWindow);
 
 	EndPopup();
 }
@@ -4176,29 +4176,14 @@ void SexyAppBase::MakeWindow()
 
 	if ((mPlayingDemoBuffer) || (mIsWindowed && !mFullScreenWindow)) //todo:replace
 	{
-		/*
-		DWORD aWindowStyle = WS_CLIPCHILDREN | WS_POPUP | WS_BORDER | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
-		if (mEnableMaximizeButton)
-			aWindowStyle |= WS_MAXIMIZEBOX;
+		int aWidth = mWidth;
+		int aHeight = mHeight;
+		SDL_Rect aDesktopRect;
+		SDL_GetDisplayUsableBounds(SDL_GetPrimaryDisplay(), &aDesktopRect);
 
-		RECT aRect;
-		aRect.left = 0;
-		aRect.top = 0;
-		aRect.right = mWidth;
-		aRect.bottom = mHeight;
-
-		BOOL worked = AdjustWindowRect(&aRect, aWindowStyle, FALSE);
-
-		int aWidth = aRect.right - aRect.left;
-		int aHeight = aRect.bottom - aRect.top;
-
-		// Get the work area of the desktop to allow us to center
-		RECT aDesktopRect;
-		::SystemParametersInfo(SPI_GETWORKAREA, NULL, &aDesktopRect, NULL);
-*/
-		int aPlaceX = 64;
-		int aPlaceY = 64;
-		/*
+		int aPlaceX = aDesktopRect.x + 64;
+		int aPlaceY = aDesktopRect.y + 64;
+		
 		if (mPreferredX != -1)
 		{
 			aPlaceX = mPreferredX;
@@ -4206,25 +4191,25 @@ void SexyAppBase::MakeWindow()
 
 			int aSpacing = 4;
 
-			if (aPlaceX < aDesktopRect.left + aSpacing)
-				aPlaceX = aDesktopRect.left + aSpacing;
+			if (aPlaceX < aDesktopRect.x + aSpacing)
+				aPlaceX = aDesktopRect.x + aSpacing;
 
-			if (aPlaceY < aDesktopRect.top + aSpacing)
-				aPlaceY = aDesktopRect.top + aSpacing;
+			if (aPlaceY < aDesktopRect.y + aSpacing)
+				aPlaceY = aDesktopRect.y + aSpacing;
 
-			if (aPlaceX + aWidth >= aDesktopRect.right - aSpacing)
-				aPlaceX = aDesktopRect.right - aWidth - aSpacing;
+			if (aPlaceX + aWidth >= aDesktopRect.w - aSpacing)
+				aPlaceX = aDesktopRect.w - aWidth - aSpacing;
 
-			if (aPlaceY + aHeight >= aDesktopRect.bottom - aSpacing)
-				aPlaceY = aDesktopRect.bottom - aHeight - aSpacing;
-		}*/
+			if (aPlaceY + aHeight >= aDesktopRect.h - aSpacing)
+				aPlaceY = aDesktopRect.h - aHeight - aSpacing;
+		}
 
 
 		if (mPreferredX == -1)
 		{
-			/* SDL_SetWindowPosition(mWindow->mInternalWindow, 
-			aDesktopRect.left + ((aDesktopRect.right - aDesktopRect.left) - aWidth) / 2,  
-			aDesktopRect.top + (int)(((aDesktopRect.bottom - aDesktopRect.top) - aHeight) * 0.382));*/
+			SDL_SetWindowPosition(mWindow->mInternalWindow, 
+			aDesktopRect.x + ((aDesktopRect.w - aDesktopRect.x) - aWidth) / 2,  
+			aDesktopRect.y + (int)(((aDesktopRect.h - aDesktopRect.y) - aHeight) * 0.382));
 		}
 
 		mIsPhysWindowed = true;
@@ -5497,6 +5482,18 @@ void SexyAppBase::Init()
 	if (IsScreenSaver())
 		mOnlyAllowOneCopyToRun = false;
 
+	int aTouchDeviceLength = 0;
+	SDL_TouchID *aDevicesDummy = SDL_GetTouchDevices(&aTouchDeviceLength);
+	if (aTouchDeviceLength > 0) // check for tablet pc
+	{
+		mTabletPC = true;
+		mFullScreenPageFlip = false; // so that tablet keyboard can show up
+	}
+	else
+		mTabletPC = false;
+
+	SDL_free(aDevicesDummy);
+
 	// Change directory
 	if (!ChangeDirHook(mChangeDirTo.c_str()))
 		std::filesystem::current_path(mChangeDirTo);
@@ -5537,8 +5534,10 @@ void SexyAppBase::Init()
 	// Check to see if we CAN run windowed or not...
 	if (mIsWindowed && !mFullScreenWindow)
 	{
+		SDL_DisplayID aPrimaryDisplay = SDL_GetPrimaryDisplay();
+		const SDL_DisplayMode *aMode = SDL_GetCurrentDisplayMode(aPrimaryDisplay);
 		// How can we be windowed if our screen isn't even big enough?
-		if ((mWidth >= GetSystemMetrics(SM_CXFULLSCREEN)) || (mHeight >= GetSystemMetrics(SM_CYFULLSCREEN)))
+		if (mWidth >= aMode->w || mHeight >= aMode->h)
 		{
 			mIsWindowed = false;
 			mForceFullscreen = true;
