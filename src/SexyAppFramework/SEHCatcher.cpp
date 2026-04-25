@@ -1405,7 +1405,7 @@ std::string SEHCatcher::GetSysInfo()
 		if (aMod != NULL)
 		{
 			GetModuleFileNameA(aMod, aPath, 256);
-			aDebugDump += "DDraw Ver: " + mApp->GetProductVersion(aPath) + "\r\n";
+			aDebugDump += "DDraw Ver: " + mApp->GetProductVersionDLL(aPath) + "\r\n";
 			FreeLibrary(aMod);
 		}
 	}

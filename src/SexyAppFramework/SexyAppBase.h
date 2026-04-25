@@ -430,7 +430,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	virtual void URLOpenFailed(const std::string &theURL);
 	virtual void URLOpenSucceeded(const std::string &theURL);
 	virtual bool OpenURL(const std::string &theURL, bool shutdownOnOpen = false);
-	virtual std::string GetProductVersion(const std::string &thePath);
+	virtual std::string GetProductVersionDLL(const std::string &thePath);
 
 	virtual void SEHOccured();
 	virtual std::string GetGameSEHInfo();
@@ -447,8 +447,8 @@ class SexyAppBase : public ButtonListener, public DialogListener
 
 	virtual void Start();
 	virtual void Init();
-	virtual void PreDDInterfaceInitHook();
-	virtual void PostDDInterfaceInitHook();
+	virtual void PreRendererInitHook();
+	virtual void PostRendererInitHook();
 	virtual bool ChangeDirHook(const char *theIntendedPath);
 	virtual void PlaySample(int theSoundNum);
 	virtual void PlaySample(int theSoundNum, int thePan);
@@ -607,7 +607,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	virtual void DoMainLoop();
 	virtual bool UpdateAppStep(bool *updated);
 	virtual bool UpdateApp();
-	int InitDDInterface();
+	int InitRenderer();
 	void ClearUpdateBacklog(bool relaxForASecond = false);
 	bool IsScreenSaver();
 	virtual bool AppCanRestore();
