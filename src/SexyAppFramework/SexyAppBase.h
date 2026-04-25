@@ -182,6 +182,9 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	bool mbAllowExtendedChars;
 
 	bool mOnlyAllowOneCopyToRun;
+	#if WIN32
+	HANDLE mCopyMutex;
+	#endif
 	CritSect mCritSect;
 	bool mBetaValidate;
 	uint8_t mAdd8BitMaxTable[512];

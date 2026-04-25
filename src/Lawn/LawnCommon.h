@@ -7,6 +7,7 @@
 
 using namespace Sexy;
 
+class LawnApp;
 class Board;
 class LawnStoneButton;
 class NewLawnButton;
@@ -31,6 +32,30 @@ class LawnEditWidget : public EditWidget
 	virtual void KeyDown(KeyCode theKey);
 	virtual void KeyChar(char theChar);
 };
+
+class LawnSlider : public Widget
+{
+  public:
+	LawnApp *mApp;
+	float mRawValue;
+	float mStepMultiplier;
+	float mSliderHeightPercent;
+	float mScrollMultiplier;
+	Rect mAllowedMouseZone;
+	bool mStartedDrag;
+
+  public:
+	LawnSlider(LawnApp* theApp);
+	~LawnSlider();
+
+	virtual void Update();
+	virtual void MouseWheel(int theDelta);
+	virtual void MouseDown(int x, int y);
+	virtual void MouseUp(int x, int y);
+	virtual void Draw(Graphics *g);
+	float GetValue();
+};
+
 
 // ====================================================================================================
 // ★ 常用逻辑判断

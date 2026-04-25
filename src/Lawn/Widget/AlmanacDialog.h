@@ -45,6 +45,8 @@ class AlmanacDialog : public LawnDialog
 	Zombie *mZombie;			  //+0x1A0
 	Zombie *mZombiePerfTest[400]; //+0x1A4
 
+	LawnSlider *mDescriptionSlider;
+
   public:
 	AlmanacDialog(LawnApp *theApp);
 	virtual ~AlmanacDialog();
@@ -72,6 +74,7 @@ class AlmanacDialog : public LawnDialog
 	{
 	}
 
+	virtual void MouseWheel(int theDelta);
 	static ZombieType GetZombieType(int theIndex);
 	/*inline*/ void ShowPlant(SeedType theSeedType);
 	/*inline*/ void ShowZombie(ZombieType theZombieType);

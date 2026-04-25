@@ -433,22 +433,19 @@ int TodDrawStringWrappedHelper(Graphics *g,
 			if (aSpacePos != -1) // 如果本行前面的字符中存在空格字符
 			{
 				int aCurY = (int)g->mTransY + theRect.mY + aYOffset;
-				if (aCurY >= g->mClipRect.mY && aCurY <= g->mClipRect.mY + g->mClipRect.mHeight +
-															 aLineSpacing) // 确保当前绘制位置纵坐标在裁剪范围内
-				{
-					TodWriteWordWrappedHelper(
-						g,
-						theText,
-						theRect.mX,
-						theRect.mY + aYOffset,
-						aCurrentFormat,
-						theRect.mWidth,
-						theJustification,
-						drawString,
-						aLineFeedPos,			  // 上次换行的位置即为新行开始的位置
-						aSpacePos - aLineFeedPos, // 绘制部分为从上次换行的位置开始至本行空格字符之前的文本
-						theMaxChars);			  // 绘制新一行的文本（若需要）
-				}
+				bool aAllowDrawText = drawString && aCurY >= g->mClipRect.mY && aCurY <= g->mClipRect.mY + g->mClipRect.mHeight + aLineSpacing; // we do all that anyways cause the formatting
+				TodWriteWordWrappedHelper(g,
+					theText,
+					theRect.mX,
+					theRect.mY + aYOffset,
+					aCurrentFormat,
+					theRect.mWidth,
+					theJustification,
+					aAllowDrawText,
+					aLineFeedPos,			  // 上次换行的位置即为新行开始的位置
+					aSpacePos - aLineFeedPos, // 绘制部分为从上次换行的位置开始至本行空格字符之前的文本
+					theMaxChars);			  // 绘制新一行的文本（若需要）
+				
 
 				aLineWidth = aCurWidth;
 				if (aLineWidth < 0) // 如果本行字符总宽度小于 0
