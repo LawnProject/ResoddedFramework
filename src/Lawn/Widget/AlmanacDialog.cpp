@@ -13,6 +13,7 @@
 #include "../System/ReanimationLawn.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "../../SexyAppFramework/WidgetManager.h"
+#include "../../SexyAppFramework/Font.h"
 
 bool gZombieDefeated[NUM_ZOMBIE_TYPES] = {false};
 
@@ -79,6 +80,12 @@ AlmanacDialog::AlmanacDialog(LawnApp *theApp)
 	mZombieButton->mDrawStoneButton = true;
 	mZombieButton->mParentWidget = this;
 
+	mDescriptionSlider = new LawnSlider(mApp);
+	mDescriptionSlider->mSliderHeightPercent = 0.57f;
+	mDescriptionSlider->mStepMultiplier = 0.55f;
+	mDescriptionSlider->Resize(735, 377, 8, 140);
+	mDescriptionSlider->mAllowedMouseZone = Rect(484, 377, 258, 162);
+	mDescriptionSlider->mScrollMultiplier = 0.09f;
 	SetPage(ALMANAC_PAGE_INDEX);
 	if (!mApp->mBoard || !mApp->mBoard->mPaused)
 		mApp->mMusic->MakeSureMusicIsPlaying(MUSIC_TUNE_CHOOSE_YOUR_SEEDS);
@@ -95,6 +102,8 @@ AlmanacDialog::~AlmanacDialog()
 		delete mPlantButton;
 	if (mZombieButton)
 		delete mZombieButton;
+	if (mDescriptionSlider)
+		delete mDescriptionSlider;
 
 	ClearPlantsAndZombies();
 }
@@ -194,6 +203,7 @@ void AlmanacDialog::SetPage(AlmanacPage thePage)
 		mIndexButton->mBtnNoDraw = true;
 		mPlantButton->mBtnNoDraw = false;
 		mZombieButton->mBtnNoDraw = false;
+		mDescriptionSlider->mVisible = false;
 	}
 	else
 	{
@@ -207,6 +217,8 @@ void AlmanacDialog::SetPage(AlmanacPage thePage)
 		mIndexButton->mBtnNoDraw = false;
 		mPlantButton->mBtnNoDraw = true;
 		mZombieButton->mBtnNoDraw = true;
+		mDescriptionSlider->mVisible = true;
+
 	}
 }
 
@@ -229,6 +241,7 @@ void AlmanacDialog::Update()
 	mIndexButton->Update();
 	mPlantButton->Update();
 	mZombieButton->Update();
+	mDescriptionSlider->Update();
 	if (mPlant)
 		mPlant->Update();
 	if (mZombie)
@@ -360,6 +373,10 @@ void AlmanacDialog::DrawPlants(Graphics *g)
 	g->DrawImage(Sexy::IMAGE_ALMANAC_PLANTCARD, 459, 86);
 	PlantDefinition &aPlantDef = GetPlantDefinition(mSelectedSeed);
 	SexyString aName = Plant::GetNameString(mSelectedSeed, SEED_NONE);
+
+	// TODO: consider adding this slider to the plants page too.
+	mDescriptionSlider->mDisabled = true;
+	mDescriptionSlider->mVisible = false;
 
 	SexyString aHeaderName = StrFormat("[%s_DESCRIPTION_HEADER]", aPlantDef.mPlantName);
 	SexyString aDescriptionName = StrFormat("[%s_DESCRIPTION]", aPlantDef.mPlantName);
@@ -556,8 +573,7 @@ void AlmanacDialog::DrawZombies(Graphics *g)
 	if (ZombieHasDescription(mSelectedZombie))
 	{
 		aDescription = TodStringTranslate(StrFormat("[%s_DESCRIPTION]", aZombieDef.mZombieName));
-		if (mZombie->mZombieType != ZombieType::ZOMBIE_ZAMBONI)
-			aHeaderName = TodStringTranslate(StrFormat("[%s_DESCRIPTION_HEADER]", aZombieDef.mZombieName)); // Sooo, cause he has a LONG description, they removed the header, why PopCap.... -Electr0Gunner
+		aHeaderName = TodStringTranslate(StrFormat("[%s_DESCRIPTION_HEADER]", aZombieDef.mZombieName));
 
 		aAlign = DS_ALIGN_LEFT;
 	}
@@ -583,13 +599,31 @@ void AlmanacDialog::DrawZombies(Graphics *g)
 		}
 	}
 
-	int aDistanceHeader = 0;
-	if (mZombie->mZombieType != ZombieType::ZOMBIE_ZAMBONI)
-		aDistanceHeader = TodDrawStringWrappedHelper(
-			g, aHeaderName, Rect(484, 377, 258, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_LEFT, true);
+	int aMaxWidthOffset = 0;
+	int aDistanceHeader = TodDrawStringWrappedHelper(g, aHeaderName, Rect(484, 377, 258, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_LEFT, true);
+	int aDescriptionHeight = TodDrawStringWrappedHelper(g, aDescription, Rect(484, 377 + aDistanceHeader, 258, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), aAlign, false);
+	if (aDescriptionHeight + aDistanceHeader < 170)
+	{
+		mDescriptionSlider->mDisabled = true;
+		mDescriptionSlider->mVisible = false;
+		mDescriptionSlider->mRawValue = 0.0f;
+	}
 	else
-		aDistanceHeader = -15;
-	TodDrawStringWrapped(g, aDescription, Rect(484, 377 + aDistanceHeader, 258, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), aAlign);
+	{
+		aMaxWidthOffset = 15;
+		mDescriptionSlider->mDisabled = false;
+		mDescriptionSlider->mVisible = true;
+	}
+	mDescriptionSlider->Resize(735, 377 + aDistanceHeader, 8, 142 - aDistanceHeader + Sexy::FONT_BRIANNETOD12->GetHeight());
+	int anOffsetSlider = 0;
+	if (!mDescriptionSlider->mDisabled)
+	{
+		anOffsetSlider = mDescriptionSlider->GetValue() * aDescriptionHeight;
+		g->SetClipRect(484, 377 + aDistanceHeader, 258, 162 - aDistanceHeader);
+
+	}
+	TodDrawStringWrapped(g, aDescription, Rect(484, 377 + aDistanceHeader - anOffsetSlider, 258 - aMaxWidthOffset, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), aAlign);
+	g->ClearClipRect();
 }
 
 //0x403810
@@ -622,6 +656,7 @@ void AlmanacDialog::Draw(Graphics *g)
 	mIndexButton->Draw(g);
 	mPlantButton->Draw(g);
 	mZombieButton->Draw(g);
+	mDescriptionSlider->Draw(g);
 }
 
 void AlmanacDialog::GetSeedPosition(SeedType theSeedType, int &x, int &y)
@@ -766,6 +801,7 @@ void AlmanacDialog::MouseUp(int x, int y, int theClickCount)
 		mApp->KillAlmanacDialog();
 	else if (mIndexButton->IsMouseOver())
 		SetPage(ALMANAC_PAGE_INDEX);
+	mDescriptionSlider->MouseUp(x, y);
 }
 
 //0x403D00
@@ -775,6 +811,8 @@ void AlmanacDialog::MouseDown(int x, int y, int theClickCount)
 		mApp->PlaySample(Sexy::SOUND_TAP);
 	if (mZombieButton->IsMouseOver())
 		mApp->PlaySample(Sexy::SOUND_GRAVEBUTTON);
+
+	mDescriptionSlider->MouseDown(x, y);
 
 	SeedType aSeedType = SeedHitTest(x, y);
 	if (aSeedType != SeedType::SEED_NONE && aSeedType != mSelectedSeed)
@@ -790,6 +828,11 @@ void AlmanacDialog::MouseDown(int x, int y, int theClickCount)
 		SetupZombie();
 		mApp->PlaySample(Sexy::SOUND_TAP);
 	}
+}
+
+void AlmanacDialog::MouseWheel(int theDelta)
+{
+	mDescriptionSlider->MouseWheel(theDelta);
 }
 
 void AlmanacInitForPlayer()

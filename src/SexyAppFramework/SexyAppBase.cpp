@@ -459,8 +459,9 @@ SexyAppBase::~SexyAppBase()
 
 	WriteDemoBuffer();
 
-	
 #if WIN32
+	if (mCopyMutex != NULL)
+		::CloseHandle(mCopyMutex);
 	FreeLibrary(gVersionDLL);
 #endif
 }
@@ -5054,7 +5055,6 @@ void SexyAppBase::Start()
 		sprintf(aString, "Avg FPS       = %d\r\n", (mDrawCount * 1000) / (mDrawTime + mScreenBltTime));
 		OutputDebugStringA(aString);
 	}
-	std::filesystem::remove(mProdName + "_lock"); //free it up
 	PreTerminate();
 
 	WriteToRegistry();
@@ -5502,8 +5502,11 @@ void SexyAppBase::Init()
 
 	if (mOnlyAllowOneCopyToRun)
 	{
-		if (!std::filesystem::create_directory(mProdName + "_lock"))
+		#if WIN32
+		mCopyMutex = CreateMutex(NULL, TRUE, (mProdName + "_OnlyAllowOneCopyToRun_Mutex").c_str());
+		if (::GetLastError() == ERROR_ALREADY_EXISTS)
 			HandleGameAlreadyRunning();
+		#endif
 	}
 
 	mRandSeed = SDL_GetTicks();

@@ -8,6 +8,7 @@
 #include "../SexyAppFramework/Font.h"
 #include "../SexyAppFramework/Dialog.h"
 #include "../SexyAppFramework/SexyMatrix.h"
+#include "../SexyAppFramework/WidgetManager.h"
 #include "../SexyAppFramework/Checkbox.h"
 
 int gLawnEditWidgetColors[][4] = {
@@ -131,4 +132,109 @@ int GetCurrentDaysSince2000()
 
 	int dy = aNowTM.tm_year - 100;
 	return dy * 365 + (dy - 1) / 400 - (dy - 1) / 100 + (dy - 1) / 4 + aNowTM.tm_yday + 1;
+}
+
+
+LawnSlider::LawnSlider(LawnApp *theApp)
+{
+	mApp = theApp;
+	mRawValue = 0.0f;
+	mStepMultiplier = 1.0f;
+	mSliderHeightPercent = 0.5f;
+	mScrollMultiplier = 0.09f;
+	mAllowedMouseZone = Rect(0, 0, mApp->mWidth, mApp->mHeight);
+	mStartedDrag = false;
+}
+
+LawnSlider::~LawnSlider()
+{
+
+}
+void LawnSlider::Update()
+{
+	Widget::Update();
+
+	if (!mStartedDrag || mDisabled)
+		return;
+
+	int aLocalY = mApp->mWidgetManager->mLastMouseY - mY;
+	int aHeightSlider = mHeight * mSliderHeightPercent;
+	int aRange = mHeight - aHeightSlider;
+
+	float aNewValue = (float)(aLocalY - aHeightSlider * 0.5f) / aRange;
+
+	mRawValue = std::clamp(aNewValue, 0.0f, 1.0f);
+}
+
+void LawnSlider::MouseDown(int x, int y)
+{
+	if (!Rect(mX, mY, mWidth, mHeight).Contains(x, y))
+		return;
+	mStartedDrag = true;
+}
+
+void LawnSlider::MouseUp(int x, int y)
+{
+	mStartedDrag = false;
+}
+
+void LawnSlider::MouseWheel(int theDelta)
+{
+	Widget::MouseWheel(theDelta);
+
+	if (!mAllowedMouseZone.Contains(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY) || mDisabled)
+		return;
+	mRawValue -= theDelta * mScrollMultiplier;
+	mRawValue = std::clamp(mRawValue, 0.0f, 1.0f);
+}
+
+float LawnSlider::GetValue()
+{
+	return mRawValue * mStepMultiplier;
+}
+
+void LawnSlider::Draw(Graphics* g)
+{
+	if (!mVisible)
+		return;
+
+	int aHeightSlider = mHeight * mSliderHeightPercent;
+	int anOffsetSlider = (mHeight - aHeightSlider) * mRawValue;
+
+	g->PushState();
+	g->Translate(mX, mY);
+	// Draw the background
+	
+	g->SetColor(Color(152, 149, 188));
+	g->FillRect(0, 0, 8, mHeight);
+
+	g->Translate(0, anOffsetSlider);
+
+	// Draw the base
+	g->SetColor(Color(63, 64, 86));
+	g->FillRect(0, 0, mWidth, aHeightSlider);
+
+	// Highlight
+	g->SetColor(Color(80, 81, 108));
+	g->FillRect(1, 1, 6, 1);
+	g->FillRect(1, 1, 1, aHeightSlider - 2);
+	g->SetColor(Color(84, 86, 113));
+	g->FillRect(1, 1, 1, 1);
+
+	// Border 1
+	g->SetColor(Color(30, 28, 34));
+	g->FillRect(mWidth, 0, 1, aHeightSlider);
+	g->FillRect(0, aHeightSlider, mWidth, 1);
+	g->SetColor(Color(22, 19, 21));
+	g->FillRect(mWidth, aHeightSlider, 1, 1);
+
+	// Border 2
+	g->SetColor(Color(30, 28, 34));
+	g->FillRect(mWidth - 1, 1, 1, aHeightSlider);
+	g->FillRect(0, aHeightSlider, mWidth, 1);
+	g->SetColor(Color(22, 19, 21));
+	g->FillRect(mWidth, aHeightSlider - 1, 1, 1);
+	g->FillRect(2, aHeightSlider - 1, mWidth - 1, 1);
+
+	g->PopState();
 }
