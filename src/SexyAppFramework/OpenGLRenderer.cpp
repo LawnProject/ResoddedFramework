@@ -97,20 +97,21 @@ bool OpenGLRenderer::Init()
 
 uint32_t *OpenGLRenderer::CaptureFrameBuffer()
 {
-	uint32_t *thePixels = new uint32_t[mPresentationRect.mWidth * mPresentationRect.mHeight];
-	glReadPixels(mPresentationRect.mX,
-				 mPresentationRect.mY,
-				 mPresentationRect.mWidth,
-				 mPresentationRect.mHeight,
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, mFBO);
+	uint32_t *thePixels = new uint32_t[mWidth * mHeight];
+	glReadPixels(0,
+				 0,
+				 mWidth,
+				 mHeight,
 				 GL_BGRA,
 				 GL_UNSIGNED_BYTE,
 				 thePixels);
-	for (int y = 0; y < mPresentationRect.mHeight / 2; ++y)
+	for (int y = 0; y < mHeight / 2; ++y)
 	{
-		uint32_t *row = thePixels + y * mPresentationRect.mWidth;
-		uint32_t *opp = thePixels + (mPresentationRect.mHeight - 1 - y) * mPresentationRect.mWidth;
+		uint32_t *row = thePixels + y * mWidth;
+		uint32_t *opp = thePixels + (mHeight - 1 - y) * mWidth;
 
-		for (int x = 0; x < mPresentationRect.mWidth; ++x)
+		for (int x = 0; x < mWidth; ++x)
 			std::swap(row[x], opp[x]);
 	}
 
@@ -160,12 +161,15 @@ void OpenGLRenderer::Cleanup()
 
 	mCommandBuffer.clear();
 
-	SDL_GL_DestroyContext(mContext);
-
+	glDeleteTextures(1, &mFBOTexture);
+	
 	glDeleteBuffers(1, &mVBO);
 	glDeleteVertexArrays(1, &mVAO);
+	glDeleteFramebuffers(1, &mFBO);
 	mVBO = 0;
 	mVAO = 0;
+	mFBO = 0;
+	mFBOTexture = 0;
 	
 	glDeleteSamplers(1, &mSamplers.mWrap);
 	glDeleteSamplers(1, &mSamplers.mClamp);
@@ -173,8 +177,11 @@ void OpenGLRenderer::Cleanup()
 	//Delete the buffers that OpenGLImage has
 	glDeleteBuffers(1, &OpenGLImage::gOpenGLImageVBO);
 	glDeleteVertexArrays(1, &OpenGLImage::gOpenGLImageVAO);
+	SDL_GL_DestroyContext(mContext);
 	OpenGLImage::gOpenGLImageVBO = 0;
 	OpenGLImage::gOpenGLImageVAO = 0;
+
+	gGLTextureCount = 0;
 }
 
 void OpenGLRenderer::SetVideoOnlyDraw(bool videoOnly)
@@ -208,6 +215,14 @@ bool OpenGLRenderer::PreDraw()
 
 bool OpenGLRenderer::InitGLContext()
 {
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 	mContext = SDL_GL_CreateContext(mApp->mWindow->mInternalWindow);
 
 	if (!gladLoadGL())
@@ -216,9 +231,9 @@ bool OpenGLRenderer::InitGLContext()
 	}
 
 	SDL_GL_MakeCurrent(mApp->mWindow->mInternalWindow, mContext);
-	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
-	glEnable(GL_MULTISAMPLE);
+
+	mSamplers.mClamp = 0;
+	mSamplers.mWrap = 0;
 	mDefaultShader = new GLShader();
 	mDefaultShader->LoadFromSource(gVertexShaderSrc, gFragmentShaderSrc);
 
@@ -251,6 +266,21 @@ bool OpenGLRenderer::InitBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
+	glGenFramebuffers(1, &mFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+	glGenTextures(1, &mFBOTexture);
+
+	glBindTexture(GL_TEXTURE_2D, mFBOTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mFBOTexture, 0);
+
+	gGLTextureCount++;
 	glGenSamplers(1, &mSamplers.mWrap);
 	glSamplerParameteri(mSamplers.mWrap, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glSamplerParameteri(mSamplers.mWrap, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -264,15 +294,23 @@ bool OpenGLRenderer::InitBuffers()
 
 	return true;
 }
+
+void doScissorFromTL(int x, int y, int w, int h, int screenHeight)
+{
+	glScissor(x, screenHeight - h - y, w, h);
+}
+
 bool gRenderingPreDrawError = false;
 bool OpenGLRenderer::Redraw(Rect *theClipRect)
 {
 	if (mCommandBuffer.empty())
 		return !gRenderingPreDrawError;
+	// Draw to FBO Here:
+	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+	glViewport(0, 0, mWidth, mHeight);
+	glScissor(0, 0, mWidth, mHeight);
 
 	glClear(GL_COLOR_BUFFER_BIT);
-
-	glViewport(mPresentationRect.mX, mPresentationRect.mY, mPresentationRect.mWidth, mPresentationRect.mHeight);
 
 	glBindVertexArray(mVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
@@ -291,15 +329,8 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 		if (cmd.mHasClipRect)
 		{
 			glEnable(GL_SCISSOR_TEST);
-			float scaleX = (float)mPresentationRect.mWidth / mWidth;
-			float scaleY = (float)mPresentationRect.mHeight / mHeight;
 
-			// convert logical rect to window pixels for glScissor
-			int scissorX = mPresentationRect.mX + (int)(cmd.mClipRect.mX * scaleX);
-			int scissorY = mPresentationRect.mY + (int)((mHeight - (cmd.mClipRect.mY + cmd.mClipRect.mHeight)) * scaleY);
-			int scissorW = (int)(cmd.mClipRect.mWidth * scaleX);
-			int scissorH = (int)(cmd.mClipRect.mHeight * scaleY);
-			glScissor(scissorX, scissorY, scissorW, scissorH);
+			doScissorFromTL(cmd.mClipRect.mX, cmd.mClipRect.mY, cmd.mClipRect.mWidth, cmd.mClipRect.mHeight, mHeight);
 		}
 		else
 			glDisable(GL_SCISSOR_TEST);
@@ -310,9 +341,20 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 		glBufferSubData(GL_ARRAY_BUFFER, 0, cmd.mVertices.size() * sizeof(Vertex), cmd.mVertices.data());
 		glDrawArrays(cmd.mPrimitiveType, 0, (GLsizei)cmd.mVertices.size());
 	}
-
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+	glDisable(GL_SCISSOR_TEST);
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, mFBO);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+	// Draw to screen here:
+	glBlitFramebuffer(0, 0, mWidth, mHeight,
+					  mPresentationRect.mX, mPresentationRect.mY,
+					  mPresentationRect.mX + mPresentationRect.mWidth,
+					  mPresentationRect.mY + mPresentationRect.mHeight,
+					  GL_COLOR_BUFFER_BIT,
+					  GL_NEAREST);
+
 #if SEXY_USE_IMGUI
 	mApp->mImGuiManager->Flush();
 #endif
@@ -381,13 +423,9 @@ void OpenGLRenderer::UpdateViewport()
 		vpY = (aWindowHeight - vpH) / 2;
 	}
 
-	// Set the OpenGL viewport
-	glViewport(vpX, vpY, vpW, vpH);
-
 	mPresentationRect = Rect(vpX, vpY, vpW, vpH);
 
-	mProjection = glm::ortho(0.0f, (float)mWidth, (float)mHeight, 0.0f, -1.0f, 1.0f) *
-		glm::mat4(1.0f);
+	mProjection = glm::ortho(0.0f, (float)mWidth, (float)mHeight, 0.0f, -1.0f, 1.0f) * glm::mat4(1.0f);
 }
 
 bool OpenGLRenderer::CreateImageTexture(MemoryImage *theImage)

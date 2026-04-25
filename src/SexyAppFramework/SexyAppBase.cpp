@@ -134,7 +134,7 @@ SexyAppBase::SexyAppBase()
 
 	// Extract product version
 	std::string aPath = std::filesystem::current_path().string();
-	mProductVersion = GetProductVersion(aPath);
+	mProductVersion = GetProductVersionDLL(aPath);
 	mChangeDirTo = GetFileDir(aPath);
 
 	mNoDefer = false;
@@ -1076,7 +1076,7 @@ bool SexyAppBase::OpenURL(const std::string &theURL, bool shutdownOnOpen)
 	return true;
 }
 
-std::string SexyAppBase::GetProductVersion(const std::string &thePath)
+std::string SexyAppBase::GetProductVersionDLL(const std::string &thePath)
 {
 	#if WIN32
 	// Dynamically Load Version.dll
@@ -1169,8 +1169,8 @@ void SexyAppBase::TakeScreenshot()
 	// Write image
 	ImageLib::Image aSaveImage;
 	aSaveImage.mBits = mRenderer->CaptureFrameBuffer();
-	aSaveImage.mWidth = mRenderer->mPresentationRect.mWidth;
-	aSaveImage.mHeight = mRenderer->mPresentationRect.mHeight;
+	aSaveImage.mWidth = mRenderer->mWidth;
+	aSaveImage.mHeight = mRenderer->mHeight;
 	aSaveImage.mNumChannels = 4;
 	ImageLib::WriteImage(anImageName, &aSaveImage, ".png");
 
@@ -2269,7 +2269,7 @@ void SexyAppBase::Redraw(Rect *theClipRect)
 				return;
 			}
 
-			int aResult = InitDDInterface();
+			int aResult = InitRenderer();
 
 			//gDebugStream << SDL_GetTicks() << " ReInit..." << std::endl;
 			/*
@@ -4248,7 +4248,7 @@ void SexyAppBase::MakeWindow()
 		}
 	}
 
-	int aResult = InitDDInterface();
+	int aResult = InitRenderer();
 
 	//if (mDDInterface->mD3DTester != NULL && mDDInterface->mD3DTester->ResultsChanged())
 		//RegistryEraseValue("Is3D");
@@ -4424,7 +4424,7 @@ void SexyAppBase::SwitchScreenMode(bool wantWindowed, bool is3d, bool force)
 		mSoundManager->SetCooperativeWindow(mIsWindowed);
 	}
 
-	mLastTime = timeGetTime();
+	mLastTime = GetTicks();
 }
 
 void SexyAppBase::SwitchScreenMode(bool wantWindowed)
@@ -4976,9 +4976,9 @@ bool SexyAppBase::UpdateApp()
 	}
 }
 
-int SexyAppBase::InitDDInterface()
+int SexyAppBase::InitRenderer()
 {
-	PreDDInterfaceInitHook();
+	PreRendererInitHook();
 	DeleteNativeImageData();
 	int aResult = mRenderer->Init();
 	DemoSyncRefreshRate();
@@ -4990,7 +4990,7 @@ int SexyAppBase::InitDDInterface()
 		mScreenBounds.mHeight = mRenderer->mHeight;
 		mRenderer->UpdateViewport();
 		mWidgetManager->Resize(mScreenBounds, mRenderer->mPresentationRect);
-		PostDDInterfaceInitHook();
+		PostRendererInitHook();
 	}
 
 #if SEXY_USE_IMGUI
@@ -5415,11 +5415,11 @@ void SexyAppBase::PreDisplayHook()
 {
 }
 
-void SexyAppBase::PreDDInterfaceInitHook()
+void SexyAppBase::PreRendererInitHook()
 {
 }
 
-void SexyAppBase::PostDDInterfaceInitHook()
+void SexyAppBase::PostRendererInitHook()
 {
 }
 
@@ -6308,7 +6308,7 @@ void SexyAppBase::Set3DAcclerated(bool is3D, bool reinit)
 
 	if (reinit)
 	{
-		int aResult = InitDDInterface();
+		int aResult = InitRenderer();
 		/*
 		if (is3D && aResult != DDInterface::RESULT_OK)
 		{

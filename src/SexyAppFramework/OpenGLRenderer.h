@@ -79,6 +79,8 @@ namespace Sexy
 	  public:
 		GLuint mVAO;
 		GLuint mVBO;
+		GLuint mFBO;
+		GLuint mFBOTexture;
 		SDL_GLContext mContext;
 		std::vector<GLDrawCommand> mCommandBuffer;
 		GLShader *mDefaultShader;
