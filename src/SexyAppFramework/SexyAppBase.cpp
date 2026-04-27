@@ -303,6 +303,11 @@ SexyAppBase::SexyAppBase()
 	mWidgetManager = new WidgetManager(this);
 	mResourceManager = new ResourceManager(this);
 
+	for (int i = 0; i < MAX_GAMEPADS; i++)
+	{
+		mGamepads[i] = nullptr;
+	}
+
 	mPrimaryThreadId = 0;
 
 	#if WIN32
@@ -420,6 +425,12 @@ SexyAppBase::~SexyAppBase()
 	}
 	mDialogMap.clear();
 	mDialogList.clear();
+
+	for (int i = 0; i < MAX_GAMEPADS; i++)
+	{
+		if (mGamepads[i] != nullptr)
+			delete mGamepads[i];
+	}
 
 	delete mWidgetManager;
 	delete mResourceManager;
@@ -3841,6 +3852,44 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 					mWidgetManager->SysColorChangedAll();
 					mWidgetManager->MarkAllDirty();
 					break;
+#if SEXY_USE_CONTROLLER
+				case SDL_EVENT_GAMEPAD_ADDED:
+					{
+						int anIdToUse = -1;
+						for (int i = 0; i < MAX_GAMEPADS; i++)
+						{
+							if (mGamepads[i] == nullptr)
+							{
+								anIdToUse = i;
+								break;
+							}
+						}
+						if (anIdToUse != -1)
+						{
+							mGamepads[anIdToUse] = new Gamepad();
+							mGamepads[anIdToUse]->SetDeviceID(event.gdevice.which);
+						}
+					}
+					break;
+				case SDL_EVENT_GAMEPAD_REMOVED:
+					{
+						int anIdRemoved = -1;
+						for (int i = 0; i < MAX_GAMEPADS; i++)
+						{
+							if (mGamepads[i] != nullptr && mGamepads[i]->GetDeviceID() == event.gdevice.which)
+							{
+								anIdRemoved = i;
+								break;
+							}
+						}
+						if (anIdRemoved != -1)
+						{
+							delete mGamepads[anIdRemoved];
+							mGamepads[anIdRemoved] = nullptr;
+						}
+					}
+					break;
+#endif
 			}
 
 		}
@@ -5451,7 +5500,7 @@ void SexyAppBase::Init()
 	if (mShutdown)
 		return;
 
-	if (!SDL_Init(SDL_INIT_VIDEO))
+	if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD))
 	{
 		DoExit(0);
 	}

@@ -7540,7 +7540,35 @@ void Board::DrawDebugText(Graphics *g)
 	case DebugTextMode::DEBUG_TEXT_COLLISION:
 		aText += StrFormat("COLLISION DEBUG\n");
 		break;
+#if SEXY_USE_CONTROLLER
+	case DebugTextMode::DEBUG_TEXT_CONTROLLER:
+		aText += StrFormat("CONTROLLER DEBUG\n");
+		for (int i = 0; i < MAX_GAMEPADS; i++)
+		{
+			if (mApp->mGamepads[i] == nullptr)
+			{
+				aText += StrFormat("No Controller found on slot %d\n", i);
+				continue;
+			}
+			aText += StrFormat("Controller slot: %d\n", i);
 
+			aText += StrFormat("axis X Left: %.2f\n", mApp->mGamepads[0]->GetLeftAxisXPosition());
+			aText += StrFormat("axis Y Left: %.2f\n", mApp->mGamepads[0]->GetLeftAxisYPosition());
+			aText += StrFormat("axis X Right: %.2f\n", mApp->mGamepads[0]->GetRightAxisXPosition());
+			aText += StrFormat("axis Y Right: %.2f\n", mApp->mGamepads[0]->GetRightAxisYPosition());
+			aText += StrFormat("rumble: %s\n",
+							   mApp->mGamepads[0]->IsButtonDown(GamepadButtons::BUTTON_LEFT_SHOULDER) ? "on" : "off");
+
+			if (mApp->mGamepads[0]->IsButtonDown(GamepadButtons::BUTTON_LEFT_SHOULDER))
+			{
+				mApp->mGamepads[0]->AddRumbleEffect(0.2, 0.1, 20);
+			}
+
+		}
+
+
+		break;
+#endif
 	default:
 		TOD_ASSERT();
 		break;
@@ -8569,7 +8597,7 @@ void Board::KeyChar(SexyChar theChar)
 	else if (theChar == 'z')
 	{
 		mDebugTextMode = (DebugTextMode)((int)mDebugTextMode + 1);
-		if (mDebugTextMode > DebugTextMode::DEBUG_TEXT_COLLISION)
+		if (mDebugTextMode >= DebugTextMode::DEBUG_TEXT_MAX)
 		{
 			mDebugTextMode = DebugTextMode::DEBUG_TEXT_NONE;
 		}

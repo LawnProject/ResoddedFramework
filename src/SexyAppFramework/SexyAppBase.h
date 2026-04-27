@@ -5,6 +5,7 @@
 #include "Version.h"
 #include "Rect.h"
 #include "Color.h"
+#include "Gamepad.h"
 #include "ButtonListener.h"
 #include "DialogListener.h"
 #include "Buffer.h"
@@ -353,6 +354,13 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	StringDoubleMap mDoubleProperties;
 	StringStringVectorMap mStringVectorProperties;
 	ResourceManager *mResourceManager;
+
+#if SEXY_USE_CONTROLLER
+
+	int mNumGamepads;
+	Gamepad* mGamepads[MAX_GAMEPADS];
+
+#endif
 
 #ifdef ZYLOM
 	unsigned int mZylomGameId;
