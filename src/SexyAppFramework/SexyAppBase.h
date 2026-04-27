@@ -2,6 +2,7 @@
 #define __SEXYAPPBASE_H__
 
 #include "Common.h"
+#include "Version.h"
 #include "Rect.h"
 #include "Color.h"
 #include "ButtonListener.h"
@@ -214,6 +215,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	bool mReadFromRegistry;
 	std::string mRegisterLink;
 	std::string mProductVersion;
+	Version mVersion;
 	Image *mCursorImages[NUM_CURSORS];
 	SDL_Cursor* mOverrideCursor;
 	bool mIsOpeningURL;

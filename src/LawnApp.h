@@ -40,6 +40,7 @@ namespace Sexy
 class Dialog;
 class Graphics;
 class ButtonWidget;
+class Version;
 }; // namespace Sexy
 
 enum FoleyType;
@@ -387,5 +388,7 @@ extern bool gFastMo;	   //0x6A9EAB
 extern bool gSlowMo;	   //0x6A9EAA
 extern LawnApp *gLawnApp;  //0x6A9EC0
 extern int gSlowMoCounter; //0x6A9EC4
+
+extern Version mResoddedVersion;
 
 #endif // __LAWNAPP_H__

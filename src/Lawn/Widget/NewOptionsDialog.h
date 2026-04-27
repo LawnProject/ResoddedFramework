@@ -27,6 +27,8 @@ class NewOptionsDialog : public Sexy::Dialog, public Sexy::SliderListener, publi
 		NewOptionsDialog_SoundVolume,
 		NewOptionsDialog_Fullscreen,
 		NewOptionsDialog_HardwareAcceleration,
+		NewOptionsDialog_AdvancedOptions,
+
 	};
 
   public:
@@ -39,6 +41,7 @@ class NewOptionsDialog : public Sexy::Dialog, public Sexy::SliderListener, publi
 	LawnStoneButton *mBackToMainButton;			   //+0x170
 	LawnStoneButton *mRestartButton;			   //+0x174
 	NewLawnButton *mBackToGameButton;			   //+0x178
+	LawnStoneButton *mAdvancedButtons;
 	bool mFromGameSelector;						   //+0x17C
 
   public:

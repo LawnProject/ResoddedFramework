@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Properties version="1.0" language="en" country="US" lookandfeel="NORMAL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="">
+<String id="LOCALE">English_United States</String>
+
+<!-- Framework Strings -->
+	<String id="DIALOG_BUTTON_YES">YES</String>
+	<String id="DIALOG_BUTTON_NO">NO</String>
+	<String id="DIALOG_BUTTON_OK">OK</String>
+	<String id="DIALOG_BUTTON_CANCEL">CANCEL</String>
+
+	<String id="UNEXPECTED_ERROR">An unexpected error has occured!  Pressing 'Send Report will send us helpful debugging information that may help us resolve this issue in the future.&cr;&cr;You can also contact us directly at feedback@popcap.com.</String>
+
+	<String id="PLEASE_HELP">Please help us out by providing as much information as you can about this crash. Is this the first time it happened? Have you used other PopCap Deluxe games successfully before? Have you upgraded your drivers or any software recently that may be interfering with this program?</String>
+
+	<String id="FAILED_CONNECT_POPCAP">Failed to connect to PopCap servers.  Please check your Internet connection.&cr;If you are on a dial-up connection, you may have to manually connect to your ISP.</String>
+
+	<String id="HARDWARE_ACCEL_SWITCHED_ON">3D acceleration was switched on during this session.&cr;If this resulted in slower performance or other display problems,&cr;it should be switched off.&cr;&cr;Would you like to keep 3D acceleration switched on?</String>
+
+	<String id="HARDWARE_ACCEL_CONFIRMATION">3D Acceleration Confirmation</String>
+
+	<String id="HARDWARE_ACCEL_NOT_WORKING">3D acceleration may not have been working correctly during this session.&cr;If you noticed graphics problems, you may want to turn off 3D acceleration.&cr;Would you like to keep 3D acceleration switched on?</String>
+
+	<String id="FATAL_ERROR">FATAL ERROR</String>
+
+	<String id="PLEASE_SET_COLOR_DEPTH">Please set your desktop color depth to 16 bit.</String>
+
+	<String id="FAILED_INIT_DIRECTDRAW">Failed to initialize DirectDraw:&nbsp;</String>
+
+	<String id="UNABLE_OPEN_PROPERTIES">Unable to open properties file&nbsp;</String>
+
+	<String id="PROPERTIES_SIG_FAILED">Signature check failed on&nbsp;</String>
+
+	<String id="INVALID_COMMANDLINE_PARAM">Invalid command line parameter:</String> 
+
+	<String id="APP_REQUIRES_DIRECTX">This application requires DirectX to run.  You can get DirectX at http://www.microsoft.com/directx</String>
+	<String id="YOU_NEED_DIRECTX">You need DirectX</String>
+
+</Properties>

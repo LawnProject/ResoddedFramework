@@ -102,9 +102,3 @@ foreach(FILE_PATH IN LISTS SOURCES)
 
     source_group("${GROUP_NAME}" FILES "${FILE_PATH}")
 endforeach()
-
-if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    install(FILES ${CMAKE_SOURCE_DIR}/thirdparty/x64/bass.dll DESTINATION "${CMAKE_SOURCE_DIR}/Dist")
-else ()
-   install(FILES ${CMAKE_SOURCE_DIR}/thirdparty/x86/bass.dll DESTINATION "${CMAKE_SOURCE_DIR}/Dist")
-endif()

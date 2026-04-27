@@ -50,6 +50,8 @@
 #include "Lawn/Debug/DebuggerWindow.h"
 #endif
 
+Version mResoddedVersion(0, 5, 0);
+
 bool gIsPartnerBuild = false;
 bool gSlowMo = false;		 //0x6A9EAA
 bool gFastMo = false;		 //0x6A9EAB
@@ -154,6 +156,12 @@ LawnApp::LawnApp()
 #if LAWN_DEBUG_TOOLS
 	mDebugWindow = nullptr;
 #endif
+
+	//Define version here:
+
+	mVersion.mMajor = 0;
+	mVersion.mMinor = 0;
+	mVersion.mPatch = 0;
 
 }
 
@@ -1725,6 +1733,7 @@ void LawnApp::LoadingThreadProc()
 		return;
 
 	TodStringListLoad("properties/LawnStrings.txt");
+	TodStringListLoad("properties/FrameworkStrings.txt");
 
 	if (mTitleScreen)
 	{

@@ -656,7 +656,9 @@ void AlmanacDialog::Draw(Graphics *g)
 	mIndexButton->Draw(g);
 	mPlantButton->Draw(g);
 	mZombieButton->Draw(g);
+	g->Translate(mDescriptionSlider->mX, mDescriptionSlider->mY);
 	mDescriptionSlider->Draw(g);
+	g->Translate(-mDescriptionSlider->mX, -mDescriptionSlider->mY);
 }
 
 void AlmanacDialog::GetSeedPosition(SeedType theSeedType, int &x, int &y)
@@ -801,7 +803,7 @@ void AlmanacDialog::MouseUp(int x, int y, int theClickCount)
 		mApp->KillAlmanacDialog();
 	else if (mIndexButton->IsMouseOver())
 		SetPage(ALMANAC_PAGE_INDEX);
-	mDescriptionSlider->MouseUp(x, y);
+	mDescriptionSlider->MouseUp(x - mDescriptionSlider->mX, y - mDescriptionSlider->mY, theClickCount);
 }
 
 //0x403D00
@@ -812,7 +814,7 @@ void AlmanacDialog::MouseDown(int x, int y, int theClickCount)
 	if (mZombieButton->IsMouseOver())
 		mApp->PlaySample(Sexy::SOUND_GRAVEBUTTON);
 
-	mDescriptionSlider->MouseDown(x, y);
+	mDescriptionSlider->MouseDown(x - mDescriptionSlider->mX, y - mDescriptionSlider->mY, theClickCount);
 
 	SeedType aSeedType = SeedHitTest(x, y);
 	if (aSeedType != SeedType::SEED_NONE && aSeedType != mSelectedSeed)

@@ -3,6 +3,8 @@
 using namespace Sexy;
 
 
+Version::Version() : Version(0, 0, 0) {}
+
 Version::Version(int theMajor, int theMinor, int thePatch)
 {
 	mMajor = theMajor;
@@ -44,4 +46,9 @@ bool Version::isEqual(const Version &theVersion)
 bool Version::isNewerThan(const Version &theVersion)
 {
 	return !isOlderThan(theVersion) && !isEqual(theVersion);
+}
+
+std::string Sexy::Version::toString()
+{
+	return StrFormat("v%d.%d.%d", mMajor, mMinor, mPatch);
 }

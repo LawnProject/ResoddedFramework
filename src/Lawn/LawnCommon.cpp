@@ -153,11 +153,11 @@ LawnSlider::~LawnSlider()
 void LawnSlider::Update()
 {
 	Widget::Update();
-
 	if (!mStartedDrag || mDisabled)
 		return;
 
 	int aLocalY = mApp->mWidgetManager->mLastMouseY - mY;
+
 	int aHeightSlider = mHeight * mSliderHeightPercent;
 	int aRange = mHeight - aHeightSlider;
 
@@ -166,15 +166,18 @@ void LawnSlider::Update()
 	mRawValue = std::clamp(aNewValue, 0.0f, 1.0f);
 }
 
-void LawnSlider::MouseDown(int x, int y)
+void LawnSlider::MouseDown(int x, int y, int theClickCount)
 {
-	if (!Rect(mX, mY, mWidth, mHeight).Contains(x, y))
+	Widget::MouseDown(x, y, theClickCount);
+
+	if (!Rect(mX, mY, mWidth, mHeight).Contains(x + mX, y + mY)) //MouseDown is called with relative coordinates
 		return;
 	mStartedDrag = true;
 }
 
-void LawnSlider::MouseUp(int x, int y)
+void LawnSlider::MouseUp(int x, int y, int theClickCount)
 {
+	Widget::MouseUp(x, y, theClickCount);
 	mStartedDrag = false;
 }
 
@@ -202,7 +205,7 @@ void LawnSlider::Draw(Graphics* g)
 	int anOffsetSlider = (mHeight - aHeightSlider) * mRawValue;
 
 	g->PushState();
-	g->Translate(mX, mY);
+
 	// Draw the background
 	
 	g->SetColor(Color(152, 149, 188));

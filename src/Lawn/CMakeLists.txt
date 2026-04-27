@@ -76,17 +76,45 @@ foreach(FILE_PATH IN LISTS SOURCES)
     source_group("${GROUP_NAME}" FILES "${FILE_PATH}")
 endforeach()
 
-set_target_properties(${PROJECT_NAME}
-    PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/Dist"
-    RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_SOURCE_DIR}/Dist"
-    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/Dist"
-    RUNTIME_OUTPUT_NAME ${PROJECT_NAME}
+set(EXPORT_DIR "${CMAKE_SOURCE_DIR}/Export")
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${EXPORT_DIR}"
+    RUNTIME_OUTPUT_DIRECTORY_DEBUG "${EXPORT_DIR}"
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${EXPORT_DIR}"
+    RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${EXPORT_DIR}"
+    RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL "${EXPORT_DIR}"
 )
 
-install(TARGETS ${PROJECT_NAME}
-    RUNTIME DESTINATION "${CMAKE_SOURCE_DIR}/Dist"
-    CONFIGURATIONS Debug
-    FILE_SET PDBS
-    DESTINATION "${CMAKE_SOURCE_DIR}/Dist"
+# Base PvZ Assets
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/assets/base"
+        "${EXPORT_DIR}"
+)
+
+# Engine Assets
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/assets/framework"
+        "${EXPORT_DIR}"
+)
+# Mod Assets
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/assets/mod"
+        "${EXPORT_DIR}"
+)
+
+# DLL
+if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(BASS_DLL "${CMAKE_SOURCE_DIR}/thirdparty/x64/bass.dll")
+else()
+    set(BASS_DLL "${CMAKE_SOURCE_DIR}/thirdparty/x86/bass.dll")
+endif()
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${BASS_DLL}"
+        "${EXPORT_DIR}"
 )

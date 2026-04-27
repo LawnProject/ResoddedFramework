@@ -1,0 +1,16 @@
+﻿<Properties>
+  <Boolean id="CheckActivity">true</Boolean>
+  <Boolean id="DefaultWindowed">false</Boolean>
+  <String id="DisplayName">Plants vs. Zombies</String>
+  <Boolean id="DisplayPartnerLogo">false</Boolean>
+  <Boolean id="DontUpdate">true</Boolean>
+  <Integer id="Height">480</Integer>
+  <String id="MarketingMode" />
+  <Integer id="MaxTime">60</Integer>
+  <String id="PartnerName">Steam</String>
+  <String id="ProdName">PlantsVsZombies</String>
+  <String id="RegistryKey">SteamPopCap\PlantsVsZombies</String>
+  <Integer id="SteamId">3590</Integer>
+  <Boolean id="VistaCompliant">true</Boolean>
+  <Integer id="Width">640</Integer>
+</Properties>

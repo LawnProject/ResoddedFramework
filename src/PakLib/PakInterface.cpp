@@ -109,23 +109,34 @@ bool PakInterface::AddPakFile(const std::string &theFileName)
 	aPakRecord->mStartPos = 0;
 	aPakRecord->mSize = aFileSize;
 
-	PFILE *aFP = FOpen(theFileName.c_str(), "rb");
-	if (aFP == NULL)
-		return false;
-
+	size_t aFileOffset = 0;
 	uint32_t aMagic = 0;
-	FRead(&aMagic, sizeof(uint32_t), 1, aFP);
+
+	memcpy(&aMagic, aPakCollection->mData.data() + aFileOffset, sizeof(uint32_t));
+	aFileOffset += sizeof(uint32_t);
+
 	if (aMagic != 0xBAC04AC0)
 	{
-		FClose(aFP);
-		return false;
+		aMagic ^= 0xF7F7F7F7;
+		if (aMagic != 0xBAC04AC0) //if the magic is 0xF7 encrypted, it means the whole file is
+		{
+			printf("Invalid Magic Number received in Pak File: %s\n", theFileName.c_str());
+			return false;
+		}
+
+		printf("Pak File: %s is encrypted, decrypting now...\n", theFileName.c_str());
+		
+		for (uint8_t &byte : aPakRecord->mCollection->mData)
+			byte ^= 0xF7;
 	}
 
 	uint32_t aVersion = 0;
-	FRead(&aVersion, sizeof(uint32_t), 1, aFP);
+	memcpy(&aVersion, aPakCollection->mData.data() + aFileOffset, sizeof(uint32_t));
+	aFileOffset += sizeof(uint32_t);
+
 	if (aVersion > 0)
 	{
-		FClose(aFP);
+		printf("Invalid version received in Pak File: %s\n", theFileName.c_str());
 		return false;
 	}
 
@@ -134,21 +145,33 @@ bool PakInterface::AddPakFile(const std::string &theFileName)
 	for (;;)
 	{
 		uint8_t aFlags = 0;
-		int aCount = FRead(&aFlags, 1, 1, aFP);
-		if ((aFlags & FILEFLAGS_END) || (aCount == 0))
+
+		memcpy(&aFlags, aPakCollection->mData.data() + aFileOffset, sizeof(uint8_t));
+		aFileOffset += sizeof(uint8_t);
+
+		if ((aFlags & FILEFLAGS_END) || (aFileOffset >= aPakCollection->mData.size()))
 			break;
 
 		uint8_t aNameWidth = 0;
 		char aName[256];
-		FRead(&aNameWidth, 1, 1, aFP);
-		FRead(aName, 1, aNameWidth, aFP);
-		aName[aNameWidth] = 0;
+
+		memcpy(&aNameWidth, aPakCollection->mData.data() + aFileOffset, sizeof(uint8_t));
+		aFileOffset += sizeof(uint8_t);
+
+		memcpy(&aName, aPakCollection->mData.data() + aFileOffset, aNameWidth);
+		aFileOffset += aNameWidth;
+
+		aName[aNameWidth] = '\0';
 
 		int aSrcSize = 0;
-		FRead(&aSrcSize, sizeof(int), 1, aFP);
+
+		memcpy(&aSrcSize, aPakCollection->mData.data() + aFileOffset, sizeof(int));
+		aFileOffset += sizeof(int);
+
 		int64_t aFileTime;
-		FRead(&aFileTime, sizeof(int64_t), 1, aFP);
-		
+		memcpy(&aFileTime, aPakCollection->mData.data() + aFileOffset, sizeof(int64_t));
+		aFileOffset += sizeof(int64_t);
+
 		for (int i = 0; i < aNameWidth; i++) //windows....
 		{
 			if (aName[i] == '\\')
@@ -169,7 +192,7 @@ bool PakInterface::AddPakFile(const std::string &theFileName)
 		aPos += aSrcSize;
 	}
 
-	int anOffset = FTell(aFP);
+	int anOffset = (int)aFileOffset;
 
 	// Now fix file starts
 	aRecordItr = mPakRecordMap.begin();
@@ -181,15 +204,24 @@ bool PakInterface::AddPakFile(const std::string &theFileName)
 		++aRecordItr;
 	}
 
-	FClose(aFP);
-
 	return true;
 }
 
 //0x5D85C0
 PFILE *PakInterface::FOpen(const char *theFileName, const char *anAccess)
 {
-	if ((stricmp(anAccess, "r") == 0) || (stricmp(anAccess, "rb") == 0) || (stricmp(anAccess, "rt") == 0))
+	if (std::filesystem::exists(theFileName))
+	{
+		FILE *aFP = fopen(theFileName, anAccess);
+		if (aFP == NULL)
+			return NULL;
+		PFILE *aPFP = new PFILE;
+		aPFP->mRecord = NULL;
+		aPFP->mPos = 0;
+		aPFP->mFP = aFP;
+		return aPFP;
+	}
+	else if ((stricmp(anAccess, "r") == 0) || (stricmp(anAccess, "rb") == 0) || (stricmp(anAccess, "rt") == 0))
 	{
 		char anUpperName[256];
 		FixFileName(theFileName, anUpperName);
@@ -200,25 +232,17 @@ PFILE *PakInterface::FOpen(const char *theFileName, const char *anAccess)
 			PFILE *aPFP = new PFILE;
 			aPFP->mRecord = &anItr->second;
 			aPFP->mPos = 0;
-			aPFP->mFP = NULL;
+			aPFP->mFP = nullptr;
 			return aPFP;
 		}
 	}
-
-	FILE *aFP = fopen(theFileName, anAccess);
-	if (aFP == NULL)
-		return NULL;
-	PFILE *aPFP = new PFILE;
-	aPFP->mRecord = NULL;
-	aPFP->mPos = 0;
-	aPFP->mFP = aFP;
-	return aPFP;
+	return nullptr;
 }
 
 //0x5D8780
 int PakInterface::FClose(PFILE *theFile)
 {
-	if (theFile->mRecord == NULL)
+	if (theFile->mFP != nullptr)
 		fclose(theFile->mFP);
 	delete theFile;
 	return 0;
@@ -227,6 +251,8 @@ int PakInterface::FClose(PFILE *theFile)
 //0x5D87B0
 int PakInterface::FSeek(PFILE *theFile, long theOffset, int theOrigin)
 {
+	if (theFile->mFP != nullptr)
+		return fseek(theFile->mFP, theOffset, theOrigin);
 	if (theFile->mRecord != NULL)
 	{
 		if (theOrigin == SEEK_SET)
@@ -236,27 +262,28 @@ int PakInterface::FSeek(PFILE *theFile, long theOffset, int theOrigin)
 		else if (theOrigin == SEEK_CUR)
 			theFile->mPos += theOffset;
 
-		// 当前指针位置不能超过整个文件的大小，且不能小于 0
+		// The current pointer position cannot exceed the entire file size, and cannot be less than 0.
 		theFile->mPos = std::max(std::min(theFile->mPos, (long)theFile->mRecord->mSize), 0l);
-		return 0;
 	}
-	else
-		return fseek(theFile->mFP, theOffset, theOrigin);
+	return 0;
 }
 
 //0x5D8830
 long PakInterface::FTell(PFILE *theFile)
 {
-	if (theFile->mRecord != NULL)
-		return theFile->mPos;
-	else
+	if (theFile->mFP != nullptr)
 		return ftell(theFile->mFP);
+	else if (theFile->mRecord != NULL)
+		return theFile->mPos;
+	return 0;
 }
 
 //0x5D8850
 size_t PakInterface::FRead(void *thePtr, int theElemSize, int theCount, PFILE *theFile)
 {
-	if (theFile->mRecord != NULL)
+	if (theFile->mFP != nullptr)
+		return fread(thePtr, theElemSize, theCount, theFile->mFP);
+	else if (theFile->mRecord != NULL)
 	{
 		// 实际读取的字节数不能超过当前资源文件剩余可读取的字节数
 		int aSizeBytes = std::min(1l * theElemSize * theCount, theFile->mRecord->mSize - theFile->mPos);
@@ -264,49 +291,49 @@ size_t PakInterface::FRead(void *thePtr, int theElemSize, int theCount, PFILE *t
 		// 取得在整个 pak 中开始读取的位置的指针
 		uint8_t *src = theFile->mRecord->mCollection->mData.data() + theFile->mRecord->mStartPos + theFile->mPos;
 		uint8_t *dest = (uint8_t *)thePtr;
-		for (int i = 0; i < aSizeBytes; i++)
-			*(dest++) = (*src++) ^ 0xF7; // 'Decrypt'
+		memcpy(thePtr, src, aSizeBytes);
 		theFile->mPos += aSizeBytes;	 // 读取完成后，移动当前读取位置的指针
 		return aSizeBytes / theElemSize; // 返回实际读取的项数
 	}
-
-	return fread(thePtr, theElemSize, theCount, theFile->mFP);
+	return 0;
 }
 
 int PakInterface::FGetC(PFILE *theFile)
 {
-	if (theFile->mRecord != NULL)
+	if (theFile->mFP != nullptr)
+		return fgetc(theFile->mFP);
+	else if (theFile->mRecord != NULL)
 	{
 		for (;;)
 		{
 			if (theFile->mPos >= theFile->mRecord->mSize)
 				return EOF;
 			char aChar =
-				*((char *)theFile->mRecord->mCollection->mData.data() + theFile->mRecord->mStartPos + theFile->mPos++) ^
-				0xF7;
+				*((char *)theFile->mRecord->mCollection->mData.data() + theFile->mRecord->mStartPos + theFile->mPos++);
 			if (aChar != '\r')
 				return (uint8_t)aChar;
 		}
 	}
-
-	return fgetc(theFile->mFP);
+	return '\0';
 }
 
 int PakInterface::UnGetC(int theChar, PFILE *theFile)
 {
-	if (theFile->mRecord != NULL)
+	if (theFile->mFP != nullptr)
+		return ungetc(theChar, theFile->mFP);
+	else if (theFile->mRecord != NULL)
 	{
 		// This won't work if we're not pushing the same chars back in the stream
 		theFile->mPos = std::max(theFile->mPos - 1, 0l);
-		return theChar;
 	}
-
-	return ungetc(theChar, theFile->mFP);
+	return EOF;
 }
 
 char *PakInterface::FGetS(char *thePtr, int theSize, PFILE *theFile)
 {
-	if (theFile->mRecord != NULL)
+	if (theFile->mFP != nullptr)
+		return fgets(thePtr, theSize, theFile->mFP);
+	else if (theFile->mRecord != NULL)
 	{
 		int anIdx = 0;
 		while (anIdx < theSize)
@@ -318,8 +345,7 @@ char *PakInterface::FGetS(char *thePtr, int theSize, PFILE *theFile)
 				break;
 			}
 			char aChar =
-				*((char *)theFile->mRecord->mCollection->mData.data() + theFile->mRecord->mStartPos + theFile->mPos++) ^
-				0xF7;
+				*((char *)theFile->mRecord->mCollection->mData.data() + theFile->mRecord->mStartPos + theFile->mPos++);
 			if (aChar != '\r')
 				thePtr[anIdx++] = aChar;
 			if (aChar == '\n')
@@ -328,14 +354,14 @@ char *PakInterface::FGetS(char *thePtr, int theSize, PFILE *theFile)
 		thePtr[anIdx] = 0;
 		return thePtr;
 	}
-
-	return fgets(thePtr, theSize, theFile->mFP);
+	return nullptr;
 }
 
 int PakInterface::FEof(PFILE *theFile)
 {
-	if (theFile->mRecord != NULL)
-		return theFile->mPos >= theFile->mRecord->mSize;
-	else
+	if (theFile->mFP != nullptr)
 		return feof(theFile->mFP);
+	else if (theFile->mRecord != NULL)
+		return theFile->mPos >= theFile->mRecord->mSize;
+	return true;
 }

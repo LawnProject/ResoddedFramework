@@ -7,10 +7,12 @@
 #include "../System/Music.h"
 #include "../../Resources.h"
 #include "NewOptionsDialog.h"
+#include "../ResoddedFramework/AdvancedOptionsDialog.h"
 #include "../../ConstEnums.h"
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "../../SexyAppFramework/Slider.h"
 #include "../../SexyAppFramework/Checkbox.h"
+#include "../../SexyAppFramework/WidgetManager.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
 
 using namespace Sexy;
@@ -25,6 +27,7 @@ NewOptionsDialog::NewOptionsDialog(LawnApp *theApp, bool theFromGameSelector)
 	mAlmanacButton = MakeButton(NewOptionsDialog::NewOptionsDialog_Almanac, this, "[VIEW_ALMANAC_BUTTON]");
 	mRestartButton = MakeButton(NewOptionsDialog::NewOptionsDialog_Restart, this, "[RESTART_LEVEL_BUTTON]");
 	mBackToMainButton = MakeButton(NewOptionsDialog::NewOptionsDialog_MainMenu, this, "[MAIN_MENU_BUTTON]");
+	mAdvancedButtons = MakeButton(NewOptionsDialog::NewOptionsDialog_AdvancedOptions, this, "[ADVANCED_OPTIONS_BUTTON]");
 
 	mBackToGameButton = MakeNewButton(Dialog::ID_OK,
 									  this,
@@ -101,6 +104,7 @@ NewOptionsDialog::~NewOptionsDialog()
 	delete mRestartButton;
 	delete mBackToMainButton;
 	delete mBackToGameButton;
+	delete mAdvancedButtons;
 }
 
 //0x45C880
@@ -121,6 +125,7 @@ void NewOptionsDialog::AddedToManager(Sexy::WidgetManager *theWidgetManager)
 	AddWidget(mHardwareAccelerationCheckbox);
 	AddWidget(mFullscreenCheckbox);
 	AddWidget(mBackToGameButton);
+	AddWidget(mAdvancedButtons);
 }
 
 //0x45C930
@@ -135,6 +140,7 @@ void NewOptionsDialog::RemovedFromManager(Sexy::WidgetManager *theWidgetManager)
 	RemoveWidget(mBackToMainButton);
 	RemoveWidget(mBackToGameButton);
 	RemoveWidget(mRestartButton);
+	RemoveWidget(mAdvancedButtons);
 }
 
 //0x45C9D0
@@ -148,6 +154,7 @@ void NewOptionsDialog::Resize(int theX, int theY, int theWidth, int theHeight)
 	mAlmanacButton->Resize(107, 241, 209, 46);
 	mRestartButton->Resize(mAlmanacButton->mX, mAlmanacButton->mY + 43, 209, 46);
 	mBackToMainButton->Resize(mRestartButton->mX, mRestartButton->mY + 43, 209, 46);
+	mAdvancedButtons->Resize(mBackToMainButton->mX, mBackToMainButton->mY + 43, 209, 46);
 	mBackToGameButton->Resize(30, 381, mBackToGameButton->mWidth, mBackToGameButton->mHeight);
 
 	if (mFromGameSelector)
@@ -387,6 +394,16 @@ void NewOptionsDialog::ButtonDepress(int theId)
 				mApp->mSawYeti = mApp->mBoard->mKilledYeti;
 				mApp->PreNewGame(mApp->mGameMode, false);
 			}
+		}
+		break;
+	}
+
+	case NewOptionsDialog::NewOptionsDialog_AdvancedOptions: {
+		{
+			AdvancedOptionsDialog *aDialog = new AdvancedOptionsDialog(mApp);
+			mApp->CenterDialog(aDialog, 600, 420);
+			mApp->AddDialog(Dialogs::DIALOG_ADVANCEDOPTIONS, aDialog);
+			mApp->mWidgetManager->SetFocus(aDialog);
 		}
 		break;
 	}

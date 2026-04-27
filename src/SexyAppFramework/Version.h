@@ -7,6 +7,7 @@ namespace Sexy
 	class Version
 	{
 	  public:
+		Version();
 		Version(int theMajor, int theMinor, int thePatch);
 		Version(const Version &theVersion);
 		~Version();
@@ -14,6 +15,7 @@ namespace Sexy
 		bool isOlderThan(const Version &theVersion);
 		bool isEqual(const Version &theVersion);
 		bool isNewerThan(const Version &theVersion);
+		std::string toString();
 
 	  public:
 		int mMajor;

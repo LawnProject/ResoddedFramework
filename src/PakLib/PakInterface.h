@@ -130,21 +130,7 @@ static PFILE *p_fopen(const char *theFileName, const char *theAccess)
 	aPFile->mFP = aFP;
 	return aPFile;
 }
-/*
-static PFILE *p_fopen(const wchar_t *theFileName, const wchar_t *theAccess)
-{
-	if (gPakInterface != NULL)
-		return gPakInterface->FOpen(theFileName, theAccess);
-	FILE *aFP = _wfopen(theFileName, theAccess);
-	if (aFP == NULL)
-		return NULL;
-	PFILE *aPFile = new PFILE();
-	aPFile->mRecord = NULL;
-	aPFile->mPos = 0;
-	aPFile->mFP = aFP;
-	return aPFile;
-}
-*/
+
 static int p_fclose(PFILE *theFile)
 {
 	if (gPakInterface != NULL)

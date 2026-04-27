@@ -50,8 +50,8 @@ class LawnSlider : public Widget
 
 	virtual void Update();
 	virtual void MouseWheel(int theDelta);
-	virtual void MouseDown(int x, int y);
-	virtual void MouseUp(int x, int y);
+	virtual void MouseDown(int x, int y, int theClickCount);
+	virtual void MouseUp(int x, int y, int theClickCount);
 	virtual void Draw(Graphics *g);
 	float GetValue();
 };

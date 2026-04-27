@@ -8,5 +8,4 @@ out/
 savefiles/
 crash.txt
 
-#The game export folder
-Dist/
+Export/
