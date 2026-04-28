@@ -6145,8 +6145,10 @@ void Board::Update()
 		return;
 	mGamepadX += mApp->mGamepads[0]->GetLeftAxisXPosition() * 10;
 	mGamepadY += mApp->mGamepads[0]->GetLeftAxisYPosition() * 10;
-	mGamepadX = std::clamp(mGamepadX, (float)LAWN_XMIN, (float)BOARD_WIDTH);  //todo: figure out true max pos
-	mGamepadY = std::clamp(mGamepadY, (float)LAWN_YMIN, (float)BOARD_HEIGHT); //todo: figure out true max pos
+	int aSizeTileX = GridToPixelX(1, 1) - LAWN_XMIN;
+	int aSizeTileY = GridToPixelY(1, 1) - LAWN_YMIN;
+	mGamepadX = std::clamp(mGamepadX, (float)LAWN_XMIN, (float)aSizeTileX * MAX_GRID_SIZE_X);
+	mGamepadY = std::clamp(mGamepadY, (float)LAWN_YMIN, (float)aSizeTileY * (MAX_GRID_SIZE_Y - (StageHas6Rows() ? 0 : 1)));
 	
 #endif
 }
