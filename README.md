@@ -1,3 +1,10 @@
+# ResoddedFramework
+< MISSING_DESCRIPTION >
+
+## Join the Discord
+
+https://discord.gg/cK2ewgYQUe
+
 # How To Use
 
 ## What do you need?
@@ -20,19 +27,19 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 - Reworked Rendering - 60%
 
 - JSON Settings, replacing the registry - 100%
-- ResourceGen V2 ([In Development](https://github.com/LawnProject/ResourceGen)) - %
+- ResourceGen V2 ([In Development](https://github.com/LawnProject/ResourceGen))
 - Documentation - 1%
 
 
-- Window Resizing - 50%
-- Advanced Options - 0%
+- Window Resizing - 100%
+- Advanced Options - 10%
 - UTF-8 Support - 100%
 
 - MP3/OGG/FLAC Music with loop points - 0%
-- Controller Support - 0%
+- Controller Support - 30%
 ### Low Priority
 - Multi-platform support - 5%
-- Separate mod resources (.pak + folders) - 0%
+- Separate mod resources (.pak + folders) - 5%
 - Update Checker - 0%
 
 # Credits
