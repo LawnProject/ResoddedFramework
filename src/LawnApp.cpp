@@ -38,6 +38,9 @@
 #include "Lawn/Widget/ChallengeScreen.h"
 #include "Lawn/Widget/NewOptionsDialog.h"
 #include "Lawn/Widget/SeedChooserScreen.h"
+
+#include "Lawn/ResourceInclude.h"
+
 #include "SexyAppFramework/WidgetManager.h"
 #include "SexyAppFramework/ResourceManager.h"
 
@@ -1279,6 +1282,12 @@ void LawnApp::Init()
 		return;
 	}
 
+	if (!mResourceManager->AddResourcesFile("properties/framework_resources.xml"))
+	{
+		ShowResourceError(true);
+		return;
+	}
+
 	if (!TodLoadResources("Init"))
 	{
 		return;
@@ -1720,6 +1729,8 @@ void LawnApp::LoadGroup(const char *theGroupName, int theGroupAveMsToLoad)
 		ShowResourceError();
 		mLoadingFailed = true;
 	}
+
+	ResoddedFrameworkExtractResourcesByName(mResourceManager, theGroupName); //First try to load stuff that the framework needs
 
 	int aTotalGroupWeight = mResourceManager->GetNumResources(theGroupName) * theGroupAveMsToLoad;
 	int aGroupTime = std::max(aTimer.GetDuration(), 0.0);

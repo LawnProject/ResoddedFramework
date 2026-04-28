@@ -9,7 +9,7 @@
 #include "SeedPacket.h"
 #include "../LawnApp.h"
 #include "Projectile.h"
-#include "../Resources.h"
+#include "ResourceInclude.h"
 #include "CursorObject.h"
 #include "ToolTipWidget.h"
 #include "MessageWidget.h"

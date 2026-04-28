@@ -611,6 +611,15 @@ bool ResourceManager::ParseResourcesFile(const std::string &theFilename)
 	return DoParseResources();
 }
 
+bool ResourceManager::AddResourcesFile(const std::string &theFilename)
+{
+	bool anOldDefine = mAllowAlreadyDefinedResources;
+	mAllowAlreadyDefinedResources = true;
+	bool aResult = ParseResourcesFile(theFilename);
+	mAllowAlreadyDefinedResources = anOldDefine;
+	return aResult;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 bool ResourceManager::ReparseResourcesFile(const std::string &theFilename)

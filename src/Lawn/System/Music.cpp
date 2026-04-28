@@ -319,8 +319,9 @@ void Music::PlayFromOffset(MusicFile theMusicFile, int theOffset, double theVolu
 		aMusicInfo->mVolumeAdd = 0.0;
 		BASS_ChannelSetAttribute(aMusicInfo->mHMusic, BASS_ATTRIB_VOL, aMusicInfo->mVolume * 100); // 调整音乐音量
 		BASS_ChannelFlags(aMusicInfo->mHMusic, BASS_MUSIC_POSRESET | BASS_MUSIC_RAMP | BASS_MUSIC_LOOP, -1);
-		BASS_ChannelSetPosition(aMusicInfo->mHMusic, LOWORD(theOffset), BASS_POS_MUSIC_ORDER); // 设置偏移位置
 		BASS_ChannelPlay(aMusicInfo->mHMusic, false);						 // 重新开始播放
+		BASS_ChannelSetPosition(aMusicInfo->mHMusic, theOffset, BASS_POS_MUSIC_ORDER); // 设置偏移位置
+
 	}
 }
 

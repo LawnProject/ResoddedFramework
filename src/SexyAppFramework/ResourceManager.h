@@ -165,6 +165,8 @@ class ResourceManager
 	virtual ~ResourceManager();
 
 	bool ParseResourcesFile(const std::string &theFilename);
+	//Add additional resources/overwrite resources
+	bool AddResourcesFile(const std::string &theFilename);
 	bool ReparseResourcesFile(const std::string &theFilename);
 
 	std::string GetErrorText();

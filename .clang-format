@@ -5,7 +5,9 @@ UseTab: Always
 SortIncludes: false
 ReflowComments: false
 AllowShortFunctionsOnASingleLine: false
-BinPackParameters: false
-BinPackArguments: false
+BinPackParameters: true
+BinPackArguments: true
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
+AlignArrayOfStructures: None
+BreakArrays: false
