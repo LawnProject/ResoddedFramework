@@ -162,6 +162,12 @@ Board::Board(LawnApp *theApp)
 	mStoreButton = nullptr;
 	mIgnoreMouseUp = false;
 
+	
+#if SEXY_USE_CONTROLLER
+	mGamepadX = LAWN_XMIN;
+	mGamepadY = LAWN_YMIN;
+#endif
+
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
 		mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 	{
@@ -6133,6 +6139,16 @@ void Board::Update()
 	UpdateLevelEndSequence();
 	mPrevMouseX = mApp->mWidgetManager->mLastMouseX;
 	mPrevMouseY = mApp->mWidgetManager->mLastMouseY;
+	
+#if SEXY_USE_CONTROLLER
+	if (mApp->mGamepads[0] == nullptr)
+		return;
+	mGamepadX += mApp->mGamepads[0]->GetLeftAxisXPosition() * 10;
+	mGamepadY += mApp->mGamepads[0]->GetLeftAxisYPosition() * 10;
+	mGamepadX = std::clamp(mGamepadX, (float)LAWN_XMIN, (float)BOARD_WIDTH);  //todo: figure out true max pos
+	mGamepadY = std::clamp(mGamepadY, (float)LAWN_YMIN, (float)BOARD_HEIGHT); //todo: figure out true max pos
+	
+#endif
 }
 
 //0x416080
@@ -7949,6 +7965,22 @@ void Board::DrawUITop(Graphics *g)
 		g->SetColor(Color(200, 200, 200, 210));
 		g->FillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
 	}
+
+#if SEXY_USE_CONTROLLER
+	if (mApp->mGameScene == GameScenes::SCENE_PLAYING && mApp->mGamepads[0] != nullptr)
+	{
+		int anOffsetArrowX = Sexy::IMAGE_GAMEPAD_CURSOR_ARROWS_SHADOW->mWidth / 2;
+		int anOffsetArrowY = Sexy::IMAGE_GAMEPAD_CURSOR_ARROWS_SHADOW->mWidth / 2;
+		g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_ARROWS_SHADOW, mGamepadX - anOffsetArrowX, mGamepadY - anOffsetArrowY);
+		g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_ARROWS, mGamepadX - anOffsetArrowX, mGamepadY - anOffsetArrowY);
+
+		int aGridX = PixelToGridX(mGamepadX, mGamepadY);
+		int aGridY = PixelToGridY(mGamepadX, mGamepadY);
+		int aClampedX = GridToPixelX(aGridX, aGridY);
+		int aClampedY = GridToPixelY(aGridX, aGridY);
+		g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_FRAME, Rect(aClampedX, aClampedY, 80, 100), Rect(0, 0, Sexy::IMAGE_GAMEPAD_CURSOR_FRAME->mWidth, Sexy::IMAGE_GAMEPAD_CURSOR_FRAME->mHeight));
+	}
+#endif
 
 	if (mApp->mGameScene == GameScenes::SCENE_PLAYING || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 	{

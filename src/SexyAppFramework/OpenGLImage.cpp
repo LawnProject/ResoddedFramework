@@ -316,7 +316,9 @@ void OpenGLImage::ImplDrawLine(
 void OpenGLImage::ImplDrawLineAA(
 	double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
 {
-
+	glEnable(GL_MULTISAMPLE);
+	ImplDrawLine(theStartY, theStartY, theEndX, theEndY, theColor, theDrawMode);
+	glDisable(GL_MULTISAMPLE);
 }
 
 void OpenGLImage::ImplBlt(

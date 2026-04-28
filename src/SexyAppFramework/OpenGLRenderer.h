@@ -39,9 +39,10 @@ namespace Sexy
 
 	struct GLDrawCommand
 	{
-		GLenum mPrimitiveType;
-		GLuint mTextureID;
-		BlendMode mBlendMode;
+		GLenum mPrimitiveType = GL_TRIANGLES;
+		GLuint mTextureID = 0;
+		BlendMode mBlendMode = BLENDMODE_BLEND;
+		GLenum mFilterMode = GL_LINEAR;
 		std::vector<Vertex> mVertices;
 		bool mHasClipRect = false;
 		Rect mClipRect;
@@ -85,7 +86,7 @@ namespace Sexy
 		std::vector<GLDrawCommand> mCommandBuffer;
 		GLShader *mDefaultShader;
 		glm::mat4 mProjection;
-		WrappingSamplers mSamplers;
+		std::unordered_map<GLenum, WrappingSamplers> mSamplers;
 
 		static int gGLTextureCount;
 

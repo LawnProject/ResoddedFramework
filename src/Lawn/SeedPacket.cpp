@@ -2,6 +2,7 @@
 #include "Cutscene.h"
 #include "Challenge.h"
 #include "SeedPacket.h"
+#include "ResourceInclude.h"
 #include "../LawnApp.h"
 #include "CursorObject.h"
 #include "../Resources.h"
@@ -9,6 +10,8 @@
 #include "../SexyAppFramework/Font.h"
 #include "../Sexy.TodLib/FilterEffect.h"
 #include "../SexyAppFramework/SexyMatrix.h"
+
+bool mIgnorePacketSpriteScale = false;
 
 SeedPacket::SeedPacket()
 {
@@ -314,14 +317,17 @@ void DrawSeedPacket(Graphics *g,
 							: theSeedType == SeedType::SEED_ZOMBIQUARIUM_TROPHY		 ? 8
 																					 : 2;
 
-	if (g->mScaleX > 1)
+	if (g->mScaleX > 1 && !mIgnorePacketSpriteScale)
 	{
 		TodDrawImageCelScaledF(g, Sexy::IMAGE_SEEDPACKET_LARGER, x, y, 0, 0, g->mScaleX * 0.5f, g->mScaleY * 0.5f);
 	}
 	else
 	{
+		if (!mIgnorePacketSpriteScale)
+			g->SetLinearBlend(false);
 		TodDrawImageCelScaledF(g, Sexy::IMAGE_SEEDS, x, y, aPacketBackground, 0, g->mScaleX, g->mScaleY);
 	}
+	g->SetLinearBlend(true);
 
 	float aScale = 0.5f;
 	bool aDrawSeedInMiddle = true;
@@ -549,7 +555,7 @@ void DrawSeedPacket(Graphics *g,
 		Graphics aPlantG(*g);
 		aPlantG.SetColor(Color(64, 64, 64, 255));
 		aPlantG.SetColorizeImages(true);
-		aPlantG.ClipRect(x, y, SEED_PACKET_WIDTH, aDarknessHeight);
+		aPlantG.ClipRect(x, y, SEED_PACKET_WIDTH * aPlantG.mScaleX, aDarknessHeight * aPlantG.mScaleY);
 		TodDrawImageCelScaledF(
 			&aPlantG, Sexy::IMAGE_SEEDS, x, y, aPacketBackground, 0, aPlantG.mScaleX, aPlantG.mScaleY);
 		if (aDrawSeedInMiddle)
@@ -588,7 +594,7 @@ void DrawSeedPacket(Graphics *g,
 		{
 			SexyMatrix3 aMatrix;
 			TodScaleTransformMatrix(
-				aMatrix, aTextOffsetX * g->mScaleX + x, aTextOffsetY * g->mScaleY + y, g->mScaleX, g->mScaleY);
+				aMatrix, aTextOffsetX * g->mScaleX + x + g->mTransX, aTextOffsetY * g->mScaleY + y+ g->mTransY, g->mScaleX, g->mScaleY);
 			if (g->mScaleX > 1.8f)
 			{
 				g->SetLinearBlend(false);
@@ -965,6 +971,9 @@ SeedBank::SeedBank()
 	mNumPackets = 0;
 	mConveyorBeltCounter = 0;
 	mCutSceneDarken = 255;
+#if SEXY_USE_CONTROLLER
+	mIndexGamepad = 0;
+#endif
 }
 
 //0x489630
@@ -999,15 +1008,53 @@ void SeedBank::Draw(Graphics *g)
 		g->DrawImage(IMAGE_SEEDBANK, IMAGE_SEEDBANK->mWidth - 12, 0, theSrcRect);
 	}
 
+#if SEXY_USE_CONTROLLER
+	g->PushState();
+	g->SetScale(1.1f, 1.1f, 0.0f, 0.0f);
+	if (mApp->mGameScene == GameScenes::SCENE_PLAYING && mApp->mGamepads[0] != nullptr)
+	{
+
+		mAxisProgress += mApp->mGamepads[0]->GetRightAxisXPosition() * 0.5;
+		if (mAxisProgress < -0.95f)
+		{
+			mIndexGamepad--;
+			mAxisProgress = 0.0f;
+		}
+		else if (mAxisProgress > 0.95f)
+		{
+			mIndexGamepad++;
+			mAxisProgress = 0.0f;
+		}
+		mIndexGamepad = std::clamp(mIndexGamepad, 0, mNumPackets - 1);
+		SeedPacket *aSeedPacket = &mSeedPackets[mIndexGamepad];
+		if (aSeedPacket->mPacketType != SeedType::SEED_NONE)
+		{
+			g->DrawImage(Sexy::IMAGE_SEED_SELECTOR, aSeedPacket->mX - (aSeedPacket->mOffsetX + 6) * g->mScaleX, 3, Rect(0, 0, Sexy::IMAGE_SEED_SELECTOR->GetWidth(), Sexy::IMAGE_SEED_SELECTOR->GetHeight()));
+		}
+	}
+	g->PopState();
+#endif
+	mIgnorePacketSpriteScale = true;
 	for (int i = 0; i < mNumPackets; i++)
 	{
+#if SEXY_USE_CONTROLLER 
+		g->PushState();
+		if (i == mIndexGamepad && mApp->mGameScene == GameScenes::SCENE_PLAYING)
+		{
+			g->SetScale(1.1f, 1.1f, 0.0f, 0.0f);
+		}
+#endif
 		SeedPacket *aSeedPacket = &mSeedPackets[i];
 		if (aSeedPacket->mPacketType != SeedType::SEED_NONE && aSeedPacket->BeginDraw(g))
 		{
 			aSeedPacket->Draw(g);
 			aSeedPacket->EndDraw(g);
 		}
+#if SEXY_USE_CONTROLLER
+		g->PopState();
+#endif
 	}
+	mIgnorePacketSpriteScale = false;
 
 	g->ClearClipRect();
 	if (mApp->IsSlotMachineLevel() && mY > -IMAGE_SEEDBANK->GetHeight())

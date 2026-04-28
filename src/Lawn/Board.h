@@ -218,6 +218,11 @@ class Board : public Widget, public ButtonListener
 	int mPottedPlantsCollected;										  //+0x57A8
 	int mChocolateCollected;										  //+0x57AC
 
+#if SEXY_USE_CONTROLLER
+	float mGamepadX;
+	float mGamepadY;
+#endif
+
   public:
 	Board(LawnApp *theApp);
 	virtual ~Board();

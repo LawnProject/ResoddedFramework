@@ -170,9 +170,11 @@ void OpenGLRenderer::Cleanup()
 	mVAO = 0;
 	mFBO = 0;
 	mFBOTexture = 0;
-	
-	glDeleteSamplers(1, &mSamplers.mWrap);
-	glDeleteSamplers(1, &mSamplers.mClamp);
+
+	glDeleteSamplers(1, &mSamplers[GL_NEAREST].mWrap);
+	glDeleteSamplers(1, &mSamplers[GL_NEAREST].mClamp);
+	glDeleteSamplers(1, &mSamplers[GL_LINEAR].mWrap);
+	glDeleteSamplers(1, &mSamplers[GL_LINEAR].mClamp);
 
 	//Delete the buffers that OpenGLImage has
 	glDeleteBuffers(1, &OpenGLImage::gOpenGLImageVBO);
@@ -232,8 +234,11 @@ bool OpenGLRenderer::InitGLContext()
 
 	SDL_GL_MakeCurrent(mApp->mWindow->mInternalWindow, mContext);
 
-	mSamplers.mClamp = 0;
-	mSamplers.mWrap = 0;
+	mSamplers[GL_NEAREST].mWrap = 0;
+	mSamplers[GL_NEAREST].mClamp = 0;
+	mSamplers[GL_LINEAR].mWrap = 0;
+	mSamplers[GL_LINEAR].mClamp = 0;
+
 	mDefaultShader = new GLShader();
 	mDefaultShader->LoadFromSource(gVertexShaderSrc, gFragmentShaderSrc);
 
@@ -281,16 +286,23 @@ bool OpenGLRenderer::InitBuffers()
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mFBOTexture, 0);
 
 	gGLTextureCount++;
-	glGenSamplers(1, &mSamplers.mWrap);
-	glSamplerParameteri(mSamplers.mWrap, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glSamplerParameteri(mSamplers.mWrap, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glSamplerParameteri(mSamplers.mWrap, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glSamplerParameteri(mSamplers.mWrap, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glGenSamplers(1, &mSamplers.mClamp);
-	glSamplerParameteri(mSamplers.mClamp, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glSamplerParameteri(mSamplers.mClamp, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glSamplerParameteri(mSamplers.mClamp, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glSamplerParameteri(mSamplers.mClamp, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	GLenum possiblefilters[2] = {GL_NEAREST, GL_LINEAR};
+	for (int i = 0; i < 2; i++)
+	{
+		GLenum aFilter = possiblefilters[i];
+		glGenSamplers(1, &mSamplers[aFilter].mWrap);
+		glSamplerParameteri(mSamplers[aFilter].mWrap, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glSamplerParameteri(mSamplers[aFilter].mWrap, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glSamplerParameteri(mSamplers[aFilter].mWrap, GL_TEXTURE_MIN_FILTER, aFilter);
+		glSamplerParameteri(mSamplers[aFilter].mWrap, GL_TEXTURE_MAG_FILTER, aFilter);
+		glGenSamplers(1, &mSamplers[aFilter].mClamp);
+		glSamplerParameteri(mSamplers[aFilter].mClamp, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glSamplerParameteri(mSamplers[aFilter].mClamp, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glSamplerParameteri(mSamplers[aFilter].mClamp, GL_TEXTURE_MIN_FILTER, aFilter);
+		glSamplerParameteri(mSamplers[aFilter].mClamp, GL_TEXTURE_MAG_FILTER, aFilter);
+
+	}
 
 	return true;
 }
@@ -325,7 +337,7 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 
 		ApplyBlendMode(cmd.mBlendMode);
 
-		glBindSampler(0, cmd.mUVWrapMode == UV_WRAP ? mSamplers.mWrap : mSamplers.mClamp);
+		glBindSampler(0, cmd.mUVWrapMode == UV_WRAP ? mSamplers[cmd.mFilterMode].mWrap : mSamplers[cmd.mFilterMode].mClamp);
 		if (cmd.mHasClipRect)
 		{
 			glEnable(GL_SCISSOR_TEST);
@@ -640,6 +652,7 @@ void OpenGLRenderer::Blt(Image *theImage,
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
+	aCmd.mFilterMode = linearFilter ? GL_LINEAR : GL_NEAREST;
 
 	glm::vec2 p0 = {theX, theY};
 	glm::vec2 p1 = {theX + theSrcRect.mWidth, theY};
@@ -744,6 +757,7 @@ void OpenGLRenderer::BltMirror(Image *theImage,
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
+	aCmd.mFilterMode = linearFilter ? GL_LINEAR : GL_NEAREST;
 
 	glm::vec2 p0 = {theX, theY};
 	glm::vec2 p1 = {theX + theSrcRect.mWidth, theY};
@@ -927,6 +941,7 @@ void OpenGLRenderer::BltTransformed(Image *theImage,
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
+	aCmd.mFilterMode = linearFilter ? GL_LINEAR : GL_NEAREST;
 
 	float aWidth = static_cast<float>(theSrcRect.mWidth);
 	float aHeight = static_cast<float>(theSrcRect.mHeight);
