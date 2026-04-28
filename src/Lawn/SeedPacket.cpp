@@ -1010,7 +1010,7 @@ void SeedBank::Draw(Graphics *g)
 
 #if SEXY_USE_CONTROLLER
 	g->PushState();
-	g->SetScale(1.1f, 1.1f, 0.0f, 0.0f);
+	//g->SetScale(1.1f, 1.1f, 0.0f, 0.0f);
 	if (mApp->mGameScene == GameScenes::SCENE_PLAYING && mApp->mGamepads[0] != nullptr)
 	{
 
@@ -1029,7 +1029,7 @@ void SeedBank::Draw(Graphics *g)
 		SeedPacket *aSeedPacket = &mSeedPackets[mIndexGamepad];
 		if (aSeedPacket->mPacketType != SeedType::SEED_NONE)
 		{
-			g->DrawImage(Sexy::IMAGE_SEED_SELECTOR, aSeedPacket->mX - (aSeedPacket->mOffsetX + 6) * g->mScaleX, 3, Rect(0, 0, Sexy::IMAGE_SEED_SELECTOR->GetWidth(), Sexy::IMAGE_SEED_SELECTOR->GetHeight()));
+			g->DrawImage(Sexy::IMAGE_SEED_SELECTOR, aSeedPacket->mX - 5, 3);
 		}
 	}
 	g->PopState();
@@ -1041,7 +1041,7 @@ void SeedBank::Draw(Graphics *g)
 		g->PushState();
 		if (i == mIndexGamepad && mApp->mGameScene == GameScenes::SCENE_PLAYING)
 		{
-			g->SetScale(1.1f, 1.1f, 0.0f, 0.0f);
+			//g->SetScale(1.1f, 1.1f, 0.0f, 0.0f);
 		}
 #endif
 		SeedPacket *aSeedPacket = &mSeedPackets[i];
