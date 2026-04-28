@@ -2,6 +2,7 @@
 #include "../../Resources.h"
 #include "../../SexyAppFramework/Font.h"
 #include "../../LawnApp.h"
+#include "../../SexyAppFramework/GitData.h"
 
 AdvancedOptionsDialog::AdvancedOptionsDialog(LawnApp *theApp)
 	: LawnDialog(theApp, DIALOG_ADVANCEDOPTIONS, true, "[ADVANCED_OPTIONS_HEADER]", "", "", BUTTONS_NONE)
@@ -28,18 +29,35 @@ AdvancedOptionsDialog::~AdvancedOptionsDialog()
 void AdvancedOptionsDialog::Draw(Graphics* g)
 {
 	LawnDialog::Draw(g);
-	g->SetColor(Color::White);
-	g->SetFont(Sexy::FONT_BRIANNETOD12);
-	SexyString aVersionString = "ResoddedFramework " + mResoddedVersion.toString();
-	g->WriteString(aVersionString, mWidth - Sexy::FONT_BRIANNETOD12->StringWidth(aVersionString) + 60, mHeight - Sexy::FONT_BRIANNETOD12->GetHeight() - 20);
+
+	int aMaxContentHeight = 600;
+	float aMaxScroll = std::max(0.0f, (float)aMaxContentHeight - mOptionsSlider->mAllowedMouseZone.mHeight);
+
+	float aScrollOffset = mOptionsSlider->GetValue() * aMaxScroll;
+
 	g->PushState();
 	g->SetClipRect(Rect(mOptionsSlider->mAllowedMouseZone.mX - mX,
 						mOptionsSlider->mAllowedMouseZone.mY - mY,
 						mOptionsSlider->mAllowedMouseZone.mWidth,
 						mOptionsSlider->mAllowedMouseZone.mHeight));
-	g->Translate(35, 120 + -mOptionsSlider->GetValue() * 700);
-	g->DrawImage(Sexy::IMAGE_REANIM_ZOMBIE_HEAD_SUNGLASSES1, 0, 0);
-	g->DrawImage(Sexy::IMAGE_REANIM_ZOMBIE_HEAD_SUNGLASSES2, 0, 600);
+	g->Translate(35, 120 - aScrollOffset);
+
+	SexyString aVersionString = "ResoddedFramework " + mResoddedVersion.toString();
+	TodDrawString(g, aVersionString, 
+					mOptionsSlider->mAllowedMouseZone.mWidth - Sexy::FONT_BRIANNETOD12->StringWidth(aVersionString) - 27,
+					aMaxContentHeight - Sexy::FONT_BRIANNETOD12->GetHeight(),
+					Sexy::FONT_BRIANNETOD12, 
+					Color::White, 
+					DrawStringJustification::DS_ALIGN_LEFT);
+#if GIT_AVAILABLE
+	SexyString aHash = GIT_HASH;
+	SexyString aGitString = "Git: Hash (" + aHash + ") " + (GIT_IS_DIRTY ? "WORK IN PROGRESS" : "");
+	TodDrawString(g, aGitString, 
+					mOptionsSlider->mAllowedMouseZone.mWidth - Sexy::FONT_BRIANNETOD12->StringWidth(aGitString) - 27,
+					aMaxContentHeight,
+					Sexy::FONT_BRIANNETOD12,
+					Color::White, DrawStringJustification::DS_ALIGN_LEFT);
+#endif
 	g->PopState();
 }
 

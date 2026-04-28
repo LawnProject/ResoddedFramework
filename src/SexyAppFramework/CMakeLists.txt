@@ -72,11 +72,28 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
 )
 endif()
 
+
+# execute the git parser once on initial setup
+execute_process(
+  COMMAND ${CMAKE_COMMAND}
+    -DSRC=${CMAKE_SOURCE_DIR}/src/SexyAppFramework/GitData.h.in
+    -DDST=${CMAKE_BINARY_DIR}/src/SexyAppFramework/GitData.h
+    -P ${CMAKE_SOURCE_DIR}/cmake/CheckGit.cmake
+)
+
+add_custom_target(git_check
+  COMMAND ${CMAKE_COMMAND}
+    -D SRC=${CMAKE_SOURCE_DIR}/src/SexyAppFramework/GitData.h.in
+    -D DST=${CMAKE_SOURCE_DIR}/src/SexyAppFramework/GitData.h
+    -P ${CMAKE_SOURCE_DIR}/cmake/CheckGit.cmake
+)
+
+add_dependencies(${PROJECT_NAME} git_check)
+
 target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_SOURCE_DIR}/thirdparty/src"
 )
-
 
 foreach(FILE_PATH IN LISTS SOURCES)
     get_filename_component(EXT "${FILE_PATH}" EXT)
