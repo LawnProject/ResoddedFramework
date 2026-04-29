@@ -1,6 +1,8 @@
 #include "AdvancedOptionsDialog.h"
 #include "../../Resources.h"
 #include "../../SexyAppFramework/Font.h"
+#include "../../SexyAppFramework/Renderer.h"
+#include "../../SexyAppFramework/Checkbox.h"
 #include "../../LawnApp.h"
 #include "../../SexyAppFramework/GitData.h"
 
@@ -14,8 +16,9 @@ AdvancedOptionsDialog::AdvancedOptionsDialog(LawnApp *theApp)
 	mOptionsSlider->Resize(500, 90, 8, 140);
 	mOptionsSlider->mScrollMultiplier = 0.09f;
 
-	mApplyButton = MakeButton(ADVANCED_OPTIONS_APPLY, this, "[ADVANCED_OPTIONS_APPLY]");
-	mCancelButton = MakeButton(ADVANCED_OPTIONS_CANCEL, this, "[ADVANCED_OPTIONS_CANCEL]");
+	mVSyncCheckbox = MakeNewCheckbox(AdvancedOptionsDialog::ADVANCED_OPTIONS_VSYNC, this, theApp->mWaitForVSync);
+
+	mApplyButton = MakeButton(ADVANCED_OPTIONS_BACK, this, "[ADVANCED_OPTIONS_BACK]");
 	CalcSize(211, 214);
 }
 
@@ -23,7 +26,7 @@ AdvancedOptionsDialog::~AdvancedOptionsDialog()
 {
 	delete mOptionsSlider;
 	delete mApplyButton;
-	delete mCancelButton;
+	delete mVSyncCheckbox;
 }
 
 void AdvancedOptionsDialog::Draw(Graphics* g)
@@ -36,11 +39,23 @@ void AdvancedOptionsDialog::Draw(Graphics* g)
 	float aScrollOffset = mOptionsSlider->GetValue() * aMaxScroll;
 
 	g->PushState();
+	g->Translate(mApplyButton->mX, mApplyButton->mY);
+	mApplyButton->Draw(g);
+	g->PopState();
+	g->PushState();
 	g->SetClipRect(Rect(mOptionsSlider->mAllowedMouseZone.mX - mX,
 						mOptionsSlider->mAllowedMouseZone.mY - mY,
 						mOptionsSlider->mAllowedMouseZone.mWidth,
 						mOptionsSlider->mAllowedMouseZone.mHeight));
 	g->Translate(35, 120 - aScrollOffset);
+
+
+	mVSyncCheckbox->Resize(40, 140 - aScrollOffset, 46, 45);
+	mVSyncCheckbox->mDisabled = (mVSyncCheckbox->mY + mY) < mOptionsSlider->mAllowedMouseZone.mY;
+	TodDrawString(g, "[ADVANCED_OPTIONS_VIDEO]", 20, 10, Sexy::FONT_BRIANNETOD12, Color::White,
+				  DrawStringJustification::DS_ALIGN_LEFT);
+
+	TodDrawString(g, "[ADVANCED_OPTIONS_VSYNC]", mVSyncCheckbox->mX + 20, 40, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
 
 	SexyString aVersionString = "ResoddedFramework " + mResoddedVersion.toString();
 	TodDrawString(g, aVersionString, 
@@ -66,7 +81,7 @@ void AdvancedOptionsDialog::AddedToManager(WidgetManager *theWidgetManager)
 	LawnDialog::AddedToManager(theWidgetManager);
 	AddWidget(mOptionsSlider);
 	AddWidget(mApplyButton);
-	AddWidget(mCancelButton);
+	AddWidget(mVSyncCheckbox);
 }
 
 //0x45D8E0
@@ -75,7 +90,7 @@ void AdvancedOptionsDialog::RemovedFromManager(WidgetManager *theWidgetManager)
 	LawnDialog::RemovedFromManager(theWidgetManager);
 	RemoveWidget(mOptionsSlider);
 	RemoveWidget(mApplyButton);
-	RemoveWidget(mCancelButton);
+	RemoveWidget(mVSyncCheckbox);
 }
 
 void AdvancedOptionsDialog::Resize(int theX, int theY, int theWidth, int theHeight)
@@ -83,8 +98,8 @@ void AdvancedOptionsDialog::Resize(int theX, int theY, int theWidth, int theHeig
 	LawnDialog::Resize(theX, theY, theWidth, theHeight);
 	mOptionsSlider->Resize(mWidth - 60, 110, 8, 200);
 	mOptionsSlider->mAllowedMouseZone = Rect(mX + 35, mY + 120, mWidth - 70, mHeight - 240);
-	mApplyButton->Resize(40, 331, 140, 46);
-	mCancelButton->Resize(190, 331, 140, 46);
+	mApplyButton->Resize(40, 331, 209, 46);
+	SetWidgetClipping(Rect(35, 120, mWidth - 70, mHeight - 240));
 }
 void AdvancedOptionsDialog::MouseWheel(int theDelta)
 {
@@ -99,16 +114,31 @@ void AdvancedOptionsDialog::ButtonDepress(int theId)
 {
 	switch (theId)
 	{
-		case AdvancedOptionsDialog::ADVANCED_OPTIONS_CANCEL:
-		case AdvancedOptionsDialog::ADVANCED_OPTIONS_APPLY:
+		case AdvancedOptionsDialog::ADVANCED_OPTIONS_BACK:
 		{
 			mApp->KillDialog(mId);
-			if (theId == ADVANCED_OPTIONS_APPLY)
-			{
-				//special code to update some specific options
-			}
 			
 			break;
 		}
+	}
+}
+
+
+void AdvancedOptionsDialog::CheckboxChecked(int theId, bool checked)
+{
+	switch (theId)
+	{
+	case AdvancedOptionsDialog::ADVANCED_OPTIONS_VSYNC:
+		mApp->mWaitForVSync = checked;
+		RendererError anError = mApp->mRenderer->UpdateVSync();
+		if (anError == RendererError::ERROR_VSYNC)
+		{
+			mVSyncCheckbox->SetChecked(!checked, false);
+			SexyString aFailString = StrFormat("V-Sync couldn't be toggled %s\n\nYour video card does not\nmeet the "
+											   "minimum requirements\nfor this game.",
+											   (checked ? "on" : "off"));
+			mApp->DoDialog(Dialogs::DIALOG_INFO, true, "Failed", aFailString, "OK", Dialog::BUTTONS_FOOTER);
+		}
+		break;
 	}
 }

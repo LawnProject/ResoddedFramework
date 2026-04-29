@@ -91,8 +91,30 @@ bool OpenGLRenderer::Init()
 		mRefreshRate = 60;
 	mMillisecondsPerFrame = 1000 / mRefreshRate;
 
+	if (!mTriedToSetVSync)
+	{
+		if (!SDL_GL_SetSwapInterval(mApp->mWaitForVSync ? 1 : 0))
+		{
+			SDL_GL_SetSwapInterval(1);
+		}
+	}
+	int aVSync = 0;
+	SDL_GL_GetSwapInterval(&aVSync);
+	mApp->mWaitForVSync = aVSync != 0;
+	mApp->mVSyncBroken = aVSync == 0;
+
 	mSceneBegun = true;
+	mTriedToSetVSync = true;
 	return aResult;
+}
+
+RendererError OpenGLRenderer::UpdateVSync()
+{
+	if (!SDL_GL_SetSwapInterval(mApp->mWaitForVSync ? 1 : 0))
+	{
+		return RendererError::ERROR_VSYNC;
+	}
+	return RendererError::ERROR_NONE;
 }
 
 uint32_t *OpenGLRenderer::CaptureFrameBuffer()

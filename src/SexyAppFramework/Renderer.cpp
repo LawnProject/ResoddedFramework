@@ -14,6 +14,7 @@ Renderer::Renderer(SexyAppBase* theApp) : mApp(theApp)
 	mPresentationRect = Rect(0, 0, mWidth, mHeight);
 	mScreenImage = nullptr;
 	mSceneBegun = false;
+	mTriedToSetVSync = false;
 	mMillisecondsPerFrame = 0;
 	mRefreshRate = 0;
 

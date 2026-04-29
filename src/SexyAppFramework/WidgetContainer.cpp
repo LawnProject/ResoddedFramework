@@ -23,6 +23,7 @@ WidgetContainer::WidgetContainer()
 	mClip = true;
 	mPriority = 0;
 	mZOrder = 0;
+	ResetWidgetClipping();
 }
 
 WidgetContainer::~WidgetContainer()
@@ -579,6 +580,8 @@ void WidgetContainer::DrawAll(ModalFlags *theFlags, Graphics *g)
 		g->PopState();
 	}
 
+	if (mWidgetsClipping.mWidth != -1 || mWidgetsClipping.mHeight != -1)
+		g->ClipRect(mWidgetsClipping);
 	WidgetList::iterator anItr = mWidgets.begin();
 	while (anItr != mWidgets.end())
 	{
@@ -601,6 +604,21 @@ void WidgetContainer::DrawAll(ModalFlags *theFlags, Graphics *g)
 
 void WidgetContainer::SysColorChanged()
 {
+}
+
+void WidgetContainer::SetWidgetClipping(const Rect &theRect)
+{
+	mWidgetsClipping = theRect;
+}
+
+void WidgetContainer::SetWidgetClipping(int theX, int theY, int theWidth, int theHeight)
+{
+	SetWidgetClipping(Rect(theX, theY, theWidth, theHeight));
+}
+
+void WidgetContainer::ResetWidgetClipping()
+{
+	mWidgetsClipping = Rect(-1, -1, -1, -1);
 }
 
 void WidgetContainer::SysColorChangedAll()

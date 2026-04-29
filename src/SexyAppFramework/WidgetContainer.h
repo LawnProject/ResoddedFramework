@@ -35,6 +35,7 @@ class WidgetContainer
 	FlagsMod mWidgetFlagsMod;
 	int mPriority;
 	int mZOrder;
+	Rect mWidgetsClipping;
 
   public:
 	Widget *GetWidgetAtHelper(int x, int y, int theFlags, bool *found, int *theWidgetX, int *theWidgetY);
@@ -79,6 +80,10 @@ class WidgetContainer
 	virtual void DrawAll(ModalFlags *theFlags, Graphics *g);
 	virtual void SysColorChangedAll();
 	virtual void SysColorChanged();
+
+	virtual void SetWidgetClipping(const Rect &theRect);
+	virtual void SetWidgetClipping(int theX, int theY, int theWidth, int theHeight);
+	virtual void ResetWidgetClipping();
 };
 
 }; // namespace Sexy
