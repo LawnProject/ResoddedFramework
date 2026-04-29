@@ -77,7 +77,7 @@ endif()
 execute_process(
   COMMAND ${CMAKE_COMMAND}
     -DSRC=${CMAKE_SOURCE_DIR}/src/SexyAppFramework/GitData.h.in
-    -DDST=${CMAKE_BINARY_DIR}/src/SexyAppFramework/GitData.h
+    -DDST=${CMAKE_SOURCE_DIR}/src/SexyAppFramework/GitData.h
     -P ${CMAKE_SOURCE_DIR}/cmake/CheckGit.cmake
 )
 

@@ -51,7 +51,7 @@ void AdvancedOptionsDialog::Draw(Graphics* g)
 					DrawStringJustification::DS_ALIGN_LEFT);
 #if GIT_AVAILABLE
 	SexyString aHash = GIT_HASH;
-	SexyString aGitString = "Git: Hash (" + aHash + ") " + (GIT_IS_DIRTY ? "WORK IN PROGRESS" : "");
+	SexyString aGitString = "Git: Hash (" + aHash + ")" + (GIT_IS_DIRTY ? " WORK IN PROGRESS" : "");
 	TodDrawString(g, aGitString, 
 					mOptionsSlider->mAllowedMouseZone.mWidth - Sexy::FONT_BRIANNETOD12->StringWidth(aGitString) - 27,
 					aMaxContentHeight,
