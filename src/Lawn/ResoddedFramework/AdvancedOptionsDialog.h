@@ -13,11 +13,13 @@ class AdvancedOptionsDialog : public LawnDialog, public Sexy::CheckboxListener
 	{
 		ADVANCED_OPTIONS_BACK,
 		ADVANCED_OPTIONS_VSYNC,
+		ADVANCED_OPTIONS_SAVE_FILE,
 	};
 
   public:
 	LawnApp *mApp;				  //+0x16C
 	LawnStoneButton *mApplyButton;
+	LawnStoneButton *mSaveFileButton;
 	Sexy::Checkbox *mVSyncCheckbox;
 	LawnSlider *mOptionsSlider;
 

@@ -1479,9 +1479,6 @@ bool SexyAppBase::RegistryWrite(const std::string &theValueName,
 								const uint8_t *theValue,
 								uint32_t theLength)
 {
-	if (mRegKey.length() == 0)
-		return false;
-
 	if (mPlayingDemoBuffer)
 	{
 		if (mManualShutdown)
@@ -1496,7 +1493,7 @@ bool SexyAppBase::RegistryWrite(const std::string &theValueName,
 		return mDemoBuffer.ReadNumBits(1, false) != 0;
 	}
 
-	std::filesystem::path config = GetAppDataFolder() + mRegKey + "/registry.json"; // always registry.json
+	std::filesystem::path config = GetAppDataFolder() + "/registry.json"; // always registry.json
 	std::filesystem::create_directories(config.parent_path());
 
 	nlohmann::json j;
@@ -1577,9 +1574,6 @@ void SexyAppBase::WriteToRegistry()
 
 bool SexyAppBase::RegistryEraseKey(const SexyString &_theKeyName)
 { 
-	if (mRegKey.length() == 0)
-		return false;
-
 	if (mPlayingDemoBuffer)
 	{
 		if (mManualShutdown)
@@ -1628,7 +1622,7 @@ bool SexyAppBase::RegistryEraseKey(const SexyString &_theKeyName)
 
 void SexyAppBase::RegistryEraseValue(const SexyString &_theValueName)
 {
-	std::filesystem::path configPath = GetAppDataFolder() + mRegKey + "/registry.json";
+	std::filesystem::path configPath = GetAppDataFolder() + "/registry.json";
 	std::string keyName = _theValueName;
 
 	if (!std::filesystem::exists(configPath))
@@ -1676,7 +1670,7 @@ bool SexyAppBase::RegistryRead(const std::string &theValueName,
 bool SexyAppBase::RegistryReadKey(
 	const std::string &theValueName, JSONRegistryType *theType, uint8_t *theValue, uint32_t *theLength, int theKey)
 {
-	std::filesystem::path configPath = GetAppDataFolder() + mRegKey + "/registry.json";
+	std::filesystem::path configPath = GetAppDataFolder() + "/registry.json";
 	if (!std::filesystem::exists(configPath) || !theType || !theValue || !theLength)
 		return false;
 
@@ -1748,7 +1742,7 @@ bool SexyAppBase::RegistryReadKey(
 
 bool SexyAppBase::RegistryReadString(const std::string &theKey, std::string *theString)
 {
-	std::filesystem::path configPath = GetAppDataFolder() + mRegKey + "/registry.json";
+	std::filesystem::path configPath = GetAppDataFolder() + "/registry.json";
 	if (!std::filesystem::exists(configPath) || !theString)
 		return false;
 
@@ -1781,7 +1775,7 @@ bool SexyAppBase::RegistryReadInteger(const std::string &theKey, int *theValue)
 	std::string s;
 
 	nlohmann::json j;
-	std::filesystem::path configPath = GetAppDataFolder() + mRegKey + "/registry.json";
+	std::filesystem::path configPath = GetAppDataFolder() + "/registry.json";
 	std::ifstream inFile(configPath);
 	if (!inFile)
 		return false;
@@ -1808,7 +1802,7 @@ bool SexyAppBase::RegistryReadBoolean(const std::string &theKey, bool *theValue)
 		return false;
 
 	nlohmann::json j;
-	std::filesystem::path configPath = GetAppDataFolder() + mRegKey + "/registry.json";
+	std::filesystem::path configPath = GetAppDataFolder() + "/registry.json";
 	std::ifstream inFile(configPath);
 	if (!inFile)
 		return false;
@@ -1835,7 +1829,7 @@ bool SexyAppBase::RegistryReadData(const std::string &theKey, uint8_t *theValue,
 		return false;
 
 	nlohmann::json j;
-	std::filesystem::path configPath = GetAppDataFolder() + mRegKey + "/registry.json";
+	std::filesystem::path configPath = GetAppDataFolder() + "/registry.json";
 	std::ifstream inFile(configPath);
 	if (!inFile)
 		return false;
@@ -1864,10 +1858,6 @@ bool SexyAppBase::RegistryReadData(const std::string &theKey, uint8_t *theValue,
 void SexyAppBase::ReadFromRegistry()
 {
 	mReadFromRegistry = true;
-	mRegKey = SexyStringToString(GetString("RegistryKey", StringToSexyString(mRegKey)));
-
-	if (mRegKey.length() == 0)
-		return;
 
 	int anInt;
 	if (RegistryReadInteger("MusicVolume", &anInt))
@@ -5506,7 +5496,7 @@ void SexyAppBase::Init()
 		DoExit(0);
 	}
 
-	std::string aDataPath = GetAppDataFolder() + mFullCompanyName + "\\" + mProdName;
+	std::string aDataPath = GetAppDataFolder() + mFullCompanyName + "/" + mProdName;
 	SetAppDataFolder(aDataPath + "/");
 	MkDir(aDataPath);
 	if (mDemoFileName.length() < 2 || (mDemoFileName[1] != ':' && mDemoFileName[2] != '/'))

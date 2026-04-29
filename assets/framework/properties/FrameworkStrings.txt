@@ -13,3 +13,8 @@ Video Settings
 [ADVANCED_OPTIONS_VSYNC]
 V-Sync
 
+[ADVANCED_OPTIONS_MISC]
+Miscellaneous Settings
+
+[ADVANCED_OPTIONS_SAVE_FILE]
+Open Save File Folder
