@@ -248,8 +248,7 @@ SexyAppBase::SexyAppBase()
 	mVSyncBrokenCount = 0;
 	mVSyncBrokenTestStartTick = 0;
 	mVSyncBrokenTestUpdates = 0;
-	mWaitForVSync = false;
-	mSoftVSyncWait = true;
+	mWaitForVSync = true;
 	mUserChanged3DSetting = false;
 	mAutoEnable3D = false;
 	mTest3D = false;
@@ -2586,13 +2585,6 @@ bool SexyAppBase::DrawDirtyStuff()
 							mHeight - gFPSImage->GetHeight() - gDemoTimeLeftImage->GetHeight() - 15);
 		}
 
-		if (mWaitForVSync && mIsPhysWindowed && mSoftVSyncWait)
-		{
-			uint32_t aTick = timeGetTime();
-			if (aTick - mLastDrawTick < mRenderer->mMillisecondsPerFrame)
-				Sleep(mRenderer->mMillisecondsPerFrame - (aTick - mLastDrawTick));
-		}
-
 		uint32_t aPreScreenBltTime = timeGetTime();
 		mLastDrawTick = aPreScreenBltTime;
 
@@ -4652,8 +4644,8 @@ bool SexyAppBase::Process(bool allowSleep)
 	if (mLoadingFailed)
 		Shutdown();
 
-	bool isVSynched = (!mPlayingDemoBuffer) && (mVSyncUpdates) && (!mLastDrawWasEmpty) && (!mVSyncBroken) &&
-					  ((!mIsPhysWindowed) || (mIsPhysWindowed && mWaitForVSync && !mSoftVSyncWait));
+	bool isVSynched = !mPlayingDemoBuffer && mVSyncUpdates && !mLastDrawWasEmpty && !mVSyncBroken;
+
 	double aFrameFTime;
 	double anUpdatesPerUpdateF;
 

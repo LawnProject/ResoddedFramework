@@ -2,22 +2,23 @@
 
 #include "../Widget/LawnDialog.h"
 #include "../Widget/GameButton.h"
+#include "../../SexyAppFramework/CheckboxListener.h"
 
 class LawnApp;
 
-class AdvancedOptionsDialog : public LawnDialog
+class AdvancedOptionsDialog : public LawnDialog, public Sexy::CheckboxListener
 {
   protected:
 	enum
 	{
-		ADVANCED_OPTIONS_APPLY,
-		ADVANCED_OPTIONS_CANCEL,
+		ADVANCED_OPTIONS_BACK,
+		ADVANCED_OPTIONS_VSYNC,
 	};
 
   public:
 	LawnApp *mApp;				  //+0x16C
 	LawnStoneButton *mApplyButton;
-	LawnStoneButton *mCancelButton;
+	Sexy::Checkbox *mVSyncCheckbox;
 	LawnSlider *mOptionsSlider;
 
   public:
@@ -30,4 +31,5 @@ class AdvancedOptionsDialog : public LawnDialog
 	virtual void MouseWheel(int theDelta);
 	virtual void ButtonPress(int theId);
 	virtual void ButtonDepress(int theId);
+	void CheckboxChecked(int theId, bool checked);
 };

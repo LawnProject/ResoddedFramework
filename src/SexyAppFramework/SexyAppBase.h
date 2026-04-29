@@ -336,7 +336,6 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	uint32_t mVSyncBrokenTestStartTick;
 	uint32_t mVSyncBrokenTestUpdates;
 	bool mWaitForVSync;
-	bool mSoftVSyncWait;
 	bool mUserChanged3DSetting;
 	bool mAutoEnable3D;
 	bool mTest3D;

@@ -52,6 +52,12 @@ namespace Sexy
 		RAW_FORMAT_R,
 	};
 
+	enum RendererError
+	{
+		ERROR_NONE,
+		ERROR_VSYNC,
+	};
+
 	enum RenderingBackend
 	{
 		BACKEND_NONE = 0,
@@ -110,9 +116,9 @@ namespace Sexy
 		int mWidth;
 		int mHeight;
 		Rect mPresentationRect;
-		bool mIsWindowed;
 		bool mSceneBegun;
 		int mRefreshRate;
+		bool mTriedToSetVSync;
 		int mMillisecondsPerFrame;
 		RenderingBackend mCurrentBackend;
 
@@ -177,6 +183,8 @@ namespace Sexy
 
 		virtual void UpdateViewport() = 0;
 		virtual bool Init() = 0;
+
+		virtual RendererError UpdateVSync() = 0;
 
 		virtual RenderingInfo GetRenderingInfo() = 0;
 

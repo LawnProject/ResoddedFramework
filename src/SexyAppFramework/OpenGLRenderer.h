@@ -125,6 +125,7 @@ namespace Sexy
 
 		virtual void UpdateViewport();
 		virtual bool Init();
+		virtual RendererError UpdateVSync();
 
 		virtual bool CreateImageTexture(MemoryImage *theImage);
 		virtual bool RecoverBits(MemoryImage *theImage);
