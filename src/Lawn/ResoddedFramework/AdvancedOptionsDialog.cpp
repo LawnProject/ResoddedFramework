@@ -5,6 +5,11 @@
 #include "../../SexyAppFramework/Checkbox.h"
 #include "../../LawnApp.h"
 #include "../../SexyAppFramework/GitData.h"
+#if WIN32
+#include <ShlObj_core.h>
+#include <locale>
+#include <codecvt>
+#endif
 
 AdvancedOptionsDialog::AdvancedOptionsDialog(LawnApp *theApp)
 	: LawnDialog(theApp, DIALOG_ADVANCEDOPTIONS, true, "[ADVANCED_OPTIONS_HEADER]", "", "", BUTTONS_NONE)
@@ -18,6 +23,8 @@ AdvancedOptionsDialog::AdvancedOptionsDialog(LawnApp *theApp)
 
 	mVSyncCheckbox = MakeNewCheckbox(AdvancedOptionsDialog::ADVANCED_OPTIONS_VSYNC, this, theApp->mWaitForVSync);
 
+	mSaveFileButton = MakeButton(ADVANCED_OPTIONS_SAVE_FILE, this, "[ADVANCED_OPTIONS_SAVE_FILE]");
+
 	mApplyButton = MakeButton(ADVANCED_OPTIONS_BACK, this, "[ADVANCED_OPTIONS_BACK]");
 	CalcSize(211, 214);
 }
@@ -26,6 +33,7 @@ AdvancedOptionsDialog::~AdvancedOptionsDialog()
 {
 	delete mOptionsSlider;
 	delete mApplyButton;
+	delete mSaveFileButton;
 	delete mVSyncCheckbox;
 }
 
@@ -52,10 +60,16 @@ void AdvancedOptionsDialog::Draw(Graphics* g)
 
 	mVSyncCheckbox->Resize(40, 140 - aScrollOffset, 46, 45);
 	mVSyncCheckbox->mDisabled = (mVSyncCheckbox->mY + mY) < mOptionsSlider->mAllowedMouseZone.mY;
+
 	TodDrawString(g, "[ADVANCED_OPTIONS_VIDEO]", 20, 10, Sexy::FONT_BRIANNETOD12, Color::White,
 				  DrawStringJustification::DS_ALIGN_LEFT);
 
 	TodDrawString(g, "[ADVANCED_OPTIONS_VSYNC]", mVSyncCheckbox->mX + 20, 40, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
+
+	mSaveFileButton->Resize(40, 220 - aScrollOffset, 330, 46);
+
+	TodDrawString(g, "[ADVANCED_OPTIONS_MISC]", 20, 80, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
+
 
 	SexyString aVersionString = "ResoddedFramework " + mResoddedVersion.toString();
 	TodDrawString(g, aVersionString, 
@@ -82,6 +96,7 @@ void AdvancedOptionsDialog::AddedToManager(WidgetManager *theWidgetManager)
 	AddWidget(mOptionsSlider);
 	AddWidget(mApplyButton);
 	AddWidget(mVSyncCheckbox);
+	AddWidget(mSaveFileButton);
 }
 
 //0x45D8E0
@@ -91,6 +106,7 @@ void AdvancedOptionsDialog::RemovedFromManager(WidgetManager *theWidgetManager)
 	RemoveWidget(mOptionsSlider);
 	RemoveWidget(mApplyButton);
 	RemoveWidget(mVSyncCheckbox);
+	RemoveWidget(mSaveFileButton);
 }
 
 void AdvancedOptionsDialog::Resize(int theX, int theY, int theWidth, int theHeight)
@@ -117,7 +133,18 @@ void AdvancedOptionsDialog::ButtonDepress(int theId)
 		case AdvancedOptionsDialog::ADVANCED_OPTIONS_BACK:
 		{
 			mApp->KillDialog(mId);
-			
+			break;
+		}
+		case AdvancedOptionsDialog::ADVANCED_OPTIONS_SAVE_FILE:
+		{
+			SexyString aSaveFileFolder = GetAppDataFolder();
+			#if WIN32
+			ShellExecuteA(NULL, "open", aSaveFileFolder.c_str(), NULL, NULL, SW_SHOWDEFAULT);
+			#else
+			SexyString aFailString = StrFormat("Couldn't open the folder on this platform.\nThe path is: \n%s", aSaveFileFolder.c_str());
+
+			mApp->DoDialog(Dialogs::DIALOG_INFO, true, "Failed", aFailString, "OK", Dialog::BUTTONS_FOOTER);
+			#endif
 			break;
 		}
 	}

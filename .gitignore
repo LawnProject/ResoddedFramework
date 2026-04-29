@@ -5,7 +5,6 @@ out/
 *.pdb
 .vscode/
 .vs/
-savefiles/
 crash.txt
 
 Export/

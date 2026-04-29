@@ -163,7 +163,6 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	std::string mFullCompanyName;
 	std::string mProdName;
 	SexyString mTitle;
-	std::string mRegKey;
 	std::string mChangeDirTo;
 
 	int mRelaxUpdateBacklogCount; // app doesn't try to catch up for this many frames
