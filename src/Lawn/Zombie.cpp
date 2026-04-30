@@ -7495,6 +7495,10 @@ void Zombie::DieNoLoot()
 	{
 		BossDie();
 	}
+#if LAWN_DEBUG_TOOLS
+	if (mBoard != nullptr && mBoard->mDebugSelectedZombie == this)
+		mBoard->mDebugSelectedZombie = nullptr;
+#endif
 }
 
 //0x530640

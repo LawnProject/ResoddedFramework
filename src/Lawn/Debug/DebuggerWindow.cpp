@@ -9,6 +9,8 @@
 #include "../Sexy.TodLib/Trail.h"
 #include "../Sexy.TodLib/Reanimator.h"
 #include "../Sexy.TodLib/TodParticle.h"
+#include "../SexyAppFramework/MTRand.h"
+#include "../SexyAppFramework/WidgetManager.h"
 #include "../Challenge.h"
 #include "../../LawnApp.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
@@ -27,6 +29,7 @@ DebuggerWindow::~DebuggerWindow()
 
 void DebuggerWindow::Update()
 {
+	MTRand::gIgnoreAssert = true;
 	ImGui::Begin("LawnTools");
 	if (ImGui::BeginTabBar("LawnTabs"))
 	{
@@ -69,7 +72,12 @@ void DebuggerWindow::Update()
 					}
 					else if (mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 					{
-						ImGui::Text("Tree Height: %d", mApp->mPlayerInfo->mChallengeRecords[mApp->GetCurrentChallengeIndex()]);
+						if (ImGui::BeginTabItem("Zen Garden"))
+						{
+							ImGui::Text("Tree Height: %d",mApp->mPlayerInfo->mChallengeRecords[mApp->GetCurrentChallengeIndex()]);
+
+							ImGui::EndTabItem();
+						}
 
 					}
 					else
@@ -113,13 +121,60 @@ void DebuggerWindow::Update()
 						}
 						if (ImGui::BeginTabItem("Zombies"))
 						{
-							ImGui::SeparatorText("Zombie Spawning");
-							for (int i = 0; i < 100; i++)
+							if (ImGui::BeginTabBar("ZombieTabs"))
 							{
-								if (mApp->mBoard->mZombieAllowed[i])
+								if (ImGui::BeginTabItem("Spawning"))
 								{
-									ImGui::Text(GetZombieDefinition((ZombieType)i).mZombieName);
+									for (int i = ZOMBIE_NORMAL; i < NUM_ZOMBIE_TYPES; i++)
+									{
+										if (((ZombieType)i == ZOMBIE_YETI && mApp->CanSpawnYetis()) || ((ZombieType)i != ZOMBIE_YETI && mApp->mBoard->mZombieAllowed[i]))
+											ImGui::Text(GetZombieDefinition((ZombieType)i).mZombieName);
+									}
+
+									ImGui::EndTabItem();
 								}
+								if (ImGui::BeginTabItem("Debug Spawn"))
+								{
+									for (int i = ZOMBIE_NORMAL; i < NUM_ZOMBIE_TYPES; i++)
+									{
+										if (ImGui::Button(GetZombieDefinition((ZombieType)i).mZombieName))
+										{
+											mApp->mBoard->AddZombie((ZombieType)i, Zombie::ZOMBIE_WAVE_DEBUG);
+										}
+									}
+
+									ImGui::EndTabItem();
+								}
+								if (ImGui::BeginTabItem("Debug"))
+								{
+
+									if (mApp->mBoard->mDebugSelectedZombie)
+									{
+										ZombieDefinition aDefinition = GetZombieDefinition(mApp->mBoard->mDebugSelectedZombie->mZombieType);
+										ImGui::Text("Currently Selected Zombie: %s", aDefinition.mZombieName);
+										ImGui::SeparatorText("General Information");
+										ImGui::Text("X: %d", mApp->mBoard->mDebugSelectedZombie->mX);
+										ImGui::Text("Y: %d", mApp->mBoard->mDebugSelectedZombie->mY);
+										ImGui::SeparatorText("Gameplay Info");
+
+										ImGui::Text("Body Health: %d", mApp->mBoard->mDebugSelectedZombie->mBodyHealth);
+										if (mApp->mBoard->mDebugSelectedZombie->mHelmType != HelmType::HELMTYPE_NONE)
+										{
+											ImGui::Text("Helmet Health: %d", mApp->mBoard->mDebugSelectedZombie->mHelmHealth);
+										}
+										if (mApp->mBoard->mDebugSelectedZombie->mShieldType != ShieldType::SHIELDTYPE_NONE)
+										{
+											ImGui::Text("Shield Health: %d", mApp->mBoard->mDebugSelectedZombie->mShieldHealth);
+										}
+
+										ImGui::Text("Row: %d", mApp->mBoard->mDebugSelectedZombie->mRow);
+										ImGui::Text("In Pool: %s", mApp->mBoard->mDebugSelectedZombie->mInPool ? "true" : "false");
+										ImGui::Text("MindControlled: %s", mApp->mBoard->mDebugSelectedZombie->mMindControlled ? "true" : "false");
+									}
+									ImGui::EndTabItem();
+								}
+
+								ImGui::EndTabBar();
 							}
 
 							ImGui::EndTabItem();
@@ -169,6 +224,7 @@ void DebuggerWindow::Update()
 	}
 	
 	ImGui::End();
+	MTRand::gIgnoreAssert = false;
 }
 
 #endif

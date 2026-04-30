@@ -39,6 +39,8 @@ email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
 #include "Debug.h"
 #include <stdio.h>
 
+bool Sexy::MTRand::gIgnoreAssert = false;
+
 using namespace Sexy;
 
 /* Period parameters */
@@ -119,7 +121,7 @@ void MTRand::SRand(unsigned long seed)
 
 unsigned long MTRand::Next()
 {
-	DBG_ASSERT(gRandAllowed == 0);
+	DBG_ASSERT(gRandAllowed == 0 || gIgnoreAssert);
 	return NextNoAssert();
 }
 
@@ -171,7 +173,7 @@ unsigned long MTRand::NextNoAssert(unsigned long range)
 
 unsigned long MTRand::Next(unsigned long range)
 {
-	DBG_ASSERT(gRandAllowed == 0);
+	DBG_ASSERT(gRandAllowed == 0 || gIgnoreAssert);
 	return NextNoAssert(range);
 }
 
@@ -182,7 +184,7 @@ float MTRand::NextNoAssert(float range)
 
 float MTRand::Next(float range)
 {
-	DBG_ASSERT(gRandAllowed == 0);
+	DBG_ASSERT(gRandAllowed == 0 || gIgnoreAssert);
 	return NextNoAssert(range);
 }
 

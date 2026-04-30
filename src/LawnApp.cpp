@@ -158,6 +158,7 @@ LawnApp::LawnApp()
 
 #if LAWN_DEBUG_TOOLS
 	mDebugWindow = nullptr;
+	mDebuggerEnabled = false;
 #endif
 
 	//Define version here:
@@ -1396,6 +1397,7 @@ bool LawnApp::DebugKeyDown(int theKey)
 			mDebugWindow = new DebuggerWindow(this);
 		else
 			mDebugWindow->mEnabled = !mDebugWindow->mEnabled;
+		mDebuggerEnabled = mDebugWindow->mEnabled;
 #endif
 		
 	}

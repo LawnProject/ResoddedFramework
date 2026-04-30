@@ -205,11 +205,16 @@ Board::Board(LawnApp *theApp)
 		mStoreButton->mBtnNoDraw = true;
 		mStoreButton->SetLabel("[GET_FULL_VERSION_BUTTON]");
 	}
+
+#if LAWN_DEBUG_TOOLS
+	mDebugSelectedZombie = nullptr;
+#endif
 }
 
 //0x408670、0x408690
 Board::~Board()
 {
+	mDebugSelectedZombie = nullptr;
 	delete mAdvice;
 	delete mCursorObject;
 	delete mCursorPreview;
@@ -4657,6 +4662,34 @@ void Board::MouseDown(int x, int y, int theClickCount)
 
 	HitResult aHitResult;
 	MouseHitTest(x, y, &aHitResult);
+#if LAWN_DEBUG_TOOLS
+	if (aHitResult.mObjectType == GameObjectType::OBJECT_TYPE_NONE)
+	{
+		Zombie *aZombie = nullptr;
+		uint32_t aBestScore = 0;
+		while (mApp->mBoard->IterateZombies(aZombie))
+		{
+			if (!aZombie->IsDeadOrDying())
+			{
+				Rect aZombieRect = aZombie->GetZombieRect();
+				if (GetCircleRectOverlap(x, y - 20, 45, aZombieRect))
+				{
+					float dx = aZombie->mX - x;
+					float dy = aZombie->mY - y;
+					float distSq = dx * dx + dy * dy;
+
+					uint32_t aCurrentScore = aZombie->mRenderOrder * 100000 - (int)distSq;
+					if (mDebugSelectedZombie == nullptr || aCurrentScore >= aBestScore)
+					{
+						aBestScore = aCurrentScore;
+						mDebugSelectedZombie = aZombie;
+					}
+				}
+			}
+		}
+	}
+#endif
+
 	if (mChallenge->MouseDown(x, y, theClickCount, &aHitResult))
 		return;
 
@@ -8032,6 +8065,18 @@ void Board::DrawUITop(Graphics *g)
 	}
 
 	mToolTip->Draw(g);
+#if LAWN_DEBUG_TOOLS
+	if (mApp->mDebuggerEnabled && mDebugSelectedZombie && !mDebugSelectedZombie->IsDeadOrDying())
+	{
+		Rect aRect = mDebugSelectedZombie->GetZombieRect();
+		g->SetColor(Color(0, 255, 0));
+		g->DrawRect(aRect);
+
+		Rect aAttackRect = mDebugSelectedZombie->GetZombieAttackRect();
+		g->SetColor(Color(255, 0, 0));
+		g->DrawRect(aAttackRect);
+	}
+#endif
 	DrawDebugText(g);
 	DrawDebugObjectRects(g);
 }

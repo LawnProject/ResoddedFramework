@@ -115,6 +115,7 @@ class LawnApp : public SexyApp
 	PopDRMComm *mDRM;					   //+0x878
 #endif
 #if LAWN_DEBUG_TOOLS
+	bool mDebuggerEnabled;
 	DebuggerWindow *mDebugWindow;
 #endif
 	int mSessionID;						   //+0x87C

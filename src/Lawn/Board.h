@@ -120,6 +120,11 @@ class Board : public Widget, public ButtonListener
 	Font *mDebugFont;												  //+0x158
 	CutScene *mCutScene;											  //+0x15C
 	Challenge *mChallenge;											  //+0x160
+
+#if LAWN_DEBUG_TOOLS
+	Zombie *mDebugSelectedZombie;
+#endif
+
 	bool mPaused;													  //+0x164
 	GridSquareType mGridSquareType[MAX_GRID_SIZE_X][MAX_GRID_SIZE_Y]; //+0x168
 	int mGridCelLook[MAX_GRID_SIZE_X][MAX_GRID_SIZE_Y];				  //+0x240

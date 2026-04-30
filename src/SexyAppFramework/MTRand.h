@@ -30,6 +30,7 @@ class MTRand
 	std::string Serialize();
 
 	static void SetRandAllowed(bool allowed);
+	static bool gIgnoreAssert;
 };
 
 struct MTAutoDisallowRand
