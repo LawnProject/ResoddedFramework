@@ -10,7 +10,7 @@
 #include "KeyCodes.h"
 #include "Renderer.h"
 #if SEXY_USE_OPENGL
-#include "OpenGLRenderer.h"
+#include "OpenGL/OpenGLRenderer.h"
 #endif
 #if SEXY_USE_IMGUI
 #include "ImGui/ImGuiManager.h"

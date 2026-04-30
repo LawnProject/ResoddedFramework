@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 #include <SDL3/SDL_video.h>
-#include <OpenGLImage.h>
+#include "OpenGLImage.h"
 
 #include <unordered_map>
 #include <vector>

@@ -10,7 +10,7 @@
 #include FT_OUTLINE_H
 #include FT_SYNTHESIS_H
 #if SEXY_USE_OPENGL
-#include "OpenGLRenderer.h"
+#include "OpenGL/OpenGLRenderer.h"
 #endif
 
 
