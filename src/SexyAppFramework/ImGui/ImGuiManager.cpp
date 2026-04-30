@@ -5,7 +5,7 @@
 #include "SexyAppBase.h"
 #include "Window.h"
 #if SEXY_USE_OPENGL
-#include "OpenGLRenderer.h"
+#include "OpenGL/OpenGLRenderer.h"
 #endif
 
 using namespace Sexy;
