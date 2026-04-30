@@ -53,22 +53,10 @@ void main() {
 )glsl";
 
 int OpenGLRenderer::gGLTextureCount = 0;
+uint64_t OpenGLRenderer::gGLUsedMemoryCount = 0;
 
 OpenGLRenderer::OpenGLRenderer(SexyAppBase *theApp) : Renderer(theApp)
 {
-	mRGBBits = 32;
-
-	mRedBits = 8;
-	mGreenBits = 8;
-	mBlueBits = 8;
-
-	mRedShift = 0;
-	mGreenShift = 8;
-	mBlueShift = 16;
-
-	mRedMask = (0xFFU << mRedShift);
-	mGreenMask = (0xFFU << mGreenShift);
-	mBlueMask = (0xFFU << mBlueShift);
 	mCurrentBackend = RenderingBackend::BACKEND_OPENGL;
 }
 
@@ -158,8 +146,8 @@ void OpenGLRenderer::Cleanup()
 	{
 		MemoryImage *anImage = *anItr;
 
-		delete (OpenGLTextureData *)anImage->mD3DData;
-		anImage->mD3DData = nullptr;
+		delete (OpenGLTextureData *)anImage->mGPUData;
+		anImage->mGPUData = nullptr;
 
 		OpenGLImage *anNativeImage = dynamic_cast<OpenGLImage *>(anImage);
 		if (anNativeImage != nullptr && anNativeImage->mFBO != 0) //Delete the FBO incase the renderer resets
@@ -222,10 +210,10 @@ void OpenGLRenderer::SetVideoOnlyDraw(bool videoOnly)
 
 void OpenGLRenderer::Remove3DData(MemoryImage *theImage)
 {
-	if (theImage->mD3DData != nullptr)
+	if (theImage->mGPUData != nullptr)
 	{
-		delete (OpenGLTextureData *)theImage->mD3DData;
-		theImage->mD3DData = nullptr;
+		delete (OpenGLTextureData *)theImage->mGPUData;
+		theImage->mGPUData = nullptr;
 
 		AutoCrit aCrit(mCritSect); // Make images thread safe
 		mImageSet.erase(theImage);
@@ -422,8 +410,9 @@ void OpenGLRenderer::ApplyBlendMode(BlendMode mode)
 RenderingInfo OpenGLRenderer::GetRenderingInfo()
 {
 	RenderingInfo anInfo;
-	anInfo.mFreeVideoMem = 0;
-	anInfo.mTotalVideoMem = 0;
+	anInfo.mFreeVideoMem = -1;
+	anInfo.mTotalVideoMem = -1;
+	anInfo.mUsedVideoMemory = gGLUsedMemoryCount;
 	anInfo.mNumTextures = gGLTextureCount;
 	return anInfo;
 }
@@ -466,9 +455,9 @@ bool OpenGLRenderer::CreateImageTexture(MemoryImage *theImage)
 {
 	bool wantPurge = false;
 
-	if (theImage->mD3DData == nullptr)
+	if (theImage->mGPUData == nullptr)
 	{
-		theImage->mD3DData = new OpenGLTextureData();
+		theImage->mGPUData = new OpenGLTextureData();
 
 		// The actual purging was deferred
 		wantPurge = theImage->mPurgeBits;
@@ -477,7 +466,7 @@ bool OpenGLRenderer::CreateImageTexture(MemoryImage *theImage)
 		mImageSet.insert(theImage);
 	}
 
-	OpenGLTextureData *aData = static_cast<OpenGLTextureData *>(theImage->mD3DData);
+	OpenGLTextureData *aData = static_cast<OpenGLTextureData *>(theImage->mGPUData);
 	aData->CheckCreateTextures(theImage, nullptr); //We don't need extra variables when creating OpenGL Textures
 
 	if (wantPurge)
@@ -488,10 +477,10 @@ bool OpenGLRenderer::CreateImageTexture(MemoryImage *theImage)
 
 bool OpenGLRenderer::RecoverBits(MemoryImage *theImage)
 {
-	if (theImage->mD3DData == nullptr)
+	if (theImage->mGPUData == nullptr)
 		return false;
 
-	OpenGLTextureData *aData = (OpenGLTextureData *)theImage->mD3DData;
+	OpenGLTextureData *aData = (OpenGLTextureData *)theImage->mGPUData;
 	if (aData->mBitsChangedCount != theImage->mBitsChangedCount) // bits have changed since texture was created
 		return false;
 
@@ -545,6 +534,10 @@ OpenGLTextureData::OpenGLTextureData()
 
 void OpenGLTextureData::ReleaseTextures()
 {
+	OpenGLRenderer::gGLUsedMemoryCount -= mTexMemSize;
+	mTexMemSize = 0;
+	mWidth = 0;
+	mHeight = 0;
 	if (mSourceIsFBO) //releasing is handled by the source
 		return;
 	if (mTexData != nullptr)
@@ -636,6 +629,8 @@ void OpenGLTextureData::CreateTextures(MemoryImage* theImage, void* theRendererD
 	if (mTexData != nullptr)
 		delete mTexData;
 	mTexData = new GLuint(mTexID);
+	mTexMemSize = mWidth * mHeight * 4; //Using ARGB
+	OpenGLRenderer::gGLUsedMemoryCount += mTexMemSize;
 }
 
 void OpenGLTextureData::CheckCreateTextures(MemoryImage* theImage, void* theRendererData)
@@ -670,7 +665,7 @@ void OpenGLRenderer::Blt(Image *theImage,
 		return;
 
 	GLDrawCommand aCmd;
-	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mD3DData)->GetTextureID();
+	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
@@ -726,7 +721,7 @@ void OpenGLRenderer::BltClipF(Image *theImage,
 		aCmd.mClipRect = theClipRect;
 	}
 
-	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mD3DData)->GetTextureID();
+	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
@@ -775,7 +770,7 @@ void OpenGLRenderer::BltMirror(Image *theImage,
 		return;
 
 	GLDrawCommand aCmd;
-	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mD3DData)->GetTextureID();
+	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
@@ -833,7 +828,7 @@ void OpenGLRenderer::StretchBlt(Image *theImage,
 		aCmd.mHasClipRect = true;
 		aCmd.mClipRect = theClipRect;
 	}
-	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mD3DData)->GetTextureID();
+	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
@@ -895,7 +890,7 @@ void OpenGLRenderer::BltRotated(Image *theImage,
 		aCmd.mHasClipRect = true;
 		aCmd.mClipRect = theClipRect;
 	}
-	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mD3DData)->GetTextureID();
+	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
@@ -959,7 +954,7 @@ void OpenGLRenderer::BltTransformed(Image *theImage,
 		aCmd.mHasClipRect = true;
 		aCmd.mClipRect = theClipRect;
 	}
-	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mD3DData)->GetTextureID();
+	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
@@ -1089,7 +1084,7 @@ void OpenGLRenderer::DrawTriangleTex(const TriVertex &p1,
 		return;
 
 	GLDrawCommand aCmd;
-	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mD3DData)->GetTextureID();
+	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
@@ -1125,7 +1120,7 @@ void OpenGLRenderer::DrawTrianglesTex(const TriVertex theVertices[][3],
 		return;
 
 	GLDrawCommand aCmd;
-	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mD3DData)->GetTextureID();
+	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;

@@ -27,7 +27,6 @@
 #include "PropertiesParser.h"
 #include "PerfTimer.h"
 #include "MTRand.h"
-#include "ModVal.h"
 
 #include <fstream>
 
@@ -1252,8 +1251,8 @@ void SexyAppBase::DumpProgramInfo()
 			aRLAlphaMemory = aNumPixels;
 		if (aMemoryImage->mRLAdditiveData != NULL)
 			aRLAdditiveMemory = aNumPixels;
-		if (aMemoryImage->mD3DData != NULL)
-			aTextureMemory += ((TextureData *)aMemoryImage->mD3DData)->mTexMemSize;
+		if (aMemoryImage->mGPUData != NULL)
+			aTextureMemory += ((TextureData *)aMemoryImage->mGPUData)->mTexMemSize;
 
 		aMemorySize = aBitsMemory + aSurfaceMemory + aPalletizedMemory + aNativeAlphaMemory + aRLAlphaMemory +
 					  aRLAdditiveMemory + aTextureMemory;
@@ -1324,11 +1323,11 @@ void SexyAppBase::DumpProgramInfo()
 			aRLAlphaMemory = aNumPixels;
 		if (aMemoryImage->mRLAdditiveData != NULL)
 			aRLAdditiveMemory = aNumPixels;
-		if (aMemoryImage->mD3DData != NULL)
+		if (aMemoryImage->mGPUData != NULL)
 		{
-			aTextureMemory += ((TextureData *)aMemoryImage->mD3DData)->mTexMemSize;
+			aTextureMemory += ((TextureData *)aMemoryImage->mGPUData)->mTexMemSize;
 
-			switch (((TextureData *)aMemoryImage->mD3DData)->mPixelFormat)
+			switch (((TextureData *)aMemoryImage->mGPUData)->mPixelFormat)
 			{
 			case PixelFormat_A8R8G8B8:
 				aTextureFormatName = "A8R8G8B8";
@@ -1376,7 +1375,7 @@ void SexyAppBase::DumpProgramInfo()
 						   ((aSurfaceMemory != 0) ? "DDSurface<BR>" + CommaSeperate(aSurfaceMemory) : "&nbsp;"))
 					<< "</TD>" << std::endl;
 		aDumpStream << "<TD>"
-					<< SexyStringToString(((aMemoryImage->mD3DData != NULL)
+					<< SexyStringToString(((aMemoryImage->mGPUData != NULL)
 											   ? "Texture<BR>" + StringToSexyString(aTextureFormatName) +
 													 "<BR>" + CommaSeperate(aTextureMemory)
 											   : "&nbsp;"))
@@ -3325,6 +3324,7 @@ void SexyAppBase::ShowMemoryUsage()
 	uint32_t aNumTextures = 0;
 	uint32_t aTotal = 0;
 	uint32_t aFree = 0;
+	uint32_t aUsed = 0;
 
 	if (mRenderer != nullptr)
 	{
@@ -3332,6 +3332,7 @@ void SexyAppBase::ShowMemoryUsage()
 		aNumTextures = anInfo.mNumTextures;
 		aFree = anInfo.mFreeVideoMem;
 		aTotal = anInfo.mTotalVideoMem;
+		aUsed = anInfo.mUsedVideoMemory;
 	}
 
 	MemoryImageSet::iterator anItr = mMemoryImageSet.begin();
@@ -3342,9 +3343,9 @@ void SexyAppBase::ShowMemoryUsage()
 	while (anItr != mMemoryImageSet.end())
 	{
 		MemoryImage *aMemoryImage = *anItr;
-		if (aMemoryImage->mD3DData != NULL)
+		if (aMemoryImage->mGPUData != NULL)
 		{
-			TextureData *aData = (TextureData *)aMemoryImage->mD3DData;
+			TextureData *aData = (TextureData *)aMemoryImage->mGPUData;
 			aTextureMemory += aData->mTexMemSize;
 
 			FormatUsage &aUsage = aFormatMap[aData->mPixelFormat];
@@ -3365,14 +3366,17 @@ void SexyAppBase::ShowMemoryUsage()
 	else
 		aDesc = "Unsupported";
 	
-	aStr += StrFormat("Current Rendering Backend: %s\n", gRenderBackends.find(mRenderer->mCurrentBackend)->second.c_str(), aDesc);
+	aStr += StrFormat("Current Rendering Backend: %s\n", gRenderBackends.find(mRenderer->mCurrentBackend)->second.c_str());
 	aStr += StrFormat("3D-Mode is %s (3D is %s on this system)\n\n", Is3DAccelerated() ? "On" : "Off", aDesc);
 
 	aStr += StrFormat("Num Images: %d\n", (int)mMemoryImageSet.size());
 	aStr += StrFormat("Num Sounds: %d\n", mSoundManager->GetNumSounds());
-	aStr += StrFormat("Video Memory: %s/%s KB\n",
-					  SexyStringToString(CommaSeperate((aTotal - aFree) / 1024)).c_str(),
-					  SexyStringToString(CommaSeperate(aTotal / 1024)).c_str());
+	aStr += "Video Memory:\n";
+
+	aStr += StrFormat("Used: %s KB\n", aUsed != -1 ? CommaSeperate(aUsed / 1024).c_str() : "N/A");
+	aStr += StrFormat("Free: %s KB\n", aFree != -1 ? CommaSeperate(aFree / 1024).c_str() : "N/A");
+	aStr += StrFormat("Total: %s KB\n", aTotal != -1 ? CommaSeperate(aTotal / 1024).c_str() : "N/A");
+
 	aStr += StrFormat("Texture Memory: %s KB\n", CommaSeperate(aTextureMemory / 1024).c_str());
 	aStr += StrFormat("Num Textures: %d \n\n", aNumTextures);
 
@@ -3401,19 +3405,7 @@ bool SexyAppBase::IsAltKeyUsed()
 
 bool SexyAppBase::DebugKeyDown(int theKey)
 {
-	if ((theKey == 'R') && (mWidgetManager->mKeyDown[KEYCODE_MENU]))
-	{
-#ifndef RELEASEFINAL
-		if (ReparseModValues())
-			PlaySoundA("c:\\windows\\media\\Windows XP Menu Command.wav", NULL, SND_ASYNC);
-		else
-		{
-			for (int aKeyNum = 0; aKeyNum < 0xFF; aKeyNum++) // prevent alt from getting stuck
-				mWidgetManager->mKeyDown[aKeyNum] = false;
-		}
-#endif
-	}
-	else if (theKey == KEYCODE_F3)
+	if (theKey == KEYCODE_F3)
 	{
 		if (mWidgetManager->mKeyDown[KEYCODE_SHIFT])
 		{

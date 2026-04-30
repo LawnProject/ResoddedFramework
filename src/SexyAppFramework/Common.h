@@ -59,8 +59,6 @@
 
 // STL Headers End
 
-#include "ModVal.h"
-
 // SexyString Start
 
 #if __clang__

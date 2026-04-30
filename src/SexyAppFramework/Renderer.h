@@ -4,6 +4,7 @@
 #include "GPUImage.h"
 #include "SexyMatrix.h"
 #include "CritSect.h"
+#include <unordered_map>
 
 #define MAX_VERTICES 16384
 
@@ -66,7 +67,7 @@ namespace Sexy
 #endif
 	};
 
-	const std::map<RenderingBackend, std::string> gRenderBackends = 
+	const std::unordered_map<RenderingBackend, std::string> gRenderBackends = 
 	{
 		{RenderingBackend::BACKEND_NONE, "NONE"}
 		#if SEXY_USE_OPENGL
@@ -79,6 +80,7 @@ namespace Sexy
 	{
 		int mTotalVideoMem;
 		int mFreeVideoMem;
+		int mUsedVideoMemory; //This is mostly used for backends that don't over the total or free amount -Electr0Gunner
 		int mNumTextures;
 	};
 
@@ -136,7 +138,6 @@ namespace Sexy
 
 		GPUImage *mScreenImage;
 
-		int mRGBBits;
 		uint32_t mRedMask;
 		uint32_t mGreenMask;
 		uint32_t mBlueMask;
@@ -155,7 +156,12 @@ namespace Sexy
 
 		virtual std::string getBackendType()
 		{
-			return "NONE";
+			for (auto backend : gRenderBackends)
+			{
+				if (backend.first == mCurrentBackend)
+					return backend.second;
+			}
+			return "UNKNOWN";
 		}
 
 		virtual void Cleanup();
