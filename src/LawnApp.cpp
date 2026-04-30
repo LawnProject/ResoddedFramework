@@ -1147,8 +1147,8 @@ bool LawnApp::KillNewOptionsDialog()
 		return false;
 
 	bool wantWindowed = !aNewOptionsDialog->mFullscreenCheckbox->IsChecked();
-	bool want3D = aNewOptionsDialog->mHardwareAccelerationCheckbox->IsChecked();
-	SwitchScreenMode(wantWindowed, want3D, false);
+	SwitchScreenMode(wantWindowed, true, false); //todo: once another graphics backend is implemented, maybe replace the 3D variable with a renderer choice?
+	// The renderers will probably be tested on boot with a simple init
 
 	KillDialog(Dialogs::DIALOG_NEWOPTIONS);
 	ClearUpdateBacklog();
