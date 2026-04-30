@@ -18,19 +18,17 @@ Renderer::Renderer(SexyAppBase* theApp) : mApp(theApp)
 	mMillisecondsPerFrame = 0;
 	mRefreshRate = 0;
 
-	mRGBBits = 0;
-
-	mRedMask = 0;
-	mGreenMask = 0;
-	mBlueMask = 0;
-
-	mRedBits = 0;
-	mGreenBits = 0;
-	mBlueBits = 0;
+	mRedBits = 8;
+	mGreenBits = 8;
+	mBlueBits = 8;
 
 	mRedShift = 0;
-	mGreenShift = 0;
-	mBlueShift = 0;
+	mGreenShift = 8;
+	mBlueShift = 16;
+
+	mRedMask = (0xFFU << mRedShift);
+	mGreenMask = (0xFFU << mGreenShift);
+	mBlueMask = (0xFFU << mBlueShift);
 	mCurrentUVWrapMode = UV_CLAMP;
 	mCurrentBackend = RenderingBackend::BACKEND_NONE;
 }
@@ -99,6 +97,7 @@ TextureData::TextureData()
 	mWidth = 0;
 	mHeight = 0;
 	mBitsChangedCount = 0;
+	mTexMemSize = 0;
 	mTexData = nullptr;
 }
 

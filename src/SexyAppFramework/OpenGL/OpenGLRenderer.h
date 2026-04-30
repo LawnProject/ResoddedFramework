@@ -1,7 +1,7 @@
 #pragma once
 #if SEXY_USE_OPENGL
 #include "Renderer.h"
-#include "GLShader.h"
+#include "OpenGL/GLShader.h"
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 #include <SDL3/SDL_video.h>
@@ -89,6 +89,7 @@ namespace Sexy
 		std::unordered_map<GLenum, WrappingSamplers> mSamplers;
 
 		static int gGLTextureCount;
+		static uint64_t gGLUsedMemoryCount;
 
 	  public:
 		OpenGLRenderer(SexyAppBase *theApp);
@@ -99,11 +100,6 @@ namespace Sexy
 		void AddCommand(const GLDrawCommand& theCommand);
 		void ApplyBlendMode(BlendMode mode);
 
-		virtual std::string getBackendType()
-		{
-			return "OpenGL";
-		}
-		
 		virtual GPUImage *NewGPUImage()
 		{
 			return new OpenGLImage(this);

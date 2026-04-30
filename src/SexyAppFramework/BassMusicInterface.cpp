@@ -19,8 +19,7 @@ BassMusicInterface::BassMusicInterface(Window *theWindow)
 	BOOL success;
 	#if WIN32
 	SDL_PropertiesID props = SDL_GetWindowProperties(theWindow->mInternalWindow);
-	HWND aHWND = NULL;
-	SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, aHWND);
+	HWND aHWND = theWindow->GetHWND();
 	success = BASS_Init(1, 44100, 0, aHWND, NULL);
 	#else
 	success = BASS_Init(1, 44100, 0, NULL, NULL);

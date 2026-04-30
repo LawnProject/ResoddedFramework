@@ -2,7 +2,6 @@
 
 #include "SexyAppBase.h"
 #include "Graphics.h"
-#include "NativeDisplay.h"
 #include "Debug.h"
 #include "Quantize.h"
 #include "PerfTimer.h"
@@ -37,7 +36,7 @@ MemoryImage::MemoryImage(const MemoryImage &theMemoryImage)
 	: Image(theMemoryImage), mApp(theMemoryImage.mApp), mHasAlpha(theMemoryImage.mHasAlpha),
 	  mHasTrans(theMemoryImage.mHasTrans), mBitsChanged(theMemoryImage.mBitsChanged),
 	  mIsVolatile(theMemoryImage.mIsVolatile), mPurgeBits(theMemoryImage.mPurgeBits), mWantPal(theMemoryImage.mWantPal),
-	  mGPUFlags(theMemoryImage.mGPUFlags), mBitsChangedCount(theMemoryImage.mBitsChangedCount), mD3DData(NULL)
+	  mGPUFlags(theMemoryImage.mGPUFlags), mBitsChangedCount(theMemoryImage.mBitsChangedCount), mGPUData(NULL)
 {
 	bool deleteBits = false;
 
@@ -144,7 +143,7 @@ void MemoryImage::Init()
 	mForcedMode = false;
 	mIsVolatile = false;
 
-	mD3DData = NULL;
+	mGPUData = NULL;
 	mGPUFlags = 0;
 	mBitsChangedCount = 0;
 
@@ -1090,7 +1089,7 @@ void MemoryImage::PurgeBits()
 	{
 		// Due to potential D3D threading issues we have to defer the texture creation
 		//  and therefore the actual purging
-		if (mD3DData == NULL)
+		if (mGPUData == NULL)
 			return;
 	}
 	else
@@ -1104,7 +1103,7 @@ void MemoryImage::PurgeBits()
 	delete[] mBits;
 	mBits = NULL;
 
-	if (mD3DData != NULL)
+	if (mGPUData != NULL)
 	{
 		delete[] mColorIndices;
 		mColorIndices = NULL;
@@ -1228,7 +1227,7 @@ uint32_t *MemoryImage::GetBits()
 		}
 		else if (mNativeAlphaData != NULL)
 		{
-			NativeDisplay *aDisplay = (NativeDisplay *)gSexyAppBase->mRenderer;
+			Renderer *aDisplay = gSexyAppBase->mRenderer;
 
 			const int rMask = aDisplay->mRedMask;
 			const int gMask = aDisplay->mGreenMask;
@@ -1255,7 +1254,7 @@ uint32_t *MemoryImage::GetBits()
 				*(aDestPtr++) = (r << 16) | (g << 8) | (b) | (anAlpha << 24);
 			}
 		}
-		else if ((mD3DData == NULL) || (!mApp->mRenderer->RecoverBits(this)))
+		else if ((mGPUData == NULL) || (!mApp->mRenderer->RecoverBits(this)))
 		{
 			memset(mBits, 0, aSize * sizeof(uint32_t));
 		}

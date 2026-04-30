@@ -38,7 +38,6 @@ OpenGLImage::~OpenGLImage()
 		OpenGLRenderer::gGLTextureCount--;
 	}
 		
-
 	if (mFBO != 0)
 		glDeleteFramebuffers(1, &mFBO);
 }
@@ -80,7 +79,7 @@ void OpenGLImage::DeleteSurface()
 {
 	if (mSurface != nullptr)
 	{
-		if ((mColorTable == NULL) && (mBits == NULL) && (mD3DData == NULL))
+		if ((mColorTable == NULL) && (mBits == NULL) && (mGPUData == NULL))
 			GetBits();
 
 		delete (GLuint *)mSurface;
@@ -334,7 +333,7 @@ void OpenGLImage::ImplBlt(
 	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
 	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
 
-	int aTexID = static_cast<OpenGLTextureData *>(aImg->mD3DData)->GetTextureID();
+	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
 	glm::vec2 p0 = {theX, theY};
 	glm::vec2 p1 = {theX + theSrcRect.mWidth, theY};
@@ -409,7 +408,7 @@ void OpenGLImage::ImplBltF(Image *theImage,
 	else
 		glDisable(GL_SCISSOR_TEST);
 
-	int aTexID = static_cast<OpenGLTextureData *>(aImg->mD3DData)->GetTextureID();
+	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
 	glm::vec2 p0 = {theX, theY};
 	glm::vec2 p1 = {theX + theSrcRect.mWidth, theY};
@@ -488,7 +487,7 @@ void OpenGLImage::ImplBltRotated(Image *theImage,
 	else
 		glDisable(GL_SCISSOR_TEST);
 
-	int aTexID = static_cast<OpenGLTextureData *>(aImg->mD3DData)->GetTextureID();
+	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
 	glm::vec2 p0 = {theX, theY};
 	glm::vec2 p1 = {theX + theSrcRect.mWidth, theY};
@@ -572,7 +571,7 @@ void OpenGLImage::ImplStretchBlt(Image *theImage,
 	else
 		glDisable(GL_SCISSOR_TEST);
 
-	int aTexID = static_cast<OpenGLTextureData *>(aImg->mD3DData)->GetTextureID();
+	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
 	glm::vec2 p0 = {theDestRect.mX, theDestRect.mY};
 	glm::vec2 p1 = {theDestRect.mX + theDestRect.mWidth, theDestRect.mY};
@@ -650,7 +649,7 @@ void OpenGLImage::ImplBltMatrix(Image *theImage,
 	else
 		glDisable(GL_SCISSOR_TEST);
 
-	int aTexID = static_cast<OpenGLTextureData *>(aImg->mD3DData)->GetTextureID();
+	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
 	float aWidth = static_cast<float>(theSrcRect.mWidth);
 	float aHeight = static_cast<float>(theSrcRect.mHeight);
@@ -730,7 +729,7 @@ void OpenGLImage::ImplBltTrianglesTex(Image *theTexture,
 						(float)theColor.mGreen / 255.0f,
 						(float)theColor.mBlue / 255.0f,
 						(float)theColor.mAlpha / 255.0f};
-	int aTexID = static_cast<OpenGLTextureData *>(aImg->mD3DData)->GetTextureID();
+	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
 	for (int i = 0; i < theNumTriangles; i++)
 	{
@@ -793,7 +792,7 @@ void OpenGLImage::ImplBltMirror(
 	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
 	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
 
-	int aTexID = static_cast<OpenGLTextureData *>(aImg->mD3DData)->GetTextureID();
+	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
 	glm::vec2 p0 = {theX, theY};
 	glm::vec2 p1 = {theX + theSrcRect.mWidth, theY};
@@ -869,7 +868,7 @@ void OpenGLImage::ImplStretchBltMirror(Image *theImage,
 	else
 		glDisable(GL_SCISSOR_TEST);
 
-	int aTexID = static_cast<OpenGLTextureData *>(aImg->mD3DData)->GetTextureID();
+	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
 	glm::vec2 p0 = {theDestRectOrig.mX, theDestRectOrig.mY};
 	glm::vec2 p1 = {theDestRectOrig.mX + theDestRectOrig.mWidth, theDestRectOrig.mY};

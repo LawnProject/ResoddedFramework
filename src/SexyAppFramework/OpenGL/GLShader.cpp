@@ -1,6 +1,6 @@
 #if SEXY_USE_OPENGL
 
-#include "glshader.h"
+#include "OpenGL/GLShader.h"
 #include <fstream>
 #include <filesystem>
 #include <glm/gtc/type_ptr.hpp>
