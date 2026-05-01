@@ -1358,7 +1358,7 @@ bool DefinitionCompileAndLoad(const SexyString &theXMLFilePath, DefMap *theDefMa
 
 	PerfTimer aTimer;
 	aTimer.Start();
-	bool aResult = DefinitionCompileFile(theXMLFilePath, aCompiledFilePath, theDefMap, theDefinition);
+	bool aResult = DefinitionCompileFile(theXMLFilePath, "fresh_" + aCompiledFilePath, theDefMap, theDefinition); //write to fresh_compiled to not overwrite on game re-compile by accident
 	TodTrace("compile %d ms:'%s'", (int)aTimer.GetDuration(), aCompiledFilePath.c_str());
 	TodHesitationTrace("compiled %s", aCompiledFilePath.c_str());
 	if (aResult)

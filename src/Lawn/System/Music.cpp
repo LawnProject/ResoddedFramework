@@ -789,7 +789,7 @@ void Music::GameMusicPause(bool thePause)
 
 			if (aMusicInfo->mHStream)
 			{
-				mPauseOffset = BASS_ChannelGetPosition(aMusicInfo->mHStream, BASS_POS_MUSIC_ORDER);
+				mPauseOffset = BASS_ChannelGetPosition(aMusicInfo->mHStream, BASS_POS_BYTE);
 				mMusicInterface->StopMusic(mCurMusicFileMain);
 			}
 			else

@@ -1371,7 +1371,7 @@ bool TodResourceManager::FindFontPath(Font *theFont, std::string *thePath)
 	for (auto anItr = mFontMap.begin(); anItr != mFontMap.end(); anItr++)
 	{
 		FontRes *aFontRes = (FontRes *)anItr->second;
-		Font *aFont = (Font *)aFontRes->mImage;
+		Font *aFont = (Font *)aFontRes->mFont;
 		if (aFont == theFont)
 		{
 			*thePath = anItr->first;

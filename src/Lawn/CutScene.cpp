@@ -1863,7 +1863,8 @@ void CutScene::ClearUpsellBoard()
 	Reanimation *aReanim = nullptr;
 	while (mBoard->IterateReanimations(aReanim))
 	{
-		aReanim->ReanimationDie();
+		if (aReanim->mReanimationType != ReanimationType::REANIM_CRAZY_DAVE)
+			aReanim->ReanimationDie();
 	}
 	mBoard->mPoolSparklyParticleID = ParticleSystemID::PARTICLESYSTEMID_NULL;
 
@@ -2061,6 +2062,7 @@ void CutScene::LoadUpsellChallengeScreen()
 {
 	ClearUpsellBoard();
 	mUpsellChallengeScreen = new ChallengeScreen(mApp, ChallengePage::CHALLENGE_PAGE_CHALLENGE);
+	mUpsellChallengeScreen->mWidgetManager = mApp->mWidgetManager;
 }
 
 //0x43FD90
@@ -2180,6 +2182,7 @@ void CutScene::UpdateUpsell()
 	if (mCrazyDaveLastTalkIndex == -1)
 	{
 		mApp->CrazyDaveTalkIndex(mCrazyDaveDialogStart);
+		mCrazyDaveLastTalkIndex = mCrazyDaveDialogStart;
 		mCrazyDaveCountDown = ParseTalkTimeFromMessage();
 		return;
 	}
@@ -2342,7 +2345,7 @@ void CutScene::DrawUpsell(Graphics *g)
 void CutScene::UpdateIntro()
 {
 	mBoard->Move(TodAnimateCurve(
-					 TimeIntro_PanRightStart, TimeIntro_PanRightEnd, mCutsceneTime, -100, 100, TodCurves::CURVE_LINEAR),
+					 TimeIntro_PanRightStart, TimeIntro_PanRightEnd, mCutsceneTime, 100, -100, TodCurves::CURVE_LINEAR),
 				 0);
 
 	if (mCutsceneTime == 10)
@@ -2404,7 +2407,7 @@ void CutScene::DrawIntro(Graphics *g)
 					  "[INTRO_PRESENTS]",
 					  BOARD_WIDTH / 2 - mBoard->mX,
 					  310 - mBoard->mY,
-					  FONT_BRIANNETOD16,
+					  FONT_BRIANNETOD32,
 					  Color(255, 255, 255, anAlpha),
 					  DrawStringJustification::DS_ALIGN_CENTER);
 	}

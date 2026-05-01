@@ -73,9 +73,9 @@ void SettingsDialog::Draw(Graphics* g)
 	TodDrawString(g, "[SETTINGS_FULLSCREEN]", mFullscreenCheckbox->mX + 20, 90, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
 
 	mSaveFileButton->Resize(40, 260 - aScrollOffset, 330, 46);
+	mSaveFileButton->mDisabled = (mSaveFileButton->mY + mY) < mOptionsSlider->mAllowedMouseZone.mY;
 
 	TodDrawString(g, "[SETTINGS_MISC]", 20, 130, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
-
 
 	SexyString aVersionString = "ResoddedFramework " + mResoddedVersion.toString();
 	TodDrawString(g, aVersionString, 
@@ -174,7 +174,7 @@ void SettingsDialog::CheckboxChecked(int theId, bool checked)
 			{
 				mVSyncCheckbox->SetChecked(!checked, false);
 				SexyString aFailString = StrFormat("V-Sync couldn't be toggled %s\n\nYour video card does not\nmeet the "
-												   "minimum requirements\nfor this game.",
+												   "minimum requirements\nfor this feature.",
 												   (checked ? "on" : "off"));
 				mApp->DoDialog(Dialogs::DIALOG_INFO, true, "Failed", aFailString, "OK", Dialog::BUTTONS_FOOTER);
 			}
