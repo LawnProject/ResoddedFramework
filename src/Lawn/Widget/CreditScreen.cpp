@@ -311,6 +311,7 @@ CreditScreen::CreditScreen(LawnApp *theApp)
 	mDontSync = false;
 	mCreditsPaused = false;
 	mPreloaded = false;
+	mFinalScrollProgress = 0.0f;
 
 	mApp->mEffectSystem->EffectSystemFreeAll();
 	mApp->mMusic->StopAllMusic();
@@ -723,54 +724,44 @@ void CreditScreen::DrawOverlay(Graphics *g)
 		}
 	}
 }
-
 //0x435550
 void CreditScreen::DrawFinalCredits(Graphics *g)
 {
-	TodDrawString(g,
-				  "[CREDITS_GAMENAME]",
-				  BOARD_WIDTH / 2,
-				  60,
-				  FONT_HOUSEOFTERROR28,
-				  Color::White,
-				  DrawStringJustification::DS_ALIGN_CENTER);
 
-	Rect aRectNames1(405, 90, 200, 200);
-	TodDrawStringWrapped(g,
-						 "[CREDITS_NAMES1]",
-						 aRectNames1,
-						 FONT_HOUSEOFTERROR16,
-						 Color::White,
-						 DrawStringJustification::DS_ALIGN_LEFT);
-	Rect aRectRoles1(190, 90, 200, 200);
-	TodDrawStringWrapped(g,
-						 "[CREDITS_ROLES1]",
-						 aRectRoles1,
-						 FONT_HOUSEOFTERROR16,
-						 Color::White,
-						 DrawStringJustification::DS_ALIGN_RIGHT);
-	Rect aRectNames2(340, 280, 450, 250);
-	TodDrawStringWrapped(g,
-						 "[CREDITS_NAMES2]",
-						 aRectNames2,
-						 FONT_HOUSEOFTERROR16,
-						 Color::White,
-						 DrawStringJustification::DS_ALIGN_LEFT);
-	Rect aRectRoles2(30, 280, 300, 250);
-	TodDrawStringWrapped(g,
-						 "[CREDITS_ROLES2]",
-						 aRectRoles2,
-						 FONT_HOUSEOFTERROR16,
-						 Color::White,
-						 DrawStringJustification::DS_ALIGN_RIGHT);
+	g->SetClipRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT - 90);
+	SexyString aRawRoleStr = "[CREDITS_ROLES%d]";
+	int aCurrentRoleIndex = 1;
+	SexyString aCurrentRoleStr = TodStringTranslate(StrFormat(aRawRoleStr.c_str(), aCurrentRoleIndex++));
+	int aScrollY = BOARD_HEIGHT - (int)(mFinalScrollProgress * 5.0f);
+	while (aCurrentRoleStr.find("<Missing") == std::string::npos)
+	{
+		SexyString aNameStr = TodStringTranslate(StrFormat("[CREDITS_NAMES%d]", aCurrentRoleIndex - 1));
 
-	TodDrawString(g,
-				  "[CREDITS_THANKS]",
-				  BOARD_WIDTH / 2,
-				  530,
-				  FONT_HOUSEOFTERROR16,
-				  Color::White,
-				  DrawStringJustification::DS_ALIGN_CENTER);
+		if (aCurrentRoleStr[0] == '^')
+		{
+			SexyString aHeaderText = aCurrentRoleStr.substr(1); // remove the ^ lol
+			aScrollY -= 4;
+			aScrollY += TodDrawStringWrappedHelper(g, aHeaderText, Rect(60, aScrollY, 680, 250), FONT_HOUSEOFTERROR16,Color::White, DrawStringJustification::DS_ALIGN_CENTER, true);
+			aScrollY -= 4;
+		}
+		else
+		{
+			TodDrawStringWrapped(g, aCurrentRoleStr, Rect(60, aScrollY, 300, 250), FONT_HOUSEOFTERROR16, Color::White, DrawStringJustification::DS_ALIGN_RIGHT);
+			TodDrawStringWrapped(g, aNameStr, Rect(390, aScrollY, 450, 250), FONT_HOUSEOFTERROR16, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
+			int aRoleHeight = TodDrawStringWrappedHelper(g, aCurrentRoleStr, Rect(30, aScrollY, 300, 250), FONT_HOUSEOFTERROR16, Color::White, DrawStringJustification::DS_ALIGN_RIGHT, false);
+			int aNameHeight = TodDrawStringWrappedHelper(g, aNameStr, Rect(390, aScrollY, 450, 250), FONT_HOUSEOFTERROR16, Color::White, DrawStringJustification::DS_ALIGN_LEFT, false);
+
+			aScrollY += std::max(aRoleHeight, aNameHeight);
+		}
+
+		aCurrentRoleStr = TodStringTranslate(StrFormat(aRawRoleStr.c_str(), aCurrentRoleIndex++));
+	}
+
+
+	mFinalScrollProgress += 0.1f;
+	if (mFinalScrollProgress > 260)
+		mFinalScrollProgress = 0;
+	g->ClearClipRect();
 }
 
 //0x435A90

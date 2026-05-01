@@ -326,7 +326,14 @@ bool gRenderingPreDrawError = false;
 bool OpenGLRenderer::Redraw(Rect *theClipRect)
 {
 	if (mCommandBuffer.empty())
+	{
+#if SEXY_USE_IMGUI 
+		mApp->mImGuiManager->Flush();
+#endif
+		SDL_GL_SwapWindow(mApp->mWindow->mInternalWindow);
 		return !gRenderingPreDrawError;
+	}
+		
 	// Draw to FBO Here:
 	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 	glViewport(0, 0, mWidth, mHeight);
