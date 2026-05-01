@@ -1,4 +1,4 @@
-#include "AdvancedOptionsDialog.h"
+#include "SettingsDialog.h"
 #include "../../Resources.h"
 #include "../../SexyAppFramework/Font.h"
 #include "../../SexyAppFramework/Renderer.h"
@@ -11,8 +11,8 @@
 #include <codecvt>
 #endif
 
-AdvancedOptionsDialog::AdvancedOptionsDialog(LawnApp *theApp)
-	: LawnDialog(theApp, DIALOG_ADVANCEDOPTIONS, true, "[ADVANCED_OPTIONS_HEADER]", "", "", BUTTONS_NONE)
+SettingsDialog::SettingsDialog(LawnApp *theApp)
+	: LawnDialog(theApp, DIALOG_SETTINGS, true, "[SETTINGS_HEADER]", "", "", BUTTONS_NONE)
 {
 	mApp = theApp;
 	mOptionsSlider = new LawnSlider(mApp);
@@ -21,23 +21,26 @@ AdvancedOptionsDialog::AdvancedOptionsDialog(LawnApp *theApp)
 	mOptionsSlider->Resize(500, 90, 8, 140);
 	mOptionsSlider->mScrollMultiplier = 0.09f;
 
-	mVSyncCheckbox = MakeNewCheckbox(AdvancedOptionsDialog::ADVANCED_OPTIONS_VSYNC, this, theApp->mWaitForVSync);
+	mFullscreenCheckbox = MakeNewCheckbox(SettingsDialog::SETTINGS_FULLSCREEN, this, !theApp->mIsWindowed);
 
-	mSaveFileButton = MakeButton(ADVANCED_OPTIONS_SAVE_FILE, this, "[ADVANCED_OPTIONS_SAVE_FILE]");
+	mVSyncCheckbox = MakeNewCheckbox(SettingsDialog::SETTINGS_VSYNC, this, theApp->mWaitForVSync);
 
-	mApplyButton = MakeButton(ADVANCED_OPTIONS_BACK, this, "[ADVANCED_OPTIONS_BACK]");
+	mSaveFileButton = MakeButton(SETTINGS_OPEN_SAVE_FOLDER, this, "[SETTINGS_OPEN_SAVE_FOLDER]");
+
+	mApplyButton = MakeButton(SETTINGS_BACK, this, "[SETTINGS_BACK]");
 	CalcSize(211, 214);
 }
 
-AdvancedOptionsDialog::~AdvancedOptionsDialog()
+SettingsDialog::~SettingsDialog()
 {
 	delete mOptionsSlider;
 	delete mApplyButton;
 	delete mSaveFileButton;
 	delete mVSyncCheckbox;
+	delete mFullscreenCheckbox;
 }
 
-void AdvancedOptionsDialog::Draw(Graphics* g)
+void SettingsDialog::Draw(Graphics* g)
 {
 	LawnDialog::Draw(g);
 
@@ -60,15 +63,18 @@ void AdvancedOptionsDialog::Draw(Graphics* g)
 
 	mVSyncCheckbox->Resize(40, 140 - aScrollOffset, 46, 45);
 	mVSyncCheckbox->mDisabled = (mVSyncCheckbox->mY + mY) < mOptionsSlider->mAllowedMouseZone.mY;
+	mFullscreenCheckbox->Resize(40, 190 - aScrollOffset, 46, 45);
+	mFullscreenCheckbox->mDisabled = (mFullscreenCheckbox->mY + mY) < mOptionsSlider->mAllowedMouseZone.mY;
 
-	TodDrawString(g, "[ADVANCED_OPTIONS_VIDEO]", 20, 10, Sexy::FONT_BRIANNETOD12, Color::White,
+	TodDrawString(g, "[SETTINGS_VIDEO]", 20, 10, Sexy::FONT_BRIANNETOD12, Color::White,
 				  DrawStringJustification::DS_ALIGN_LEFT);
 
-	TodDrawString(g, "[ADVANCED_OPTIONS_VSYNC]", mVSyncCheckbox->mX + 20, 40, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
+	TodDrawString(g, "[SETTINGS_VSYNC]", mVSyncCheckbox->mX + 20, 40, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
+	TodDrawString(g, "[SETTINGS_FULLSCREEN]", mFullscreenCheckbox->mX + 20, 90, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
 
-	mSaveFileButton->Resize(40, 220 - aScrollOffset, 330, 46);
+	mSaveFileButton->Resize(40, 260 - aScrollOffset, 330, 46);
 
-	TodDrawString(g, "[ADVANCED_OPTIONS_MISC]", 20, 80, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
+	TodDrawString(g, "[SETTINGS_MISC]", 20, 130, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
 
 
 	SexyString aVersionString = "ResoddedFramework " + mResoddedVersion.toString();
@@ -90,26 +96,28 @@ void AdvancedOptionsDialog::Draw(Graphics* g)
 	g->PopState();
 }
 
-void AdvancedOptionsDialog::AddedToManager(WidgetManager *theWidgetManager)
+void SettingsDialog::AddedToManager(WidgetManager *theWidgetManager)
 {
 	LawnDialog::AddedToManager(theWidgetManager);
 	AddWidget(mOptionsSlider);
 	AddWidget(mApplyButton);
 	AddWidget(mVSyncCheckbox);
+	AddWidget(mFullscreenCheckbox);
 	AddWidget(mSaveFileButton);
 }
 
 //0x45D8E0
-void AdvancedOptionsDialog::RemovedFromManager(WidgetManager *theWidgetManager)
+void SettingsDialog::RemovedFromManager(WidgetManager *theWidgetManager)
 {
 	LawnDialog::RemovedFromManager(theWidgetManager);
 	RemoveWidget(mOptionsSlider);
 	RemoveWidget(mApplyButton);
 	RemoveWidget(mVSyncCheckbox);
+	RemoveWidget(mFullscreenCheckbox);
 	RemoveWidget(mSaveFileButton);
 }
 
-void AdvancedOptionsDialog::Resize(int theX, int theY, int theWidth, int theHeight)
+void SettingsDialog::Resize(int theX, int theY, int theWidth, int theHeight)
 {
 	LawnDialog::Resize(theX, theY, theWidth, theHeight);
 	mOptionsSlider->Resize(mWidth - 60, 110, 8, 200);
@@ -117,25 +125,28 @@ void AdvancedOptionsDialog::Resize(int theX, int theY, int theWidth, int theHeig
 	mApplyButton->Resize(40, 331, 209, 46);
 	SetWidgetClipping(Rect(35, 120, mWidth - 70, mHeight - 240));
 }
-void AdvancedOptionsDialog::MouseWheel(int theDelta)
+
+void SettingsDialog::MouseWheel(int theDelta)
 {
 	LawnDialog::MouseWheel(theDelta);
 	mOptionsSlider->MouseWheel(theDelta);
 }
-void AdvancedOptionsDialog::ButtonPress(int theId)
+
+void SettingsDialog::ButtonPress(int theId)
 {
 	mApp->PlaySample(SOUND_GRAVEBUTTON);
 }
-void AdvancedOptionsDialog::ButtonDepress(int theId)
+
+void SettingsDialog::ButtonDepress(int theId)
 {
 	switch (theId)
 	{
-		case AdvancedOptionsDialog::ADVANCED_OPTIONS_BACK:
+		case SettingsDialog::SETTINGS_BACK:
 		{
 			mApp->KillDialog(mId);
 			break;
 		}
-		case AdvancedOptionsDialog::ADVANCED_OPTIONS_SAVE_FILE:
+		case SettingsDialog::SETTINGS_OPEN_SAVE_FOLDER:
 		{
 			SexyString aSaveFileFolder = GetAppDataFolder();
 			#if WIN32
@@ -151,20 +162,39 @@ void AdvancedOptionsDialog::ButtonDepress(int theId)
 }
 
 
-void AdvancedOptionsDialog::CheckboxChecked(int theId, bool checked)
+void SettingsDialog::CheckboxChecked(int theId, bool checked)
 {
 	switch (theId)
 	{
-	case AdvancedOptionsDialog::ADVANCED_OPTIONS_VSYNC:
-		mApp->mWaitForVSync = checked;
-		RendererError anError = mApp->mRenderer->UpdateVSync();
-		if (anError == RendererError::ERROR_VSYNC)
+	case SettingsDialog::SETTINGS_VSYNC:
 		{
-			mVSyncCheckbox->SetChecked(!checked, false);
-			SexyString aFailString = StrFormat("V-Sync couldn't be toggled %s\n\nYour video card does not\nmeet the "
-											   "minimum requirements\nfor this game.",
-											   (checked ? "on" : "off"));
-			mApp->DoDialog(Dialogs::DIALOG_INFO, true, "Failed", aFailString, "OK", Dialog::BUTTONS_FOOTER);
+			mApp->mWaitForVSync = checked;
+			RendererError anError = mApp->mRenderer->UpdateVSync();
+			if (anError == RendererError::ERROR_VSYNC)
+			{
+				mVSyncCheckbox->SetChecked(!checked, false);
+				SexyString aFailString = StrFormat("V-Sync couldn't be toggled %s\n\nYour video card does not\nmeet the "
+												   "minimum requirements\nfor this game.",
+												   (checked ? "on" : "off"));
+				mApp->DoDialog(Dialogs::DIALOG_INFO, true, "Failed", aFailString, "OK", Dialog::BUTTONS_FOOTER);
+			}
+		}
+		break;
+	case SettingsDialog::SETTINGS_FULLSCREEN:
+		if (!checked && mApp->mForceFullscreen)
+		{
+			mApp->DoDialog(Dialogs::DIALOG_COLORDEPTH_EXP, true, "No Windowed Mode",
+						   "Windowed mode is only available if your desktop was running in either\n"
+						   "16 bit or 32 bit color mode when you started the game.\n\n"
+						   "If you'd like to run in Windowed mode then you need to quit the game and switch your "
+						   "desktop to 16 or 32 bit color mode.",
+						   "OK", Dialog::BUTTONS_FOOTER);
+
+			mFullscreenCheckbox->SetChecked(true, false);
+		}
+		else
+		{
+			mApp->SwitchScreenMode(!mFullscreenCheckbox->IsChecked(), true, false);
 		}
 		break;
 	}

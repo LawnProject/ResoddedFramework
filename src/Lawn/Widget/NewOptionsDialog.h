@@ -25,8 +25,7 @@ class NewOptionsDialog : public Sexy::Dialog, public Sexy::SliderListener, publi
 		NewOptionsDialog_Update,
 		NewOptionsDialog_MusicVolume,
 		NewOptionsDialog_SoundVolume,
-		NewOptionsDialog_Fullscreen,
-		NewOptionsDialog_AdvancedOptions,
+		NewOptionsDialog_Settings,
 
 	};
 
@@ -34,12 +33,11 @@ class NewOptionsDialog : public Sexy::Dialog, public Sexy::SliderListener, publi
 	LawnApp *mApp;
 	Sexy::Slider *mMusicVolumeSlider;
 	Sexy::Slider *mSfxVolumeSlider;
-	Sexy::Checkbox *mFullscreenCheckbox;
 	LawnStoneButton *mAlmanacButton;
 	LawnStoneButton *mBackToMainButton;
 	LawnStoneButton *mRestartButton;
 	NewLawnButton *mBackToGameButton;
-	LawnStoneButton *mAdvancedButtons;
+	NewLawnButton *mSettingsButton;
 	bool mFromGameSelector;
 
   public:

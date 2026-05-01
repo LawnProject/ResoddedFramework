@@ -39,6 +39,7 @@
 #include "Lawn/Widget/NewOptionsDialog.h"
 #include "Lawn/Widget/SeedChooserScreen.h"
 
+#include "Lawn/ResoddedFramework/SettingsDialog.h"
 #include "Lawn/ResourceInclude.h"
 
 #include "SexyAppFramework/WidgetManager.h"
@@ -1145,10 +1146,6 @@ bool LawnApp::KillNewOptionsDialog()
 	NewOptionsDialog *aNewOptionsDialog = (NewOptionsDialog *)GetDialog(Dialogs::DIALOG_NEWOPTIONS);
 	if (aNewOptionsDialog == nullptr)
 		return false;
-
-	bool wantWindowed = !aNewOptionsDialog->mFullscreenCheckbox->IsChecked();
-	SwitchScreenMode(wantWindowed, true, false); //todo: once another graphics backend is implemented, maybe replace the 3D variable with a renderer choice?
-	// The renderers will probably be tested on boot with a simple init
 
 	KillDialog(Dialogs::DIALOG_NEWOPTIONS);
 	ClearUpdateBacklog();
@@ -3396,10 +3393,10 @@ void LawnApp::SwitchScreenMode(bool wantWindowed, bool is3d, bool force)
 {
 	SexyAppBase::SwitchScreenMode(wantWindowed, is3d, force);
 
-	NewOptionsDialog *aNewOptionsDialog = (NewOptionsDialog *)GetDialog(Dialogs::DIALOG_NEWOPTIONS);
-	if (aNewOptionsDialog)
+	SettingsDialog *aSettingsDialog = (SettingsDialog *)GetDialog(Dialogs::DIALOG_SETTINGS);
+	if (aSettingsDialog)
 	{
-		aNewOptionsDialog->mFullscreenCheckbox->SetChecked(!mIsWindowed);
+		aSettingsDialog->mFullscreenCheckbox->SetChecked(!mIsWindowed, false);
 	}
 }
 

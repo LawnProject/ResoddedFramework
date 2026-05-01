@@ -6,26 +6,28 @@
 
 class LawnApp;
 
-class AdvancedOptionsDialog : public LawnDialog, public Sexy::CheckboxListener
+class SettingsDialog : public LawnDialog, public Sexy::CheckboxListener
 {
   protected:
 	enum
 	{
-		ADVANCED_OPTIONS_BACK,
-		ADVANCED_OPTIONS_VSYNC,
-		ADVANCED_OPTIONS_SAVE_FILE,
+		SETTINGS_BACK,
+		SETTINGS_VSYNC,
+		SETTINGS_FULLSCREEN,
+		SETTINGS_OPEN_SAVE_FOLDER,
 	};
 
   public:
 	LawnApp *mApp;				  //+0x16C
 	LawnStoneButton *mApplyButton;
 	LawnStoneButton *mSaveFileButton;
+	Sexy::Checkbox *mFullscreenCheckbox;
 	Sexy::Checkbox *mVSyncCheckbox;
 	LawnSlider *mOptionsSlider;
 
   public:
-	AdvancedOptionsDialog(LawnApp *theApp);
-	virtual ~AdvancedOptionsDialog();
+	SettingsDialog(LawnApp *theApp);
+	virtual ~SettingsDialog();
 	virtual void Draw(Graphics *g);
 	virtual void AddedToManager(WidgetManager *theWidgetManager);
 	virtual void RemovedFromManager(WidgetManager *theWidgetManager);

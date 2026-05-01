@@ -378,7 +378,7 @@ void NewLawnButton::Draw(Graphics *g)
 			DrawButtonImage(g, mDownImage, mDownRect, mButtonOffsetX + mTranslateX, mButtonOffsetY + mTranslateY);
 		else if (HaveButtonImage(mOverImage, mOverRect))
 			DrawButtonImage(g, mOverImage, mOverRect, mButtonOffsetX + mTranslateX, mButtonOffsetY + mTranslateY);
-		else
+		else if (mButtonImage != nullptr)
 			DrawButtonImage(g, mButtonImage, mNormalRect, mButtonOffsetX + mTranslateX, mButtonOffsetY + mTranslateY);
 
 		g->SetColorizeImages(false);
@@ -410,8 +410,17 @@ NewLawnButton *MakeNewButton(int theId,
 	aButton->SetFont(theFont == nullptr ? Sexy::FONT_BRIANNETOD12 : theFont);
 	aButton->SetLabel(theText);
 
-	aButton->mWidth = theImageNormal->mWidth;
-	aButton->mHeight = theImageNormal->mHeight;
+	if (theImageNormal != nullptr)
+	{
+		aButton->mWidth = theImageNormal->mWidth;
+		aButton->mHeight = theImageNormal->mHeight;
+	}
+	else //Let the user set them
+	{
+		aButton->mWidth = 0;
+		aButton->mHeight = 0; 
+	}
+
 	aButton->mButtonImage = theImageNormal;
 	aButton->mDownImage = theImageDown;
 	aButton->mOverImage = theImageOver;
