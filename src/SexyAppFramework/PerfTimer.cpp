@@ -6,7 +6,7 @@ using namespace Sexy;
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-inline int QueryCounters(uint64_t *out)
+inline uint64_t QueryCounters(uint64_t *out)
 {
 	*out = SDL_GetPerformanceCounter();
 	return *out;
@@ -14,7 +14,7 @@ inline int QueryCounters(uint64_t *out)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-inline int DeltaCounters(uint64_t *previous)
+inline uint64_t DeltaCounters(uint64_t *previous)
 {
 	uint64_t now = SDL_GetPerformanceCounter();
 	uint64_t delta = now - *previous;
@@ -38,7 +38,7 @@ void PerfTimer::CalcDuration()
 	uint64_t anEnd, aFreq;
 	anEnd = SDL_GetPerformanceCounter();
 	aFreq = SDL_GetPerformanceFrequency();
-	mDuration = (double)(anEnd - mStart) * 1000.0 / (double)aFreq;
+	mDuration = ((anEnd - mStart) * 1000.0) / (double)aFreq;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

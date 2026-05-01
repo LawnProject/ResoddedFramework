@@ -774,13 +774,13 @@ int LawnApp::LawnMessageBox(int theDialogId,
 
 	LawnDialog *aDialog =
 		(LawnDialog *)DoDialog(theDialogId, true, theHeaderName, theLinesName, theButton1Name, theButtonMode);
-	if (aDialog->mYesButton)
+	if (aDialog->mLawnYesButton)
 	{
-		aDialog->mYesButton->mLabel = TodStringTranslate(theButton1Name);
+		aDialog->mLawnYesButton->mLabel = TodStringTranslate(theButton1Name);
 	}
-	if (aDialog->mNoButton)
+	if (aDialog->mLawnNoButton)
 	{
-		aDialog->mNoButton->mLabel = TodStringTranslate(theButton2Name);
+		aDialog->mLawnNoButton->mLabel = TodStringTranslate(theButton2Name);
 	}
 	//aDialog->CalcSize(0, 0);
 
