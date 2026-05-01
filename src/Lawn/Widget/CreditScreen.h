@@ -94,6 +94,7 @@ class CreditScreen : public Widget, public ButtonListener
 	double mOriginalMusicVolume;	  //+0xE8
 	bool mPreloaded;				  //+0xF0
 	int mLastDrawCount;				  //+0xF4
+	float mFinalScrollProgress;
 
   public:
 	CreditScreen(LawnApp *theApp);
