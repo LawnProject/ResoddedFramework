@@ -2453,7 +2453,7 @@ void Zombie::UpdateZombieGatlingHead()
 		aBodyReanim->GetCurrentTransform(aTrackIndex, &aTransform);
 
 		float aOriginX = mPosX + aTransform.mTransX - 9.0f;
-		float aOriginY = mPosY + aTransform.mTransY + 6.0f;
+		float aOriginY = mPosY + aTransform.mTransY + 6.0f - mAltitude;
 #ifdef DO_FIX_BUGS
 		if (mMindControlled) // 魅惑修复
 		{
@@ -6870,6 +6870,7 @@ void Zombie::CheckIfPreyCaught()
 		mZombieType == ZombieType::ZOMBIE_REDEYE_GARGANTUAR || mZombieType == ZombieType::ZOMBIE_ZAMBONI ||
 		mZombieType == ZombieType::ZOMBIE_CATAPULT || mZombieType == ZombieType::ZOMBIE_BOSS || IsBouncingPogo() ||
 		IsBobsledTeamWithSled() || mZombiePhase == ZombiePhase::PHASE_POLEVAULTER_IN_VAULT ||
+		mZombiePhase == ZombiePhase::PHASE_JACK_IN_THE_BOX_POPPING ||
 		mZombiePhase == ZombiePhase::PHASE_POLEVAULTER_PRE_VAULT ||
 		mZombiePhase == ZombiePhase::PHASE_NEWSPAPER_MADDENING || mZombiePhase == ZombiePhase::PHASE_DIGGER_RISING ||
 		mZombiePhase == ZombiePhase::PHASE_DIGGER_TUNNELING_PAUSE_WITHOUT_AXE ||
