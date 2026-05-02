@@ -50,6 +50,7 @@
 #include "SexyAppFramework/Dialog.h"
 #include "SexyAppFramework/resource.h"
 #include "SexyAppFramework/SEHCatcher.h"
+#include "Lawn/ResoddedFramework/UpdateChecker.h"
 
 #if LAWN_DEBUG_TOOLS
 #include "Lawn/Debug/DebuggerWindow.h"
@@ -1261,8 +1262,10 @@ void LawnApp::Init()
 	//{
 	//	gSexyCache->Disconnect();
 	//}
+	UpdateChecker::gUpdateHost = "todo: make this the path to ResoddedVersion.txt on github";
+	UpdateChecker::Check();
 
-	mSessionID = _time32(nullptr);
+	mSessionID = GetTicks();
 	mPlayTimeActiveSession = 0;
 	mPlayTimeInactiveSession = 0;
 	mBoardResult = BoardResult::BOARDRESULT_NONE;
