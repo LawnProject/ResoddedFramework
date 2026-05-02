@@ -192,7 +192,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	WidgetManager *mWidgetManager;
 	DialogMap mDialogMap;
 	DialogList mDialogList;
-	uint32_t mPrimaryThreadId;
+	std::thread::id mPrimaryThreadId;
 	bool mSEHOccured;
 	bool mShutdown;
 	bool mExitToTop;

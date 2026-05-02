@@ -393,7 +393,7 @@ void HTTPTransfer::StartTransfer()
 		return;
 
 	mThreadRunning = true;
-	_beginthread(GetThreadProcStub, 0, this);
+	std::thread(GetThreadProcStub, this).detach();
 }
 
 void HTTPTransfer::GetHelper(const std::string &theURL)

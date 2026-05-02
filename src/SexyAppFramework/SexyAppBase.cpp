@@ -313,7 +313,7 @@ SexyAppBase::SexyAppBase()
 	}
 #endif
 
-	mPrimaryThreadId = 0;
+	mPrimaryThreadId = std::this_thread::get_id();
 
 #if SEXY_CRASH_HANDLER
 	gSEHCatcher.mApp = this;
@@ -2078,7 +2078,7 @@ void SexyAppBase::ShutdownHook()
 
 void SexyAppBase::Shutdown()
 {
-	if ((mPrimaryThreadId != 0) && (GetCurrentThreadId() != mPrimaryThreadId))
+	if (std::this_thread::get_id() != mPrimaryThreadId)
 	{
 		mLoadingFailed = true;
 	}
@@ -3123,7 +3123,7 @@ void SexyAppBase::ClearKeysDown()
 void SexyAppBase::WriteDemoTimingBlock()
 {
 	// Demo writing functions can only be called from the main thread and after SexyAppBase::Init
-	DBG_ASSERTE(GetCurrentThreadId() == mPrimaryThreadId);
+	DBG_ASSERTE(std::this_thread::get_id() == mPrimaryThreadId);
 
 	while (mUpdateCount - mLastDemoUpdateCnt > 15)
 	{
@@ -4383,9 +4383,8 @@ void SexyAppBase::StartLoadingThread()
 	if (!mLoadingThreadStarted)
 	{
 		mYieldMainThread = true;
-		::SetThreadPriority(::GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
 		mLoadingThreadStarted = true;
-		_beginthread(LoadingThreadProcStub, 0, this);
+		std::thread(LoadingThreadProcStub, this).detach();
 	}
 }
 
@@ -5452,7 +5451,7 @@ void SexyAppBase::InitHook()
 
 void SexyAppBase::Init()
 {
-	mPrimaryThreadId = GetCurrentThreadId();
+	mPrimaryThreadId = std::this_thread::get_id();
 
 	if (mShutdown)
 		return;
