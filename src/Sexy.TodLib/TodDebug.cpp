@@ -77,7 +77,7 @@ void TodAssertFailed(const char *theCondition, const char *theFile, int theLine,
 	}
 	TodTrace("%s", aBuffer);
 
-	if (!IsDebuggerPresent())
+	if (!SexyDebuggerCheck())
 	{
 		if (gInAssert)
 		{
@@ -86,6 +86,7 @@ void TodAssertFailed(const char *theCondition, const char *theFile, int theLine,
 		}
 
 		gInAssert = true;
+#if WIN32
 		LPEXCEPTION_POINTERS exp;
 
 		__try
@@ -96,7 +97,7 @@ void TodAssertFailed(const char *theCondition, const char *theFile, int theLine,
 		{
 			TodReportError(exp, aFormattedMsg);
 		}
-
+#endif
 		gInAssert = false;
 		exit(0);
 	}
@@ -206,7 +207,7 @@ void TodTraceAndLog(const char *theFormat, ...)
 		}
 	}
 
-	OutputDebugStringA(aButter);
+	printf(aButter);
 	TodLogString(aButter);
 #endif
 }
@@ -241,14 +242,16 @@ void TodTraceWithoutSpamming(const char *theFormat, ...)
 		}
 	}
 
-	OutputDebugStringA(aButter);
+	printf(aButter);
 #endif
 }
 
+#if WIN32
 void TodReportError(LPEXCEPTION_POINTERS exceptioninfo, const char *theMessage)
 {
 	Sexy::SEHCatcher::UnhandledExceptionFilter(exceptioninfo);
 }
+
 
 long __stdcall TodUnhandledExceptionFilter(LPEXCEPTION_POINTERS exceptioninfo)
 {
@@ -266,6 +269,7 @@ long __stdcall TodUnhandledExceptionFilter(LPEXCEPTION_POINTERS exceptioninfo)
 
 	return EXCEPTION_EXECUTE_HANDLER;
 }
+#endif
 
 void (*gBetaSubmitFunc)() = nullptr;
 
@@ -290,6 +294,7 @@ void TodAssertInitForApp()
 
 	std::time_t aclock = std::time(nullptr);
 	TodLog("Started %s\n", std::asctime(std::localtime(&aclock)));
-
+#if WIN32
 	SetUnhandledExceptionFilter(TodUnhandledExceptionFilter);
+#endif
 }

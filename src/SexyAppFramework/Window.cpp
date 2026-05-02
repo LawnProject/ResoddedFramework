@@ -16,7 +16,7 @@ Window::~Window()
     SDL_DestroyWindow(mInternalWindow);
 }
 
-#ifdef WIN32
+#if WIN32
  
 HWND Window::GetHWND()
 {

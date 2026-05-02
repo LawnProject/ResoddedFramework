@@ -38,10 +38,6 @@ class SexyApp : public SexyAppBase
 	int mTimesExecuted;
 	bool mTimedOut;
 
-#ifdef ZYLOM
-	uint mZylomGameId;
-#endif
-
   public:
 	virtual void UpdateFrames();
 
@@ -76,10 +72,6 @@ class SexyApp : public SexyAppBase
 	virtual std::string GetGameSEHInfo();
 	virtual void GetSEHWebParams(DefinesMap *theDefinesMap);
 
-#ifdef ZYLOM
-	bool ZylomUpdateCheckNeeded();
-	void ZylomShowAd();
-#endif
 };
 
 extern SexyApp *gSexyApp;

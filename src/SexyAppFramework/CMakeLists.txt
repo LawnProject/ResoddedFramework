@@ -29,9 +29,9 @@ foreach(EXCLUDED_FILE IN LISTS EXCLUDE_FILES)
     list(REMOVE_ITEM SOURCES "${EXCLUDED_FILE}")
 endforeach()
 
-set(SEXY_USE_OPENGL"Enable the OpenGL Rendering Backend" ON)
 set(SEXY_USE_IMGUI "Enable ImGui" ON)
 set(SEXY_USE_CONTROLLER "Enable the use of a controller" ON)
+set(SEXY_CRASH_HANDLER "Enable the use of the crash handler" ON)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
@@ -44,6 +44,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     freetype
     Vorbis::vorbisfile
     Vorbis::vorbis
+    cpptrace::cpptrace
     ImageLib
     PakLib
 )
@@ -61,9 +62,10 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
 
     # SAF specific
     USE_OGG_LIB
-    $<$<BOOL:${SEXY_USE_OPENGL}>:SEXY_USE_OPENGL>
+    SEXY_USE_OPENGL
     $<$<BOOL:${SEXY_USE_IMGUI}>:SEXY_USE_IMGUI>
     $<$<BOOL:${SEXY_USE_CONTROLLER}>:SEXY_USE_CONTROLLER>
+    $<$<BOOL:${SEXY_CRASH_HANDLER}>:SEXY_CRASH_HANDLER>
 
 )
 

@@ -49,6 +49,7 @@
 #include "SexyAppFramework/BassMusicInterface.h"
 #include "SexyAppFramework/Dialog.h"
 #include "SexyAppFramework/resource.h"
+#include "SexyAppFramework/SEHCatcher.h"
 
 #if LAWN_DEBUG_TOOLS
 #include "Lawn/Debug/DebuggerWindow.h"
@@ -1272,6 +1273,10 @@ void LawnApp::Init()
 	TodAssertInitForApp();
 	gBetaSubmitFunc = BetaSubmitFunc;
 	TodLog("session id: %u", mSessionID);
+#endif
+
+#if SEXY_CRASH_HANDLER
+	gSEHCatcher.mSubmitHost = "https://github.com/LawnProject/ResoddedFramework";
 #endif
 
 	if (!mResourceManager->ParseResourcesFile("properties/resources.xml"))

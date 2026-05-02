@@ -1,7 +1,9 @@
 #include "HTTPTransfer.h"
 #include "SexyAppBase.h"
+#if WIN32
 #include <process.h>
 #include <winsock.h>
+#endif
 
 using namespace Sexy;
 
@@ -21,7 +23,7 @@ HTTPTransfer::~HTTPTransfer()
 	Abort();
 	while (mThreadRunning)
 	{
-		Sleep(20);
+		SDL_Delay(20);
 	}
 }
 
@@ -69,6 +71,7 @@ void HTTPTransfer::Fail(int theResult)
 
 bool HTTPTransfer::SocketWait(bool checkRead, bool checkWrite)
 {
+#if WIN32
 	while (!mExiting)
 	{
 		fd_set aReadSet;
@@ -114,13 +117,14 @@ bool HTTPTransfer::SocketWait(bool checkRead, bool checkWrite)
 		if (FD_ISSET(mSocket, &aWriteSet))
 			return true;
 	}
-
+#endif
 	// Return true on abort
 	return true;
 }
 
 void HTTPTransfer::GetThreadProc()
 {
+#if WIN32
 	WSADATA aDat;
 	WSAStartup(MAKEWORD(1, 1), &aDat);
 
@@ -329,6 +333,7 @@ void HTTPTransfer::GetThreadProc()
 
 	mThreadRunning = false;
 	mTransferPending = false;
+#endif
 }
 
 void HTTPTransfer::GetThreadProcStub(void *theArg)
@@ -557,7 +562,7 @@ void HTTPTransfer::WaitFor()
 	while (mTransferPending)
 	{
 		UpdateStatus();
-		Sleep(20);
+		SDL_Delay(20);
 	}
 }
 

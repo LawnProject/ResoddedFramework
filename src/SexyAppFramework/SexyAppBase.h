@@ -360,9 +360,6 @@ class SexyAppBase : public ButtonListener, public DialogListener
 
 #endif
 
-#ifdef ZYLOM
-	unsigned int mZylomGameId;
-#endif
 
   protected:
 	void RehupFocus();

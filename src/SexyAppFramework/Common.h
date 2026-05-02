@@ -26,14 +26,14 @@
 #undef _UNICODE
 #undef UNICODE
 
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-
 #ifdef LoadImage
 #undef LoadImage // Windows, i fucking hate you -Electr0Gunner
 #endif
 
+#endif
+
+#ifndef NOMINMAX
+#define NOMINMAX
 #endif
 
 #ifdef max

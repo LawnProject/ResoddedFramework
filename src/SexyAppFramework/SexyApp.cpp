@@ -8,11 +8,6 @@
 #include <direct.h>
 //#include "BetaSupport.h"
 
-#ifdef ZYLOM
-#include "zylomso.h"
-using namespace zylom::zylomso;
-#endif
-
 using namespace Sexy;
 
 SexyApp *Sexy::gSexyApp = NULL;
@@ -230,13 +225,9 @@ void SexyApp::WriteToRegistry()
 
 	if (!mPlayingDemoBuffer)
 	{
-		char aFileName[256];
-		GetWindowsDirectory(aFileName, 256);
-		if (aFileName[strlen(aFileName) - 1] != '\\')
-			strcat(aFileName, "\\");
-		strcat(aFileName, "popcinfo.dat");
+		SexyString aFileName = GetAppDataFolder() + "popcinfo.dat";
 
-		FILE *fp = fopen(aFileName, "r+b");
+		FILE *fp = fopen(aFileName.c_str(), "r+b");
 		if (fp != NULL)
 		{
 			for (;;)
@@ -262,7 +253,7 @@ void SexyApp::WriteToRegistry()
 			}
 		}
 		else
-			fp = fopen(aFileName, "wb");
+			fp = fopen(aFileName.c_str(), "wb");
 
 		if (fp != NULL)
 		{
@@ -341,10 +332,6 @@ bool SexyApp::OpenHTMLTemplate(const std::string &theTemplateFile, const Defines
 
 bool SexyApp::OpenRegisterPage(DefinesMap theStatsMap)
 {
-#ifdef ZYLOM
-	ZylomGS_StandAlone_ShowBuyPage();
-	return true;
-#endif
 
 	// Insert standard defines
 	DefinesMap aDefinesMap;
@@ -389,17 +376,12 @@ bool SexyApp::ShouldCheckForUpdate()
 {
 	if (mDontUpdate)
 		return false;
-
-#ifdef ZYLOM
-	return ZylomUpdateCheckNeeded();
-#else
 	time_t aTimeNow;
 	time(&aTimeNow);
 
 	// It is set to 0 if we crash, otherwise ask every week
 	return ((mLastVerCheckQueryTime == 0) || (!mLastShutdownWasGraceful) ||
 			((mLastVerCheckQueryTime != 0) && (aTimeNow - mLastVerCheckQueryTime > 7 * 24 * 60 * 60)));
-#endif
 }
 
 void SexyApp::UpdateCheckQueried()
@@ -483,24 +465,16 @@ bool SexyApp::CheckSignature(const Buffer &theBuffer, const std::string &theFile
 
 void SexyApp::PreTerminate()
 {
-#ifdef ZYLOM
-	ZylomShowAd();
-#else
 	//if ((!mSkipAd) &&
 	//	((((!mIsRegistered) || (mInternetManager->HasNewAds())) && ((Rand()%2) == 0))))
 	//{
 	//	mInternetManager->TryShowAd();
 	//}
-#endif
 }
 
 void SexyApp::OpenUpdateURL()
 {
-#ifdef ZYLOM
-	ZylomGS_StandAlone_ShowUpdatePage();
-#else
 	//OpenURL(mInternetManager->GetUpdateURL(), true);
-#endif
 	Shutdown();
 }
 
@@ -513,7 +487,7 @@ void SexyApp::HandleCmdLineParam(const std::string &theParamName, const std::str
 		std::string aVersionString = "Product: " + mProdName + "\r\n" + "Version: " + mProductVersion + "\r\n" +
 									 "Build Num: " + StrFormat("%d", mBuildNum) + "\r\n" + "Build Date: " + mBuildDate;
 
-		MessageBox(NULL, aVersionString.c_str(), "Version Info", MB_ICONINFORMATION | MB_OK);
+		MsgBox("Version Info", aVersionString.c_str(),  MESSAGEBOX_INFORMATION | MESSAGEBOX_BTN_OK);
 		DoExit(0);
 	}
 	else
@@ -576,30 +550,24 @@ void SexyApp::InitPropertiesHook()
 
 	//mInternetManager->Init();
 	mBetaSupport = nullptr; //new BetaSupport(this);
-
-#ifdef ZYLOM
-	LoadProperties();
-	ZylomGS_StandAlone_Init(
-		mZylomGameId, (char *)GetString("BUG_REPORT_TITLE").c_str(), (char *)GetString("BUG_REPORT_BODY").c_str());
-#endif
 }
 
 void SexyApp::Init()
 {
-#if WIN32
-	SEHCatcher::mCrashMessage = L"An unexpected error has occured!  Pressing 'Send Report' "
+#if SEXY_CRASH_HANDLER
+	SEHCatcher::mCrashMessage = "An unexpected error has occured!  Pressing 'Send Report' "
 								"will send us helpful debugging information that may help "
-								"us resolve this issue in the future.\r\n\r\n"
-								"You can also contact us directly at feedback@popcap.com.";
+								"us resolve this issue in the future.\n\n"
+								"Contact the developers so this issue can be fixed.";
 
-	SEHCatcher::mSubmitMessage = L"Please help us out by providing as much information as "
+	SEHCatcher::mSubmitMessage = "Please help us out by providing as much information as "
 								 "you can about this crash. Is this the first time it happened? "
-								 "Have you used other PopCap Deluxe games successfully before? "
+								 "Have you used other games successfully before? "
 								 "Have you upgraded your drivers or any software recently that "
 								 "may be interfering with this program?";
 
 	SEHCatcher::mSubmitErrorMessage =
-		L"Failed to connect to PopCap servers.  Please check your Internet connection.\n"
+		"Failed to redirect to issue page.  Please check your Internet connection.\n"
 		"If you are on a dial-up connection, you may have to manually connect to your ISP.";
 
 	SEHCatcher::mSubmitHost = "www.popcap.com";
@@ -622,17 +590,3 @@ void SexyApp::UpdateFrames()
 
 	//mInternetManager->Update();
 }
-
-#ifdef ZYLOM
-
-bool SexyApp::ZylomUpdateCheckNeeded()
-{
-	return ZylomGS_StandAlone_UpdateCheckNeeded();
-}
-
-void SexyApp::ZylomShowAd()
-{
-	ZylomGS_StandAlone_ShowAd(mIsRegistered);
-}
-
-#endif

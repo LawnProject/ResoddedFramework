@@ -59,5 +59,10 @@ FetchContent_Declare(
     GIT_TAG master
 )
 
+FetchContent_Declare(
+  cpptrace
+  GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
+  GIT_TAG        v1.0.4
+)
 
-FetchContent_MakeAvailable(SDL3 zlib openal ogg vorbis glm freetype)
+FetchContent_MakeAvailable(SDL3 zlib openal ogg vorbis glm freetype cpptrace)
