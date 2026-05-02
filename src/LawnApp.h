@@ -118,7 +118,7 @@ class LawnApp : public SexyApp
 	bool mDebuggerEnabled;
 	DebuggerWindow *mDebugWindow;
 #endif
-	int mSessionID;						   //+0x87C
+	uint32_t mSessionID;						   //+0x87C
 	int mPlayTimeActiveSession;			   //+0x880
 	int mPlayTimeInactiveSession;		   //+0x884
 	BoardResult mBoardResult;			   //+0x888
