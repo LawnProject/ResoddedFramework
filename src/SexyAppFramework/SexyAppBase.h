@@ -215,7 +215,6 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	bool mReadFromRegistry;
 	std::string mRegisterLink;
 	std::string mProductVersion;
-	Version mVersion;
 	Image *mCursorImages[NUM_CURSORS];
 	SDL_Cursor* mOverrideCursor;
 	bool mIsOpeningURL;
@@ -359,6 +358,8 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	Gamepad* mGamepads[MAX_GAMEPADS];
 
 #endif
+
+	static Version gVersion;
 
 
   protected:

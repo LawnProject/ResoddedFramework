@@ -3,7 +3,9 @@
 using namespace Sexy;
 
 
-Version::Version() : Version(0, 0, 0) {}
+Version::Version() : Version(-1, -1, -1)
+{
+}
 
 Version::Version(int theMajor, int theMinor, int thePatch)
 {
@@ -20,20 +22,19 @@ Version::~Version()
 
 bool Version::isOlderThan(const Version &theVersion)
 {
-	if (theVersion.mMajor < mMajor)
+	if (mMajor < theVersion.mMajor)
 		return true;
-	else if(theVersion.mMajor > mMajor)
+	else if (mMajor > theVersion.mMajor)
 		return false;
 
-	if (theVersion.mMinor < mMinor)
+	if (mMinor < theVersion.mMinor)
 		return true;
-	else if(theVersion.mMinor > mMinor)
+	else if (mMinor > theVersion.mMinor)
 		return false;
 
-	if (theVersion.mPatch < mPatch)
+	if (mPatch < theVersion.mPatch)
 		return true;
-	else if (theVersion.mPatch > mPatch)
-		return false;
+
 
 	return false;
 }

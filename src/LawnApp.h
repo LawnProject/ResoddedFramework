@@ -144,6 +144,9 @@ class LawnApp : public SexyApp
 	bool mDebugTrialLocked;				   //+0x8C4
 	bool mMuteSoundsForCutscene;		   //+0x8C5
 
+	static Version gResoddedVersion;
+
+
   public:
 	LawnApp();
 	virtual ~LawnApp();
@@ -389,7 +392,5 @@ extern bool gFastMo;	   //0x6A9EAB
 extern bool gSlowMo;	   //0x6A9EAA
 extern LawnApp *gLawnApp;  //0x6A9EC0
 extern int gSlowMoCounter; //0x6A9EC4
-
-extern Version mResoddedVersion;
 
 #endif // __LAWNAPP_H__

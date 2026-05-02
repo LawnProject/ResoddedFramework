@@ -120,6 +120,8 @@ static GPUImage *gFPSImage = NULL;
 
 static SysFont* gDebugFont = nullptr;
 
+Version SexyAppBase::gVersion;
+
 //////////////////////////////////////////////////////////////////////////
 
 SexyAppBase::SexyAppBase()

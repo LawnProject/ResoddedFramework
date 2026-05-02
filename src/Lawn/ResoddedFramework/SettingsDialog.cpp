@@ -77,7 +77,7 @@ void SettingsDialog::Draw(Graphics* g)
 
 	TodDrawString(g, "[SETTINGS_MISC]", 20, 130, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
 
-	SexyString aVersionString = "ResoddedFramework " + mResoddedVersion.toString();
+	SexyString aVersionString = "ResoddedFramework " + LawnApp::gResoddedVersion.toString();
 	TodDrawString(g, aVersionString, 
 					mOptionsSlider->mAllowedMouseZone.mWidth - Sexy::FONT_BRIANNETOD12->StringWidth(aVersionString) - 27,
 					aMaxContentHeight - Sexy::FONT_BRIANNETOD12->GetHeight(),

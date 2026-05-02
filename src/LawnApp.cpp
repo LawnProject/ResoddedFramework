@@ -56,7 +56,7 @@
 #include "Lawn/Debug/DebuggerWindow.h"
 #endif
 
-Version mResoddedVersion(0, 5, 0);
+Version LawnApp::gResoddedVersion(0, 5, 0);
 
 bool gIsPartnerBuild = false;
 bool gSlowMo = false;		 //0x6A9EAA
@@ -166,9 +166,9 @@ LawnApp::LawnApp()
 
 	//Define version here:
 
-	mVersion.mMajor = 0;
-	mVersion.mMinor = 0;
-	mVersion.mPatch = 0;
+	gVersion.mMajor = 0;
+	gVersion.mMinor = 0;
+	gVersion.mPatch = 0;
 
 }
 
@@ -1262,8 +1262,13 @@ void LawnApp::Init()
 	//{
 	//	gSexyCache->Disconnect();
 	//}
-	UpdateChecker::gUpdateHost = "todo: make this the path to ResoddedVersion.txt on github";
+	UpdateChecker::gUpdateHost = "https://raw.githubusercontent.com/LawnProject/ResoddedFramework/refs/heads/work-in-progress/LawnVersion.txt";
 	UpdateChecker::Check();
+
+	if (UpdateChecker::gIsOutdated)
+		printf("OUTDATED\n");
+	else
+		printf("UP TO DATE\n");
 
 	mSessionID = GetTicks();
 	mPlayTimeActiveSession = 0;
