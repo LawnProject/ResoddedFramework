@@ -430,7 +430,10 @@ SexyAppBase::~SexyAppBase()
 	if (gDebugFont)
 		delete gDebugFont;
 
+	curl_global_cleanup();
+
 	FT_Done_FreeType(mFreeTypeLib);
+
 #if SEXY_USE_IMGUI
 	delete mImGuiManager;
 #endif
@@ -450,6 +453,8 @@ SexyAppBase::~SexyAppBase()
 	gSexyAppBase = NULL;
 
 	WriteDemoBuffer();
+
+	SDL_Quit();
 
 #if WIN32
 	if (mCopyMutex != NULL)
@@ -5469,6 +5474,8 @@ void SexyAppBase::Init()
 	{
 		DoExit(0);
 	}
+
+	curl_global_init(CURL_GLOBAL_DEFAULT);
 
 	std::string aDataPath = GetAppDataFolder() + mFullCompanyName + "/" + mProdName;
 	SetAppDataFolder(aDataPath + "/");
