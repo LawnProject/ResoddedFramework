@@ -1,5 +1,6 @@
-#ifndef __HTTPTRANSFER_H__
-#define __HTTPTRANSFER_H__
+#pragma once
+
+#include "curl/curl.h"
 
 #include "Common.h"
 
@@ -30,14 +31,10 @@ class HTTPTransfer
 	std::string mSpecifiedRelURL;
 	std::string mURL;
 	std::string mProto;
-	std::string mHost;
-	int mPort;
-	std::string mPath;
 
 	int mContentLength;
 	std::string mContent;
 
-	bool mTransferPending;
 	bool mThreadRunning;
 	bool mExiting;
 	bool mAborted;
@@ -45,8 +42,11 @@ class HTTPTransfer
 
 	int mDemoLastKnownResult;
 
+  private:
+	std::thread mThread;
+
   protected:
-	void PrepareTransfer(const std::string &theURL);
+	void PrepareTransfer();
 	void StartTransfer();
 	void GetHelper(const std::string &theURL);
 
@@ -58,7 +58,6 @@ class HTTPTransfer
 	static std::string GetAbsURL(const std::string &theBaseURL, const std::string &theRelURL);
 
 	void UpdateStatus();
-	bool SocketWait(bool checkRead, bool checkWrite);
 
   public:
 	HTTPTransfer();
@@ -74,11 +73,8 @@ class HTTPTransfer
 
 	void Reset();
 	void Abort();
-	void WaitFor();
 	int GetResultCode();
 	std::string GetContent();
 };
 
 }; // namespace Sexy
-
-#endif //__HTTPTRANSFER_H__

@@ -45,6 +45,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     Vorbis::vorbisfile
     Vorbis::vorbis
     cpptrace::cpptrace
+    CURL::libcurl
     ImageLib
     PakLib
 )
