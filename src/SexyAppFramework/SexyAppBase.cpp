@@ -300,11 +300,13 @@ SexyAppBase::SexyAppBase()
 
 	mWidgetManager = new WidgetManager(this);
 	mResourceManager = new ResourceManager(this);
-
+	
+#if SEXY_USE_CONTROLLER
 	for (int i = 0; i < MAX_GAMEPADS; i++)
 	{
 		mGamepads[i] = nullptr;
 	}
+#endif
 
 	mPrimaryThreadId = 0;
 
@@ -424,11 +426,13 @@ SexyAppBase::~SexyAppBase()
 	mDialogMap.clear();
 	mDialogList.clear();
 
+#if SEXY_USE_CONTROLLER
 	for (int i = 0; i < MAX_GAMEPADS; i++)
 	{
 		if (mGamepads[i] != nullptr)
 			delete mGamepads[i];
 	}
+#endif
 
 	delete mWidgetManager;
 	delete mResourceManager;

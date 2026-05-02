@@ -10,8 +10,8 @@
 
 using namespace Sexy;
 
-static char gLogFileName[MAX_PATH];
-static char gDebugDataFolder[MAX_PATH];
+static char gLogFileName[1024];
+static char gDebugDataFolder[1024];
 
 //0x514EA0
 void TodErrorMessageBox(const char *theMessage, const char *theTitle)
@@ -135,18 +135,19 @@ void TodLogString(const char *theMsg)
 	FILE *f = fopen(gLogFileName, "a");
 	if (f == nullptr)
 	{
-		OutputDebugString("Failed to open log file\n");
+		printf("Failed to open log file\n");
 	}
 
-	if (fwrite(theMsg, strlen(theMsg), 1, f) != 1)
+	if (f && fwrite(theMsg, strlen(theMsg), 1, f) != 1)
 	{
-		OutputDebugString("Failed to write to log file\n");
+		printf("Failed to write to log file\n");
 	}
 
 	// @ThePixelMoon; why isn't this using printf already?
 	printf("%s", theMsg);
 
-	fclose(f);
+	if (f)
+		fclose(f);
 #endif
 }
 
@@ -272,8 +273,7 @@ void TodAssertInitForApp()
 {
 	std::chrono::system_clock::time_point aNow = std::chrono::system_clock::now();
 	std::time_t t = std::chrono::system_clock::to_time_t(aNow);
-	std::tm aLocalTime;
-	localtime_s(&aLocalTime, &t);
+	std::tm aLocalTime = *std::localtime(&t);
 
 	std::ostringstream aOss;
 	aOss << std::put_time(&aLocalTime, "%d-%m-%Y-%H.%M");
@@ -286,10 +286,10 @@ void TodAssertInitForApp()
 	std::string aFormatted = StrFormat("log-%s.txt", aTimestamp.c_str());
 	strcat(gLogFileName, aFormatted.c_str());
 
-	TOD_ASSERT(strlen(gLogFileName) < MAX_PATH);
+	TOD_ASSERT(strlen(gLogFileName) < 1024);
 
-	__time64_t aclock = _time64(nullptr);
-	TodLog("Started %s\n", asctime(_localtime64(&aclock)));
+	std::time_t aclock = std::time(nullptr);
+	TodLog("Started %s\n", std::asctime(std::localtime(&aclock)));
 
 	SetUnhandledExceptionFilter(TodUnhandledExceptionFilter);
 }

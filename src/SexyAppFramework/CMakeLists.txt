@@ -29,6 +29,10 @@ foreach(EXCLUDED_FILE IN LISTS EXCLUDE_FILES)
     list(REMOVE_ITEM SOURCES "${EXCLUDED_FILE}")
 endforeach()
 
+set(SEXY_USE_OPENGL"Enable the OpenGL Rendering Backend" ON)
+set(SEXY_USE_IMGUI "Enable ImGui" ON)
+set(SEXY_USE_CONTROLLER "Enable the use of a controller" ON)
+
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC 
@@ -57,9 +61,10 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
 
     # SAF specific
     USE_OGG_LIB
-    SEXY_USE_OPENGL
-    SEXY_USE_IMGUI
-    SEXY_USE_CONTROLLER
+    $<$<BOOL:${SEXY_USE_OPENGL}>:SEXY_USE_OPENGL>
+    $<$<BOOL:${SEXY_USE_IMGUI}>:SEXY_USE_IMGUI>
+    $<$<BOOL:${SEXY_USE_CONTROLLER}>:SEXY_USE_CONTROLLER>
+
 )
 
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)

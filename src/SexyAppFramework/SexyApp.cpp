@@ -586,6 +586,7 @@ void SexyApp::InitPropertiesHook()
 
 void SexyApp::Init()
 {
+#if WIN32
 	SEHCatcher::mCrashMessage = L"An unexpected error has occured!  Pressing 'Send Report' "
 								"will send us helpful debugging information that may help "
 								"us resolve this issue in the future.\r\n\r\n"
@@ -602,10 +603,10 @@ void SexyApp::Init()
 		"If you are on a dial-up connection, you may have to manually connect to your ISP.";
 
 	SEHCatcher::mSubmitHost = "www.popcap.com";
-
-	OutputDebugString(StrFormat("Product: %s\r\n", mProdName.c_str()).c_str());
-	OutputDebugString(StrFormat("BuildNum: %d\r\n", mBuildNum).c_str());
-	OutputDebugString(StrFormat("BuildDate: %s\r\n", mBuildDate.c_str()).c_str());
+#endif
+	printf(StrFormat("Product: %s\n", mProdName.c_str()).c_str());
+	printf(StrFormat("BuildNum: %d\n", mBuildNum).c_str());
+	printf(StrFormat("BuildDate: %s\n", mBuildDate.c_str()).c_str());
 
 	SexyAppBase::Init();
 

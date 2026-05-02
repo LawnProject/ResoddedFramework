@@ -623,24 +623,13 @@ bool IsFileInPakFile(const SexyString &theFilePath)
 bool DefinitionIsCompiled(const SexyString &theXMLFilePath)
 {
 	SexyString aCompiledFilePath = DefinitionGetCompiledFilePathFromXMLFilePath(theXMLFilePath);
-	if (IsFileInPakFile(aCompiledFilePath))
-		return true;
-
-	_WIN32_FILE_ATTRIBUTE_DATA lpFileData;
-	_FILETIME aCompiledFileTime;
-	bool aSucceed =
-		GetFileAttributesEx(aCompiledFilePath.c_str(), _GET_FILEEX_INFO_LEVELS::GetFileExInfoStandard, &lpFileData);
-	if (aSucceed)
-		aCompiledFileTime = lpFileData.ftLastWriteTime;
-
-	if (!GetFileAttributesEx(theXMLFilePath.c_str(), _GET_FILEEX_INFO_LEVELS::GetFileExInfoStandard, &lpFileData))
+	PFILE *pFile = p_fopen(aCompiledFilePath.c_str(), "rb");
+	if (pFile)
 	{
-		// This message PISSES me off
-		//TodTrace("Can't file source file to compile '%s'", theXMLFilePath);
+		p_fclose(pFile);
 		return true;
 	}
-	else
-		return aSucceed && CompareFileTime(&aCompiledFileTime, &lpFileData.ftLastWriteTime) == 1;
+	return false;
 }
 
 void DefinitionFillWithDefaults(DefMap *theDefMap, void *theDefinition)
