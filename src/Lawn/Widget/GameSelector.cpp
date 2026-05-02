@@ -13,6 +13,7 @@
 #include "../System/PlayerInfo.h"
 #include "../System/ProfileMgr.h"
 #include "../System/TypingCheck.h"
+#include "../ResoddedFramework/UpdateChecker.h"
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "../../Sexy.TodLib/TodDebug.h"
 #include "../../SexyAppFramework/Font.h"
@@ -20,6 +21,7 @@
 #include "../../Sexy.TodLib/TodParticle.h"
 #include "../../SexyAppFramework/Dialog.h"
 #include "../../SexyAppFramework/WidgetManager.h"
+#include "../../Sexy.TodLib/TodStringFile.h"
 
 static float gFlowerCenter[3][2] = {{765.0f, 483.0f}, {663.0f, 455.0f}, {701.0f, 439.0f}}; //0x665430
 
@@ -259,6 +261,13 @@ GameSelector::GameSelector(LawnApp *theApp)
 	SyncProfile(false);
 	mApp->PlaySample(Sexy::SOUND_ROLL_IN);
 	TodHesitationTrace("gameselectorinit");
+
+	if (UpdateChecker::gIsOutdated)
+	{
+		SexyString aDialogText =
+			StrFormat(TodStringTranslate("[UPDATE_OUTDATED_MESSAGE]").c_str(), LawnApp::gVersion.toString().c_str(),UpdateChecker::gLatestVersion.toString().c_str());
+		mApp->DoDialog(DIALOG_VERSION_NOTICE, true, "[UPDATE_OUTDATED_HEADER]", aDialogText, "[DIALOG_BUTTON_OK]", Dialog::BUTTONS_FOOTER);
+	}
 }
 
 //0x449D00��0x449D20

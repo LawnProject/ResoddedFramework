@@ -21,3 +21,11 @@ Miscellaneous Settings
 
 [SETTINGS_OPEN_SAVE_FOLDER]
 Open Save Folder
+
+[UPDATE_OUTDATED_MESSAGE]
+You are playing an outdated version of the mod.
+Your Version: %s | Latest Version: %s
+It is recommended you update the mod.
+
+[UPDATE_OUTDATED_HEADER]
+Outdated Version

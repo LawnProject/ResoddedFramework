@@ -1262,13 +1262,6 @@ void LawnApp::Init()
 	//{
 	//	gSexyCache->Disconnect();
 	//}
-	UpdateChecker::gUpdateHost = "https://raw.githubusercontent.com/LawnProject/ResoddedFramework/refs/heads/work-in-progress/LawnVersion.txt";
-	UpdateChecker::Check();
-
-	if (UpdateChecker::gIsOutdated)
-		printf("OUTDATED\n");
-	else
-		printf("UP TO DATE\n");
 
 	mSessionID = GetTicks();
 	mPlayTimeActiveSession = 0;
@@ -1282,6 +1275,20 @@ void LawnApp::Init()
 	gBetaSubmitFunc = BetaSubmitFunc;
 	TodLog("session id: %u", mSessionID);
 #endif
+	
+	// [SETUP] - Here you (can) add a link that contains the LATEST version of your mod. I recommend Github as it's free and easy to setup. (And you are probably using it now)
+
+	UpdateChecker::gUpdateHost =
+		"https://raw.githubusercontent.com/LawnProject/ResoddedFramework/refs/heads/work-in-progress/LawnVersion.txt";
+
+	UpdateChecker::Check();
+
+	if (UpdateChecker::gIsOutdated)
+		TodLog("OUTDATED: Current Version: %s | Latest Version: %s", gVersion.toString().c_str(),
+			   UpdateChecker::gLatestVersion.toString().c_str());
+	else
+		TodLog("UP TO DATE: Version : %s", gVersion.toString().c_str());
+
 
 #if SEXY_CRASH_HANDLER
 	gSEHCatcher.mSubmitHost = "https://github.com/LawnProject/ResoddedFramework";

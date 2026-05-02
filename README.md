@@ -38,9 +38,9 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 - MP3/OGG/FLAC Music with loop points - 0%
 - Controller Support - 30%
 ### Low Priority
-- Multi-platform support - 5%
+- Multi-platform support - 15%
 - Separate mod resources (.pak + folders) - 5%
-- Update Checker - 0%
+- Update Checker - 100%
 
 # Credits
 

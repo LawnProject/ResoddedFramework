@@ -296,6 +296,7 @@ enum Dialogs
 	DIALOG_IMITATER,			   // 49：模仿者对话
 	DIALOG_PURCHASE_PACKET_SLOT,   // 50：升级卡槽的格子数量
 	DIALOG_SETTINGS,
+	DIALOG_VERSION_NOTICE,
 	NUM_DIALOGS
 };
 enum DebugTextMode

@@ -1,6 +1,7 @@
 #include "UpdateChecker.h"
 #include "../../LawnApp.h"
 #include <HTTPTransfer.h>
+#include "../../Sexy.TodLib/TodDebug.h"
 #include <sstream>
 
 using namespace Sexy;
@@ -11,6 +12,7 @@ bool UpdateChecker::gIsOutdated = false;
 
 UpdateCheckResult UpdateChecker::Check()
 {
+	TodLog("Checking for any newer versions the mod.");
 	HTTPTransfer aTransfer;
 	aTransfer.Get(gUpdateHost);
 
