@@ -7526,47 +7526,69 @@ void Board::DrawDebugText(Graphics *g)
 			}
 			aText += StrFormat("\n");
 
-			int aPackedOrderMain = mApp->mMusic->GetMusicOrder(mApp->mMusic->mCurMusicFileMain);
-			int aCurrentOrder = LOWORD(aPackedOrderMain);
-			aText +=
-				StrFormat("Music order %02d row %02d\n", LOWORD(aPackedOrderMain), HIWORD(aPackedOrderMain) / 4);
-			if (mApp->mMusic->mCurMusicTune == MusicTune::MUSIC_TUNE_DAY_GRASSWALK ||
-				mApp->mMusic->mCurMusicTune == MusicTune::MUSIC_TUNE_POOL_WATERYGRAVES ||
-				mApp->mMusic->mCurMusicTune == MusicTune::MUSIC_TUNE_FOG_RIGORMORMIST ||
-				mApp->mMusic->mCurMusicTune == MusicTune::MUSIC_TUNE_ROOF_GRAZETHEROOF)
+			if (mApp->mMusic->IsTrackerMusic(mApp->mMusic->mCurMusicTune))
 			{
-				int aPackedOrderHihats = mApp->mMusic->GetMusicOrder(mApp->mMusic->mCurMusicFileHihats);
-				int aPackedOrderDrums = mApp->mMusic->GetMusicOrder(mApp->mMusic->mCurMusicFileDrums);
-				if (aCurrentOrder == LOWORD(aPackedOrderHihats) && aCurrentOrder == LOWORD(aPackedOrderDrums))
+				int aPackedOrderMain = mApp->mMusic->GetMusicOrder(mApp->mMusic->mCurMusicFileMain);
+				int aCurrentOrder = LOWORD(aPackedOrderMain);
+				aText +=
+					StrFormat("Music order %02d row %02d\n", LOWORD(aPackedOrderMain), HIWORD(aPackedOrderMain) / 4);
+				if (mApp->mMusic->mCurMusicTune == MusicTune::MUSIC_TUNE_DAY_GRASSWALK ||
+					mApp->mMusic->mCurMusicTune == MusicTune::MUSIC_TUNE_POOL_WATERYGRAVES ||
+					mApp->mMusic->mCurMusicTune == MusicTune::MUSIC_TUNE_FOG_RIGORMORMIST ||
+					mApp->mMusic->mCurMusicTune == MusicTune::MUSIC_TUNE_ROOF_GRAZETHEROOF)
 				{
-					int aDiffHihats = HIWORD(aPackedOrderHihats) - HIWORD(aPackedOrderMain);
-					int aDiffDrums = HIWORD(aPackedOrderDrums) - HIWORD(aPackedOrderMain);
-					if (abs(aDiffHihats) > 1 || abs(aDiffDrums) > 1)
+					int aPackedOrderHihats = mApp->mMusic->GetMusicOrder(mApp->mMusic->mCurMusicFileHihats);
+					int aPackedOrderDrums = mApp->mMusic->GetMusicOrder(mApp->mMusic->mCurMusicFileDrums);
+					if (aCurrentOrder == LOWORD(aPackedOrderHihats) && aCurrentOrder == LOWORD(aPackedOrderDrums))
 					{
-						aText += StrFormat("Music unsynced hihats %d drums %d\n", aDiffHihats, aDiffDrums);
+						int aDiffHihats = HIWORD(aPackedOrderHihats) - HIWORD(aPackedOrderMain);
+						int aDiffDrums = HIWORD(aPackedOrderDrums) - HIWORD(aPackedOrderMain);
+						if (abs(aDiffHihats) > 1 || abs(aDiffDrums) > 1)
+						{
+							aText += StrFormat("Music unsynced hihats %d drums %d\n", aDiffHihats, aDiffDrums);
+						}
+					}
+
+					HMUSIC aMusicHandle1 = mApp->mMusic->GetBassMusicHandle(mApp->mMusic->mCurMusicFileMain);
+					HMUSIC aMusicHandle2 = mApp->mMusic->GetBassMusicHandle(mApp->mMusic->mCurMusicFileHihats);
+					HMUSIC aMusicHandle3 = mApp->mMusic->GetBassMusicHandle(mApp->mMusic->mCurMusicFileDrums);
+					float bpm1, bpm2, bpm3;
+					BASS_ChannelGetAttribute(aMusicHandle1, BASS_ATTRIB_MUSIC_BPM, &bpm1);
+					BASS_ChannelGetAttribute(aMusicHandle2, BASS_ATTRIB_MUSIC_BPM, &bpm2);
+					BASS_ChannelGetAttribute(aMusicHandle3, BASS_ATTRIB_MUSIC_BPM, &bpm3);
+					aText += StrFormat("bpm1 %f bmp2 %f bpm3 %f\n", bpm1, bpm2, bpm3);
+				}
+				else if (mApp->mMusic->mCurMusicTune == MusicTune::MUSIC_TUNE_NIGHT_MOONGRAINS)
+				{
+					int aPackedOrderDrums = mApp->mMusic->GetMusicOrder(mApp->mMusic->mCurMusicFileDrums);
+					aText += StrFormat("Drum order %02d row %02d\n", LOWORD(aPackedOrderDrums),
+									   HIWORD(aPackedOrderDrums) / 4);
+					int aDiffDrums = HIWORD(aPackedOrderDrums) - HIWORD(aPackedOrderMain);
+					if (abs(aDiffDrums) > 0 && abs(aDiffDrums) <= 128)
+					{
+						aText += StrFormat("Drums unsynced %d", aDiffDrums);
 					}
 				}
-
-				HMUSIC aMusicHandle1 = mApp->mMusic->GetBassMusicHandle(mApp->mMusic->mCurMusicFileMain);
-				HMUSIC aMusicHandle2 = mApp->mMusic->GetBassMusicHandle(mApp->mMusic->mCurMusicFileHihats);
-				HMUSIC aMusicHandle3 = mApp->mMusic->GetBassMusicHandle(mApp->mMusic->mCurMusicFileDrums);
-				float bpm1, bpm2, bpm3;
-				BASS_ChannelGetAttribute(aMusicHandle1, BASS_ATTRIB_MUSIC_BPM, &bpm1);
-				BASS_ChannelGetAttribute(aMusicHandle2, BASS_ATTRIB_MUSIC_BPM, &bpm2);
-				BASS_ChannelGetAttribute(aMusicHandle3, BASS_ATTRIB_MUSIC_BPM, &bpm3);
-				aText += StrFormat("bpm1 %f bmp2 %f bpm3 %f\n", bpm1, bpm2, bpm3);
 			}
-			else if (mApp->mMusic->mCurMusicTune == MusicTune::MUSIC_TUNE_NIGHT_MOONGRAINS)
+			else
 			{
-				int aPackedOrderDrums = mApp->mMusic->GetMusicOrder(mApp->mMusic->mCurMusicFileDrums);
-				aText += StrFormat(
-					"Drum order %02d row %02d\n", LOWORD(aPackedOrderDrums), HIWORD(aPackedOrderDrums) / 4);
-				int aDiffDrums = HIWORD(aPackedOrderDrums) - HIWORD(aPackedOrderMain);
-				if (abs(aDiffDrums) > 0 && abs(aDiffDrums) <= 128)
+				int aMainPosition = mApp->mMusic->GetMusicPosition(mApp->mMusic->mCurMusicFileMain);
+				
+				aText += StrFormat("Music position %d\n", aMainPosition);
+				if (mApp->mMusic->mCurMusicFileDrums != MusicFile::MUSIC_FILE_NONE)
 				{
-					aText += StrFormat("Drums unsynced %d", aDiffDrums);
+					int aDrumsPosition = mApp->mMusic->GetMusicPosition(mApp->mMusic->mCurMusicFileDrums);
+					aText += StrFormat("Music drums position %d\n", aDrumsPosition);
 				}
+				
+				if (mApp->mMusic->mCurMusicFileHihats != MusicFile::MUSIC_FILE_NONE)
+				{
+					int aHihatsPosition = mApp->mMusic->GetMusicPosition(mApp->mMusic->mCurMusicFileHihats);
+					aText += StrFormat("Music hihats position %d\n", aHihatsPosition);
+				}
+
 			}
+
 		}
 
 		break;
@@ -9077,7 +9099,7 @@ void Board::KeyChar(SexyChar theChar)
 	}
 	if (theChar == 'M')
 	{
-		mApp->mMusic->mBurstOverride = 2 - (mApp->mMusic->mBurstOverride != 1);
+		mApp->mMusic->mBurstOverride = (MusicBurstType)((int)MusicBurstType::MUSIC_BURST_REPLACE - (mApp->mMusic->mBurstOverride != MusicBurstType::MUSIC_BURST_ADDON));
 		return;
 	}
 

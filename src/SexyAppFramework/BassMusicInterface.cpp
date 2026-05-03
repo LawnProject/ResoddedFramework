@@ -379,3 +379,15 @@ int BassMusicInterface::GetMusicOrder(int theSongId)
 	}
 	return -1;
 }
+
+int BassMusicInterface::GetMusicPosition(int theSongId)
+{
+	BassMusicMap::iterator anItr = mMusicMap.find(theSongId);
+	if (anItr != mMusicMap.end())
+	{
+		BassMusicInfo *aMusicInfo = &anItr->second;
+		int aPosition = BASS_ChannelGetPosition(aMusicInfo->GetHandle(), BASS_POS_BYTE);
+		return aPosition;
+	}
+	return -1;
+}

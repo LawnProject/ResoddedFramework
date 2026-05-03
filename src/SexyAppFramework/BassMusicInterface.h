@@ -65,6 +65,8 @@ class BassMusicInterface : public MusicInterface
 
 	// functions for dealing with MODs
 	int GetMusicOrder(int theSongId);
+	// functions for base audio files
+	int GetMusicPosition(int theSongId);
 };
 
 } // namespace Sexy

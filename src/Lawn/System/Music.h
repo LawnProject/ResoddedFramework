@@ -56,6 +56,15 @@ enum MusicDrumsState
 	MUSIC_DRUMS_FADING
 };
 
+// MUSIC_BURST_ADDON = Simple addon onto the main theme
+// MUSIC_BURST_REPLACE = Mute the main track. Play the drums instead
+enum MusicBurstType
+{
+	MUSIC_BURST_INVALID = -1,
+	MUSIC_BURST_ADDON = 1,
+	MUSIC_BURST_REPLACE,
+};
+
 class MusicFileData
 {
   public:
@@ -72,7 +81,7 @@ class Music
 	MusicFile mCurMusicFileMain;		   //+0xC
 	MusicFile mCurMusicFileDrums;		   //+0x10
 	MusicFile mCurMusicFileHihats;		   //+0x14
-	int mBurstOverride;					   //+0x18
+	MusicBurstType mBurstOverride;		   //+0x18
 	float mBaseBPM;						   //+0x1C
 	float mBaseModSpeed;				   //+0x20
 	MusicBurstState mMusicBurstState;	   //+0x24
@@ -86,6 +95,7 @@ class Music
 	bool mMusicDisabled;				   //+0x41
 	int mFadeOutCounter;				   //+0x44
 	int mFadeOutDuration;				   //+0x48
+	int mQueuedDrumTrackPosition;
 
   public:
 	Music();
@@ -103,6 +113,8 @@ class Music
 	/*inline*/ void LoadSong(MusicFile theMusicFile, const std::string &theFileName);
 	void MusicResync();
 	void UpdateMusicBurst();
+	void UpdateBurstTracker();
+	void UpdateBurstAudio();
 	/*inline*/ void StartBurst();
 	void GameMusicPause(bool thePause);
 	void PlayFromOffset(MusicFile theMusicFile, int theOffset, double theVolume);
@@ -113,8 +125,11 @@ class Music
 	/*inline*/ void FadeOut(int theFadeOutDuration);
 	void SetupMusicFileForTune(MusicFile theMusicFile, MusicTune theMusicTune);
 	unsigned long GetMusicOrder(MusicFile theMusicFile);
+	unsigned long GetMusicPosition(MusicFile theMusicFile);
 	void MusicLoadCreditsSong();
 	int GetNumLoadingTasks();
+	bool IsTrackerMusic(MusicTune theMusicTune);
+	MusicBurstType GetMusicBurstType(MusicTune theMusicTune);
 };
 
 #endif

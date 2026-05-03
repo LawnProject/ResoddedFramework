@@ -125,6 +125,8 @@ LawnApp::LawnApp()
 	mSfxVolume = 0.5525;
 	mAutoStartLoadingThread = false;
 	mDebugKeysEnabled = false;
+	mTodCheatKeys = false;
+
 	mProdName = "PlantsVsZombies";
 	std::string aTitleName = "Plants vs. Zombies";
 #ifdef _DEBUG
@@ -148,7 +150,12 @@ LawnApp::LawnApp()
 	mCompletedLoadingThreadTasks = 0;
 	mProfileMgr = new ProfileMgr();
 	mRegisterResourcesLoaded = false;
-	mTodCheatKeys = false;
+
+#ifdef _DEBUG
+	mTodCheatKeys = true;
+	mDebugKeysEnabled = true;
+#endif
+
 	mCrazyDaveReanimID = ReanimationID::REANIMATIONID_NULL;
 	mCrazyDaveState = CrazyDaveState::CRAZY_DAVE_OFF;
 	mCrazyDaveBlinkCounter = 0;
@@ -1366,11 +1373,6 @@ void LawnApp::Init()
 	mDanceCheck = new TypingCheck("dance");
 	mDaisyCheck = new TypingCheck("daisies");
 	mSukhbirCheck = new TypingCheck("sukhbir");
-
-#ifdef _DEBUG
-	mTodCheatKeys = true;
-	mDebugKeysEnabled = true;
-#endif
 
 #ifdef _DEBUG
 	aDuration = mTimer.GetDuration();
