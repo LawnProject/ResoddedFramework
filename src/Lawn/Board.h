@@ -23,6 +23,12 @@ using namespace Sexy;
 #define MAX_POOL_GRID_SIZE 10
 #define MAX_RENDER_ITEMS 2048
 #define PROGRESS_METER_COUNTER 150
+#define MAX_PLANTS_SIZE 1024U
+#define MAX_ZOMBIES_SIZE 1024U
+#define MAX_PROJECTILE_SIZE 1024U
+#define MAX_COIN_SIZE 1024U
+#define MAX_LAWN_MOWER_SIZE 32U
+#define MAX_GRID_ITEM_SIZE 128U
 
 class LawnApp;
 class CursorObject;

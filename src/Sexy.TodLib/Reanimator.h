@@ -5,6 +5,8 @@
 #include "FilterEffect.h"
 #include "../SexyAppFramework/SexyMatrix.h"
 
+#define MAX_REANIMATIONS_SIZE 1024U
+
 using namespace Sexy;
 
 class Reanimation;

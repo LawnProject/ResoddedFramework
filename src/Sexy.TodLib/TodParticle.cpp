@@ -1355,9 +1355,9 @@ TodParticleHolder::~TodParticleHolder()
 //0x518900
 void TodParticleHolder::InitializeHolder()
 {
-	mParticleSystems.DataArrayInitialize(1024U, "particle systems");
-	mEmitters.DataArrayInitialize(1024U, "emitters");
-	mParticles.DataArrayInitialize(1024U, "particles");
+	mParticleSystems.DataArrayInitialize(MAX_PARTICLE_SYSTEM_SIZE, "particle systems");
+	mEmitters.DataArrayInitialize(MAX_EMITTER_SIZE, "emitters");
+	mParticles.DataArrayInitialize(MAX_PARTICLE_INSTANCE_SIZE, "particles");
 	mParticleListNodeAllocator.Initialize(1024, sizeof(TodListNode<ParticleID>));
 	mEmitterListNodeAllocator.Initialize(1024, sizeof(TodListNode<ParticleEmitterID>));
 }

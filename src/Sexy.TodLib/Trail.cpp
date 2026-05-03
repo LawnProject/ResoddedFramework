@@ -284,7 +284,7 @@ void Trail::Draw(Graphics *g)
 
 void TrailHolder::InitializeHolder()
 {
-	mTrails.DataArrayInitialize(1024U, "trails");
+	mTrails.DataArrayInitialize(MAX_TRAIL_SIZE, "trails");
 }
 
 //0x4455A0
