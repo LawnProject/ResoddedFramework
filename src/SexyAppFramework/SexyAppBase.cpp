@@ -307,6 +307,10 @@ SexyAppBase::SexyAppBase()
 
 	mWidgetManager = new WidgetManager(this);
 	mResourceManager = new ResourceManager(this);
+
+	#if WIN32
+	mCopyMutex = NULL;
+	#endif
 	
 #if SEXY_USE_CONTROLLER
 	for (int i = 0; i < MAX_GAMEPADS; i++)

@@ -1129,7 +1129,7 @@ ReanimationHolder::~ReanimationHolder()
 
 void ReanimationHolder::InitializeHolder()
 {
-	mReanimations.DataArrayInitialize(1024U, "reanims");
+	mReanimations.DataArrayInitialize(MAX_REANIMATIONS_SIZE, "reanims");
 }
 
 //0x473590

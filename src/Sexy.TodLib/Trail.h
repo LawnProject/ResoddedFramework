@@ -3,6 +3,7 @@
 
 #include "TodParticle.h"
 
+#define MAX_TRAIL_SIZE 1024U
 #define MAX_TRAIL_TRIANGLES 38
 
 enum TrailType

@@ -12,6 +12,9 @@ class Graphics;
 
 using namespace Sexy;
 
+#define MAX_PARTICLE_SYSTEM_SIZE 1024U
+#define MAX_EMITTER_SIZE 1024U
+#define MAX_PARTICLE_INSTANCE_SIZE 1024U
 #define MAX_PARTICLES_SIZE 900
 #define MAX_PARTICLE_FIELDS 4
 

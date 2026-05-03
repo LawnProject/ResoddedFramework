@@ -11,6 +11,7 @@ class Graphics;
 }
 using namespace Sexy;
 
+#define MAX_ATTACHMENTS 1024U
 #define MAX_EFFECTS_PER_ATTACHMENT 16
 
 class Trail;

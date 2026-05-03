@@ -44,12 +44,12 @@ Board::Board(LawnApp *theApp)
 	mApp->mBoard = this;
 	TodHesitationTrace("preboard");
 
-	mZombies.DataArrayInitialize(1024U, "zombies");
-	mPlants.DataArrayInitialize(1024U, "plants");
-	mProjectiles.DataArrayInitialize(1024U, "projectiles");
-	mCoins.DataArrayInitialize(1024U, "coins");
-	mLawnMowers.DataArrayInitialize(32U, "lawnmowers");
-	mGridItems.DataArrayInitialize(128U, "griditems");
+	mZombies.DataArrayInitialize(MAX_ZOMBIES_SIZE, "zombies");
+	mPlants.DataArrayInitialize(MAX_PLANTS_SIZE, "plants");
+	mProjectiles.DataArrayInitialize(MAX_PROJECTILE_SIZE, "projectiles");
+	mCoins.DataArrayInitialize(MAX_COIN_SIZE, "coins");
+	mLawnMowers.DataArrayInitialize(MAX_LAWN_MOWER_SIZE, "lawnmowers");
+	mGridItems.DataArrayInitialize(MAX_GRID_ITEM_SIZE, "griditems");
 	TodHesitationTrace("board dataarrays");
 
 	mApp->mEffectSystem->EffectSystemFreeAll();
