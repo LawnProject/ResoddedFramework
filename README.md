@@ -39,7 +39,7 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 - Controller Support - 30%
 ### Low Priority
 - Multi-platform support - 15%
-- Separate mod resources (.pak + folders) - 5%
+- Separate mod resources (.pak + folders) - 100%
 - Update Checker - 100%
 
 # Credits
