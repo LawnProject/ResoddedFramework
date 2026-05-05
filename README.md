@@ -36,7 +36,7 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 - UTF-8 Support - 100%
 
 - MP3/OGG/FLAC Lawn Music - 100%
-- Controller Support - 50%
+- Controller Support - 45%
 ### Low Priority
 - Multi-platform support - 15%
 - Separate mod resources (.pak + folders) - 100%
@@ -52,7 +52,7 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 
 - niqkidd -> Name of the project
 - Patoke -> Creator of [re-plants-vs-zombies](https://github.com/Patoke/re-plants-vs-zombies), a huge source of reference for Sexy.TodLib
-- [IsraelProyects](https://github.com/IsraelDXPP)
+- [IsraelProyects](https://github.com/IsraelDXPP) Controller Support Codder
 - The original team behind the 0.9.9 decompilation
 
 ### Acknowledgements
