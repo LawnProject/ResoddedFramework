@@ -52,7 +52,7 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 
 - niqkidd -> Name of the project
 - Patoke -> Creator of [re-plants-vs-zombies](https://github.com/Patoke/re-plants-vs-zombies), a huge source of reference for Sexy.TodLib
-- [IsraelProyects](https://github.com/IsraelDXPP) Controller Support Codder
+- [IsraelProyects](https://github.com/IsraelDXPP) Controller Support Coder
 - The original team behind the 0.9.9 decompilation
 
 ### Acknowledgements
