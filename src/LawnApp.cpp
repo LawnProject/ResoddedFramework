@@ -52,6 +52,9 @@
 #include "SexyAppFramework/SEHCatcher.h"
 #include "Lawn/ResoddedFramework/UpdateChecker.h"
 
+#include <PakInterface.h>
+#include <filesystem>
+
 #if LAWN_DEBUG_TOOLS
 #include "Lawn/Debug/DebuggerWindow.h"
 #endif
@@ -1300,6 +1303,12 @@ void LawnApp::Init()
 #if SEXY_CRASH_HANDLER
 	gSEHCatcher.mSubmitHost = "https://github.com/LawnProject/ResoddedFramework";
 #endif
+
+	// Replace 'mod_name' with the name of the pak file you are going to add.
+
+	SexyString anExtensionPak = "mod_name.pak";
+	if (std::filesystem::exists(anExtensionPak))
+		gPakInterface->AddPakFile(anExtensionPak);
 
 	if (!mResourceManager->ParseResourcesFile("properties/resources.xml"))
 	{
