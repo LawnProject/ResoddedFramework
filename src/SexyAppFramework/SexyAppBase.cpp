@@ -3,6 +3,7 @@
 //#define SEXY_MEMTRACE
 
 #include "SexyAppBase.h"
+#include "resource.h"
 #include "SEHCatcher.h"
 #include "WidgetManager.h"
 #include "Widget.h"
@@ -51,7 +52,41 @@
 #include <json.hpp>
 
 
+#if WIN32
+#include <windows.h>
+#include <SDL3/SDL_properties.h>
+
+static WNDPROC gOldWndProc = nullptr;
+static Sexy::SexyAppBase* gAppForCursor = nullptr;
+
+static HCURSOR gHandCursor = nullptr;
+static HCURSOR gDraggingCursor = nullptr;
+
+static LRESULT CALLBACK MyWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    if (msg == WM_SETCURSOR) {
+        if (LOWORD(lParam) == HTCLIENT) {
+            if (gAppForCursor) {
+#if SEXY_USE_CONTROLLER
+                if (gAppForCursor->mUsingGamepad) {
+                    SDL_HideCursor();
+                    return TRUE;
+                }
+#endif
+                gAppForCursor->EnforceCursor();
+            } else {
+                ::SetCursor(::LoadCursorA(GetModuleHandleA(nullptr), MAKEINTRESOURCEA(IDC_CURSOR1)));
+            }
+            return TRUE;
+        }
+    }
+    return CallWindowProcA(gOldWndProc, hwnd, msg, wParam, lParam);
+}
+#endif
+
+
+
 using namespace Sexy;
+
 
 const int DEMO_FILE_ID = 0x42BEEF78;
 const int DEMO_VERSION = 2;
@@ -198,6 +233,9 @@ SexyAppBase::SexyAppBase()
 	mYieldMainThread = false;
 	mLoadingFailed = false;
 	mLoadingThreadStarted = false;
+#if SEXY_USE_CONTROLLER
+	mUsingGamepad = false;
+#endif
 	mAutoStartLoadingThread = true;
 	mLoadingThreadCompleted = false;
 	mCursorThreadRunning = false;
@@ -2543,6 +2581,13 @@ bool SexyAppBase::DrawDirtyStuff()
 	bool drewScreen = mWidgetManager->DrawScreen();
 	mIsDrawing = false;
 
+#if SEXY_USE_CONTROLLER
+	if (mUsingGamepad)
+	{
+		SDL_HideCursor();
+	}
+#endif
+
 	if ((drewScreen || (aStartTime - mLastDrawTick >= 1000) || (mCustomCursorDirty)) &&
 		((int)(aStartTime - mNextDrawTick) >= 0))
 	{
@@ -3678,6 +3723,25 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 						int x = event.motion.x;
 						int y = event.motion.y;
 
+#if SEXY_USE_CONTROLLER
+						if (mUsingGamepad)
+						{
+							// If this is genuine physical mouse movement (SDL flags SDL_MOUSEMOTION_RELATIVE
+							// as relative==true for mouse warp injections), revert to mouse mode.
+							// SDL3 sets event.motion.which == SDL_TOUCH_MOUSEID for touch/synthetic events.
+							if (event.motion.which != SDL_TOUCH_MOUSEID &&
+								(event.motion.xrel != 0 || event.motion.yrel != 0))
+							{
+								mUsingGamepad = false;
+								EnforceCursor();
+							}
+							else
+							{
+								break; // Synthetic/injected movement — ignore it completely
+							}
+						}
+#endif
+
 						if (!(x >= mRenderer->mPresentationRect.mX && x < mRenderer->mPresentationRect.mX + mRenderer->mPresentationRect.mWidth &&
 							y >= mRenderer->mPresentationRect.mY && y < mRenderer->mPresentationRect.mY + mRenderer->mPresentationRect.mHeight && x > 0 && y > 0))
 						{
@@ -3699,6 +3763,16 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 					{
 						int btnCode = 0;
 						bool down = event.type == SDL_EVENT_MOUSE_BUTTON_DOWN;
+
+#if SEXY_USE_CONTROLLER
+						// Do NOT revert to mouse mode on a button event alone — SDL3 on Windows
+						// can fire synthetic button events without any physical mouse movement.
+						// We switch back only when actual motion is detected (see MOUSE_MOTION).
+						if (mUsingGamepad)
+						{
+							break;
+						}
+#endif
 
 						switch (event.button.button)
 						{
@@ -3750,6 +3824,12 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 					}
 					break;
 				case SDL_EVENT_MOUSE_WHEEL:
+#if SEXY_USE_CONTROLLER
+					if (mUsingGamepad)
+					{
+						break; // Ignore mouse wheel while gamepad is active to prevent cursor flicker
+					}
+#endif
 					mWidgetManager->MouseWheel(event.wheel.y);
 					break;
 				case SDL_EVENT_KEY_DOWN:
@@ -4242,6 +4322,14 @@ void SexyAppBase::MakeWindow()
 	SDL_PropertiesID props = SDL_GetWindowProperties(mWindow->mInternalWindow);
 	SDL_SetPointerProperty(props, "sexyappframework.userdata", this);
 
+#if WIN32
+	HWND hwnd = (HWND)SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL);
+	if (hwnd && gOldWndProc == nullptr) {
+		gAppForCursor = this;
+		gOldWndProc = (WNDPROC)SetWindowLongPtrA(hwnd, GWLP_WNDPROC, (LONG_PTR)MyWndProc);
+	}
+#endif
+
 	if (mRenderer == nullptr)
 	{
 #if SEXY_USE_OPENGL
@@ -4467,67 +4555,102 @@ void SexyAppBase::SetAlphaDisabled(bool isDisabled)
 
 void SexyAppBase::EnforceCursor()
 {
+#if SEXY_USE_CONTROLLER
+	// While a gamepad is active, always keep the hardware cursor hidden.
+	// This guard must wrap ALL SDL_ShowCursor() calls below, not just the early-return,
+	// because the game can reach EnforceCursor from widget hover/focus paths.
+	if (mUsingGamepad)
+	{
+		static bool wasGamepadHidden = false;
+		if (!wasGamepadHidden) {
+			OutputDebugStringA("EnforceCursor: mUsingGamepad=true -> SDL_HideCursor()\n");
+			SDL_HideCursor();
+			wasGamepadHidden = true;
+		}
+		return;
+	}
+#endif
+
+	char debugStr[128];
+	sprintf(debugStr, "EnforceCursor: mUsingGamepad=false, mCursorNum=%d\n", mCursorNum);
+	OutputDebugStringA(debugStr);
+
+	if (!gHandCursor) {
+		gHandCursor = CreateCursor(GetModuleHandleA(nullptr), 11, 4, 32, 32, gFingerCursorData, gFingerCursorData + sizeof(gFingerCursorData) / 2);
+	}
+	if (!gDraggingCursor) {
+		gDraggingCursor = CreateCursor(GetModuleHandleA(nullptr), 15, 10, 32, 32, gDraggingCursorData, gDraggingCursorData + sizeof(gDraggingCursorData) / 2);
+	}
+
 	bool wantSysCursor = true;
-	SDL_SystemCursor aNativeCursor;
+	LPCSTR aNativeCursor = nullptr;
+	HCURSOR aCustomCursor = nullptr;
 
 	switch (mCursorNum)
 	{
 	case CURSOR_HAND:
-		aNativeCursor = SDL_SYSTEM_CURSOR_POINTER;
+		aCustomCursor = gHandCursor;
 		break;
 	case CURSOR_DRAGGING:
-		aNativeCursor = SDL_SYSTEM_CURSOR_MOVE;
+	case CURSOR_SIZEALL:
+		aCustomCursor = gDraggingCursor;
 		break;
 	case CURSOR_TEXT:
-		aNativeCursor = SDL_SYSTEM_CURSOR_TEXT;
+		aNativeCursor = IDC_IBEAM;
 		break;
 	case CURSOR_CIRCLE_SLASH:
-		aNativeCursor = SDL_SYSTEM_CURSOR_NOT_ALLOWED;
-		break;
-	case CURSOR_SIZEALL:
-		aNativeCursor = SDL_SYSTEM_CURSOR_MOVE;
+		aNativeCursor = IDC_NO;
 		break;
 	case CURSOR_SIZENESW:
-		aNativeCursor = SDL_SYSTEM_CURSOR_NESW_RESIZE;
+		aNativeCursor = IDC_SIZENESW;
 		break;
 	case CURSOR_SIZENS:
-		aNativeCursor = SDL_SYSTEM_CURSOR_NS_RESIZE;
+		aNativeCursor = IDC_SIZENS;
 		break;
 	case CURSOR_SIZENWSE:
-		aNativeCursor = SDL_SYSTEM_CURSOR_NWSE_RESIZE;
+		aNativeCursor = IDC_SIZENWSE;
 		break;
 	case CURSOR_SIZEWE:
-		aNativeCursor = SDL_SYSTEM_CURSOR_EW_RESIZE;
+		aNativeCursor = IDC_SIZEWE;
 		break;
 	case CURSOR_WAIT:
-		aNativeCursor = SDL_SYSTEM_CURSOR_WAIT;
+		aNativeCursor = IDC_WAIT;
+		break;
+	case CURSOR_POINTER:
+	default:
+		aNativeCursor = MAKEINTRESOURCEA(IDC_CURSOR1);
 		break;
 	case CURSOR_NONE:
 		SDL_HideCursor();
 		return;
-	case CURSOR_POINTER:
-	default:
-		aNativeCursor = SDL_SYSTEM_CURSOR_DEFAULT;
-		break;
 	}
 
 	if ((mSEHOccured) || (!mMouseIn))
 	{
-		SDL_Cursor *aCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_POINTER);
-		SDL_SetCursor(aCursor);
-		mCustomCursorDirty = true; //this is useless cause we don't draw the cursor to the screen manually.?
+		::SetCursor(::LoadCursorA(NULL, IDC_ARROW));
+		mCustomCursorDirty = true;
 	}
 	else
 	{
-		if ((mCursorImages[mCursorNum] == nullptr) ||
+		if (mCursorNum >= NUM_CURSORS || (mCursorImages[mCursorNum] == nullptr) ||
 			((!mPlayingDemoBuffer) && (!mCustomCursorsEnabled) && (mCursorNum != CURSOR_CUSTOM)))
 		{
-			SDL_Cursor *aCursor = SDL_CreateSystemCursor(aNativeCursor);
-			SDL_SetCursor(aCursor);
+			if (aCustomCursor)
+			{
+				::SetCursor(aCustomCursor);
+			}
+			else if (mCursorNum == CURSOR_POINTER || mCursorNum == 100) // 100 might be the default/loading
+			{
+				::SetCursor(::LoadCursorA(GetModuleHandleA(nullptr), aNativeCursor));
+			}
+			else
+			{
+				::SetCursor(::LoadCursorA(NULL, aNativeCursor));
+			}
 		}
 		else
 		{
-				mCustomCursorDirty = true;
+			mCustomCursorDirty = true;
 
 			if (!mPlayingDemoBuffer)
 			{
@@ -4547,6 +4670,7 @@ void SexyAppBase::EnforceCursor()
 															mCursorImages[(int)mCursorNum]->mHeight / 2);
 
 				SDL_SetCursor(aCursor);
+				SDL_ShowCursor();
 
 				SDL_DestroySurface(aSurface);
 			}
@@ -4559,11 +4683,16 @@ void SexyAppBase::EnforceCursor()
 	{
 		mSysCursor = wantSysCursor;
 
-		// Don't hide the hardware cursor when playing back a demo buffer
 		if (!mPlayingDemoBuffer)
 		{
-			SDL_Cursor *aCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_POINTER);
-			SDL_SetCursor(aCursor);
+			if (mCursorNum == CURSOR_POINTER)
+			{
+				::SetCursor(::LoadCursorA(GetModuleHandleA(nullptr), aNativeCursor));
+			}
+			else
+			{
+				::SetCursor(::LoadCursorA(NULL, aNativeCursor));
+			}
 		}
 	}
 }
@@ -5654,6 +5783,10 @@ std::string SexyAppBase::GetClipboard()
 void SexyAppBase::SetCursor(int theCursorNum)
 {
 	mCursorNum = theCursorNum;
+#if SEXY_USE_CONTROLLER
+	if (mUsingGamepad)
+		return;
+#endif
 	EnforceCursor();
 }
 
