@@ -1207,6 +1207,7 @@ uint32_t *MemoryImage::GetBits()
 	if (mBits == NULL)
 	{
 		int aSize = mWidth * mHeight;
+		if (aSize < 0 || aSize > 100000000) return NULL; 
 
 		mBits = new uint32_t[aSize + 1];
 		mBits[aSize] = MEMORYCHECK_ID;

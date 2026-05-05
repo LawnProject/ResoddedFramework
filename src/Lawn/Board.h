@@ -232,6 +232,19 @@ class Board : public Widget, public ButtonListener
 #if SEXY_USE_CONTROLLER
 	float mGamepadX;
 	float mGamepadY;
+	// Previous button states, used to detect press-once vs hold
+	bool mGamepadPrevSouth;     // A
+	bool mGamepadPrevEast;      // B
+	bool mGamepadPrevWest;      // X
+	bool mGamepadPrevNorth;     // Y
+	bool mGamepadPrevStart;     // Start
+	bool mGamepadPrevLShoulder; // LB
+	bool mGamepadPrevRShoulder; // RB
+	bool mGamepadPrevLTrigger;  // LT
+	bool mGamepadPrevRTrigger;  // RT
+	// D-Pad accumulators for cell-to-cell stepping (one step per press)
+	float mGamepadDpadXAccum;
+	float mGamepadDpadYAccum;
 #endif
 
   public:

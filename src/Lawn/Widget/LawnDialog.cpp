@@ -336,10 +336,13 @@ void LawnDialog::Draw(Graphics *g)
 		aBottomRightImage = IMAGE_DIALOG_BIGBOTTOMRIGHT;
 	}
 
-	int aRepeatX =
-		(mWidth - IMAGE_DIALOG_TOPRIGHT->mWidth - IMAGE_DIALOG_TOPLEFT->mWidth) / IMAGE_DIALOG_TOPMIDDLE->mWidth;
+	int aRepeatX = (mWidth - IMAGE_DIALOG_TOPLEFT->mWidth - IMAGE_DIALOG_TOPRIGHT->mWidth) /
+				   IMAGE_DIALOG_TOPMIDDLE->mWidth;
+	aRepeatX = std::clamp(aRepeatX, 0, 100); // Safety limit
+
 	int aRepeatY = (mHeight - IMAGE_DIALOG_TOPLEFT->mHeight - aBottomLeftImage->mHeight - DIALOG_HEADER_OFFSET) /
 				   IMAGE_DIALOG_CENTERLEFT->mHeight;
+	aRepeatY = std::clamp(aRepeatY, 0, 100); // Safety limit
 
 	int aPosX = 0;
 	int aPosY = DIALOG_HEADER_OFFSET;

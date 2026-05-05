@@ -35,7 +35,7 @@ bool Gamepad::IsButtonDown(GamepadButtons theButton)
 
 float Sexy::Gamepad::GetAxisPosition(SDL_GamepadAxis theAxis)
 {
-	float aRawValue = SDL_GetGamepadAxis(mInternalGamepad, theAxis) / (float)UINT16_MAX;
+	float aRawValue = SDL_GetGamepadAxis(mInternalGamepad, theAxis) / 32767.0f;
 	float aFiltered = fabsf(aRawValue) < mWeight ? 0.0f : aRawValue;
 	return aFiltered;
 }

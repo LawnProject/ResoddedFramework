@@ -162,10 +162,20 @@ Board::Board(LawnApp *theApp)
 	mStoreButton = nullptr;
 	mIgnoreMouseUp = false;
 
-	
 #if SEXY_USE_CONTROLLER
-	mGamepadX = LAWN_XMIN;
-	mGamepadY = LAWN_YMIN;
+	mGamepadX          = LAWN_XMIN;
+	mGamepadY          = LAWN_YMIN;
+	mGamepadPrevSouth  = false;
+	mGamepadPrevEast   = false;
+	mGamepadPrevWest   = false;
+	mGamepadPrevNorth  = false;
+	mGamepadPrevStart  = false;
+	mGamepadPrevLShoulder = false;
+	mGamepadPrevRShoulder = false;
+	mGamepadPrevLTrigger = false;
+	mGamepadPrevRTrigger = false;
+	mGamepadDpadXAccum = 0.0f;
+	mGamepadDpadYAccum = 0.0f;
 #endif
 
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
@@ -3063,6 +3073,11 @@ PlantingReason Board::CanPlantAt(int theGridX, int theGridY, SeedType theSeedTyp
 //0x40E520
 void Board::UpdateCursor()
 {
+#if SEXY_USE_CONTROLLER
+	// Do not update the OS cursor while a gamepad is active
+	if (mApp->UsingGamepad())
+		return;
+#endif
 	int aMouseX = mApp->mWidgetManager->mLastMouseX - mX;
 	int aMouseY = mApp->mWidgetManager->mLastMouseY - mY;
 	bool aShowFinger = false;
@@ -3388,8 +3403,8 @@ void Board::UpdateToolTip()
 		return;
 	}
 
-	int aMouseX = mWidgetManager->mLastMouseX - mX;
-	int aMouseY = mWidgetManager->mLastMouseY - mY;
+	int aMouseX = mApp->mWidgetManager->mLastMouseX - mX;
+	int aMouseY = mApp->mWidgetManager->mLastMouseY - mY;
 
 	if (mApp->mGameScene == GameScenes::SCENE_LEVEL_INTRO)
 	{
@@ -3399,7 +3414,7 @@ void Board::UpdateToolTip()
 			return;
 		}
 
-		if (mSeedBank->ContainsPoint(mWidgetManager->mLastMouseX, mWidgetManager->mLastMouseY) ||
+		if (mSeedBank->ContainsPoint(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY) ||
 			mApp->mSeedChooserScreen->mAlmanacButton->IsMouseOver() ||
 			mApp->mSeedChooserScreen->mStoreButton->IsMouseOver() ||
 			mApp->mSeedChooserScreen->mImitaterButton->IsMouseOver())
@@ -6175,14 +6190,320 @@ void Board::Update()
 	
 #if SEXY_USE_CONTROLLER
 	if (mApp->mGamepads[0] == nullptr)
-		return;
-	mGamepadX += mApp->mGamepads[0]->GetLeftAxisXPosition() * 10;
-	mGamepadY += mApp->mGamepads[0]->GetLeftAxisYPosition() * 10;
-	int aSizeTileX = GridToPixelX(1, 1) - LAWN_XMIN;
-	int aSizeTileY = GridToPixelY(1, 1) - LAWN_YMIN;
-	mGamepadX = std::clamp(mGamepadX, (float)LAWN_XMIN, (float)aSizeTileX * MAX_GRID_SIZE_X);
-	mGamepadY = std::clamp(mGamepadY, (float)LAWN_YMIN, (float)aSizeTileY * (MAX_GRID_SIZE_Y - (StageHas6Rows() ? 0 : 1)));
-	
+		goto gamepad_update_end;
+
+	{
+		Gamepad* aPad = mApp->mGamepads[0];
+
+		// -------------------------------------------------------
+		// Left stick: free cursor movement across the board
+		// -------------------------------------------------------
+		{
+			float aSpeedScale = 8.0f;
+			
+			int aPrevGridX = PixelToGridXKeepOnBoard((int)mGamepadX, (int)mGamepadY);
+			
+			mGamepadX += aPad->GetLeftAxisXPosition() * aSpeedScale;
+			mGamepadY += aPad->GetLeftAxisYPosition() * aSpeedScale;
+
+			int aSizeTileX = GridToPixelX(1, 1) - LAWN_XMIN;
+			mGamepadX = std::clamp(mGamepadX, (float)LAWN_XMIN, (float)aSizeTileX * MAX_GRID_SIZE_X);
+			
+			// Dynamically compute the Y bounds based on the current column's slope (important for roof stages)
+			int aNewGridX = PixelToGridXKeepOnBoard((int)mGamepadX, (int)mGamepadY);
+			
+			if (StageHasRoof() && aNewGridX != aPrevGridX)
+			{
+				int aOldSlope = (aPrevGridX < 5) ? (5 - aPrevGridX) * 20 : 0;
+				int aNewSlope = (aNewGridX < 5) ? (5 - aNewGridX) * 20 : 0;
+				mGamepadY += (aNewSlope - aOldSlope);
+			}
+
+			// Helper lambda to get the center of the PixelToGridY hitbox (instead of the visual GridToPixelY which has massive offsets on the roof)
+			auto GetHitboxY = [&](int aGridX, int aGridY) -> float {
+				if (StageHasRoof())
+					return (float)(aGridY * 85 + LAWN_YMIN + (aGridX < 5 ? (4 - aGridX) * 20 : 0) + 42);
+				if (StageHasPool())
+					return (float)(aGridY * 85 + LAWN_YMIN + 42);
+				return (float)(aGridY * 100 + LAWN_YMIN + 50);
+			};
+
+			int aMaxRow = MAX_GRID_SIZE_Y - (StageHas6Rows() ? 1 : 2);
+			float aMinY = GetHitboxY(aNewGridX, 0) - 40.0f;
+			float aMaxY = GetHitboxY(aNewGridX, aMaxRow) + 40.0f;
+			mGamepadY = std::clamp(mGamepadY, aMinY, aMaxY);
+		}
+
+		// -------------------------------------------------------
+		// D-Pad: cell-by-cell navigation (accumulator-based)
+		// -------------------------------------------------------
+		{
+			const float kDpadSpeed  = 0.12f; // amount accumulated per frame
+			const float kDpadThresh = 1.0f;  // threshold to commit one step
+
+			bool aDpadUp    = aPad->IsButtonDown(GamepadButtons::BUTTON_DPAD_UP);
+			bool aDpadDown  = aPad->IsButtonDown(GamepadButtons::BUTTON_DPAD_DOWN);
+			bool aDpadLeft  = aPad->IsButtonDown(GamepadButtons::BUTTON_DPAD_LEFT);
+			bool aDpadRight = aPad->IsButtonDown(GamepadButtons::BUTTON_DPAD_RIGHT);
+
+			if (aDpadLeft)  mGamepadDpadXAccum -= kDpadSpeed;
+			if (aDpadRight) mGamepadDpadXAccum += kDpadSpeed;
+			if (aDpadUp)    mGamepadDpadYAccum -= kDpadSpeed;
+			if (aDpadDown)  mGamepadDpadYAccum += kDpadSpeed;
+
+			// If no button on an axis, drain that accumulator back to 0
+			if (!aDpadLeft && !aDpadRight) mGamepadDpadXAccum = 0.0f;
+			if (!aDpadUp   && !aDpadDown)  mGamepadDpadYAccum = 0.0f;
+
+			auto GetHitboxY = [&](int aGridX, int aGridY) -> float {
+				if (StageHasRoof())
+					return (float)(aGridY * 85 + LAWN_YMIN + (aGridX < 5 ? (4 - aGridX) * 20 : 0) + 42);
+				if (StageHasPool())
+					return (float)(aGridY * 85 + LAWN_YMIN + 42);
+				return (float)(aGridY * 100 + LAWN_YMIN + 50);
+			};
+
+			// Horizontal step (snap to cell center, corrects roof stage)
+			if (mGamepadDpadXAccum >= kDpadThresh || mGamepadDpadXAccum <= -kDpadThresh)
+			{
+				int aStepDir = (mGamepadDpadXAccum > 0) ? 1 : -1;
+				int aGridX   = PixelToGridXKeepOnBoard((int)mGamepadX, (int)mGamepadY);
+				int aGridY   = PixelToGridYKeepOnBoard((int)mGamepadX, (int)mGamepadY);
+				int aNewGridX = std::clamp(aGridX + aStepDir, 0, MAX_GRID_SIZE_X - 1);
+				
+				mGamepadX = (float)(GridToPixelX(aNewGridX, aGridY) + 40);
+				mGamepadY = GetHitboxY(aNewGridX, aGridY);
+				mGamepadDpadXAccum = 0.0f;
+				aPad->AddRumbleEffect(0.0f, 0.05f, 20);
+			}
+
+			// Vertical step (snap to cell center, corrects roof stage)
+			if (mGamepadDpadYAccum >= kDpadThresh || mGamepadDpadYAccum <= -kDpadThresh)
+			{
+				int aStepDir = (mGamepadDpadYAccum > 0) ? 1 : -1;
+				int aGridX   = PixelToGridXKeepOnBoard((int)mGamepadX, (int)mGamepadY);
+				int aGridY   = PixelToGridYKeepOnBoard((int)mGamepadX, (int)mGamepadY);
+				int aMaxRow  = MAX_GRID_SIZE_Y - (StageHas6Rows() ? 1 : 2);
+				int aNewGridY = std::clamp(aGridY + aStepDir, 0, aMaxRow);
+
+				mGamepadX = (float)(GridToPixelX(aGridX, aNewGridY) + 40);
+				mGamepadY = GetHitboxY(aGridX, aNewGridY);
+				mGamepadDpadYAccum = 0.0f;
+				aPad->AddRumbleEffect(0.0f, 0.05f, 20);
+			}
+		}
+
+		// Detect active gamepad input to switch into gamepad mode
+		if (abs(aPad->GetLeftAxisXPosition()) > 0.1f || abs(aPad->GetLeftAxisYPosition()) > 0.1f ||
+			aPad->IsButtonDown(GamepadButtons::BUTTON_DPAD_UP) || aPad->IsButtonDown(GamepadButtons::BUTTON_DPAD_DOWN) ||
+			aPad->IsButtonDown(GamepadButtons::BUTTON_DPAD_LEFT) || aPad->IsButtonDown(GamepadButtons::BUTTON_DPAD_RIGHT) ||
+			aPad->IsButtonDown(GamepadButtons::BUTTON_SOUTH) || aPad->IsButtonDown(GamepadButtons::BUTTON_EAST) ||
+			aPad->IsButtonDown(GamepadButtons::BUTTON_WEST) || aPad->IsButtonDown(GamepadButtons::BUTTON_NORTH) ||
+			aPad->IsButtonDown(GamepadButtons::BUTTON_LEFT_SHOULDER) || aPad->IsButtonDown(GamepadButtons::BUTTON_RIGHT_SHOULDER) ||
+			aPad->IsButtonDown(GamepadButtons::BUTTON_START) ||
+			abs(aPad->GetAxisPosition(SDL_GAMEPAD_AXIS_LEFTX)) > 0.2f || abs(aPad->GetAxisPosition(SDL_GAMEPAD_AXIS_LEFTY)) > 0.2f ||
+			abs(aPad->GetAxisPosition(SDL_GAMEPAD_AXIS_RIGHTX)) > 0.2f || abs(aPad->GetAxisPosition(SDL_GAMEPAD_AXIS_RIGHTY)) > 0.2f)
+		{
+			if (!mApp->UsingGamepad())
+			{
+				mApp->mUsingGamepad = true;
+				mApp->EnforceCursor();
+			}
+		}
+
+		if (mApp->UsingGamepad())
+		{
+			mApp->mWidgetManager->mLastMouseX = (int)mGamepadX;
+			mApp->mWidgetManager->mLastMouseY = (int)mGamepadY;
+			if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_NORMAL)
+				mCursorObject->mVisible = false; // Hide the software cursor (hand/tool)
+
+			// Auto-collect coins/suns within proximity of the gamepad cursor
+			Coin* aCoin = nullptr;
+			while (IterateCoins(aCoin))
+			{
+				if (!aCoin->mIsBeingCollected && !aCoin->mDead)
+				{
+					float dx = aCoin->mPosX + aCoin->mWidth / 2 - mGamepadX;
+					float dy = aCoin->mPosY + aCoin->mHeight / 2 - mGamepadY;
+					if (dx * dx + dy * dy < 60 * 60) // 60-pixel proximity radius
+					{
+						aCoin->Collect();
+						aCoin->PlayCollectSound();
+					}
+				}
+			}
+		}
+
+		// Mass auto-collect all coins/suns with LT + RT
+		bool aCurLTrigger = aPad->GetAxisPosition(SDL_GAMEPAD_AXIS_LEFT_TRIGGER) > 0.5f;
+		bool aCurRTrigger = aPad->GetAxisPosition(SDL_GAMEPAD_AXIS_RIGHT_TRIGGER) > 0.5f;
+		if (aCurLTrigger && aCurRTrigger)
+		{
+			Coin* aCoin = nullptr;
+			while (IterateCoins(aCoin))
+			{
+				if (!aCoin->mIsBeingCollected && !aCoin->mDead)
+				{
+					aCoin->Collect();
+					aCoin->PlayCollectSound();
+				}
+			}
+		}
+
+		// Only process actions when the game scene is active and unpaused
+		if (mApp->mGameScene == GameScenes::SCENE_PLAYING && !mPaused && mApp->GetDialogCount() == 0)
+		{
+			int aVX = (int)mGamepadX;
+			int aVY = (int)mGamepadY;
+
+			// ---------------------------------------------------
+			// Read current button states
+			// ---------------------------------------------------
+			bool aCurSouth     = aPad->IsButtonDown(GamepadButtons::BUTTON_SOUTH);
+			bool aCurEast      = aPad->IsButtonDown(GamepadButtons::BUTTON_EAST);
+			bool aCurWest      = aPad->IsButtonDown(GamepadButtons::BUTTON_WEST);
+			bool aCurNorth     = aPad->IsButtonDown(GamepadButtons::BUTTON_NORTH);
+			bool aCurStart     = aPad->IsButtonDown(GamepadButtons::BUTTON_START);
+			bool aCurLShoulder = aPad->IsButtonDown(GamepadButtons::BUTTON_LEFT_SHOULDER);
+			bool aCurRShoulder = aPad->IsButtonDown(GamepadButtons::BUTTON_RIGHT_SHOULDER);
+
+			// Detect rising edges (fires only on the frame the button is first pressed)
+			bool aPressedSouth     = aCurSouth     && !mGamepadPrevSouth;
+			bool aPressedEast      = aCurEast      && !mGamepadPrevEast;
+			bool aPressedWest      = aCurWest      && !mGamepadPrevWest;
+			(void)(aCurNorth);  // Y reserved for future use
+			bool aPressedStart     = aCurStart     && !mGamepadPrevStart;
+			bool aPressedLShoulder = aCurLShoulder && !mGamepadPrevLShoulder;
+			bool aPressedRShoulder = aCurRShoulder && !mGamepadPrevRShoulder;
+
+
+
+			// ---------------------------------------------------
+			// A (SOUTH): Confirm — simulate left-click at the virtual
+			//           gamepad cursor position. Reuses all existing
+			//           planting / select / tool logic.
+			// ---------------------------------------------------
+			if (aPressedSouth)
+			{
+				// If a seed is selected in the SeedBank (mIndexGamepad)
+				// and the cursor is still empty, first pick up that seed
+				// ONLY if we are not hovering an existing plant.
+				if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_NORMAL &&
+				    mSeedBank->mNumPackets > 0)
+				{
+					Plant* aHoveredPlant = ToolHitTest(aVX, aVY);
+					if (aHoveredPlant == nullptr || 
+					    aHoveredPlant->mSeedType == SeedType::SEED_FLOWERPOT || 
+					    aHoveredPlant->mSeedType == SeedType::SEED_LILYPAD)
+					{
+						SeedPacket* aSP = &mSeedBank->mSeedPackets[mSeedBank->mIndexGamepad];
+						if (aSP->mPacketType != SeedType::SEED_NONE && aSP->CanPickUp())
+						{
+							// Calcular coordenadas del centro del seed packet
+							int aSeedX = aSP->mX + mSeedBank->mX + aSP->mOffsetX + SEED_PACKET_WIDTH / 2;
+							int aSeedY = aSP->mY + mSeedBank->mY + SEED_PACKET_HEIGHT / 2;
+							// Simular MouseDown sobre el seed packet
+							MouseDown(aSeedX, aSeedY, 1);
+							MouseUp(aSeedX, aSeedY, 1);
+							// Cursor now carries the plant — next A press will plant it
+							goto gamepad_buttons_end;
+						}
+					}
+				}
+
+				// With plant in cursor or tool active: simulate click at gamepad cursor position
+				MouseDown(aVX, aVY, 1);
+				MouseUp(aVX, aVY, 1);
+				aPad->AddRumbleEffect(0.1f, 0.2f, 60);
+			}
+
+			// ---------------------------------------------------
+			// B (EAST): Cancel / return seed to bank
+			// ---------------------------------------------------
+			if (aPressedEast)
+			{
+				if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_NORMAL)
+				{
+					RefreshSeedPacketFromCursor();
+				}
+			}
+
+			// ---------------------------------------------------
+			// X (WEST): Shovel (pick up / cancel shovel)
+			// ---------------------------------------------------
+			if (aPressedWest)
+			{
+				if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_SHOVEL)
+				{
+					// Already holding shovel — return it
+					RefreshSeedPacketFromCursor();
+				}
+				else if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_NORMAL && mShowShovel)
+				{
+					// Simulate a click on the shovel button
+					Rect aShovelRect = GetShovelButtonRect();
+					int aShovelCX = aShovelRect.mX + aShovelRect.mWidth  / 2;
+					int aShovelCY = aShovelRect.mY + aShovelRect.mHeight / 2;
+					MouseDown(aShovelCX, aShovelCY, 1);
+					MouseUp(aShovelCX, aShovelCY, 1);
+				}
+			}
+
+			// ---------------------------------------------------
+			// LB (LEFT_SHOULDER):  Previous seed in bank
+			// RB (RIGHT_SHOULDER): Next seed in bank
+			// ---------------------------------------------------
+			if (aPressedLShoulder && mSeedBank->mNumPackets > 0)
+			{
+				mSeedBank->mIndexGamepad = std::clamp(mSeedBank->mIndexGamepad - 1, 0, mSeedBank->mNumPackets - 1);
+				mApp->PlaySample(Sexy::SOUND_TAP);
+			}
+			if (aPressedRShoulder && mSeedBank->mNumPackets > 0)
+			{
+				mSeedBank->mIndexGamepad = std::clamp(mSeedBank->mIndexGamepad + 1, 0, mSeedBank->mNumPackets - 1);
+				mApp->PlaySample(Sexy::SOUND_TAP);
+			}
+
+			// ---------------------------------------------------
+			// Start: Pause
+			// ---------------------------------------------------
+			if (aPressedStart && mApp->CanPauseNow())
+			{
+				mApp->PlaySample(Sexy::SOUND_PAUSE);
+				mApp->DoPauseDialog();
+			}
+
+			gamepad_buttons_end:;
+
+			// ---------------------------------------------------
+			// Update previous-frame state for edge detection
+			// ---------------------------------------------------
+			mGamepadPrevSouth    = aCurSouth;
+			mGamepadPrevEast     = aCurEast;
+			mGamepadPrevWest     = aCurWest;
+			mGamepadPrevNorth    = aCurNorth;
+			mGamepadPrevStart    = aCurStart;
+			mGamepadPrevLShoulder= aCurLShoulder;
+			mGamepadPrevRShoulder= aCurRShoulder;
+		}
+		else
+		{
+			// Outside game scene: sync previous state so held buttons
+			// don't fire actions when returning to gameplay.
+			mGamepadPrevSouth     = aPad->IsButtonDown(GamepadButtons::BUTTON_SOUTH);
+			mGamepadPrevEast      = aPad->IsButtonDown(GamepadButtons::BUTTON_EAST);
+			mGamepadPrevWest      = aPad->IsButtonDown(GamepadButtons::BUTTON_WEST);
+			mGamepadPrevNorth     = aPad->IsButtonDown(GamepadButtons::BUTTON_NORTH);
+			mGamepadPrevStart     = aPad->IsButtonDown(GamepadButtons::BUTTON_START);
+			mGamepadPrevLShoulder = aPad->IsButtonDown(GamepadButtons::BUTTON_LEFT_SHOULDER);
+			mGamepadPrevRShoulder = aPad->IsButtonDown(GamepadButtons::BUTTON_RIGHT_SHOULDER);
+			mGamepadPrevLTrigger = aPad->GetAxisPosition(SDL_GAMEPAD_AXIS_LEFT_TRIGGER) > 0.5f;
+			mGamepadPrevRTrigger = aPad->GetAxisPosition(SDL_GAMEPAD_AXIS_RIGHT_TRIGGER) > 0.5f;
+		}
+	}
+
+	gamepad_update_end:;
 #endif
 }
 
@@ -6752,6 +7073,21 @@ void Board::DrawGameObjects(Graphics *g)
 	AddGameObjectRenderItemCursorPreview(
 		aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_CURSOR_PREVIEW, mCursorPreview);
 
+#if SEXY_USE_CONTROLLER
+	if (mApp->UsingGamepad())
+	{
+		int aGridX = PixelToGridXKeepOnBoard((int)mGamepadX, (int)mGamepadY);
+		int aGridY = PixelToGridYKeepOnBoard((int)mGamepadX, (int)mGamepadY);
+		// Offset 802 places the cursor above Lily Pads/Flower Pots (800) but below normal plants (805)
+		int aZPos = MakeRenderOrder(RenderLayer::RENDER_LAYER_PLANT, aGridY, 802 - GridToPixelX(aGridX, aGridY));
+
+		RenderItem& aRenderItem = aRenderList[aRenderItemCount];
+		aRenderItem.mRenderObjectType = RenderObjectType::RENDER_ITEM_GAMEPAD_CURSOR;
+		aRenderItem.mZPos = aZPos;
+		aRenderItemCount++;
+	}
+#endif
+
 	TodHesitationTrace("start sort");
 	std::sort(aRenderList, aRenderList + aRenderItemCount, RenderItemSortFunc);
 
@@ -6839,6 +7175,18 @@ void Board::DrawGameObjects(Graphics *g)
 			{
 				aCoin->Draw(g);
 				aCoin->EndDraw(g);
+			}
+			break;
+		}
+
+		case RenderObjectType::RENDER_ITEM_GAMEPAD_CURSOR: {
+			if (mApp->UsingGamepad())
+			{
+				int aGridX = PixelToGridXKeepOnBoard((int)mGamepadX, (int)mGamepadY);
+				int aGridY = PixelToGridYKeepOnBoard((int)mGamepadX, (int)mGamepadY);
+				int aClampedX = GridToPixelX(aGridX, aGridY);
+				int aClampedY = GridToPixelY(aGridX, aGridY);
+				g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_FRAME, Rect(aClampedX, aClampedY, 80, 100), Rect(0, 0, Sexy::IMAGE_GAMEPAD_CURSOR_FRAME->mWidth, Sexy::IMAGE_GAMEPAD_CURSOR_FRAME->mHeight));
 			}
 			break;
 		}
@@ -8024,19 +8372,6 @@ void Board::DrawUITop(Graphics *g)
 	}
 
 #if SEXY_USE_CONTROLLER
-	if (mApp->mGameScene == GameScenes::SCENE_PLAYING && mApp->mGamepads[0] != nullptr)
-	{
-		int anOffsetArrowX = Sexy::IMAGE_GAMEPAD_CURSOR_ARROWS_SHADOW->mWidth / 2;
-		int anOffsetArrowY = Sexy::IMAGE_GAMEPAD_CURSOR_ARROWS_SHADOW->mWidth / 2;
-		g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_ARROWS_SHADOW, mGamepadX - anOffsetArrowX, mGamepadY - anOffsetArrowY);
-		g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_ARROWS, mGamepadX - anOffsetArrowX, mGamepadY - anOffsetArrowY);
-
-		int aGridX = PixelToGridX(mGamepadX, mGamepadY);
-		int aGridY = PixelToGridY(mGamepadX, mGamepadY);
-		int aClampedX = GridToPixelX(aGridX, aGridY);
-		int aClampedY = GridToPixelY(aGridX, aGridY);
-		g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_FRAME, Rect(aClampedX, aClampedY, 80, 100), Rect(0, 0, Sexy::IMAGE_GAMEPAD_CURSOR_FRAME->mWidth, Sexy::IMAGE_GAMEPAD_CURSOR_FRAME->mHeight));
-	}
 #endif
 
 	if (mApp->mGameScene == GameScenes::SCENE_PLAYING || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
