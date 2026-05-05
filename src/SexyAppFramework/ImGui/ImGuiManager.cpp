@@ -104,6 +104,7 @@ void ImGuiManager::Init()
 	ImGui::CreateContext();
 	ImGuiIO &io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 	(void)io;
 	ImGui::StyleColorsDark();
 	switch (mApp->mRenderer->mCurrentBackend)
