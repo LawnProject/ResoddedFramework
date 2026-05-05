@@ -45,7 +45,7 @@ void CursorObject::Update()
 		return;
 	}
 
-	if (!mApp->mWidgetManager->mMouseIn)
+	if (!mApp->mWidgetManager->mMouseIn && !mApp->UsingGamepad())
 	{
 		mVisible = false;
 		return;
@@ -58,8 +58,18 @@ void CursorObject::Update()
 	}
 
 	mVisible = true;
-	mX = mApp->mWidgetManager->mLastMouseX - 25;
-	mY = mApp->mWidgetManager->mLastMouseY - 35;
+	if (mApp->UsingGamepad())
+	{
+		int aGridX = mBoard->PixelToGridXKeepOnBoard((int)mBoard->mGamepadX, (int)mBoard->mGamepadY);
+		int aGridY = mBoard->PixelToGridYKeepOnBoard((int)mBoard->mGamepadX, (int)mBoard->mGamepadY);
+		mX = mBoard->GridToPixelX(aGridX, aGridY) + 15;
+		mY = mBoard->GridToPixelY(aGridX, aGridY) + 15;
+	}
+	else
+	{
+		mX = mApp->mWidgetManager->mLastMouseX - 25;
+		mY = mApp->mWidgetManager->mLastMouseY - 35;
+	}
 }
 
 void CursorObject::Die()
@@ -176,6 +186,12 @@ void CursorObject::Draw(Graphics *g)
 	case CursorType::CURSOR_TYPE_PLANT_FROM_BANK:
 	case CursorType::CURSOR_TYPE_PLANT_FROM_USABLE_COIN:
 	case CursorType::CURSOR_TYPE_PLANT_FROM_DUPLICATOR: {
+#if SEXY_USE_CONTROLLER
+		if (mApp->UsingGamepad())
+		{
+			break; // CursorPreview draws the ghost plant in gamepad mode; skip this to avoid a double draw
+		}
+#endif
 		float aOffsetX = -10.0f;
 		float aOffsetY = PlantDrawHeightOffset(mBoard, nullptr, mType, -1, -1) - 10.0f;
 		if (Plant::IsFlying(mType) || mType == SeedType::SEED_GRAVEBUSTER)

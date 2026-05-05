@@ -972,7 +972,8 @@ SeedBank::SeedBank()
 	mConveyorBeltCounter = 0;
 	mCutSceneDarken = 255;
 #if SEXY_USE_CONTROLLER
-	mIndexGamepad = 0;
+	mIndexGamepad  = 0;
+	mAxisProgress  = 0.0f;
 #endif
 }
 
@@ -1026,10 +1027,14 @@ void SeedBank::Draw(Graphics *g)
 			mAxisProgress = 0.0f;
 		}
 		mIndexGamepad = std::clamp(mIndexGamepad, 0, mNumPackets - 1);
-		SeedPacket *aSeedPacket = &mSeedPackets[mIndexGamepad];
-		if (aSeedPacket->mPacketType != SeedType::SEED_NONE)
+		
+		if (mApp->UsingGamepad())
 		{
-			g->DrawImage(Sexy::IMAGE_SEED_SELECTOR, aSeedPacket->mX - 5, 3);
+			SeedPacket *aSeedPacket = &mSeedPackets[mIndexGamepad];
+			if (aSeedPacket->mPacketType != SeedType::SEED_NONE)
+			{
+				g->DrawImage(Sexy::IMAGE_SEED_SELECTOR, aSeedPacket->mX + aSeedPacket->mOffsetX - 5, 3);
+			}
 		}
 	}
 	g->PopState();

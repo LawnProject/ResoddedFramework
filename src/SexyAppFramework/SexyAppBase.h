@@ -356,6 +356,8 @@ class SexyAppBase : public ButtonListener, public DialogListener
 
 	int mNumGamepads;
 	Gamepad* mGamepads[MAX_GAMEPADS];
+	bool mUsingGamepad;
+	bool UsingGamepad() const { return mUsingGamepad; }
 
 #endif
 
@@ -372,7 +374,6 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	virtual bool DoUpdateFrames();
 	virtual void DoUpdateFramesF(float theFrac);
 	virtual void MakeWindow();
-	virtual void EnforceCursor();
 	virtual void ReInitImages();
 	virtual void DeleteNativeImageData();
 	virtual void DeleteExtraImageData();
@@ -427,6 +428,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 							  const SexyString &theDialogFooter,
 							  int theButtonMode);
 	virtual void PreDisplayHook();
+	virtual void EnforceCursor();
 
 	// Public methods
 	virtual void BeginPopup();
