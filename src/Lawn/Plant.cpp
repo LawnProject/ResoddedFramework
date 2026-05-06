@@ -581,35 +581,51 @@ int Plant::GetDamageRangeFlags(PlantWeapon thePlantWeapon)
 	switch (mSeedType)
 	{
 	case SeedType::SEED_CACTUS:
-		return thePlantWeapon == PlantWeapon::WEAPON_SECONDARY ? 1 : 2;
+		return thePlantWeapon == PlantWeapon::WEAPON_SECONDARY ? GetBit(DamageRangeFlags::DAMAGES_GROUND) : GetBit(DamageRangeFlags::DAMAGES_FLYING);
 	case SeedType::SEED_CHERRYBOMB:
 	case SeedType::SEED_JALAPENO:
 	case SeedType::SEED_COBCANNON:
 	case SeedType::SEED_DOOMSHROOM:
-		return 127;
+		return GetBit(DamageRangeFlags::DAMAGES_GROUND) | 
+				GetBit(DamageRangeFlags::DAMAGES_FLYING) |
+				GetBit(DamageRangeFlags::DAMAGES_DOG) |
+				GetBit(DamageRangeFlags::DAMAGES_SUBMERGED) |
+				GetBit(DamageRangeFlags::DAMAGES_DYING) |
+				GetBit(DamageRangeFlags::DAMAGES_UNDERGROUND) |
+				GetBit(DamageRangeFlags::DAMAGES_OFF_GROUND);
 	case SeedType::SEED_MELONPULT:
 	case SeedType::SEED_CABBAGEPULT:
 	case SeedType::SEED_KERNELPULT:
 	case SeedType::SEED_WINTERMELON:
-		return 13;
+		return GetBit(DamageRangeFlags::DAMAGES_GROUND) | 
+				GetBit(DamageRangeFlags::DAMAGES_SUBMERGED) |
+				GetBit(DamageRangeFlags::DAMAGES_DOG);
 	case SeedType::SEED_POTATOMINE:
-		return 77;
+		return GetBit(DamageRangeFlags::DAMAGES_GROUND) | 
+				GetBit(DamageRangeFlags::DAMAGES_SUBMERGED) |
+				GetBit(DamageRangeFlags::DAMAGES_DOG) | 
+				GetBit(DamageRangeFlags::DAMAGES_UNDERGROUND);
 	case SeedType::SEED_SQUASH:
-		return 13;
+		return GetBit(DamageRangeFlags::DAMAGES_GROUND) | GetBit(DamageRangeFlags::DAMAGES_SUBMERGED) |
+			   GetBit(DamageRangeFlags::DAMAGES_DOG);
 	case SeedType::SEED_PUFFSHROOM:
 	case SeedType::SEED_SEASHROOM:
 	case SeedType::SEED_FUMESHROOM:
 	case SeedType::SEED_GLOOMSHROOM:
 	case SeedType::SEED_CHOMPER:
-		return 9;
+		return GetBit(DamageRangeFlags::DAMAGES_GROUND) | GetBit(DamageRangeFlags::DAMAGES_DOG);
 	case SeedType::SEED_CATTAIL:
-		return 11;
+		return GetBit(DamageRangeFlags::DAMAGES_GROUND) | 
+				GetBit(DamageRangeFlags::DAMAGES_FLYING) |
+				GetBit(DamageRangeFlags::DAMAGES_DOG);
+
 	case SeedType::SEED_TANGLEKELP:
-		return 5;
+		return GetBit(DamageRangeFlags::DAMAGES_GROUND) | GetBit(DamageRangeFlags::DAMAGES_SUBMERGED);
 	case SeedType::SEED_GIANT_WALLNUT:
-		return 17;
+		return GetBit(DamageRangeFlags::DAMAGES_GROUND) | GetBit(DamageRangeFlags::DAMAGES_OFF_GROUND);
+
 	default:
-		return 1;
+		return GetBit(DamageRangeFlags::DAMAGES_GROUND);
 	}
 }
 

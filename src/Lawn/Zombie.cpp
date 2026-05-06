@@ -2337,13 +2337,17 @@ void Zombie::UpdateZombiePeaHead()
 			aOriginX += 90.0f * mScaleZombie;
 			Projectile *aProjectile =
 				mBoard->AddProjectile(aOriginX, aOriginY, mRenderOrder, mRow, ProjectileType::PROJECTILE_PEA);
-			aProjectile->mDamageRangeFlags = 1;
+			aProjectile->mDamageRangeFlags = GetBit(DamageRangeFlags::DAMAGES_GROUND);
 		}
 		else
 		{
 			Projectile *aProjectile =
 				mBoard->AddProjectile(aOriginX, aOriginY, mRenderOrder, mRow, ProjectileType::PROJECTILE_ZOMBIE_PEA);
 			aProjectile->mMotionType = ProjectileMotion::MOTION_BACKWARDS;
+			unsigned int aHypnoFix = 0;
+			SetBit(aHypnoFix, DamageRangeFlags::DAMAGES_MINDCONTROLLED);
+			aProjectile->mDamageRangeFlags = aHypnoFix;
+
 		}
 #else
 		Projectile *aProjectile =
@@ -2460,7 +2464,7 @@ void Zombie::UpdateZombieGatlingHead()
 			aOriginX += 90.0f * mScaleZombie;
 			Projectile *aProjectile =
 				mBoard->AddProjectile(aOriginX, aOriginY, mRenderOrder, mRow, ProjectileType::PROJECTILE_PEA);
-			aProjectile->mDamageRangeFlags = 1;
+			aProjectile->mDamageRangeFlags = GetBit(DamageRangeFlags::DAMAGES_GROUND);
 		}
 		else
 		{
@@ -5579,7 +5583,24 @@ void Zombie::DrawBungeeReanim(Graphics *g, const ZombieDrawPosition &theDrawPos)
 					else if (aPlant->mSeedType == SeedType::SEED_GLOOMSHROOM)
 						aPosY -= 12.0f;
 
-					aSleepReanim->mOverlayMatrix.m12 = aPosY;
+					aSleepReanim->SetPosition(aPosX, aPosY);
+				}
+			}
+
+			if (aPlant->mParticleID != ParticleSystemID::PARTICLESYSTEMID_NULL)
+			{
+				TodParticleSystem *aParticle = mApp->ParticleTryToGet(aPlant->mParticleID);
+				if (aParticle != nullptr)
+				{
+					aParticle->mRenderOrder = mRenderOrder + 2;
+					float aPosX = aPlantGraphics.mTransX;
+					float aPosY = aPlantGraphics.mTransY;
+					if (aPlant->mSeedType == SeedType::SEED_PLANTERN)
+					{
+						aPosX += 40.0f;
+						aPosY += 40.0f;
+					}
+					aParticle->SystemMove(aPosX, aPosY);
 				}
 			}
 
@@ -8169,17 +8190,13 @@ bool Zombie::EffectedByDamage(unsigned int theDamageRangeFlags)
 		return false;
 	}
 
-	if (TestBit(theDamageRangeFlags, (int)DamageRangeFlags::DAMAGES_ONLY_MINDCONTROLLED))
+	if (TestBit(theDamageRangeFlags, (int)DamageRangeFlags::DAMAGES_MINDCONTROLLED))
 	{
-		if (!mMindControlled)
-		{
-			return false;
-		}
+		if (mMindControlled)
+			return true;
 	}
 	else if (mMindControlled)
-	{
 		return false;
-	}
 
 	if (mZombieType == ZombieType::ZOMBIE_BUNGEE && mZombiePhase != ZombiePhase::PHASE_BUNGEE_AT_BOTTOM &&
 		mZombiePhase != ZombiePhase::PHASE_BUNGEE_GRABBING)

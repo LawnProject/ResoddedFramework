@@ -209,6 +209,11 @@ Color GetFlashingColor(int theCounter, int theFlashTime);
 Color ColorsMultiply(const Color &theColor1, const Color &theColor2);
 Color ColorAdd(const Color &theColor1, const Color &theColor2);
 
+inline unsigned int GetBit(int theIdx)
+{
+	return 1 << theIdx;
+}
+
 inline void SetBit(unsigned int &theNum, int theIdx, bool theValue = true)
 {
 	if (theValue)

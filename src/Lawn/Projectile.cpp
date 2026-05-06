@@ -212,8 +212,9 @@ Zombie *Projectile::FindCollisionTarget()
 	Zombie *aZombie = nullptr;
 	while (mBoard->IterateZombies(aZombie))
 	{
-		if ((aZombie->mZombieType == ZombieType::ZOMBIE_BOSS || aZombie->mRow == mRow) &&
-			aZombie->EffectedByDamage((unsigned int)mDamageRangeFlags))
+		bool isEffected = aZombie->EffectedByDamage((unsigned int)mDamageRangeFlags);
+
+		if ((aZombie->mZombieType == ZombieType::ZOMBIE_BOSS || aZombie->mRow == mRow) && isEffected)
 		{
 			if (aZombie->mZombiePhase == ZombiePhase::PHASE_SNORKEL_WALKING_IN_POOL && mPosZ >= 45.0f)
 			{
@@ -272,7 +273,7 @@ void Projectile::CheckForCollision()
 		return;
 	}
 
-	if (mProjectileType == ProjectileType::PROJECTILE_STAR && (mPosY > 600.0f || mPosY < 0.0f))
+	if (mMotionType == ProjectileMotion::MOTION_STAR && (mPosY > 600.0f || mPosY < 0.0f))
 	{
 		Die();
 		return;
@@ -301,14 +302,15 @@ void Projectile::CheckForCollision()
 			mApp->PlayFoley(FoleyType::FOLEY_SPLAT);
 			mApp->AddTodParticle(mPosX - 3.0f, mPosY + 17.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_PEA_SPLAT);
 			Die();
+			return;
 		}
-		return;
 	}
 
 	Zombie *aZombie = FindCollisionTarget();
 	if (aZombie)
 	{
-		if (aZombie->mOnHighGround && CantHitHighGround())
+		if ((aZombie->mOnHighGround && CantHitHighGround()) ||
+			(mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_PEA && !aZombie->mMindControlled))
 		{
 			return;
 		}
@@ -942,12 +944,10 @@ void Projectile::Update()
 		return;
 
 	int aTime = 20;
-	if (mProjectileType == ProjectileType::PROJECTILE_PEA || mProjectileType == ProjectileType::PROJECTILE_SNOWPEA ||
-		mProjectileType == ProjectileType::PROJECTILE_CABBAGE || mProjectileType == ProjectileType::PROJECTILE_MELON ||
-		mProjectileType == ProjectileType::PROJECTILE_WINTERMELON ||
-		mProjectileType == ProjectileType::PROJECTILE_KERNEL || mProjectileType == ProjectileType::PROJECTILE_BUTTER ||
-		mProjectileType == ProjectileType::PROJECTILE_COBBIG ||
-		mProjectileType == ProjectileType::PROJECTILE_ZOMBIE_PEA || mProjectileType == ProjectileType::PROJECTILE_SPIKE)
+	if (mProjectileType != ProjectileType::PROJECTILE_PUFF &&
+		mProjectileType != ProjectileType::PROJECTILE_FIREBALL &&
+		mProjectileType != ProjectileType::PROJECTILE_STAR &&
+		mProjectileType != ProjectileType::PROJECTILE_BASKETBALL)
 	{
 		aTime = 0;
 	}
