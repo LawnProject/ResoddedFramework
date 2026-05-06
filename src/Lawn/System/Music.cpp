@@ -185,7 +185,7 @@ void Music::SetupMusicFileForTune(MusicFile theMusicFile, MusicTune theMusicTune
 		}
 		break;
 	default:
-		if (theMusicFile == MusicFile::MUSIC_FILE_MAIN_MUSIC || theMusicFile == MusicFile::MUSIC_FILE_DRUMS)
+		if (theMusicFile == MusicFile::MUSIC_FILE_MAIN_MUSIC || theMusicFile == MusicFile::MUSIC_FILE_DRUMS || theMusicFile == MusicFile::MUSIC_FILE_HIHATS)
 		{
 			aTrackCount = 29;
 			aTrackStart1 = 0;
@@ -195,6 +195,11 @@ void Music::SetupMusicFileForTune(MusicFile theMusicFile, MusicTune theMusicTune
 	}
 
 	HMUSIC aHMusic = GetBassMusicHandle(theMusicFile);
+	for (int aTrack = 0; aTrack <= 29; aTrack++)
+	{
+		BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_VOL_CHAN + aTrack, 1.0f);
+	}
+
 	for (int aTrack = 0; aTrack <= aTrackCount; aTrack++)
 	{
 		int aVolume;
@@ -240,7 +245,7 @@ void Music::MusicInit()
 
 	LoadSong(MusicFile::MUSIC_FILE_DRUMS, "sounds/mainmusic.mo3");
 	mApp->mCompletedLoadingThreadTasks += 3500;;
-	LoadSong(MusicFile::MUSIC_FILE_HIHATS, "sounds/mainmusic_hihats.mo3");
+	LoadSong(MusicFile::MUSIC_FILE_HIHATS, "sounds/mainmusic.mo3"); // it seems the original mainmusic_hihats.mo3 was missing instruments for Watery Graves
 	mApp->mCompletedLoadingThreadTasks += 3500;
 
 #ifdef _DEBUG
