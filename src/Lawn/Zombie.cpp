@@ -5579,7 +5579,24 @@ void Zombie::DrawBungeeReanim(Graphics *g, const ZombieDrawPosition &theDrawPos)
 					else if (aPlant->mSeedType == SeedType::SEED_GLOOMSHROOM)
 						aPosY -= 12.0f;
 
-					aSleepReanim->mOverlayMatrix.m12 = aPosY;
+					aSleepReanim->SetPosition(aPosX, aPosY);
+				}
+			}
+
+			if (aPlant->mParticleID != ParticleSystemID::PARTICLESYSTEMID_NULL)
+			{
+				TodParticleSystem *aParticle = mApp->ParticleTryToGet(aPlant->mParticleID);
+				if (aParticle != nullptr)
+				{
+					aParticle->mRenderOrder = mRenderOrder + 2;
+					float aPosX = aPlantGraphics.mTransX;
+					float aPosY = aPlantGraphics.mTransY;
+					if (aPlant->mSeedType == SeedType::SEED_PLANTERN)
+					{
+						aPosX += 40.0f;
+						aPosY += 40.0f;
+					}
+					aParticle->SystemMove(aPosX, aPosY);
 				}
 			}
 
