@@ -212,8 +212,9 @@ Zombie *Projectile::FindCollisionTarget()
 	Zombie *aZombie = nullptr;
 	while (mBoard->IterateZombies(aZombie))
 	{
-		if ((aZombie->mZombieType == ZombieType::ZOMBIE_BOSS || aZombie->mRow == mRow) &&
-			aZombie->EffectedByDamage((unsigned int)mDamageRangeFlags))
+		bool isEffected = aZombie->EffectedByDamage((unsigned int)mDamageRangeFlags);
+
+		if ((aZombie->mZombieType == ZombieType::ZOMBIE_BOSS || aZombie->mRow == mRow) && isEffected)
 		{
 			if (aZombie->mZombiePhase == ZombiePhase::PHASE_SNORKEL_WALKING_IN_POOL && mPosZ >= 45.0f)
 			{

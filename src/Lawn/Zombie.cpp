@@ -2337,13 +2337,17 @@ void Zombie::UpdateZombiePeaHead()
 			aOriginX += 90.0f * mScaleZombie;
 			Projectile *aProjectile =
 				mBoard->AddProjectile(aOriginX, aOriginY, mRenderOrder, mRow, ProjectileType::PROJECTILE_PEA);
-			aProjectile->mDamageRangeFlags = 1;
+			aProjectile->mDamageRangeFlags = GetBit(DamageRangeFlags::DAMAGES_GROUND);
 		}
 		else
 		{
 			Projectile *aProjectile =
 				mBoard->AddProjectile(aOriginX, aOriginY, mRenderOrder, mRow, ProjectileType::PROJECTILE_ZOMBIE_PEA);
 			aProjectile->mMotionType = ProjectileMotion::MOTION_BACKWARDS;
+			unsigned int aHypnoFix = 0;
+			SetBit(aHypnoFix, DamageRangeFlags::DAMAGES_MINDCONTROLLED);
+			aProjectile->mDamageRangeFlags = aHypnoFix;
+
 		}
 #else
 		Projectile *aProjectile =
@@ -2460,7 +2464,7 @@ void Zombie::UpdateZombieGatlingHead()
 			aOriginX += 90.0f * mScaleZombie;
 			Projectile *aProjectile =
 				mBoard->AddProjectile(aOriginX, aOriginY, mRenderOrder, mRow, ProjectileType::PROJECTILE_PEA);
-			aProjectile->mDamageRangeFlags = 1;
+			aProjectile->mDamageRangeFlags = GetBit(DamageRangeFlags::DAMAGES_GROUND);
 		}
 		else
 		{
@@ -8186,17 +8190,13 @@ bool Zombie::EffectedByDamage(unsigned int theDamageRangeFlags)
 		return false;
 	}
 
-	if (TestBit(theDamageRangeFlags, (int)DamageRangeFlags::DAMAGES_ONLY_MINDCONTROLLED))
+	if (TestBit(theDamageRangeFlags, (int)DamageRangeFlags::DAMAGES_MINDCONTROLLED))
 	{
-		if (!mMindControlled)
-		{
-			return false;
-		}
+		if (mMindControlled)
+			return true;
 	}
 	else if (mMindControlled)
-	{
 		return false;
-	}
 
 	if (mZombieType == ZombieType::ZOMBIE_BUNGEE && mZombiePhase != ZombiePhase::PHASE_BUNGEE_AT_BOTTOM &&
 		mZombiePhase != ZombiePhase::PHASE_BUNGEE_GRABBING)
