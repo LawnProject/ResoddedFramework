@@ -232,6 +232,9 @@ class Board : public Widget, public ButtonListener
 #if SEXY_USE_CONTROLLER
 	float mGamepadX;
 	float mGamepadY;
+	float mVisualGamepadX;
+	float mVisualGamepadY;
+	bool mGamepadIgnoreChallenge;
 	// Previous button states, used to detect press-once vs hold
 	bool mGamepadPrevSouth;     // A
 	bool mGamepadPrevEast;      // B

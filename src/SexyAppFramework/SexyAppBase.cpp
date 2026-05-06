@@ -51,50 +51,6 @@
 
 #include <json.hpp>
 
-
-#if WIN32
-#include <windows.h>
-#include <SDL3/SDL_properties.h>
-
-static WNDPROC gOldWndProc = nullptr;
-namespace Sexy { class SexyAppBase; extern SexyAppBase* gSexyAppBase; }
-using Sexy::gSexyAppBase;
-
-
-
-static HCURSOR gHandCursor = nullptr;
-static HCURSOR gDraggingCursor = nullptr;
-
-static LRESULT CALLBACK MyWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-    if (msg == WM_SETCURSOR)
-    {
-        if (LOWORD(lParam) == HTCLIENT)
-        {
-            if (gSexyAppBase)
-            {
-#if SEXY_USE_CONTROLLER
-                if (gSexyAppBase->mUsingGamepad)
-                {
-                    SDL_HideCursor();
-                    return TRUE;
-                }
-#endif
-                gSexyAppBase->EnforceCursor();
-            }
-            else
-            {
-                ::SetCursor(::LoadCursorA(GetModuleHandleA(nullptr), MAKEINTRESOURCEA(IDC_CURSOR1)));
-            }
-            return TRUE;
-        }
-    }
-    return CallWindowProcA(gOldWndProc, hwnd, msg, wParam, lParam);
-}
-#endif
-
-
-
 using namespace Sexy;
 
 
@@ -258,8 +214,8 @@ SexyAppBase::SexyAppBase()
 	mForceWindowed = false;
 	mHasFocus = true;
 	mCustomCursorsEnabled = false;
-	mCustomCursorDirty = false;
-	mOverrideCursor = NULL;
+	for (int i = 0; i < NUM_CURSORS; i++)
+		mCachedCursors[i] = nullptr;
 	mIsOpeningURL = false;
 	mInitialized = false;
 	mLastShutdownWasGraceful = true;
@@ -317,7 +273,7 @@ SexyAppBase::SexyAppBase()
 	int i;
 
 	for (i = 0; i < NUM_CURSORS; i++)
-		mCursorImages[i] = NULL;
+		mCursorImages[i] = nullptr;
 
 	for (i = 0; i < 256; i++)
 		mAdd8BitMaxTable[i] = i;
@@ -508,6 +464,13 @@ SexyAppBase::~SexyAppBase()
 
 	WriteDemoBuffer();
 
+	for (int i = 0; i < SDL_SYSTEM_CURSOR_COUNT; i++)
+	{
+		SDL_DestroyCursor(mSystemCursors[i]);
+	}
+	for (int i = 0; i < NUM_CURSORS; i++)
+		if (mCachedCursors[i] != nullptr)
+			SDL_DestroyCursor(mCachedCursors[i]);
 	SDL_Quit();
 
 #if WIN32
@@ -2598,7 +2561,7 @@ bool SexyAppBase::DrawDirtyStuff()
 	}
 #endif
 
-	if ((drewScreen || (aStartTime - mLastDrawTick >= 1000) || (mCustomCursorDirty)) &&
+	if ((drewScreen || (aStartTime - mLastDrawTick >= 1000)) &&
 		((int)(aStartTime - mNextDrawTick) >= 0))
 	{
 		mLastDrawWasEmpty = false;
@@ -2669,7 +2632,6 @@ bool SexyAppBase::DrawDirtyStuff()
 			mNextDrawTick = aEndTime;
 
 		mHasPendingDraw = false;
-		mCustomCursorDirty = false;
 
 		return true;
 	}
@@ -3911,6 +3873,15 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 					mWidgetManager->MarkAllDirty();
 					break;
 #if SEXY_USE_CONTROLLER
+
+				case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
+						gSexyAppBase->mUsingGamepad = true;
+					break;
+				case SDL_EVENT_GAMEPAD_AXIS_MOTION:
+					if (fabsf(event.gaxis.value / 32767.0f) > mGamepads[0]->mWeight)
+						gSexyAppBase->mUsingGamepad = true;
+					break;
+
 				case SDL_EVENT_GAMEPAD_ADDED:
 					{
 						int anIdToUse = -1;
@@ -4332,14 +4303,6 @@ void SexyAppBase::MakeWindow()
 	SDL_PropertiesID props = SDL_GetWindowProperties(mWindow->mInternalWindow);
 	SDL_SetPointerProperty(props, "sexyappframework.userdata", this);
 
-#if WIN32
-	HWND hwnd = (HWND)SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL);
-	if (hwnd && gOldWndProc == nullptr) {
-
-		gOldWndProc = (WNDPROC)SetWindowLongPtrA(hwnd, GWLP_WNDPROC, (LONG_PTR)MyWndProc);
-	}
-#endif
-
 	if (mRenderer == nullptr)
 	{
 #if SEXY_USE_OPENGL
@@ -4572,113 +4535,88 @@ void SexyAppBase::EnforceCursor()
 	if (mUsingGamepad)
 	{
 		SDL_HideCursor();
-		::SetCursor(NULL);
 		return;
 	}
 #endif
 
-
-
-	if (!gHandCursor) {
-		gHandCursor = CreateCursor(GetModuleHandleA(nullptr), 11, 4, 32, 32, gFingerCursorData, gFingerCursorData + sizeof(gFingerCursorData) / 2);
-	}
-	if (!gDraggingCursor) {
-		gDraggingCursor = CreateCursor(GetModuleHandleA(nullptr), 15, 10, 32, 32, gDraggingCursorData, gDraggingCursorData + sizeof(gDraggingCursorData) / 2);
-	}
-
 	bool wantSysCursor = true;
-	LPCSTR aNativeCursor = nullptr;
-	HCURSOR aCustomCursor = nullptr;
+	SDL_SystemCursor aNativeCursor;
 
 	switch (mCursorNum)
 	{
 	case CURSOR_HAND:
-		aCustomCursor = gHandCursor;
+		aNativeCursor = SDL_SYSTEM_CURSOR_POINTER;
 		break;
 	case CURSOR_DRAGGING:
-	case CURSOR_SIZEALL:
-		aCustomCursor = gDraggingCursor;
+		aNativeCursor = SDL_SYSTEM_CURSOR_MOVE;
 		break;
 	case CURSOR_TEXT:
-		aNativeCursor = IDC_IBEAM;
+		aNativeCursor = SDL_SYSTEM_CURSOR_TEXT;
 		break;
 	case CURSOR_CIRCLE_SLASH:
-		aNativeCursor = IDC_NO;
+		aNativeCursor = SDL_SYSTEM_CURSOR_NOT_ALLOWED;
+		break;
+	case CURSOR_SIZEALL:
+		aNativeCursor = SDL_SYSTEM_CURSOR_MOVE;
 		break;
 	case CURSOR_SIZENESW:
-		aNativeCursor = IDC_SIZENESW;
+		aNativeCursor = SDL_SYSTEM_CURSOR_NESW_RESIZE;
 		break;
 	case CURSOR_SIZENS:
-		aNativeCursor = IDC_SIZENS;
+		aNativeCursor = SDL_SYSTEM_CURSOR_NS_RESIZE;
 		break;
 	case CURSOR_SIZENWSE:
-		aNativeCursor = IDC_SIZENWSE;
+		aNativeCursor = SDL_SYSTEM_CURSOR_NWSE_RESIZE;
 		break;
 	case CURSOR_SIZEWE:
-		aNativeCursor = IDC_SIZEWE;
+		aNativeCursor = SDL_SYSTEM_CURSOR_EW_RESIZE;
 		break;
 	case CURSOR_WAIT:
-		aNativeCursor = IDC_WAIT;
-		break;
-	case CURSOR_POINTER:
-	default:
-		aNativeCursor = MAKEINTRESOURCEA(IDC_CURSOR1);
+		aNativeCursor = SDL_SYSTEM_CURSOR_WAIT;
 		break;
 	case CURSOR_NONE:
 		SDL_HideCursor();
 		return;
+	case CURSOR_POINTER:
+	default:
+		aNativeCursor = SDL_SYSTEM_CURSOR_DEFAULT;
+		break;
 	}
 
 	if ((mSEHOccured) || (!mMouseIn))
 	{
-		::SetCursor(::LoadCursorA(NULL, IDC_ARROW));
-		mCustomCursorDirty = true;
+		SDL_SetCursor(mSystemCursors[SDL_SYSTEM_CURSOR_DEFAULT]);
+		SDL_ShowCursor();
 	}
 	else
 	{
 		if (mCursorNum >= NUM_CURSORS || (mCursorImages[mCursorNum] == nullptr) ||
-			((!mPlayingDemoBuffer) && (!mCustomCursorsEnabled) && (mCursorNum != CURSOR_CUSTOM)))
+			((!mPlayingDemoBuffer) && (!mCustomCursorsEnabled)))
 		{
-			if (aCustomCursor)
-			{
-				::SetCursor(aCustomCursor);
-			}
-			else if (mCursorNum == CURSOR_POINTER || mCursorNum == 100) // 100 might be the default/loading
-			{
-				::SetCursor(::LoadCursorA(GetModuleHandleA(nullptr), aNativeCursor));
-			}
-			else
-			{
-				::SetCursor(::LoadCursorA(NULL, aNativeCursor));
-			}
+			SDL_SetCursor(mSystemCursors[aNativeCursor]);
+			SDL_ShowCursor();
 		}
 		else
 		{
-			mCustomCursorDirty = true;
-
-			if (!mPlayingDemoBuffer)
+			if (!mCachedCursors[mCursorNum])
 			{
-				SDL_HideCursor();
-			}
-			else
-			{
-				SDL_Surface *aSurface = SDL_CreateSurfaceFrom(
-					mCursorImages[static_cast<int>(mCursorNum)]->mWidth,
-					mCursorImages[static_cast<int>(mCursorNum)]->mHeight,
-					SDL_PIXELFORMAT_ARGB8888,
-					static_cast<GPUImage *>(mCursorImages[static_cast<int>(mCursorNum)])->GetBits(),
-					mCursorImages[static_cast<int>(mCursorNum)]->mWidth * sizeof(uint32_t));
+				SDL_Surface *aSurface =
+					SDL_CreateSurfaceFrom(mCursorImages[mCursorNum]->mWidth, mCursorImages[mCursorNum]->mHeight,
+										  SDL_PIXELFORMAT_ARGB8888, ((GPUImage *)mCursorImages[mCursorNum])->GetBits(),
+										  mCursorImages[mCursorNum]->mWidth * sizeof(uint32_t));
 
-				SDL_Cursor *aCursor = SDL_CreateColorCursor(aSurface,
-															mCursorImages[(int)mCursorNum]->mWidth / 2,
-															mCursorImages[(int)mCursorNum]->mHeight / 2);
-
-				SDL_SetCursor(aCursor);
-				SDL_ShowCursor();
+				SDL_Cursor *aCursor = SDL_CreateColorCursor(aSurface, 0, 0);
+				mCachedCursors[mCursorNum] = aCursor;
 
 				SDL_DestroySurface(aSurface);
 			}
+			SDL_SetCursor(mCachedCursors[mCursorNum]);
+			SDL_ShowCursor();
 
+			if (!mPlayingDemoBuffer)
+			{
+				//SDL_HideCursor();
+			}
 			wantSysCursor = false;
 		}
 	}
@@ -4689,14 +4627,7 @@ void SexyAppBase::EnforceCursor()
 
 		if (!mPlayingDemoBuffer)
 		{
-			if (mCursorNum == CURSOR_POINTER)
-			{
-				::SetCursor(::LoadCursorA(GetModuleHandleA(nullptr), aNativeCursor));
-			}
-			else
-			{
-				::SetCursor(::LoadCursorA(NULL, aNativeCursor));
-			}
+			SDL_SetCursor(mSystemCursors[SDL_SYSTEM_CURSOR_DEFAULT]);
 		}
 	}
 }
@@ -5644,6 +5575,11 @@ void SexyAppBase::Init()
 		mTabletPC = false;
 
 	SDL_free(aDevicesDummy);
+
+	for (int i = 0; i < SDL_SYSTEM_CURSOR_COUNT; i++)
+	{
+		mSystemCursors[i] = SDL_CreateSystemCursor((SDL_SystemCursor)i);
+	}
 
 	// Change directory
 	if (!ChangeDirHook(mChangeDirTo.c_str()))

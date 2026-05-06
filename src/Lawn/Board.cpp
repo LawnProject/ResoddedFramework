@@ -37,11 +37,6 @@
 //#include "../SexyAppFramework/memmgr.h"
 
 bool gShownMoreSunTutorial = false;
-bool gGamepadIgnoreChallenge = false;
-static float gVisualGamepadX = -1.0f;
-static float gVisualGamepadY = -1.0f;
-
-
 
 //0x407B50
 Board::Board(LawnApp *theApp)
@@ -169,13 +164,16 @@ Board::Board(LawnApp *theApp)
 	mIgnoreMouseUp = false;
 
 #if SEXY_USE_CONTROLLER
-	mGamepadX          = LAWN_XMIN;
-	mGamepadY          = LAWN_YMIN;
-	mGamepadPrevSouth  = false;
-	mGamepadPrevEast   = false;
-	mGamepadPrevWest   = false;
-	mGamepadPrevNorth  = false;
-	mGamepadPrevStart  = false;
+	mGamepadX = LAWN_XMIN;
+	mGamepadY = LAWN_YMIN;
+	mVisualGamepadX = 0;
+	mVisualGamepadY = 0;
+	mGamepadIgnoreChallenge = false;
+	mGamepadPrevSouth = false;
+	mGamepadPrevEast = false;
+	mGamepadPrevWest = false;
+	mGamepadPrevNorth = false;
+	mGamepadPrevStart = false;
 	mGamepadPrevLShoulder = false;
 	mGamepadPrevRShoulder = false;
 	mGamepadPrevLTrigger = false;
@@ -6265,12 +6263,12 @@ void Board::Update()
 			float aVisTargetX = (float)GridToPixelX(aNewGridX, aNewGridY);
 			float aVisTargetY = (float)GridToPixelY(aNewGridX, aNewGridY);
 			
-			if (gVisualGamepadX < 0) { 
-				gVisualGamepadX = aVisTargetX; 
-				gVisualGamepadY = aVisTargetY; 
+			if (mVisualGamepadX < 0) { 
+				mVisualGamepadX = aVisTargetX; 
+				mVisualGamepadY = aVisTargetY; 
 			} else {
-				gVisualGamepadX += (aVisTargetX - gVisualGamepadX) * 0.25f;
-				gVisualGamepadY += (aVisTargetY - gVisualGamepadY) * 0.25f;
+				mVisualGamepadX += (aVisTargetX - mVisualGamepadX) * 0.25f;
+				mVisualGamepadY += (aVisTargetY - mVisualGamepadY) * 0.25f;
 			}
 		}
 
@@ -6365,13 +6363,15 @@ void Board::Update()
 			mApp->mWidgetManager->mLastMouseX = aSnapPX;
 			mApp->mWidgetManager->mLastMouseY = aSnapPY;
 			if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_NORMAL)
-				mCursorObject->mVisible = false; // Hide the software cursor (hand/tool)
+				mCursorObject->mVisible = false; // Hide the in-game cursor (hand/tool)
 
 			// Auto-collect coins/suns within proximity of the gamepad cursor (raw pos)
 			Coin* aCoin = nullptr;
 			while (IterateCoins(aCoin))
 			{
-				if (!aCoin->mIsBeingCollected && !aCoin->mDead)
+				bool aCanCollect = !(mCursorObject->mCursorType == CURSOR_TYPE_PLANT_FROM_USABLE_COIN && aCoin->mType == COIN_USABLE_SEED_PACKET);
+				// don't allow selection of packets if we have one already
+				if (!aCoin->mIsBeingCollected && !aCoin->mDead && aCanCollect)
 				{
 					float dx = aCoin->mPosX + aCoin->mWidth / 2 - mGamepadX;
 					float dy = aCoin->mPosY + aCoin->mHeight / 2 - mGamepadY;
@@ -6380,22 +6380,6 @@ void Board::Update()
 						aCoin->Collect();
 						aCoin->PlayCollectSound();
 					}
-				}
-			}
-		}
-
-		// Mass auto-collect all coins/suns with LT + RT
-		bool aCurLTrigger = aPad->GetAxisPosition(SDL_GAMEPAD_AXIS_LEFT_TRIGGER) > 0.5f;
-		bool aCurRTrigger = aPad->GetAxisPosition(SDL_GAMEPAD_AXIS_RIGHT_TRIGGER) > 0.5f;
-		if (aCurLTrigger && aCurRTrigger)
-		{
-			Coin* aCoin = nullptr;
-			while (IterateCoins(aCoin))
-			{
-				if (!aCoin->mIsBeingCollected && !aCoin->mDead)
-				{
-					aCoin->Collect();
-					aCoin->PlayCollectSound();
 				}
 			}
 		}
@@ -6475,10 +6459,10 @@ void Board::Update()
 
 				if (aHoldingSomething || !aIsWhackLevel)
 				{
-					gGamepadIgnoreChallenge = true;
+					mGamepadIgnoreChallenge = true;
 					MouseDown(aVX, aVY, 1);
 					MouseUp(aVX, aVY, 1);
-					gGamepadIgnoreChallenge = false;
+					mGamepadIgnoreChallenge = false;
 					aPad->AddRumbleEffect(0.1f, 0.2f, 60);
 				}
 			}
@@ -7254,7 +7238,7 @@ void Board::DrawGameObjects(Graphics *g)
 		case RenderObjectType::RENDER_ITEM_GAMEPAD_CURSOR: {
 			if (mApp->UsingGamepad())
 			{
-				g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_FRAME, (int)gVisualGamepadX, (int)gVisualGamepadY, 80, 100);
+				g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_FRAME, (int)mVisualGamepadX, (int)mVisualGamepadY, 80, 100);
 			}
 			break;
 		}

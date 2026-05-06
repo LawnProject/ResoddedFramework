@@ -487,6 +487,7 @@ void LawnSyncGame(Board* theBoard, SaveContext theContext)
 	SYNC_MUSIC_VARIABLE(mQueuedDrumTrackPosition);
 
 	SYNC_SEEDBANK_VARIABLE(mX); // This is one of the only variables we need to sync that isn't defined in the class
+	SYNC_SEEDBANK_VARIABLE(mY);
 	SYNC_SEEDBANK_VARIABLE(mWidth);
 	SYNC_SEEDBANK_VARIABLE(mNumPackets);
 	SYNC_SEEDBANK_ARRAY(mSeedPackets);

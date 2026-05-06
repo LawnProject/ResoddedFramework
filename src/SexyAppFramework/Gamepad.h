@@ -30,6 +30,9 @@ namespace Sexy
 	class Gamepad
 	{
 		  public:
+			float mWeight;
+
+		  public:
 			Gamepad();
 			~Gamepad();
 			bool IsConnected();
@@ -60,7 +63,6 @@ namespace Sexy
 		private:
 			SDL_Gamepad *mInternalGamepad;
 			SDL_JoystickID mDeviceID; 
-			float mWeight;
 	};
 
 }
