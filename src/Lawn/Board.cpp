@@ -7236,10 +7236,12 @@ void Board::DrawGameObjects(Graphics *g)
 		}
 
 		case RenderObjectType::RENDER_ITEM_GAMEPAD_CURSOR: {
+#if SEXY_USE_CONTROLLER
 			if (mApp->UsingGamepad())
 			{
 				g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_FRAME, (int)mVisualGamepadX, (int)mVisualGamepadY, 80, 100);
 			}
+#endif
 			break;
 		}
 

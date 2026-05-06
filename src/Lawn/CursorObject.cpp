@@ -45,7 +45,11 @@ void CursorObject::Update()
 		return;
 	}
 
-	if (!mApp->mWidgetManager->mMouseIn && !mApp->UsingGamepad())
+	if (!mApp->mWidgetManager->mMouseIn 
+#if SEXY_USE_CONTROLLER 
+		&& !mApp->UsingGamepad()
+#endif
+		)
 	{
 		mVisible = false;
 		return;
@@ -58,6 +62,7 @@ void CursorObject::Update()
 	}
 
 	mVisible = true;
+#if SEXY_USE_CONTROLLER
 	if (mApp->UsingGamepad())
 	{
 		int aGridX = mBoard->PixelToGridXKeepOnBoard((int)mBoard->mGamepadX, (int)mBoard->mGamepadY);
@@ -66,6 +71,7 @@ void CursorObject::Update()
 		mY = mBoard->GridToPixelY(aGridX, aGridY) + 15;
 	}
 	else
+#endif
 	{
 		mX = mApp->mWidgetManager->mLastMouseX - 25;
 		mY = mApp->mWidgetManager->mLastMouseY - 35;
