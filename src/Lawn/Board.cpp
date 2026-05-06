@@ -1,3 +1,4 @@
+#include <cmath>
 #include "ZenGarden.h"
 #include "BoardInclude.h"
 #include "System/Music.h"
@@ -36,6 +37,11 @@
 //#include "../SexyAppFramework/memmgr.h"
 
 bool gShownMoreSunTutorial = false;
+bool gGamepadIgnoreChallenge = false;
+static float gVisualGamepadX = -1.0f;
+static float gVisualGamepadY = -1.0f;
+
+
 
 //0x407B50
 Board::Board(LawnApp *theApp)
@@ -175,8 +181,9 @@ Board::Board(LawnApp *theApp)
 	mGamepadPrevLTrigger = false;
 	mGamepadPrevRTrigger = false;
 	mGamepadDpadXAccum = 0.0f;
-	mGamepadDpadYAccum = 0.0f;
 #endif
+
+
 
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
 		mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
@@ -6189,29 +6196,50 @@ void Board::Update()
 	mPrevMouseY = mApp->mWidgetManager->mLastMouseY;
 	
 #if SEXY_USE_CONTROLLER
-	if (mApp->mGamepads[0] == nullptr)
+	if (mApp->mGamepads[0] == nullptr || 
+	    mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || 
+	    mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 		goto gamepad_update_end;
 
 	{
 		Gamepad* aPad = mApp->mGamepads[0];
-
-		// -------------------------------------------------------
+		
+		// Hide hardware cursor if gamepad is used
+		float aRawStickX = aPad->GetLeftAxisXPosition();
+		float aRawStickY = aPad->GetLeftAxisYPosition();
+		if (std::abs(aRawStickX) > 0.2f || std::abs(aRawStickY) > 0.2f || 
+		    aPad->IsButtonDown(GamepadButtons::BUTTON_SOUTH) || aPad->IsButtonDown(GamepadButtons::BUTTON_EAST) ||
+		    aPad->IsButtonDown(GamepadButtons::BUTTON_WEST) || aPad->IsButtonDown(GamepadButtons::BUTTON_NORTH) ||
+		    aPad->IsButtonDown(GamepadButtons::BUTTON_START) || aPad->IsButtonDown(GamepadButtons::BUTTON_LEFT_SHOULDER) ||
+		    aPad->IsButtonDown(GamepadButtons::BUTTON_RIGHT_SHOULDER))
+		{
+			if (!mApp->mUsingGamepad)
+			{
+				mApp->mUsingGamepad = true;
+				mApp->EnforceCursor();
+			}
+		}
 		// Left stick: free cursor movement across the board
 		// -------------------------------------------------------
 		{
-			float aSpeedScale = 8.0f;
-			
+			float aSpeedScale = 6.0f;
 			int aPrevGridX = PixelToGridXKeepOnBoard((int)mGamepadX, (int)mGamepadY);
 			
-			mGamepadX += aPad->GetLeftAxisXPosition() * aSpeedScale;
-			mGamepadY += aPad->GetLeftAxisYPosition() * aSpeedScale;
+			float aRawX = aPad->GetLeftAxisXPosition();
+			float aRawY = aPad->GetLeftAxisYPosition();
+
+			// Apply a power curve for more precision at low stick tilts
+			auto aCurveInput = [](float theVal) {
+				return (theVal >= 0.0f ? 1.0f : -1.0f) * std::pow(std::abs(theVal), 1.5f);
+			};
+
+			mGamepadX += aCurveInput(aRawX) * aSpeedScale;
+			mGamepadY += aCurveInput(aRawY) * aSpeedScale;
 
 			int aSizeTileX = GridToPixelX(1, 1) - LAWN_XMIN;
 			mGamepadX = std::clamp(mGamepadX, (float)LAWN_XMIN, (float)aSizeTileX * MAX_GRID_SIZE_X);
 			
-			// Dynamically compute the Y bounds based on the current column's slope (important for roof stages)
 			int aNewGridX = PixelToGridXKeepOnBoard((int)mGamepadX, (int)mGamepadY);
-			
 			if (StageHasRoof() && aNewGridX != aPrevGridX)
 			{
 				int aOldSlope = (aPrevGridX < 5) ? (5 - aPrevGridX) * 20 : 0;
@@ -6219,7 +6247,6 @@ void Board::Update()
 				mGamepadY += (aNewSlope - aOldSlope);
 			}
 
-			// Helper lambda to get the center of the PixelToGridY hitbox (instead of the visual GridToPixelY which has massive offsets on the roof)
 			auto GetHitboxY = [&](int aGridX, int aGridY) -> float {
 				if (StageHasRoof())
 					return (float)(aGridY * 85 + LAWN_YMIN + (aGridX < 5 ? (4 - aGridX) * 20 : 0) + 42);
@@ -6232,6 +6259,19 @@ void Board::Update()
 			float aMinY = GetHitboxY(aNewGridX, 0) - 40.0f;
 			float aMaxY = GetHitboxY(aNewGridX, aMaxRow) + 40.0f;
 			mGamepadY = std::clamp(mGamepadY, aMinY, aMaxY);
+
+			// Visual cursor smoothing (lerp towards target grid cell)
+			int aNewGridY = PixelToGridYKeepOnBoard((int)mGamepadX, (int)mGamepadY);
+			float aVisTargetX = (float)GridToPixelX(aNewGridX, aNewGridY);
+			float aVisTargetY = (float)GridToPixelY(aNewGridX, aNewGridY);
+			
+			if (gVisualGamepadX < 0) { 
+				gVisualGamepadX = aVisTargetX; 
+				gVisualGamepadY = aVisTargetY; 
+			} else {
+				gVisualGamepadX += (aVisTargetX - gVisualGamepadX) * 0.25f;
+				gVisualGamepadY += (aVisTargetY - gVisualGamepadY) * 0.25f;
+			}
 		}
 
 		// -------------------------------------------------------
@@ -6313,12 +6353,21 @@ void Board::Update()
 
 		if (mApp->UsingGamepad())
 		{
-			mApp->mWidgetManager->mLastMouseX = (int)mGamepadX;
-			mApp->mWidgetManager->mLastMouseY = (int)mGamepadY;
+			// Snap the virtual mouse to the center of the hovered grid cell so
+			// tooltips, hover highlights and planting all target the same cell.
+			// Clamp explicitly so that Zen Garden sub-modes (which delegate to
+			// mZenGarden->PixelToGridX/Y and may return out-of-range values) never
+			// reach GridToPixelX/Y's internal TOD_ASSERT and crash the engine.
+			int aSnapGridX = std::clamp(PixelToGridXKeepOnBoard((int)mGamepadX, (int)mGamepadY), 0, MAX_GRID_SIZE_X - 1);
+			int aSnapGridY = std::clamp(PixelToGridYKeepOnBoard((int)mGamepadX, (int)mGamepadY), 0, MAX_GRID_SIZE_Y - 1);
+			int aSnapPX    = GridToPixelX(aSnapGridX, aSnapGridY) + 40;
+			int aSnapPY    = GridToPixelY(aSnapGridX, aSnapGridY) + 50;
+			mApp->mWidgetManager->mLastMouseX = aSnapPX;
+			mApp->mWidgetManager->mLastMouseY = aSnapPY;
 			if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_NORMAL)
 				mCursorObject->mVisible = false; // Hide the software cursor (hand/tool)
 
-			// Auto-collect coins/suns within proximity of the gamepad cursor
+			// Auto-collect coins/suns within proximity of the gamepad cursor (raw pos)
 			Coin* aCoin = nullptr;
 			while (IterateCoins(aCoin))
 			{
@@ -6354,8 +6403,14 @@ void Board::Update()
 		// Only process actions when the game scene is active and unpaused
 		if (mApp->mGameScene == GameScenes::SCENE_PLAYING && !mPaused && mApp->GetDialogCount() == 0)
 		{
-			int aVX = (int)mGamepadX;
-			int aVY = (int)mGamepadY;
+			// Use grid-snapped coordinates for all actions so the click always
+			// lands in the center of the visually-highlighted cell.
+			// Same explicit clamp as above to guard against out-of-range grid
+			// coords from Zen Garden / Tree of Wisdom sub-mode delegates.
+			int aActGridX = std::clamp(PixelToGridXKeepOnBoard((int)mGamepadX, (int)mGamepadY), 0, MAX_GRID_SIZE_X - 1);
+			int aActGridY = std::clamp(PixelToGridYKeepOnBoard((int)mGamepadX, (int)mGamepadY), 0, MAX_GRID_SIZE_Y - 1);
+			int aVX = GridToPixelX(aActGridX, aActGridY) + 40;
+			int aVY = GridToPixelY(aActGridX, aActGridY) + 50;
 
 			// ---------------------------------------------------
 			// Read current button states
@@ -6377,45 +6432,55 @@ void Board::Update()
 			bool aPressedLShoulder = aCurLShoulder && !mGamepadPrevLShoulder;
 			bool aPressedRShoulder = aCurRShoulder && !mGamepadPrevRShoulder;
 
-
+			// True for modes without a standard seed bank (no pick-up logic)
+			bool aIsGardenMode = (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
+			                      mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM);
 
 			// ---------------------------------------------------
-			// A (SOUTH): Confirm — simulate left-click at the virtual
-			//           gamepad cursor position. Reuses all existing
-			//           planting / select / tool logic.
+			// A (SOUTH): Confirm
 			// ---------------------------------------------------
 			if (aPressedSouth)
 			{
-				// If a seed is selected in the SeedBank (mIndexGamepad)
-				// and the cursor is still empty, first pick up that seed
-				// ONLY if we are not hovering an existing plant.
-				if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_NORMAL &&
+				// Try to pick up a seed from the bank when cursor is empty (normal or hammer) and
+				// there is a seed bank (not garden/ToW modes).
+				if (!aIsGardenMode &&
+				    (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_NORMAL || mCursorObject->mCursorType == CursorType::CURSOR_TYPE_HAMMER) &&
 				    mSeedBank->mNumPackets > 0)
 				{
-					Plant* aHoveredPlant = ToolHitTest(aVX, aVY);
-					if (aHoveredPlant == nullptr || 
-					    aHoveredPlant->mSeedType == SeedType::SEED_FLOWERPOT || 
+					// In IZombie / Whack-a-Zombie the board may have occupants that
+					// are not real obstacles — always prefer picking the seed first.
+					bool aSkipHoverCheck = mApp->IsWhackAZombieLevel() || mApp->IsIZombieLevel();
+
+					Plant* aHoveredPlant = aSkipHoverCheck ? nullptr : ToolHitTest(aVX, aVY);
+					if (aHoveredPlant == nullptr ||
+					    aHoveredPlant->mSeedType == SeedType::SEED_FLOWERPOT ||
 					    aHoveredPlant->mSeedType == SeedType::SEED_LILYPAD)
 					{
 						SeedPacket* aSP = &mSeedBank->mSeedPackets[mSeedBank->mIndexGamepad];
 						if (aSP->mPacketType != SeedType::SEED_NONE && aSP->CanPickUp())
 						{
-							// Calcular coordenadas del centro del seed packet
 							int aSeedX = aSP->mX + mSeedBank->mX + aSP->mOffsetX + SEED_PACKET_WIDTH / 2;
 							int aSeedY = aSP->mY + mSeedBank->mY + SEED_PACKET_HEIGHT / 2;
-							// Simular MouseDown sobre el seed packet
 							MouseDown(aSeedX, aSeedY, 1);
 							MouseUp(aSeedX, aSeedY, 1);
-							// Cursor now carries the plant — next A press will plant it
 							goto gamepad_buttons_end;
 						}
 					}
 				}
 
-				// With plant in cursor or tool active: simulate click at gamepad cursor position
-				MouseDown(aVX, aVY, 1);
-				MouseUp(aVX, aVY, 1);
-				aPad->AddRumbleEffect(0.1f, 0.2f, 60);
+				// In Whack-a-Zombie / Scary Potter, A should only click if holding a seed.
+				// If cursor is empty, A does nothing on board (X triggers the hammer).
+				bool aHoldingSomething = (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_NORMAL);
+				bool aIsWhackLevel = mApp->IsWhackAZombieLevel() || mApp->IsScaryPotterLevel();
+
+				if (aHoldingSomething || !aIsWhackLevel)
+				{
+					gGamepadIgnoreChallenge = true;
+					MouseDown(aVX, aVY, 1);
+					MouseUp(aVX, aVY, 1);
+					gGamepadIgnoreChallenge = false;
+					aPad->AddRumbleEffect(0.1f, 0.2f, 60);
+				}
 			}
 
 			// ---------------------------------------------------
@@ -6438,6 +6503,13 @@ void Board::Update()
 				{
 					// Already holding shovel — return it
 					RefreshSeedPacketFromCursor();
+				}
+				else if (mApp->IsWhackAZombieLevel() || mApp->IsScaryPotterLevel() || mApp->IsIZombieLevel())
+				{
+					// Whack-a-Zombie / Hammer logic: X button hits the mole/pot
+					MouseDown(aVX, aVY, 1);
+					MouseUp(aVX, aVY, 1);
+					aPad->AddRumbleEffect(0.1f, 0.1f, 30);
 				}
 				else if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_NORMAL && mShowShovel)
 				{
@@ -7182,11 +7254,7 @@ void Board::DrawGameObjects(Graphics *g)
 		case RenderObjectType::RENDER_ITEM_GAMEPAD_CURSOR: {
 			if (mApp->UsingGamepad())
 			{
-				int aGridX = PixelToGridXKeepOnBoard((int)mGamepadX, (int)mGamepadY);
-				int aGridY = PixelToGridYKeepOnBoard((int)mGamepadX, (int)mGamepadY);
-				int aClampedX = GridToPixelX(aGridX, aGridY);
-				int aClampedY = GridToPixelY(aGridX, aGridY);
-				g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_FRAME, Rect(aClampedX, aClampedY, 80, 100), Rect(0, 0, Sexy::IMAGE_GAMEPAD_CURSOR_FRAME->mWidth, Sexy::IMAGE_GAMEPAD_CURSOR_FRAME->mHeight));
+				g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_FRAME, (int)gVisualGamepadX, (int)gVisualGamepadY, 80, 100);
 			}
 			break;
 		}

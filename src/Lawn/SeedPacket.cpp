@@ -1026,7 +1026,8 @@ void SeedBank::Draw(Graphics *g)
 			mIndexGamepad++;
 			mAxisProgress = 0.0f;
 		}
-		mIndexGamepad = std::clamp(mIndexGamepad, 0, mNumPackets - 1);
+		if (mNumPackets > 0)
+			mIndexGamepad = std::clamp(mIndexGamepad, 0, mNumPackets - 1);
 		
 		if (mApp->UsingGamepad())
 		{
