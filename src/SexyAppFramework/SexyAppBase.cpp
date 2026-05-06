@@ -57,23 +57,33 @@
 #include <SDL3/SDL_properties.h>
 
 static WNDPROC gOldWndProc = nullptr;
-static Sexy::SexyAppBase* gAppForCursor = nullptr;
+namespace Sexy { class SexyAppBase; extern SexyAppBase* gSexyAppBase; }
+using Sexy::gSexyAppBase;
+
+
 
 static HCURSOR gHandCursor = nullptr;
 static HCURSOR gDraggingCursor = nullptr;
 
-static LRESULT CALLBACK MyWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-    if (msg == WM_SETCURSOR) {
-        if (LOWORD(lParam) == HTCLIENT) {
-            if (gAppForCursor) {
+static LRESULT CALLBACK MyWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+    if (msg == WM_SETCURSOR)
+    {
+        if (LOWORD(lParam) == HTCLIENT)
+        {
+            if (gSexyAppBase)
+            {
 #if SEXY_USE_CONTROLLER
-                if (gAppForCursor->mUsingGamepad) {
+                if (gSexyAppBase->mUsingGamepad)
+                {
                     SDL_HideCursor();
                     return TRUE;
                 }
 #endif
-                gAppForCursor->EnforceCursor();
-            } else {
+                gSexyAppBase->EnforceCursor();
+            }
+            else
+            {
                 ::SetCursor(::LoadCursorA(GetModuleHandleA(nullptr), MAKEINTRESOURCEA(IDC_CURSOR1)));
             }
             return TRUE;
@@ -3730,7 +3740,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 							// as relative==true for mouse warp injections), revert to mouse mode.
 							// SDL3 sets event.motion.which == SDL_TOUCH_MOUSEID for touch/synthetic events.
 							if (event.motion.which != SDL_TOUCH_MOUSEID &&
-								(event.motion.xrel != 0 || event.motion.yrel != 0))
+								(std::abs(event.motion.xrel) > 2 || std::abs(event.motion.yrel) > 2))
 							{
 								mUsingGamepad = false;
 								EnforceCursor();
@@ -4325,7 +4335,7 @@ void SexyAppBase::MakeWindow()
 #if WIN32
 	HWND hwnd = (HWND)SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL);
 	if (hwnd && gOldWndProc == nullptr) {
-		gAppForCursor = this;
+
 		gOldWndProc = (WNDPROC)SetWindowLongPtrA(hwnd, GWLP_WNDPROC, (LONG_PTR)MyWndProc);
 	}
 #endif
@@ -4561,19 +4571,13 @@ void SexyAppBase::EnforceCursor()
 	// because the game can reach EnforceCursor from widget hover/focus paths.
 	if (mUsingGamepad)
 	{
-		static bool wasGamepadHidden = false;
-		if (!wasGamepadHidden) {
-			OutputDebugStringA("EnforceCursor: mUsingGamepad=true -> SDL_HideCursor()\n");
-			SDL_HideCursor();
-			wasGamepadHidden = true;
-		}
+		SDL_HideCursor();
+		::SetCursor(NULL);
 		return;
 	}
 #endif
 
-	char debugStr[128];
-	sprintf(debugStr, "EnforceCursor: mUsingGamepad=false, mCursorNum=%d\n", mCursorNum);
-	OutputDebugStringA(debugStr);
+
 
 	if (!gHandCursor) {
 		gHandCursor = CreateCursor(GetModuleHandleA(nullptr), 11, 4, 32, 32, gFingerCursorData, gFingerCursorData + sizeof(gFingerCursorData) / 2);
