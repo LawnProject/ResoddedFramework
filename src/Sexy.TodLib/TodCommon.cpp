@@ -172,7 +172,7 @@ bool TodAppCloseRequest()
 	return false;
 }
 
-int TodPickFromWeightedArray(const TodWeightedArray *theArray, int theCount)
+uintptr_t TodPickFromWeightedArray(const TodWeightedArray *theArray, int theCount)
 {
 	return TodPickArrayItemFromWeightedArray(theArray, theCount)->mItem;
 }
@@ -257,7 +257,7 @@ float TodCalcSmoothWeight(float aWeight, float aLastPicked, float aSecondLastPic
 	return aWeight * aFactorFinal;
 }
 
-int TodPickFromSmoothArray(TodSmoothArray *theArray, int theCount)
+uintptr_t TodPickFromSmoothArray(TodSmoothArray *theArray, int theCount)
 {
 	float aTotalWeight = 0.0f;
 	for (int i = 0; i < theCount; i++)

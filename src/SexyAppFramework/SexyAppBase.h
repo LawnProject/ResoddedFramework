@@ -216,7 +216,8 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	std::string mRegisterLink;
 	std::string mProductVersion;
 	Image *mCursorImages[NUM_CURSORS];
-	SDL_Cursor* mOverrideCursor;
+	SDL_Cursor *mSystemCursors[SDL_SYSTEM_CURSOR_COUNT];
+	SDL_Cursor *mCachedCursors[NUM_CURSORS];
 	bool mIsOpeningURL;
 	bool mShutdownOnURLOpen;
 	std::string mOpeningURL;

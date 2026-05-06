@@ -137,7 +137,7 @@ LawnApp::LawnApp()
 #endif
 
 	mTitle = aTitleName;
-	mCustomCursorsEnabled = false;
+	mCustomCursorsEnabled = true;
 	mPlayerInfo = nullptr;
 	mLastLevelStats = new LevelStats();
 	mFirstTimeGameSelector = true;
@@ -164,7 +164,6 @@ LawnApp::LawnApp()
 	mCrazyDaveBlinkCounter = 0;
 	mCrazyDaveBlinkReanimID = ReanimationID::REANIMATIONID_NULL;
 	mCrazyDaveMessageIndex = -1;
-	//mBigArrowCursor = LoadCursor(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDC_CURSOR1));
 	#if SEXY_USE_DRM
 	mDRM = nullptr;
 	#endif

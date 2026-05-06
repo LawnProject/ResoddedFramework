@@ -382,7 +382,7 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 					  mPresentationRect.mX + mPresentationRect.mWidth,
 					  mPresentationRect.mY + mPresentationRect.mHeight,
 					  GL_COLOR_BUFFER_BIT,
-					  GL_NEAREST);
+					  GL_LINEAR);
 
 #if SEXY_USE_IMGUI
 	mApp->mImGuiManager->Flush();

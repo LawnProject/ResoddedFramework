@@ -29,7 +29,6 @@
 #include "../Sexy.TodLib/TodParticle.h"
 #include "../Sexy.TodLib/TodStringFile.h"
 #include "../SexyAppFramework/WidgetManager.h"
-extern bool gGamepadIgnoreChallenge;
 
 int gZombieWaves[NUM_LEVELS] = {
 	//0x6A34E8
@@ -1257,9 +1256,13 @@ bool Challenge::MouseDown(int x, int y, int theClickCount, HitResult *theHitResu
 	}
 
 	if (mApp->IsWhackAZombieLevel() && theHitResult->mObjectType == OBJECT_TYPE_NONE &&
-		mBoard->mCursorObject->mCursorType == CURSOR_TYPE_HAMMER && theClickCount >= 0 &&
-		!gGamepadIgnoreChallenge)
+		mBoard->mCursorObject->mCursorType == CURSOR_TYPE_HAMMER && theClickCount >= 0
+#if SEXY_USE_CONTROLLER
+		 && !mBoard->mGamepadIgnoreChallenge
+#endif
+		)
 	{
+		
 		MouseDownWhackAZombie(x, y);
 		return true;
 	}
@@ -1270,8 +1273,11 @@ bool Challenge::MouseDown(int x, int y, int theClickCount, HitResult *theHitResu
 		return true;
 	}
 
-	if (mApp->IsScaryPotterLevel() && theHitResult->mObjectType == OBJECT_TYPE_SCARY_POT &&
-		!gGamepadIgnoreChallenge)
+	if (mApp->IsScaryPotterLevel() && theHitResult->mObjectType == OBJECT_TYPE_SCARY_POT 
+#if SEXY_USE_CONTROLLER
+		&& !mBoard->mGamepadIgnoreChallenge
+#endif
+		)
 	{
 		ScaryPotterMalletPot((GridItem *)theHitResult->mObject);
 		return true;

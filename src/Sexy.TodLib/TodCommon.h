@@ -49,12 +49,12 @@ T TodPickFromArray(const T *theArray, int theCount)
 	return theArray[Sexy::Rand(theCount)];
 }
 
-int TodPickFromWeightedArray(const TodWeightedArray *theArray, int theCount);
+uintptr_t TodPickFromWeightedArray(const TodWeightedArray *theArray, int theCount);
 TodWeightedArray *TodPickArrayItemFromWeightedArray(const TodWeightedArray *theArray, int theCount);
 TodWeightedGridArray *TodPickFromWeightedGridArray(const TodWeightedGridArray *theArray, int theCount);
 float TodCalcSmoothWeight(float aWeight, float aLastPicked, float aSecondLastPicked);
 void TodUpdateSmoothArrayPick(TodSmoothArray *theArray, int theCount, int thePickIndex);
-int TodPickFromSmoothArray(TodSmoothArray *theArray, int theCount);
+uintptr_t TodPickFromSmoothArray(TodSmoothArray *theArray, int theCount);
 
 // #################################################################################################### //
 
