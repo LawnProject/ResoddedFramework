@@ -30,7 +30,7 @@ class LawnEditWidget : public EditWidget
 	~LawnEditWidget();
 
 	virtual void KeyDown(KeyCode theKey);
-	virtual void KeyChar(char theChar);
+	virtual void KeyChar(SexyChar theChar);
 };
 
 class LawnSlider : public Widget

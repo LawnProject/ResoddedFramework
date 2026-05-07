@@ -1013,7 +1013,7 @@ void GameSelector::KeyDown(KeyCode theKey)
 }
 
 //0x44C200
-void GameSelector::KeyChar(char theChar)
+void GameSelector::KeyChar(SexyChar theChar)
 {
 	if (mStartingGame)
 		return;

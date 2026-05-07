@@ -391,7 +391,7 @@ void AwardScreen::Update()
 }
 
 //0x407760
-void AwardScreen::KeyChar(char theChar)
+void AwardScreen::KeyChar(SexyChar theChar)
 {
 	if (theChar == ' ' || theChar == '\r' || theChar == '\u001B')
 		StartButtonPressed();

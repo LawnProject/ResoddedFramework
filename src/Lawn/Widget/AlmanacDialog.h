@@ -70,7 +70,7 @@ class AlmanacDialog : public LawnDialog
 	ZombieType ZombieHitTest(int x, int y);
 	virtual void MouseUp(int x, int y, int theClickCount);
 	virtual void MouseDown(int x, int y, int theClickCount);
-	virtual void KeyChar(char theChar)
+	virtual void KeyChar(SexyChar theChar)
 	{
 	}
 

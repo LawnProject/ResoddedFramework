@@ -90,7 +90,7 @@ class GameSelector : public Widget, public ButtonListener
 	virtual void ButtonPress(int theId, int theClickCount);
 	virtual void ButtonDepress(int theId);
 	virtual void KeyDown(KeyCode theKey);
-	virtual void KeyChar(char theChar);
+	virtual void KeyChar(SexyChar theChar);
 	virtual void MouseDown(int x, int y, int theClickCount);
 	void TrackButton(DialogButton *theButton, const char *theTrackName, float theOffsetX, float theOffsetY);
 	void SyncButtons();

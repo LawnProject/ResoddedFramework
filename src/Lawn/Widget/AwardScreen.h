@@ -47,7 +47,7 @@ class AwardScreen : public Widget
 	{
 		Widget::RemovedFromManager(theWidgetManager);
 	}
-	virtual void KeyChar(char theChar);
+	virtual void KeyChar(SexyChar theChar);
 	void StartButtonPressed();
 	virtual void MouseDown(int x, int y, int theClickCount);
 	virtual void MouseUp(int x, int y, int theClickCount);

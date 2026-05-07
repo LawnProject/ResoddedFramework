@@ -968,7 +968,7 @@ void StoreScreen::ButtonDepress(int theId)
 }
 
 //0x48C5F0
-void StoreScreen::KeyChar(char theChar)
+void StoreScreen::KeyChar(SexyChar theChar)
 {
 	if (mBubbleClickToContinue && (theChar == ' ' || theChar == '\r'))
 		AdvanceCrazyDaveDialog();

@@ -50,7 +50,7 @@ class ChallengeScreen : public Widget, public ButtonListener
 	virtual void ButtonPress(int theId);
 	virtual void ButtonDepress(int theId);
 	void UpdateToolTip();
-	virtual void KeyChar(char theChar)
+	virtual void KeyChar(SexyChar theChar)
 	{
 		;
 	}
