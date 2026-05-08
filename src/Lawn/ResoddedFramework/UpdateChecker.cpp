@@ -38,7 +38,7 @@ UpdateCheckResult UpdateChecker::Check()
 			break;
 	}
 
-	SexyString aVersionResult = aTransfer.GetContent().substr(1); //remove the 'v' prefix from the version
+	SexyString aVersionResult = aTransfer.GetContent();
 
 	size_t pos = aVersionResult.find('.');
 	gLatestVersion.mMajor = atoi(aVersionResult.substr(0, pos).c_str());
