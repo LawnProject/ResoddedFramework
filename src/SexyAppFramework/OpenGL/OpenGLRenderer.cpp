@@ -41,14 +41,24 @@ in vec4 vColor;
 
 uniform sampler2D uTexture;
 uniform bool uUseTexture;
+uniform int uBlendMode;
 
 out vec4 FragColor;
 
 void main() {
-    if (uUseTexture)
-        FragColor = texture(uTexture, vTexCoord) * vColor;
-    else
-        FragColor = vColor;
+	if (uBlendMode == 2) // Multiply
+	{
+		vec4 src = uUseTexture ? texture(uTexture, vTexCoord) * vColor : vColor;
+		FragColor = vec4(src.rgb * src.a, src.a); // premultiply just for blending
+	}
+	else
+	{
+		if (uUseTexture)
+			FragColor = texture(uTexture, vTexCoord) * vColor;
+		else
+			FragColor = vColor;
+	}
+
 }
 )glsl";
 
@@ -227,7 +237,7 @@ bool OpenGLRenderer::PreDraw()
 
 bool OpenGLRenderer::InitGLContext()
 {
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -365,6 +375,7 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 			glDisable(GL_SCISSOR_TEST);
 
 		mDefaultShader->SetUniform("uUseTexture", (cmd.mTextureID != 0));
+		mDefaultShader->SetUniform("uBlendMode", cmd.mBlendMode - 1);
 		
 		glBindTexture(GL_TEXTURE_2D, cmd.mTextureID);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, cmd.mVertices.size() * sizeof(Vertex), cmd.mVertices.data());
@@ -395,21 +406,20 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 
 void OpenGLRenderer::ApplyBlendMode(BlendMode mode)
 {
-	auto it = blend_mode_funcs.find(mode);
-	if (it == blend_mode_funcs.end())
+	auto it = gGLBlendDefines.find(mode);
+	if (it == gGLBlendDefines.end())
+	{
+		glDisable(GL_BLEND);
 		return;
+	}
 
 	const auto &blend = it->second;
 
-	if (blend.theEnableBlend)
-	{
-		glEnable(GL_BLEND);
-		glBlendFunc(blend.theSrc, blend.theDst);
-	}
-	else
-	{
-		glDisable(GL_BLEND);
-	}
+	glEnable(GL_BLEND);
+
+	glBlendFuncSeparate(blend.mSrcRGB, blend.mDstRGB, blend.mSrcAlpha, blend.mDstAlpha);
+
+	glBlendEquationSeparate(blend.mEquationRGB, blend.mEquationAlpha);
 }
 
 //yeaaa so you can't really get em. -Electr0Gunner

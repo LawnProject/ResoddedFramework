@@ -181,10 +181,10 @@ void OpenGLImage::CreateImageBuffers()
 	glGenTextures(1, &mTexID);
 	glBindTexture(GL_TEXTURE_2D, mTexID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, mWidth, mHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	OpenGLRenderer::gGLTextureCount++;
 	glGenFramebuffers(1, &mFBO);
@@ -200,11 +200,12 @@ void OpenGLImage::CreateImageBuffers()
 void OpenGLImage::PreTextureDraw()
 {
 	CreateImageBuffers();
-	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
-	glViewport(0, 0, mWidth, mHeight);
 
 	glBindVertexArray(gOpenGLImageVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, gOpenGLImageVBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+	glViewport(0, 0, mWidth, mHeight);
+
 	glDisable(GL_SCISSOR_TEST);
 }
 
@@ -264,7 +265,7 @@ void OpenGLImage::ImplFillRect(const Rect &theRect, const Color &theColor, int t
 	aVertices.push_back({p0, {0, 0}, aColor});
 
 	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
-
+	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	aShaderToUse->Use();
 	aShaderToUse->SetUniform("uProjection", mProjection);
 	aShaderToUse->SetUniform("uUseTexture",0);
@@ -298,7 +299,7 @@ void OpenGLImage::ImplDrawLine(
 	aVertices.push_back({p1, {}, aColor});
 
 	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
-
+	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	aShaderToUse->Use();
 	aShaderToUse->SetUniform("uProjection", mProjection);
 	aShaderToUse->SetUniform("uUseTexture", 0);
@@ -332,7 +333,7 @@ void OpenGLImage::ImplBlt(
 
 	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
 	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
-
+	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
 	glm::vec2 p0 = {theX, theY};
@@ -377,6 +378,10 @@ void OpenGLImage::ImplBlt(
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void doScissorFromTLCauseOpenGL(int x, int y, int w, int h, int screenHeight)
+{
+	glScissor(x, screenHeight - h - y, w, h);
+}
 void OpenGLImage::ImplBltF(Image *theImage,
 						float theX,
 						float theY,
@@ -394,16 +399,12 @@ void OpenGLImage::ImplBltF(Image *theImage,
 
 	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
 	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
-
+	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
 	{
 		glEnable(GL_SCISSOR_TEST);
 
-		int scissorX = theClipRect.mX;
-		int scissorY =  mHeight - theClipRect.mY - theClipRect.mHeight;
-		int scissorW = theClipRect.mWidth;
-		int scissorH = theClipRect.mHeight;
-		glScissor(scissorX, scissorY, scissorW, scissorH);
+		doScissorFromTLCauseOpenGL(theClipRect.mX, theClipRect.mY, theClipRect.mWidth, theClipRect.mHeight, mHeight);
 	}
 	else
 		glDisable(GL_SCISSOR_TEST);
@@ -473,16 +474,12 @@ void OpenGLImage::ImplBltRotated(Image *theImage,
 
 	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
 	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
-
+	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
 	{
 		glEnable(GL_SCISSOR_TEST);
 
-		int scissorX = theClipRect.mX;
-		int scissorY = mHeight - theClipRect.mY - theClipRect.mHeight;
-		int scissorW = theClipRect.mWidth;
-		int scissorH = theClipRect.mHeight;
-		glScissor(scissorX, scissorY, scissorW, scissorH);
+		doScissorFromTLCauseOpenGL(theClipRect.mX, theClipRect.mY, theClipRect.mWidth, theClipRect.mHeight, mHeight);
 	}
 	else
 		glDisable(GL_SCISSOR_TEST);
@@ -557,16 +554,12 @@ void OpenGLImage::ImplStretchBlt(Image *theImage,
 
 	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
 	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
-
+	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
 	{
 		glEnable(GL_SCISSOR_TEST);
 
-		int scissorX = theClipRect.mX;
-		int scissorY = mHeight - theClipRect.mY - theClipRect.mHeight;
-		int scissorW = theClipRect.mWidth;
-		int scissorH = theClipRect.mHeight;
-		glScissor(scissorX, scissorY, scissorW, scissorH);
+		doScissorFromTLCauseOpenGL(theClipRect.mX, theClipRect.mY, theClipRect.mWidth, theClipRect.mHeight, mHeight);
 	}
 	else
 		glDisable(GL_SCISSOR_TEST);
@@ -635,16 +628,12 @@ void OpenGLImage::ImplBltMatrix(Image *theImage,
 
 	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
 	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
-
+	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
 	{
 		glEnable(GL_SCISSOR_TEST);
 
-		int scissorX = theClipRect.mX;
-		int scissorY = mHeight - theClipRect.mY - theClipRect.mHeight;
-		int scissorW = theClipRect.mWidth;
-		int scissorH = theClipRect.mHeight;
-		glScissor(scissorX, scissorY, scissorW, scissorH);
+		doScissorFromTLCauseOpenGL(theClipRect.mX, theClipRect.mY, theClipRect.mWidth, theClipRect.mHeight, mHeight);
 	}
 	else
 		glDisable(GL_SCISSOR_TEST);
@@ -654,7 +643,7 @@ void OpenGLImage::ImplBltMatrix(Image *theImage,
 	float aWidth = static_cast<float>(theSrcRect.mWidth);
 	float aHeight = static_cast<float>(theSrcRect.mHeight);
 
-	glm::vec2 origin = {0.0f, 0.0f};
+	glm::vec2 origin = {aWidth * 0.5f, aHeight * 0.5f}; //Matrix Draw calls on Images are centered by default
 
 	glm::vec2 localP0 = {-origin.x, -origin.y};
 	glm::vec2 localP1 = {aWidth - origin.x, -origin.y};
@@ -693,11 +682,15 @@ void OpenGLImage::ImplBltMatrix(Image *theImage,
 	aShaderToUse->Use();
 	aShaderToUse->SetUniform("uProjection", mProjection);
 	aShaderToUse->SetUniform("uUseTexture", (aTexID != 0));
+
+	glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 1, -1, StrFormat("BLT_OPENGL_IMAGE_%s", theImage->mFilePath.c_str()).c_str());
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, aTexID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
 	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)aVertices.size());
 
+	glPopDebugGroup();
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -722,7 +715,7 @@ void OpenGLImage::ImplBltTrianglesTex(Image *theTexture,
 
 	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
 	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
-
+	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	std::vector<Vertex> aVertices;
 	aVertices.reserve(theNumTriangles * 3);
 	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
@@ -758,11 +751,7 @@ void OpenGLImage::ImplBltTrianglesTex(Image *theTexture,
 	{
 		glEnable(GL_SCISSOR_TEST);
 
-		int scissorX = theClipRect.mX;
-		int scissorY = mHeight - theClipRect.mY - theClipRect.mHeight;
-		int scissorW = theClipRect.mWidth;
-		int scissorH = theClipRect.mHeight;
-		glScissor(scissorX, scissorY, scissorW, scissorH);
+		doScissorFromTLCauseOpenGL(theClipRect.mX, theClipRect.mY, theClipRect.mWidth, theClipRect.mHeight, mHeight);
 	}
 	else
 		glDisable(GL_SCISSOR_TEST);
@@ -791,7 +780,7 @@ void OpenGLImage::ImplBltMirror(
 
 	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
 	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
-
+	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
 	glm::vec2 p0 = {theX, theY};
@@ -854,16 +843,12 @@ void OpenGLImage::ImplStretchBltMirror(Image *theImage,
 
 	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
 	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
-
+	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
 	{
 		glEnable(GL_SCISSOR_TEST);
 
-		int scissorX = theClipRect.mX;
-		int scissorY = mHeight - theClipRect.mY - theClipRect.mHeight;
-		int scissorW = theClipRect.mWidth;
-		int scissorH = theClipRect.mHeight;
-		glScissor(scissorX, scissorY, scissorW, scissorH);
+		doScissorFromTLCauseOpenGL(theClipRect.mX, theClipRect.mY, theClipRect.mWidth, theClipRect.mHeight, mHeight);
 	}
 	else
 		glDisable(GL_SCISSOR_TEST);
@@ -926,16 +911,13 @@ void OpenGLImage::ImplBltRawTexture(void *theTexture,
 
 	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
 	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
+	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
 	{
 		glEnable(GL_SCISSOR_TEST);
 
-		int scissorX = theClipRect.mX;
-		int scissorY = mHeight - theClipRect.mY - theClipRect.mHeight;
-		int scissorW = theClipRect.mWidth;
-		int scissorH = theClipRect.mHeight;
-		glScissor(scissorX, scissorY, scissorW, scissorH);
+		doScissorFromTLCauseOpenGL(theClipRect.mX, theClipRect.mY, theClipRect.mWidth, theClipRect.mHeight, mHeight);
 	}
 	else
 		glDisable(GL_SCISSOR_TEST);

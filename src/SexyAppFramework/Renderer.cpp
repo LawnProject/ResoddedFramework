@@ -68,8 +68,12 @@ BlendMode Renderer::ChooseBlendMode(int theBlendMode)
 	case Graphics::DRAWMODE_ADDITIVE:
 		aBlendMode = BLENDMODE_ADD;
 		break;
-	default:
+	case Graphics::DRAWMODE_MULTIPLY:
+		aBlendMode = BLENDMODE_MULTIPLY;
+		break;
 	case Graphics::DRAWMODE_NORMAL:
+	default:
+
 		aBlendMode = BLENDMODE_BLEND;
 		break;
 	}

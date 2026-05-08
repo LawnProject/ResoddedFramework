@@ -15,6 +15,7 @@ namespace Sexy
 		BLENDMODE_NONE = 0,
 		BLENDMODE_BLEND,
 		BLENDMODE_ADD,
+		BLENDMODE_MULTIPLY,
 	};
 
 	enum TextureUVWrapMode

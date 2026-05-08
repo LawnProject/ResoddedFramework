@@ -6,7 +6,7 @@
 namespace Sexy
 {
 class Graphics;
-class MemoryImage;
+class GPUImage;
 }; // namespace Sexy
 using namespace Sexy;
 
@@ -16,7 +16,7 @@ class ReanimCacheImageVariation
   public:
 	SeedType mSeedType;
 	DrawVariation mDrawVariation;
-	MemoryImage *mImage;
+	GPUImage *mImage;
 };
 typedef TodList<ReanimCacheImageVariation> ImageVariationList;
 
@@ -24,10 +24,10 @@ class Reanimation;
 class ReanimatorCache
 {
   public:
-	MemoryImage *mPlantImages[SeedType::NUM_SEED_TYPES];
+	GPUImage *mPlantImages[SeedType::NUM_SEED_TYPES];
 	ImageVariationList mImageVariationList;
-	MemoryImage *mLawnMowers[LawnMowerType::NUM_MOWER_TYPES];
-	MemoryImage *mZombieImages[ZombieType::NUM_CACHED_ZOMBIE_TYPES];
+	GPUImage *mLawnMowers[LawnMowerType::NUM_MOWER_TYPES];
+	GPUImage *mZombieImages[ZombieType::NUM_CACHED_ZOMBIE_TYPES];
 	LawnApp *mApp;
 
   public:
@@ -40,10 +40,10 @@ class ReanimatorCache
 		Graphics *g, float thePosX, float thePosY, SeedType theSeedType, DrawVariation theDrawVariation);
 	void DrawCachedMower(Graphics *g, float thePosX, float thePosY, LawnMowerType theMowerType);
 	void DrawCachedZombie(Graphics *g, float thePosX, float thePosY, ZombieType theZombieType);
-	MemoryImage *MakeBlankMemoryImage(int theWidth, int theHeight);
-	MemoryImage *MakeCachedPlantFrame(SeedType theSeedType, DrawVariation theDrawVariation);
-	MemoryImage *MakeCachedMowerFrame(LawnMowerType theMowerType);
-	MemoryImage *MakeCachedZombieFrame(ZombieType theZombieType);
+	GPUImage *MakeBlankGPUImage(int theWidth, int theHeight);
+	GPUImage *MakeCachedPlantFrame(SeedType theSeedType, DrawVariation theDrawVariation);
+	GPUImage *MakeCachedMowerFrame(LawnMowerType theMowerType);
+	GPUImage *MakeCachedZombieFrame(ZombieType theZombieType);
 	/*inline*/ void GetPlantImageSize(
 		SeedType theSeedType, int &theOffsetX, int &theOffsetY, int &theWidth, int &theHeight);
 	void DrawReanimatorFrame(Graphics *g,

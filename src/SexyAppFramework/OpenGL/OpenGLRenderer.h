@@ -14,14 +14,22 @@ namespace Sexy
 {
 	struct GLBlendFunc
 	{
-		GLenum theSrc;
-		GLenum theDst;
-		bool theEnableBlend = true;
+		GLenum mSrcRGB;
+		GLenum mDstRGB;
+		GLenum mSrcAlpha;
+		GLenum mDstAlpha;
+		GLenum mEquationRGB;
+		GLenum mEquationAlpha;
 	};
 
-	const std::unordered_map<BlendMode, GLBlendFunc> blend_mode_funcs = {
-	{BlendMode::BLENDMODE_BLEND, {GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, true}},
-	{BlendMode::BLENDMODE_ADD, {GL_SRC_ALPHA, GL_ONE, true}}};
+	const std::unordered_map<BlendMode, GLBlendFunc> gGLBlendDefines = {
+	{BlendMode::BLENDMODE_BLEND, 
+		{GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD, GL_FUNC_ADD}},
+	{BlendMode::BLENDMODE_ADD, 
+		{GL_SRC_ALPHA, GL_ONE, GL_ZERO, GL_ONE, GL_FUNC_ADD, GL_FUNC_ADD}},
+	{BlendMode::BLENDMODE_MULTIPLY,
+		{GL_DST_COLOR, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE, GL_FUNC_ADD, GL_FUNC_ADD}}
+	};
 
 	struct Vertex
 	{

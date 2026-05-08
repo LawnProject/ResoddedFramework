@@ -699,7 +699,10 @@ bool GPUImage::Check3D(GPUImage *theImage)
 bool GPUImage::Check3D(Image *theImage)
 {
 	GPUImage *anImage = dynamic_cast<GPUImage *>(theImage);
-	return anImage != nullptr;
+	if (anImage != NULL)
+		return Check3D(anImage);
+	else
+		return false;
 }
 
 void GPUImage::PurgeBits()

@@ -5,7 +5,8 @@
 #include "../../Sexy.TodLib/TodDebug.h"
 #include "../../SexyAppFramework/Color.h"
 #include "../../Sexy.TodLib/Reanimator.h"
-#include "../../SexyAppFramework/MemoryImage.h"
+#include "../../SexyAppFramework/GPUImage.h"
+#include "../../SexyAppFramework/Renderer.h"
 
 //0x46EF00
 void ReanimatorCache::UpdateReanimationForVariation(Reanimation *theReanim, DrawVariation theDrawVariation)
@@ -98,9 +99,9 @@ void ReanimatorCache::DrawReanimatorFrame(Graphics *g,
 }
 
 //0x46F280
-MemoryImage *ReanimatorCache::MakeBlankMemoryImage(int theWidth, int theHeight)
+GPUImage *ReanimatorCache::MakeBlankGPUImage(int theWidth, int theHeight)
 {
-	MemoryImage *aImage = new MemoryImage();
+	GPUImage *aImage = mApp->mRenderer->NewGPUImage();
 
 	int aBitsCount = theWidth * theHeight;
 	aImage->mBits = new uint32_t[aBitsCount + 1];
@@ -138,14 +139,14 @@ void ReanimatorCache::GetPlantImageSize(
 }
 
 //0x46F330
-MemoryImage *ReanimatorCache::MakeCachedMowerFrame(LawnMowerType theMowerType)
+GPUImage *ReanimatorCache::MakeCachedMowerFrame(LawnMowerType theMowerType)
 {
-	MemoryImage *aImage;
+	GPUImage *aImage;
 
 	switch (theMowerType)
 	{
 	case LawnMowerType::LAWNMOWER_LAWN: {
-		aImage = MakeBlankMemoryImage(90, 100);
+		aImage = MakeBlankGPUImage(90, 100);
 		Graphics aMemoryGraphics(aImage);
 		aMemoryGraphics.SetLinearBlend(true);
 		aMemoryGraphics.mScaleX = 0.85f;
@@ -159,7 +160,7 @@ MemoryImage *ReanimatorCache::MakeCachedMowerFrame(LawnMowerType theMowerType)
 		break;
 	}
 	case LawnMowerType::LAWNMOWER_POOL: {
-		aImage = MakeBlankMemoryImage(90, 100);
+		aImage = MakeBlankGPUImage(90, 100);
 		Graphics aMemoryGraphics(aImage);
 		aMemoryGraphics.SetLinearBlend(true);
 		aMemoryGraphics.mScaleX = 0.8f;
@@ -173,7 +174,7 @@ MemoryImage *ReanimatorCache::MakeCachedMowerFrame(LawnMowerType theMowerType)
 		break;
 	}
 	case LawnMowerType::LAWNMOWER_ROOF: {
-		aImage = MakeBlankMemoryImage(90, 100);
+		aImage = MakeBlankGPUImage(90, 100);
 		Graphics aMemoryGraphics(aImage);
 		aMemoryGraphics.SetLinearBlend(true);
 		aMemoryGraphics.mScaleX = 0.85f;
@@ -187,7 +188,7 @@ MemoryImage *ReanimatorCache::MakeCachedMowerFrame(LawnMowerType theMowerType)
 		break;
 	}
 	case LawnMowerType::LAWNMOWER_SUPER_MOWER: {
-		aImage = MakeBlankMemoryImage(90, 100);
+		aImage = MakeBlankGPUImage(90, 100);
 		Graphics aMemoryGraphics(aImage);
 		aMemoryGraphics.SetLinearBlend(true);
 		aMemoryGraphics.mScaleX = 0.85f;
@@ -209,12 +210,12 @@ MemoryImage *ReanimatorCache::MakeCachedMowerFrame(LawnMowerType theMowerType)
 }
 
 //0x46F550
-MemoryImage *ReanimatorCache::MakeCachedPlantFrame(SeedType theSeedType, DrawVariation theDrawVariation)
+GPUImage *ReanimatorCache::MakeCachedPlantFrame(SeedType theSeedType, DrawVariation theDrawVariation)
 {
 	int aOffsetX, aOffsetY, aWidth, aHeight;
 	GetPlantImageSize(theSeedType, aOffsetX, aOffsetY, aWidth, aHeight);
-	MemoryImage *aMemoryImage = MakeBlankMemoryImage(aWidth, aHeight);
-	Graphics aMemoryGraphics(aMemoryImage);
+	GPUImage *aGPUImage = MakeBlankGPUImage(aWidth, aHeight);
+	Graphics aMemoryGraphics(aGPUImage);
 	aMemoryGraphics.SetLinearBlend(true);
 
 	PlantDefinition &aPlantDef = GetPlantDefinition(theSeedType);
@@ -295,14 +296,14 @@ MemoryImage *ReanimatorCache::MakeCachedPlantFrame(SeedType theSeedType, DrawVar
 		}
 	}
 
-	return aMemoryImage;
+	return aGPUImage;
 }
 
 //0x46F8A0
-MemoryImage *ReanimatorCache::MakeCachedZombieFrame(ZombieType theZombieType)
+GPUImage *ReanimatorCache::MakeCachedZombieFrame(ZombieType theZombieType)
 {
-	MemoryImage *aMemoryImage = MakeBlankMemoryImage(200, 210);
-	Graphics aMemoryGraphics(aMemoryImage);
+	GPUImage *aGPUImage = MakeBlankGPUImage(200, 210);
+	Graphics aMemoryGraphics(aGPUImage);
 	aMemoryGraphics.SetLinearBlend(true);
 
 	ZombieType aUseZombieType = theZombieType;
@@ -392,7 +393,7 @@ MemoryImage *ReanimatorCache::MakeCachedZombieFrame(ZombieType theZombieType)
 		DrawReanimatorFrame(
 			&aMemoryGraphics, aPosX, aPosY, aZombieDef.mReanimationType, aTrackName, DrawVariation::VARIATION_NORMAL);
 	}
-	return aMemoryImage;
+	return aGPUImage;
 }
 
 //0x46FDC0
@@ -430,7 +431,7 @@ void ReanimatorCache::DrawCachedPlant(
 {
 	TOD_ASSERT(theSeedType >= 0 && theSeedType < SeedType::NUM_SEED_TYPES);
 
-	MemoryImage *aImage = nullptr;
+	GPUImage *aImage = nullptr;
 	if (theDrawVariation != DrawVariation::VARIATION_NORMAL)
 	{
 		for (TodListNode<ReanimCacheImageVariation> *aNode = mImageVariationList.mHead; aNode != nullptr;
