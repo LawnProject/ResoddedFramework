@@ -2347,6 +2347,7 @@ static void CalculateFPS()
 	if (gFPSTimer.GetDuration() >= 1000 || gForceDisplay)
 	{
 		gFPSTimer.Stop();
+		int aPrevFPS = gFPSDisplay;
 		if (!gForceDisplay)
 			gFPSDisplay = (int)(gFrameCount * 1000 / gFPSTimer.GetDuration() + 0.5f);
 		else
@@ -2363,6 +2364,9 @@ static void CalculateFPS()
 		SexyString aFPS = StrFormat("FPS: %d", gFPSDisplay);
 		aDrawG.SetColor(0x000000);
 		aDrawG.FillRect(0, 0, gFPSImage->GetWidth(), gFPSImage->GetHeight());
+		aDrawG.SetColor(0xFFFFFF);
+		aDrawG.SetColor(aPrevFPS <= gFPSDisplay ? Color(0, 255, 0) : Color(255, 0, 0));
+		aDrawG.FillRect(gFPSImage->GetWidth() - 2, 0, 2, gFPSImage->GetHeight());
 		aDrawG.SetColor(0xFFFFFF);
 		aDrawG.DrawString(aFPS, 2, gDebugFont->GetAscent());
 		gFPSImage->mBitsChangedCount++;
