@@ -53,6 +53,7 @@ class GameSelector : public Widget, public ButtonListener
 	NewLawnButton *mZenGardenButton;	//+0xB0
 	NewLawnButton *mSurvivalButton;		//+0xB4
 	NewLawnButton *mChangeUserButton;	//+0xB8
+	NewLawnButton *mAchievementsButton;
 	Widget *mOverlayWidget;				//+0xBC
 	bool mStartingGame;					//+0xC0
 	int mStartingGameCounter;			//+0xC4

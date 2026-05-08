@@ -117,6 +117,18 @@ GameSelector::GameSelector(LawnApp *theApp)
 	mSurvivalButton->mPolygonShape[3] = SexyVector2(7.0f, 57.0f);
 	mSurvivalButton->mUsePolygonShape = true;
 
+	mAchievementsButton = MakeNewButton(GameSelector::GameSelector_Survival,
+									this,
+									"",
+									nullptr,
+									Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL,
+									Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL_PRESS,
+									Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL_PRESS);
+	mAchievementsButton->Resize(0, mApp->mHeight - Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mHeight - 35, Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mWidth, Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mHeight);
+	mAchievementsButton->mClip = false;
+	mAchievementsButton->mBtnNoDraw = mHasTrophy;
+	mAchievementsButton->mMouseVisible = false;
+
 	mZenGardenButton = MakeNewButton(GameSelector::GameSelector_ZenGarden,
 									 this,
 									 "",
@@ -295,6 +307,8 @@ GameSelector::~GameSelector()
 		delete mZenGardenButton;
 	if (mSurvivalButton)
 		delete mSurvivalButton;
+	if (mAchievementsButton)
+		delete mAchievementsButton;
 	if (mChangeUserButton)
 		delete mChangeUserButton;
 
@@ -516,23 +530,6 @@ void GameSelector::Draw(Graphics *g)
 		TodDrawStringMatrix(
 			g, Sexy::FONT_BRIANNETOD16, aOverlayMatrix * aOffsetMatrix, aWelcomeStr, Color(255, 245, 200));
 	}
-
-	int aLeftIdx = aSelectorReanim->FindTrackIndex("SelectorScreen_BG_Left");
-	ReanimatorTransform aTransformLeft;
-	aSelectorReanim->GetCurrentTransform(aLeftIdx, &aTransformLeft);
-	if (mHasTrophy)
-	{
-		if (mApp->EarnedGoldTrophy())
-			TodDrawImageCelF(
-				g, Sexy::IMAGE_SUNFLOWER_TROPHY, aTransformLeft.mTransX + 10.0f, aTransformLeft.mTransY + 390.0f, 1, 0);
-		else
-			TodDrawImageCelF(
-				g, Sexy::IMAGE_SUNFLOWER_TROPHY, aTransformLeft.mTransX + 10.0f, aTransformLeft.mTransY + 390.0f, 0, 0);
-
-		TodParticleSystem *aTrophyParticle = mApp->ParticleTryToGet(mTrophyParticleID);
-		if (aTrophyParticle)
-			aTrophyParticle->Draw(g);
-	}
 }
 
 //0x44AB50
@@ -639,6 +636,21 @@ void GameSelector::DrawOverlay(Graphics *g)
 			g->DrawString("BETA BUILD: DO NOT DISTRIBUTE", 27, 594);
 	}
 
+	Reanimation *aSelectorReanim = mApp->ReanimationGet(mSelectorReanimID);
+	int aLeftIdx = aSelectorReanim->FindTrackIndex("SelectorScreen_BG_Left");
+	ReanimatorTransform aTransformLeft;
+	aSelectorReanim->GetCurrentTransform(aLeftIdx, &aTransformLeft);
+	if (mHasTrophy)
+	{
+		int aTrophyIndex = mApp->EarnedGoldTrophy() ? 1 : 0;
+		TodDrawImageCelF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, aTransformLeft.mTransX + 12.0f,
+						 aTransformLeft.mTransY + 345.0f, aTrophyIndex, 0);
+
+		TodParticleSystem *aTrophyParticle = mApp->ParticleTryToGet(mTrophyParticleID);
+		if (aTrophyParticle)
+			aTrophyParticle->Draw(g);
+	}
+
 	mToolTip->Draw(g);
 }
 
@@ -652,7 +664,7 @@ void GameSelector::UpdateTooltip()
 	{
 		int aMouseX = mApp->mWidgetManager->mLastMouseX;
 		int aMouseY = mApp->mWidgetManager->mLastMouseY;
-		if (aMouseX >= 50 && aMouseX < 135 && aMouseY >= 325 && aMouseY <= 550)
+		if (aMouseX > 49 && aMouseX < 135 && aMouseY > 249 && aMouseY < 475)
 		{
 			if (mApp->EarnedGoldTrophy())
 			{
@@ -754,6 +766,7 @@ void GameSelector::Update()
 			mMinigameButton->mBtnNoDraw = false;
 			mPuzzleButton->mBtnNoDraw = false;
 			mSurvivalButton->mBtnNoDraw = false;
+			mAchievementsButton->mBtnNoDraw = false;
 			mZenGardenButton->mBtnNoDraw = false;
 			mHelpButton->mBtnNoDraw = false;
 			mOptionsButton->mBtnNoDraw = false;
@@ -762,6 +775,7 @@ void GameSelector::Update()
 			mMinigameButton->mMouseVisible = true;
 			mPuzzleButton->mMouseVisible = true;
 			mSurvivalButton->mMouseVisible = true;
+			mAchievementsButton->mMouseVisible = true;
 			mZenGardenButton->mMouseVisible = true;
 			mHelpButton->mMouseVisible = true;
 			mOptionsButton->mMouseVisible = true;
@@ -862,6 +876,7 @@ void GameSelector::Update()
 	TrackButton(mHelpButton, "SelectorScreen_BG_Right", 576.0f, 458.0f);
 	TrackButton(mAlmanacButton, "SelectorScreen_BG_Right", 256.0f, 387.0f);
 	TrackButton(mStoreButton, "SelectorScreen_BG_Right", 334.0f, 441.0f);
+	TrackButton(mAchievementsButton, "SelectorScreen_BG_Left", 20.0f, 480.0f);
 	TrackButton(mChangeUserButton, "woodsign2", 24.0f, 10.0f);
 	aSelectorReanim->SetImageOverride("woodsign2",
 									  (mChangeUserButton->mIsOver || mChangeUserButton->mIsDown)
@@ -895,6 +910,7 @@ void GameSelector::AddedToManager(WidgetManager *theWidgetManager)
 	theWidgetManager->AddWidget(mStoreButton);
 	theWidgetManager->AddWidget(mAlmanacButton);
 	theWidgetManager->AddWidget(mSurvivalButton);
+	theWidgetManager->AddWidget(mAchievementsButton);
 	theWidgetManager->AddWidget(mZenGardenButton);
 	theWidgetManager->AddWidget(mChangeUserButton);
 	theWidgetManager->AddWidget(mOverlayWidget);
@@ -914,6 +930,7 @@ void GameSelector::RemovedFromManager(WidgetManager *theWidgetManager)
 	theWidgetManager->RemoveWidget(mStoreButton);
 	theWidgetManager->RemoveWidget(mAlmanacButton);
 	theWidgetManager->RemoveWidget(mSurvivalButton);
+	theWidgetManager->RemoveWidget(mAchievementsButton);
 	theWidgetManager->RemoveWidget(mZenGardenButton);
 	theWidgetManager->RemoveWidget(mChangeUserButton);
 	theWidgetManager->RemoveWidget(mOverlayWidget);
@@ -933,6 +950,7 @@ void GameSelector::OrderInManagerChanged()
 	mWidgetManager->PutInfront(mPuzzleButton, this);
 	mWidgetManager->PutInfront(mZenGardenButton, this);
 	mWidgetManager->PutInfront(mSurvivalButton, this);
+	mWidgetManager->PutInfront(mAchievementsButton, this);
 	mWidgetManager->PutInfront(mChangeUserButton, this);
 }
 
@@ -1121,6 +1139,7 @@ void GameSelector::ClickedAdventure()
 	mStoreButton->SetDisabled(true);
 	mAlmanacButton->SetDisabled(true);
 	mSurvivalButton->SetDisabled(true);
+	mAchievementsButton->SetDisabled(true);
 	mZenGardenButton->SetDisabled(true);
 
 	Reanimation *aHandReanim = mApp->AddReanimation(-70.0f, 10.0f, 0, ReanimationType::REANIM_ZOMBIE_HAND);
