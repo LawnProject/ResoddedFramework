@@ -205,7 +205,6 @@ void OpenGLImage::PreTextureDraw()
 	glBindBuffer(GL_ARRAY_BUFFER, gOpenGLImageVBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 	glViewport(0, 0, mWidth, mHeight);
-
 	glDisable(GL_SCISSOR_TEST);
 }
 
@@ -655,7 +654,7 @@ void OpenGLImage::ImplBltMatrix(Image *theImage,
 	glm::vec2 p2 = mGLRenderer->TransformToPoint(localP2.x, localP2.y, theMatrix, x, y);
 	glm::vec2 p3 = mGLRenderer->TransformToPoint(localP3.x, localP3.y, theMatrix, x, y);
 
-	float u0 = (float)theSrcRect.mX / (float)theImage->mWidth;
+	float u0 = (float)(theSrcRect.mX) / (float)theImage->mWidth;
 	float v0 = (float)theSrcRect.mY / (float)theImage->mHeight;
 	float u1 = (float)(theSrcRect.mX + theSrcRect.mWidth) / (float)theImage->mWidth;
 	float v1 = (float)(theSrcRect.mY + theSrcRect.mHeight) / (float)theImage->mHeight;
@@ -682,15 +681,14 @@ void OpenGLImage::ImplBltMatrix(Image *theImage,
 	aShaderToUse->Use();
 	aShaderToUse->SetUniform("uProjection", mProjection);
 	aShaderToUse->SetUniform("uUseTexture", (aTexID != 0));
-
-	glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 1, -1, StrFormat("BLT_OPENGL_IMAGE_%s", theImage->mFilePath.c_str()).c_str());
-
+	glBindSampler(0, mGLRenderer->mCurrentUVWrapMode == TextureUVWrapMode::UV_CLAMP
+						 ? mGLRenderer->mSamplers[blend ? GL_LINEAR : GL_NEAREST].mClamp
+						 : mGLRenderer->mSamplers[blend ? GL_LINEAR : GL_NEAREST].mWrap);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, aTexID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
 	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)aVertices.size());
 
-	glPopDebugGroup();
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -758,6 +756,9 @@ void OpenGLImage::ImplBltTrianglesTex(Image *theTexture,
 	aShaderToUse->Use();
 	aShaderToUse->SetUniform("uProjection", mProjection);
 	aShaderToUse->SetUniform("uUseTexture", (aTexID != 0));
+	glBindSampler(0, mGLRenderer->mCurrentUVWrapMode == TextureUVWrapMode::UV_CLAMP
+						 ? mGLRenderer->mSamplers[blend ? GL_LINEAR : GL_NEAREST].mClamp
+						 : mGLRenderer->mSamplers[blend ? GL_LINEAR : GL_NEAREST].mWrap);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, aTexID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
