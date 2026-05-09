@@ -327,10 +327,13 @@ class Board : public Widget, public ButtonListener
 	/*inline*/ bool StageHas6Rows();
 	/*inline*/ bool StageHasFog();
 	bool StageHasGraveStones();
+
 	int PixelToGridX(int theX, int theY);
 	int PixelToGridY(int theX, int theY);
-	/*inline*/ int GridToPixelX(int theGridX, int theGridY);
+
+	int GridToPixelX(int theGridX, int theGridY);
 	int GridToPixelY(int theGridX, int theGridY);
+
 	/*inline*/ int PixelToGridXKeepOnBoard(int theX, int theY);
 	/*inline*/ int PixelToGridYKeepOnBoard(int theX, int theY);
 	void UpdateGameObjects();
@@ -370,6 +373,7 @@ class Board : public Widget, public ButtonListener
 	/*inline*/ Zombie *ZombieGet(ZombieID theZombieID);
 	/*inline*/ Zombie *ZombieTryToGet(ZombieID theZombieID);
 	void DrawDebugObjectRects(Graphics *g);
+	void DrawDebugGrid(Graphics *g);
 	void UpdateIce();
 	/*inline*/ int GetIceZPos(int theRow);
 	/*inline*/ bool CanAddBobSled();

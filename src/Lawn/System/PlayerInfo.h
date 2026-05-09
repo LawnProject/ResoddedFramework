@@ -22,17 +22,17 @@ class PottedPlant
 	int mY;						//+0xC
 	FacingDirection mFacing;	//+0x10
 
-	__time64_t mLastWateredTime;  //+0x18
+	int64_t mLastWateredTime;  //+0x18
 	DrawVariation mDrawVariation; //+0x20
 	PottedPlantAge mPlantAge;	  //+0x24
 	int mTimesFed;				  //+0x28
 	int mFeedingsPerGrow;		  //+0x2C
 	PottedPlantNeed mPlantNeed;	  //+0x30
 
-	__time64_t mLastNeedFulfilledTime; //+0x38
-	__time64_t mLastFertilizedTime;	   //+0x40
-	__time64_t mLastChocolateTime;	   //+0x48
-	__time64_t mFutureAttribute[1];	   //+0x50
+	int64_t mLastNeedFulfilledTime;	   //+0x38
+	int64_t mLastFertilizedTime;	   //+0x40
+	int64_t mLastChocolateTime;		   //+0x48
+	int64_t mFutureAttribute[1];	   //+0x50
 
   public:
 	void InitializePottedPlant(SeedType theSeedType);
@@ -48,11 +48,11 @@ class PlayerInfo
 	int mLevel;									 //+0x24
 	int mCoins;									 //+0x28
 	int mFinishedAdventure;						 //+0x2C
-	int mChallengeRecords[100];					 //+0x30
-	int mPurchases[80];							 //+0x1C0
+	int mChallengeRecords[NUM_GAME_MODES];		 //+0x30
+	int mPurchases[NUM_STORE_ITEM_MAX];			 //+0x1C0
 	int mPlayTimeActivePlayer;					 //+0x300
 	int mPlayTimeInactivePlayer;				 //+0x304
-	int mHasUsedCheatKeys;						 //+0x308
+	bool mHasUsedCheatKeys;						 //+0x308
 	int mHasWokenStinky;						 //+0x30C
 	int mDidntPurchasePacketUpgrade;			 //+0x310
 	long mLastStinkyChocolateTime;				 //+0x314
@@ -72,6 +72,8 @@ class PlayerInfo
 	int mPlaceHolderPlayerStats;				 //+0x??????
 	int mNumPottedPlants;						 //+0x350
 	PottedPlant mPottedPlant[MAX_POTTED_PLANTS]; //+0x358
+	bool mEarnedAchievements[NUM_ACHIEVEMENT_TYPES];
+	bool mShownAchievements[NUM_ACHIEVEMENT_TYPES];
 
   public:
 	PlayerInfo();
@@ -91,7 +93,7 @@ class PlayerInfo
 	{
 		mLevel = theLevel;
 	}
-	/*inline*/ void ResetChallengeRecord(GameMode theGameMode);
+	void ResetChallengeRecord(GameMode theGameMode);
 };
 
 #endif

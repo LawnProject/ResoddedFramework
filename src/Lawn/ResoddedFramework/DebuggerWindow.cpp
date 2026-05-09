@@ -3,7 +3,10 @@
 #include "DebuggerWindow.h"
 #include "../Board.h"
 #include "../ZenGarden.h"
+#include "../System/PlayerInfo.h"
 #include "../Widget/ChallengeScreen.h"
+#include "../Widget/AchievementsWidget.h"
+#include "../Widget/GameSelector.h"
 #include "../Sexy.TodLib/EffectSystem.h"
 #include "../Sexy.TodLib/Attachment.h"
 #include "../Sexy.TodLib/Trail.h"
@@ -216,7 +219,79 @@ void DebuggerWindow::Update()
 
 		if (ImGui::BeginTabItem("Save File"))
 		{
-			ImGui::Text("Set some data here");
+			if (mApp->mPlayerInfo == nullptr)
+			{
+				ImGui::Text("Save File is null");
+			}
+			else
+			{
+				ImGui::SeparatorText(StrFormat("Current Profile: %s", mApp->mPlayerInfo->mName.c_str()).c_str());
+
+				if (ImGui::BeginTabBar("SaveTabs"))
+				{
+
+					if (ImGui::BeginTabItem("Info"))
+					{
+						int aArea = ClampInt((mApp->mPlayerInfo->mLevel - 1) / LEVELS_PER_AREA + 1, 1, ADVENTURE_AREAS + 1);
+						int aSub = mApp->mPlayerInfo->mLevel - (aArea - 1) * LEVELS_PER_AREA;
+						if (ImGui::InputInt("Main Level", &aArea))
+						{
+							aArea = ClampInt(aArea, 1, ADVENTURE_AREAS + 1);
+
+							mApp->mPlayerInfo->mLevel = (aArea - 1) * LEVELS_PER_AREA + aSub;
+						}
+						if (ImGui::InputInt("Sub Level", &aSub))
+						{
+							aSub = ClampInt(aSub, 1, LEVELS_PER_AREA);
+
+							mApp->mPlayerInfo->mLevel = (aArea - 1) * LEVELS_PER_AREA + aSub;
+						}
+
+						ImGui::InputInt("Level ID", &mApp->mPlayerInfo->mLevel);
+						mApp->mPlayerInfo->mLevel = ClampInt(mApp->mPlayerInfo->mLevel, 1, NUM_LEVELS);
+						if (mApp->mGameSelector != nullptr)
+							mApp->mGameSelector->mLevel = mApp->mPlayerInfo->mLevel;
+						ImGui::InputInt("Coins", &mApp->mPlayerInfo->mCoins);
+						ImGui::InputInt("Finished Adventure", &mApp->mPlayerInfo->mFinishedAdventure);
+						mApp->mPlayerInfo->mFinishedAdventure = ClampInt(mApp->mPlayerInfo->mFinishedAdventure, 0, INT_MAX);
+						ImGui::Checkbox("Used Cheat Keys", &mApp->mPlayerInfo->mHasUsedCheatKeys);
+
+						ImGui::EndTabItem();
+					}
+					if (ImGui::BeginTabItem("Purchases"))
+					{
+						for (int i = 0; i < NUM_STORE_ITEM_MAX; i++)
+						{
+							ImGui::InputInt(StrFormat("Item %d", i).c_str(), &mApp->mPlayerInfo->mPurchases[i]);
+						}
+						ImGui::EndTabItem();
+					}
+					if (ImGui::BeginTabItem("Records"))
+					{
+						for (int i = 0; i < NUM_GAME_MODES - 1; i++)
+						{
+							ImGui::InputInt(TodStringTranslate(gChallengeDefs[i].mChallengeName).c_str(), &mApp->mPlayerInfo->mChallengeRecords[i]);
+						}
+						ImGui::EndTabItem();
+					}
+					if (ImGui::BeginTabItem("Achievements"))
+					{
+						for (int i = 0; i < NUM_ACHIEVEMENT_TYPES; i++)
+						{
+							ImGui::SeparatorText(TodStringTranslate(gAchievementDefs[i].mName).c_str());
+							ImGui::PushID(i);
+							ImGui::Checkbox("Earned", &mApp->mPlayerInfo->mEarnedAchievements[i]);
+							ImGui::PopID();
+							ImGui::PushID(i + NUM_ACHIEVEMENT_TYPES);
+							ImGui::Checkbox("Shown", &mApp->mPlayerInfo->mShownAchievements[i]);
+							ImGui::PopID();
+						}
+
+						ImGui::EndTabItem();
+					}
+					ImGui::EndTabBar();
+				}
+			}
 			ImGui::EndTabItem();
 		}
 
