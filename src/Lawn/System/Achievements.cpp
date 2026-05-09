@@ -4,6 +4,7 @@
 #include "../../Resources.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "../Board.h"
+#include "../Widget/GameSelector.h"
 
 AchievementDefinition gAchievementDefs[NUM_ACHIEVEMENT_TYPES] = {
 	{"[ACHIEVEMENT_HOME_SECURITY_TITLE]", "[ACHIEVEMENT_HOME_SECURITY_DESCRIPTION]"},
@@ -62,4 +63,32 @@ void Achievements::GiveAchievement(AchievementID theAchievement, bool aForceGive
 		StrFormat("%s%s", TodStringTranslate(Achievements::GetAchievementDefinition(theAchievement).mName).c_str(), TodStringTranslate("[ACHIEVEMENT_ACHIEVED]").c_str()),
 		MessageStyle::MESSAGE_STYLE_ACHIEVEMENT, AdviceType::ADVICE_NONE
 	);
+}
+
+void Achievements::SyncAchievements()
+{
+	if (mApp->mPlayerInfo == nullptr)
+		return;
+
+	if (mApp->HasFinishedAdventure())
+		GiveAchievement(AchievementID::ACHIEVEMENT_HOME_SECURITY, true);
+
+	if (mApp->EarnedGoldTrophy())
+		GiveAchievement(AchievementID::ACHIEVEMENT_NOVEL_PEAS_PRIZE, true);
+
+	if (mApp->CanSpawnYetis())
+		GiveAchievement(AchievementID::ACHIEVEMENT_ZOMBOLOGIST, true);
+
+	if (mApp->mPlayerInfo->mChallengeRecords[GAMEMODE_TREE_OF_WISDOM - 1])
+		GiveAchievement(AchievementID::ACHIEVEMENT_TOWERING_WISDOM, true);
+
+	bool aHasAllPlants = true;
+	for (int i = SeedType::SEED_PEASHOOTER; i < SeedType::NUM_SEEDS_IN_CHOOSER; i++)
+	{
+		if (!mApp->SeedTypeAvailable(SeedType(i)))
+			aHasAllPlants = false;
+	}
+
+	if (aHasAllPlants)
+		GiveAchievement(AchievementID::ACHIEVEMENT_MORTICULTURALIST, true);
 }

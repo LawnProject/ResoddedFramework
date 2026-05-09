@@ -26,4 +26,5 @@ class Achievements
 
 	static AchievementDefinition GetAchievementDefinition(AchievementID theAchievement);
 	void GiveAchievement(AchievementID theAchievement, bool aForceGive);
+	void SyncAchievements();
 };
