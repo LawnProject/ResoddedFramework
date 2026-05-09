@@ -51,5 +51,5 @@ bool Version::isNewerThan(const Version &theVersion)
 
 std::string Sexy::Version::toString()
 {
-	return StrFormat("v%d.%d.%d", mMajor, mMinor, mPatch);
+	return StrFormat("%d.%d.%d", mMajor, mMinor, mPatch);
 }

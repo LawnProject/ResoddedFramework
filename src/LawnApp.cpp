@@ -56,7 +56,7 @@
 #include <filesystem>
 
 #if LAWN_DEBUG_TOOLS
-#include "Lawn/Debug/DebuggerWindow.h"
+#include "Lawn/ResoddedFramework/DebuggerWindow.h"
 #endif
 
 Version LawnApp::gResoddedVersion(0, 5, 0);
@@ -85,6 +85,13 @@ bool LawnHasUsedCheatKeys()
 //0x44EAA0
 LawnApp::LawnApp()
 {
+
+	//Define version here:
+
+	gVersion.mMajor = 0;
+	gVersion.mMinor = 0;
+	gVersion.mPatch = 0;
+
 	mBoard = nullptr;
 	mGameSelector = nullptr;
 	mChallengeScreen = nullptr;
@@ -133,7 +140,7 @@ LawnApp::LawnApp()
 	mProdName = "PlantsVsZombies";
 	std::string aTitleName = "Plants vs. Zombies";
 #ifdef _DEBUG
-	aTitleName += " BETA ";
+	aTitleName += StrFormat(" BETA %s ", gVersion.toString().c_str());
 #endif
 
 	mTitle = aTitleName;
@@ -172,12 +179,6 @@ LawnApp::LawnApp()
 	mDebugWindow = nullptr;
 	mDebuggerEnabled = false;
 #endif
-
-	//Define version here:
-
-	gVersion.mMajor = 0;
-	gVersion.mMinor = 0;
-	gVersion.mPatch = 0;
 
 }
 
@@ -1630,7 +1631,7 @@ void LawnApp::UpdatePlayTimeStats()
 
 	if (mPlayerInfo && !mPlayerInfo->mHasUsedCheatKeys && !mDebugKeysEnabled && mTodCheatKeys)
 	{
-		mPlayerInfo->mHasUsedCheatKeys = 1;
+		mPlayerInfo->mHasUsedCheatKeys = true;
 	}
 
 	if (aLastTime == -1)

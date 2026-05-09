@@ -53,7 +53,8 @@ void MessageWidget::ClearLabel()
 void MessageWidget::SetLabel(const SexyString &theNewLabel, MessageStyle theMessageStyle)
 {
 	SexyString aLabel = TodStringTranslate(theNewLabel);
-	TOD_ASSERT(aLabel.length() < MAX_MESSAGE_LENGTH - 1);
+	TOD_ASSERT(utf8::is_valid(aLabel));
+	TOD_ASSERT(utf8::distance(aLabel.begin(), aLabel.end()) < MAX_MESSAGE_LENGTH - 1);
 
 	if (mReanimType != ReanimationType::REANIM_NONE && mDuration > 0)
 	{
@@ -74,17 +75,21 @@ void MessageWidget::SetLabel(const SexyString &theNewLabel, MessageStyle theMess
 	else
 	{
 		ClearReanim();
-		size_t count = 0;
-
+		size_t aByteCount = 0;
 		auto it = aLabel.begin();
 		auto end = aLabel.end();
+		size_t count = 0;
 
-		while (it != end && count < MAX_MESSAGE_LENGTH - 1)
+		while (it != end && count < MAX_MESSAGE_LENGTH - 1) //get the amount of bytes so we can use strncpy properly
 		{
-			mLabel[count++] = utf8::next(it, end);
+			auto charStart = it;
+			utf8::next(it, end);
+			aByteCount += it - charStart;
+			count++;
 		}
 
-		mLabel[count] = '\0';
+		strncpy(mLabel, aLabel.c_str(), aByteCount);
+		mLabel[aByteCount] = '\0';
 		mMessageStyle = theMessageStyle;
 		mReanimType = ReanimationType::REANIM_NONE;
 

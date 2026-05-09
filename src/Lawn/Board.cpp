@@ -8173,6 +8173,43 @@ void Board::DrawDebugObjectRects(Graphics *g)
 	}
 }
 
+void Board::DrawDebugGrid(Graphics *g)
+{
+	if (mDebugTextMode != DebugTextMode::DEBUG_TEXT_GRID)
+		return;
+
+	//TODO: complete so the last row and column are drawn
+	for (int x = 0; x < MAX_GRID_SIZE_X - 1; x++)
+	{
+		for (int y = 0; y < MAX_GRID_SIZE_Y - 1; y++)
+		{
+			if (mGridSquareType[x][y] == GridSquareType::GRIDSQUARE_NONE || y >= MAX_GRID_SIZE_Y - (StageHas6Rows() ? 0 : 1))
+				continue;
+
+			int x1 = GridToPixelX(x, y);
+			int y1 = GridToPixelY(x, y);
+
+			int x2 = GridToPixelX(x + 1, y);
+			int y2 = GridToPixelY(x + 1, y);
+
+			int x3 = GridToPixelX(x + 1, y + 1);
+			int y3 = GridToPixelY(x + 1, y + 1);
+
+			int x4 = GridToPixelX(x, y + 1);
+			int y4 = GridToPixelY(x, y + 1);
+
+			Color aColor = (mGridSquareType[x][y] == GridSquareType::GRIDSQUARE_POOL) ? Color(0, 0, 255) : Color(255, 0, 0);
+
+			g->SetColor(aColor);
+
+			g->DrawLine(x1, y1, x2, y2);
+			g->DrawLine(x2, y2, x3, y3);
+			g->DrawLine(x3, y3, x4, y4);
+			g->DrawLine(x4, y4, x1, y1);
+		}
+	}
+}
+
 //0x419EB0
 void Board::DrawFadeOut(Graphics *g)
 {
@@ -8538,6 +8575,7 @@ void Board::DrawUITop(Graphics *g)
 	}
 #endif
 	DrawDebugText(g);
+	DrawDebugGrid(g);
 	DrawDebugObjectRects(g);
 }
 
@@ -8850,11 +8888,9 @@ void Board::KeyChar(SexyChar theChar)
 					else if (aNeed == PottedPlantNeed::PLANTNEED_FERTILIZER)
 					{
 						aPlant->mHighlighted = true;
-						if (mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_FERTILIZER] <=
-							PURCHASE_COUNT_OFFSET)
+						if (mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_FERTILIZER] <= PURCHASE_COUNT_OFFSET)
 						{
-							mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_FERTILIZER] =
-								PURCHASE_COUNT_OFFSET + 1;
+							mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_FERTILIZER] = PURCHASE_COUNT_OFFSET + 1;
 						}
 						mApp->mZenGarden->MouseDownWithFeedingTool(
 							aPlant->mX, aPlant->mY, CursorType::CURSOR_TYPE_FERTILIZER);
@@ -8863,11 +8899,9 @@ void Board::KeyChar(SexyChar theChar)
 					else if (aNeed == PottedPlantNeed::PLANTNEED_BUGSPRAY)
 					{
 						aPlant->mHighlighted = true;
-						if (mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_BUG_SPRAY] <=
-							PURCHASE_COUNT_OFFSET)
+						if (mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_BUG_SPRAY] <= PURCHASE_COUNT_OFFSET)
 						{
-							mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_BUG_SPRAY] =
-								PURCHASE_COUNT_OFFSET + 1;
+							mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_BUG_SPRAY] = PURCHASE_COUNT_OFFSET + 1;
 						}
 						mApp->mZenGarden->MouseDownWithFeedingTool(
 							aPlant->mX, aPlant->mY, CursorType::CURSOR_TYPE_BUG_SPRAY);

@@ -46,7 +46,7 @@ SexyString TodStringTranslate(const SexyString &theString);
 SexyString TodStringTranslate(const SexyChar *theString);
 bool TodStringListExists(const SexyString &theString);
 void TodStringRemoveReturnChars(std::string &theString);
-bool CharIsSpaceInFormat(char theChar, const TodStringListFormat &theCurrentFormat);
+bool CharIsSpaceInFormat(SexyChar theChar, const TodStringListFormat &theCurrentFormat);
 int TodWriteString(Graphics *g,
 				   const SexyString &theString,
 				   int theX,
