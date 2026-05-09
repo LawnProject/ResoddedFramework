@@ -8,6 +8,7 @@
 #include "System/PoolEffect.h"
 #include "System/PopDRMComm.h"
 #include "System/TypingCheck.h"
+#include "System/Achievements.h"
 #include "Widget/StoreScreen.h"
 #include "Widget/AwardScreen.h"
 #include "../Sexy.TodLib/Trail.h"
@@ -2765,6 +2766,9 @@ Zombie *Board::AddZombieInRow(ZombieType theZombieType, int theRow, int theFromW
 		TodTrace("Too many zombies!!");
 		return nullptr;
 	}
+
+	if (theZombieType == ZombieType::ZOMBIE_YETI)
+		mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_ZOMBOLOGIST);
 
 	bool aVariant = !Rand(5);
 	Zombie *aZombie = mZombies.DataArrayAlloc();
@@ -8637,7 +8641,8 @@ void Board::SetMustacheMode(bool theEnableMustache)
 	mApp->PlayFoley(FoleyType::FOLEY_POLEVAULT);
 	mMustacheMode = theEnableMustache;
 	mApp->mMustacheMode = theEnableMustache;
-
+	if (theEnableMustache)
+		mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_MUSTACHE_MODE);
 	Zombie *aZombie = nullptr;
 	while (IterateZombies(aZombie))
 	{
@@ -10691,7 +10696,32 @@ bool Board::PlantingRequirementsMet(SeedType theSeedType)
 	}
 }
 
-//0x41D8A0
+std::vector<Zombie *> Board::GetZombiesInRadius(int theRow, int theX, int theY, int theRadius, int theRowRange, int theDamageRangeFlags)
+{
+	std::vector<Zombie *> aVec;
+	aVec.reserve(mZombies.mSize);
+	Zombie *aZombie = nullptr;
+	while (IterateZombies(aZombie))
+	{
+		if (aZombie->EffectedByDamage(theDamageRangeFlags))
+		{
+			Rect aZombieRect = aZombie->GetZombieRect();
+			int aRowDist = aZombie->mRow - theRow;
+			if (aZombie->mZombieType == ZombieType::ZOMBIE_BOSS)
+			{
+				aRowDist = 0;
+			}
+
+			if (aRowDist <= theRowRange && aRowDist >= -theRowRange &&
+				GetCircleRectOverlap(theX, theY, theRadius, aZombieRect))
+			{
+				aVec.push_back(aZombie);
+			}
+		}
+	}
+	return aVec;
+}
+
 void Board::KillAllZombiesInRadius(
 	int theRow, int theX, int theY, int theRadius, int theRowRange, bool theBurn, int theDamageRangeFlags)
 {

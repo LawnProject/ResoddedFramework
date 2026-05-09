@@ -17,6 +17,7 @@
 #include "MessageWidget.h"
 #include "../GameConstants.h"
 #include "System/PlayerInfo.h"
+#include "System/Achievements.h"
 #include "Widget/GameButton.h"
 #include "Widget/StoreScreen.h"
 #include "../Sexy.TodLib/TodDebug.h"
@@ -2067,7 +2068,7 @@ void Challenge::UpdateSlotMachine()
 			else
 			{
 				mBoard->DisplayAdvice("[ADVICE_SLOT_MACHINE_3_OF_A_KIND]", MESSAGE_STYLE_SLOT_MACHINE, ADVICE_NONE);
-				for (int i = 0; i < 20; i++)
+				for (int i = 0; i < 3; i++)
 				{
 					mBoard->AddCoin(320 + i * 20, 85, COIN_USABLE_SEED_PACKET, COIN_MOTION_COIN)->mUsableSeedType =
 						aPacket1;
@@ -5511,8 +5512,10 @@ void Challenge::TreeOfWisdomGrow()
 {
 	mApp->mPlayerInfo->mChallengeRecords[mApp->GetCurrentChallengeIndex()]++;
 	int aTreeSize = TreeOfWisdomGetSize();
-	mApp->ReanimationGet(mReanimChallenge)
-		->PlayReanim(StrFormat("anim_grow%d", ClampInt(aTreeSize, 1, 51)).c_str(), REANIM_PLAY_ONCE_AND_HOLD, 0, 8.0f);
+	if (aTreeSize >= 100)
+		mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_TOWERING_WISDOM);
+
+	mApp->ReanimationGet(mReanimChallenge)->PlayReanim(StrFormat("anim_grow%d", ClampInt(aTreeSize, 1, 51)).c_str(), REANIM_PLAY_ONCE_AND_HOLD, 0, 8.0f);
 	mApp->PlayFoley(FOLEY_PLANTGROW);
 
 	if (aTreeSize > 1)

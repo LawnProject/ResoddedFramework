@@ -13,6 +13,7 @@
 #include "../GameConstants.h"
 #include "System/PlayerInfo.h"
 #include "System/ReanimationLawn.h"
+#include "System/Achievements.h"
 #include "../Sexy.TodLib/TodFoley.h"
 #include "../Sexy.TodLib/TodDebug.h"
 #include "../Sexy.TodLib/Attachment.h"
@@ -4532,6 +4533,9 @@ void Plant::DoSpecial()
 		mApp->PlayFoley(FoleyType::FOLEY_CHERRYBOMB);
 		mApp->PlayFoley(FoleyType::FOLEY_JUICY);
 
+		std::vector<Zombie *> aZombiesInRange = mBoard->GetZombiesInRadius(mRow, aPosX, aPosY, 250, 3, aDamageRangeFlags);
+		if (aZombiesInRange.size() > 10)
+			mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_EXPLODONATOR);
 		mBoard->KillAllZombiesInRadius(mRow, aPosX, aPosY, 115, 1, true, aDamageRangeFlags);
 
 		mApp->AddTodParticle(aPosX, aPosY, (int)RenderLayer::RENDER_LAYER_TOP, ParticleEffect::PARTICLE_POWIE);
@@ -4591,6 +4595,7 @@ void Plant::DoSpecial()
 
 		mApp->PlaySample(SOUND_POTATO_MINE);
 		mBoard->KillAllZombiesInRadius(mRow, aPosX, aPosY, 60, 0, false, aDamageRangeFlags);
+		mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_SPUDOW);
 
 		int aRenderPosition = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_PARTICLE, mRow, 0);
 		mApp->AddTodParticle(aPosX + 20.0f, aPosY, aRenderPosition, ParticleEffect::PARTICLE_POTATO_MINE);

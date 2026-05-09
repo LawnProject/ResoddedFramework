@@ -446,8 +446,8 @@ class Board : public Widget, public ButtonListener
 	bool IsValidCobCannonSpot(int theGridX, int theGridY);
 	bool IsValidCobCannonSpotHelper(int theGridX, int theGridY);
 	void MouseDownCobcannonFire(int x, int y, int theClickCount);
-	void KillAllZombiesInRadius(
-		int theRow, int theX, int theY, int theRadius, int theRowRange, bool theBurn, int theDamageRangeFlags);
+	std::vector<Zombie*> GetZombiesInRadius(int theRow, int theX, int theY, int theRadius, int theRowRange, int theDamageRangeFlags);
+	void KillAllZombiesInRadius(int theRow, int theX, int theY, int theRadius, int theRowRange, bool theBurn, int theDamageRangeFlags);
 	/*inline*/ int GetSeedBankExtraWidth();
 	bool IsFlagWave(int theWaveNumber);
 	void DrawHouseDoorTop(Graphics *g);

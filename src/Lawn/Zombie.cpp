@@ -9,6 +9,7 @@
 #include "../LawnApp.h"
 #include "../Resources.h"
 #include "System/Music.h"
+#include "System/Achievements.h"
 #include "Widget/AlmanacDialog.h"
 #include "../Sexy.TodLib/TodFoley.h"
 #include "../Sexy.TodLib/TodDebug.h"
@@ -7052,6 +7053,8 @@ void Zombie::StartMindControlled()
 
 	if (mZombieType == ZombieType::ZOMBIE_DANCER)
 	{
+		mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_DISCO_IS_UNDEAD);
+
 		for (int i = 0; i < NUM_BACKUP_DANCERS; i++)
 		{
 			mFollowerZombieID[i] = ZombieID::ZOMBIEID_NULL;

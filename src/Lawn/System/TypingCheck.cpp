@@ -40,7 +40,7 @@ bool TypingCheck::Check()
 //0x51C5A0
 bool TypingCheck::Check(Sexy::KeyCode theKeyCode)
 {
-	mRecentTyping.append(1, (char)theKeyCode);
+	mRecentTyping.append(1, tolower((char)theKeyCode));
 	int aLength = mPhrase.size();
 	if (aLength == 0)
 		return false;
