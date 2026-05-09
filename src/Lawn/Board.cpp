@@ -3837,6 +3837,13 @@ void Board::MouseDownWithPlant(int x, int y, int theClickCount)
 	PlantingReason aReason = CanPlantAt(aGridX, aGridY, aPlantingSeedType);
 	if (aReason != PlantingReason::PLANTING_OK)
 	{
+#if SEXY_USE_CONTROLLER
+		if (mApp->UsingGamepad())
+		{
+			mApp->PlaySample(SOUND_BUZZER);
+		}
+#endif
+
 		// 根据不同的种植原因播放相应的提示字幕
 		if (aReason == PlantingReason::PLANTING_ONLY_ON_GRAVES)
 		{
@@ -6441,12 +6448,24 @@ void Board::Update()
 					    aHoveredPlant->mSeedType == SeedType::SEED_LILYPAD)
 					{
 						SeedPacket* aSP = &mSeedBank->mSeedPackets[mSeedBank->mIndexGamepad];
-						if (aSP->mPacketType != SeedType::SEED_NONE && aSP->CanPickUp())
+						if (aSP->mPacketType != SeedType::SEED_NONE)
 						{
-							int aSeedX = aSP->mX + mSeedBank->mX + aSP->mOffsetX + SEED_PACKET_WIDTH / 2;
-							int aSeedY = aSP->mY + mSeedBank->mY + SEED_PACKET_HEIGHT / 2;
-							MouseDown(aSeedX, aSeedY, 1);
-							MouseUp(aSeedX, aSeedY, 1);
+							if (aSP->CanPickUp())
+							{
+								int aSeedX = aSP->mX + mSeedBank->mX + aSP->mOffsetX + SEED_PACKET_WIDTH / 2;
+								int aSeedY = aSP->mY + mSeedBank->mY + SEED_PACKET_HEIGHT / 2;
+								MouseDown(aSeedX, aSeedY, 1);
+								MouseUp(aSeedX, aSeedY, 1);
+							}
+							else
+							{
+								mApp->PlaySample(SOUND_BUZZER);
+							}
+							goto gamepad_buttons_end;
+						}
+						else if (HasConveyorBeltSeedBank())
+						{
+							mApp->PlaySample(SOUND_BUZZER);
 							goto gamepad_buttons_end;
 						}
 					}
@@ -9789,7 +9808,7 @@ int Board::GetNumSeedsInBank()
 
 	int aNumSeeds = mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_PACKET_UPGRADE] + 6;
 	int aSeedsAvailable = mApp->GetSeedsAvailable();
-	return std::min(aNumSeeds, aSeedsAvailable);
+	return std::min({aNumSeeds, aSeedsAvailable, SEEDBANK_MAX});
 }
 
 //0x41C010

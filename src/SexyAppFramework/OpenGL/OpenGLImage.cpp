@@ -65,7 +65,7 @@ uint32_t *OpenGLImage::GetBits()
 					0,
 					mWidth,
 					mHeight,
-					GL_RGBA, GL_UNSIGNED_BYTE,
+					GL_BGRA, GL_UNSIGNED_BYTE,
 					mBits);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -143,7 +143,7 @@ void OpenGLImage::SetSurface(void* theSurface) // this should be a texture id or
 	if (mTexID != 0)
 	{
 		glBindTexture(GL_TEXTURE_2D, mTexID);
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, mBits);
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, GL_UNSIGNED_BYTE, mBits);
 		glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexID, 0);
 		GLenum drawBuffers[1] = {GL_COLOR_ATTACHMENT0};

@@ -729,6 +729,13 @@ bool SeedPacket::CanPickUp()
 		{
 			return false;
 		}
+
+#if SEXY_USE_CONTROLLER
+		if (mApp->UsingGamepad() && mBoard->HasConveyorBeltSeedBank() && mX + mOffsetX >= 570)
+		{
+			return false;
+		}
+#endif
 	}
 
 	return true;
@@ -847,6 +854,14 @@ void SeedPacket::MouseDown(int x, int y, int theClickCount)
 
 			return;
 		}
+
+#if SEXY_USE_CONTROLLER
+		if (mApp->UsingGamepad() && mBoard->HasConveyorBeltSeedBank() && mX + mOffsetX >= 570)
+		{
+			mApp->PlaySample(SOUND_BUZZER);
+			return;
+		}
+#endif
 	}
 
 	mBoard->ClearAdvice(AdviceType::ADVICE_CANT_AFFORD_PLANT);
@@ -1272,7 +1287,7 @@ void SeedBank::UpdateConveyorBelt()
 //0x489CD0
 void SeedBank::UpdateWidth()
 {
-	mNumPackets = mBoard->GetNumSeedsInBank();
+	mNumPackets = std::min(mBoard->GetNumSeedsInBank(), SEEDBANK_MAX);
 	mWidth = IMAGE_SEEDBANK->GetWidth() + mBoard->GetSeedBankExtraWidth();
 	for (int i = 0; i < mNumPackets; i++)
 	{

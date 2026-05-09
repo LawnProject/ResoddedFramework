@@ -296,7 +296,7 @@ bool OpenGLRenderer::InitBuffers()
 	glGenTextures(1, &mFBOTexture);
 
 	glBindTexture(GL_TEXTURE_2D, mFBOTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, mWidth, mHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, nullptr);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -505,7 +505,7 @@ bool OpenGLRenderer::RecoverBits(MemoryImage *theImage)
 	uint32_t *aPixels = new uint32_t[aData->mWidth * aData->mHeight];
 	GLuint aTexID = aData->GetTextureID();
 	glBindTexture(GL_TEXTURE_2D, aTexID);
-	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, aPixels);
+	glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, GL_UNSIGNED_BYTE, aPixels);
 
 	theImage->SetBits(aPixels, aData->mWidth, aData->mHeight);
 	delete aPixels;
@@ -517,7 +517,7 @@ uint32_t *OpenGLRenderer::GetBitsFromTexture(void *theTexture, int theWidth, int
 	uint32_t *aPixels = new uint32_t[theWidth * theHeight];
 	GLuint aTexID = *(GLuint *)theTexture;
 	glBindTexture(GL_TEXTURE_2D, aTexID);
-	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, aPixels);
+	glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, GL_UNSIGNED_BYTE, aPixels);
 
 	return aPixels;
 }
