@@ -11,6 +11,7 @@
 #include "../System/Music.h"
 #include "SeedChooserScreen.h"
 #include "../../GameConstants.h"
+#include "../System/Achievements.h"
 #include "../System/PopDRMComm.h"
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "../../Sexy.TodLib/TodCommon.h"
@@ -20,38 +21,17 @@
 #include "../../SexyAppFramework/ImageFont.h"
 #include "../../SexyAppFramework/WidgetManager.h"
 
-static StoreItem gStoreItemSpots[NUM_STORE_PAGES][MAX_PAGE_SPOTS] = {{STORE_ITEM_PACKET_UPGRADE,
-																	  STORE_ITEM_POOL_CLEANER,
-																	  STORE_ITEM_RAKE,
-																	  STORE_ITEM_ROOF_CLEANER,
-																	  STORE_ITEM_PLANT_GATLINGPEA,
-																	  STORE_ITEM_PLANT_TWINSUNFLOWER,
-																	  STORE_ITEM_PLANT_GLOOMSHROOM,
-																	  STORE_ITEM_PLANT_CATTAIL},
-																	 {STORE_ITEM_PLANT_SPIKEROCK,
-																	  STORE_ITEM_PLANT_GOLD_MAGNET,
-																	  STORE_ITEM_PLANT_WINTERMELON,
-																	  STORE_ITEM_PLANT_COBCANNON,
-																	  STORE_ITEM_PLANT_IMITATER,
-																	  STORE_ITEM_FIRSTAID,
-																	  STORE_ITEM_INVALID,
-																	  STORE_ITEM_INVALID},
-																	 {STORE_ITEM_POTTED_MARIGOLD_1,
-																	  STORE_ITEM_POTTED_MARIGOLD_2,
-																	  STORE_ITEM_POTTED_MARIGOLD_3,
-																	  STORE_ITEM_GOLD_WATERINGCAN,
-																	  STORE_ITEM_FERTILIZER,
-																	  STORE_ITEM_BUG_SPRAY,
-																	  STORE_ITEM_PHONOGRAPH,
-																	  STORE_ITEM_GARDENING_GLOVE},
-																	 {STORE_ITEM_MUSHROOM_GARDEN,
-																	  STORE_ITEM_AQUARIUM_GARDEN,
-																	  STORE_ITEM_WHEEL_BARROW,
-																	  STORE_ITEM_STINKY_THE_SNAIL,
-																	  STORE_ITEM_TREE_OF_WISDOM,
-																	  STORE_ITEM_TREE_FOOD,
-																	  STORE_ITEM_INVALID,
-																	  STORE_ITEM_INVALID}};
+static StoreItem gStoreItemSpots[NUM_STORE_PAGES][MAX_PAGE_SPOTS] = {
+	{STORE_ITEM_PACKET_UPGRADE, STORE_ITEM_POOL_CLEANER, STORE_ITEM_RAKE, STORE_ITEM_ROOF_CLEANER,
+	 STORE_ITEM_PLANT_GATLINGPEA, STORE_ITEM_PLANT_TWINSUNFLOWER, STORE_ITEM_PLANT_GLOOMSHROOM,
+	 STORE_ITEM_PLANT_CATTAIL},
+	{STORE_ITEM_PLANT_SPIKEROCK, STORE_ITEM_PLANT_GOLD_MAGNET, STORE_ITEM_PLANT_WINTERMELON, STORE_ITEM_PLANT_COBCANNON,
+	 STORE_ITEM_PLANT_IMITATER, STORE_ITEM_FIRSTAID, STORE_ITEM_INVALID, STORE_ITEM_INVALID},
+	{STORE_ITEM_POTTED_MARIGOLD_1, STORE_ITEM_POTTED_MARIGOLD_2, STORE_ITEM_POTTED_MARIGOLD_3,
+	 STORE_ITEM_GOLD_WATERINGCAN, STORE_ITEM_FERTILIZER, STORE_ITEM_BUG_SPRAY, STORE_ITEM_PHONOGRAPH,
+	 STORE_ITEM_GARDENING_GLOVE},
+	{STORE_ITEM_MUSHROOM_GARDEN, STORE_ITEM_AQUARIUM_GARDEN, STORE_ITEM_WHEEL_BARROW, STORE_ITEM_STINKY_THE_SNAIL,
+	 STORE_ITEM_TREE_OF_WISDOM, STORE_ITEM_TREE_FOOD, STORE_ITEM_INVALID, STORE_ITEM_INVALID}};
 
 StoreScreenOverlay::StoreScreenOverlay(StoreScreen *theParent)
 {
@@ -72,6 +52,7 @@ StoreScreen::StoreScreen(LawnApp *theApp)
 	mApp = theApp;
 	mClip = false;
 	mStoreTime = 0;
+	mInCutscene = false;
 	mBubbleCountDown = 0;
 	mBubbleClickToContinue = false;
 	mAmbientSpeechCountDown = 200;
@@ -576,7 +557,7 @@ void StoreScreen::SetBubbleText(int theCrazyDaveMessage, int theTime, bool theCl
 void StoreScreen::UpdateMouse()
 {
 	mMouseOverItem = STORE_ITEM_INVALID;
-	if (mStoreTime < 120 || mBubbleClickToContinue || mHatchTimer > 0 || mWaitForDialog)
+	if (mStoreTime < 120 || mBubbleClickToContinue || mHatchTimer > 0 || mWaitForDialog || mInCutscene)
 		return;
 	int aMouseX = mApp->mWidgetManager->mLastMouseX - mX, aMouseY = mApp->mWidgetManager->mLastMouseY - mY;
 	bool aShowFinger = false;
@@ -729,7 +710,7 @@ void StoreScreen::StorePreload()
 
 bool StoreScreen::CanInteractWithButtons()
 {
-	return mStoreTime >= 120 && !mBubbleClickToContinue && mHatchTimer <= 0 && !mWaitForDialog;
+	return mStoreTime >= 120 && !mBubbleClickToContinue && mHatchTimer <= 0 && !mWaitForDialog && !mInCutscene;
 }
 
 //0x48BF60
@@ -763,6 +744,22 @@ void StoreScreen::Update()
 	mStoreTime++;
 	if (mApp->mCrazyDaveState != CRAZY_DAVE_OFF && mApp->mCrazyDaveState != CRAZY_DAVE_ENTERING)
 	{
+
+		if (mApp->mCrazyDaveMessageIndex >= 4000 && mApp->mCrazyDaveMessageIndex < 4004)
+		{
+			if (mBubbleCountDown <= 100)
+			{
+				mApp->mCrazyDaveMessageIndex++;
+				SetBubbleText(mApp->mCrazyDaveMessageIndex, 300, false);
+			}
+			if (mApp->mCrazyDaveMessageIndex == 4004)
+			{
+				mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_MORTICULTURALIST, true);
+				mInCutscene = false;
+				EnableButtons(true);
+			}
+		}
+
 		if (mHatchTimer > 0)
 		{
 			mHatchTimer--;
@@ -1061,8 +1058,8 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
 		Dialog *aDialog = mApp->DoDialog(
 			DIALOG_NOT_ENOUGH_MONEY,
 			true,
-			"Not enough money" /*[NOT_ENOUGH_MONEY]*/,
-			"You can't afford this item yet. Earn more coins by killing zombies!" /*[CANNOT_AFFORD_ITEM]*/,
+			"[NOT_ENOUGH_MONEY]",
+			"[CANNOT_AFFORD_ITEM]",
 			"[DIALOG_BUTTON_OK]",
 			BUTTONS_FOOTER);
 		mWaitForDialog = true;
@@ -1073,8 +1070,8 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
 	{
 		LawnDialog *aComfirmDialog = (LawnDialog *)mApp->DoDialog(DIALOG_STORE_PURCHASE,
 																  true,
-																  "Buy this item?",
-																  "Are you sure you want to buy this item?",
+																  "[BUY_ITEM_HEADER]",
+																  "[BUY_ITEM]",
 																  "",
 																  BUTTONS_YES_NO);
 		aComfirmDialog->mLawnYesButton->SetLabel("[DIALOG_BUTTON_YES]");
@@ -1090,11 +1087,10 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
 			if (theStoreItem == STORE_ITEM_PACKET_UPGRADE)
 			{
 				++mApp->mPlayerInfo->mPurchases[theStoreItem];
-				SexyString aDialogLines = StrFormat("Now you can choose to take %d seeds with you per level!",
-													6 + mApp->mPlayerInfo->mPurchases[theStoreItem]);
+				SexyString aDialogLines = StrFormat("[NOW_YOU_CAN_CHOOSE_X_SEEDS]", 6 + mApp->mPlayerInfo->mPurchases[theStoreItem]);
 				Dialog *aDialog = mApp->DoDialog(DIALOG_UPGRADED,
 												 true,
-												 "More slots!" /*[MORE_SLOTS]*/,
+												 "[MORE_SLOTS]",
 												 aDialogLines,
 												 "[DIALOG_BUTTON_OK]",
 												 BUTTONS_FOOTER);
@@ -1182,6 +1178,23 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
 			if (mApp->mSeedChooserScreen)
 			{
 				mApp->mSeedChooserScreen->UpdateAfterPurchase();
+			}
+
+			if (theStoreItem >= STORE_ITEM_PLANT_GATLINGPEA && theStoreItem <= STORE_ITEM_PLANT_IMITATER)
+			{
+				bool aHasAllPlants = true;
+				for (int i = SeedType::SEED_GATLINGPEA; i <= SeedType::SEED_IMITATER; i++)
+				{
+					if (!mApp->SeedTypeAvailable(SeedType(i)))
+						aHasAllPlants = false;
+				}
+				if (aHasAllPlants)
+				{
+					mInCutscene = true;
+					SetBubbleText(4000, 300, false);
+					EnableButtons(false);
+
+				}
 			}
 
 			mApp->WriteCurrentUserConfig();
