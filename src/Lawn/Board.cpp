@@ -9618,6 +9618,9 @@ void Board::KeyChar(SexyChar theChar)
 void Board::AddSunMoney(int theAmount)
 {
 	mSunMoney += theAmount;
+	if (mSunMoney >= 8000)
+		mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_SUNNY_DAYS);
+
 	if (mSunMoney > 9990)
 	{
 		mSunMoney = 9990;

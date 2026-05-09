@@ -189,6 +189,7 @@ class Plant : public GameObject
 	bool mIsAsleep;							   //+0x143
 	bool mIsOnBoard;						   //+0x144
 	bool mHighlighted;						   //+0x145
+	int mBowlingHits;
 
   public:
 	Plant();

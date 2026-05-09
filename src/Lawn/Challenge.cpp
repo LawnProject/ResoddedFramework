@@ -373,15 +373,20 @@ void Challenge::StartLevel()
 		mBoard->mZombieCountDownStart = mBoard->mZombieCountDown;
 		mConveyorBeltCounter = 200;
 	}
-	if (mApp->IsSurvivalMode() && mSurvivalStage == 0)
+	if (mApp->IsSurvivalMode())
 	{
-		SexyString aMessage =
-			mApp->IsSurvivalNormal(aGameMode)
-				? TodReplaceNumberString("[ADVICE_SURVIVE_FLAGS]", "{FLAGS}", SURVIVAL_NORMAL_FLAGS)
-			: mApp->IsSurvivalHard(aGameMode)
-				? TodReplaceNumberString("[ADVICE_SURVIVE_FLAGS]", "{FLAGS}", SURVIVAL_HARD_FLAGS)
-				: "[ADVICE_SURVIVE_ENDLESS]";
-		mBoard->DisplayAdvice(aMessage, MESSAGE_STYLE_HINT_FAST, ADVICE_SURVIVE_FLAGS);
+		if (mApp->IsSurvivalEndless(aGameMode) && mBoard->GetSurvivalFlagsCompleted() >= 20)
+			mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_IMMORTAL);
+		if (mSurvivalStage == 0)
+		{
+			SexyString aMessage =
+				mApp->IsSurvivalNormal(aGameMode)
+					? TodReplaceNumberString("[ADVICE_SURVIVE_FLAGS]", "{FLAGS}", SURVIVAL_NORMAL_FLAGS)
+				: mApp->IsSurvivalHard(aGameMode)
+					? TodReplaceNumberString("[ADVICE_SURVIVE_FLAGS]", "{FLAGS}", SURVIVAL_HARD_FLAGS)
+					: "[ADVICE_SURVIVE_ENDLESS]";
+			mBoard->DisplayAdvice(aMessage, MESSAGE_STYLE_HINT_FAST, ADVICE_SURVIVE_FLAGS);
+		}
 	}
 	if (aGameMode == GAMEMODE_CHALLENGE_LAST_STAND && mSurvivalStage == 0)
 	{
