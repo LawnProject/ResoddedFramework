@@ -763,6 +763,7 @@ void GameSelector::Update()
 		mAchievementsWidget->mY = aNewY + mApp->mHeight;
 
 		mAchievementsButton->MarkDirty();
+		mZenGardenButton->MarkDirty();
 		mOptionsButton->MarkDirty();
 		mHelpButton->MarkDirty();
 		mQuitButton->MarkDirty();

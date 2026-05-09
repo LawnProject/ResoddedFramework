@@ -126,6 +126,7 @@ void Plant::PlantInitialize(int theGridX, int theGridY, SeedType theSeedType, Se
 	mRecentlyEatenCountdown = 0;
 	mEatenFlashCountdown = 0;
 	mBeghouledFlashCountdown = 0;
+	mBowlingHits = 0;
 	mWidth = 80;
 	mHeight = 80;
 	memset(mMagnetItems, 0, sizeof(mMagnetItems));
@@ -2517,6 +2518,10 @@ void Plant::UpdateBowling()
 	Zombie *aZombie = FindTargetZombie(mRow, PlantWeapon::WEAPON_PRIMARY);
 	if (aZombie)
 	{
+		mBowlingHits++;
+		if (mBowlingHits >= 5)
+			mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_ROLL_SOME_HEADS);
+
 		int aPosX = mX + mWidth / 2;
 		int aPosY = mY + mHeight / 2;
 
