@@ -13,6 +13,7 @@
 #include "../System/PlayerInfo.h"
 #include "../System/ProfileMgr.h"
 #include "../System/TypingCheck.h"
+#include "../System/Achievements.h"
 #include "../ResoddedFramework/UpdateChecker.h"
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "../../Sexy.TodLib/TodDebug.h"
@@ -47,6 +48,8 @@ GameSelector::GameSelector(LawnApp *theApp)
 	TodHesitationTrace("pregameselector");
 
 	mApp = theApp;
+	mApp->mAchievements->SyncAchievements();
+
 	mLevel = 1;
 	mLoading = false;
 	mHasTrophy = false;

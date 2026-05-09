@@ -397,15 +397,13 @@ int TodDrawStringWrappedHelper(Graphics *g,
 	SexyChar aPrevChar = '\0';
 	int aSpacePos = -1;
 	int aMaxWidth = 0;
-
 	auto it = theText.begin();
 	auto end = theText.end();
-
 	while (it != end)
 	{
 		auto aCharStart = it;
 		size_t aCurPos = aCharStart - theText.begin();
-		SexyChar aCurChar = utf8::next(it, end);  
+		aCurChar = utf8::next(it, end);  
 		if (aCurChar == '{')
 		{
 			const char *aFmtStart = theText.c_str() + aCurPos;
@@ -462,27 +460,29 @@ int TodDrawStringWrappedHelper(Graphics *g,
 				if (aLineWidth < 0)
 					break;
 
-				if (aCurChar != '\n')
+				it = theText.begin() + aSpacePos + 1;
+				bool aWrappedOnNewLine = theText[aSpacePos] == '\n';
+				aCurPos = aSpacePos + 1;
+				if (!aWrappedOnNewLine)
 				{
 					while (it != end)
 					{
 						auto aSpaceCheck = it;
-						uint32_t cp = utf8::next(it, end);
-						if (!CharIsSpaceInFormat(cp, aCurrentFormat))
+						uint32_t aCodePoint = utf8::next(it, end);
+						if (!CharIsSpaceInFormat(aCodePoint, aCurrentFormat))
 						{
 							it = aSpaceCheck;
 							break;
 						}
 					}
 				}
-				else
-				{
-					it = theText.begin() + aSpacePos + 1;
-				}
-				aLineFeedPos = it - theText.cbegin();
+
+				aLineFeedPos = it - theText.begin();
 			}
 			else
 			{
+				aCurPos = it - theText.begin();
+
 				aLineWidth =
 					TodWriteWordWrappedHelper(g,
 											  theText,
@@ -492,24 +492,19 @@ int TodDrawStringWrappedHelper(Graphics *g,
 											  theRect.mWidth,
 											  theJustification,
 											  drawString,
-											  aLineFeedPos,			  // 上次换行的位置即为新行开始的位置
-											  aCurPos - aLineFeedPos, // 绘制部分为从上次换行的位置开始至当前位置的文本
-											  theMaxChars);			  // 绘制新一行的文本（若需要）
-				if (aLineWidth < 0)									  // 如果本行字符总宽度小于 0
+											  aLineFeedPos,
+											  aCurPos - aLineFeedPos,
+											  theMaxChars);
+				if (aLineWidth < 0)
 					break;
 			}
 
 			if (aLineWidth > aMaxWidth)
-				aMaxWidth = aLineWidth; // 更新最大行宽度
+				aMaxWidth = aLineWidth;
 			aYOffset += aLineSpacing;
-			aLineFeedPos = aCurPos; // 记录当前位置为“上次换行的位置”
 			aSpacePos = -1;
 			aCurWidth = 0;
 			aPrevChar = '\0';
-		}
-		else // 当前宽度未超过限制区域宽度时
-		{
-			aCurPos++; // 继续下一个字符
 		}
 	}
 
@@ -524,9 +519,9 @@ int TodDrawStringWrappedHelper(Graphics *g,
 									  theRect.mWidth,
 									  theJustification,
 									  drawString,
-									  aLineFeedPos,					 // 上次换行的位置即为最后一行开始的位置
-									  theText.size() - aLineFeedPos, // 绘制部分为从上次换行的位置开始的所有剩余文本
-									  theMaxChars);					 // 绘制最后一行的文本
+									  aLineFeedPos,
+									  theText.size() - aLineFeedPos,
+									  theMaxChars);
 		if (aLastLineLength >= 0)
 			aYOffset += aLineSpacing;
 	}
