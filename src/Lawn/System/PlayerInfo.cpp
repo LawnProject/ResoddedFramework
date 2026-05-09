@@ -41,17 +41,17 @@ void PlayerInfo::SyncDetails(DataSync &theSync)
 	theSync.SyncLong(mLevel);
 	theSync.SyncLong(mCoins);
 	theSync.SyncLong(mFinishedAdventure);
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < NUM_GAME_MODES; i++)
 	{
 		theSync.SyncLong(mChallengeRecords[i]);
 	}
-	for (int i = 0; i < 80; i++)
+	for (int i = 0; i < NUM_STORE_ITEM_MAX; i++)
 	{
 		theSync.SyncLong(mPurchases[i]);
 	}
 	theSync.SyncLong(mPlayTimeActivePlayer);
 	theSync.SyncLong(mPlayTimeInactivePlayer);
-	theSync.SyncLong(mHasUsedCheatKeys);
+	theSync.SyncBool(mHasUsedCheatKeys);
 	theSync.SyncLong(mHasWokenStinky);
 	theSync.SyncLong(mDidntPurchasePacketUpgrade);
 	theSync.SyncLong(mLastStinkyChocolateTime);
@@ -75,6 +75,11 @@ void PlayerInfo::SyncDetails(DataSync &theSync)
 	for (int i = 0; i < mNumPottedPlants; i++)
 	{
 		theSync.SyncBytes(&mPottedPlant[i], sizeof(PottedPlant));
+	}
+	for (int i = 0; i < NUM_ACHIEVEMENT_TYPES; i++)
+	{
+		theSync.SyncBool(mEarnedAchievements[i]);
+		theSync.SyncBool(mShownAchievements[i]);
 	}
 }
 
@@ -157,6 +162,8 @@ void PlayerInfo::Reset()
 	mHasSeenUpsell = 0;
 	mPlaceHolderPlayerStats = 0;
 	memset(mPottedPlant, 0, sizeof(mPottedPlant));
+	memset(mEarnedAchievements, 0, sizeof(mEarnedAchievements));
+	memset(mShownAchievements, 0, sizeof(mShownAchievements));
 	mNumPottedPlants = 0;
 }
 

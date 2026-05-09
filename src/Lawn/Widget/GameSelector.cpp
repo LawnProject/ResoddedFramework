@@ -1119,7 +1119,7 @@ void GameSelector::KeyChar(SexyChar theChar)
 		mApp->mPlayerInfo->mHasUnlockedPuzzleMode = true;
 		mApp->mPlayerInfo->mHasUnlockedSurvivalMode = true;
 
-		for (int i = 1; i < 100; i++)
+		for (int i = 1; i < NUM_GAME_MODES; i++)
 			if (i != (int)GameMode::GAMEMODE_TREE_OF_WISDOM && i != (int)GameMode::GAMEMODE_SCARY_POTTER_ENDLESS &&
 				i != (int)GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS &&
 				i != (int)GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_3)
@@ -1417,7 +1417,7 @@ void GameSelector::AddPreviewProfiles()
 		aProfile->mPurchases[StoreItem::STORE_ITEM_TREE_OF_WISDOM] = 1;
 
 		aProfile->mChallengeRecords[(int)GameMode::GAMEMODE_TREE_OF_WISDOM - 1] = 1;
-		for (int i = 1; i < 100; i++)
+		for (int i = 1; i < NUM_GAME_MODES; i++)
 			if (i != (int)GameMode::GAMEMODE_TREE_OF_WISDOM && i != (int)GameMode::GAMEMODE_SCARY_POTTER_ENDLESS &&
 				i != (int)GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS &&
 				i != (int)GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_3)

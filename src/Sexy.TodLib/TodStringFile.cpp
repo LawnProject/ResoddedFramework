@@ -242,7 +242,7 @@ void TodWriteStringSetFormat(const char *theFormat, TodStringListFormat &theCurr
 	}
 }
 
-bool CharIsSpaceInFormat(char theChar, const TodStringListFormat &theCurrentFormat)
+bool CharIsSpaceInFormat(SexyChar theChar, const TodStringListFormat &theCurrentFormat)
 {
 	return theChar == ' ' ||
 		   (TestBit(theCurrentFormat.mFormatFlags, TodStringFormatFlag::TOD_FORMAT_IGNORE_NEWLINES) && theChar == '\n');
@@ -261,7 +261,7 @@ int TodWriteString(Graphics *g,
 				   int theLength)
 {
 	Font *aFont = *theCurrentFormat.mNewFont;
-	if (drawString) // 如果需要实际绘制
+	if (drawString)
 	{
 		int aSpareX = theWidth - TodWriteString(g,
 												theString,
@@ -273,7 +273,7 @@ int TodWriteString(Graphics *g,
 												false,
 												theOffset,
 												theLength);
-		switch (theJustification) // 根据对齐方式调整实际绘制的横坐标
+		switch (theJustification)
 		{
 		case DrawStringJustification::DS_ALIGN_RIGHT:
 		case DrawStringJustification::DS_ALIGN_RIGHT_VERTICAL_MIDDLE:
@@ -289,56 +289,62 @@ int TodWriteString(Graphics *g,
 	if (theLength < 0 || theOffset + theLength > theString.size())
 		theLength = theString.size();
 	else
-		theLength = theOffset + theLength; // 将 theLength 更改为子串结束位置
+		theLength = theOffset + theLength;
 
 	SexyString aString;
 	int aXOffset = 0;
 	bool aPrevCharWasSpace = false;
-	for (int i = theOffset; i < theLength; i++)
+
+	auto it = theString.begin() + theOffset;
+	auto end = theString.begin() + theLength;
+
+	while (it != end)
 	{
-		if (theString[i] == '{')
+		auto aCurCharPos = it;
+		SexyChar aCodePoint = utf8::next(it, end);
+		if (aCodePoint == '{')
 		{
-			const char *aFormatStart = theString.c_str() + i;
+			const char *aFormatStart = theString.c_str() + (aCurCharPos - theString.begin());
 			const char *aFormatEnd = strchr(aFormatStart + 1, '}');
-			if (aFormatEnd != nullptr) // 如果存在完整的“{FORMAT}”控制字符
+			if (aFormatEnd != nullptr)
 			{
-				i += aFormatEnd - aFormatStart; // i 移动至 "}" 处
-				if (drawString)					// 如果需要实际绘制
+				it = theString.begin() + (aFormatEnd - theString.c_str()) + 1;
+				if (drawString)
 					aFont->DrawString(g,
 									  theX + aXOffset,
 									  theY,
 									  aString,
 									  theCurrentFormat.mNewColor,
-									  g->mClipRect); // 将已经积攒的字符进行绘制
+									  g->mClipRect);
 
-				aXOffset += aFont->StringWidth(aString);					 // 横向偏移值加上绘制的字符串的宽度
-				aString.assign("");											 // 清空字符串
-				TodWriteStringSetFormat(aFormatStart + 1, theCurrentFormat); // 根据当前控制字符调整格式
+				aXOffset += aFont->StringWidth(aString);
+				aString.assign("");
+				TodWriteStringSetFormat(aFormatStart + 1, theCurrentFormat);
 				aFont = *theCurrentFormat.mNewFont;
 			}
 		}
 		else
 		{
 			if (TestBit(theCurrentFormat.mFormatFlags,
-						TodStringFormatFlag::TOD_FORMAT_IGNORE_NEWLINES)) // 如果将换行符视作空格
+						TodStringFormatFlag::TOD_FORMAT_IGNORE_NEWLINES))
 			{
-				if (CharIsSpaceInFormat(theString[i], theCurrentFormat)) // 如果当前字符是空格
+				if (CharIsSpaceInFormat(aCodePoint, theCurrentFormat))
 				{
-					if (!aPrevCharWasSpace)		// 如果前一个字符不是空格
-						aString.append(1, ' '); // 积攒一个空格
+					if (!aPrevCharWasSpace)
+						aString.append(1, ' ');
 					continue;
 				}
 				else
-					aPrevCharWasSpace = false; // 确保字符串中至多只能连续出现 1 个空格字符
+					aPrevCharWasSpace = false;
 			}
 
-			aString.append(1, theString[i]);
+			aString.append(aCurCharPos, it);
 		}
 	}
 
-	if (drawString) // 如果需要实际绘制
+	if (drawString)
 		aFont->DrawString(
-			g, theX + aXOffset, theY, aString, theCurrentFormat.mNewColor, g->mClipRect); // 将已经积攒的字符进行绘制
+			g, theX + aXOffset, theY, aString, theCurrentFormat.mNewColor, g->mClipRect);
 	return aXOffset + aFont->StringWidth(aString);
 }
 
@@ -391,21 +397,27 @@ int TodDrawStringWrappedHelper(Graphics *g,
 	SexyChar aPrevChar = '\0';
 	int aSpacePos = -1;
 	int aMaxWidth = 0;
-	while (aCurPos < theText.size())
+
+	auto it = theText.begin();
+	auto end = theText.end();
+
+	while (it != end)
 	{
-		aCurChar = theText[aCurPos];
-		if (aCurChar == '{') // 如果当前字符是特殊格式控制字符的起始标志（即“{”）
+		auto aCharStart = it;
+		size_t aCurPos = aCharStart - theText.begin();
+		SexyChar aCurChar = utf8::next(it, end);  
+		if (aCurChar == '{')
 		{
 			const char *aFmtStart = theText.c_str() + aCurPos;
 			const char *aFormat = aFmtStart + 1;
 			const char *aFmtEnd = strchr(aFormat, '}');
-			if (aFmtEnd != nullptr) // 如果存在与“{”对应的“}”，即存在完整的控制字符
+			if (aFmtEnd != nullptr)
 			{
-				aCurPos += aFmtEnd - aFmtStart + 1; // aCurPos 移至“}”的下一个字符处
+				it = theText.cbegin() + (aFmtEnd - theText.c_str()) + 1;
 				int aOldAscentOffset = theFont->GetAscent() - theFont->GetAscentPadding();
-				Color aExistingColor = aCurrentFormat.mNewColor;  // 备份当前格式的颜色
-				TodWriteStringSetFormat(aFormat, aCurrentFormat); // 根据当前控制字符设置新的格式
-				aCurrentFormat.mNewColor = aExistingColor;		  // 还原为原有格式的颜色
+				Color aExistingColor = aCurrentFormat.mNewColor;
+				TodWriteStringSetFormat(aFormat, aCurrentFormat);
+				aCurrentFormat.mNewColor = aExistingColor;
 				int aNewAscentOffset =
 					(*aCurrentFormat.mNewFont)->GetAscent() - (*aCurrentFormat.mNewFont)->GetAscentPadding();
 				aLineSpacing = (*aCurrentFormat.mNewFont)->GetLineSpacing() + aCurrentFormat.mLineSpacingOffset;
@@ -422,15 +434,14 @@ int TodDrawStringWrappedHelper(Graphics *g,
 		{
 			aSpacePos = aCurPos;
 			aCurWidth = theRect.mWidth + 1;
-			aCurPos++;
 		}
 
-		aCurWidth += (*aCurrentFormat.mNewFont)->CharWidthKern(aCurChar, aPrevChar); // 当前宽度加上当前字符的宽度
+		aCurWidth += (*aCurrentFormat.mNewFont)->CharWidthKern(aCurChar, aPrevChar);
 		aPrevChar = aCurChar;
-		if (aCurWidth > theRect.mWidth) // 如果当前宽度超出了限制区域的宽度，则进行换行的处理
+		if (aCurWidth > theRect.mWidth)
 		{
 			int aLineWidth;
-			if (aSpacePos != -1) // 如果本行前面的字符中存在空格字符
+			if (aSpacePos != -1)
 			{
 				int aCurY = (int)g->mTransY + theRect.mY + aYOffset;
 				bool aAllowDrawText = drawString && aCurY >= g->mClipRect.mY && aCurY <= g->mClipRect.mY + g->mClipRect.mHeight + aLineSpacing; // we do all that anyways cause the formatting
@@ -442,25 +453,36 @@ int TodDrawStringWrappedHelper(Graphics *g,
 					theRect.mWidth,
 					theJustification,
 					aAllowDrawText,
-					aLineFeedPos,			  // 上次换行的位置即为新行开始的位置
-					aSpacePos - aLineFeedPos, // 绘制部分为从上次换行的位置开始至本行空格字符之前的文本
-					theMaxChars);			  // 绘制新一行的文本（若需要）
+					aLineFeedPos,
+					aSpacePos - aLineFeedPos,
+					theMaxChars);
 				
 
 				aLineWidth = aCurWidth;
-				if (aLineWidth < 0) // 如果本行字符总宽度小于 0
+				if (aLineWidth < 0)
 					break;
 
-				aCurPos = aSpacePos + 1; // 将 aCurPos 移至下一行的开始处
 				if (aCurChar != '\n')
-					while (aCurPos < theText.size() && CharIsSpaceInFormat(theText[aCurPos], aCurrentFormat))
-						aCurPos++; // aCurPos 跳过所有连续的空白字符
+				{
+					while (it != end)
+					{
+						auto aSpaceCheck = it;
+						uint32_t cp = utf8::next(it, end);
+						if (!CharIsSpaceInFormat(cp, aCurrentFormat))
+						{
+							it = aSpaceCheck;
+							break;
+						}
+					}
+				}
+				else
+				{
+					it = theText.begin() + aSpacePos + 1;
+				}
+				aLineFeedPos = it - theText.cbegin();
 			}
 			else
 			{
-				if (aCurPos < aLineFeedPos + 1)
-					aCurPos++; // 确保每行至少有 1 个字符
-
 				aLineWidth =
 					TodWriteWordWrappedHelper(g,
 											  theText,

@@ -1,6 +1,7 @@
 #include "AchievementsWidget.h"
 #include "GameSelector.h"
 #include "../../LawnApp.h"
+#include "../System/PlayerInfo.h"
 #include "../../SexyAppFramework/WidgetManager.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "../../GameConstants.h"
@@ -28,8 +29,8 @@ AchievementDefinition gAchievementDefs[NUM_ACHIEVEMENT_TYPES] =
 	{"[ACHIEVEMENT_BEYOND_THE_GRAVE_TITLE]", "[ACHIEVEMENT_BEYOND_THE_GRAVE_DESCRIPTION]"},
 	{"[ACHIEVEMENT_IMMORTAL_TITLE]", "[ACHIEVEMENT_IMMORTAL_DESCRIPTION]"},
 	{"[ACHIEVEMENT_TOWERING_WISDOM_TITLE]", "[ACHIEVEMENT_TOWERING_WISDOM_DESCRIPTION]"},
-	{"[ACHIEVEMENT_MUSTACHE_MODE_DESCRIPTION]", "[ACHIEVEMENT_MUSTACHE_MODE_DESCRIPTION]"},
-	{"[ACHIEVEMENT_DISCO_IS_UNDEAD_DESCRIPTION]", "[ACHIEVEMENT_DISCO_IS_UNDEAD_DESCRIPTION]"},
+	{"[ACHIEVEMENT_MUSTACHE_MODE_TITLE]", "[ACHIEVEMENT_MUSTACHE_MODE_DESCRIPTION]"},
+	{"[ACHIEVEMENT_DISCO_IS_UNDEAD_TITLE]", "[ACHIEVEMENT_DISCO_IS_UNDEAD_DESCRIPTION]"},
 };
 
 int gDefaultScrollValue = 30;
@@ -113,6 +114,36 @@ void AchievementsWidget::Draw(Graphics *g)
 	g->DrawImage(IMAGE_ACHEESEMENTS_ZUMA, 0, 11250);
 	g->DrawImage(IMAGE_ACHEESEMENTS_CHINA, 0, mHeight - IMAGE_ACHEESEMENTS_CHINA->mHeight - 50);
 
+	for (int i = 0; i < NUM_ACHIEVEMENT_TYPES; i++)
+	{
+		bool aHasAchievement = (mApp->mPlayerInfo != nullptr && mApp->mPlayerInfo->mEarnedAchievements[i]);
+		int anAchivementOffset = 57 * (i / 2);
+		int aImageXPos = i % 2 == 0 ? 120 : 410;
+		int aImageYPos = 178 + anAchivementOffset;
+		int aTextXPos = aImageXPos + 70;
+		int aTextYPos = aImageYPos + 16;
+
+		Rect aSrcRect(70 * (i % 7), 70 * (i / 7), 70, 70);
+		Rect aDestRect(aImageXPos, aImageYPos, 56, 56);
+		g->SetColor(aHasAchievement ? Color(255, 255, 255) : Color(255, 255, 255, 32));
+		g->SetColorizeImages(true);
+		g->DrawImage(IMAGE_ACHEESEMENTS_ICONS, aDestRect, aSrcRect);
+		g->SetColorizeImages(false);
+
+
+		g->SetFont(FONT_DWARVENTODCRAFT15);
+		g->SetColor(Color(21, 175, 0));
+
+		g->DrawString(TodStringTranslate(gAchievementDefs[i].mName), aTextXPos, aTextYPos);
+
+		Rect aPos = Rect(aTextXPos, aTextYPos + 3, 212, 60);
+
+		g->SetFont(FONT_DWARVENTODCRAFT12);
+		g->SetColor(Color(255, 255, 255));
+
+		g->WriteWordWrapped(aPos, TodStringTranslate(gAchievementDefs[i].mDescription), 12);
+	}
+
 	g->DrawImage(IMAGE_ACHEESEMENTS_MORE_ROCK, 700, 450);
 }
 
@@ -163,7 +194,7 @@ void AchievementsWidget::ButtonDepress(int theId)
 		mWidgetManager->SetFocus(mApp->mGameSelector);
 		break;
 	case AchievementsWidget::ACHIEVEMENTS_MORE:
-		mScrollValue = 20;
+		mScrollValue = 22;
 		mPressedMoreButton = !mPressedMoreButton;
 		mScrollDirection = mPressedMoreButton ? -1 : 1;
 		if (mPressedMoreButton)

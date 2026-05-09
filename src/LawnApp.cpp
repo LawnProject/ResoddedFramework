@@ -56,7 +56,7 @@
 #include <filesystem>
 
 #if LAWN_DEBUG_TOOLS
-#include "Lawn/Debug/DebuggerWindow.h"
+#include "Lawn/ResoddedFramework/DebuggerWindow.h"
 #endif
 
 Version LawnApp::gResoddedVersion(0, 5, 0);
@@ -1631,7 +1631,7 @@ void LawnApp::UpdatePlayTimeStats()
 
 	if (mPlayerInfo && !mPlayerInfo->mHasUsedCheatKeys && !mDebugKeysEnabled && mTodCheatKeys)
 	{
-		mPlayerInfo->mHasUsedCheatKeys = 1;
+		mPlayerInfo->mHasUsedCheatKeys = true;
 	}
 
 	if (aLastTime == -1)

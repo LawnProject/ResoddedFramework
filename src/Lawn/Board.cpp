@@ -8843,11 +8843,9 @@ void Board::KeyChar(SexyChar theChar)
 					else if (aNeed == PottedPlantNeed::PLANTNEED_FERTILIZER)
 					{
 						aPlant->mHighlighted = true;
-						if (mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_FERTILIZER] <=
-							PURCHASE_COUNT_OFFSET)
+						if (mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_FERTILIZER] <= PURCHASE_COUNT_OFFSET)
 						{
-							mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_FERTILIZER] =
-								PURCHASE_COUNT_OFFSET + 1;
+							mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_FERTILIZER] = PURCHASE_COUNT_OFFSET + 1;
 						}
 						mApp->mZenGarden->MouseDownWithFeedingTool(
 							aPlant->mX, aPlant->mY, CursorType::CURSOR_TYPE_FERTILIZER);
@@ -8856,11 +8854,9 @@ void Board::KeyChar(SexyChar theChar)
 					else if (aNeed == PottedPlantNeed::PLANTNEED_BUGSPRAY)
 					{
 						aPlant->mHighlighted = true;
-						if (mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_BUG_SPRAY] <=
-							PURCHASE_COUNT_OFFSET)
+						if (mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_BUG_SPRAY] <= PURCHASE_COUNT_OFFSET)
 						{
-							mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_BUG_SPRAY] =
-								PURCHASE_COUNT_OFFSET + 1;
+							mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_BUG_SPRAY] = PURCHASE_COUNT_OFFSET + 1;
 						}
 						mApp->mZenGarden->MouseDownWithFeedingTool(
 							aPlant->mX, aPlant->mY, CursorType::CURSOR_TYPE_BUG_SPRAY);
