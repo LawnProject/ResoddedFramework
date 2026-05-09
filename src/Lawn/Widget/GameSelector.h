@@ -4,8 +4,10 @@
 #include "../../ConstEnums.h"
 #include "../../SexyAppFramework/Widget.h"
 #include "../../SexyAppFramework/ButtonListener.h"
+#include "GameButton.h"
 
 class LawnApp;
+class AchievementsWidget;
 class ToolTipWidget;
 namespace Sexy
 {
@@ -28,16 +30,17 @@ class GameSelector : public Widget, public ButtonListener
 	enum
 	{
 		GameSelector_Adventure = 100,
-		GameSelector_Minigame = 101,
-		GameSelector_Puzzle = 102,
-		GameSelector_Options = 103,
-		GameSelector_Help = 104,
-		GameSelector_Quit = 105,
-		GameSelector_ChangeUser = 106,
-		GameSelector_Store = 107,
-		GameSelector_Almanac = 108,
-		GameSelector_ZenGarden = 109,
-		GameSelector_Survival = 110
+		GameSelector_Minigame,
+		GameSelector_Puzzle,
+		GameSelector_Options,
+		GameSelector_Help,
+		GameSelector_Quit,
+		GameSelector_ChangeUser,
+		GameSelector_Store,
+		GameSelector_Almanac,
+		GameSelector_ZenGarden,
+		GameSelector_Survival,
+		GameSelector_Achievements,
 	};
 
   public:
@@ -75,6 +78,12 @@ class GameSelector : public Widget, public ButtonListener
 	ToolTipWidget *mToolTip;			//+0x128
 	bool mHasTrophy;					//+0x12C
 	bool mUnlockSelectorCheat;			//+0x12D
+	int mSlideCounter;
+	int mStartX;
+	int mStartY;
+	int mDestX;
+	int mDestY;
+	AchievementsWidget *mAchievementsWidget;
 
   public:
 	GameSelector(LawnApp *theApp);
@@ -100,6 +109,8 @@ class GameSelector : public Widget, public ButtonListener
 	void UpdateTooltip();
 	/*inline*/ bool ShouldDoZenTuturialBeforeAdventure();
 	void AddPreviewProfiles();
+	void SlideTo(int theX, int theY);
+	void ShowAchivementScreen();
 };
 
 class GameSelectorOverlay : public Widget
