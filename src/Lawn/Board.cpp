@@ -8015,6 +8015,11 @@ void Board::DrawDebugText(Graphics *g)
 	case DebugTextMode::DEBUG_TEXT_COLLISION:
 		aText += StrFormat("COLLISION DEBUG\n");
 		break;
+
+	case DebugTextMode::DEBUG_TEXT_GRID:
+		aText += StrFormat("GRID DEBUG\n");
+		break;
+
 #if SEXY_USE_CONTROLLER
 	case DebugTextMode::DEBUG_TEXT_CONTROLLER:
 		aText += StrFormat("CONTROLLER DEBUG\n");
@@ -8062,64 +8067,108 @@ void Board::DrawDebugText(Graphics *g)
 //0x419AE0
 void Board::DrawDebugObjectRects(Graphics *g)
 {
-	if (mDebugTextMode != DebugTextMode::DEBUG_TEXT_COLLISION)
-		return;
-
+	if (mDebugTextMode == DebugTextMode::DEBUG_TEXT_COLLISION)
 	{
-		Plant *aPlant = nullptr;
-		while (IteratePlants(aPlant))
 		{
-			Rect aRect = aPlant->GetPlantRect();
-			g->SetColor(Color(0, 255, 0));
-			g->DrawRect(aRect);
-
-			Rect aAttackRect = aPlant->GetPlantAttackRect(PlantWeapon::WEAPON_PRIMARY);
-			if (aAttackRect.mWidth < BOARD_WIDTH)
+			Plant *aPlant = nullptr;
+			while (IteratePlants(aPlant))
 			{
-				g->SetColor(Color(255, 0, 0));
-				g->DrawRect(aAttackRect);
-			}
-
-			Rect aSecondaryRect = aPlant->GetPlantAttackRect(PlantWeapon::WEAPON_SECONDARY);
-			if (aSecondaryRect.mWidth < BOARD_WIDTH)
-			{
-				g->SetColor(Color(255, 0, 128));
-				g->DrawRect(aSecondaryRect);
-			}
-		}
-	}
-	{
-		Zombie *aZombie = nullptr;
-		while (IterateZombies(aZombie))
-		{
-			if (!aZombie->IsDeadOrDying())
-			{
-				Rect aRect = aZombie->GetZombieRect();
+				Rect aRect = aPlant->GetPlantRect();
 				g->SetColor(Color(0, 255, 0));
 				g->DrawRect(aRect);
 
-				Rect aAttackRect = aZombie->GetZombieAttackRect();
+				Rect aAttackRect = aPlant->GetPlantAttackRect(PlantWeapon::WEAPON_PRIMARY);
+				if (aAttackRect.mWidth < BOARD_WIDTH)
+				{
+					g->SetColor(Color(255, 0, 0));
+					g->DrawRect(aAttackRect);
+				}
+
+				Rect aSecondaryRect = aPlant->GetPlantAttackRect(PlantWeapon::WEAPON_SECONDARY);
+				if (aSecondaryRect.mWidth < BOARD_WIDTH)
+				{
+					g->SetColor(Color(255, 0, 128));
+					g->DrawRect(aSecondaryRect);
+				}
+			}
+		}
+		{
+			Zombie *aZombie = nullptr;
+			while (IterateZombies(aZombie))
+			{
+				if (!aZombie->IsDeadOrDying())
+				{
+					Rect aRect = aZombie->GetZombieRect();
+					g->SetColor(Color(0, 255, 0));
+					g->DrawRect(aRect);
+
+					Rect aAttackRect = aZombie->GetZombieAttackRect();
+					g->SetColor(Color(255, 0, 0));
+					g->DrawRect(aAttackRect);
+				}
+			}
+		}
+		{
+			LawnMower *aLawnMower = nullptr;
+			while (IterateLawnMowers(aLawnMower))
+			{
+				Rect aAttackRect = aLawnMower->GetLawnMowerAttackRect();
 				g->SetColor(Color(255, 0, 0));
 				g->DrawRect(aAttackRect);
 			}
 		}
-	}
-	{
-		LawnMower *aLawnMower = nullptr;
-		while (IterateLawnMowers(aLawnMower))
 		{
-			Rect aAttackRect = aLawnMower->GetLawnMowerAttackRect();
-			g->SetColor(Color(255, 0, 0));
-			g->DrawRect(aAttackRect);
+			Projectile *aProjectile = nullptr;
+			while (IterateProjectiles(aProjectile))
+			{
+				if (aProjectile->mProjectileType == ProjectileType::PROJECTILE_COBBIG)
+				{
+					g->SetColor(Color(255, 0, 0));
+					Rect aDamageRect = aProjectile->GetProjectileRect();
+					g->DrawRect(aDamageRect);
+				}
+			}
 		}
 	}
+	else if (mDebugTextMode == DebugTextMode::DEBUG_TEXT_GRID)
 	{
-		Projectile *aProjectile = nullptr;
-		while (IterateProjectiles(aProjectile))
+		g->SetColor(Color(0, 255, 0));
+
+		auto getX = [&](int gx) {
+			return (gx < MAX_GRID_SIZE_X) ? GridToPixelX(gx, 0) : (gx * 80 + LAWN_XMIN);
+		};
+
+		auto getY = [&](int gx, int gy) {
+			if (gx < MAX_GRID_SIZE_X && gy < MAX_GRID_SIZE_Y)
+				return GridToPixelY(gx, gy);
+
+			int aSlopeOffset = 0;
+			if (StageHasRoof())
+			{
+				int aCheckX = std::min(gx, (int)MAX_GRID_SIZE_X - 1);
+				if (aCheckX < 5) aSlopeOffset = (5 - aCheckX) * 20;
+			}
+
+			int aYStep = (StageHasPool() || StageHasRoof()) ? 85 : 100;
+			int aYBase = StageHasRoof() ? (LAWN_YMIN - 10) : LAWN_YMIN;
+			return gy * aYStep + aSlopeOffset + aYBase;
+		};
+
+		int aNumRows = StageHas6Rows() ? 6 : 5;
+
+		g->SetColor(Color(255, 0, 0));
+		for (int j = 0; j <= aNumRows; j++)
 		{
-			g->SetColor(Color(255, 0, 0));
-			Rect aDamageRect = aProjectile->GetProjectileRect();
-			g->DrawRect(aDamageRect);
+			for (int i = 0; i < MAX_GRID_SIZE_X; i++)
+			{
+				g->DrawLine(getX(i), getY(i, j), getX(i + 1), getY(i + 1, j));
+			}
+		}
+
+		g->SetColor(Color(0, 255, 0));
+		for (int i = 0; i <= MAX_GRID_SIZE_X; i++)
+		{
+			g->DrawLine(getX(i), getY(i, 0), getX(i), getY(i, aNumRows));
 		}
 	}
 }
