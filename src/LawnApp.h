@@ -8,6 +8,7 @@
 #undef LAWN_DEBUG_TOOLS
 #endif
 
+class Achievements;
 class Board;
 class GameSelector;
 class ChallengeDefinition;
@@ -99,6 +100,7 @@ class LawnApp : public SexyApp
 	ReanimatorCache *mReanimatorCache;	   //+0x824
 	ProfileMgr *mProfileMgr;			   //+0x828
 	PlayerInfo *mPlayerInfo;			   //+0x82C
+	Achievements *mAchievements;
 	LevelStats *mLastLevelStats;		   //+0x830
 	bool mCloseRequest;					   //+0x834
 	int mAppCounter;					   //+0x838

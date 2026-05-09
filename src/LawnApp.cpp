@@ -35,6 +35,7 @@
 #include "Lawn/Widget/NewUserDialog.h"
 #include "Lawn/Widget/ContinueDialog.h"
 #include "Lawn/System/ReanimationLawn.h"
+#include "Lawn/System/Achievements.h"
 #include "Lawn/Widget/ChallengeScreen.h"
 #include "Lawn/Widget/NewOptionsDialog.h"
 #include "Lawn/Widget/SeedChooserScreen.h"
@@ -212,6 +213,7 @@ LawnApp::~LawnApp()
 
 	delete mSoundSystem;
 	delete mMusic;
+	delete mAchievements;
 
 	if (mKonamiCheck)
 	{
@@ -1358,6 +1360,7 @@ void LawnApp::Init()
 	mTimer.Start();
 
 	mMusic = new Music();
+	mAchievements = new Achievements(this);
 	mSoundSystem = new TodFoley();
 	mEffectSystem = new EffectSystem();
 	mEffectSystem->EffectSystemInitialize();
