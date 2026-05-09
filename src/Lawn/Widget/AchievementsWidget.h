@@ -9,15 +9,6 @@ class LawnApp;
 
 using namespace Sexy;
 
-class AchievementDefinition
-{
-  public:
-	const SexyCharByte *mName;
-	const SexyCharByte *mDescription;
-};
-
-extern AchievementDefinition gAchievementDefs[NUM_ACHIEVEMENT_TYPES];
-
 class AchievementsWidget : public Widget, public ButtonListener
 {
 	enum

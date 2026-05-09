@@ -5,7 +5,7 @@
 #include "../ZenGarden.h"
 #include "../System/PlayerInfo.h"
 #include "../Widget/ChallengeScreen.h"
-#include "../Widget/AchievementsWidget.h"
+#include "../System/Achievements.h"
 #include "../Widget/GameSelector.h"
 #include "../Sexy.TodLib/EffectSystem.h"
 #include "../Sexy.TodLib/Attachment.h"
@@ -280,7 +280,14 @@ void DebuggerWindow::Update()
 						{
 							ImGui::SeparatorText(TodStringTranslate(gAchievementDefs[i].mName).c_str());
 							ImGui::PushID(i);
-							ImGui::Checkbox("Earned", &mApp->mPlayerInfo->mEarnedAchievements[i]);
+							bool anOldEarned = mApp->mPlayerInfo->mEarnedAchievements[i];
+							if (ImGui::Checkbox("Earned", &mApp->mPlayerInfo->mEarnedAchievements[i]))
+							{
+								if (!anOldEarned && mApp->mPlayerInfo->mEarnedAchievements[i])
+								{
+									mApp->mAchievements->GiveAchievement((AchievementID)i, true);
+								}
+							}
 							ImGui::PopID();
 							ImGui::PushID(i + NUM_ACHIEVEMENT_TYPES);
 							ImGui::Checkbox("Shown", &mApp->mPlayerInfo->mShownAchievements[i]);

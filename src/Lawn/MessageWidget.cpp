@@ -134,6 +134,10 @@ void MessageWidget::SetLabel(const SexyString &theNewLabel, MessageStyle theMess
 			mDuration = 750;
 			break;
 
+		case MessageStyle::MESSAGE_STYLE_ACHIEVEMENT:
+			mDuration = 250;
+			break;
+
 		default:
 			TOD_ASSERT();
 			break;
@@ -322,6 +326,7 @@ Font *MessageWidget::GetFont()
 	case MessageStyle::MESSAGE_STYLE_HOUSE_NAME:
 	case MessageStyle::MESSAGE_STYLE_HUGE_WAVE:
 	case MessageStyle::MESSAGE_STYLE_ZEN_GARDEN_LONG:
+	case MessageStyle::MESSAGE_STYLE_ACHIEVEMENT:
 		return Sexy::FONT_HOUSEOFTERROR28;
 
 	case MessageStyle::MESSAGE_STYLE_SLOT_MACHINE:
@@ -369,6 +374,7 @@ void MessageWidget::Draw(Graphics *g)
 	case MessageStyle::MESSAGE_STYLE_HINT_TALL_FAST:
 	case MessageStyle::MESSAGE_STYLE_HINT_TALL_UNLOCKMESSAGE:
 	case MessageStyle::MESSAGE_STYLE_HINT_TALL_LONG:
+	case MessageStyle::MESSAGE_STYLE_ACHIEVEMENT:
 		aPosY = 476;
 		aRectHeight = 100;
 		aTextOffsetY = -4;
