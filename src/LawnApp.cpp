@@ -60,7 +60,7 @@
 #include "Lawn/ResoddedFramework/DebuggerWindow.h"
 #endif
 
-Version LawnApp::gResoddedVersion(0, 5, 0);
+Version LawnApp::gResoddedVersion(0, 7, 0);
 
 bool gIsPartnerBuild = false;
 bool gSlowMo = false;		 //0x6A9EAA
@@ -1275,7 +1275,7 @@ void LawnApp::Init()
 	//	gSexyCache->Disconnect();
 	//}
 
-	mSessionID = GetTicks();
+	SDL_GetCurrentTime(&mSessionID);
 	mPlayTimeActiveSession = 0;
 	mPlayTimeInactiveSession = 0;
 	mBoardResult = BoardResult::BOARDRESULT_NONE;
