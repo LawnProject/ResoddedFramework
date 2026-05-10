@@ -1,2 +1,2 @@
-# ignore the gitdata header
-GitData.h
+# ignore the BuildInfo header
+BuildInfo.h

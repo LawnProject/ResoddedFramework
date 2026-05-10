@@ -16,6 +16,9 @@ V-Sync
 [SETTINGS_FULLSCREEN]
 Fullscreen
 
+[SETTINGS_HIGHQUALITY]
+High Quality
+
 [SETTINGS_MISC]
 Miscellaneous Settings
 

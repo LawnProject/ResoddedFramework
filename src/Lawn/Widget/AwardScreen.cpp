@@ -25,7 +25,7 @@ AwardScreen::AwardScreen(LawnApp *theApp, AwardType theAwardType)
 	mAwardType = theAwardType;
 	mAchievementTime = 0;
 	mHasAchievementsToShow = mApp->mAchievements->HasUnshownAchievements();
-	mScrollSlider = nullptr;
+	mScrollBar = nullptr;
 	TodLoadResources("DelayLoad_AwardScreen");
 	if (mHasAchievementsToShow)
 	{
@@ -57,19 +57,23 @@ AwardScreen::AwardScreen(LawnApp *theApp, AwardType theAwardType)
 			{
 				mAchievementItems[j].mDestY = aTopY;
 				if (anIsScrolling)
-					mAchievementItems[j].mStartY = aTotalHeight;
+				{
+					mAchievementItems[j].mStartY = aTotalHeight + 100;
+					mAchievementItems[j].mY = mAchievementItems[j].mStartY;
+				}
 				aTopY += 76;
 			}
 			if (anIsScrolling)
 			{
-				mScrollSlider = new LawnSlider(mApp);
-				mScrollSlider->Resize(770, 90, 8, 480);
-				mScrollSlider->mAllowedMouseZone = Rect(20, 90, 780, 420);
-				mScrollSlider->mBaseColor = Color(239, 164, 103);
+				mScrollBar = new LawnScrollbar(mApp);
+				mScrollBar->Resize(770, 90, 8, 480);
+				mScrollBar->mAllowedMouseZone = Rect(20, 90, 780, 420);
+				mScrollBar->mThumbColor = Color(131, 69, 32);
+				mScrollBar->mBaseColor = Color(233, 149, 88);
 				int aScrollableRange = aTotalHeight - aVisibleWindow;
-				mScrollSlider->mSliderHeightPercent = (float)aVisibleWindow / (float)aTotalHeight;
-				mScrollSlider->mScrollMultiplier = 0.03f;
-				mScrollSlider->mStepMultiplier = aScrollableRange;
+				mScrollBar->mSliderHeightPercent = (float)aVisibleWindow / (float)aTotalHeight;
+				mScrollBar->mScrollMultiplier = 0.03f;
+				mScrollBar->mStepMultiplier = aScrollableRange;
 			}
 
 		}
@@ -246,8 +250,8 @@ AwardScreen::~AwardScreen()
 		delete mMenuButton;
 	if (mAchievementButton)
 		delete mAchievementButton;
-	if (mScrollSlider)
-		delete mScrollSlider;
+	if (mScrollBar)
+		delete mScrollBar;
 }
 
 bool AwardScreen::IsPaperNote()
@@ -303,9 +307,9 @@ void AwardScreen::Draw(Graphics *g)
 		TodDrawString(g, "[ACHIEVEMENTS_TITLE]", 400, 58, Sexy::FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
 		g->SetClipRect(Rect(20, 90, 780, 420));
 
-		if (mScrollSlider)
+		if (mScrollBar)
 		{
-			g->Translate(0, -mScrollSlider->GetValue());
+			g->Translate(0, -mScrollBar->GetValue());
 		}
 		for (size_t i = 0; i < mAchievementItems.size(); i++)
 		{
@@ -324,12 +328,12 @@ void AwardScreen::Draw(Graphics *g)
 		}
 		g->ClearClipRect();
 
-		if (mScrollSlider)
+		if (mScrollBar)
 		{
-			g->Translate(0, mScrollSlider->GetValue());
-			g->Translate(mScrollSlider->mX, mScrollSlider->mY);
-			mScrollSlider->Draw(g);
-			g->Translate(-mScrollSlider->mX, -mScrollSlider->mY);
+			g->Translate(0, mScrollBar->GetValue());
+			g->Translate(mScrollBar->mX, mScrollBar->mY);
+			mScrollBar->Draw(g);
+			g->Translate(-mScrollBar->mX, -mScrollBar->mY);
 
 		}
 
@@ -482,8 +486,8 @@ void AwardScreen::Update()
 	mStartButton->Update();
 	mMenuButton->Update();
 	mAchievementButton->Update();
-	if (mScrollSlider)
-		mScrollSlider->Update();
+	if (mScrollBar)
+		mScrollBar->Update();
 	if (mHasAchievementsToShow)
 	{
 		mAchievementTime++;
@@ -620,15 +624,15 @@ void AwardScreen::StartButtonPressed()
 }
 void AwardScreen::MouseWheel(int theDelta)
 {
-	if (mScrollSlider)
-		mScrollSlider->MouseWheel(theDelta);
+	if (mScrollBar)
+		mScrollBar->MouseWheel(theDelta);
 }
 
 //0x4079F0
 void AwardScreen::MouseDown(int x, int y, int theClickCount)
 {
-	if (mScrollSlider)
-		mScrollSlider->MouseDown(x - mScrollSlider->mX, y - mScrollSlider->mY, theClickCount);
+	if (mScrollBar)
+		mScrollBar->MouseDown(x - mScrollBar->mX, y - mScrollBar->mY, theClickCount);
 	if (theClickCount == 1 && (mStartButton->IsMouseOver() || mMenuButton->IsMouseOver()))
 		mApp->PlaySample(Sexy::SOUND_TAP);
 }
@@ -636,8 +640,8 @@ void AwardScreen::MouseDown(int x, int y, int theClickCount)
 //0x407A70
 void AwardScreen::MouseUp(int x, int y, int theClickCount)
 {
-	if (mScrollSlider)
-		mScrollSlider->MouseUp(x - mScrollSlider->mX, y - mScrollSlider->mY, theClickCount);
+	if (mScrollBar)
+		mScrollBar->MouseUp(x - mScrollBar->mX, y - mScrollBar->mY, theClickCount);
 
 	if (theClickCount == 1)
 	{

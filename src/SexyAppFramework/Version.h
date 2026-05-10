@@ -8,7 +8,7 @@ namespace Sexy
 	{
 	  public:
 		Version();
-		Version(int theMajor, int theMinor, int thePatch);
+		Version(int theMajor, int theMinor, int thePatch, int theBuildNumber = -1);
 		Version(const Version &theVersion);
 		~Version();
 
@@ -21,5 +21,6 @@ namespace Sexy
 		int mMajor;
 		int mMinor;
 		int mPatch;
+		int mBuildNumber;
 	};
 }

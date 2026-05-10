@@ -14,6 +14,7 @@ class SettingsDialog : public LawnDialog, public Sexy::CheckboxListener
 		SETTINGS_BACK,
 		SETTINGS_VSYNC,
 		SETTINGS_FULLSCREEN,
+		SETTINGS_HIGHQUALITY,
 		SETTINGS_OPEN_SAVE_FOLDER,
 	};
 
@@ -23,7 +24,8 @@ class SettingsDialog : public LawnDialog, public Sexy::CheckboxListener
 	LawnStoneButton *mSaveFileButton;
 	Sexy::Checkbox *mFullscreenCheckbox;
 	Sexy::Checkbox *mVSyncCheckbox;
-	LawnSlider *mOptionsSlider;
+	Sexy::Checkbox *mHighQualityCheckbox;
+	LawnScrollbar *mOptionsSlider;
 
   public:
 	SettingsDialog(LawnApp *theApp);

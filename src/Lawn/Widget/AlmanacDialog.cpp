@@ -80,12 +80,12 @@ AlmanacDialog::AlmanacDialog(LawnApp *theApp)
 	mZombieButton->mDrawStoneButton = true;
 	mZombieButton->mParentWidget = this;
 
-	mDescriptionSlider = new LawnSlider(mApp);
-	mDescriptionSlider->mSliderHeightPercent = 0.57f;
-	mDescriptionSlider->mStepMultiplier = 0.55f;
-	mDescriptionSlider->Resize(735, 377, 8, 140);
-	mDescriptionSlider->mAllowedMouseZone = Rect(484, 377, 258, 162);
-	mDescriptionSlider->mScrollMultiplier = 0.09f;
+	mDescriptionScrollbar = new LawnScrollbar(mApp);
+	mDescriptionScrollbar->mSliderHeightPercent = 0.57f;
+	mDescriptionScrollbar->mStepMultiplier = 0.55f;
+	mDescriptionScrollbar->Resize(735, 377, 8, 140);
+	mDescriptionScrollbar->mAllowedMouseZone = Rect(484, 377, 258, 162);
+	mDescriptionScrollbar->mScrollMultiplier = 0.09f;
 	SetPage(ALMANAC_PAGE_INDEX);
 	if (!mApp->mBoard || !mApp->mBoard->mPaused)
 		mApp->mMusic->MakeSureMusicIsPlaying(MUSIC_TUNE_CHOOSE_YOUR_SEEDS);
@@ -102,8 +102,8 @@ AlmanacDialog::~AlmanacDialog()
 		delete mPlantButton;
 	if (mZombieButton)
 		delete mZombieButton;
-	if (mDescriptionSlider)
-		delete mDescriptionSlider;
+	if (mDescriptionScrollbar)
+		delete mDescriptionScrollbar;
 
 	ClearPlantsAndZombies();
 }
@@ -203,7 +203,7 @@ void AlmanacDialog::SetPage(AlmanacPage thePage)
 		mIndexButton->mBtnNoDraw = true;
 		mPlantButton->mBtnNoDraw = false;
 		mZombieButton->mBtnNoDraw = false;
-		mDescriptionSlider->mVisible = false;
+		mDescriptionScrollbar->mVisible = false;
 	}
 	else
 	{
@@ -217,7 +217,7 @@ void AlmanacDialog::SetPage(AlmanacPage thePage)
 		mIndexButton->mBtnNoDraw = false;
 		mPlantButton->mBtnNoDraw = true;
 		mZombieButton->mBtnNoDraw = true;
-		mDescriptionSlider->mVisible = true;
+		mDescriptionScrollbar->mVisible = true;
 
 	}
 }
@@ -241,7 +241,7 @@ void AlmanacDialog::Update()
 	mIndexButton->Update();
 	mPlantButton->Update();
 	mZombieButton->Update();
-	mDescriptionSlider->Update();
+	mDescriptionScrollbar->Update();
 	if (mPlant)
 		mPlant->Update();
 	if (mZombie)
@@ -375,8 +375,8 @@ void AlmanacDialog::DrawPlants(Graphics *g)
 	SexyString aName = Plant::GetNameString(mSelectedSeed, SEED_NONE);
 
 	// TODO: consider adding this slider to the plants page too.
-	mDescriptionSlider->mDisabled = true;
-	mDescriptionSlider->mVisible = false;
+	mDescriptionScrollbar->mDisabled = true;
+	mDescriptionScrollbar->mVisible = false;
 
 	SexyString aHeaderName = StrFormat("[%s_DESCRIPTION_HEADER]", aPlantDef.mPlantName);
 	SexyString aDescriptionName = StrFormat("[%s_DESCRIPTION]", aPlantDef.mPlantName);
@@ -604,21 +604,21 @@ void AlmanacDialog::DrawZombies(Graphics *g)
 	int aDescriptionHeight = TodDrawStringWrappedHelper(g, aDescription, Rect(484, 377 + aDistanceHeader, 258, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), aAlign, false);
 	if (aDescriptionHeight + aDistanceHeader < 170)
 	{
-		mDescriptionSlider->mDisabled = true;
-		mDescriptionSlider->mVisible = false;
-		mDescriptionSlider->mRawValue = 0.0f;
+		mDescriptionScrollbar->mDisabled = true;
+		mDescriptionScrollbar->mVisible = false;
+		mDescriptionScrollbar->mRawValue = 0.0f;
 	}
 	else
 	{
 		aMaxWidthOffset = 15;
-		mDescriptionSlider->mDisabled = false;
-		mDescriptionSlider->mVisible = true;
+		mDescriptionScrollbar->mDisabled = false;
+		mDescriptionScrollbar->mVisible = true;
 	}
-	mDescriptionSlider->Resize(735, 377 + aDistanceHeader, 8, 142 - aDistanceHeader + Sexy::FONT_BRIANNETOD12->GetHeight());
+	mDescriptionScrollbar->Resize(735, 377 + aDistanceHeader, 8, 142 - aDistanceHeader + Sexy::FONT_BRIANNETOD12->GetHeight());
 	int anOffsetSlider = 0;
-	if (!mDescriptionSlider->mDisabled)
+	if (!mDescriptionScrollbar->mDisabled)
 	{
-		anOffsetSlider = mDescriptionSlider->GetValue() * aDescriptionHeight;
+		anOffsetSlider = mDescriptionScrollbar->GetValue() * aDescriptionHeight;
 		g->SetClipRect(484, 377 + aDistanceHeader, 258, 162 - aDistanceHeader);
 
 	}
@@ -656,9 +656,9 @@ void AlmanacDialog::Draw(Graphics *g)
 	mIndexButton->Draw(g);
 	mPlantButton->Draw(g);
 	mZombieButton->Draw(g);
-	g->Translate(mDescriptionSlider->mX, mDescriptionSlider->mY);
-	mDescriptionSlider->Draw(g);
-	g->Translate(-mDescriptionSlider->mX, -mDescriptionSlider->mY);
+	g->Translate(mDescriptionScrollbar->mX, mDescriptionScrollbar->mY);
+	mDescriptionScrollbar->Draw(g);
+	g->Translate(-mDescriptionScrollbar->mX, -mDescriptionScrollbar->mY);
 }
 
 void AlmanacDialog::GetSeedPosition(SeedType theSeedType, int &x, int &y)
@@ -803,7 +803,7 @@ void AlmanacDialog::MouseUp(int x, int y, int theClickCount)
 		mApp->KillAlmanacDialog();
 	else if (mIndexButton->IsMouseOver())
 		SetPage(ALMANAC_PAGE_INDEX);
-	mDescriptionSlider->MouseUp(x - mDescriptionSlider->mX, y - mDescriptionSlider->mY, theClickCount);
+	mDescriptionScrollbar->MouseUp(x - mDescriptionScrollbar->mX, y - mDescriptionScrollbar->mY, theClickCount);
 }
 
 //0x403D00
@@ -814,7 +814,7 @@ void AlmanacDialog::MouseDown(int x, int y, int theClickCount)
 	if (mZombieButton->IsMouseOver())
 		mApp->PlaySample(Sexy::SOUND_GRAVEBUTTON);
 
-	mDescriptionSlider->MouseDown(x - mDescriptionSlider->mX, y - mDescriptionSlider->mY, theClickCount);
+	mDescriptionScrollbar->MouseDown(x - mDescriptionScrollbar->mX, y - mDescriptionScrollbar->mY, theClickCount);
 
 	SeedType aSeedType = SeedHitTest(x, y);
 	if (aSeedType != SeedType::SEED_NONE && aSeedType != mSelectedSeed)
@@ -834,7 +834,7 @@ void AlmanacDialog::MouseDown(int x, int y, int theClickCount)
 
 void AlmanacDialog::MouseWheel(int theDelta)
 {
-	mDescriptionSlider->MouseWheel(theDelta);
+	mDescriptionScrollbar->MouseWheel(theDelta);
 }
 
 void AlmanacInitForPlayer()

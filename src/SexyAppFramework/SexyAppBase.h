@@ -179,8 +179,6 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	bool mWantFMod;
 	bool mCmdLineParsed;
 	bool mSkipSignatureChecks;
-	bool mStandardWordWrap;
-	bool mbAllowExtendedChars;
 
 	bool mOnlyAllowOneCopyToRun;
 	#if WIN32
@@ -198,7 +196,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	bool mExitToTop;
 	bool mIsWindowed;
 	bool mIsPhysWindowed;
-	bool mFullScreenWindow; // uses ChangeDisplaySettings to run fullscreen with mIsWindowed true
+	bool mFullScreenWindow;
 	bool mForceFullscreen;
 	bool mForceWindowed;
 	bool mInitialized;
@@ -337,11 +335,10 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	bool mWaitForVSync;
 	bool mUserChanged3DSetting;
 	bool mAutoEnable3D;
-	bool mTest3D;
+	bool mIs3D;
 	uint32_t mMinVidMemory3D;
 	uint32_t mRecommendedVidMemory3D;
 
-	bool mWidescreenAware;
 	Rect mScreenBounds;
 	bool mEnableWindowAspect;
 	Ratio mWindowAspect;
@@ -542,8 +539,11 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	virtual bool DebugKeyDown(int theKey);
 	virtual bool DebugKeyDownAsync(int theKey, bool ctrlDown, bool altDown);
 	virtual void CloseRequestAsync();
+	// Is the game in "High Quality"
 	bool Is3DAccelerated();
+	// [DEPRECATED] Returns true
 	bool Is3DAccelerationSupported();
+	// [DEPRECATED] Returns true
 	bool Is3DAccelerationRecommended();
 	void DemoSyncRefreshRate();
 	void Set3DAcclerated(bool is3D, bool reinit = true);
