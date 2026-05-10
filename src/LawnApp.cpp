@@ -1590,7 +1590,10 @@ void LawnApp::CheckForGameEnd()
 		}
 		else
 		{
-			PreNewGame(mGameMode, false);
+			if (mAchievements->HasUnshownAchievements())
+				ShowAwardScreen(AwardType::AWARD_ACHIEVEMENTONLY);
+			else
+				PreNewGame(mGameMode, false);
 		}
 	}
 	else if (IsSurvivalMode())
@@ -1605,7 +1608,10 @@ void LawnApp::CheckForGameEnd()
 			}
 			else
 			{
-				ShowChallengeScreen(ChallengePage::CHALLENGE_PAGE_SURVIVAL);
+				if (mAchievements->HasUnshownAchievements())
+					ShowAwardScreen(AwardType::AWARD_ACHIEVEMENTONLY);
+				else
+					ShowChallengeScreen(ChallengePage::CHALLENGE_PAGE_SURVIVAL);
 			}
 		}
 		else
@@ -1625,7 +1631,10 @@ void LawnApp::CheckForGameEnd()
 		}
 		else
 		{
-			ShowChallengeScreen(ChallengePage::CHALLENGE_PAGE_PUZZLE);
+			if (mAchievements->HasUnshownAchievements())
+				ShowAwardScreen(AwardType::AWARD_ACHIEVEMENTONLY);
+			else
+				ShowChallengeScreen(ChallengePage::CHALLENGE_PAGE_PUZZLE);
 		}
 	}
 	else
@@ -1642,7 +1651,10 @@ void LawnApp::CheckForGameEnd()
 		}
 		else
 		{
-			ShowChallengeScreen(ChallengePage::CHALLENGE_PAGE_CHALLENGE);
+			if (mAchievements->HasUnshownAchievements())
+				ShowAwardScreen(AwardType::AWARD_ACHIEVEMENTONLY);
+			else
+				ShowChallengeScreen(ChallengePage::CHALLENGE_PAGE_CHALLENGE);
 		}
 	}
 }
