@@ -10,6 +10,7 @@
 #include "MessageWidget.h"
 #include "../GameConstants.h"
 #include "System/PlayerInfo.h"
+#include "System/Achievements.h"
 #include "../Sexy.TodLib/TodFoley.h"
 #include "../Sexy.TodLib/TodDebug.h"
 #include "../Sexy.TodLib/Reanimator.h"
@@ -446,6 +447,10 @@ void Coin::UpdateFade()
 		mFadeCount--;
 		if (mFadeCount == 0)
 		{
+			if (IsMoney() && mBoard)
+			{
+				mBoard->mPennyPincherStreak = 0;
+			}
 			Die();
 		}
 	}
@@ -1044,6 +1049,15 @@ void Coin::Collect()
 	mCollectX = mPosX;
 	mCollectY = mPosY;
 	mIsBeingCollected = true;
+
+	if (IsMoney() && mBoard)
+	{
+		mBoard->mPennyPincherStreak++;
+		if (mBoard->mPennyPincherStreak >= 30)
+		{
+			mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_PENNY_PINCHER);
+		}
+	}
 
 	bool aIsEndlessAward = false;
 	if ((mApp->IsEndlessIZombie(mApp->mGameMode) || mApp->IsEndlessScaryPotter(mApp->mGameMode)) && IsLevelAward())

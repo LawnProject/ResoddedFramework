@@ -9,6 +9,7 @@
 #include "../Sexy.TodLib/TodFoley.h"
 #include "../Sexy.TodLib/TodDebug.h"
 #include "../Sexy.TodLib/Reanimator.h"
+#include "System/Achievements.h"
 #include "../Sexy.TodLib/Attachment.h"
 
 ProjectileDefinition gProjectileDefinition[] = { //0x69F1C0
@@ -614,7 +615,15 @@ void Projectile::UpdateLobMotion()
 	}
 	else if (mProjectileType == ProjectileType::PROJECTILE_COBBIG)
 	{
+		int aBeforeGargantuarCount = mBoard->GetLiveGargantuarCount();
 		mBoard->KillAllZombiesInRadius(mRow, mPosX + 80, mPosY + 40, 115, 1, true, mDamageRangeFlags);
+		int aAfterGargantuarCount = mBoard->GetLiveGargantuarCount();
+		mBoard->mGargantuarsKillsByCornCob += aBeforeGargantuarCount - aAfterGargantuarCount;
+		if (mBoard->mGargantuarsKillsByCornCob >= 2)
+		{
+			mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_POPCORN_PARTY);
+		}
+
 		DoImpact(nullptr);
 	}
 	else

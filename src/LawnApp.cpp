@@ -1463,6 +1463,7 @@ bool LawnApp::UpdatePlayerProfileForFinishingLevel()
 		{
 			mPlayerInfo->SetLevel(1);		   // 存档回到第 1-1 关
 			mPlayerInfo->mFinishedAdventure++; // 完成冒险模式周目数增加 1 次
+			mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_HOME_SECURITY);
 			if (mPlayerInfo->mFinishedAdventure == 1)
 			{
 				mPlayerInfo->mNeedsMessageOnGameSelector = 1;
@@ -1545,6 +1546,23 @@ void LawnApp::CheckForGameEnd()
 		return;
 
 	bool aUnlockedNewChallenge = UpdatePlayerProfileForFinishingLevel();
+
+	if (mBoard->StageHasPool() && !mBoard->StageIsNight() && !mBoard->mDontPeaUsedPeashooter)
+	{
+		mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_DONT_PEA);
+	}
+	if (mBoard->StageHasRoof() && !mBoard->HasConveyorBeltSeedBank() && !mBoard->mGroundedUsedCatapult)
+	{
+		mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_GROUNDED);
+	}
+	if (!mBoard->StageIsNight() && !mBoard->StageHasPool() && !mBoard->StageHasRoof() && !mBoard->mGoodMorningUsedNonFungus)
+	{
+		mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_GOOD_MORNING);
+	}
+	if (mBoard->StageIsNight() && !mBoard->mNoFungusUsedFungus)
+	{
+		mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_NO_FUNGUS_AMONG_US);
+	}
 
 	if (IsAdventureMode())
 	{
@@ -2259,7 +2277,7 @@ bool LawnApp::IsLittleTroubleLevel()
 //0x4538F0
 bool LawnApp::IsScaryPotterLevel()
 {
-	if (mGameMode >= GameMode::GAMEMODE_SCARY_POTTER_1 && mGameMode <= GameMode::GAMEMODE_SCARY_POTTER_9)
+	if (mGameMode >= GameMode::GAMEMODE_SCARY_POTTER_1 && mGameMode <= GameMode::GAMEMODE_SCARY_POTTER_ENDLESS)
 		return true;
 
 	return IsAdventureMode() && mPlayerInfo->mLevel == 35;

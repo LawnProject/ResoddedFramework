@@ -36,7 +36,7 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 - UTF-8 Support - 100%
 
 - MP3/OGG/FLAC Lawn Music - 100%
-- Controller Support - 45%
+- Controller Support - 46%
 ### Low Priority
 - Multi-platform support - 15%
 - Separate mod resources (.pak + folders) - 100%
@@ -46,13 +46,13 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 
 ### Main
 
-- Electr0Gunner -> Lead programmer
+- Electr0Gunner -> Creator, Lead Programmer
+- [IsraelProyects](https://github.com/IsraelDXPP) -> Secondary Programmer, Fixes & Improvements
 
 ### Special Thanks
 
 - niqkidd -> Name of the project
 - [Patoke](https://github.com/Patoke) -> Creator of [re-plants-vs-zombies](https://github.com/Patoke/re-plants-vs-zombies), a huge source of reference for reversed engineered code
-- [IsraelProyects](https://github.com/IsraelDXPP) Controller Support Coder
 - The original team behind the 0.9.9 decompilation
 
 ### Acknowledgements

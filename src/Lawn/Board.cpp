@@ -130,6 +130,12 @@ Board::Board(LawnApp *theApp)
 	mDiamondsCollected = 0;
 	mPottedPlantsCollected = 0;
 	mChocolateCollected = 0;
+	mPennyPincherStreak = 0;
+	mDontPeaUsedPeashooter = false;
+	mGroundedUsedCatapult = false;
+	mGoodMorningUsedNonFungus = false;
+	mNoFungusUsedFungus = false;
+	mGargantuarsKillsByCornCob = 0;
 	for (int y = 0; y < MAX_GRID_SIZE_Y; y++)
 	{
 		for (int x = 0; x < 12; x++)
@@ -2188,6 +2194,51 @@ void Board::DoPlantingEffects(int theGridX, int theGridY, Plant *thePlant)
 //0x40D120
 Plant *Board::AddPlant(int theGridX, int theGridY, SeedType theSeedType, SeedType theImitaterType)
 {
+	SeedType aActualType = theSeedType;
+	if (theSeedType == SeedType::SEED_IMITATER && theImitaterType != SeedType::SEED_NONE)
+		aActualType = theImitaterType;
+
+	if (StageHasPool() && !StageIsNight())
+	{
+		if (aActualType == SeedType::SEED_PEASHOOTER || aActualType == SeedType::SEED_REPEATER ||
+			aActualType == SeedType::SEED_THREEPEATER || aActualType == SeedType::SEED_GATLINGPEA ||
+			aActualType == SeedType::SEED_SNOWPEA || aActualType == SeedType::SEED_SPLITPEA)
+		{
+			mDontPeaUsedPeashooter = true;
+		}
+	}
+
+	if (StageHasRoof() && !StageIsNight())
+	{
+		if (aActualType == SeedType::SEED_CABBAGEPULT || aActualType == SeedType::SEED_KERNELPULT ||
+			aActualType == SeedType::SEED_MELONPULT || aActualType == SeedType::SEED_WINTERMELON)
+		{
+			mGroundedUsedCatapult = true;
+		}
+	}
+
+	bool aIsMushroom = (aActualType == SeedType::SEED_PUFFSHROOM || aActualType == SeedType::SEED_SUNSHROOM ||
+						aActualType == SeedType::SEED_FUMESHROOM || aActualType == SeedType::SEED_HYPNOSHROOM ||
+						aActualType == SeedType::SEED_SCAREDYSHROOM || aActualType == SeedType::SEED_ICESHROOM ||
+						aActualType == SeedType::SEED_DOOMSHROOM || aActualType == SeedType::SEED_SEASHROOM ||
+						aActualType == SeedType::SEED_GLOOMSHROOM || aActualType == SeedType::SEED_MAGNETSHROOM);
+
+	if (!StageIsNight() && !StageHasPool() && !StageHasRoof())
+	{
+		if (!aIsMushroom && aActualType != SeedType::SEED_INSTANT_COFFEE)
+		{
+			mGoodMorningUsedNonFungus = true;
+		}
+	}
+
+	if (StageIsNight() && !StageHasPool() && !StageHasRoof())
+	{
+		if (aIsMushroom)
+		{
+			mNoFungusUsedFungus = true;
+		}
+	}
+
 	Plant *aPlant = NewPlant(theGridX, theGridY, theSeedType, theImitaterType);
 	DoPlantingEffects(theGridX, theGridY, aPlant);
 	mChallenge->PlantAdded(aPlant);
@@ -10578,6 +10629,20 @@ Zombie *Board::GetBossZombie()
 		}
 	}
 	return nullptr;
+}
+
+int Board::GetLiveGargantuarCount()
+{
+	int aCount = 0;
+	Zombie* aZombie = nullptr;
+	while (IterateZombies(aZombie))
+	{
+		if (!aZombie->IsDeadOrDying() && aZombie->mZombieType == ZombieType::ZOMBIE_GARGANTUAR)
+		{
+			aCount++;
+		}
+	}
+	return aCount;
 }
 
 //0x41D3D0

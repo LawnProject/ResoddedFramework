@@ -228,6 +228,12 @@ class Board : public Widget, public ButtonListener
 	int mDiamondsCollected;											  //+0x57A4
 	int mPottedPlantsCollected;										  //+0x57A8
 	int mChocolateCollected;										  //+0x57AC
+	int mPennyPincherStreak;										  //+0x57B0
+	bool mDontPeaUsedPeashooter;									  //+0x57B8
+	bool mGroundedUsedCatapult;										  //+0x57B9
+	bool mGoodMorningUsedNonFungus;									  //+0x57BA
+	bool mNoFungusUsedFungus;										  //+0x57BB
+	int mGargantuarsKillsByCornCob;
 
 #if SEXY_USE_CONTROLLER
 	float mGamepadX;
@@ -453,6 +459,7 @@ class Board : public Widget, public ButtonListener
 	void DrawHouseDoorTop(Graphics *g);
 	void DrawHouseDoorBottom(Graphics *g);
 	Zombie *GetBossZombie();
+	int GetLiveGargantuarCount();
 	bool HasConveyorBeltSeedBank();
 	/*inline*/ bool StageHasRoof();
 	void SpawnZombiesFromPool();

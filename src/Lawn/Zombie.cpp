@@ -8071,6 +8071,8 @@ void Zombie::TakeBodyDamage(int theDamage, unsigned int theDamageFlags)
 
 	if (mBodyHealth <= 0)
 	{
+
+
 		mBodyHealth = 0;
 		PlayDeathAnim(theDamageFlags);
 		DropLoot();
