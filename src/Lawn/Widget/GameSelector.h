@@ -8,6 +8,7 @@
 
 class LawnApp;
 class AchievementsWidget;
+class ZombatarWidget;
 class ToolTipWidget;
 namespace Sexy
 {
@@ -41,6 +42,7 @@ class GameSelector : public Widget, public ButtonListener
 		GameSelector_ZenGarden,
 		GameSelector_Survival,
 		GameSelector_Achievements,
+		GameSelector_Zombatar,
 	};
 
   public:
@@ -57,6 +59,7 @@ class GameSelector : public Widget, public ButtonListener
 	NewLawnButton *mSurvivalButton;		//+0xB4
 	NewLawnButton *mChangeUserButton;	//+0xB8
 	NewLawnButton *mAchievementsButton;
+	NewLawnButton *mZombatarButton;
 	Widget *mOverlayWidget;				//+0xBC
 	bool mStartingGame;					//+0xC0
 	int mStartingGameCounter;			//+0xC4
@@ -84,6 +87,7 @@ class GameSelector : public Widget, public ButtonListener
 	int mDestX;
 	int mDestY;
 	AchievementsWidget *mAchievementsWidget;
+	ZombatarWidget *mZombatarWidget;
 
   public:
 	GameSelector(LawnApp *theApp);
@@ -110,7 +114,6 @@ class GameSelector : public Widget, public ButtonListener
 	/*inline*/ bool ShouldDoZenTuturialBeforeAdventure();
 	void AddPreviewProfiles();
 	void SlideTo(int theX, int theY);
-	void ShowAchivementScreen();
 };
 
 class GameSelectorOverlay : public Widget
