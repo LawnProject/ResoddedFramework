@@ -23,9 +23,58 @@ AwardScreen::AwardScreen(LawnApp *theApp, AwardType theAwardType)
 	mClip = false;
 	mFadeInCounter = 180;
 	mAwardType = theAwardType;
+	mAchievementTime = 0;
 	mHasAchievementsToShow = mApp->mAchievements->HasUnshownAchievements();
+	mScrollSlider = nullptr;
 	TodLoadResources("DelayLoad_AwardScreen");
+	if (mHasAchievementsToShow)
+	{
+		TodLoadResources("DelayLoad_ChallengeScreen");
 
+		for (int i = 0; i < NUM_ACHIEVEMENT_TYPES; i++)
+		{
+			if (mApp->mPlayerInfo->mEarnedAchievements[i] && !mApp->mPlayerInfo->mShownAchievements[i])
+			{
+				mApp->mPlayerInfo->mShownAchievements[i] = true;
+
+				AchievementScreenItem aAchievementItem{};
+				aAchievementItem.mAchievement = (AchievementID)i;
+				aAchievementItem.mStartAnimTime = 100 * mAchievementItems.size() + 150;
+				aAchievementItem.mEndAnimTime = aAchievementItem.mStartAnimTime + 100;
+				aAchievementItem.mStartY = BOARD_HEIGHT + 80;
+				aAchievementItem.mY = aAchievementItem.mStartY;
+				mAchievementItems.push_back(aAchievementItem);
+			}
+		}
+		if (!mAchievementItems.empty())
+		{
+			int aDestY = 284 - ((76 * mAchievementItems.size()) / 2);
+			int aTopY = std::max(aDestY, 90); // clamp it to like 90 pixels on the Y axis.
+			bool anIsScrolling = aDestY < 90;
+			int aTotalHeight = 76 * mAchievementItems.size();
+			int aVisibleWindow = 420;
+			for (int j = 0; j < mAchievementItems.size(); j++)
+			{
+				mAchievementItems[j].mDestY = aTopY;
+				if (anIsScrolling)
+					mAchievementItems[j].mStartY = aTotalHeight;
+				aTopY += 76;
+			}
+			if (anIsScrolling)
+			{
+				mScrollSlider = new LawnSlider(mApp);
+				mScrollSlider->Resize(770, 90, 8, 480);
+				mScrollSlider->mAllowedMouseZone = Rect(20, 90, 780, 420);
+				mScrollSlider->mBaseColor = Color(239, 164, 103);
+				int aScrollableRange = aTotalHeight - aVisibleWindow;
+				mScrollSlider->mSliderHeightPercent = (float)aVisibleWindow / (float)aTotalHeight;
+				mScrollSlider->mScrollMultiplier = 0.03f;
+				mScrollSlider->mStepMultiplier = aScrollableRange;
+			}
+
+		}
+	}
+		
 	int aLevel = mApp->mPlayerInfo->GetLevel();
 	if (mAwardType == AWARD_CREDITS_ZOMBIENOTE)
 	{
@@ -109,6 +158,8 @@ AwardScreen::AwardScreen(LawnApp *theApp, AwardType theAwardType)
 	mAchievementButton->Resize(324, 515, 156, 42);
 	mAchievementButton->mTextOffsetY = -1;
 	mAchievementButton->SetLabel("[CONTINUE_BUTTON]");
+	mAchievementButton->mDisabled = true;
+	mAchievementButton->mBtnNoDraw = true;
 
 	if (!mApp->HasFinishedAdventure() && aLevel <= 3)
 	{
@@ -195,6 +246,8 @@ AwardScreen::~AwardScreen()
 		delete mMenuButton;
 	if (mAchievementButton)
 		delete mAchievementButton;
+	if (mScrollSlider)
+		delete mScrollSlider;
 }
 
 bool AwardScreen::IsPaperNote()
@@ -248,6 +301,38 @@ void AwardScreen::Draw(Graphics *g)
 	{
 		g->DrawImage(Sexy::IMAGE_CHALLENGE_BACKGROUND, 0, 0);
 		TodDrawString(g, "[ACHIEVEMENTS_TITLE]", 400, 58, Sexy::FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
+		g->SetClipRect(Rect(20, 90, 780, 420));
+
+		if (mScrollSlider)
+		{
+			g->Translate(0, -mScrollSlider->GetValue());
+		}
+		for (size_t i = 0; i < mAchievementItems.size(); i++)
+		{
+			AchievementDefinition aDefinition = Achievements::GetAchievementDefinition(mAchievementItems[i].mAchievement);
+
+
+			SexyString aAchievementText = TodReplaceString("[ACHIEVEMENT_EARNED]", "{ACHIEVEMENT}", TodStringTranslate(aDefinition.mName));
+			
+			Rect aSrcRect = Rect(70 * (mAchievementItems[i].mAchievement % 7), 70 * (mAchievementItems[i].mAchievement / 7), 70, 70);
+			Rect aTextRect = Rect(300, mAchievementItems[i].mY + 15, 300, 60);
+
+			g->DrawImage(IMAGE_ACHEESEMENTS_ICONS, 219, mAchievementItems[i].mY, aSrcRect);
+
+			TodDrawString(g, aAchievementText, BOARD_WIDTH / 2 + 50, mAchievementItems[i].mY + 20, FONT_DWARVENTODCRAFT15, Color(224, 187, 98), DS_ALIGN_CENTER);
+			TodDrawStringWrapped(g, TodStringTranslate(aDefinition.mDescription), aTextRect, FONT_DWARVENTODCRAFT12, Color(255, 255, 255), DS_ALIGN_CENTER_VERTICAL_MIDDLE);
+		}
+		g->ClearClipRect();
+
+		if (mScrollSlider)
+		{
+			g->Translate(0, mScrollSlider->GetValue());
+			g->Translate(mScrollSlider->mX, mScrollSlider->mY);
+			mScrollSlider->Draw(g);
+			g->Translate(-mScrollSlider->mX, -mScrollSlider->mY);
+
+		}
+
 		mAchievementButton->Draw(g);
 	}
 	else
@@ -397,6 +482,28 @@ void AwardScreen::Update()
 	mStartButton->Update();
 	mMenuButton->Update();
 	mAchievementButton->Update();
+	if (mScrollSlider)
+		mScrollSlider->Update();
+	if (mHasAchievementsToShow)
+	{
+		mAchievementTime++;
+
+		for (int i = 0; i < mAchievementItems.size(); i++)
+		{
+			if (mAchievementTime >= mAchievementItems[i].mStartAnimTime)
+			{
+				mAchievementItems[i].mY = TodAnimateCurve(
+					mAchievementItems[i].mStartAnimTime, mAchievementItems[i].mEndAnimTime, mAchievementTime,
+					mAchievementItems[i].mStartY, mAchievementItems[i].mDestY, CURVE_EASE_IN_OUT);
+			}
+
+			if (mAchievementItems[mAchievementItems.size() - 1].mY == mAchievementItems[mAchievementItems.size() - 1].mDestY)
+			{
+				mAchievementButton->mBtnNoDraw = false;
+				mAchievementButton->mDisabled = false;
+			}
+		}
+	}
 	mApp->SetCursor(mStartButton->IsMouseOver() || mMenuButton->IsMouseOver() || mAchievementButton->IsMouseOver() ? CURSOR_HAND : CURSOR_POINTER);
 	MarkDirty();
 	if (mFadeInCounter > 0)
@@ -511,10 +618,17 @@ void AwardScreen::StartButtonPressed()
 		}
 	}
 }
+void AwardScreen::MouseWheel(int theDelta)
+{
+	if (mScrollSlider)
+		mScrollSlider->MouseWheel(theDelta);
+}
 
 //0x4079F0
 void AwardScreen::MouseDown(int x, int y, int theClickCount)
 {
+	if (mScrollSlider)
+		mScrollSlider->MouseDown(x - mScrollSlider->mX, y - mScrollSlider->mY, theClickCount);
 	if (theClickCount == 1 && (mStartButton->IsMouseOver() || mMenuButton->IsMouseOver()))
 		mApp->PlaySample(Sexy::SOUND_TAP);
 }
@@ -522,6 +636,9 @@ void AwardScreen::MouseDown(int x, int y, int theClickCount)
 //0x407A70
 void AwardScreen::MouseUp(int x, int y, int theClickCount)
 {
+	if (mScrollSlider)
+		mScrollSlider->MouseUp(x - mScrollSlider->mX, y - mScrollSlider->mY, theClickCount);
+
 	if (theClickCount == 1)
 	{
 		if (mStartButton->IsMouseOver())
