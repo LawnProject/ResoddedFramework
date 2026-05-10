@@ -80,23 +80,20 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
 )
 endif()
 
+set(BUILD_INFO_SRC ${CMAKE_CURRENT_SOURCE_DIR}/BuildInfo.h.in)
+set(BUILD_INFO_DST ${CMAKE_CURRENT_SOURCE_DIR}//BuildInfo.h)
 
-# execute the git parser once on initial setup
-execute_process(
-  COMMAND ${CMAKE_COMMAND}
-    -DSRC=${CMAKE_SOURCE_DIR}/src/SexyAppFramework/GitData.h.in
-    -DDST=${CMAKE_SOURCE_DIR}/src/SexyAppFramework/GitData.h
-    -P ${CMAKE_SOURCE_DIR}/cmake/CheckGit.cmake
+add_custom_target(build_info ALL
+    COMMAND ${CMAKE_COMMAND}
+        -DSRC=${BUILD_INFO_SRC}
+        -DDST=${BUILD_INFO_DST}
+        -DCMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR}
+        -P ${CMAKE_SOURCE_DIR}/cmake/BuildInfo.cmake
+    COMMENT "Updating build info..."
 )
 
-add_custom_target(git_check
-  COMMAND ${CMAKE_COMMAND}
-    -D SRC=${CMAKE_SOURCE_DIR}/src/SexyAppFramework/GitData.h.in
-    -D DST=${CMAKE_SOURCE_DIR}/src/SexyAppFramework/GitData.h
-    -P ${CMAKE_SOURCE_DIR}/cmake/CheckGit.cmake
-)
-
-add_dependencies(${PROJECT_NAME} git_check)
+target_sources(${PROJECT_NAME} PRIVATE ${BUILD_INFO_DST})
+add_dependencies(${PROJECT_NAME} build_info)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"

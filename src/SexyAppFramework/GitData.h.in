@@ -1,5 +1,0 @@
-#pragma once
-
-#define GIT_HASH "@GIT_HASH@"
-#define GIT_IS_DIRTY @GIT_IS_DIRTY@
-#define GIT_AVAILABLE @GIT_AVAILABLE@ 

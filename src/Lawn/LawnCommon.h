@@ -33,7 +33,7 @@ class LawnEditWidget : public EditWidget
 	virtual void KeyChar(SexyChar theChar);
 };
 
-class LawnSlider : public Widget
+class LawnScrollbar : public Widget
 {
   public:
 	LawnApp *mApp;
@@ -44,11 +44,12 @@ class LawnSlider : public Widget
 	Rect mAllowedMouseZone;
 	bool mStartedDrag;
 	bool mUseGlobalCoordinates;
+	Color mThumbColor;
 	Color mBaseColor;
 
   public:
-	LawnSlider(LawnApp* theApp);
-	~LawnSlider();
+	LawnScrollbar(LawnApp* theApp);
+	~LawnScrollbar();
 
 	virtual void Update();
 	virtual void MouseWheel(int theDelta);

@@ -1,5 +1,11 @@
 find_package(Git)
 
+# Define your mod's version here.
+
+set(VERSION_MAJOR 0)
+set(VERSION_MINOR 0)
+set(VERSION_PATCH 0)
+
 if(GIT_EXECUTABLE)
     message(STATUS "Git found, parsing Git information")
 
@@ -42,5 +48,16 @@ set(GIT_HASH none)
 set(GIT_AVAILABLE 0)
 endif()
 
+set(BUILD_CACHE_FILE "${CMAKE_SOURCE_DIR}/cmake/BuildNumberCache.txt")
 
+IF(EXISTS "${BUILD_CACHE_FILE}")
+    message(STATUS "Incrementing build number")
+	file(READ "${BUILD_CACHE_FILE}" BUILD_NUMBER)
+	math(EXPR BUILD_NUMBER "${BUILD_NUMBER}+1")
+ELSE()
+    message(STATUS "Incrementing build number cache not found, setting to 0")
+	set(BUILD_NUMBER "0")
+ENDIF()
+
+file(WRITE "${BUILD_CACHE_FILE}" "${BUILD_NUMBER}")
 configure_file(${SRC} ${DST} @ONLY)

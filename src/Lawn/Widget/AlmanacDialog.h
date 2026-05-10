@@ -45,7 +45,7 @@ class AlmanacDialog : public LawnDialog
 	Zombie *mZombie;			  //+0x1A0
 	Zombie *mZombiePerfTest[400]; //+0x1A4
 
-	LawnSlider *mDescriptionSlider;
+	LawnScrollbar *mDescriptionScrollbar;
 
   public:
 	AlmanacDialog(LawnApp *theApp);

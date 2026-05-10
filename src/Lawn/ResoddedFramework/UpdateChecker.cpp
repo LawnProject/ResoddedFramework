@@ -51,6 +51,9 @@ UpdateCheckResult UpdateChecker::Check()
 	start = pos + 1;
 	gLatestVersion.mPatch = atoi(aVersionResult.substr(start).c_str());
 
+	start = pos + 1;
+	gLatestVersion.mBuildNumber = atoi(aVersionResult.substr(start).c_str());
+
 	gIsOutdated = LawnApp::gVersion.isOlderThan(gLatestVersion);
 	return RESULT_SUCCESS;
 }

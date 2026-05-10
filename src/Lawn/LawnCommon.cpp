@@ -135,7 +135,7 @@ int GetCurrentDaysSince2000()
 }
 
 
-LawnSlider::LawnSlider(LawnApp *theApp)
+LawnScrollbar::LawnScrollbar(LawnApp *theApp)
 {
 	mApp = theApp;
 	mRawValue = 0.0f;
@@ -146,13 +146,14 @@ LawnSlider::LawnSlider(LawnApp *theApp)
 	mStartedDrag = false;
 	mUseGlobalCoordinates = false;
 	mBaseColor = Color(152, 149, 188);
+	mThumbColor = Color(63, 64, 86);
 }
 
-LawnSlider::~LawnSlider()
+LawnScrollbar::~LawnScrollbar()
 {
 
 }
-void LawnSlider::Update()
+void LawnScrollbar::Update()
 {
 	Widget::Update();
 	if (!mStartedDrag || mDisabled)
@@ -168,7 +169,7 @@ void LawnSlider::Update()
 	mRawValue = std::clamp(aNewValue, 0.0f, 1.0f);
 }
 
-void LawnSlider::MouseDown(int x, int y, int theClickCount)
+void LawnScrollbar::MouseDown(int x, int y, int theClickCount)
 {
 	Widget::MouseDown(x, y, theClickCount);
 
@@ -178,13 +179,13 @@ void LawnSlider::MouseDown(int x, int y, int theClickCount)
 	mStartedDrag = true;
 }
 
-void LawnSlider::MouseUp(int x, int y, int theClickCount)
+void LawnScrollbar::MouseUp(int x, int y, int theClickCount)
 {
 	Widget::MouseUp(x, y, theClickCount);
 	mStartedDrag = false;
 }
 
-void LawnSlider::MouseWheel(int theDelta)
+void LawnScrollbar::MouseWheel(int theDelta)
 {
 	Widget::MouseWheel(theDelta);
 
@@ -194,17 +195,17 @@ void LawnSlider::MouseWheel(int theDelta)
 	mRawValue = std::clamp(mRawValue, 0.0f, 1.0f);
 }
 
-float LawnSlider::GetValue()
+float LawnScrollbar::GetValue()
 {
 	return mRawValue * mStepMultiplier;
 }
 
-Color DeriveLawnSliderColorFromBase(Color aColor, int r, int g, int b)
+Color DeriveLawnSliderColor(Color aColor, int r, int g, int b)
 {
 	return Color(std::clamp(aColor.mRed + r, 0, 255), std::clamp(aColor.mGreen + g, 0, 255), std::clamp(aColor.mBlue + b, 0, 255));
 }
 
-void LawnSlider::Draw(Graphics* g)
+void LawnScrollbar::Draw(Graphics* g)
 {
 	if (!mVisible)
 		return;
@@ -214,8 +215,6 @@ void LawnSlider::Draw(Graphics* g)
 
 	g->PushState();
 
-	 Color(152, 149, 188);
-
 	// Draw the background
 	
 	g->SetColor(mBaseColor);
@@ -224,28 +223,28 @@ void LawnSlider::Draw(Graphics* g)
 	g->Translate(0, anOffsetSlider);
 
 	// Draw the base
-	g->SetColor(DeriveLawnSliderColorFromBase(mBaseColor, -89, -85, -102));
+	g->SetColor(mThumbColor);
 	g->FillRect(0, 0, mWidth, aHeightSlider);
 
 	// Highlight
-	g->SetColor(DeriveLawnSliderColorFromBase(mBaseColor, -72, -68, -80));
+	g->SetColor(DeriveLawnSliderColor(mThumbColor, 17, 17, 22));
 	g->FillRect(1, 1, 6, 1);
 	g->FillRect(1, 1, 1, aHeightSlider - 2);
-	g->SetColor(DeriveLawnSliderColorFromBase(mBaseColor, -68, -63, -75));
+	g->SetColor(DeriveLawnSliderColor(mThumbColor, 21, 22, 27));
 	g->FillRect(1, 1, 1, 1);
 
 	// Border 1
-	g->SetColor(DeriveLawnSliderColorFromBase(mBaseColor, -122, -121, -154));
+	g->SetColor(DeriveLawnSliderColor(mThumbColor, -33, -36, -52));
 	g->FillRect(mWidth, 0, 1, aHeightSlider);
 	g->FillRect(0, aHeightSlider, mWidth, 1);
-	g->SetColor(DeriveLawnSliderColorFromBase(mBaseColor, -130, -130, -167));
+	g->SetColor(DeriveLawnSliderColor(mThumbColor, -41, -45, -65));
 	g->FillRect(mWidth, aHeightSlider, 1, 1);
 
 	// Border 2
-	g->SetColor(DeriveLawnSliderColorFromBase(mBaseColor, -122, -121, -154));
+	g->SetColor(DeriveLawnSliderColor(mThumbColor, -33, -36, -52));
 	g->FillRect(mWidth - 1, 1, 1, aHeightSlider);
 	g->FillRect(0, aHeightSlider, mWidth, 1);
-	g->SetColor(DeriveLawnSliderColorFromBase(mBaseColor, -130, -130, -167));
+	g->SetColor(DeriveLawnSliderColor(mThumbColor, -41, -45, -65));
 	g->FillRect(mWidth, aHeightSlider - 1, 1, 1);
 	g->FillRect(2, aHeightSlider - 1, mWidth - 1, 1);
 

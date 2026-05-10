@@ -4,7 +4,7 @@
 #include "../../SexyAppFramework/Renderer.h"
 #include "../../SexyAppFramework/Checkbox.h"
 #include "../../LawnApp.h"
-#include "../../SexyAppFramework/GitData.h"
+#include "../../SexyAppFramework/BuildInfo.h"
 #if WIN32
 #include <ShlObj_core.h>
 #include <locale>
@@ -15,7 +15,7 @@ SettingsDialog::SettingsDialog(LawnApp *theApp)
 	: LawnDialog(theApp, DIALOG_SETTINGS, true, "[SETTINGS_HEADER]", "", "", BUTTONS_NONE)
 {
 	mApp = theApp;
-	mOptionsSlider = new LawnSlider(mApp);
+	mOptionsSlider = new LawnScrollbar(mApp);
 	mOptionsSlider->mSliderHeightPercent = 0.57f;
 	mOptionsSlider->mStepMultiplier = 1.0f;
 	mOptionsSlider->Resize(500, 90, 8, 140);
@@ -24,6 +24,8 @@ SettingsDialog::SettingsDialog(LawnApp *theApp)
 	mFullscreenCheckbox = MakeNewCheckbox(SettingsDialog::SETTINGS_FULLSCREEN, this, !theApp->mIsWindowed);
 
 	mVSyncCheckbox = MakeNewCheckbox(SettingsDialog::SETTINGS_VSYNC, this, theApp->mWaitForVSync);
+
+	mHighQualityCheckbox = MakeNewCheckbox(SettingsDialog::SETTINGS_HIGHQUALITY, this, theApp->mIs3D);
 
 	mSaveFileButton = MakeButton(SETTINGS_OPEN_SAVE_FOLDER, this, "[SETTINGS_OPEN_SAVE_FOLDER]");
 
@@ -38,6 +40,7 @@ SettingsDialog::~SettingsDialog()
 	delete mSaveFileButton;
 	delete mVSyncCheckbox;
 	delete mFullscreenCheckbox;
+	delete mHighQualityCheckbox;
 }
 
 void SettingsDialog::Draw(Graphics* g)
@@ -62,20 +65,30 @@ void SettingsDialog::Draw(Graphics* g)
 
 
 	mVSyncCheckbox->Resize(40, 140 - aScrollOffset, 46, 45);
-	mVSyncCheckbox->mDisabled = (mVSyncCheckbox->mY + mY) < mOptionsSlider->mAllowedMouseZone.mY;
+	mVSyncCheckbox->mDisabled = (mVSyncCheckbox->mY + mY) < mOptionsSlider->mAllowedMouseZone.mY ||
+								(mVSyncCheckbox->mY + mY) >
+									mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight;
 	mFullscreenCheckbox->Resize(40, 190 - aScrollOffset, 46, 45);
-	mFullscreenCheckbox->mDisabled = (mFullscreenCheckbox->mY + mY) < mOptionsSlider->mAllowedMouseZone.mY;
+	mFullscreenCheckbox->mDisabled = (mFullscreenCheckbox->mY + mY) < mOptionsSlider->mAllowedMouseZone.mY ||
+									 (mFullscreenCheckbox->mY + mY) > mOptionsSlider->mAllowedMouseZone.mY +
+																		   mOptionsSlider->mAllowedMouseZone.mHeight;
+	mHighQualityCheckbox->Resize(40, 240 - aScrollOffset, 46, 45);
+	mHighQualityCheckbox->mDisabled = (mHighQualityCheckbox->mY + mY) < mOptionsSlider->mAllowedMouseZone.mY ||
+									  (mHighQualityCheckbox->mY + mY) > mOptionsSlider->mAllowedMouseZone.mY +
+																			mOptionsSlider->mAllowedMouseZone.mHeight;
 
 	TodDrawString(g, "[SETTINGS_VIDEO]", 20, 10, Sexy::FONT_BRIANNETOD12, Color::White,
 				  DrawStringJustification::DS_ALIGN_LEFT);
 
 	TodDrawString(g, "[SETTINGS_VSYNC]", mVSyncCheckbox->mX + 20, 40, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
 	TodDrawString(g, "[SETTINGS_FULLSCREEN]", mFullscreenCheckbox->mX + 20, 90, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
+	TodDrawString(g, "[SETTINGS_HIGHQUALITY]", mHighQualityCheckbox->mX + 20, 140, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
 
-	mSaveFileButton->Resize(40, 260 - aScrollOffset, 330, 46);
-	mSaveFileButton->mDisabled = (mSaveFileButton->mY + mY) < mOptionsSlider->mAllowedMouseZone.mY;
+	mSaveFileButton->Resize(40, 310 - aScrollOffset, 330, 46);
+	mSaveFileButton->mDisabled = (mSaveFileButton->mY + mY) < mOptionsSlider->mAllowedMouseZone.mY ||
+		(mSaveFileButton->mY + mY) > mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight;
 
-	TodDrawString(g, "[SETTINGS_MISC]", 20, 130, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
+	TodDrawString(g, "[SETTINGS_MISC]", 20, 180, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
 
 	SexyString aVersionString = "ResoddedFramework " + LawnApp::gResoddedVersion.toString();
 	TodDrawString(g, aVersionString, 
@@ -104,6 +117,7 @@ void SettingsDialog::AddedToManager(WidgetManager *theWidgetManager)
 	AddWidget(mVSyncCheckbox);
 	AddWidget(mFullscreenCheckbox);
 	AddWidget(mSaveFileButton);
+	AddWidget(mHighQualityCheckbox);
 }
 
 //0x45D8E0
@@ -115,6 +129,7 @@ void SettingsDialog::RemovedFromManager(WidgetManager *theWidgetManager)
 	RemoveWidget(mVSyncCheckbox);
 	RemoveWidget(mFullscreenCheckbox);
 	RemoveWidget(mSaveFileButton);
+	RemoveWidget(mHighQualityCheckbox);
 }
 
 void SettingsDialog::Resize(int theX, int theY, int theWidth, int theHeight)
@@ -122,7 +137,7 @@ void SettingsDialog::Resize(int theX, int theY, int theWidth, int theHeight)
 	LawnDialog::Resize(theX, theY, theWidth, theHeight);
 	mOptionsSlider->Resize(mWidth - 60, 110, 8, 200);
 	mOptionsSlider->mAllowedMouseZone = Rect(mX + 35, mY + 120, mWidth - 70, mHeight - 240);
-	mApplyButton->Resize(40, 331, 209, 46);
+	mApplyButton->Resize(350, 331, 209, 46);
 	SetWidgetClipping(Rect(35, 120, mWidth - 70, mHeight - 240));
 }
 
@@ -197,5 +212,10 @@ void SettingsDialog::CheckboxChecked(int theId, bool checked)
 			mApp->SwitchScreenMode(!mFullscreenCheckbox->IsChecked(), true, false);
 		}
 		break;
+	
+	case SettingsDialog::SETTINGS_HIGHQUALITY:
+		mApp->mIs3D = mHighQualityCheckbox->IsChecked();
+		break;
 	}
+
 }

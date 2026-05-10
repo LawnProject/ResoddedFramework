@@ -40,7 +40,7 @@ class AwardScreen : public Widget
 	bool mHasAchievementsToShow;
 	GameButton *mAchievementButton;
 	std::vector<AchievementScreenItem> mAchievementItems;
-	LawnSlider *mScrollSlider;
+	LawnScrollbar *mScrollBar;
 
 
   public:

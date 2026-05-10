@@ -28,6 +28,7 @@
 #include "PropertiesParser.h"
 #include "PerfTimer.h"
 #include "MTRand.h"
+#include "BuildInfo.h"
 
 #include <fstream>
 
@@ -48,6 +49,12 @@
 
 #endif
 #include "memmgr.h"
+
+#ifdef _DEBUG
+#include <zlib.h>
+#include <bass.h>
+#include <SDL3/SDL.h>
+#endif
 
 #include <json.hpp>
 
@@ -121,7 +128,7 @@ static GPUImage *gFPSImage = NULL;
 
 static SysFont* gDebugFont = nullptr;
 
-Version SexyAppBase::gVersion;
+Version SexyAppBase::gVersion(VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, BUILD_NUMBER);
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -226,8 +233,6 @@ SexyAppBase::SexyAppBase()
 	mAltDown = false;
 	mStepMode = 0;
 	mCleanupSharedImages = false;
-	mStandardWordWrap = true;
-	mbAllowExtendedChars = true;
 	mEnableMaximizeButton = false;
 
 	mMusicVolume = 0.85;
@@ -261,11 +266,10 @@ SexyAppBase::SexyAppBase()
 	mWaitForVSync = true;
 	mUserChanged3DSetting = false;
 	mAutoEnable3D = false;
-	mTest3D = false;
+	mIs3D = true;
 	mMinVidMemory3D = 6;
 	mRecommendedVidMemory3D = 14;
 	mRelaxUpdateBacklogCount = 0;
-	mWidescreenAware = false;
 	mEnableWindowAspect = false;
 	mWindowAspect.Set(4, 3);
 	mIsWideWindow = false;
@@ -1574,6 +1578,7 @@ void SexyAppBase::WriteToRegistry()
 	RegistryWriteInteger("CustomCursors", mCustomCursorsEnabled ? 1 : 0);
 	RegistryWriteInteger("InProgress", 0);
 	RegistryWriteBoolean("WaitForVSync", mWaitForVSync);
+	RegistryWriteBoolean("Is3D", mIs3D);
 }
 
 bool SexyAppBase::RegistryEraseKey(const SexyString &_theKeyName)
@@ -1883,6 +1888,7 @@ void SexyAppBase::ReadFromRegistry()
 		EnableCustomCursors(anInt != 0);
 
 	RegistryReadBoolean("WaitForVSync", &mWaitForVSync);
+	RegistryReadBoolean("Is3D", &mIs3D);
 
 	if (RegistryReadInteger("InProgress", &anInt))
 		mLastShutdownWasGraceful = anInt == 0;
@@ -4321,20 +4327,17 @@ void SexyAppBase::MakeWindow()
 			if (mAutoEnable3D)
 			{
 				mAutoEnable3D = false;
-				mTest3D = true;
+				mIs3D = true;
 			}
 
 			if (is3D)
-				mTest3D = true;
+				mIs3D = true;
 
-			//mDDInterface->mIs3D = is3D;
 		}
 	}
 
 	int aResult = InitRenderer();
 
-	//if (mDDInterface->mD3DTester != NULL && mDDInterface->mD3DTester->ResultsChanged())
-		//RegistryEraseValue("Is3D");
 	/*
 	if ((mIsWindowed) && (aResult == DDInterface::RESULT_INVALID_COLORDEPTH))
 	{
@@ -6360,25 +6363,17 @@ void SexyAppBase::Remove3DData(MemoryImage *theMemoryImage)
 
 bool SexyAppBase::Is3DAccelerated()
 {
-	return true; //mRenderer->mIs3D; -I mean IT IS 3D accelerated
+	return mIs3D;
 }
 
 bool SexyAppBase::Is3DAccelerationSupported()
 {
 	return true;
-	//if (mDDInterface->mD3DTester)
-		//return mDDInterface->mD3DTester->Is3DSupported();
-	//else
-		//return false;
 }
 
 bool SexyAppBase::Is3DAccelerationRecommended()
 {
 	return true;
-	//if (mDDInterface->mD3DTester)
-		//return mDDInterface->mD3DTester->Is3DRecommended();
-	//else
-		//return false;
 }
 
 void SexyAppBase::DemoSyncRefreshRate()

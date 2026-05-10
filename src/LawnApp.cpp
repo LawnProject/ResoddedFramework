@@ -63,10 +63,10 @@
 Version LawnApp::gResoddedVersion(0, 7, 0);
 
 bool gIsPartnerBuild = false;
-bool gSlowMo = false;		 //0x6A9EAA
-bool gFastMo = false;		 //0x6A9EAB
-LawnApp *gLawnApp = nullptr; //0x6A9EC0
-int gSlowMoCounter = 0;		 //0x6A9EC4
+bool gSlowMo = false;
+bool gFastMo = false;
+LawnApp *gLawnApp = nullptr;
+int gSlowMoCounter = 0;
 
 //0x44E8A0
 bool LawnGetCloseRequest()
@@ -86,13 +86,6 @@ bool LawnHasUsedCheatKeys()
 //0x44EAA0
 LawnApp::LawnApp()
 {
-
-	//Define version here:
-
-	gVersion.mMajor = 0;
-	gVersion.mMinor = 0;
-	gVersion.mPatch = 0;
-
 	mBoard = nullptr;
 	mGameSelector = nullptr;
 	mChallengeScreen = nullptr;
