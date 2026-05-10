@@ -92,3 +92,13 @@ void Achievements::SyncAchievements()
 	if (aHasAllPlants)
 		GiveAchievement(AchievementID::ACHIEVEMENT_MORTICULTURALIST, true);
 }
+
+bool Achievements::HasUnshownAchievements()
+{
+	if (mApp->mPlayerInfo == nullptr)
+		return false;
+	for (int i = 0; i < AchievementID::NUM_ACHIEVEMENT_TYPES; i++)
+		if (!mApp->mPlayerInfo->mShownAchievements[i] && mApp->mPlayerInfo->mEarnedAchievements[i])
+			return true;
+	return false;
+}

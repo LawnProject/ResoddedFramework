@@ -22,6 +22,9 @@ class AwardScreen : public Widget
 	LawnApp *mApp;			  //+0x90
 	int mFadeInCounter;		  //+0x94
 	AwardType mAwardType;	  //+0x98
+	bool mHasAchievementsToShow;
+	GameButton *mAchievementButton;
+
 
   public:
 	AwardScreen(LawnApp *theApp, AwardType theAwardType);
