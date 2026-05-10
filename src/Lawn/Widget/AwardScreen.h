@@ -3,10 +3,24 @@
 
 #include "../../ConstEnums.h"
 #include "../../SexyAppFramework/Widget.h"
+#include "../LawnCommon.h"
 using namespace Sexy;
 
 class LawnApp;
 class GameButton;
+
+class AchievementScreenItem
+{
+  public:
+	AchievementID mAchievement;
+	int mStartAnimTime;
+	int mEndAnimTime;
+	int mDestY;
+	int mStartY;
+	int mY;
+};
+
+
 class AwardScreen : public Widget
 {
   private:
@@ -22,8 +36,11 @@ class AwardScreen : public Widget
 	LawnApp *mApp;			  //+0x90
 	int mFadeInCounter;		  //+0x94
 	AwardType mAwardType;	  //+0x98
+	int mAchievementTime;
 	bool mHasAchievementsToShow;
 	GameButton *mAchievementButton;
+	std::vector<AchievementScreenItem> mAchievementItems;
+	LawnSlider *mScrollSlider;
 
 
   public:
@@ -54,6 +71,7 @@ class AwardScreen : public Widget
 	void StartButtonPressed();
 	virtual void MouseDown(int x, int y, int theClickCount);
 	virtual void MouseUp(int x, int y, int theClickCount);
+	virtual void MouseWheel(int theDelta);
 };
 
 #endif

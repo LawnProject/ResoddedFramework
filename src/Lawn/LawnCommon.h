@@ -43,6 +43,8 @@ class LawnSlider : public Widget
 	float mScrollMultiplier;
 	Rect mAllowedMouseZone;
 	bool mStartedDrag;
+	bool mUseGlobalCoordinates;
+	Color mBaseColor;
 
   public:
 	LawnSlider(LawnApp* theApp);
