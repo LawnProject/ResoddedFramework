@@ -11,6 +11,7 @@
 #include "../../Resources.h"
 #include "../../GameConstants.h"
 #include "../System/PlayerInfo.h"
+#include "../System/Achievements.h"
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "../../Sexy.TodLib/TodCommon.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
@@ -158,6 +159,9 @@ AwardScreen::AwardScreen(LawnApp *theApp, AwardType theAwardType)
 	}
 	else
 		mApp->mMusic->MakeSureMusicIsPlaying(MUSIC_TUNE_ZEN_GARDEN);
+
+	if (mApp->EarnedGoldTrophy())
+		mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_NOBEL_PEAS_PRIZE);
 }
 
 //0x406420 & 0x406440

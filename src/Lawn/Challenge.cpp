@@ -4386,6 +4386,8 @@ void Challenge::PuzzleNextStageClear()
 
 	mSurvivalStage++;
 
+	mBoard->ClearAdviceImmediately();
+
 	if (mApp->mGameMode == GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS && mSurvivalStage >= 10)
 	{
 		mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_BETTER_OFF_DEAD);
@@ -4395,7 +4397,6 @@ void Challenge::PuzzleNextStageClear()
 		mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_CHINA_SHOP);
 	}
 
-	mBoard->ClearAdviceImmediately();
 	mBoard->mLevelAwardSpawned = false;
 	mApp->AddTodParticle(BOARD_WIDTH / 2, BOARD_HEIGHT / 2, RENDER_LAYER_TOP, PARTICLE_SCREEN_FLASH);
 }
