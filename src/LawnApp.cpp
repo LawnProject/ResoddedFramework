@@ -1632,6 +1632,10 @@ void LawnApp::CheckForGameEnd()
 	{
 		KillBoard();
 
+		if (GetNumTrophies(ChallengePage::CHALLENGE_PAGE_CHALLENGE) == 20)
+			mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_BEYOND_THE_GRAVE, true);
+
+
 		if (aUnlockedNewChallenge && HasFinishedAdventure())
 		{
 			ShowAwardScreen(AwardType::AWARD_FORLEVEL);

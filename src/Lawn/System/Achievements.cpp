@@ -74,7 +74,7 @@ void Achievements::SyncAchievements()
 		GiveAchievement(AchievementID::ACHIEVEMENT_HOME_SECURITY, true);
 
 	if (mApp->EarnedGoldTrophy())
-		GiveAchievement(AchievementID::ACHIEVEMENT_NOVEL_PEAS_PRIZE, true);
+		GiveAchievement(AchievementID::ACHIEVEMENT_NOBEL_PEAS_PRIZE, true);
 
 	if (mApp->CanSpawnYetis())
 		GiveAchievement(AchievementID::ACHIEVEMENT_ZOMBOLOGIST, true);
