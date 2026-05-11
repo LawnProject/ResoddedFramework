@@ -5,6 +5,7 @@
 #define PURCHASE_COUNT_OFFSET 1000
 
 #include "../../ConstEnums.h"
+#include <json.hpp>
 
 class PottedPlant
 {
@@ -16,62 +17,83 @@ class PottedPlant
 	};
 
   public:
-	SeedType mSeedType;			//+0x0
-	GardenType mWhichZenGarden; //+0x4
-	int mX;						//+0x8
-	int mY;						//+0xC
-	FacingDirection mFacing;	//+0x10
+	SeedType mSeedType;
+	GardenType mWhichZenGarden;
+	int mX;
+	int mY;
+	FacingDirection mFacing;
 
-	int64_t mLastWateredTime;  //+0x18
-	DrawVariation mDrawVariation; //+0x20
-	PottedPlantAge mPlantAge;	  //+0x24
-	int mTimesFed;				  //+0x28
-	int mFeedingsPerGrow;		  //+0x2C
-	PottedPlantNeed mPlantNeed;	  //+0x30
+	int64_t mLastWateredTime;
+	DrawVariation mDrawVariation;
+	PottedPlantAge mPlantAge;
+	int mTimesFed;
+	int mFeedingsPerGrow;
+	PottedPlantNeed mPlantNeed;
 
-	int64_t mLastNeedFulfilledTime;	   //+0x38
-	int64_t mLastFertilizedTime;	   //+0x40
-	int64_t mLastChocolateTime;		   //+0x48
-	int64_t mFutureAttribute[1];	   //+0x50
+	int64_t mLastNeedFulfilledTime;
+	int64_t mLastFertilizedTime;
+	int64_t mLastChocolateTime;
 
   public:
 	void InitializePottedPlant(SeedType theSeedType);
 };
 
-class DataSync;
+class ProfileSyncer
+{
+  public:
+	bool mReading;
+	bool mCanRead;
+	nlohmann::json mJSON;
+
+  public:
+	ProfileSyncer();
+	ProfileSyncer(const SexyString &thePath);
+	~ProfileSyncer();
+	void SyncBool(const SexyString &theName, bool &theBool);
+	void SyncFloat(const SexyString &theName, float &theFloat);
+	void SyncInt(const SexyString &theName, int &theInt);
+	void SyncUnsignedInt(const SexyString &theName, unsigned int &theInt);
+	void SyncLong(const SexyString &theName, long &theLong);
+	void SyncUnsignedLong(const SexyString &theName, unsigned long &theLong);
+	void SyncString(const SexyString &theName, SexyString &theStr);
+	template <typename T, size_t N> 
+	void SyncArray(const std::string &theName, T (&theArray)[N], int &theRealSize);
+	template <typename T, size_t N> 
+	void SyncArrayFromSize(const std::string &theName, T (&theArray)[N], int theRealSize);
+};
 class PlayerInfo
 {
   public:
-	SexyString mName;							 //+0x0
-	unsigned long mUseSeq;						 //+0x1C
-	unsigned long mId;							 //+0x20
-	int mLevel;									 //+0x24
-	int mCoins;									 //+0x28
-	int mFinishedAdventure;						 //+0x2C
-	int mChallengeRecords[NUM_GAME_MODES];		 //+0x30
-	int mPurchases[NUM_STORE_ITEM_MAX];			 //+0x1C0
-	int mPlayTimeActivePlayer;					 //+0x300
-	int mPlayTimeInactivePlayer;				 //+0x304
-	bool mHasUsedCheatKeys;						 //+0x308
-	int mHasWokenStinky;						 //+0x30C
-	int mDidntPurchasePacketUpgrade;			 //+0x310
-	long mLastStinkyChocolateTime;				 //+0x314
-	int mStinkyPosX;							 //+0x318
-	int mStinkyPosY;							 //+0x31C
-	int mHasUnlockedMinigames;					 //+0x320
-	int mHasUnlockedPuzzleMode;					 //+0x324
-	int mHasNewMiniGame;						 //+0x328
-	int mHasNewScaryPotter;						 //+0x32C
-	int mHasNewIZombie;							 //+0x330
-	int mHasNewSurvival;						 //+0x334
-	int mHasUnlockedSurvivalMode;				 //+0x338
-	int mNeedsMessageOnGameSelector;			 //+0x33C
-	int mNeedsMagicTacoReward;					 //+0x340
-	int mHasSeenStinky;							 //+0x344
-	int mHasSeenUpsell;							 //+0x348
-	int mPlaceHolderPlayerStats;				 //+0x??????
-	int mNumPottedPlants;						 //+0x350
-	PottedPlant mPottedPlant[MAX_POTTED_PLANTS]; //+0x358
+	SexyString mName;
+	unsigned long mUseSeq;
+	unsigned long mId;
+	int mLevel;
+	int mCoins;
+	int mFinishedAdventure;
+	int mChallengeRecords[NUM_GAME_MODES];
+	int mPurchases[NUM_STORE_ITEM_MAX];
+	int mPlayTimeActivePlayer;
+	int mPlayTimeInactivePlayer;
+	bool mHasUsedCheatKeys;
+	bool mHasWokenStinky;
+	int mDidntPurchasePacketUpgrade;
+	long mLastStinkyChocolateTime;
+	int mStinkyPosX;
+	int mStinkyPosY;
+	bool mHasUnlockedMinigames;
+	bool mHasUnlockedPuzzleMode;
+	bool mHasNewMiniGame;
+	bool mHasNewScaryPotter;
+	bool mHasNewIZombie;
+	bool mHasNewSurvival;
+	bool mHasUnlockedSurvivalMode;
+	bool mNeedsMessageOnGameSelector;
+	bool mNeedsMagicTacoReward;
+	bool mHasSeenStinky;	
+	bool mHasSeenUpsell;
+	bool mAcceptedZombatarTOS;
+	int mNumPottedPlants;
+	PottedPlant mPottedPlant[MAX_POTTED_PLANTS];
 	bool mEarnedAchievements[NUM_ACHIEVEMENT_TYPES];
 	bool mShownAchievements[NUM_ACHIEVEMENT_TYPES];
 
@@ -80,8 +102,8 @@ class PlayerInfo
 
 	void Reset();
 	/*inline*/ void AddCoins(int theAmount);
-	void SyncSummary(DataSync &theSync);
-	void SyncDetails(DataSync &theSync);
+	void SyncSummary(ProfileSyncer &theSync);
+	void SyncDetails(ProfileSyncer &theSync);
 	void DeleteUserFiles();
 	void LoadDetails();
 	void SaveDetails();

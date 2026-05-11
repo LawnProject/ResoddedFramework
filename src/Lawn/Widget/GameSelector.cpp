@@ -1358,8 +1358,14 @@ void GameSelector::ButtonDepress(int theId)
 		mWidgetManager->SetFocus(mAchievementsWidget);
 		break;
 	case GameSelector::GameSelector_Zombatar:
-		SlideTo(-mApp->mWidth, 0);
-		mWidgetManager->SetFocus(mZombatarWidget);
+		if (mApp->mPlayerInfo->mAcceptedZombatarTOS)
+		{
+			SlideTo(-mApp->mWidth, 0);
+			mWidgetManager->SetFocus(mZombatarWidget);
+		}
+		else
+			mApp->ShowZombatarTOS();
+
 		break;
 	}
 }
@@ -1390,8 +1396,8 @@ void GameSelector::AddPreviewProfiles()
 	if (aProfile)
 	{
 		aProfile->mLevel = 31;
-		aProfile->mHasUnlockedMinigames = 1;
-		aProfile->mHasUnlockedSurvivalMode = 1;
+		aProfile->mHasUnlockedMinigames = true;
+		aProfile->mHasUnlockedSurvivalMode = true;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_PACKET_UPGRADE] = 2;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_POOL_CLEANER] = 1;
 		aProfile->mCoins = 400;
@@ -1402,9 +1408,9 @@ void GameSelector::AddPreviewProfiles()
 	if (aProfile)
 	{
 		aProfile->mLevel = 41;
-		aProfile->mHasUnlockedMinigames = 1;
-		aProfile->mHasUnlockedPuzzleMode = 1;
-		aProfile->mHasUnlockedSurvivalMode = 1;
+		aProfile->mHasUnlockedMinigames = true;
+		aProfile->mHasUnlockedPuzzleMode = true;
+		aProfile->mHasUnlockedSurvivalMode = true;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_PACKET_UPGRADE] = 2;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_POOL_CLEANER] = 1;
 		aProfile->mCoins = 500;
@@ -1415,10 +1421,10 @@ void GameSelector::AddPreviewProfiles()
 	if (aProfile)
 	{
 		aProfile->mLevel = 1;
-		aProfile->mFinishedAdventure = 1;
-		aProfile->mHasUnlockedMinigames = 1;
-		aProfile->mHasUnlockedPuzzleMode = 1;
-		aProfile->mHasUnlockedSurvivalMode = 1;
+		aProfile->mFinishedAdventure = true;
+		aProfile->mHasUnlockedMinigames = true;
+		aProfile->mHasUnlockedPuzzleMode = true;
+		aProfile->mHasUnlockedSurvivalMode = true;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_PACKET_UPGRADE] = 2;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_POOL_CLEANER] = 1;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_ROOF_CLEANER] = 1;
@@ -1430,14 +1436,14 @@ void GameSelector::AddPreviewProfiles()
 	if (aProfile)
 	{
 		aProfile->mLevel = 1;
-		aProfile->mFinishedAdventure = 2;
+		aProfile->mFinishedAdventure = true;
 		aProfile->AddCoins(50000);
 		aProfile->mPurchases[StoreItem::STORE_ITEM_FERTILIZER] = PURCHASE_COUNT_OFFSET + 5;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_BUG_SPRAY] = PURCHASE_COUNT_OFFSET + 5;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_CHOCOLATE] = PURCHASE_COUNT_OFFSET + 5;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_TREE_FOOD] = PURCHASE_COUNT_OFFSET + 5;
-		aProfile->mHasUnlockedMinigames = 1;
-		aProfile->mHasUnlockedPuzzleMode = 1;
+		aProfile->mHasUnlockedMinigames = true;
+		aProfile->mHasUnlockedPuzzleMode = true;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_PLANT_GATLINGPEA] = 1;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_PLANT_TWINSUNFLOWER] = 1;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_PLANT_GLOOMSHROOM] = 1;

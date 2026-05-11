@@ -26,6 +26,7 @@
 #include "Lawn/Widget/StoreScreen.h"
 #include "Lawn/Widget/CheatDialog.h"
 #include "Lawn/Widget/GameSelector.h"
+#include "Lawn/Widget/ZombatarTOS.h"
 #include "Lawn/Widget/CreditScreen.h"
 #include "Sexy.TodLib/EffectSystem.h"
 #include "Sexy.TodLib/FilterEffect.h"
@@ -591,6 +592,14 @@ void LawnApp::KillCreditScreen()
 		SafeDeleteWidget(mCreditScreen);
 		mCreditScreen = nullptr;
 	}
+}
+
+void LawnApp::ShowZombatarTOS()
+{
+	ZombatarTOS *aDialog = new ZombatarTOS(this);
+	CenterDialog(aDialog, aDialog->mWidth, aDialog->mHeight);
+	AddDialog(Dialogs::DIALOG_ZOMBATAR_TOS, aDialog);
+	mWidgetManager->SetFocus(aDialog);
 }
 
 //0x44FC30
@@ -1804,6 +1813,7 @@ void LawnApp::LoadingThreadProc()
 		return;
 
 	TodStringListLoad("properties/LawnStrings.txt");
+	TodStringListLoad("properties/ZombatarTOS.txt");
 	TodStringListLoad("properties/FrameworkStrings.txt");
 
 	if (mTitleScreen)

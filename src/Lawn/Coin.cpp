@@ -1105,7 +1105,7 @@ void Coin::Collect()
 		mFadeCount = 0;
 
 		AttachmentDetachCrossFadeParticleType(mAttachmentID, ParticleEffect::PARTICLE_AWARD_PICKUP_ARROW, nullptr);
-		mApp->mPlayerInfo->mHasUnlockedMinigames = 1;
+		mApp->mPlayerInfo->mHasUnlockedMinigames = true;
 
 		return;
 	}
@@ -1119,7 +1119,7 @@ void Coin::Collect()
 		mFadeCount = 0;
 
 		AttachmentDetachCrossFadeParticleType(mAttachmentID, ParticleEffect::PARTICLE_AWARD_PICKUP_ARROW, nullptr);
-		mApp->mPlayerInfo->mHasUnlockedPuzzleMode = 1;
+		mApp->mPlayerInfo->mHasUnlockedPuzzleMode = true;
 
 		return;
 	}
@@ -1133,7 +1133,7 @@ void Coin::Collect()
 		mFadeCount = 0;
 
 		AttachmentDetachCrossFadeParticleType(mAttachmentID, ParticleEffect::PARTICLE_AWARD_PICKUP_ARROW, nullptr);
-		mApp->mPlayerInfo->mHasUnlockedSurvivalMode = 1;
+		mApp->mPlayerInfo->mHasUnlockedSurvivalMode = true;
 
 		return;
 	}
