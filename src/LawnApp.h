@@ -328,6 +328,7 @@ class LawnApp : public SexyApp
 					   int theButtonMode);
 	void ShowCreditScreen();
 	void KillCreditScreen();
+	void ShowZombatarTOS();
 	static SexyString Pluralize(int theCount, const SexyString &theSingular, const SexyString &thePlural);
 	int GetNumTrophies(ChallengePage thePage);
 	/*inline*/ bool EarnedGoldTrophy();

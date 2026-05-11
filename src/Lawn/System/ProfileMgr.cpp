@@ -1,7 +1,9 @@
 #include "DataSync.h"
 #include "ProfileMgr.h"
 #include "PlayerInfo.h"
+#include <fstream>
 #include "../../SexyAppFramework/SexyAppBase.h"
+#include "../../Sexy.TodLib/TodDebug.h"
 
 using namespace Sexy;
 static int gProfileVersion = 14;
@@ -27,44 +29,46 @@ void ProfileMgr::Clear()
 }
 
 //0x46A830
-void ProfileMgr::SyncState(DataSync &theSync)
+void ProfileMgr::SyncState(ProfileSyncer &theSync)
 {
-	DataReader *aReader = theSync.GetReader();
-	DataWriter *aWriter = theSync.GetWriter();
-
-	int aVersion = gProfileVersion;
-	theSync.SyncLong(aVersion);
-	theSync.SetVersion(aVersion);
-	if (aVersion == gProfileVersion)
+	if (theSync.mReading)
 	{
-		if (aReader)
+		mProfileMap.clear();
+
+		int aMaxProfileId = 0;
+		int aMaxUseSeq = 0;
+		auto &auUserArray = theSync.mJSON["users"];
+		for (auto &anUser : auUserArray)
 		{
-			mProfileMap.clear();
+			ProfileSyncer aUserSyncer;
+			aUserSyncer.mJSON = anUser;
+			aUserSyncer.mReading = true;
+			PlayerInfo aProfile;
+			aProfile.SyncSummary(aUserSyncer);
 
-			int aMaxProfileId = 0;
-			int aMaxUseSeq = 0;
-			for (int aProfileCount = aReader->ReadShort(); aProfileCount > 0; aProfileCount--)
-			{
-				PlayerInfo aProfile;
-				aProfile.SyncSummary(theSync);
+			if (aProfile.mId > aMaxProfileId)
+				aMaxProfileId = aProfile.mId;
+			if (aProfile.mUseSeq > aMaxUseSeq)
+				aMaxUseSeq = aProfile.mUseSeq;
 
-				if (aProfile.mId > aMaxProfileId)
-					aMaxProfileId = aProfile.mId;
-				if (aProfile.mUseSeq > aMaxUseSeq)
-					aMaxUseSeq = aProfile.mUseSeq;
-
-				mProfileMap[aProfile.mName] = aProfile;
-			}
-
-			mNextProfileId = aMaxProfileId + 1;
-			mNextProfileUseSeq = aMaxUseSeq + 1;
+			mProfileMap[aProfile.mName] = aProfile;
 		}
-		else
-		{
-			aWriter->WriteShort((short)mProfileMap.size());
 
-			for (auto anItr = mProfileMap.begin(); anItr != mProfileMap.end(); anItr++)
-				anItr->second.SyncSummary(theSync);
+		mNextProfileId = aMaxProfileId + 1;
+		mNextProfileUseSeq = aMaxUseSeq + 1;
+	}
+	else
+	{
+		auto &aUsers = theSync.mJSON["users"];
+		aUsers = nlohmann::json::array();
+
+		for (auto &aProfile : mProfileMap)
+		{
+			ProfileSyncer aUserSyncer;
+
+			aProfile.second.SyncSummary(aUserSyncer);
+
+			aUsers.push_back(aUserSyncer.mJSON);
 		}
 	}
 }
@@ -72,36 +76,46 @@ void ProfileMgr::SyncState(DataSync &theSync)
 //0x46ABC0
 void ProfileMgr::Load()
 {
-	Buffer aBuffer;
-	std::string aFileName = GetAppDataFolder() + "savefiles/users.dat";
 
 	try
 	{
-		if (gSexyAppBase->ReadBufferFromFile(aFileName, &aBuffer, false))
+		std::string aFileName = GetAppDataFolder() + "savefiles/users.json";
+		ProfileSyncer aSync(aFileName);
+
+		if (std::filesystem::exists(aFileName))
 		{
-			DataReader aReader;
-			aReader.OpenMemory(aBuffer.GetDataPtr(), aBuffer.GetDataLen(), false);
-			DataSync aSync(aReader);
-			SyncState(aSync);
+			ProfileSyncer aSync(aFileName);
+			if (aSync.mCanRead)
+			{
+				aSync.mReading = true;
+				SyncState(aSync);
+			}
+			else
+			{
+				TodTraceAndLog("Couldn't read profile file : %s\nResetting it", aFileName.c_str());
+				Clear();
+			}
 		}
 	}
-	catch (DataReaderException &)
+	catch (nlohmann::json::parse_error &anError)
 	{
+		TodTraceAndLog("Failed to profiles\n");
 		Clear();
+
 	}
 }
 
 //0x46AD80
 void ProfileMgr::Save()
 {
-	DataWriter aWriter;
-	aWriter.OpenMemory(0x20);
-	DataSync aSync(aWriter);
-	SyncState(aSync);
 
 	MkDir(GetAppDataFolder() + "savefiles");
-	std::string aFileName = GetAppDataFolder() + "savefiles/users.dat";
-	gSexyAppBase->WriteBytesToFile(aFileName, aWriter.GetDataPtr(), aWriter.GetDataLen());
+	std::string aFileName = GetAppDataFolder() + "savefiles/users.json";
+	ProfileSyncer aSync(aFileName);
+	SyncState(aSync);
+	std::ofstream outFile(aFileName);
+	if (outFile)
+		outFile << aSync.mJSON.dump(4);
 }
 
 void ProfileMgr::DeleteProfile(ProfileMap::iterator theProfile)

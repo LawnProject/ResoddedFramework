@@ -1,4 +1,6 @@
 #include "DataSync.h"
+#include <fstream>
+#include <filesystem>
 #include "PlayerInfo.h"
 #include "../LawnCommon.h"
 #include "../Widget/ChallengeScreen.h"
@@ -15,72 +17,55 @@ PlayerInfo::PlayerInfo()
 }
 
 //0x468310
-void PlayerInfo::SyncSummary(DataSync &theSync)
+void PlayerInfo::SyncSummary(ProfileSyncer &theSync)
 {
-	theSync.SyncString(mName);
-	theSync.SyncLong(mUseSeq);
-	theSync.SyncLong(mId);
+	theSync.SyncString("name", mName);
+	theSync.SyncUnsignedLong("use_seq", mUseSeq);
+	theSync.SyncUnsignedLong("id", mId);
 }
 
 //0x468390
-void PlayerInfo::SyncDetails(DataSync &theSync)
+void PlayerInfo::SyncDetails(ProfileSyncer &theSync)
 {
-	if (theSync.GetReader())
+	if (theSync.mReading)
 	{
 		Reset();
 	}
 
-	int aVersion = gUserVersion;
-	theSync.SyncLong(aVersion);
-	theSync.SetVersion(aVersion);
-	if (aVersion != gUserVersion)
-	{
-		return;
-	}
+	theSync.SyncInt("level", mLevel);
+	theSync.SyncInt("coins", mCoins);
+	theSync.SyncInt("has_finished_adventure", mFinishedAdventure);
 
-	theSync.SyncLong(mLevel);
-	theSync.SyncLong(mCoins);
-	theSync.SyncLong(mFinishedAdventure);
-	for (int i = 0; i < NUM_GAME_MODES; i++)
-	{
-		theSync.SyncLong(mChallengeRecords[i]);
-	}
-	for (int i = 0; i < NUM_STORE_ITEM_MAX; i++)
-	{
-		theSync.SyncLong(mPurchases[i]);
-	}
-	theSync.SyncLong(mPlayTimeActivePlayer);
-	theSync.SyncLong(mPlayTimeInactivePlayer);
-	theSync.SyncBool(mHasUsedCheatKeys);
-	theSync.SyncLong(mHasWokenStinky);
-	theSync.SyncLong(mDidntPurchasePacketUpgrade);
-	theSync.SyncLong(mLastStinkyChocolateTime);
-	theSync.SyncLong(mStinkyPosX);
-	theSync.SyncLong(mStinkyPosY);
-	theSync.SyncLong(mHasUnlockedMinigames);
-	theSync.SyncLong(mHasUnlockedPuzzleMode);
-	theSync.SyncLong(mHasNewMiniGame);
-	theSync.SyncLong(mHasNewScaryPotter);
-	theSync.SyncLong(mHasNewIZombie);
-	theSync.SyncLong(mHasNewSurvival);
-	theSync.SyncLong(mHasUnlockedSurvivalMode);
-	theSync.SyncLong(mNeedsMessageOnGameSelector);
-	theSync.SyncLong(mNeedsMagicTacoReward);
-	theSync.SyncLong(mHasSeenStinky);
-	theSync.SyncLong(mHasSeenUpsell);
-	theSync.SyncLong(mPlaceHolderPlayerStats);
-	theSync.SyncLong(mNumPottedPlants);
+	theSync.SyncArrayFromSize("challenge_records", mChallengeRecords, NUM_GAME_MODES);
+	theSync.SyncArrayFromSize("purchases", mPurchases, NUM_STORE_ITEM_MAX);
+
+
+	theSync.SyncInt("playtime_active", mPlayTimeActivePlayer);
+	theSync.SyncInt("playtime_inactive", mPlayTimeInactivePlayer);
+	theSync.SyncBool("used_cheat_keys", mHasUsedCheatKeys);
+	theSync.SyncBool("woken_stinky", mHasWokenStinky);
+	theSync.SyncInt("didnt_purchase_seed_packet_upgrade", mDidntPurchasePacketUpgrade);
+	theSync.SyncLong("last_stinky_chocolate_time", mLastStinkyChocolateTime);
+	theSync.SyncInt("stinky_pos_x", mStinkyPosX);
+	theSync.SyncInt("stinky_pos_y", mStinkyPosY);
+	theSync.SyncBool("has_unlocked_minigames", mHasUnlockedMinigames);
+	theSync.SyncBool("has_unlocked_minigames", mHasUnlockedPuzzleMode);
+	theSync.SyncBool("has_unlocked_puzzles", mHasNewMiniGame);
+	theSync.SyncBool("has_new_scarypotter", mHasNewScaryPotter);
+	theSync.SyncBool("has_new_izombie", mHasNewIZombie);
+	theSync.SyncBool("has_new_survival", mHasNewSurvival);
+	theSync.SyncBool("unlocked_survival", mHasUnlockedSurvivalMode);
+	theSync.SyncBool("needs_message_on_gameselector", mNeedsMessageOnGameSelector);
+	theSync.SyncBool("needs_magic_taco_reward", mNeedsMagicTacoReward);
+	theSync.SyncBool("seen_stinky", mHasSeenStinky);
+	theSync.SyncBool("seen_upsell", mHasSeenUpsell);
+	theSync.SyncBool("accepted_zombatar_tos", mAcceptedZombatarTOS);
+
+	theSync.SyncArray("potted_plants", mPottedPlant, mNumPottedPlants);
+	theSync.SyncArrayFromSize("achievements_shown", mShownAchievements, NUM_ACHIEVEMENT_TYPES);
+	theSync.SyncArrayFromSize("achievements_earned", mEarnedAchievements, NUM_ACHIEVEMENT_TYPES);
 
 	TOD_ASSERT(mNumPottedPlants <= MAX_POTTED_PLANTS);
-	for (int i = 0; i < mNumPottedPlants; i++)
-	{
-		theSync.SyncBytes(&mPottedPlant[i], sizeof(PottedPlant));
-	}
-	for (int i = 0; i < NUM_ACHIEVEMENT_TYPES; i++)
-	{
-		theSync.SyncBool(mEarnedAchievements[i]);
-		theSync.SyncBool(mShownAchievements[i]);
-	}
 }
 
 //0x469400
@@ -89,20 +74,27 @@ void PlayerInfo::LoadDetails()
 	try
 	{
 		Buffer aBuffer;
-		std::string aFileName = GetAppDataFolder() + StrFormat("savefiles/user%d.dat", mId);
-		if (!gSexyAppBase->ReadBufferFromFile(aFileName, &aBuffer, false))
+		std::string aFileName = GetAppDataFolder() + StrFormat("savefiles/user%d.json", mId);
+		if (std::filesystem::exists(aFileName))
 		{
-			return;
+			ProfileSyncer aSync(aFileName);
+			if (aSync.mCanRead)
+			{
+				aSync.mReading = true;
+				SyncDetails(aSync);
+			}
+			else
+			{
+				TodTraceAndLog("Couldn't read profile : %s\nResettings it", aFileName.c_str());
+				Reset();
+			}
 		}
 
-		DataReader aReader;
-		aReader.OpenMemory(aBuffer.GetDataPtr(), aBuffer.GetDataLen(), false);
-		DataSync aSync(aReader);
-		SyncDetails(aSync);
 	}
-	catch (DataReaderException &)
+	catch (nlohmann::json::parse_error &anError)
 	{
-		TodTrace("Failed to player data, resetting it\n");
+		TodTraceAndLog("Failed to parse profile data, resetting it\n");
+		TodTraceAndLog("JSON Reading Error: %s", anError.what());
 		Reset();
 	}
 }
@@ -110,26 +102,28 @@ void PlayerInfo::LoadDetails()
 //0x4695F0
 void PlayerInfo::SaveDetails()
 {
-	DataWriter aWriter;
-	aWriter.OpenMemory();
-	DataSync aSync(aWriter);
-	SyncDetails(aSync);
-
 	MkDir(GetAppDataFolder() + "savefiles");
-	std::string aFileName = GetAppDataFolder() + StrFormat("savefiles/user%d.dat", mId);
-	gSexyAppBase->WriteBytesToFile(aFileName, aWriter.GetDataPtr(), aWriter.GetDataLen());
+	std::string aFileName = GetAppDataFolder() + StrFormat("savefiles/user%d.json", mId);
+	ProfileSyncer aSync(aFileName);
+	SyncDetails(aSync);
+	std::ofstream outFile(aFileName);
+	if (outFile)
+		outFile << aSync.mJSON.dump(4);
 }
 
 //0x469810
 void PlayerInfo::DeleteUserFiles()
 {
-	std::string aFilename = GetAppDataFolder() + StrFormat("savefiles/user%d.dat", mId);
-	gSexyAppBase->EraseFile(aFilename);
-
-	for (int i = 0; i < (int)GameMode::NUM_GAME_MODES; i++)
+	std::string aFilename = GetAppDataFolder() + StrFormat("savefiles/user%d.json", mId);
+	if (std::filesystem::exists(aFilename))
 	{
-		std::string aFileName = GetSavedGameName((GameMode)i, mId);
-		gSexyAppBase->EraseFile(aFileName);
+		gSexyAppBase->EraseFile(aFilename);
+
+		for (int i = 0; i < (int)GameMode::NUM_GAME_MODES; i++)
+		{
+			std::string aFileName = GetSavedGameName((GameMode)i, mId);
+			gSexyAppBase->EraseFile(aFileName);
+		}
 	}
 }
 
@@ -143,24 +137,24 @@ void PlayerInfo::Reset()
 	memset(mPurchases, 0, sizeof(mPurchases));
 	mPlayTimeActivePlayer = 0;
 	mPlayTimeInactivePlayer = 0;
-	mHasUsedCheatKeys = 0;
-	mHasWokenStinky = 0;
+	mHasUsedCheatKeys = false;
+	mHasWokenStinky = false;
 	mDidntPurchasePacketUpgrade = 0;
 	mLastStinkyChocolateTime = 0;
 	mStinkyPosX = 0;
 	mStinkyPosY = 0;
-	mHasUnlockedMinigames = 0;
-	mHasUnlockedPuzzleMode = 0;
-	mHasNewMiniGame = 0;
-	mHasNewScaryPotter = 0;
-	mHasNewIZombie = 0;
-	mHasNewSurvival = 0;
-	mHasUnlockedSurvivalMode = 0;
-	mNeedsMessageOnGameSelector = 0;
-	mNeedsMagicTacoReward = 0;
-	mHasSeenStinky = 0;
-	mHasSeenUpsell = 0;
-	mPlaceHolderPlayerStats = 0;
+	mHasUnlockedMinigames = false;
+	mHasUnlockedPuzzleMode = false;
+	mHasNewMiniGame = false;
+	mHasNewScaryPotter = false;
+	mHasNewIZombie = false;
+	mHasNewSurvival = false;
+	mHasUnlockedSurvivalMode = false;
+	mNeedsMessageOnGameSelector = false;
+	mNeedsMagicTacoReward = false;
+	mHasSeenStinky = false;
+	mHasSeenUpsell = false;
+	mAcceptedZombatarTOS = false;
 	memset(mPottedPlant, 0, sizeof(mPottedPlant));
 	memset(mEarnedAchievements, 0, sizeof(mEarnedAchievements));
 	memset(mShownAchievements, 0, sizeof(mShownAchievements));
@@ -203,4 +197,285 @@ void PottedPlant::InitializePottedPlant(SeedType theSeedType)
 	mLastNeedFulfilledTime = 0i64;
 	mLastFertilizedTime = 0i64;
 	mLastChocolateTime = 0i64;
+}
+
+ProfileSyncer::ProfileSyncer()
+{
+	mJSON = nlohmann::json::object();
+	mReading = false;
+	mCanRead = false;
+}
+
+ProfileSyncer::ProfileSyncer(const SexyString &thePath)
+{
+	mJSON = nlohmann::json::object();
+	mReading = false;
+	std::ifstream inFile(thePath);
+	if (inFile)
+	{
+		try
+		{
+			inFile >> mJSON;
+			mCanRead = true;
+		}
+		catch (...)
+		{
+			mCanRead = false;
+		}
+	}
+	else
+		mCanRead = false;
+}
+
+ProfileSyncer::~ProfileSyncer()
+{
+}
+
+bool json_has_key(const nlohmann::json &j, const std::string &key)
+{
+	return j.find(key) != j.end();
+}
+
+void ProfileSyncer::SyncBool(const SexyString &theName, bool &theBool)
+{
+	if (mReading)
+	{
+		if (json_has_key(mJSON, theName) && mJSON[theName].is_boolean())
+		{
+			theBool = mJSON[theName].get<nlohmann::json::boolean_t>();
+		}
+		else
+		{
+			theBool = false;
+			TodTraceAndLog("Missing Boolean in Save File: %s", theName.c_str());
+		}
+	}
+	else
+		mJSON[theName] = theBool;
+}
+
+void ProfileSyncer::SyncFloat(const SexyString &theName, float &theFloat)
+{
+	if (mReading)
+	{
+		if (json_has_key(mJSON, theName) && mJSON[theName].is_number_float())
+		{
+			theFloat = mJSON[theName].get<nlohmann::json::number_float_t>();
+		}
+		else
+		{
+			theFloat = 0.0f;
+			TodTraceAndLog("Missing Float in Save File: %s", theName.c_str());
+		}
+	}
+	else
+		mJSON[theName] = theFloat;
+}
+
+void ProfileSyncer::SyncInt(const SexyString &theName, int &theInt)
+{
+	if (mReading)
+	{
+		if (json_has_key(mJSON, theName) && mJSON[theName].is_number_integer())
+		{
+			theInt = mJSON[theName].get<nlohmann::json::number_integer_t>();
+		}
+		else
+		{
+			theInt = 0;
+			TodTraceAndLog("Missing Integer in Save File: %s", theName.c_str());
+		}
+	}
+	else
+		mJSON[theName] = theInt;
+}
+
+void ProfileSyncer::SyncUnsignedInt(const SexyString &theName, unsigned int &theInt)
+{
+	if (mReading)
+	{
+		if (json_has_key(mJSON, theName) && mJSON[theName].is_number_integer())
+		{
+			theInt = mJSON[theName].get<nlohmann::json::number_integer_t>();
+		}
+		else
+		{
+			theInt = 0;
+			TodTraceAndLog("Missing Integer in Save File: %s", theName.c_str());
+		}
+	}
+	else
+		mJSON[theName] = theInt;
+}
+
+void ProfileSyncer::SyncLong(const SexyString &theName, long &theLong)
+{
+	if (mReading)
+	{
+		if (json_has_key(mJSON, theName) && mJSON[theName].is_number_integer())
+		{
+			theLong = mJSON[theName].get<nlohmann::json::number_integer_t>();
+		}
+		else
+		{
+			theLong = 0;
+			TodTraceAndLog("Missing Integer in Save File: %s", theName.c_str());
+		}
+	}
+	else
+		mJSON[theName] = theLong;
+}
+
+void ProfileSyncer::SyncUnsignedLong(const SexyString &theName, unsigned long &theLong)
+{
+	if (mReading)
+	{
+		if (json_has_key(mJSON, theName) && mJSON[theName].is_number_integer())
+		{
+			theLong = mJSON[theName].get<nlohmann::json::number_integer_t>();
+		}
+		else
+		{
+			theLong = 0;
+			TodTraceAndLog("Missing Long in Save File: %s", theName.c_str());
+		}
+	}
+	else
+		mJSON[theName] = theLong;
+}
+
+void ProfileSyncer::SyncString(const SexyString &theName, SexyString &theStr)
+{
+	if (mReading)
+	{
+		if (json_has_key(mJSON, theName) && mJSON[theName].is_string())
+		{
+			theStr = mJSON[theName].get<nlohmann::json::string_t>();
+		}
+		else
+		{
+			theStr = "";
+			TodTraceAndLog("Missing Integer in Save File: %s", theName.c_str());
+		}
+	}
+	else
+		mJSON[theName] = theStr;
+}
+
+void to_json(nlohmann::json &j, const PottedPlant &p)
+{
+	j = {{"seed_type", (int)p.mSeedType},
+		 {"garden", (int)p.mWhichZenGarden},
+
+		 {"x", p.mX},
+		 {"y", p.mY},
+
+		 {"facing", (int)p.mFacing},
+
+		 {"last_watered", p.mLastWateredTime},
+
+		 {"draw_variation", (int)p.mDrawVariation},
+		 {"age", (int)p.mPlantAge},
+
+		 {"times_fed", p.mTimesFed},
+		 {"feedings_per_grow", p.mFeedingsPerGrow},
+
+		 {"plant_need", (int)p.mPlantNeed},
+
+		 {"last_need_fulfilled_time", p.mLastNeedFulfilledTime},
+		 {"last_fertilized_time", p.mLastFertilizedTime},
+		 {"last_chocolate_time", p.mLastChocolateTime}};
+}
+
+void from_json(const nlohmann::json &j, PottedPlant &p)
+{
+	p.mSeedType = (SeedType)j.value("seed_type", 0);
+	p.mWhichZenGarden = (GardenType)j.value("garden", 0);
+
+	p.mX = j.value("x", 0);
+	p.mY = j.value("y", 0);
+
+	p.mFacing = (PottedPlant::FacingDirection)j.value("facing", 0);
+
+	p.mLastWateredTime = j.value("last_watered", 0LL);
+
+	p.mDrawVariation = (DrawVariation)j.value("draw_variation", 0);
+	p.mPlantAge = (PottedPlantAge)j.value("age", 0);
+
+	p.mTimesFed = j.value("times_fed", 0);
+	p.mFeedingsPerGrow = j.value("feedings_per_grow", 0);
+
+	p.mPlantNeed = (PottedPlantNeed)j.value("plant_need", 0);
+
+	p.mLastNeedFulfilledTime = j.value("last_need_fulfilled_time", 0LL);
+	p.mLastFertilizedTime = j.value("last_fertilized_time", 0LL);
+	p.mLastChocolateTime = j.value("last_chocolate_time", 0LL);
+}
+
+template <typename T, size_t N> void ProfileSyncer::SyncArray(const SexyString &theName, T (&theArray)[N], int &theRealSize)
+{
+	if (mReading)
+	{
+		if (json_has_key(mJSON, theName) && mJSON[theName].is_array())
+		{
+			const auto &aJsonArray = mJSON[theName];
+
+			size_t aCount = std::min(aJsonArray.size(), N);
+			theRealSize = aCount;
+			for (size_t i = 0; i < aCount; i++)
+			{
+				theArray[i] = aJsonArray[i].get<T>();
+			}
+		}
+		else
+		{
+			memset(theArray, 0, N);
+			theRealSize = 0;
+			TodTraceAndLog("Missing Array in Save File: %s", theName.c_str());
+		}
+	}
+	else
+	{
+		nlohmann::json aArray = nlohmann::json::array();
+
+		for (size_t i = 0; i < theRealSize; i++)
+		{
+			aArray.push_back(theArray[i]);
+		}
+
+		mJSON[theName] = std::move(aArray);
+	}
+}
+
+template <typename T, size_t N> void ProfileSyncer::SyncArrayFromSize(const SexyString &theName, T (&theArray)[N], int theRealSize)
+{
+	if (mReading)
+	{
+		if (json_has_key(mJSON, theName) && mJSON[theName].is_array())
+		{
+			const auto &aJsonArray = mJSON[theName];
+
+			size_t aCount = std::min(aJsonArray.size(), (size_t)theRealSize);
+			for (size_t i = 0; i < aCount; i++)
+			{
+				theArray[i] = aJsonArray[i].get<T>();
+			}
+		}
+		else
+		{
+			memset(theArray, 0, theRealSize);
+			TodTraceAndLog("Missing Array in Save File: %s", theName.c_str());
+		}
+	}
+	else
+	{
+		nlohmann::json aArray = nlohmann::json::array();
+
+		for (size_t i = 0; i < theRealSize; i++)
+		{
+			aArray.push_back(theArray[i]);
+		}
+
+		mJSON[theName] = std::move(aArray);
+	}
 }

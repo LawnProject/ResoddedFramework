@@ -5,7 +5,7 @@
 #include <string>
 #include "../../SexyAppFramework/Common.h"
 
-class DataSync;
+class ProfileSyncer;
 class PlayerInfo;
 typedef std::pair<SexyString, PlayerInfo> ProfilePair;
 typedef std::map<SexyString, PlayerInfo, Sexy::StringLessNoCase> ProfileMap;
@@ -18,7 +18,7 @@ class ProfileMgr
 	unsigned long mNextProfileUseSeq; //+0x14
 
   protected:
-	void SyncState(DataSync &theSync);
+	void SyncState(ProfileSyncer &theSync);
 	void DeleteOldestProfile();
 	inline void DeleteOldProfiles()
 	{
