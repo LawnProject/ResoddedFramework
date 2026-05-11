@@ -1468,7 +1468,7 @@ void GameSelector::AddPreviewProfiles()
 			if (i != (int)GameMode::GAMEMODE_TREE_OF_WISDOM && i != (int)GameMode::GAMEMODE_SCARY_POTTER_ENDLESS &&
 				i != (int)GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS &&
 				i != (int)GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_3)
-				mApp->mPlayerInfo->mChallengeRecords[i - 1] = 20;
+				aProfile->mChallengeRecords[i - 1] = 20;
 
 		aProfile->SaveDetails();
 	}
