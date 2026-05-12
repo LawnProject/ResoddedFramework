@@ -703,8 +703,8 @@ void LawnApp::DoConfirmBackToMain()
 	LawnDialog *aDialog = (LawnDialog *)DoDialog(
 		Dialogs::DIALOG_CONFIRM_BACK_TO_MAIN,
 		true,
-		"[LEAVE_GAME]",
 		"[LEAVE_GAME_HEADER]",
+		"[LEAVE_GAME]",
 		"",
 		Dialog::BUTTONS_YES_NO);
 
