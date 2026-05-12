@@ -49,8 +49,8 @@ void PlayerInfo::SyncDetails(ProfileSyncer &theSync)
 	theSync.SyncInt("stinky_pos_x", mStinkyPosX);
 	theSync.SyncInt("stinky_pos_y", mStinkyPosY);
 	theSync.SyncBool("has_unlocked_minigames", mHasUnlockedMinigames);
-	theSync.SyncBool("has_unlocked_minigames", mHasUnlockedPuzzleMode);
-	theSync.SyncBool("has_unlocked_puzzles", mHasNewMiniGame);
+	theSync.SyncBool("has_unlocked_puzzle", mHasUnlockedPuzzleMode);
+	theSync.SyncBool("has_new_minigame", mHasNewMiniGame);
 	theSync.SyncBool("has_new_scarypotter", mHasNewScaryPotter);
 	theSync.SyncBool("has_new_izombie", mHasNewIZombie);
 	theSync.SyncBool("has_new_survival", mHasNewSurvival);

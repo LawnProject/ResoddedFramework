@@ -247,6 +247,10 @@ GameSelector::GameSelector(LawnApp *theApp)
 	aSelectorReanim->PlayReanim("anim_open", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0, 30.0f);
 	aSelectorReanim->AssignRenderGroupToPrefix("flower", RENDER_GROUP_HIDDEN);
 	aSelectorReanim->AssignRenderGroupToPrefix("leaf", RENDER_GROUP_HIDDEN);
+
+	ReanimatorTrackInstance *anAdventureTrack = aSelectorReanim->GetTrackInstanceByName("SelectorScreen_Adventure_button");
+	anAdventureTrack->mImageOverride = Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_BUTTON;
+
 	aSelectorReanim->AssignRenderGroupToTrack("SelectorScreen_BG", 1);
 	mSelectorReanimID = mApp->ReanimationGetID(aSelectorReanim);
 	mSelectorState = SelectorAnimState::SELECTOR_OPEN;
@@ -431,6 +435,7 @@ void GameSelector::SyncButtons()
 	if (mShowStartButton)
 	{
 		aSelectorReanim->AssignRenderGroupToPrefix("SelectorScreen_Adventure_", RENDER_GROUP_HIDDEN);
+		aSelectorReanim->AssignRenderGroupToTrack("SelectorScreen_StartAdventure_shadow", RENDER_GROUP_NORMAL);
 		mAdventureButton->mButtonImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_BUTTON;
 		mAdventureButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_HIGHLIGHT;
 		mAdventureButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_STARTADVENTURE_HIGHLIGHT;
@@ -438,6 +443,7 @@ void GameSelector::SyncButtons()
 	else
 	{
 		aSelectorReanim->AssignRenderGroupToPrefix("SelectorScreen_StartAdventure_", RENDER_GROUP_HIDDEN);
+		aSelectorReanim->AssignRenderGroupToTrack("SelectorScreen_Adventure_shadow", RENDER_GROUP_NORMAL);
 		mAdventureButton->mButtonImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_BUTTON;
 		mAdventureButton->mOverImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT;
 		mAdventureButton->mDownImage = Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_HIGHLIGHT;
@@ -880,8 +886,6 @@ void GameSelector::Update()
 			if (mApp->mPlayerInfo == nullptr)
 			{
 				mApp->DoCreateUserDialog();
-				if (gIsPartnerBuild)
-					AddPreviewProfiles();
 
 				mSelectorState = SelectorAnimState::SELECTOR_NEW_USER;
 			}
@@ -1143,27 +1147,6 @@ void GameSelector::KeyChar(SexyChar theChar)
 	if (mStartingGame)
 		return;
 
-	if ((gIsPartnerBuild || mApp->mDebugKeysEnabled) && theChar == 'u' && mApp->mPlayerInfo)
-	{
-		TodTraceAndLog("Selector cheat key '%c'", theChar);
-
-		mApp->mPlayerInfo->mFinishedAdventure = 2;
-		mApp->mPlayerInfo->AddCoins(50000);
-		mApp->mPlayerInfo->mHasUsedCheatKeys = true;
-		mApp->mPlayerInfo->mHasUnlockedMinigames = true;
-		mApp->mPlayerInfo->mHasUnlockedPuzzleMode = true;
-		mApp->mPlayerInfo->mHasUnlockedSurvivalMode = true;
-
-		for (int i = 1; i < NUM_GAME_MODES; i++)
-			if (i != (int)GameMode::GAMEMODE_TREE_OF_WISDOM && i != (int)GameMode::GAMEMODE_SCARY_POTTER_ENDLESS &&
-				i != (int)GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS &&
-				i != (int)GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_3)
-				mApp->mPlayerInfo->mChallengeRecords[i - 1] = 20;
-		SyncProfile(true);
-
-		mApp->EraseFile(GetSavedGameName(GameMode::GAMEMODE_ADVENTURE, mApp->mPlayerInfo->mId));
-	}
-
 	if (mApp->mDebugKeysEnabled)
 	{
 		TodTraceAndLog("Selector cheat key '%c'", theChar);
@@ -1173,6 +1156,28 @@ void GameSelector::KeyChar(SexyChar theChar)
 			mPuzzleLocked = false;
 			mSurvivalLocked = false;
 			SyncButtons();
+		}
+		else if (theChar == 'u')
+		{
+			mApp->mPlayerInfo->mFinishedAdventure = 2;
+			mApp->mPlayerInfo->AddCoins(50000);
+			mApp->mPlayerInfo->mHasUsedCheatKeys = true;
+			mApp->mPlayerInfo->mHasUnlockedMinigames = true;
+			mApp->mPlayerInfo->mHasUnlockedPuzzleMode = true;
+			mApp->mPlayerInfo->mHasUnlockedSurvivalMode = true;
+
+			for (int i = 1; i < NUM_GAME_MODES; i++)
+				if (i != (int)GameMode::GAMEMODE_TREE_OF_WISDOM && i != (int)GameMode::GAMEMODE_SCARY_POTTER_ENDLESS &&
+					i != (int)GameMode::GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS &&
+					i != (int)GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_3)
+					mApp->mPlayerInfo->mChallengeRecords[i - 1] = 20;
+			SyncProfile(true);
+
+			mApp->EraseFile(GetSavedGameName(GameMode::GAMEMODE_ADVENTURE, mApp->mPlayerInfo->mId));
+		}
+		else if(theChar == 'p' || theChar == 'P')
+		{
+			AddPreviewProfiles();
 		}
 	}
 }
@@ -1375,6 +1380,13 @@ void GameSelector::AddPreviewProfiles()
 {
 	PlayerInfo *aProfile;
 
+	aProfile = mApp->mProfileMgr->AddProfile("1 Day");
+	if (aProfile)
+	{
+		aProfile->mLevel = 1;
+		aProfile->SaveDetails();
+	}
+
 	aProfile = mApp->mProfileMgr->AddProfile("2 Night");
 	if (aProfile)
 	{
@@ -1397,7 +1409,6 @@ void GameSelector::AddPreviewProfiles()
 	{
 		aProfile->mLevel = 31;
 		aProfile->mHasUnlockedMinigames = true;
-		aProfile->mHasUnlockedSurvivalMode = true;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_PACKET_UPGRADE] = 2;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_POOL_CLEANER] = 1;
 		aProfile->mCoins = 400;
@@ -1410,7 +1421,6 @@ void GameSelector::AddPreviewProfiles()
 		aProfile->mLevel = 41;
 		aProfile->mHasUnlockedMinigames = true;
 		aProfile->mHasUnlockedPuzzleMode = true;
-		aProfile->mHasUnlockedSurvivalMode = true;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_PACKET_UPGRADE] = 2;
 		aProfile->mPurchases[StoreItem::STORE_ITEM_POOL_CLEANER] = 1;
 		aProfile->mCoins = 500;
@@ -1470,8 +1480,15 @@ void GameSelector::AddPreviewProfiles()
 				i != (int)GameMode::GAMEMODE_SURVIVAL_ENDLESS_STAGE_3)
 				aProfile->mChallengeRecords[i - 1] = 20;
 
+		for (int i = 0; i < NUM_ACHIEVEMENT_TYPES; i++)
+		{
+			aProfile->mShownAchievements[i] = true;
+			aProfile->mEarnedAchievements[i] = true;
+		}
+
 		aProfile->SaveDetails();
 	}
+	mApp->mAchievements->SyncAchievements();
 }
 
 void GameSelector::SlideTo(int theX, int theY)

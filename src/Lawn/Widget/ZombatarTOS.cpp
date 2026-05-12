@@ -27,7 +27,7 @@ ZombatarTOS::ZombatarTOS(LawnApp *theApp) : LawnDialog(theApp, DIALOG_ZOMBATAR_T
 								Sexy::IMAGE_ZOMBATAR_ACCEPT_BUTTON_HIGHLIGHT, Sexy::IMAGE_ZOMBATAR_ACCEPT_BUTTON_HIGHLIGHT);
 	mAcceptButton->mDisabled = true;
 
-	mTOSChecbox = MakeNewCheckbox(ZombatarTOS::ZombatarTOS_TOSCheckbox, this, !theApp->mIsWindowed);
+	mTOSCheckbox = MakeNewCheckbox(ZombatarTOS::ZombatarTOS_TOSCheckbox, this, !theApp->mIsWindowed);
 
 	CalcSize(110, 200);
 }
@@ -40,8 +40,8 @@ ZombatarTOS::~ZombatarTOS()
 		delete mBackButton;
 	if (mAcceptButton)
 		delete mAcceptButton;
-	if (mTOSChecbox)
-		delete mTOSChecbox;
+	if (mTOSCheckbox)
+		delete mTOSCheckbox;
 }
 
 
@@ -51,7 +51,7 @@ void ZombatarTOS::AddedToManager(Sexy::WidgetManager *theWidgetManager)
 	AddWidget(mTOSSlider);
 	AddWidget(mBackButton);
 	AddWidget(mAcceptButton);
-	AddWidget(mTOSChecbox);
+	AddWidget(mTOSCheckbox);
 }
 
 void ZombatarTOS::RemovedFromManager(Sexy::WidgetManager *theWidgetManager)
@@ -60,7 +60,7 @@ void ZombatarTOS::RemovedFromManager(Sexy::WidgetManager *theWidgetManager)
 	RemoveWidget(mTOSSlider);
 	RemoveWidget(mBackButton);
 	RemoveWidget(mAcceptButton);
-	RemoveWidget(mTOSChecbox);
+	RemoveWidget(mTOSCheckbox);
 }
 
 void ZombatarTOS::Resize(int theX, int theY, int theWidth, int theHeight)
@@ -69,7 +69,7 @@ void ZombatarTOS::Resize(int theX, int theY, int theWidth, int theHeight)
 	mTOSSlider->Resize(Rect(GetWidth() - 15, GetTop() + 5, 40, 135));
 	mBackButton->Resize(GetLeft(), 340, Sexy::IMAGE_ZOMBATAR_BACK_BUTTON->mWidth, Sexy::IMAGE_ZOMBATAR_BACK_BUTTON->mHeight);
 	mAcceptButton->Resize(GetWidth() - 60, 340, Sexy::IMAGE_ZOMBATAR_BACK_BUTTON->mWidth, Sexy::IMAGE_ZOMBATAR_BACK_BUTTON->mHeight);
-	mTOSChecbox->Resize(GetWidth() - 110, 335, 46, 45);
+	mTOSCheckbox->Resize(GetWidth() - 110, 335, 46, 45);
 }
 
 

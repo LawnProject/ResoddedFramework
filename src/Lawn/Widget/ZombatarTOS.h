@@ -27,7 +27,7 @@ class ZombatarTOS : public LawnDialog, public Sexy::SliderListener, public Sexy:
 		Sexy::Slider *mTOSSlider;
 		NewLawnButton *mBackButton;
 		NewLawnButton *mAcceptButton;
-		Sexy::Checkbox *mTOSChecbox;
+		Sexy::Checkbox *mTOSCheckbox;
 
 
 	public:

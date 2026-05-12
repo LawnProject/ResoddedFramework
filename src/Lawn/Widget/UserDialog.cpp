@@ -6,6 +6,7 @@
 #include "../System/PlayerInfo.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "../../SexyAppFramework/ListWidget.h"
+#include "../../SexyAppFramework/Slider.h"
 
 static int gUserListWidgetColors[][3] = { //0x69F274
 	{23, 24, 35},
@@ -19,7 +20,7 @@ UserDialog::UserDialog(LawnApp *theApp)
 	: LawnDialog(theApp,
 				 Dialogs::DIALOG_USERDIALOG,
 				 true,
-				 "WHO ARE YOU?" /*[WHO_ARE_YOU]*/,
+				 "[WHO_ARE_YOU]",
 				 "",
 				 "",
 				 Dialog::BUTTONS_OK_CANCEL)
@@ -31,8 +32,14 @@ UserDialog::UserDialog(LawnApp *theApp)
 	mUserList->mJustify = ListWidget::JUSTIFY_CENTER;
 	mUserList->mItemHeight = 24;
 
-	mRenameButton = MakeButton(UserDialog::UserDialog_RenameUser, this, "Rename" /*[RENAME_BUTTON]*/);
-	mDeleteButton = MakeButton(UserDialog::UserDialog_DeleteUser, this, "Delete" /*[DELETE_BUTTON]*/);
+	mRenameButton = MakeButton(UserDialog::UserDialog_RenameUser, this, "[RENAME_BUTTON]");
+	mDeleteButton = MakeButton(UserDialog::UserDialog_DeleteUser, this, "[DELETE_BUTTON]");
+
+	mListSlider = new Slider(IMAGE_ZOMBATAR_TOS_SLIDER, IMAGE_ZOMBATAR_TOS_SLIDER_THUMB, UserDialog::UserDialog_ListSlider, this);
+	mListSlider->mHorizontal = false;
+	mListSlider->SetValue(0);
+	mListSlider->mDisabled = true;
+	mListSlider->mVisible = false;
 
 	mNumUsers = 0;
 	if (theApp->mPlayerInfo)
@@ -52,10 +59,12 @@ UserDialog::UserDialog(LawnApp *theApp)
 		mUserList->AddLine(anItr->second.mName, false);
 		mNumUsers++;
 	}
+	mUserList->AddLine(TodStringTranslate("[CREATE_NEW_USER]"), false);
 
-	if (mNumUsers < 8)
+	if (mNumUsers >= 8)
 	{
-		mUserList->AddLine("(Create a New User)" /*[CREATE_NEW_USER]*/, false);
+		mListSlider->mDisabled = false;
+		mListSlider->mVisible = true;
 	}
 
 	mTallBottom = true;
@@ -68,6 +77,7 @@ UserDialog::~UserDialog()
 	delete mUserList;
 	delete mRenameButton;
 	delete mDeleteButton;
+	delete mListSlider;
 }
 
 //0x51CC80
@@ -89,6 +99,8 @@ void UserDialog::Resize(int theX, int theY, int theWidth, int theHeight)
 						  0,
 						  0,
 						  0);
+
+	mListSlider->Resize(Rect(GetWidth() + 20, GetTop() + 5, 40, 200));
 }
 
 //0x51CD20
@@ -104,6 +116,7 @@ void UserDialog::AddedToManager(WidgetManager *theWidgetManager)
 	AddWidget(mUserList);
 	AddWidget(mDeleteButton);
 	AddWidget(mRenameButton);
+	AddWidget(mListSlider);
 }
 
 //0x51CDC0
@@ -113,6 +126,7 @@ void UserDialog::RemovedFromManager(WidgetManager *theWidgetManager)
 	RemoveWidget(mUserList);
 	RemoveWidget(mDeleteButton);
 	RemoveWidget(mRenameButton);
+	RemoveWidget(mListSlider);
 }
 
 //0x51CE10
@@ -142,9 +156,16 @@ void UserDialog::FinishDeleteUser()
 	}
 
 	mNumUsers--;
-	if (mNumUsers == 7)
+
+	if (mNumUsers >= 8)
 	{
-		mUserList->AddLine("(Create a New User)" /*[CREATE_NEW_USER]*/, false);
+		mListSlider->mDisabled = false;
+		mListSlider->mVisible = true;
+	}
+	else
+	{
+		mListSlider->mDisabled = true;
+		mListSlider->mVisible = false;
 	}
 }
 
@@ -162,6 +183,12 @@ void UserDialog::Draw(Graphics *g)
 	LawnDialog::Draw(g);
 }
 
+void UserDialog::Update()
+{
+	if (!mListSlider->mDisabled)
+		mUserList->mPosition = mListSlider->mVal * (mNumUsers - 7);
+}
+
 //0x51CF60
 void UserDialog::ListClicked(int theId, int theIdx, int theClickCount)
 {
@@ -172,7 +199,7 @@ void UserDialog::ListClicked(int theId, int theIdx, int theClickCount)
 	else
 	{
 		mUserList->SetSelect(theIdx);
-		if (theClickCount == 2) // ���˫��
+		if (theClickCount == 2)
 		{
 			mApp->FinishUserDialog(true);
 		}
