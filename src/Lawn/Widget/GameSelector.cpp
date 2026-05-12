@@ -1488,6 +1488,7 @@ void GameSelector::AddPreviewProfiles()
 
 		aProfile->SaveDetails();
 	}
+	mApp->mProfileMgr->Save();
 	mApp->mAchievements->SyncAchievements();
 }
 

@@ -901,9 +901,9 @@ void LawnApp::FinishCreateUserDialog(bool isYes)
 		DoDialog(
 			Dialogs::DIALOG_CREATEUSERERROR,
 			true,
-			"Enter Your Name",
-			"Please enter your name to create a new user profile for storing high score data and game progress",
-			"OK",
+			"[ENTER_YOUR_NAME]",
+			"[USER_ERROR_MESSAGE]",
+			"[DIALOG_BUTTON_OK]",
 			Dialog::BUTTONS_FOOTER);
 	}
 	else if (mPlayerInfo == nullptr && (!isYes || aName.empty()))
@@ -911,9 +911,9 @@ void LawnApp::FinishCreateUserDialog(bool isYes)
 		DoDialog(
 			Dialogs::DIALOG_CREATEUSERERROR,
 			true,
-			"Enter Your Name" /*"[ENTER_YOUR_NAME]"*/,
-			"Please enter your name to create a new user profile for storing high score data and game progress" /*"[ENTER_NEW_USER]"*/,
-			"OK" /*"[DIALOG_BUTTON_OK]"*/,
+			"[ENTER_YOUR_NAME]",
+			"[USER_ERROR_MESSAGE]",
+			"[DIALOG_BUTTON_OK]",
 			Dialog::BUTTONS_FOOTER);
 	}
 	else if (!isYes)
