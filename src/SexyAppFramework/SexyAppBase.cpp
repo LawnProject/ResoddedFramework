@@ -2171,6 +2171,14 @@ void SexyAppBase::UpdateFrames()
 
 	mMusicInterface->Update();
 	CleanSharedImages();
+
+#if SEXY_USE_CONTROLLER
+	for (int i = 0; i < MAX_GAMEPADS; i++)
+	{
+		if (mGamepads[i] != nullptr)
+			mGamepads[i]->UpdateStates(1.0f);
+	}
+#endif
 }
 
 void SexyAppBase::DoUpdateFramesF(float theFrac)

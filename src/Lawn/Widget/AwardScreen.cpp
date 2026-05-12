@@ -239,6 +239,13 @@ AwardScreen::AwardScreen(LawnApp *theApp, AwardType theAwardType)
 
 	if (mApp->EarnedGoldTrophy())
 		mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_NOBEL_PEAS_PRIZE);
+
+#if SEXY_USE_CONTROLLER
+	if (mApp->UsingGamepad() && mApp->mGamepads[0] && !IsPaperNote())
+	{
+		mApp->mGamepads[0]->AddRumbleEffect(0.4f, 0.4f, 1000);
+	}
+#endif
 }
 
 //0x406420 & 0x406440

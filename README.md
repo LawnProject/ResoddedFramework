@@ -36,7 +36,7 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 - UTF-8 Support - 100%
 
 - MP3/OGG/FLAC Lawn Music - 100%
-- Controller Support - 46%
+- Controller Support - 48%
 ### Low Priority
 - Multi-platform support - 15%
 - Separate mod resources (.pak + folders) - 100%

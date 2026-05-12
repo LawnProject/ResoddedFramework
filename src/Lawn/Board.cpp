@@ -4772,6 +4772,30 @@ void Board::MouseDown(int x, int y, int theClickCount)
 	}
 #endif
 
+#if SEXY_USE_CONTROLLER
+	if (mApp->UsingGamepad() && mApp->mGamepads[0] != nullptr && mApp->mGamepads[0]->IsButtonDown(GamepadButtons::BUTTON_WEST))
+	{
+		// For combat minigames, we use the grid-centered coordinates.
+		// These are derived from mCursorObject which is updated in CursorObject::Update to snap to grid.
+		int aCombatX = mCursorObject->mX + 25; 
+		int aCombatY = mCursorObject->mY + 35;
+
+		if (mApp->IsWhackAZombieLevel())
+		{
+			mChallenge->MouseDownWhackAZombie(aCombatX, aCombatY);
+			return;
+		}
+		if (mApp->IsScaryPotterLevel())
+		{
+			if (aHitResult.mObjectType == GameObjectType::OBJECT_TYPE_SCARY_POT)
+			{
+				mChallenge->ScaryPotterMalletPot((GridItem*)aHitResult.mObject);
+				return;
+			}
+		}
+	}
+#endif
+
 	if (mChallenge->MouseDown(x, y, theClickCount, &aHitResult))
 		return;
 
@@ -6285,8 +6309,8 @@ void Board::Update()
 			float aSpeedScale = 6.0f;
 			int aPrevGridX = PixelToGridXKeepOnBoard((int)mGamepadX, (int)mGamepadY);
 			
-			float aRawX = aPad->GetLeftAxisXPosition();
-			float aRawY = aPad->GetLeftAxisYPosition();
+			float aRawX = aPad->GetAxisXPositionRamped();
+			float aRawY = aPad->GetAxisYPositionRamped();
 
 			// Apply a power curve for more precision at low stick tilts
 			auto aCurveInput = [](float theVal) {
@@ -6458,25 +6482,13 @@ void Board::Update()
 			int aVX = GridToPixelX(aActGridX, aActGridY) + 40;
 			int aVY = GridToPixelY(aActGridX, aActGridY) + 50;
 
-			// ---------------------------------------------------
-			// Read current button states
-			// ---------------------------------------------------
-			bool aCurSouth     = aPad->IsButtonDown(GamepadButtons::BUTTON_SOUTH);
-			bool aCurEast      = aPad->IsButtonDown(GamepadButtons::BUTTON_EAST);
-			bool aCurWest      = aPad->IsButtonDown(GamepadButtons::BUTTON_WEST);
-			bool aCurNorth     = aPad->IsButtonDown(GamepadButtons::BUTTON_NORTH);
-			bool aCurStart     = aPad->IsButtonDown(GamepadButtons::BUTTON_START);
-			bool aCurLShoulder = aPad->IsButtonDown(GamepadButtons::BUTTON_LEFT_SHOULDER);
-			bool aCurRShoulder = aPad->IsButtonDown(GamepadButtons::BUTTON_RIGHT_SHOULDER);
-
-			// Detect rising edges (fires only on the frame the button is first pressed)
-			bool aPressedSouth     = aCurSouth     && !mGamepadPrevSouth;
-			bool aPressedEast      = aCurEast      && !mGamepadPrevEast;
-			bool aPressedWest      = aCurWest      && !mGamepadPrevWest;
-			(void)(aCurNorth);  // Y reserved for future use
-			bool aPressedStart     = aCurStart     && !mGamepadPrevStart;
-			bool aPressedLShoulder = aCurLShoulder && !mGamepadPrevLShoulder;
-			bool aPressedRShoulder = aCurRShoulder && !mGamepadPrevRShoulder;
+			// Detect rising edges using Gamepad helper methods
+			bool aPressedSouth     = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_SOUTH);
+			bool aPressedEast      = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_EAST);
+			bool aPressedWest      = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_WEST);
+			bool aPressedStart     = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_START);
+			bool aPressedLShoulder = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_LEFT_SHOULDER);
+			bool aPressedRShoulder = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_RIGHT_SHOULDER);
 
 			// True for modes without a standard seed bank (no pick-up logic)
 			bool aIsGardenMode = (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
@@ -6528,38 +6540,60 @@ void Board::Update()
 
 				// In Whack-a-Zombie / Scary Potter, A should only click if holding a seed.
 				// If cursor is empty, A does nothing on board (X triggers the hammer).
-				bool aHoldingSomething = (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_NORMAL);
+				bool aHoldingSeed = (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_BANK || 
+				                      mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_USABLE_COIN);
 				bool aIsWhackLevel = mApp->IsWhackAZombieLevel() || mApp->IsScaryPotterLevel();
 
-				if (aHoldingSomething || !aIsWhackLevel)
+				if (aHoldingSeed || !aIsWhackLevel)
 				{
-					mGamepadIgnoreChallenge = true;
-					MouseDown(aVX, aVY, 1);
-					MouseUp(aVX, aVY, 1);
-					mGamepadIgnoreChallenge = false;
-					aPad->AddRumbleEffect(0.1f, 0.2f, 60);
+					// Extra guard: If A is pressed while holding a shovel in a normal level, do nothing
+					if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_SHOVEL)
+					{
+						mGamepadIgnoreChallenge = true;
+						MouseDown(aVX, aVY, 1);
+						MouseUp(aVX, aVY, 1);
+						mGamepadIgnoreChallenge = false;
+						aPad->AddRumbleEffect(0.1f, 0.2f, 60);
+					}
 				}
 			}
 
 			// ---------------------------------------------------
-			// B (EAST): Cancel / return seed to bank
+			// B (EAST): Shovel (pick up / use) / Cancel seed
 			// ---------------------------------------------------
 			if (aPressedEast)
 			{
-				if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_NORMAL)
+				if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_SHOVEL)
 				{
+					// Use shovel (action)
+					MouseDown(aVX, aVY, 1);
+					MouseUp(aVX, aVY, 1);
+					aPad->AddRumbleEffect(0.1f, 0.1f, 30);
+				}
+				else if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_NORMAL)
+				{
+					// Holding seed or something else — return it
 					RefreshSeedPacketFromCursor();
+				}
+				else if (mShowShovel)
+				{
+					// Empty hand — pick up shovel
+					Rect aShovelRect = GetShovelButtonRect();
+					int aShovelCX = aShovelRect.mX + aShovelRect.mWidth  / 2;
+					int aShovelCY = aShovelRect.mY + aShovelRect.mHeight / 2;
+					MouseDown(aShovelCX, aShovelCY, 1);
+					MouseUp(aShovelCX, aShovelCY, 1);
 				}
 			}
 
 			// ---------------------------------------------------
-			// X (WEST): Shovel (pick up / cancel shovel)
+			// X (WEST): Cancel (return shovel/seed) / Hammer
 			// ---------------------------------------------------
 			if (aPressedWest)
 			{
-				if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_SHOVEL)
+				if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_NORMAL)
 				{
-					// Already holding shovel — return it
+					// Holding anything (shovel, seed, etc) — return it
 					RefreshSeedPacketFromCursor();
 				}
 				else if (mApp->IsWhackAZombieLevel() || mApp->IsScaryPotterLevel() || mApp->IsIZombieLevel())
@@ -6568,15 +6602,6 @@ void Board::Update()
 					MouseDown(aVX, aVY, 1);
 					MouseUp(aVX, aVY, 1);
 					aPad->AddRumbleEffect(0.1f, 0.1f, 30);
-				}
-				else if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_NORMAL && mShowShovel)
-				{
-					// Simulate a click on the shovel button
-					Rect aShovelRect = GetShovelButtonRect();
-					int aShovelCX = aShovelRect.mX + aShovelRect.mWidth  / 2;
-					int aShovelCY = aShovelRect.mY + aShovelRect.mHeight / 2;
-					MouseDown(aShovelCX, aShovelCY, 1);
-					MouseUp(aShovelCX, aShovelCY, 1);
 				}
 			}
 
@@ -6605,17 +6630,6 @@ void Board::Update()
 			}
 
 			gamepad_buttons_end:;
-
-			// ---------------------------------------------------
-			// Update previous-frame state for edge detection
-			// ---------------------------------------------------
-			mGamepadPrevSouth    = aCurSouth;
-			mGamepadPrevEast     = aCurEast;
-			mGamepadPrevWest     = aCurWest;
-			mGamepadPrevNorth    = aCurNorth;
-			mGamepadPrevStart    = aCurStart;
-			mGamepadPrevLShoulder= aCurLShoulder;
-			mGamepadPrevRShoulder= aCurRShoulder;
 		}
 		else
 		{
@@ -7313,7 +7327,25 @@ void Board::DrawGameObjects(Graphics *g)
 #if SEXY_USE_CONTROLLER
 			if (mApp->UsingGamepad())
 			{
-				g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_FRAME, (int)mVisualGamepadX, (int)mVisualGamepadY, 80, 100);
+				// Slower, smoother glowing animation per user request
+				float aPulse = 1.0f + 0.02f * sinf(mMainCounter * 0.05f); 
+				int aW = (int)(80 * aPulse);
+				int aH = (int)(100 * aPulse);
+				int aX = (int)mVisualGamepadX - (aW - 80) / 2;
+				int aY = (int)mVisualGamepadY - (aH - 100) / 2;
+
+				g->SetColorizeImages(true);
+				// Soft white-yellow glow using the main frame
+				g->SetColor(Color(255, 255, 255, 200 + (int)(55 * sinf(mMainCounter * 0.05f))));
+				g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_FRAME, aX, aY, aW, aH);
+				
+				// Use the dedicated shadow image for the inner light/shadow effect
+				g->SetDrawMode(Graphics::DRAWMODE_ADDITIVE);
+				g->SetColor(Color(255, 255, 200, 80 + (int)(40 * cosf(mMainCounter * 0.05f))));
+				g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW, aX + 4, aY + 4, aW - 8, aH - 8);
+				g->SetDrawMode(Graphics::DRAWMODE_NORMAL);
+				
+				g->SetColorizeImages(false);
 			}
 #endif
 			break;
