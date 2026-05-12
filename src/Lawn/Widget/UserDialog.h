@@ -4,26 +4,30 @@
 #include "LawnDialog.h"
 #include "../../SexyAppFramework/ListListener.h"
 #include "../../SexyAppFramework/EditListener.h"
+#include "../../SexyAppFramework/SliderListener.h"
 
 namespace Sexy
 {
 class ListWidget;
+class Slider;
 };
 
-class UserDialog : public LawnDialog, public ListListener, public EditListener
+class UserDialog : public LawnDialog, public ListListener, public EditListener, public SliderListener
 {
   protected:
 	enum
 	{
 		UserDialog_RenameUser,
-		UserDialog_DeleteUser
+		UserDialog_DeleteUser,
+		UserDialog_ListSlider,
 	};
 
   public:
-	ListWidget *mUserList;		 //+0x174
-	DialogButton *mRenameButton; //+0x178
-	DialogButton *mDeleteButton; //+0x17C
-	int mNumUsers;				 //+0x180
+	ListWidget *mUserList;
+	DialogButton *mRenameButton;
+	DialogButton *mDeleteButton;
+	Slider *mListSlider;
+	int mNumUsers;
 
   public:
 	UserDialog(LawnApp *theApp);
@@ -38,6 +42,7 @@ class UserDialog : public LawnDialog, public ListListener, public EditListener
 	virtual void EditWidgetText(int theId, const SexyString &theString);
 	virtual bool AllowChar(int theId, SexyChar theChar);
 	virtual void Draw(Graphics *g);
+	virtual void Update();
 	void FinishDeleteUser();
 	void FinishRenameUser(const SexyString &theNewName);
 	SexyString GetSelName();

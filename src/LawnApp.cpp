@@ -703,8 +703,8 @@ void LawnApp::DoConfirmBackToMain()
 	LawnDialog *aDialog = (LawnDialog *)DoDialog(
 		Dialogs::DIALOG_CONFIRM_BACK_TO_MAIN,
 		true,
-		"Leave Game?" /*"[LEAVE_GAME]"*/,
-		"Do you want to return\nto the main menu?\n\nYour game will be saved." /*"[LEAVE_GAME_HEADER]"*/,
+		"[LEAVE_GAME]",
+		"[LEAVE_GAME_HEADER]",
 		"",
 		Dialog::BUTTONS_YES_NO);
 
@@ -928,9 +928,9 @@ void LawnApp::FinishCreateUserDialog(bool isYes)
 			DoDialog(
 				Dialogs::DIALOG_CREATEUSERERROR,
 				true,
-				"Name Conflict" /*"[NAME_CONFLICT]"*/,
-				"The name you entered is already being used.  Please enter a unique player name" /*"[ENTER_UNIQUE_PLAYER_NAME]"*/,
-				"OK" /*"[DIALOG_BUTTON_OK]"*/,
+				"[NAME_CONFLICT]",
+				"[ENTER_UNIQUE_PLAYER_NAME]",
+				"[DIALOG_BUTTON_OK]",
 				Dialog::BUTTONS_FOOTER);
 		}
 		else
@@ -956,9 +956,8 @@ void LawnApp::DoConfirmDeleteUserDialog(const SexyString &theName)
 	KillDialog(Dialogs::DIALOG_CONFIRMDELETEUSER);
 	DoDialog(Dialogs::DIALOG_CONFIRMDELETEUSER,
 			 true,
-			 "Are You Sure" /*"[ARE_YOU_SURE]"*/,
-			 // StrFormat(TodStringTranslate("[DELETE_USER_WARNING]").c_str(), StringToSexyStringFast(theName))
-			 StrFormat("This will permanently remove '%s' from the player roster!", theName.c_str()),
+			 "[ARE_YOU_SURE]",
+			 StrFormat(TodStringTranslate("[DELETE_USER_WARNING]").c_str(), theName.c_str()),
 			 "",
 			 Dialog::BUTTONS_YES_NO);
 }
@@ -1044,9 +1043,9 @@ void LawnApp::FinishRenameUserDialog(bool isYes)
 		DoDialog(
 			Dialogs::DIALOG_RENAMEUSERERROR,
 			true,
-			"Name Conflict" /*"[NAME_CONFLICT]"*/,
-			"The name you entered is already being used.  Please enter a unique player name" /*"[ENTER_UNIQUE_PLAYER_NAME]"*/,
-			"OK" /*"[DIALOG_BUTTON_OK]"*/,
+			"[NAME_CONFLICT]",
+			"[ENTER_UNIQUE_PLAYER_NAME]",
+			"[DIALOG_BUTTON_OK]",
 			Dialog::BUTTONS_FOOTER);
 		return;
 	}
@@ -2919,11 +2918,7 @@ void LawnApp::CrazyDaveTalkMessage(const SexyString &theMessage)
 			ReanimatorTrackInstance *aHandTrackInstance = aCrazyDaveReanim->GetTrackInstanceByName("Dave_handinghand");
 			AttachReanim(aHandTrackInstance->mAttachmentID, aMoneyBagReanim, 90.0f, 405.0f);
 			aCrazyDaveReanim->Update();
-			/*
-			v16 = Reanimation::GetTrackInstanceByName(v3, "Dave_handinghand");
-			theAnimRate = 405.0;
-			v17 = 90.0;
-			*/
+
 			if (doSound)
 			{
 				PlayFoley(FoleyType::FOLEY_CRAZY_DAVE_LONG);
