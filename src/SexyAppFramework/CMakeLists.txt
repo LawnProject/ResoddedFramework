@@ -81,7 +81,7 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
 endif()
 
 set(BUILD_INFO_SRC ${CMAKE_CURRENT_SOURCE_DIR}/BuildInfo.h.in)
-set(BUILD_INFO_DST ${CMAKE_CURRENT_SOURCE_DIR}//BuildInfo.h)
+set(BUILD_INFO_DST ${CMAKE_CURRENT_SOURCE_DIR}/BuildInfo.h)
 
 add_custom_target(build_info ALL
     COMMAND ${CMAKE_COMMAND}
@@ -92,6 +92,7 @@ add_custom_target(build_info ALL
     COMMENT "Updating build info..."
 )
 
+set_source_files_properties(${BUILD_INFO_DST} PROPERTIES GENERATED TRUE)
 target_sources(${PROJECT_NAME} PRIVATE ${BUILD_INFO_DST})
 add_dependencies(${PROJECT_NAME} build_info)
 

@@ -129,6 +129,7 @@ class Board : public Widget, public ButtonListener
 
 #if LAWN_DEBUG_TOOLS
 	Zombie *mDebugSelectedZombie;
+	Plant  *mDebugSelectedPlant;
 #endif
 
 	bool mPaused;													  //+0x164

@@ -5204,6 +5204,10 @@ void Plant::Die()
 			aPotReanim->mAnimRate = RandRangeFloat(10.0f, 15.0f);
 		}
 	}
+#if LAWN_DEBUG_TOOLS
+	if (mBoard != nullptr && mBoard->mDebugSelectedPlant == this)
+		mBoard->mDebugSelectedPlant = nullptr;
+#endif
 }
 
 PlantDefinition &GetPlantDefinition(SeedType theSeedType)

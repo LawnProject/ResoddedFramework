@@ -230,6 +230,7 @@ Board::Board(LawnApp *theApp)
 
 #if LAWN_DEBUG_TOOLS
 	mDebugSelectedZombie = nullptr;
+	mDebugSelectedPlant  = nullptr;
 #endif
 }
 
@@ -237,6 +238,9 @@ Board::Board(LawnApp *theApp)
 Board::~Board()
 {
 	mDebugSelectedZombie = nullptr;
+#if LAWN_DEBUG_TOOLS
+	mDebugSelectedPlant  = nullptr;
+#endif
 	delete mAdvice;
 	delete mCursorObject;
 	delete mCursorPreview;
@@ -8677,6 +8681,16 @@ void Board::DrawUITop(Graphics *g)
 
 		Rect aAttackRect = mDebugSelectedZombie->GetZombieAttackRect();
 		g->SetColor(Color(255, 0, 0));
+		g->DrawRect(aAttackRect);
+	}
+	if (mApp->mDebuggerEnabled && mDebugSelectedPlant && !mDebugSelectedPlant->mDead)
+	{
+		Rect aPlantRect = mDebugSelectedPlant->GetPlantRect();
+		g->SetColor(Color(0, 255, 255));
+		g->DrawRect(aPlantRect);
+
+		Rect aAttackRect = mDebugSelectedPlant->GetPlantAttackRect();
+		g->SetColor(Color(255, 128, 0));
 		g->DrawRect(aAttackRect);
 	}
 #endif
