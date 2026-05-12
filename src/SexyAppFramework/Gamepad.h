@@ -25,6 +25,7 @@ namespace Sexy
 		BUTTON_DPAD_DOWN,
 		BUTTON_DPAD_LEFT,
 		BUTTON_DPAD_RIGHT,
+		BUTTON_COUNT = SDL_GAMEPAD_BUTTON_COUNT
 	};
 
 	class Gamepad
@@ -45,10 +46,10 @@ namespace Sexy
 			float GetRightAxisYPosition();
 			void AddRumbleEffect(float theLowFrequency, float theHighFrequency, uint32_t theMsDuration);
 			void Reset();
-			/* //todo: research and implement
-			void GetAxisYPositionRamped(void);
-			void GetAxisXPositionRamped(void);
-			*/
+			bool IsButtonJustPressed(GamepadButtons theButton);
+			bool IsButtonJustReleased(GamepadButtons theButton);
+			float GetAxisXPositionRamped();
+			float GetAxisYPositionRamped();
 			uint32_t GetGamepadIndex();
 			void SetGamepadIndex(uint32_t theIndex);
 			void Status();
@@ -63,6 +64,7 @@ namespace Sexy
 		private:
 			SDL_Gamepad *mInternalGamepad;
 			SDL_JoystickID mDeviceID; 
+			bool mPrevButtons[SDL_GAMEPAD_BUTTON_COUNT];
 	};
 
 }

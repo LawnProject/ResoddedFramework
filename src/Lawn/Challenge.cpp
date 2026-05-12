@@ -1262,13 +1262,8 @@ bool Challenge::MouseDown(int x, int y, int theClickCount, HitResult *theHitResu
 	}
 
 	if (mApp->IsWhackAZombieLevel() && theHitResult->mObjectType == OBJECT_TYPE_NONE &&
-		mBoard->mCursorObject->mCursorType == CURSOR_TYPE_HAMMER && theClickCount >= 0
-#if SEXY_USE_CONTROLLER
-		 && !mBoard->mGamepadIgnoreChallenge
-#endif
-		)
+		mBoard->mCursorObject->mCursorType == CURSOR_TYPE_HAMMER && theClickCount >= 0)
 	{
-		
 		MouseDownWhackAZombie(x, y);
 		return true;
 	}
@@ -1279,11 +1274,11 @@ bool Challenge::MouseDown(int x, int y, int theClickCount, HitResult *theHitResu
 		return true;
 	}
 
-	if (mApp->IsScaryPotterLevel() && theHitResult->mObjectType == OBJECT_TYPE_SCARY_POT 
 #if SEXY_USE_CONTROLLER
-		&& !mBoard->mGamepadIgnoreChallenge
+	if (mApp->IsScaryPotterLevel() && theHitResult->mObjectType == OBJECT_TYPE_SCARY_POT && !mApp->UsingGamepad())
+#else
+	if (mApp->IsScaryPotterLevel() && theHitResult->mObjectType == OBJECT_TYPE_SCARY_POT)
 #endif
-		)
 	{
 		ScaryPotterMalletPot((GridItem *)theHitResult->mObject);
 		return true;
