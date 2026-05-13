@@ -20,10 +20,6 @@ class DebuggerWindow : public ImGuiWindow
 	~DebuggerWindow();
 
 	virtual void Update();
-
-	// Called from outside to push a log line
-	void PushLog(const std::string& theMsg);
-
   private:
 	// ── State ─────────────────────────────────────────────────────────────
 	LawnApp*  mApp;
@@ -48,10 +44,6 @@ class DebuggerWindow : public ImGuiWindow
 	bool      mShowImGuiDemo;
 	bool      mDebugDrawGrid;
 	bool      mDebugDrawRects;
-
-	// Log
-	std::deque<std::string> mLog;
-	bool                    mLogAutoScroll;
 
 	// App panel
 	int       mFastLoadModeIdx;

@@ -102,6 +102,10 @@ const char* DebuggerWindow::DebugTextModeName(DebugTextMode m)
     case DEBUG_TEXT_MEMORY:     return "Memory";
     case DEBUG_TEXT_COLLISION:  return "Collision";
     case DEBUG_TEXT_GRID:       return "Grid";
+#if SEXY_USE_CONTROLLER
+    case DEBUG_TEXT_CONTROLLER: return "Controller";
+#endif
+
     default: return "Other";
     }
 }
@@ -112,8 +116,8 @@ const char* DebuggerWindow::CoinTypeName(CoinType c)
     case COIN_SILVER:   return "Silver";
     case COIN_GOLD:     return "Gold";
     case COIN_DIAMOND:  return "Diamond";
-    case COIN_SUN:      return "Sun (150)";
-    case COIN_SMALLSUN: return "Small Sun (25)";
+    case COIN_SUN:      return "Sun (50)";
+    case COIN_SMALLSUN: return "Small Sun (15)";
     case COIN_LARGESUN: return "Large Sun (50)";
     default: return "Other";
     }
@@ -126,6 +130,9 @@ const char* DebuggerWindow::CoinMotionName(CoinMotion m)
     case COIN_MOTION_FROM_SKY_SLOW: return "Sky Slow";
     case COIN_MOTION_FROM_PLANT:    return "From Plant";
     case COIN_MOTION_COIN:          return "Coin";
+    case COIN_MOTION_LAWNMOWER_COIN:return "From Lawnmower";
+    case COIN_MOTION_FROM_PRESENT:  return "From Present";
+    case COIN_MOTION_FROM_BOSS:     return "From Boss";
     default: return "Other";
     }
 }
@@ -149,18 +156,13 @@ DebuggerWindow::DebuggerWindow(LawnApp *theApp) : ImGuiWindow(theApp->mImGuiMana
     mShowImGuiDemo      = false;
     mDebugDrawGrid      = false;
     mDebugDrawRects     = false;
-    mLogAutoScroll      = true;
     mFastLoadModeIdx    = 0;
 }
 DebuggerWindow::~DebuggerWindow()
 {
     ImGuiWindow::~ImGuiWindow();
 }
-void DebuggerWindow::PushLog(const std::string& msg)
-{
-    if (mLog.size() >= 256) mLog.pop_front();
-    mLog.push_back(msg);
-}
+
 
 // ─────────────────────────────────────────────────────────────
 // Main Update
@@ -190,7 +192,7 @@ void DebuggerWindow::Update()
         ImGui::EndTabBar();
     }
     ImGui::End();
-    MTRand::gIgnoreAssert = false;
+	MTRand::gIgnoreAssert = false;
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -210,6 +212,12 @@ void DebuggerWindow::DrawBoardTab()
         ImGui::EndTabBar();
     }
 }
+
+static const CoinType kCTypes[] = {COIN_SILVER, COIN_GOLD, COIN_DIAMOND, COIN_SUN, COIN_SMALLSUN, COIN_LARGESUN};
+
+static const CoinMotion kCMotionTypes[] = {COIN_MOTION_FROM_SKY, COIN_MOTION_FROM_SKY_SLOW,	 COIN_MOTION_FROM_PLANT,
+										   COIN_MOTION_COIN,	 COIN_MOTION_LAWNMOWER_COIN, COIN_MOTION_FROM_PRESENT,
+										   COIN_MOTION_FROM_BOSS};
 
 // ─────────────────────────────────────────────────────────────
 // Cheats sub-tab
@@ -234,8 +242,6 @@ void DebuggerWindow::DrawBoardCheats()
     // Spawn coin
     ImGui::SetNextItemWidth(130);
     {
-        // Coin type combo
-        static const CoinType kCTypes[] = { COIN_SILVER, COIN_GOLD, COIN_DIAMOND, COIN_SUN, COIN_SMALLSUN, COIN_LARGESUN };
         const char* cPreview = CoinTypeName(kCTypes[mSpawnCoinType < 6 ? mSpawnCoinType : 0]);
         if (ImGui::BeginCombo("Coin Type", cPreview))
         {
@@ -247,12 +253,28 @@ void DebuggerWindow::DrawBoardCheats()
             }
             ImGui::EndCombo();
         }
+
     }
-    ImGui::SameLine();
+    ImGui::SetNextItemWidth(130);
+    {
+		const char *motionPreview = CoinMotionName(kCMotionTypes[mSpawnCoinMotion < NUM_COIN_MOTIONS ? mSpawnCoinMotion : 0]);
+		if (ImGui::BeginCombo("Motion Type", motionPreview))
+		{
+			for (int i = 0; i < NUM_COIN_MOTIONS; i++)
+			{
+				bool sel = (mSpawnCoinMotion == i);
+				if (ImGui::Selectable(CoinMotionName(kCMotionTypes[i]), sel))
+					mSpawnCoinMotion = i;
+				if (sel)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndCombo();
+		}
+    }
+    
     if (ImGui::Button("Spawn Coin"))
     {
-        static const CoinType kCTypes[] = { COIN_SILVER, COIN_GOLD, COIN_DIAMOND, COIN_SUN, COIN_SMALLSUN, COIN_LARGESUN };
-        b->AddCoin(400, 300, kCTypes[mSpawnCoinType], COIN_MOTION_FROM_SKY);
+		b->AddCoin(BOARD_WIDTH / 2, BOARD_HEIGHT / 2, kCTypes[mSpawnCoinType], kCMotionTypes[mSpawnCoinMotion]);
     }
 
     // Cheat modes
@@ -280,20 +302,16 @@ void DebuggerWindow::DrawBoardCheats()
 
     // Time / Flow controls
     ImGui::SeparatorText("Time Control");
-    ImGui::Checkbox("Slow-Mo", &gSlowMo);
-    ImGui::SameLine();
-    ImGui::Checkbox("Fast-Mo", &gFastMo);
-    ImGui::SameLine();
+
     bool paused = b->mPaused;
     if (ImGui::Checkbox("Paused", &paused)) b->Pause(paused);
 
     // Fog
     ImGui::SeparatorText("Fog");
-    ImGui::Checkbox("Easy Planting", &mApp->mEasyPlantingCheat);
     if (b->StageHasFog())
     {
         ImGui::SliderFloat("Fog Offset", &b->mFogOffset, -200.0f, 800.0f);
-        if (ImGui::Button("Blow All Fog")) b->mFogBlownCountDown = 1;
+        if (ImGui::Button("Blow All Fog")) b->mFogBlownCountDown = 4000;
     }
     else ImGui::TextDisabled("(no fog on this level)");
 
@@ -315,10 +333,8 @@ void DebuggerWindow::DrawBoardCheats()
 
     ImGui::SetNextItemWidth(120);
     ImGui::InputInt("Bonus Mowers", &b->mBonusLawnMowersRemaining);
-    ImGui::InputInt("Ice Timer Row 0", &b->mIceTimer[0]);
     ImGui::InputInt("Time Stop Ctr",   &b->mTimeStopCounter);
     ImGui::InputInt("Shake (X)",       &b->mShakeAmountX);
-    ImGui::SameLine();
     ImGui::InputInt("Shake (Y)",       &b->mShakeAmountY);
     if (ImGui::Button("Do Shake")) b->ShakeBoard(b->mShakeAmountX, b->mShakeAmountY);
 }
@@ -399,8 +415,7 @@ void DebuggerWindow::DrawBoardPlants()
     // Table of all plants
     ImGui::Text("Total Plants: %d", b->mPlants.mSize);
     if (ImGui::BeginTable("PlantTable", 7,
-        ImGuiTableFlags_Borders | ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg,
-        ImVec2(0, 300)))
+        ImGuiTableFlags_Borders | ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg))
     {
         ImGui::TableSetupScrollFreeze(0, 1);
         ImGui::TableSetupColumn("Type");
@@ -510,7 +525,6 @@ void DebuggerWindow::DrawBoardZombies()
         if (z->mShieldType != SHIELDTYPE_NONE) ImGui::InputInt("Shield HP", &z->mShieldHealth);
 
         ImGui::InputInt("Chilled", &z->mChilledCounter);
-        ImGui::SameLine();
         ImGui::InputInt("Buttered", &z->mButteredCounter);
         ImGui::Checkbox("MindControl", &z->mMindControlled);
         ImGui::SameLine();
@@ -722,10 +736,16 @@ void DebuggerWindow::DrawSaveFileTab()
             ImGui::SameLine();
             ImGui::Checkbox("Survival Unlocked",   &pi->mHasUnlockedSurvivalMode);
             ImGui::Checkbox("New MiniGame",        &pi->mHasNewMiniGame);
-            ImGui::SameLine();
+
+            ImGui::Checkbox("New IZombie",         &pi->mHasNewIZombie);
+			ImGui::SameLine();
+            ImGui::Checkbox("New Vasebreaker",     &pi->mHasNewScaryPotter);
+			ImGui::SameLine();
+            ImGui::Checkbox("New Survival",        &pi->mHasNewSurvival);
+
             ImGui::Checkbox("Has Seen Stinky",     &pi->mHasSeenStinky);
             ImGui::SameLine();
-            ImGui::Checkbox("Magic Taco",          &pi->mNeedsMagicTacoReward);
+            ImGui::Checkbox("Need Magic Taco Reward",          &pi->mNeedsMagicTacoReward);
 
             ImGui::SeparatorText("Actions");
             if (ImGui::Button("Full Unlock"))
@@ -734,7 +754,8 @@ void DebuggerWindow::DrawSaveFileTab()
                 pi->mHasUnlockedMinigames = pi->mHasUnlockedPuzzleMode = pi->mHasUnlockedSurvivalMode = true;
                 pi->mHasNewMiniGame = pi->mHasNewScaryPotter = pi->mHasNewIZombie = pi->mHasNewSurvival = true;
                 pi->mCoins += 100000;
-                for (int i=0;i<NUM_ACHIEVEMENT_TYPES;i++) pi->mEarnedAchievements[i]=true;
+                for (int i=0;i<NUM_ACHIEVEMENT_TYPES;i++) 
+                    pi->mEarnedAchievements[i] = pi->mShownAchievements[i] = true;
             }
             ImGui::SameLine();
             if (ImGui::Button("Save Now")) pi->SaveDetails();
@@ -803,27 +824,11 @@ void DebuggerWindow::DrawDebugTab()
         }
     }
 
-    ImGui::SeparatorText("Overlay");
-    ImGui::Checkbox("Draw Grid Overlay",  &mDebugDrawGrid);
-    ImGui::SameLine();
-    ImGui::Checkbox("Draw Rect Overlay",  &mDebugDrawRects);
-
     ImGui::SeparatorText("Misc");
-    ImGui::Checkbox("Ignore Asserts", &MTRand::gIgnoreAssert);
-    ImGui::Text("SlowMo: %s  FastMo: %s  SlowMoCtr: %d",
-        gSlowMo?"ON":"OFF", gFastMo?"ON":"OFF", gSlowMoCounter);
-
-    ImGui::SeparatorText("Log");
-    ImGui::Checkbox("Auto-scroll",&mLogAutoScroll);
-    ImGui::SameLine();
-    if (ImGui::Button("Clear")) mLog.clear();
-    if (ImGui::BeginChild("LogChild", ImVec2(0,200), true))
-    {
-        for (auto& line : mLog) ImGui::TextUnformatted(line.c_str());
-        if (mLogAutoScroll && ImGui::GetScrollY()>=ImGui::GetScrollMaxY())
-            ImGui::SetScrollHereY(1.0f);
-    }
-    ImGui::EndChild();
+	ImGui::Checkbox("Slow-Mo", &gSlowMo);
+	ImGui::SameLine();
+	ImGui::Checkbox("Fast-Mo", &gFastMo);
+	ImGui::SameLine();
 }
 
 // ─── App panel ───────────────────────────────────────────────
