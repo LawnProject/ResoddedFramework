@@ -7,6 +7,8 @@ using namespace Sexy;
 
 std::string Renderer::mErrorString;
 
+bool Renderer::gRenderingPreDrawError = false;
+
 Renderer::Renderer(SexyAppBase* theApp) : mApp(theApp)
 {
 	mWidth = mApp->mWidth;

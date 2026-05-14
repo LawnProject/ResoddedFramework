@@ -204,6 +204,7 @@ void OpenGLRenderer::Cleanup()
 	OpenGLImage::gOpenGLImageVAO = 0;
 
 	gGLTextureCount = 0;
+	gGLTextureCount = 0;
 }
 
 void OpenGLRenderer::SetVideoOnlyDraw(bool videoOnly)
@@ -332,7 +333,6 @@ void doScissorFromTL(int x, int y, int w, int h, int screenHeight)
 	glScissor(x, screenHeight - h - y, w, h);
 }
 
-bool gRenderingPreDrawError = false;
 bool OpenGLRenderer::Redraw(Rect *theClipRect)
 {
 	if (mCommandBuffer.empty())
@@ -655,10 +655,10 @@ void OpenGLTextureData::CheckCreateTextures(MemoryImage* theImage, void* theRend
 	if (GetTextureID() != 0)
 	{
 		if (mWidth != theImage->mWidth || mHeight != theImage->mHeight || mBitsChangedCount != theImage->mBitsChangedCount)
-			CreateTextures(theImage, nullptr);
+			CreateTextures(theImage, theRendererData);
 		return;
 	}
-	CreateTextures(theImage, nullptr);
+	CreateTextures(theImage, theRendererData);
 }
 
 //Rendering
@@ -1272,6 +1272,11 @@ void OpenGLRenderer::BltRawTexture(void *theTexture,
 	aCmd.mVertices.push_back({p0, uv0, aColor});
 
 	AddCommand(aCmd);
+}
+
+bool OpenGLRenderer::TestOpenGL()
+{
+	return false;
 }
 
 #endif

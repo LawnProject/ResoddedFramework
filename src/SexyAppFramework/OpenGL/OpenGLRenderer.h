@@ -228,6 +228,9 @@ namespace Sexy
 							  const Rect &theClipRect,
 							  const Color &theColor,
 							  int theDrawMode);
+
+		static bool TestOpenGL();
+
 		glm::vec2 TransformToPoint(float x, float y, const SexyMatrix3& m, float aTransX = 0, float aTransY = 0)
 		{
 			glm::vec2 result;

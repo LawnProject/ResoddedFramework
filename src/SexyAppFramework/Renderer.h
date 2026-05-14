@@ -66,6 +66,9 @@ namespace Sexy
 #if SEXY_USE_OPENGL
 		BACKEND_OPENGL,
 #endif
+#if SEXY_USE_SDL3_RENDERER
+		BACKEND_SDL3,
+#endif
 	};
 
 	const std::unordered_map<RenderingBackend, std::string> gRenderBackends = 
@@ -74,6 +77,10 @@ namespace Sexy
 		#if SEXY_USE_OPENGL
 		,
 		{RenderingBackend::BACKEND_OPENGL, "OPENGL"}
+		#endif
+		#if SEXY_USE_SDL3_RENDERER
+		,
+		{RenderingBackend::BACKEND_SDL3, "SDL3_RENDERER"}
 		#endif
 	};
 
@@ -150,6 +157,8 @@ namespace Sexy
 		int mBlueShift;
 
 		TextureUVWrapMode mCurrentUVWrapMode;
+
+		static bool gRenderingPreDrawError;
 
 	  public:
 		Renderer(SexyAppBase *theApp);

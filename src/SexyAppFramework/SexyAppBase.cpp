@@ -13,6 +13,9 @@
 #if SEXY_USE_OPENGL
 #include "OpenGL/OpenGLRenderer.h"
 #endif
+#if SEXY_USE_SDL3_RENDERER
+#include "SDL3Renderer/SDL3Renderer.h"
+#endif
 #if SEXY_USE_IMGUI
 #include "ImGui/ImGuiManager.h"
 #endif
@@ -383,8 +386,7 @@ SexyAppBase::~SexyAppBase()
 			//RegistryWriteBoolean("Is3D", mDDInterface->mIs3D);
 	}
 
-	extern bool gRenderingPreDrawError;
-	if (!showedMsgBox && gRenderingPreDrawError && !IsScreenSaver())
+	if (!showedMsgBox && Renderer::gRenderingPreDrawError && !IsScreenSaver())
 	{
 
 		SDL_MessageBoxButtonData buttons[] = {{SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes"},
@@ -2256,8 +2258,7 @@ void SexyAppBase::Redraw(Rect *theClipRect)
 	static uint32_t aRetryTick = 0;
 	if (!mRenderer->Redraw(theClipRect))
 	{
-		extern bool gRenderingPreDrawError;
-		gRenderingPreDrawError = false; // something wrong happened!!!
+		Renderer::gRenderingPreDrawError = false; // something wrong happened!!!
 		if (!gIsFailing)
 		{
 			gIsFailing = true;
@@ -4323,8 +4324,23 @@ void SexyAppBase::MakeWindow()
 
 	if (mRenderer == nullptr)
 	{
+#if SEXY_USE_SDL3_RENDERER
+		if (SDL3Renderer::TestSDL3())
+		{
+			mRenderer = new SDL3Renderer(this);
+		}
+		else
+#endif
 #if SEXY_USE_OPENGL
-		mRenderer = new OpenGLRenderer(this);
+		if (OpenGLRenderer::TestOpenGL())
+		{
+			mRenderer = new OpenGLRenderer(this);
+		}
+		else
+		{
+			MsgBox("Couldn't create a renderer", "Engine Error");
+			assert(false);
+		}
 #endif
 
 		// Enable 3d setting
