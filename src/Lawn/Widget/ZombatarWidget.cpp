@@ -13,6 +13,7 @@ ZombatarWidget::ZombatarWidget(LawnApp *theApp)
 	mApp = theApp;
 	mWidth = BOARD_WIDTH;
 	mHeight = BOARD_HEIGHT;
+	TodLoadResources("DelayLoad_Almanac");
 	TodLoadResources("DelayLoad_Zombatar");
 
 	mBackButton = MakeNewButton(ZombatarWidget::ZOMBATAR_BACK, this, "", nullptr, Sexy::IMAGE_BLANK, Sexy::IMAGE_ZOMBATAR_MAINMENUBACK_HIGHLIGHT, Sexy::IMAGE_ZOMBATAR_MAINMENUBACK_HIGHLIGHT);
@@ -29,6 +30,16 @@ ZombatarWidget::~ZombatarWidget()
 void ZombatarWidget::Draw(Graphics *g)
 {
 	g->DrawImage(IMAGE_ZOMBATAR_MAIN_BG, 0, 0);
+	g->ClipRect(600, 300, 170, 200);
+	g->DrawImage(IMAGE_ALMANAC_GROUNDDAY, 600, 300);
+	g->ClearClipRect();
+
+	int aWidgetX = 25;
+	int aWidgetY = 25;
+	g->DrawImage(IMAGE_ZOMBATAR_WIDGET_BG, aWidgetX, aWidgetY);
+	g->DrawImage(IMAGE_ZOMBATAR_WIDGET_INNER_BG, aWidgetX + 127, aWidgetY + 100);
+	g->DrawImage(IMAGE_ZOMBATAR_DISPLAY_WINDOW, 0, 0);
+
 	TodDrawStringWrapped(g, "WORK IN PROGRESS COME BACK LATER", Rect(BOARD_WIDTH / 2 - 100, BOARD_HEIGHT / 2, 200, 500), FONT_BRIANNETOD16, Color(255, 255, 255), DrawStringJustification::DS_ALIGN_CENTER);
 }
 
