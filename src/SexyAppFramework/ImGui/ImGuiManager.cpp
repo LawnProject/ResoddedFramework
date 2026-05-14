@@ -7,6 +7,9 @@
 #if SEXY_USE_OPENGL
 #include "OpenGL/OpenGLRenderer.h"
 #endif
+#if SEXY_USE_SDL3_RENDERER
+#include "SDL3Renderer/SDL3Renderer.h"
+#endif
 
 using namespace Sexy;
 
@@ -29,11 +32,18 @@ void ImGuiManager::Frame()
 		case RenderingBackend::BACKEND_OPENGL: 
 		{
 			ImGui_ImplOpenGL3_NewFrame();
-			ImGui_ImplSDL3_NewFrame();
+			break;
+		}
+#endif
+#if SEXY_USE_SDL3_RENDERER
+		case RenderingBackend::BACKEND_SDL3: 
+		{
+			ImGui_ImplSDLRenderer3_NewFrame();
 			break;
 		}
 #endif
 	}
+		ImGui_ImplSDL3_NewFrame();
 
 	ImGui::NewFrame();
 	for (const auto &entry : mWindows)
@@ -57,18 +67,20 @@ void ImGuiManager::Flush()
 				ImGuiIO &io = ImGui::GetIO();
 				if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 				{
-					SDL_Window *aBackupWindow = SDL_GL_GetCurrentWindow();
-					SDL_GLContext aBackupContext = SDL_GL_GetCurrentContext();
-
 					ImGui::UpdatePlatformWindows();
 					ImGui::RenderPlatformWindowsDefault();
-
-					SDL_GL_MakeCurrent(aBackupWindow, aBackupContext);
 				}
 			}
 		
 		break;
 
+		}
+#endif
+#if SEXY_USE_SDL3_RENDERER
+		case RenderingBackend::BACKEND_SDL3: {
+			ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), ((SDL3Renderer*)mApp->mRenderer)->mBackendRenderer);
+
+			break;
 		}
 #endif
 	}
@@ -83,10 +95,15 @@ void ImGuiManager::Reset()
 #if SEXY_USE_OPENGL
 		case RenderingBackend::BACKEND_OPENGL: 
 		{
-
 			ImGui_ImplOpenGL3_Shutdown();
-			ImGui_ImplSDL3_Shutdown();
-			ImGui::DestroyContext();
+			break;
+
+		}
+#endif
+#if SEXY_USE_SDL3_RENDERER
+		case RenderingBackend::BACKEND_SDL3: 
+		{
+			ImGui_ImplSDLRenderer3_Shutdown();
 			break;
 
 		}
@@ -95,6 +112,8 @@ void ImGuiManager::Reset()
 			mApp->Popup("INVALID RENDERING BACKEND GIVEN TO IMGUI");
 			break;
 	}
+	ImGui_ImplSDL3_Shutdown();
+	ImGui::DestroyContext();
 }
 
 void ImGuiManager::Init()
@@ -112,11 +131,21 @@ void ImGuiManager::Init()
 #if SEXY_USE_OPENGL
 		case RenderingBackend::BACKEND_OPENGL:
 		{
-
 			{
 				OpenGLRenderer *aRenderer = static_cast<OpenGLRenderer *>(mApp->mRenderer);
 				ImGui_ImplSDL3_InitForOpenGL(mApp->mWindow->mInternalWindow, aRenderer->mContext);
 				ImGui_ImplOpenGL3_Init();
+				break;
+			}
+		}
+#endif
+#if SEXY_USE_SDL3_RENDERER
+		case RenderingBackend::BACKEND_SDL3:
+		{
+			{
+				SDL3Renderer *aRenderer = static_cast<SDL3Renderer *>(mApp->mRenderer);
+				ImGui_ImplSDL3_InitForSDLRenderer(mApp->mWindow->mInternalWindow, aRenderer->mBackendRenderer);
+				ImGui_ImplSDLRenderer3_Init(aRenderer->mBackendRenderer);
 				break;
 			}
 		}
