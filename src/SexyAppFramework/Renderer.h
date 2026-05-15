@@ -13,7 +13,7 @@ namespace Sexy
 	enum BlendMode
 	{
 		BLENDMODE_NONE = 0,
-		BLENDMODE_BLEND,
+		BLENDMODE_NORMAL,
 		BLENDMODE_ADD,
 		BLENDMODE_MULTIPLY,
 	};

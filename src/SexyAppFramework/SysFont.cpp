@@ -12,6 +12,9 @@
 #if SEXY_USE_OPENGL
 #include "OpenGL/OpenGLRenderer.h"
 #endif
+#if SEXY_USE_SDL3_RENDERER
+#include "SDL3Renderer/SDL3Renderer.h"
+#endif
 
 
 using namespace Sexy;
@@ -245,10 +248,7 @@ void TrueTypeData::Init()
 	for (uint32_t aSetupChar : aWantedChar)
 	{
 		GlpyhAtlasEntry aGlyph;
-		if (!FT_Load_Char(mFace, aSetupChar, FT_LOAD_RENDER))
-		{
-			//idk
-		}
+		FT_Load_Char(mFace, aSetupChar, FT_LOAD_RENDER);
 		
 		if (mFont->mBold)
 		{

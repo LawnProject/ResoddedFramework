@@ -23,7 +23,7 @@ namespace Sexy
 	};
 
 	const std::unordered_map<BlendMode, GLBlendFunc> gGLBlendDefines = {
-	{BlendMode::BLENDMODE_BLEND, 
+	{BlendMode::BLENDMODE_NORMAL, 
 		{GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_FUNC_ADD, GL_FUNC_ADD}},
 	{BlendMode::BLENDMODE_ADD, 
 		{GL_SRC_ALPHA, GL_ONE, GL_ZERO, GL_ONE, GL_FUNC_ADD, GL_FUNC_ADD}},
@@ -49,7 +49,7 @@ namespace Sexy
 	{
 		GLenum mPrimitiveType = GL_TRIANGLES;
 		GLuint mTextureID = 0;
-		BlendMode mBlendMode = BLENDMODE_BLEND;
+		BlendMode mBlendMode = BLENDMODE_NORMAL;
 		GLenum mFilterMode = GL_LINEAR;
 		std::vector<Vertex> mVertices;
 		bool mHasClipRect = false;

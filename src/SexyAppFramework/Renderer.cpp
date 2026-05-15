@@ -75,8 +75,7 @@ BlendMode Renderer::ChooseBlendMode(int theBlendMode)
 		break;
 	case Graphics::DRAWMODE_NORMAL:
 	default:
-
-		aBlendMode = BLENDMODE_BLEND;
+		aBlendMode = BLENDMODE_NORMAL;
 		break;
 	}
 	return aBlendMode;

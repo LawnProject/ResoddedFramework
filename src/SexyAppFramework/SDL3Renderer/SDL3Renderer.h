@@ -46,6 +46,8 @@ class SDL3Renderer : public Renderer
 
 	bool InitRendererObject();
 	void ApplyBlendMode(BlendMode mode);
+	void SetLinearBlend_SDL(SDL_Texture *theTexture, bool linearBlend);
+	SDL_BlendMode Get_SDL_NativeBlendMode(BlendMode theBlendMode);
 
 	virtual GPUImage *NewGPUImage()
 	{
