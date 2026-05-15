@@ -85,6 +85,7 @@ SettingsDialog::SettingsDialog(LawnApp *theApp)
 
 		}
 	}
+	mRendererList->SetSelect(mApp->mRenderer->mCurrentBackend - 1);
 	
 	mSizesList = new ListWidget(SETTINGS_WINDOW_SIZES, Sexy::FONT_PICO129, this);
 	mSizesList->SetColors(gUserListWidgetColors, LENGTH(gUserListWidgetColors));
