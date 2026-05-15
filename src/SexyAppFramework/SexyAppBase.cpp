@@ -4068,7 +4068,11 @@ void SexyAppBase::MakeWindow()
 
 				int aMaxX = aUsableBounds.x + aUsableBounds.w - aWidth - aSpacing;
 				int aMaxY = aUsableBounds.y + aUsableBounds.h - aHeight - aSpacing;
+				if (aMinX > aMaxX)
+					aMaxX = aMinX;
 
+				if (aMinY > aMaxY)
+					aMaxY = aMinY;
 				aPlaceX = std::clamp(aPlaceX, aMinX, aMaxX);
 				aPlaceY = std::clamp(aPlaceY, aMinY, aMaxY);
 			}

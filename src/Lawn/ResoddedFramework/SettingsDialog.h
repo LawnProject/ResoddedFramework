@@ -11,6 +11,11 @@ namespace Sexy
 class ListWidget;
 };
 
+struct LawnWindowSizePreset
+{
+	int mWidth;
+	int mHeight;
+};
 
 class SettingsDialog : public LawnDialog, public Sexy::CheckboxListener, public Sexy::ListListener
 {
@@ -23,8 +28,7 @@ class SettingsDialog : public LawnDialog, public Sexy::CheckboxListener, public 
 		SETTINGS_HIGHQUALITY,
 		SETTINGS_OPEN_SAVE_FOLDER,
 		SETTINGS_RENDER_LIST,
-		SETTINGS_RENDER_BACKEND_OPENGL,
-		SETTINGS_RENDER_BACKEND_SDL3,
+		SETTINGS_WINDOW_SIZES,
 	};
 
   public:
@@ -35,7 +39,10 @@ class SettingsDialog : public LawnDialog, public Sexy::CheckboxListener, public 
 	Sexy::Checkbox *mVSyncCheckbox;
 	Sexy::Checkbox *mHighQualityCheckbox;
 	Sexy::ListWidget *mRendererList;
+	Sexy::ListWidget *mSizesList;
 	LawnScrollbar *mOptionsSlider;
+
+	std::vector<LawnWindowSizePreset> mValidSizes;
 
   public:
 	SettingsDialog(LawnApp *theApp);
@@ -48,6 +55,7 @@ class SettingsDialog : public LawnDialog, public Sexy::CheckboxListener, public 
 	virtual void ButtonPress(int theId);
 	virtual void ButtonDepress(int theId);
 	virtual void ListClicked(int theId, int theIdx, int theClickCount);
+	bool IsCurrentWindowSizeInList();
 
 	void CheckboxChecked(int theId, bool checked);
 };

@@ -25,6 +25,9 @@ Renderer Backend
 [SETTINGS_RENDERER_RESTART_NOTIF]
 Restart the game to change the rendering backend.
 
+[SETTINGS_WINDOW_SIZE]
+Window Size
+
 [SETTINGS_MISC]
 Miscellaneous Settings
 
