@@ -5084,32 +5084,22 @@ StringVector SexyAppBase::GetStringVector(const std::string &theId)
 
 void SexyAppBase::SetString(const std::string &theId, const std::string &theValue)
 {
-	std::pair<StringStringMap::iterator, bool> aPair =
-		mStringProperties.insert(StringStringMap::value_type(theId, theValue));
-	if (!aPair.second) // Found it, change value
-		aPair.first->second = theValue;
+	mStringProperties.insert_or_assign(theId, theValue);
 }
 
 void SexyAppBase::SetBoolean(const std::string &theId, bool theValue)
 {
-	std::pair<StringBoolMap::iterator, bool> aPair = mBoolProperties.insert(StringBoolMap::value_type(theId, theValue));
-	if (!aPair.second) // Found it, change value
-		aPair.first->second = theValue;
+	mBoolProperties.insert_or_assign(theId, theValue);
 }
 
 void SexyAppBase::SetInteger(const std::string &theId, int theValue)
 {
-	std::pair<StringIntMap::iterator, bool> aPair = mIntProperties.insert(StringIntMap::value_type(theId, theValue));
-	if (!aPair.second) // Found it, change value
-		aPair.first->second = theValue;
+	mIntProperties.insert_or_assign(theId, theValue);
 }
 
 void SexyAppBase::SetDouble(const std::string &theId, double theValue)
 {
-	std::pair<StringDoubleMap::iterator, bool> aPair =
-		mDoubleProperties.insert(StringDoubleMap::value_type(theId, theValue));
-	if (!aPair.second) // Found it, change value
-		aPair.first->second = theValue;
+	mDoubleProperties.insert_or_assign(theId, theValue);
 }
 
 void SexyAppBase::DoParseCmdLine()

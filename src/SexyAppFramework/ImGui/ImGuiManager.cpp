@@ -67,8 +67,13 @@ void ImGuiManager::Flush()
 				ImGuiIO &io = ImGui::GetIO();
 				if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 				{
+					SDL_Window *aBKWindow = SDL_GL_GetCurrentWindow();
+					SDL_GLContext aBKContext = SDL_GL_GetCurrentContext();
+
 					ImGui::UpdatePlatformWindows();
 					ImGui::RenderPlatformWindowsDefault();
+
+					SDL_GL_MakeCurrent(aBKWindow, aBKContext);
 				}
 			}
 		
