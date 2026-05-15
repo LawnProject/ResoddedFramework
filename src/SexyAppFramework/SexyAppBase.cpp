@@ -168,8 +168,8 @@ SexyAppBase::SexyAppBase()
 	mIsWindowed = true;
 	mIsPhysWindowed = true;
 	mFullScreenWindow = false;
-	mPreferredX = -1;
-	mPreferredY = -1;
+	mPreferredSize = Rect(-1, -1, -1, -1);
+	mSavedWindowedSize = Rect(-1, -1, -1, -1);
 	mIsScreenSaver = false;
 	mAllowMonitorPowersave = true;
 	mWindow = nullptr;
@@ -260,6 +260,7 @@ SexyAppBase::SexyAppBase()
 	mNoSoundNeeded = false;
 	mWantFMod = false;
 
+	mDesiredBackend = RenderingBackend::BACKEND_NONE;
 	mSyncRefreshRate = 100;
 	mVSyncUpdates = false;
 	mVSyncBroken = false;
@@ -1575,12 +1576,15 @@ void SexyAppBase::WriteToRegistry()
 	RegistryWriteInteger("SfxVolume", (int)(mSfxVolume * 100));
 	RegistryWriteInteger("Muted", (mMuteCount - mAutoMuteCount > 0) ? 1 : 0);
 	RegistryWriteInteger("ScreenMode", mIsWindowed ? 0 : 1);
-	RegistryWriteInteger("PreferredX", mPreferredX);
-	RegistryWriteInteger("PreferredY", mPreferredY);
+	RegistryWriteInteger("PreferredX", mPreferredSize.mX);
+	RegistryWriteInteger("PreferredY", mPreferredSize.mY);
+	RegistryWriteInteger("PreferredWidth", mPreferredSize.mWidth);
+	RegistryWriteInteger("PreferredHeight", mPreferredSize.mHeight);
 	RegistryWriteInteger("CustomCursors", mCustomCursorsEnabled ? 1 : 0);
 	RegistryWriteInteger("InProgress", 0);
 	RegistryWriteBoolean("WaitForVSync", mWaitForVSync);
 	RegistryWriteBoolean("Is3D", mIs3D);
+	RegistryWriteInteger("DesiredBackend", mDesiredBackend);
 }
 
 bool SexyAppBase::RegistryEraseKey(const SexyString &_theKeyName)
@@ -1883,14 +1887,19 @@ void SexyAppBase::ReadFromRegistry()
 	if (RegistryReadInteger("ScreenMode", &anInt))
 		mIsWindowed = anInt == 0;
 
-	RegistryReadInteger("PreferredX", &mPreferredX);
-	RegistryReadInteger("PreferredY", &mPreferredY);
+	RegistryReadInteger("PreferredX", &mPreferredSize.mX);
+	RegistryReadInteger("PreferredY", &mPreferredSize.mY);
+	RegistryReadInteger("PreferredWidth", &mPreferredSize.mWidth);
+	RegistryReadInteger("PreferredHeight", &mPreferredSize.mHeight);
 
 	if (RegistryReadInteger("CustomCursors", &anInt))
 		EnableCustomCursors(anInt != 0);
 
 	RegistryReadBoolean("WaitForVSync", &mWaitForVSync);
 	RegistryReadBoolean("Is3D", &mIs3D);
+	int aBackendInt = 0;
+	RegistryReadInteger("DesiredBackend", &aBackendInt);
+	mDesiredBackend = (RenderingBackend)aBackendInt;
 
 	if (RegistryReadInteger("InProgress", &anInt))
 		mLastShutdownWasGraceful = anInt == 0;
@@ -2146,13 +2155,7 @@ void SexyAppBase::Shutdown()
 
 void SexyAppBase::RestoreScreenResolution()
 {
-	if (mFullScreenWindow)
-	{
-		EnumWindows(ChangeDisplayWindowEnumProc, 0); // get any windows that appeared while we were running
-		ChangeDisplaySettings(NULL, 0);
-		EnumWindows(ChangeDisplayWindowEnumProc, 1); // restore window pos
-		mFullScreenWindow = false;
-	}
+
 }
 
 void SexyAppBase::DoExit(int theCode)
@@ -3855,8 +3858,8 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 					SDL_Window* theTargetWindow = SDL_GetWindowFromEvent(&event);
 					if (mWindow->mInternalWindow == theTargetWindow && mIsWindowed)
 					{
-						mPreferredX = event.window.data1;
-						mPreferredY = event.window.data2;
+						mPreferredSize.mX = event.window.data1;
+						mPreferredSize.mY = event.window.data2;
 					}
 					break;
 				}
@@ -3865,6 +3868,8 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 					SDL_Window* theTargetWindow = SDL_GetWindowFromEvent(&event);
 					if (mWindow->mInternalWindow == theTargetWindow && !mShutdown)
 					{
+						mPreferredSize.mWidth = event.window.data1;
+						mPreferredSize.mHeight = event.window.data2;
 						mMinimized = SDL_GetWindowFlags(mWindow->mInternalWindow) & SDL_WINDOW_MINIMIZED;
 
 						// We don't want any sounds (or music) playing while its minimized
@@ -3962,288 +3967,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 	
 	return SDL_HasEvents(SDL_EVENT_FIRST, SDL_EVENT_LAST);
 }
-/*
-// Why did I defer messages?  Oh, incase a dialog comes up such as a crash
-//  it won't keep crashing and stuff
-bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
-{
-	while (mDeferredMessages.size() > 0)
-	{
-		MSG aMsg = mDeferredMessages.front();
-		mDeferredMessages.pop_front();
 
-		UINT uMsg = aMsg.message;
-		LPARAM lParam = aMsg.lParam;
-		WPARAM wParam = aMsg.wParam;
-		HWND hWnd = aMsg.hwnd;
-
-		if (!mPlayingDemoBuffer)
-		{
-			switch (uMsg)
-			{
-				//  TODO: switch to killfocus/setfocus?
-				//			case WM_KILLFOCUS:
-				//			case WM_SETFOCUS:
-			case WM_ACTIVATEAPP:
-				if ((hWnd == mHWnd) && (!gInAssert) && (!mSEHOccured) && (!mShutdown))
-				{
-					//					mActive = uMsg==WM_SETFOCUS;
-
-					RehupFocus();
-
-					if ((mActive) && (!mIsWindowed))
-						mWidgetManager->MarkAllDirty();
-
-					if ((mIsOpeningURL) && (!mActive))
-						URLOpenSucceeded(mOpeningURL);
-				}
-				break;
-			case WM_LBUTTONDOWN:
-			case WM_RBUTTONDOWN:
-			case WM_MBUTTONDOWN:
-			case WM_LBUTTONDBLCLK:
-			case WM_RBUTTONDBLCLK:
-			case WM_LBUTTONUP:
-			case WM_RBUTTONUP:
-			case WM_MBUTTONUP:
-			case WM_MOUSEMOVE:
-				if ((!gInAssert) && (!mSEHOccured))
-				{
-					int x = (short)LOWORD(lParam);
-					int y = (short)HIWORD(lParam);
-					mWidgetManager->RemapMouse(x, y);
-
-					mLastUserInputTick = mLastTimerTime;
-
-					mWidgetManager->MouseMove(x, y);
-
-					if (!mMouseIn)
-					{
-						if (mRecordingDemoBuffer)
-						{
-							WriteDemoTimingBlock();
-							mDemoBuffer.WriteNumBits(0, 1);
-							mDemoBuffer.WriteNumBits(DEMO_MOUSE_ENTER, 5);
-						}
-
-						mMouseIn = true;
-						EnforceCursor();
-					}
-
-					switch (uMsg)
-					{
-					case WM_LBUTTONDOWN:
-						SetCapture(hWnd);
-						mWidgetManager->MouseDown(x, y, 1);
-						break;
-					case WM_RBUTTONDOWN:
-						SetCapture(hWnd);
-						mWidgetManager->MouseDown(x, y, -1);
-						break;
-					case WM_MBUTTONDOWN:
-						SetCapture(hWnd);
-						mWidgetManager->MouseDown(x, y, 3);
-						break;
-					case WM_LBUTTONDBLCLK:
-						SetCapture(hWnd);
-						mWidgetManager->MouseDown(x, y, 2);
-						break;
-					case WM_RBUTTONDBLCLK:
-						SetCapture(hWnd);
-						mWidgetManager->MouseDown(x, y, -2);
-						break;
-					case WM_LBUTTONUP:
-						if ((mWidgetManager->mDownButtons & ~1) == 0)
-							ReleaseCapture();
-						mWidgetManager->MouseUp(x, y, 1);
-						break;
-					case WM_RBUTTONUP:
-						if ((mWidgetManager->mDownButtons & ~2) == 0)
-							ReleaseCapture();
-						mWidgetManager->MouseUp(x, y, -1);
-						break;
-					case WM_MBUTTONUP:
-						if ((mWidgetManager->mDownButtons & ~4) == 0)
-							ReleaseCapture();
-						mWidgetManager->MouseUp(x, y, 3);
-						break;
-					}
-				}
-				break;
-			case WM_MOUSEWHEEL: {
-				char aZDelta = ((short)HIWORD(wParam)) / 120;
-				mWidgetManager->MouseWheel(aZDelta);
-			}
-			break;
-			case WM_KEYDOWN:
-			case WM_SYSKEYDOWN:
-				mLastUserInputTick = mLastTimerTime;
-
-				if (wParam == VK_RETURN && uMsg == WM_SYSKEYDOWN && !mForceFullscreen && !mForceWindowed)
-				{
-					SwitchScreenMode(!mIsWindowed);
-					ClearKeysDown();
-					break;
-				}
-				else if ((wParam == 'D') && (mWidgetManager != NULL) && (mWidgetManager->mKeyDown[KEYCODE_CONTROL]) &&
-						 (mWidgetManager->mKeyDown[KEYCODE_MENU]))
-				{
-					PlaySoundA("c:\\windows\\media\\Windows XP Menu Command.wav", NULL, SND_ASYNC);
-					mDebugKeysEnabled = !mDebugKeysEnabled;
-				}
-
-				if (mDebugKeysEnabled)
-				{
-					if (DebugKeyDown(wParam))
-						break;
-				}
-
-				mWidgetManager->KeyDown((KeyCode)wParam);
-				break;
-
-			case WM_KEYUP:
-			case WM_SYSKEYUP:
-				mLastUserInputTick = mLastTimerTime;
-				mWidgetManager->KeyUp((KeyCode)wParam);
-				break;
-			case WM_CHAR:
-				mLastUserInputTick = mLastTimerTime;
-				mWidgetManager->KeyChar((SexyChar)wParam);
-				break;
-			case WM_MOVE: {
-				if ((hWnd == mHWnd) && (mIsWindowed))
-				{
-					WINDOWPLACEMENT aWindowPlacment;
-					aWindowPlacment.length = sizeof(aWindowPlacment);
-
-					GetWindowPlacement(hWnd, &aWindowPlacment);
-					if ((aWindowPlacment.showCmd == SW_SHOW) || (aWindowPlacment.showCmd == SW_SHOWNORMAL))
-					{
-						mPreferredX = aWindowPlacment.rcNormalPosition.left;
-						mPreferredY = aWindowPlacment.rcNormalPosition.top;
-					}
-				}
-			}
-			break;
-			case WM_SIZE: {
-				bool isMinimized = wParam == SIZE_MINIMIZED;
-
-				if ((hWnd == mHWnd) && (!mShutdown) && (isMinimized != mMinimized))
-				{
-					mMinimized = isMinimized;
-
-					// We don't want any sounds (or music) playing while its minimized
-					if (mMinimized)
-					{
-						if (mMuteOnLostFocus)
-							Mute(true);
-					}
-					else
-					{
-						if (mMuteOnLostFocus)
-							Unmute(true);
-
-						mWidgetManager->MarkAllDirty();
-					}
-				}
-
-				RehupFocus();
-				if (wParam == SIZE_MAXIMIZED)
-					SwitchScreenMode(false);
-			}
-			break;
-			case WM_TIMER:
-				if ((!gInAssert) && (!mSEHOccured) && (mRunning))
-				{
-					DWORD aTimeNow = SDL_GetTicks();
-					if (aTimeNow - mLastTimerTime > 500)
-						mLastBigDelayTime = aTimeNow;
-
-					mLastTimerTime = aTimeNow;
-
-					if ((mIsOpeningURL) && (aTimeNow - mLastBigDelayTime > 5000))
-					{
-						if ((aTimeNow - mOpeningURLTime > 8000) && (!mActive))
-						{
-							//TODO: Have some demo message thing
-							URLOpenSucceeded(mOpeningURL);
-						}
-						else if ((aTimeNow - mOpeningURLTime > 12000) && (mActive))
-						{
-							URLOpenFailed(mOpeningURL);
-						}
-					}
-
-					POINT aULCorner = {0, 0};
-					::ClientToScreen(hWnd, &aULCorner);
-
-					POINT aBRCorner = {mDDInterface->mDisplayWidth, mDDInterface->mDisplayHeight};
-					::ClientToScreen(hWnd, &aBRCorner);
-
-					POINT aPoint;
-					::GetCursorPos(&aPoint);
-
-					HWND aWindow = ::WindowFromPoint(aPoint);
-					bool isMouseIn = (aWindow == hWnd) && (aPoint.x >= aULCorner.x) && (aPoint.y >= aULCorner.y) &&
-									 (aPoint.x < aBRCorner.x) && (aPoint.y < aBRCorner.y);
-
-					if (mMouseIn != isMouseIn)
-					{
-						if ((mRecordingDemoBuffer) && (!mShutdown))
-						{
-							WriteDemoTimingBlock();
-							mDemoBuffer.WriteNumBits(0, 1);
-
-							if (isMouseIn)
-								mDemoBuffer.WriteNumBits(DEMO_MOUSE_ENTER, 5);
-							else
-								mDemoBuffer.WriteNumBits(DEMO_MOUSE_EXIT, 5);
-						}
-
-						if (!isMouseIn)
-						{
-							int x = aPoint.x - aULCorner.x;
-							int y = aPoint.y - aULCorner.y;
-							mWidgetManager->RemapMouse(x, y);
-							mWidgetManager->MouseExit(x, y);
-						}
-
-						mMouseIn = isMouseIn;
-						EnforceCursor();
-					}
-				}
-				break;
-
-			case WM_SYSCOLORCHANGE:
-			case WM_DISPLAYCHANGE:
-				mWidgetManager->SysColorChangedAll();
-				mWidgetManager->MarkAllDirty();
-				break;
-			}
-		}
-
-		switch (uMsg)
-		{
-		case WM_CLOSE:
-			if ((hWnd == mHWnd) || (hWnd == mInvisHWnd))
-			{
-				// This should short-circuit all demo calls, otherwise we will get
-				//  all sorts of weird asserts because we are changing
-				//  program flow
-				mManualShutdown = true;
-
-				Shutdown();
-			}
-			break;
-		}
-
-		if (singleMessage)
-			break;
-	}
-
-	return (mDeferredMessages.size() > 0);
-}
-*/
 void SexyAppBase::Done3dTesting()
 {
 }
@@ -4254,155 +3978,181 @@ std::string SexyAppBase::NotifyCrashHook()
 	return "";
 }
 
+
+bool SexyAppBase::TryCreateRenderer(RenderingBackend theBackend)
+{
+	bool anOpenGLWorks = false;
+	bool aSDL3Works = false;
+
+#if SEXY_USE_OPENGL
+	anOpenGLWorks = OpenGLRenderer::TestOpenGL(mWindow->mInternalWindow);
+#endif
+
+#if SEXY_USE_SDL3_RENDERER
+	aSDL3Works = SDL3Renderer::TestSDL3();
+#endif
+
+	switch (theBackend)
+	{
+#if SEXY_USE_OPENGL
+	case RenderingBackend::BACKEND_OPENGL:
+		if (anOpenGLWorks)
+		{
+			mRenderer = new OpenGLRenderer(this);
+			return true;
+		}
+		break;
+#endif
+
+#if SEXY_USE_SDL3_RENDERER
+	case RenderingBackend::BACKEND_SDL3:
+		if (aSDL3Works)
+		{
+			mRenderer = new SDL3Renderer(this);
+			return true;
+		}
+		break;
+#endif
+
+	default:
+		break;
+	}
+
+	return false;
+}
+
 void SexyAppBase::MakeWindow()
 {
-	//OutputDebugString("MAKING WINDOW\r\n");
-
-	if (mWindow != NULL)
+	if (mWindow != nullptr)
 	{
-		/*SetWindowLong(mHWnd, GWL_USERDATA, NULL);
-		HWND anOldWindow = mHWnd;
-		mHWnd = NULL;
-		DestroyWindow(anOldWindow);*/
 		delete mWindow;
-		mWidgetManager->mImage = NULL;
+		mWidgetManager->mImage = nullptr;
 	}
 	
 	mWindow = new Window(this);
 
 	SDL_StartTextInput(mWindow->mInternalWindow);
 
-	if ((mPlayingDemoBuffer) || (mIsWindowed && !mFullScreenWindow)) //todo:replace
+	if ((mPlayingDemoBuffer) || (mIsWindowed && !mFullScreenWindow))
 	{
-		int aWidth = mWidth;
-		int aHeight = mHeight;
-		SDL_Rect aDesktopRect;
-		SDL_GetDisplayUsableBounds(SDL_GetPrimaryDisplay(), &aDesktopRect);
-
-		int aPlaceX = aDesktopRect.x + 64;
-		int aPlaceY = aDesktopRect.y + 64;
-		
-		if (mPreferredX != -1)
+		if (mSavedWindowedSize.mX != -1)
 		{
-			aPlaceX = mPreferredX;
-			aPlaceY = mPreferredY;
+			SDL_SetWindowSize(mWindow->mInternalWindow, mSavedWindowedSize.mWidth, mSavedWindowedSize.mHeight);
 
-			int aSpacing = 4;
+			SDL_SetWindowPosition(mWindow->mInternalWindow, mSavedWindowedSize.mX, mSavedWindowedSize.mY);
 
-			if (aPlaceX < aDesktopRect.x + aSpacing)
-				aPlaceX = aDesktopRect.x + aSpacing;
-
-			if (aPlaceY < aDesktopRect.y + aSpacing)
-				aPlaceY = aDesktopRect.y + aSpacing;
-
-			if (aPlaceX + aWidth >= aDesktopRect.w - aSpacing)
-				aPlaceX = aDesktopRect.w - aWidth - aSpacing;
-
-			if (aPlaceY + aHeight >= aDesktopRect.h - aSpacing)
-				aPlaceY = aDesktopRect.h - aHeight - aSpacing;
+			mPreferredSize = mSavedWindowedSize;
+			mSavedWindowedSize = Rect(-1, -1, -1, -1);
 		}
-
-
-		if (mPreferredX == -1)
+		else
 		{
-			SDL_SetWindowPosition(mWindow->mInternalWindow, 
-			aDesktopRect.x + ((aDesktopRect.w - aDesktopRect.x) - aWidth) / 2,  
-			aDesktopRect.y + (int)(((aDesktopRect.h - aDesktopRect.y) - aHeight) * 0.382));
-		}
+			SDL_Rect aUsableBounds{};
+			SDL_GetDisplayUsableBounds(SDL_GetDisplayForWindow(mWindow->mInternalWindow), &aUsableBounds);
 
+			int aWidth = (mPreferredSize.mWidth == -1) ? mWidth : mPreferredSize.mWidth;
+
+			int aHeight = (mPreferredSize.mHeight == -1) ? mHeight : mPreferredSize.mHeight;
+
+			int aPlaceX = aUsableBounds.x + (aUsableBounds.w - aWidth) / 2;
+			int aPlaceY = aUsableBounds.y + (int)((aUsableBounds.h - aHeight) * 0.382f);
+
+			if (mPreferredSize.mX != -1)
+			{
+				aPlaceX = mPreferredSize.mX;
+				aPlaceY = mPreferredSize.mY;
+
+				int aSpacing = 4;
+
+				int aMinX = aUsableBounds.x + aSpacing;
+				int aMinY = aUsableBounds.y + aSpacing;
+
+				int aMaxX = aUsableBounds.x + aUsableBounds.w - aWidth - aSpacing;
+				int aMaxY = aUsableBounds.y + aUsableBounds.h - aHeight - aSpacing;
+
+				aPlaceX = std::clamp(aPlaceX, aMinX, aMaxX);
+				aPlaceY = std::clamp(aPlaceY, aMinY, aMaxY);
+			}
+
+			SDL_SetWindowSize(mWindow->mInternalWindow, aWidth, aHeight);
+
+			SDL_SetWindowPosition(mWindow->mInternalWindow, aPlaceX, aPlaceY);
+
+ 			mSavedWindowedSize = Rect(aPlaceX, aPlaceY, aWidth, aHeight);
+
+		}
 		mIsPhysWindowed = true;
 	}
 	else
 		mIsPhysWindowed = false;
-
-	/*char aStr[256];
-	sprintf(aStr, "HWND: %d\r\n", mHWnd);
-	OutputDebugString(aStr);*/
+	SDL_SetWindowFocusable(mWindow->mInternalWindow, true);
 
 	SDL_PropertiesID props = SDL_GetWindowProperties(mWindow->mInternalWindow);
 	SDL_SetPointerProperty(props, "sexyappframework.userdata", this);
 
 	if (mRenderer == nullptr)
 	{
-#if SEXY_USE_SDL3_RENDERER
-		if (SDL3Renderer::TestSDL3())
+
+		if (mDesiredBackend == RenderingBackend::BACKEND_NONE)
 		{
-			mRenderer = new SDL3Renderer(this);
-		}
-		else
-#endif
 #if SEXY_USE_OPENGL
-		if (OpenGLRenderer::TestOpenGL())
-		{
-			mRenderer = new OpenGLRenderer(this);
+			mDesiredBackend = RenderingBackend::BACKEND_OPENGL;
+#elif SEXY_USE_SDL3_RENDERER
+			mDesiredBackend = RenderingBackend::BACKEND_SDL3;
+#endif
 		}
-		else
+
+		TryCreateRenderer(mDesiredBackend);
+
+#if SEXY_USE_OPENGL
+		if (mRenderer == nullptr && mDesiredBackend != RenderingBackend::BACKEND_OPENGL)
+			TryCreateRenderer(RenderingBackend::BACKEND_OPENGL);
+#endif
+
+#if SEXY_USE_SDL3_RENDERER
+		if (mRenderer == nullptr && mDesiredBackend != RenderingBackend::BACKEND_SDL3)
 		{
-			MsgBox("Couldn't create a renderer", "Engine Error");
+			TryCreateRenderer(RenderingBackend::BACKEND_SDL3);
+		}
+#endif
+
+		if (mRenderer == nullptr)
+		{
+			SexyString anError = "Couldn't create a renderer.\n\nAvailable backends:\n";
+
+#if SEXY_USE_OPENGL
+			anError +=
+				StrFormat("OpenGL: %s\n", OpenGLRenderer::TestOpenGL(mWindow->mInternalWindow) ? "OK" : "FAILED");
+#endif
+
+#if SEXY_USE_SDL3_RENDERER
+			anError += StrFormat("SDL3 Renderer: %s\n", SDL3Renderer::TestSDL3() ? "OK" : "FAILED");
+#endif
+
+			MsgBox(anError, "Engine Error");
 			assert(false);
 		}
-#endif
 
-		// Enable 3d setting
-		bool is3D = false;
-		bool is3DOptionSet = RegistryReadBoolean("Is3D", &is3D);
-		if (is3DOptionSet)
-		{
-			if (mAutoEnable3D)
-			{
-				mAutoEnable3D = false;
-				mIs3D = true;
-			}
+		printf("[SexyAppBase] - Initialized Renderer Backend - %s\n", mRenderer->getBackendType().c_str());
 
-			if (is3D)
-				mIs3D = true;
-
-		}
 	}
 
 	int aResult = InitRenderer();
 
-	/*
-	if ((mIsWindowed) && (aResult == DDInterface::RESULT_INVALID_COLORDEPTH))
+	// Enable 3d setting
+	bool is3D = false;
+	bool is3DOptionSet = RegistryReadBoolean("Is3D", &is3D);
+	if (is3DOptionSet)
 	{
-		if (mForceWindowed)
+		if (mAutoEnable3D)
 		{
-			Popup(GetString("PLEASE_SET_COLOR_DEPTH", "Please set your desktop color depth to 16 bit."));
-			DoExit(1);
+			mAutoEnable3D = false;
+			mIs3D = true;
 		}
-		else
-		{
-			mForceFullscreen = true;
-			SwitchScreenMode(false);
-		}
-		return;
+
+		if (is3D)
+			mIs3D = true;
 	}
-	else if ((!mIsWindowed) &&
-			 ((aResult == DDInterface::RESULT_EXCLUSIVE_FAIL) || (aResult == DDInterface::RESULT_DISPCHANGE_FAIL)))
-	{
-		mForceWindowed = true;
-		SwitchScreenMode(true);
-	}
-	else if (aResult == DDInterface::RESULT_3D_FAIL)
-	{
-		Set3DAcclerated(false);
-		return;
-	}
-	else if (aResult != DDInterface::RESULT_OK)
-	{
-		if (Is3DAccelerated())
-		{
-			Set3DAcclerated(false);
-			return;
-		}
-		else
-		{
-			Popup(GetString("FAILED_INIT_DIRECTDRAW", "Failed to initialize DirectDraw: ") +
-				  StringToSexyString(DDInterface::ResultToString(aResult) + " " + mDDInterface->mErrorString));
-			DoExit(1);
-		}
-	}
-	*/
+
 	bool isActive = mActive;
 	mActive = SDL_GetWindowFlags(mWindow->mInternalWindow) & SDL_WINDOW_INPUT_FOCUS;
 
@@ -4474,9 +4224,7 @@ void SexyAppBase::LoadingThreadProcStub(void *theArg)
 
 	aSexyApp->LoadingThreadProc();
 
-	char aStr[256];
-	sprintf(aStr, "Resource Loading Time: %d\r\n", (SDL_GetTicks() - aSexyApp->mTimeLoaded));
-	OutputDebugStringA(aStr);
+	printf("[SexyAppBase] - Resource Loading Time: %d\n", (SDL_GetTicks() - aSexyApp->mTimeLoaded));
 
 	aSexyApp->mLoadingThreadCompleted = true;
 }
@@ -4493,6 +4241,13 @@ void SexyAppBase::StartLoadingThread()
 
 void SexyAppBase::SwitchScreenMode(bool wantWindowed, bool is3d, bool force)
 {
+	if (mIsWindowed)
+	{
+		SDL_GetWindowSize(mWindow->mInternalWindow, &mSavedWindowedSize.mWidth, &mSavedWindowedSize.mHeight);
+
+		SDL_GetWindowPosition(mWindow->mInternalWindow, &mSavedWindowedSize.mX, &mSavedWindowedSize.mY);
+	}
+
 	if (mForceFullscreen)
 		wantWindowed = false;
 
@@ -5146,25 +4901,21 @@ void SexyAppBase::Start()
 
 	WaitForLoadingThread();
 
-	char aString[256];
-	sprintf(aString, "Seconds       = %g\r\n", (SDL_GetTicks() - aStartTime) / 1000.0);
-	OutputDebugStringA(aString);
-	//sprintf(aString, "Count         = %d\r\n", aCount);
-	//OutputDebugString(aString);
-	sprintf(aString, "Sleep Count   = %d\r\n", mSleepCount);
-	OutputDebugStringA(aString);
-	sprintf(aString, "Update Count  = %d\r\n", mUpdateCount);
-	OutputDebugStringA(aString);
-	sprintf(aString, "Draw Count    = %d\r\n", mDrawCount);
-	OutputDebugStringA(aString);
-	sprintf(aString, "Draw Time     = %d\r\n", mDrawTime);
-	OutputDebugStringA(aString);
-	sprintf(aString, "Screen Blt    = %d\r\n", mScreenBltTime);
-	OutputDebugStringA(aString);
+	printf("[SexyAppBase] - Seconds       = %g\n", (SDL_GetTicks() - aStartTime) / 1000.0);
+
+	printf("[SexyAppBase] - Sleep Count   = %d\n", mSleepCount);
+
+	printf("[SexyAppBase] - Update Count  = %d\n", mUpdateCount);
+
+	printf("[SexyAppBase] - Draw Count    = %d\n", mDrawCount);
+
+	printf("[SexyAppBase] - Draw Time     = %d\n", mDrawTime);
+
+	printf("[SexyAppBase] - Screen Blt    = %d\n", mScreenBltTime);
+
 	if (mDrawTime + mScreenBltTime > 0)
 	{
-		sprintf(aString, "Avg FPS       = %d\r\n", (mDrawCount * 1000) / (mDrawTime + mScreenBltTime));
-		OutputDebugStringA(aString);
+		printf("[SexyAppBase] - Avg FPS       = %d\r\n", (mDrawCount * 1000) / (mDrawTime + mScreenBltTime));
 	}
 	PreTerminate();
 
@@ -5652,11 +5403,13 @@ void SexyAppBase::Init()
 
 	mWidgetManager->Resize(Rect(0, 0, mWidth, mHeight), Rect(0, 0, mWidth, mHeight));
 
+	SDL_DisplayID aPrimaryDisplay = SDL_GetPrimaryDisplay();
+	const SDL_DisplayMode *aMode = SDL_GetCurrentDisplayMode(aPrimaryDisplay);
+
 	// Check to see if we CAN run windowed or not...
 	if (mIsWindowed && !mFullScreenWindow)
 	{
-		SDL_DisplayID aPrimaryDisplay = SDL_GetPrimaryDisplay();
-		const SDL_DisplayMode *aMode = SDL_GetCurrentDisplayMode(aPrimaryDisplay);
+
 		// How can we be windowed if our screen isn't even big enough?
 		if (mWidth >= aMode->w || mHeight >= aMode->h)
 		{
@@ -5665,32 +5418,6 @@ void SexyAppBase::Init()
 		}
 	}
 
-	if (mFullScreenWindow) // change resoultion using ChangeDisplaySettings
-	{
-		EnumWindows(ChangeDisplayWindowEnumProc, 0); // record window pos
-		DEVMODE dm;
-		EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &dm);
-
-		// Switch resolutions
-		if (dm.dmPelsWidth != mWidth || dm.dmPelsHeight != mHeight || (dm.dmBitsPerPel != 16 && dm.dmBitsPerPel != 32))
-		{
-			dm.dmPelsWidth = mWidth;
-			dm.dmPelsHeight = mHeight;
-			dm.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_DISPLAYFREQUENCY;
-
-			if (dm.dmBitsPerPel != 16 && dm.dmBitsPerPel != 32) // handle 24-bit/256 color case
-			{
-				dm.dmBitsPerPel = 16;
-				dm.dmFields |= DM_BITSPERPEL;
-			}
-
-			if (ChangeDisplaySettings(&dm, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
-			{
-				mFullScreenWindow = false;
-				mIsWindowed = false;
-			}
-		}
-	}
 
 	MakeWindow();
 

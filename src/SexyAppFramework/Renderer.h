@@ -69,6 +69,7 @@ namespace Sexy
 #if SEXY_USE_SDL3_RENDERER
 		BACKEND_SDL3,
 #endif
+		NUM_BACKENDS,
 	};
 
 	const std::unordered_map<RenderingBackend, std::string> gRenderBackends = 

@@ -5,11 +5,19 @@
 #include "../../SexyAppFramework/Checkbox.h"
 #include "../../LawnApp.h"
 #include "../../SexyAppFramework/BuildInfo.h"
+#include "../../SexyAppFramework/ListWidget.h"
 #if WIN32
 #include <ShlObj_core.h>
 #include <locale>
 #include <codecvt>
 #endif
+
+static int gUserListWidgetColors[][3] = {
+	{23, 24, 35},
+	{0, 0, 0},
+	{235, 225, 180},
+	{255, 255, 255},
+	{20, 180, 15}};
 
 SettingsDialog::SettingsDialog(LawnApp *theApp)
 	: LawnDialog(theApp, DIALOG_SETTINGS, true, "[SETTINGS_HEADER]", "", "", BUTTONS_NONE)
@@ -30,6 +38,22 @@ SettingsDialog::SettingsDialog(LawnApp *theApp)
 	mSaveFileButton = MakeButton(SETTINGS_OPEN_SAVE_FOLDER, this, "[SETTINGS_OPEN_SAVE_FOLDER]");
 
 	mApplyButton = MakeButton(SETTINGS_BACK, this, "[SETTINGS_BACK]");
+	
+	mRendererList = new ListWidget(SETTINGS_RENDER_LIST, Sexy::FONT_PICO129, this);
+	mRendererList->SetColors(gUserListWidgetColors, LENGTH(gUserListWidgetColors));
+	mRendererList->mDrawOutline = true;
+	mRendererList->mJustify = ListWidget::JUSTIFY_CENTER;
+	mRendererList->mItemHeight = 24;
+	for (int i = RenderingBackend::BACKEND_NONE + 1; i < RenderingBackend::NUM_BACKENDS; i++)
+	{
+		for (auto backend : gRenderBackends)
+		{
+			if (backend.first == i)
+				mRendererList->AddLine(backend.second, false);
+
+		}
+	}
+	mRendererList->SetSelect(mApp->mDesiredBackend - 1);
 	CalcSize(211, 214);
 }
 
@@ -41,6 +65,7 @@ SettingsDialog::~SettingsDialog()
 	delete mVSyncCheckbox;
 	delete mFullscreenCheckbox;
 	delete mHighQualityCheckbox;
+	delete mRendererList;
 }
 
 void SettingsDialog::Draw(Graphics* g)
@@ -77,18 +102,27 @@ void SettingsDialog::Draw(Graphics* g)
 									  (mHighQualityCheckbox->mY + mY) > mOptionsSlider->mAllowedMouseZone.mY +
 																			mOptionsSlider->mAllowedMouseZone.mHeight;
 
+	mRendererList->Resize(40, 300 - aScrollOffset, 130, 80);
+	mRendererList->mDisabled = (mRendererList->mY + mY) < mOptionsSlider->mAllowedMouseZone.mY ||
+							   (mRendererList->mY + mY) >
+								   mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight;
+
+	mSaveFileButton->Resize(40, 430 - aScrollOffset, 330, 46);
+	mSaveFileButton->mDisabled =
+		(mSaveFileButton->mY + mY) < mOptionsSlider->mAllowedMouseZone.mY ||
+		(mSaveFileButton->mY + mY) > mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight;
+
 	TodDrawString(g, "[SETTINGS_VIDEO]", 20, 10, Sexy::FONT_BRIANNETOD12, Color::White,
 				  DrawStringJustification::DS_ALIGN_LEFT);
 
 	TodDrawString(g, "[SETTINGS_VSYNC]", mVSyncCheckbox->mX + 20, 40, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
 	TodDrawString(g, "[SETTINGS_FULLSCREEN]", mFullscreenCheckbox->mX + 20, 90, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
 	TodDrawString(g, "[SETTINGS_HIGHQUALITY]", mHighQualityCheckbox->mX + 20, 140, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
+	TodDrawString(g, "[SETTINGS_RENDERER_BACKEND]", 20, 175, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
+	if (mApp->mRenderer->mCurrentBackend != mApp->mDesiredBackend)
+		TodDrawString(g, "[SETTINGS_RENDERER_RESTART_NOTIF]", 20, mRendererList->mHeight + 195, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
 
-	mSaveFileButton->Resize(40, 310 - aScrollOffset, 330, 46);
-	mSaveFileButton->mDisabled = (mSaveFileButton->mY + mY) < mOptionsSlider->mAllowedMouseZone.mY ||
-		(mSaveFileButton->mY + mY) > mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight;
-
-	TodDrawString(g, "[SETTINGS_MISC]", 20, 180, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
+	TodDrawString(g, "[SETTINGS_MISC]", 20, 300, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
 
 	SexyString aVersionString = "ResoddedFramework " + LawnApp::gResoddedVersion.toString();
 	TodDrawString(g, aVersionString, 
@@ -118,6 +152,7 @@ void SettingsDialog::AddedToManager(WidgetManager *theWidgetManager)
 	AddWidget(mFullscreenCheckbox);
 	AddWidget(mSaveFileButton);
 	AddWidget(mHighQualityCheckbox);
+	AddWidget(mRendererList);
 }
 
 //0x45D8E0
@@ -130,6 +165,7 @@ void SettingsDialog::RemovedFromManager(WidgetManager *theWidgetManager)
 	RemoveWidget(mFullscreenCheckbox);
 	RemoveWidget(mSaveFileButton);
 	RemoveWidget(mHighQualityCheckbox);
+	RemoveWidget(mRendererList);
 }
 
 void SettingsDialog::Resize(int theX, int theY, int theWidth, int theHeight)
@@ -174,6 +210,37 @@ void SettingsDialog::ButtonDepress(int theId)
 			break;
 		}
 	}
+}
+
+void SettingsDialog::ListClicked(int theId, int theIdx, int theClickCount)
+{
+	if (theIdx != mApp->mDesiredBackend - 1)
+	{
+		mRendererList->SetSelect(theIdx);
+		mApp->mDesiredBackend = (RenderingBackend)(theIdx + 1);
+		SexyString aBackendName = "";
+		for (int i = RenderingBackend::BACKEND_NONE + 1; i < RenderingBackend::NUM_BACKENDS; i++)
+		{
+			for (auto backend : gRenderBackends)
+			{
+				if (backend.first == mApp->mDesiredBackend)
+					aBackendName = backend.second;
+			}
+		}
+		mApp->RegistryWriteInteger("DesiredBackend", mApp->mDesiredBackend);
+		mApp->WriteToRegistry();
+
+		if (mApp->mDesiredBackend != mApp->mRenderer->mCurrentBackend)
+		{
+			SexyString anInfoString =
+				StrFormat("Rendering Backend has been changed to %s\nRestart the game to apply the changes",
+						  aBackendName.c_str());
+			mApp->DoDialog(Dialogs::DIALOG_INFO, true, "", anInfoString, "OK", Dialog::BUTTONS_FOOTER);
+		}
+
+
+	}
+
 }
 
 

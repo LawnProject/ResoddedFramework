@@ -35,6 +35,8 @@ enum JSONRegistryType
 	TYPE_LAST
 };
 
+enum RenderingBackend;
+
 class WidgetManager;
 class DDInterface;
 class Image;
@@ -166,8 +168,8 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	std::string mChangeDirTo;
 
 	int mRelaxUpdateBacklogCount; // app doesn't try to catch up for this many frames
-	int mPreferredX;
-	int mPreferredY;
+	Rect mPreferredSize;
+	Rect mSavedWindowedSize;
 	int mWidth;
 	int mHeight;
 	int mFullscreenBits;
@@ -237,6 +239,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 
 	FT_Library mFreeTypeLib;
 	Renderer *mRenderer;
+	RenderingBackend mDesiredBackend;
 #if SEXY_USE_IMGUI
 	ImGuiManager *mImGuiManager;
 #endif
@@ -372,6 +375,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	virtual bool DoUpdateFrames();
 	virtual void DoUpdateFramesF(float theFrac);
 	virtual void MakeWindow();
+	virtual bool TryCreateRenderer(RenderingBackend theBackend);
 	virtual void ReInitImages();
 	virtual void DeleteNativeImageData();
 	virtual void DeleteExtraImageData();

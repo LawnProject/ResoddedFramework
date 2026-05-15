@@ -19,6 +19,12 @@ Fullscreen
 [SETTINGS_HIGHQUALITY]
 High Quality
 
+[SETTINGS_RENDERER_BACKEND]
+Renderer Backend
+
+[SETTINGS_RENDERER_RESTART_NOTIF]
+Restart the game to change the rendering backend.
+
 [SETTINGS_MISC]
 Miscellaneous Settings
 

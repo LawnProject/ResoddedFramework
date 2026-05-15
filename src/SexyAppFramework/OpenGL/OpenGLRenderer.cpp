@@ -1274,9 +1274,16 @@ void OpenGLRenderer::BltRawTexture(void *theTexture,
 	AddCommand(aCmd);
 }
 
-bool OpenGLRenderer::TestOpenGL()
+bool OpenGLRenderer::TestOpenGL(SDL_Window *theWindow)
 {
-	return false;
+	SDL_GLContext theContext = SDL_GL_CreateContext(theWindow);
+	if (!theContext)
+	{
+		return false;
+	}
+	SDL_GL_DestroyContext(theContext);
+
+	return true;
 }
 
 #endif
