@@ -16,7 +16,7 @@ static char gDebugDataFolder[1024];
 //0x514EA0
 void TodErrorMessageBox(const char *theMessage, const char *theTitle)
 {
-	TodTraceAndLog("%s.%s", theMessage, theTitle);
+	TodTraceAndLog("[TodLib] - %s.%s", theMessage, theTitle);
 	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, theTitle, theMessage, nullptr);
 }
 
@@ -75,13 +75,13 @@ void TodAssertFailed(const char *theCondition, const char *theFile, int theLine,
 	{
 		TodSnprintf(aBuffer, sizeof(aBuffer), "\n%s(%d)\nassertion failed: %s\n", theFile, theLine, aFormattedMsg);
 	}
-	TodTrace("%s", aBuffer);
+	TodTrace("[TodLib] - %s", aBuffer);
 
 	if (!SexyDebuggerCheck())
 	{
 		if (gInAssert)
 		{
-			TodLog("Assert during exception processing");
+			TodLog("[TodLib] - Assert during exception processing");
 			exit(0);
 		}
 
@@ -136,12 +136,12 @@ void TodLogString(const char *theMsg)
 	FILE *f = fopen(gLogFileName, "a");
 	if (f == nullptr)
 	{
-		printf("Failed to open log file\n");
+		printf("[TodLib] - Failed to open log file\n");
 	}
 
 	if (f && fwrite(theMsg, strlen(theMsg), 1, f) != 1)
 	{
-		printf("Failed to write to log file\n");
+		printf("[TodLib] - Failed to write to log file\n");
 	}
 
 	if (f)
@@ -171,10 +171,8 @@ void TodTrace(const char *theFormat, ...)
 		}
 	}
 
-	// @ThePixelMoon; why isn't this using printf already?
 	printf("%s", aButter);
 
-	//OutputDebugStringA(aButter);
 #endif
 }
 
@@ -254,13 +252,13 @@ long __stdcall TodUnhandledExceptionFilter(LPEXCEPTION_POINTERS exceptioninfo)
 {
 	if (gInAssert)
 	{
-		TodLog("Exception during exception processing");
+		TodLog("[TodLib] - Exception during exception processing");
 	}
 	else
 	{
 		gInAssert = true;
-		TodLog("\nUnhandled Exception");
-		TodReportError(exceptioninfo, "Unhandled Exception");
+		TodLog("\n[TodLib] - Unhandled Exception");
+		TodReportError(exceptioninfo, "[TodLib] - Unhandled Exception");
 		gInAssert = false;
 	}
 
@@ -290,7 +288,7 @@ void TodAssertInitForApp()
 	TOD_ASSERT(strlen(gLogFileName) < 1024);
 
 	std::time_t aclock = std::time(nullptr);
-	TodLog("Started %s\n", std::asctime(std::localtime(&aclock)));
+	TodLog("[TodLib] - Started %s\n", std::asctime(std::localtime(&aclock)));
 #if WIN32
 	SetUnhandledExceptionFilter(TodUnhandledExceptionFilter);
 #endif

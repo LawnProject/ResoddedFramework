@@ -5783,7 +5783,7 @@ void Zombie::DrawReanim(Graphics *g, const ZombieDrawPosition &theDrawPos, int t
 	Reanimation *aBodyReanim = mApp->ReanimationGet(mBodyReanimID);
 	if (aBodyReanim == nullptr)
 	{
-		TodTrace("Missing zombie reanimation");
+		TodTrace("[LawnProject] - Missing zombie reanimation");
 		return;
 	}
 

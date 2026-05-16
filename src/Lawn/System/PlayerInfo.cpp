@@ -85,7 +85,7 @@ void PlayerInfo::LoadDetails()
 			}
 			else
 			{
-				TodTraceAndLog("Couldn't read profile : %s\nResettings it", aFileName.c_str());
+				TodTraceAndLog("[LawnProject] - Couldn't read profile : %s\nResettings it", aFileName.c_str());
 				Reset();
 			}
 		}
@@ -93,8 +93,8 @@ void PlayerInfo::LoadDetails()
 	}
 	catch (nlohmann::json::parse_error &anError)
 	{
-		TodTraceAndLog("Failed to parse profile data, resetting it\n");
-		TodTraceAndLog("JSON Reading Error: %s", anError.what());
+		TodTraceAndLog("[LawnProject] - Failed to parse profile data, resetting it\n");
+		TodTraceAndLog("[LawnProject] - JSON Reading Error: %s", anError.what());
 		Reset();
 	}
 }
@@ -247,7 +247,7 @@ void ProfileSyncer::SyncBool(const SexyString &theName, bool &theBool)
 		else
 		{
 			theBool = false;
-			TodTraceAndLog("Missing Boolean in Save File: %s", theName.c_str());
+			TodTraceAndLog("[LawnProject] - Missing Boolean in Save File: %s", theName.c_str());
 		}
 	}
 	else
@@ -265,7 +265,7 @@ void ProfileSyncer::SyncFloat(const SexyString &theName, float &theFloat)
 		else
 		{
 			theFloat = 0.0f;
-			TodTraceAndLog("Missing Float in Save File: %s", theName.c_str());
+			TodTraceAndLog("[LawnProject] - Missing Float in Save File: %s", theName.c_str());
 		}
 	}
 	else
@@ -283,7 +283,7 @@ void ProfileSyncer::SyncInt(const SexyString &theName, int &theInt)
 		else
 		{
 			theInt = 0;
-			TodTraceAndLog("Missing Integer in Save File: %s", theName.c_str());
+			TodTraceAndLog("[LawnProject] - Missing Integer in Save File: %s", theName.c_str());
 		}
 	}
 	else
@@ -301,7 +301,7 @@ void ProfileSyncer::SyncUnsignedInt(const SexyString &theName, unsigned int &the
 		else
 		{
 			theInt = 0;
-			TodTraceAndLog("Missing Integer in Save File: %s", theName.c_str());
+			TodTraceAndLog("[LawnProject] - Missing Integer in Save File: %s", theName.c_str());
 		}
 	}
 	else
@@ -319,7 +319,7 @@ void ProfileSyncer::SyncLong(const SexyString &theName, long &theLong)
 		else
 		{
 			theLong = 0;
-			TodTraceAndLog("Missing Integer in Save File: %s", theName.c_str());
+			TodTraceAndLog("[LawnProject] - Missing Integer in Save File: %s", theName.c_str());
 		}
 	}
 	else
@@ -337,7 +337,7 @@ void ProfileSyncer::SyncUnsignedLong(const SexyString &theName, unsigned long &t
 		else
 		{
 			theLong = 0;
-			TodTraceAndLog("Missing Long in Save File: %s", theName.c_str());
+			TodTraceAndLog("[LawnProject] - Missing Long in Save File: %s", theName.c_str());
 		}
 	}
 	else
@@ -355,7 +355,7 @@ void ProfileSyncer::SyncString(const SexyString &theName, SexyString &theStr)
 		else
 		{
 			theStr = "";
-			TodTraceAndLog("Missing Integer in Save File: %s", theName.c_str());
+			TodTraceAndLog("[LawnProject] - Missing Integer in Save File: %s", theName.c_str());
 		}
 	}
 	else
@@ -431,7 +431,7 @@ template <typename T, size_t N> void ProfileSyncer::SyncArray(const SexyString &
 		{
 			memset(theArray, 0, N);
 			theRealSize = 0;
-			TodTraceAndLog("Missing Array in Save File: %s", theName.c_str());
+			TodTraceAndLog("[LawnProject] - Missing Array in Save File: %s", theName.c_str());
 		}
 	}
 	else
@@ -464,7 +464,7 @@ template <typename T, size_t N> void ProfileSyncer::SyncArrayFromSize(const Sexy
 		else
 		{
 			memset(theArray, 0, theRealSize);
-			TodTraceAndLog("Missing Array in Save File: %s", theName.c_str());
+			TodTraceAndLog("[LawnProject] - Missing Array in Save File: %s", theName.c_str());
 		}
 	}
 	else

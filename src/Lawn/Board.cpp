@@ -1280,7 +1280,7 @@ bool Board::IsZombieWaveDistributionOk()
 		if (aZombieType != ZombieType::ZOMBIE_YETI && CanZombieSpawnOnLevel(aZombieType, mLevel) &&
 			aZombieTypeCount[(int)aZombieType] == 0)
 		{
-			TodTraceAndLog("Didn't spawn required zombie %s, level %d",
+			TodTraceAndLog("[LawnProject] - Didn't spawn required zombie %s, level %d",
 						   GetZombieDefinition(aZombieType).mZombieName,
 						   mLevel);
 			return false;
@@ -2875,7 +2875,7 @@ Zombie *Board::AddZombieInRow(ZombieType theZombieType, int theRow, int theFromW
 {
 	if (mZombies.mSize >= mZombies.mMaxSize - 1)
 	{
-		TodTrace("Too many zombies!!");
+		TodTrace("[LawnProject] - Too many zombies!!");
 		return nullptr;
 	}
 
@@ -9324,7 +9324,7 @@ void Board::KeyChar(SexyChar theChar)
 	if (!mApp->mDebugKeysEnabled)
 		return;
 
-	TodTraceAndLog("Board cheat key '%c'", theChar);
+	TodTraceAndLog("[LawnProject] - Board cheat key '%c'", theChar);
 
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN)
 	{

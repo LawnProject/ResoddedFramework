@@ -56,7 +56,7 @@ bool TodStringListReadName(const char *&thePtr, std::string &theName)
 	{
 		if (strspn(thePtr, " \n\r\t") != strlen(thePtr)) // 如果文本不全是空白字符
 		{
-			TodTrace("Failed to find string name");
+			TodTrace("[TodLib] - Failed to find string name");
 			return false;
 		}
 
@@ -68,7 +68,7 @@ bool TodStringListReadName(const char *&thePtr, std::string &theName)
 		const char *aNameEnd = strchr(aNameStart + 1, ']');
 		if (aNameEnd == nullptr) // 如果“[”后不存在“]”
 		{
-			TodTrace("Failed to find ']'");
+			TodTrace("[TodLib] - Failed to find ']'");
 			return false;
 		}
 
@@ -76,7 +76,7 @@ bool TodStringListReadName(const char *&thePtr, std::string &theName)
 		theName = Sexy::Trim(std::string(aNameStart + 1, aCount)); // 取得中括号之间的部分并去除字符串前后的空白字符
 		if (theName.size() == 0)
 		{
-			TodTrace("Name Too Short");
+			TodTrace("[TodLib] - Name Too Short");
 			return false;
 		}
 
@@ -135,7 +135,7 @@ bool TodStringListReadFile(const char *theFileName)
 	PFILE *pFile = p_fopen(theFileName, "rb");
 	if (pFile == nullptr)
 	{
-		TodTrace("Failed to open '%s'", theFileName);
+		TodTrace("[TodLib] - Failed to open '%s'", theFileName);
 		return false;
 	}
 
@@ -146,7 +146,7 @@ bool TodStringListReadFile(const char *theFileName)
 	bool aSuccess = true;
 	if (p_fread(aFileText, sizeof(char), aSize, pFile) <= 0) // 按字节读取数据
 	{
-		TodTrace("Failed to read '%s'", theFileName);
+		TodTrace("[TodLib] - Failed to read '%s'", theFileName);
 		aSuccess = false;
 	}
 	aFileText[aSize] = '\0';

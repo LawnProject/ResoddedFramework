@@ -290,7 +290,7 @@ void CutScene::FindPlaceForStreetZombies(ZombieType theZombieType, bool theZombi
 
 	if (aPicksCount == 0)
 	{
-		TodTrace("No place for street zombie!!");
+		TodTrace("[LawnProject] - No place for street zombie!!");
 		thePosX = 2;
 		thePosY = 2;
 	}
@@ -497,7 +497,7 @@ void CutScene::PreloadResources()
 	PlaceStreetZombies();
 
 	mBoard->mPreloadTime = std::max(aTimer.GetDuration(), 0.0);
-	TodTrace("preloading: %d ms", mBoard->mPreloadTime);
+	TodTrace("[LawnProject] - preloading: %d ms", mBoard->mPreloadTime);
 	TodHesitationTrace("CutScene::PreloadResources");
 }
 

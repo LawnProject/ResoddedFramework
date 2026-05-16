@@ -219,7 +219,7 @@ void Music::LoadSong(MusicFile theMusicFile, const std::string &theFileName)
 	TodHesitationTrace("preloadsong");
 	if (!TodLoadMusic(theMusicFile, theFileName))
 	{
-		TodTrace("music failed to load\n");
+		TodTrace("[LawnProject] - music failed to load\n");
 		mMusicDisabled = true;
 	}
 	else
@@ -252,7 +252,7 @@ void Music::MusicInit()
 	LoadSong(MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN, "sounds/ZombiesOnYourLawn.ogg");
 	mApp->mCompletedLoadingThreadTasks += 3500;
 	if (mApp->mCompletedLoadingThreadTasks != aNumLoadingTasks)
-		TodTrace("Didn't calculate loading task count correctly!!!!");
+		TodTrace("[LawnProject] - Didn't calculate loading task count correctly!!!!");
 #endif
 }
 

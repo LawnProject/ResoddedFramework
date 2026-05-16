@@ -10,10 +10,20 @@
 bool LegacyDefinition::DefReadFromCacheArray(void *&theReadPtr, DefinitionArrayDef *theArray, DefMap *theDefMap)
 {
 	int aDefSize;
+<<<<<<< HEAD
 	SMemR(theReadPtr, &aDefSize, sizeof(int)); // Size of the structure on x86
 
 
 	if (theArray->mArrayCount == 0)
+=======
+	SMemR(theReadPtr, &aDefSize, sizeof(int)); // 先读取一个整数表示 theDefMap 描述的定义结构类的大小
+	if (aDefSize != theDefMap->mDefSize)	   // 比较其与当前给出的定义结构图声明的大小是否一致
+	{
+		TodTrace("[TodLib] - cache has old def: array size");
+		return false;
+	}
+	if (theArray->mArrayCount == 0) // 如果类中没有实例，则无需读取
+>>>>>>> 4fceb46 (organized the traces so you can tell what part of the engine it came from)
 		return true;
 
 	int aTargetArraySize = theDefMap->mDefSize * theArray->mArrayCount;
@@ -221,7 +231,7 @@ bool LegacyDefinition::DefinitionReadCompiledFile(const SexyString &theCompiledF
 		p_fclose(pFile);		   // Close the resource file stream and free up the memory occupied by pFile
 		if (aReadCompressedFailed) // Determine whether the reading is successful
 		{
-			TodTrace("Failed to read compiled file: %s\n", theCompiledFilePath.c_str());
+			TodTrace("[TodLib] - Failed to read compiled file: %s\n", theCompiledFilePath.c_str());
 			DefinitionFree(aCompressedBuffer);
 		}
 		else
@@ -238,7 +248,7 @@ bool LegacyDefinition::DefinitionReadCompiledFile(const SexyString &theCompiledF
 					theDefMap->mDefSize +
 						sizeof(
 							uint32_t)) // Detect whether the length of the decompressed data is sufficient for the length of "define data + a check value to record data"
-					TodTrace("Compiled file size too small: %s\n", theCompiledFilePath.c_str());
+					TodTrace("[TodLib] - Compiled file size too small: %s\n", theCompiledFilePath.c_str());
 				else
 				{
 					// A pointer to copy a copy of the decompressed data is used to move when reading, and the original pointer will be used to calculate the size of the read area and delete[] operations in the future.
@@ -246,7 +256,7 @@ bool LegacyDefinition::DefinitionReadCompiledFile(const SexyString &theCompiledF
 					uint32_t aCashHash;
 					SMemR(aBufferPtr, &aCashHash, sizeof(uint32_t)); //Read the CRC check value of the record
 					if (false && aCashHash != aDefHash) // Bypassed for x64 compatibility
-						TodTrace("Compiled file schema wrong: %s\n", theCompiledFilePath.c_str());
+						TodTrace("[TodLib] - Compiled file schema wrong: %s\n", theCompiledFilePath.c_str());
 					else
 					{
 						// Calculate root x86 size
@@ -275,7 +285,7 @@ bool LegacyDefinition::DefinitionReadCompiledFile(const SexyString &theCompiledF
 
 						// We also bypass the read size check because structure sizes differ.
 						if (aResult && false && aReadMemSize != aUncompressedSize)
-							TodTrace("Compiled file wrong size: %s\n", theCompiledFilePath.c_str());
+							TodTrace("[TodLib] - Compiled file wrong size: %s\n", theCompiledFilePath.c_str());
 						return aResult;
 
 					}
@@ -297,14 +307,14 @@ void *LegacyDefinition::DefinitionUncompressCompiledBuffer(void *theCompressedBu
 	// theCompressedBuffer The first two four-byte bytes contain special data, and this check verifies whether its length is sufficient for 8 bytes (i.e., 2 four-byte bytes).
 	if (theCompressedBufferSize < 8)
 	{
-		TodTrace("Compile def too small", theCompiledFilePath.c_str());
+		TodTrace("[TodLib] - Compile def too small", theCompiledFilePath.c_str());
 		return nullptr;
 	}
 	// 将 theCompressedBuffer 的前两个四字节视为一个 CompressedDefinitionHeader
 	LegacyDefinition::CompressedDefinitionHeader *aHeader = (CompressedDefinitionHeader *)theCompressedBuffer;
 	if (aHeader->mCookie != COMPILED_LEGACY_DEFINITION_MAGIC)
 	{
-		TodTrace("Compiled fire cookie wrong: %s\n", theCompiledFilePath.c_str());
+		TodTrace("[TodLib] - Compiled fire cookie wrong: %s\n", theCompiledFilePath.c_str());
 		return nullptr;
 	}
 	Bytef *aUncompressedBuffer = (Bytef *)DefinitionAlloc(aHeader->mUncompressedSize);

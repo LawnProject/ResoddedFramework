@@ -16,7 +16,7 @@ OpenALSoundManager::OpenALSoundManager()
 	if (!mAudioDevice)
 	{
 		std::string anErrorString = getErrorString(alGetError());
-		printf("%s\n", anErrorString.c_str());
+		printf("[SexyAppFramework] - %s\n", anErrorString.c_str());
 		return;
 	}
 
@@ -25,7 +25,7 @@ OpenALSoundManager::OpenALSoundManager()
 	if (!alcMakeContextCurrent(mContext))
 	{
 		std::string anErrorString = getErrorString(alGetError());
-		printf("%s\n", anErrorString.c_str());
+		printf("[SexyAppFramework] - %s\n", anErrorString.c_str());
 		return;
 	}
 	for (int i = 0; i < MAX_SOURCE_SOUNDS; i++)

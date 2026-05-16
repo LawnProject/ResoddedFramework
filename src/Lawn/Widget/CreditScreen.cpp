@@ -1157,11 +1157,11 @@ void CreditScreen::Update()
 		int aUnsyncedFrames = (aUnsyncedDuration + 5) / 10;
 		if (aUnsyncedFrames < 0)
 		{
-			TodTrace("Movie playing too fast %d frames", 1 - aUnsyncedFrames);
+			TodTrace("[LawnProject] - Movie playing too fast %d frames", 1 - aUnsyncedFrames);
 		}
 		else if (aUnsyncedFrames > 2)
 		{
-			TodTrace("Movie playing too slow %d frames", aUnsyncedFrames - 1);
+			TodTrace("[LawnProject] - Movie playing too slow %d frames", aUnsyncedFrames - 1);
 		}
 
 		if (aUnsyncedDuration > 10000)

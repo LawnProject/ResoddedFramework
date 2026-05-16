@@ -92,14 +92,14 @@ void ProfileMgr::Load()
 			}
 			else
 			{
-				TodTraceAndLog("Couldn't read profile file : %s\nResetting it", aFileName.c_str());
+				TodTraceAndLog("[LawnProject] - Couldn't read profile file : %s\nResetting it", aFileName.c_str());
 				Clear();
 			}
 		}
 	}
 	catch (nlohmann::json::parse_error &anError)
 	{
-		TodTraceAndLog("Failed to profiles\n");
+		TodTraceAndLog("[LawnProject] - Failed to profiles\n");
 		Clear();
 
 	}

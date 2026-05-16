@@ -47,12 +47,7 @@ SexyApp::SexyApp()
 	SetString("UPDATE_CHECK_BODY",
 			  "Contacting PopCap.com to determine if there are any updates available for this product ...");
 
-	char aStr[9] = {0};
-	strncpy(aStr, BUILD_INFO_MARKER, 8);
-	mBuildNum = atoi(aStr);
-
-	if (mBuildNum != 0)
-		mBuildDate = BUILD_INFO_MARKER + 8;
+	mBuildNum = gVersion.mBuildNumber;
 }
 
 SexyApp::~SexyApp()
@@ -572,9 +567,9 @@ void SexyApp::Init()
 
 	SEHCatcher::mSubmitHost = "www.popcap.com";
 #endif
-	printf(StrFormat("Product: %s\n", mProdName.c_str()).c_str());
-	printf(StrFormat("BuildNum: %d\n", mBuildNum).c_str());
-	printf(StrFormat("BuildDate: %s\n", mBuildDate.c_str()).c_str());
+	printf(StrFormat("[SexyAppFramework] - Product: %s\n", mProdName.c_str()).c_str());
+	printf(StrFormat("[SexyAppFramework] - BuildNum: %d\n", mBuildNum).c_str());
+	printf(StrFormat("[SexyAppFramework] - BuildDate: %s\n", mBuildDate.c_str()).c_str());
 
 	SexyAppBase::Init();
 

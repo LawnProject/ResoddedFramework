@@ -321,7 +321,7 @@ TodParticle *TodParticleEmitter::SpawnParticle(int theIndex, int theSpawnCount)
 	DataArray<TodParticle> &aDataArray = mParticleSystem->mParticleHolder->mParticles;
 	if (aDataArray.mSize == aDataArray.mMaxSize)
 	{
-		TodTraceWithoutSpamming("Too many particles '%s'\n", mEmitterDef->mName);
+		TodTraceWithoutSpamming("[TodLib] - Too many particles '%s'\n", mEmitterDef->mName);
 		return nullptr;
 	}
 
@@ -626,12 +626,12 @@ bool TodParticleEmitter::CrossFadeParticleToName(TodParticle *theParticle, const
 	TodEmitterDefinition *aDef = mParticleSystem->FindEmitterDefByName(theEmitterName);
 	if (aDef == nullptr)
 	{
-		TodTrace("Can't find emitter to cross fade: %s\n", theEmitterName);
+		TodTrace("[TodLib] - Can't find emitter to cross fade: %s\n", theEmitterName);
 		return false;
 	}
 	if (mParticleSystem->mParticleHolder->mEmitters.mSize == mParticleSystem->mParticleHolder->mEmitters.mMaxSize)
 	{
-		TodTrace("Too many emitters to cross fade\n");
+		TodTrace("[TodLib] - Too many emitters to cross fade\n");
 		return false;
 	}
 
@@ -776,12 +776,12 @@ bool TodParticleEmitter::CrossFadeParticle(TodParticle *theParticle, TodParticle
 {
 	if (theParticle->mCrossFadeDuration > 0) // 粒子已处于交叉混合的过程中
 	{
-		TodTrace("We don't support cross fading more than one at a time\n");
+		TodTrace("[TodLib] - We don't support cross fading more than one at a time\n");
 		return false;
 	}
 	if (!FloatTrackIsSet(theToEmitter->mEmitterDef->mCrossFadeDuration)) // 目标发射器未设定交叉混合时长轨道
 	{
-		TodTrace("Can't cross fade to emitter that doesn't have CrossFadeDuration");
+		TodTrace("[TodLib] - Can't cross fade to emitter that doesn't have CrossFadeDuration");
 		return false;
 	}
 	TOD_ASSERT(theToEmitter != this); // 不能交叉混合至自身
@@ -1286,12 +1286,12 @@ void TodParticleEmitter::CrossFadeEmitter(TodParticleEmitter *theToEmitter)
 {
 	if (mEmitterCrossFadeCountDown > 0)
 	{
-		TodTrace("We don't support cross fading emitters more than one at a time\n");
+		TodTrace("[TodLib] - We don't support cross fading emitters more than one at a time\n");
 		return;
 	}
 	if (!FloatTrackIsSet(theToEmitter->mEmitterDef->mCrossFadeDuration))
 	{
-		TodTrace("Can't cross fade to emitter that doesn't have CrossFadeDuration");
+		TodTrace("[TodLib] - Can't cross fade to emitter that doesn't have CrossFadeDuration");
 		return;
 	}
 	TOD_ASSERT(theToEmitter != this);
@@ -1315,17 +1315,17 @@ void TodParticleSystem::CrossFade(const char *theEmitterName)
 	TodEmitterDefinition *aEmitterDef = FindEmitterDefByName(theEmitterName);
 	if (aEmitterDef == nullptr)
 	{
-		TodTrace("Can't find cross fade emitter: %s\n", theEmitterName);
+		TodTrace("[TodLib] - Can't find cross fade emitter: %s\n", theEmitterName);
 		return;
 	}
 	if (!FloatTrackIsSet(aEmitterDef->mCrossFadeDuration))
 	{
-		TodTrace("Can't cross fade without duration set: %s\n", theEmitterName);
+		TodTrace("[TodLib] - Can't cross fade without duration set: %s\n", theEmitterName);
 		return;
 	}
 	if (mParticleHolder->mEmitters.mSize + mEmitterList.mSize > mParticleHolder->mEmitters.mMaxSize)
 	{
-		TodTrace("Too many emitters to cross fade\n");
+		TodTrace("[TodLib] - Too many emitters to cross fade\n");
 		ParticleSystemDie();
 		return;
 	}
@@ -1383,12 +1383,12 @@ TodParticleSystem *TodParticleHolder::AllocParticleSystemFromDef(
 {
 	if (mParticleSystems.mSize == mParticleSystems.mMaxSize)
 	{
-		TodTrace("Too many particle systems\n");
+		TodTrace("[TodLib] - Too many particle systems\n");
 		return nullptr;
 	}
 	if (theDefinition->mEmitterDefCount + mEmitters.mSize > mEmitters.mMaxSize)
 	{
-		TodTrace("Too many particle emitters\n");
+		TodTrace("[TodLib] - Too many particle emitters\n");
 		return nullptr;
 	}
 
