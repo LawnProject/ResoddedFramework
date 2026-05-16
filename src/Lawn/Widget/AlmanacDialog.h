@@ -16,6 +16,8 @@ constexpr const int ALMANAC_INDEXPLANT_POSITION_X = 167 + BOARD_ADDITIONAL_WIDTH
 constexpr const int ALMANAC_INDEXPLANT_POSITION_Y = 255 + BOARD_OFFSET_Y;
 constexpr const float ALMANAC_INDEXZOMBIE_POSITION_X = 535.0f + BOARD_ADDITIONAL_WIDTH;
 constexpr const float ALMANAC_INDEXZOMBIE_POSITION_Y = 215.0f + BOARD_OFFSET_Y;
+constexpr const float ALMANAC_PLANT_MAX_SPACE = 230.0f;
+constexpr const float ALMANAC_ZOMBIE_MAX_SPACE = 162.0f;
 #else
 constexpr const float ALMANAC_PLANT_POSITION_X = 578.0f;
 constexpr const float ALMANAC_PLANT_POSITION_Y = 140.0f;
@@ -25,6 +27,8 @@ constexpr const int ALMANAC_INDEXPLANT_POSITION_X = 167;
 constexpr const int ALMANAC_INDEXPLANT_POSITION_Y = 225;
 constexpr const float ALMANAC_INDEXZOMBIE_POSITION_X = 535.0f;
 constexpr const float ALMANAC_INDEXZOMBIE_POSITION_Y = 215.0f;
+constexpr const float ALMANAC_PLANT_MAX_SPACE = 230.0f;
+constexpr const float ALMANAC_ZOMBIE_MAX_SPACE = 162.0f;
 #endif
 
 class Plant;
