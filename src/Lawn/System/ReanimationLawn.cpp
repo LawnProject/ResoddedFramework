@@ -340,6 +340,7 @@ GPUImage *ReanimatorCache::MakeCachedZombieFrame(ZombieType theZombieType)
 		aPosY += 32;
 
 		aReanim.ReanimationInitializeType(aPosX, aPosY, aZombieDef.mReanimationType);
+		aReanim.OverrideScale(0.8f, 0.8f);
 		aReanim.PlayReanim("anim_moonwalk", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0, 24.0f);
 		aReanim.Draw(&aMemoryGraphics);
 	}
