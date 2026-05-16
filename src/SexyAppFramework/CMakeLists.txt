@@ -49,12 +49,28 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     ImageLib
     PakLib
 )
-
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/thirdparty/x64/bass.lib)
-else ()
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/thirdparty/x86/bass.lib)
+    set(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/thirdparty/x64")
+else()
+    set(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/thirdparty/x86")
 endif()
+
+target_link_libraries(${PROJECT_NAME} PUBLIC
+    bass.lib
+    avcodec.lib
+    avdevice.lib
+    avformat.lib
+    avutil.lib
+    swresample.lib
+    swscale.lib
+)
+
+target_link_directories(${PROJECT_NAME} PUBLIC
+    ${THIRDPARTY_DIR}
+)
+
+get_target_property(OUT ${PROJECT_NAME} LINK_LIBRARIES)
+message(STATUS ${OUT})
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC
     $<$<CONFIG:Debug>:DEBUG>
@@ -101,6 +117,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_SOURCE_DIR}/thirdparty/src"
 )
+
 
 foreach(FILE_PATH IN LISTS SOURCES)
     get_filename_component(EXT "${FILE_PATH}" EXT)

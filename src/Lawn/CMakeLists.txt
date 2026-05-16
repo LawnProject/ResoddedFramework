@@ -107,14 +107,27 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 )
 
 # DLL
+
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(BASS_DLL "${CMAKE_SOURCE_DIR}/thirdparty/x64/bass.dll")
+    set(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/thirdparty/x64")
 else()
-    set(BASS_DLL "${CMAKE_SOURCE_DIR}/thirdparty/x86/bass.dll")
+    set(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/thirdparty/x86")
 endif()
 
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${BASS_DLL}"
-        "${EXPORT_DIR}"
+set(DLLS_TO_COPY
+    bass.dll
+    avcodec-61.dll
+    avdevice-61.dll
+    avformat-61.dll
+    avutil-59.dll
+    swresample-5.dll
+    swscale-8.dll
 )
+
+foreach(DLL ${DLLS_TO_COPY})
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${THIRDPARTY_DIR}/${DLL}"
+            "${EXPORT_DIR}"
+    )
+endforeach()

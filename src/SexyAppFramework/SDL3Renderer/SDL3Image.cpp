@@ -79,9 +79,12 @@ void SDL3Image::DeleteSurface()
 void SDL3Image::BitsChanged()
 {
 	MemoryImage::BitsChanged();
+	if (mSurface)
+	{
+		SDL_DestroyTexture((SDL_Texture *)mSurface);
+		mSurface = nullptr;
+	}
 
-	SDL_DestroyTexture((SDL_Texture *)mSurface);
-	mSurface = nullptr;
 }
 
 bool SDL3Image::GenerateSurface()
@@ -126,8 +129,8 @@ bool SDL3Image::LockSurface()
 {
 	if (mLockCount != 0)
 		return true;
-
-	SDL_LockTexture((SDL_Texture*)mSurface, nullptr, nullptr, nullptr);
+	if (mSurface)
+		SDL_LockTexture((SDL_Texture*)mSurface, nullptr, nullptr, nullptr);
 
 	mLockCount++;
 	return true;
@@ -137,7 +140,8 @@ bool SDL3Image::UnlockSurface()
 {
 	if (mLockCount == 0)
 		return true;
-	SDL_UnlockTexture((SDL_Texture *)mSurface);
+	if (mSurface)
+		SDL_UnlockTexture((SDL_Texture *)mSurface);
 
 	mLockCount--;
 	return true;
