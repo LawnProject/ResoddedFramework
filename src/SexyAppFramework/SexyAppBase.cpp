@@ -4790,13 +4790,6 @@ bool SexyAppBase::UpdateAppStep(bool *updated)
 	//  condition has already been met by processing windows messages
 	if (mUpdateAppState == UPDATESTATE_MESSAGES)
 	{
-		MSG msg;
-		while ((PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) && (!mShutdown))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-
 		ProcessDemo();
 		if (!ProcessDeferredMessages(true))
 		{
