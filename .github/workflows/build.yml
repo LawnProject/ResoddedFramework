@@ -3,8 +3,9 @@ name: Build
 
 on:
   push:
-    branches:
-      - dev
+    branches: [dev, main]
+  pull_request:
+    branches: [dev, main]
 
 jobs:
   build:
@@ -12,16 +13,16 @@ jobs:
 
     strategy:
       matrix:
-        config: [Debug, Release]
+        config: [windows-x64-debug-msvc, windows-x64-release-msvc, windows-x86-debug-msvc, windows-x86-release-msvc]
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup CMake
         uses: lukka/get-cmake@latest
         with:
-          cmakeVersion: '3.27.2'
+          cmakeVersion: '3.28'
 
       - name: Create build directory
         run: mkdir build
@@ -36,13 +37,13 @@ jobs:
       - name: Install
         run: cmake --install build --config ${{ matrix.config }}
 
-      - name: Package Dist folder
+      - name: Package Export folder
         run: |
           mkdir packaged
-          powershell Compress-Archive -Path "Dist/*" -DestinationPath "packaged/Dist-${{ matrix.config }}.zip"
+          powershell Compress-Archive -Path "Export/*" -DestinationPath "packaged/Export-${{ matrix.config }}.zip"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Dist-${{ matrix.config }}
-          path: packaged/Dist-${{ matrix.config }}.zip
+          name: Export-${{ matrix.config }}
+          path: packaged/Export-${{ matrix.config }}.zip
