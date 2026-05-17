@@ -31,63 +31,63 @@ FetchContent_Declare(
   SDL3
   GIT_REPOSITORY https://github.com/libsdl-org/SDL
   GIT_TAG main
-  OVERRIDE_FIND_PACKAGE 
+  FIND_PACKAGE_ARGS 
 )
 
 FetchContent_Declare(
     zlib
     GIT_REPOSITORY https://github.com/madler/zlib
     GIT_TAG master
-    OVERRIDE_FIND_PACKAGE 
+    FIND_PACKAGE_ARGS 
 )
 
 FetchContent_Declare(
     openal
     GIT_REPOSITORY https://github.com/kcat/openal-soft
     GIT_TAG 1.25.1
-    OVERRIDE_FIND_PACKAGE 
+    FIND_PACKAGE_ARGS 
 )
 
 FetchContent_Declare(
     ogg
     GIT_REPOSITORY https://github.com/teampopwork/ogg
     GIT_TAG master
-    OVERRIDE_FIND_PACKAGE 
+    FIND_PACKAGE_ARGS 
 )
 
 FetchContent_Declare(
     vorbis
     GIT_REPOSITORY https://github.com/teampopwork/vorbis
     GIT_TAG master
-    OVERRIDE_FIND_PACKAGE 
+    FIND_PACKAGE_ARGS 
 )
 
 FetchContent_Declare(
     glm
     GIT_REPOSITORY https://github.com/g-truc/glm
     GIT_TAG master
-    OVERRIDE_FIND_PACKAGE 
+    FIND_PACKAGE_ARGS 
 )
 
 FetchContent_Declare(
     freetype
     GIT_REPOSITORY https://gitlab.freedesktop.org/freetype/freetype
     GIT_TAG master
-    OVERRIDE_FIND_PACKAGE 
+    FIND_PACKAGE_ARGS 
 )
 
 FetchContent_Declare(
   cpptrace
   GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
   GIT_TAG        v1.0.4
-  OVERRIDE_FIND_PACKAGE 
+  FIND_PACKAGE_ARGS 
 )
 
 FetchContent_Declare(
   curl
   GIT_REPOSITORY https://github.com/curl/curl
   GIT_TAG        curl-8_4_0
-  OVERRIDE_FIND_PACKAGE 
+  FIND_PACKAGE_ARGS 
 )
 
 FetchContent_MakeAvailable(SDL3 zlib openal ogg vorbis glm freetype cpptrace curl)
