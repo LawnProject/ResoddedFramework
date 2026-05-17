@@ -12,7 +12,7 @@ bool UpdateChecker::gIsOutdated = false;
 
 UpdateCheckResult UpdateChecker::Check()
 {
-	TodLog("Checking for any newer versions the mod.");
+	TodTraceAndLog("[LawnProject] - Checking for any newer versions the mod.");
 	HTTPTransfer aTransfer;
 	aTransfer.Get(gUpdateHost);
 
