@@ -32,7 +32,7 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 
 
 - Window Resizing - 100%
-- Advanced Options - 40%
+- Advanced Options - 80%
 - UTF-8 Support - 100%
 
 - MP3/OGG/FLAC Lawn Music - 100%
