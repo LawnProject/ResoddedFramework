@@ -48,7 +48,7 @@ set(GIT_HASH none)
 set(GIT_AVAILABLE 0)
 endif()
 
-set(BUILD_CACHE_FILE "${CMAKE_SOURCE_DIR}/cmake/BuildNumberCache.txt")
+set(BUILD_CACHE_FILE "${SEXY_PROJECT_ROOT}/cmake/BuildNumberCache.txt")
 
 IF(EXISTS "${BUILD_CACHE_FILE}")
     message(STATUS "Incrementing build number")
@@ -61,3 +61,7 @@ ENDIF()
 
 file(WRITE "${BUILD_CACHE_FILE}" "${BUILD_NUMBER}")
 configure_file(${SRC} ${DST} @ONLY)
+
+set(VERSION_FILE "${SEXY_PROJECT_ROOT}/LawnVersion.txt")
+file(WRITE "${VERSION_FILE}" "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+message(STATUS "Version written to ${VERSION_FILE}: ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")

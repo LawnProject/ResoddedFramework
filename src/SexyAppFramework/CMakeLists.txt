@@ -104,7 +104,7 @@ add_custom_target(build_info ALL
     COMMAND ${CMAKE_COMMAND}
         -DSRC=${BUILD_INFO_SRC}
         -DDST=${BUILD_INFO_DST}
-        -DCMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR}
+        -DSEXY_PROJECT_ROOT=${CMAKE_SOURCE_DIR}
         -P ${CMAKE_SOURCE_DIR}/cmake/BuildInfo.cmake
     COMMENT "Updating build info..."
 )
