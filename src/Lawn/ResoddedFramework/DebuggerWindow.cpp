@@ -1,5 +1,3 @@
-#if LAWN_DEBUG_TOOLS
-
 #include "DebuggerWindow.h"
 #include "../Board.h"
 #include "../Plant.h"
@@ -19,6 +17,8 @@
 #include "../Challenge.h"
 #include "../../LawnApp.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
+
+#if LAWN_DEBUG_TOOLS
 
 using namespace Sexy;
 

@@ -120,12 +120,14 @@ bool PakInterface::AddPakFile(const std::string &theFileName)
 		aMagic ^= 0xF7F7F7F7;
 		if (aMagic != 0xBAC04AC0) //if the magic is 0xF7 encrypted, it means the whole file is
 		{
+#if DEBUG
 			printf("[PakLib] - Invalid Magic Number received in Pak File: %s\n", theFileName.c_str());
+#endif
 			return false;
 		}
-
+#if DEBUG
 		printf("[PakLib] - Pak File: %s is encrypted, decrypting now...\n", theFileName.c_str());
-		
+#endif
 		for (uint8_t &byte : aPakRecord->mCollection->mData)
 			byte ^= 0xF7;
 	}

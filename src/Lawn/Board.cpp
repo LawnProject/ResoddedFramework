@@ -237,8 +237,9 @@ Board::Board(LawnApp *theApp)
 //0x408670、0x408690
 Board::~Board()
 {
-	mDebugSelectedZombie = nullptr;
 #if LAWN_DEBUG_TOOLS
+	mDebugSelectedZombie = nullptr;
+
 	mDebugSelectedPlant  = nullptr;
 #endif
 	delete mAdvice;
