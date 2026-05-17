@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        config: [windows-x64-debug-msvc, windows-x64-release-msvc, windows-x86-debug-msvc, windows-x86-release-msvc]
+        config: [windows-x64-release-msvc, windows-x86-release-msvc]
 
     steps:
       - name: Checkout code
@@ -27,23 +27,22 @@ jobs:
       - name: Create build directory
         run: mkdir build
 
-      - name: Configure CMake
-        run: cmake -S . -B build -A Win32 -DCMAKE_BUILD_TYPE=${{ matrix.config }} -DGITHUB_ACTIONS=ON
+      - name: Configure
+        run: cmake --preset ${{ matrix.preset }} -DGITHUB_ACTIONS=ON
 
       - name: Build
-        run: cmake --build build --config ${{ matrix.config }}
+        run: cmake --build --preset ${{ matrix.preset }}-build
 
-      # ok.. installing
       - name: Install
-        run: cmake --install build --config ${{ matrix.config }}
+        run: cmake --install out/build/msvc/${{ matrix.preset }}
 
       - name: Package Export folder
         run: |
           mkdir packaged
-          powershell Compress-Archive -Path "Export/*" -DestinationPath "packaged/Export-${{ matrix.config }}.zip"
+          powershell Compress-Archive -Path "Export/*" -DestinationPath "packaged/Export-${{ matrix.preset }}.zip"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Export-${{ matrix.config }}
-          path: packaged/Export-${{ matrix.config }}.zip
+          name: Export-${{ matrix.preset }}
+          path: packaged/Export-${{ matrix.preset }}.zip
