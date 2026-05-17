@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        config: [windows-x64-release-msvc, windows-x86-release-msvc]
+        preset: [windows-x64-release-msvc, windows-x86-release-msvc]
 
     steps:
       - name: Checkout code
