@@ -1,5 +1,12 @@
 #pragma once
 
+#ifndef DEBUG
+#undef LAWN_DEBUG_TOOLS
+#endif
+#ifndef SEXY_USE_IMGUI
+#undef LAWN_DEBUG_TOOLS
+#endif
+
 enum AchievementID
 {
 	ACHIEVEMENT_HOME_SECURITY = 0,

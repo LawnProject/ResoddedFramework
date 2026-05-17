@@ -4,10 +4,6 @@
 #include "GameConstants.h"
 #include "SexyAppFramework/SexyApp.h"
 
-#ifndef SEXY_USE_IMGUI
-#undef LAWN_DEBUG_TOOLS
-#endif
-
 class Achievements;
 class Board;
 class GameSelector;
