@@ -24,7 +24,7 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 # Roadmap
 
 ### High Priority
-- Reworked Rendering - 60%
+- Reworked Rendering - 100%
 
 - JSON Settings, replacing the registry - 100%
 - ResourceGen V2 ([In Development](https://github.com/LawnProject/ResourceGen))

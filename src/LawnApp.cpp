@@ -61,7 +61,8 @@
 #include "Lawn/ResoddedFramework/DebuggerWindow.h"
 #endif
 
-Version LawnApp::gResoddedVersion(0, 7, 0);
+//Do not edit this. - Electr0Gunner
+Version LawnApp::gResoddedVersion(0, 8, 0);
 
 bool gIsPartnerBuild = false;
 bool gSlowMo = false;

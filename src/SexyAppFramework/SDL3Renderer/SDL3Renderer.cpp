@@ -662,7 +662,23 @@ void SDL3Renderer::FillRect(const Rect &theRect, const Color &theColor, int theD
 void SDL3Renderer::DrawTriangle(const TriVertex &p1, const TriVertex &p2, const TriVertex &p3, const Color &theColor,
 								  int theDrawMode)
 {
+	SDL_SetRenderTarget(mBackendRenderer, mTargetTexture);
+	SDL_SetRenderDrawBlendMode(mBackendRenderer, Get_SDL_NativeBlendMode(ChooseBlendMode(theDrawMode)));
 
+	SDL_FColor aColor = {theColor.GetRed() / 255.0f, theColor.GetGreen() / 255.0f, theColor.GetBlue() / 255.0f,
+						 theColor.GetAlpha() / 255.0f};
+
+	SDL_Vertex vertices[3] = {{SDL_FPoint{p1.x, p1.y}, aColor, {p1.u, p1.v}},
+							  {SDL_FPoint{p2.x, p2.y}, aColor, {p2.u, p2.v}},
+							  {SDL_FPoint{p3.x, p3.y}, aColor, {p3.u, p3.v}}};
+
+	int indices[] = {0, 1, 2};
+
+	SDL_RenderGeometry(mBackendRenderer, nullptr, vertices, 3, indices, 3);
+
+	SDL_SetRenderClipRect(mBackendRenderer, nullptr);
+	SDL_SetRenderTarget(mBackendRenderer, nullptr);
+	SDL_SetRenderDrawBlendMode(mBackendRenderer, SDL_BLENDMODE_BLEND);
 }
 
 void SDL3Renderer::DrawTriangleTex(const TriVertex &p1, const TriVertex &p2, const TriVertex &p3,
@@ -686,9 +702,11 @@ void SDL3Renderer::DrawTriangleTex(const TriVertex &p1, const TriVertex &p2, con
 							  {SDL_FPoint{p3.x, p3.y}, aColor, {p3.u, p3.v}}};
 
 	int indices[] = {0, 1, 2};
-
+	SDL_TextureAddressMode aMode = mCurrentUVWrapMode == UV_WRAP ? SDL_TEXTURE_ADDRESS_WRAP : SDL_TEXTURE_ADDRESS_CLAMP;
+	SDL_SetRenderTextureAddressMode(mBackendRenderer, aMode, aMode);
 	SDL_RenderGeometry(mBackendRenderer, aTexture, vertices, 3, indices, 3);
 	SDL_SetRenderClipRect(mBackendRenderer, nullptr);
+	SDL_SetRenderTextureAddressMode(mBackendRenderer, SDL_TEXTURE_ADDRESS_AUTO, SDL_TEXTURE_ADDRESS_AUTO);
 	SDL_SetRenderTarget(mBackendRenderer, nullptr);
 }
 
@@ -704,7 +722,8 @@ void SDL3Renderer::DrawTrianglesTex(const TriVertex theVertices[][3], int theNum
 	SDL_SetRenderTarget(mBackendRenderer, mTargetTexture);
 	SetLinearBlend_SDL(aTexture, blend);
 	SDL_SetTextureBlendMode(aTexture, Get_SDL_NativeBlendMode(ChooseBlendMode(theDrawMode)));
-
+	SDL_TextureAddressMode aMode = mCurrentUVWrapMode == UV_WRAP ? SDL_TEXTURE_ADDRESS_WRAP : SDL_TEXTURE_ADDRESS_CLAMP;
+	SDL_SetRenderTextureAddressMode(mBackendRenderer, aMode, aMode);
 	SDL_FColor aColor = {theColor.GetRed() / 255.0f, theColor.GetGreen() / 255.0f, theColor.GetBlue() / 255.0f,
 						 theColor.GetAlpha() / 255.0f};
 
@@ -738,6 +757,7 @@ void SDL3Renderer::DrawTrianglesTex(const TriVertex theVertices[][3], int theNum
 		SDL_RenderGeometry(mBackendRenderer, aTexture, vertices, 3, nullptr, 3);
 
 	}
+	SDL_SetRenderTextureAddressMode(mBackendRenderer, SDL_TEXTURE_ADDRESS_AUTO, SDL_TEXTURE_ADDRESS_AUTO);
 
 	SDL_SetRenderClipRect(mBackendRenderer, nullptr);
 	SDL_SetRenderTarget(mBackendRenderer, nullptr);
