@@ -4136,7 +4136,7 @@ void SexyAppBase::MakeWindow()
 			assert(false);
 		}
 
-		printf("[SexyAppBase] - Initialized Renderer Backend - %s\n", mRenderer->getBackendType().c_str());
+		printf("[SexyAppFramework] - Initialized Renderer Backend - %s\n", mRenderer->getBackendType().c_str());
 
 	}
 
@@ -4228,7 +4228,7 @@ void SexyAppBase::LoadingThreadProcStub(void *theArg)
 
 	aSexyApp->LoadingThreadProc();
 
-	printf("[SexyAppBase] - Resource Loading Time: %d\n", (SDL_GetTicks() - aSexyApp->mTimeLoaded));
+	printf("[SexyAppFramework] - Resource Loading Time: %d\n", (SDL_GetTicks() - aSexyApp->mTimeLoaded));
 
 	aSexyApp->mLoadingThreadCompleted = true;
 }
@@ -4898,21 +4898,21 @@ void SexyAppBase::Start()
 
 	WaitForLoadingThread();
 
-	printf("[SexyAppBase] - Seconds       = %g\n", (SDL_GetTicks() - aStartTime) / 1000.0);
+	printf("[SexyAppFramework] - Seconds       = %g\n", (SDL_GetTicks() - aStartTime) / 1000.0);
 
-	printf("[SexyAppBase] - Sleep Count   = %d\n", mSleepCount);
+	printf("[SexyAppFramework] - Sleep Count   = %d\n", mSleepCount);
 
-	printf("[SexyAppBase] - Update Count  = %d\n", mUpdateCount);
+	printf("[SexyAppFramework] - Update Count  = %d\n", mUpdateCount);
 
-	printf("[SexyAppBase] - Draw Count    = %d\n", mDrawCount);
+	printf("[SexyAppFramework] - Draw Count    = %d\n", mDrawCount);
 
-	printf("[SexyAppBase] - Draw Time     = %d\n", mDrawTime);
+	printf("[SexyAppFramework] - Draw Time     = %d\n", mDrawTime);
 
-	printf("[SexyAppBase] - Screen Blt    = %d\n", mScreenBltTime);
+	printf("[SexyAppFramework] - Screen Blt    = %d\n", mScreenBltTime);
 
 	if (mDrawTime + mScreenBltTime > 0)
 	{
-		printf("[SexyAppBase] - Avg FPS       = %d\r\n", (mDrawCount * 1000) / (mDrawTime + mScreenBltTime));
+		printf("[SexyAppFramework] - Avg FPS       = %d\r\n", (mDrawCount * 1000) / (mDrawTime + mScreenBltTime));
 	}
 	PreTerminate();
 

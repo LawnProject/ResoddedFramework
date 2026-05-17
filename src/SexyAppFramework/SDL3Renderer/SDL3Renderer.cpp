@@ -36,6 +36,7 @@ bool SDL3Renderer::InitRendererObject()
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Renderer Creation Failed", SDL_GetError(), nullptr);
 		return false;
 	}
+	printf("[SexyAppFramework] - Created SDL_Renderer (%s)\n", SDL_GetRendererName(mBackendRenderer));
 	SDL_SetRenderLogicalPresentation(mBackendRenderer, mWidth, mHeight, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 	mTargetTexture = SDL_CreateTexture(mBackendRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, mWidth, mHeight);
 	if (mTargetTexture == nullptr)
