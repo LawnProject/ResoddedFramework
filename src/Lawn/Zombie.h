@@ -19,6 +19,7 @@ constexpr const int RENDER_GROUP_BOSS_FRONT_LEG = 5;
 constexpr const int RENDER_GROUP_BOSS_BACK_ARM = 6;
 constexpr const int RENDER_GROUP_BOSS_FIREBALL_ADDITIVE = 7;
 constexpr const int RENDER_GROUP_BOSS_FIREBALL_TOP = 8;
+constexpr const int RENDER_GROUP_ZOMBATAR_COSMETICS= 9;
 constexpr const int ZOMBIE_LIMP_SPEED_FACTOR = 2;
 constexpr const int POGO_BOUNCE_TIME = 80;
 constexpr const int DOLPHIN_JUMP_TIME = 120;
@@ -75,6 +76,7 @@ class ZombieDrawPosition
 class Plant;
 class Reanimation;
 class TodParticleSystem;
+class Zombatar;
 class Zombie : public GameObject
 {
   public:
@@ -221,6 +223,8 @@ class Zombie : public GameObject
 	void BobsledCrash();
 	Plant *IsStandingOnSpikeweed();
 	void CheckForZombieStep();
+	void SetupZombatar();
+	void UpdateZombatar(Zombatar &aZombatar);
 	void CountExpectedMowers()
 	{
 		;

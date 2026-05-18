@@ -988,6 +988,7 @@ enum ReanimationType
 	REANIM_BUSH4_NIGHT,
 	REANIM_BUSH5_NIGHT,
 #endif
+	REANIM_ZOMBATAR_HEAD,
 	NUM_REANIMS
 };
 enum ReanimLoopType

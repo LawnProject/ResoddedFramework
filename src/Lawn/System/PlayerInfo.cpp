@@ -60,12 +60,15 @@ void PlayerInfo::SyncDetails(ProfileSyncer &theSync)
 	theSync.SyncBool("seen_stinky", mHasSeenStinky);
 	theSync.SyncBool("seen_upsell", mHasSeenUpsell);
 	theSync.SyncBool("accepted_zombatar_tos", mAcceptedZombatarTOS);
+	theSync.SyncInt("zombatar_index", mZombatarIndex);
 
 	theSync.SyncArray("potted_plants", mPottedPlant, mNumPottedPlants);
 	theSync.SyncArrayFromSize("achievements_shown", mShownAchievements, NUM_ACHIEVEMENT_TYPES);
 	theSync.SyncArrayFromSize("achievements_earned", mEarnedAchievements, NUM_ACHIEVEMENT_TYPES);
+	theSync.SyncArray("zombatars", mZombatars, mNumZombatars);
 
 	TOD_ASSERT(mNumPottedPlants <= MAX_POTTED_PLANTS);
+	TOD_ASSERT(mNumZombatars <= MAX_NUM_ZOMBATARS);
 }
 
 //0x469400
@@ -74,7 +77,7 @@ void PlayerInfo::LoadDetails()
 	try
 	{
 		Buffer aBuffer;
-		std::string aFileName = GetAppDataFolder() + StrFormat("savefiles/user%d.json", mId);
+		std::string aFileName = GetAppDataFolder() + StrFormat("profiles/user%d.json", mId);
 		if (std::filesystem::exists(aFileName))
 		{
 			ProfileSyncer aSync(aFileName);
@@ -102,8 +105,8 @@ void PlayerInfo::LoadDetails()
 //0x4695F0
 void PlayerInfo::SaveDetails()
 {
-	MkDir(GetAppDataFolder() + "savefiles");
-	std::string aFileName = GetAppDataFolder() + StrFormat("savefiles/user%d.json", mId);
+	MkDir(GetAppDataFolder() + "profiles");
+	std::string aFileName = GetAppDataFolder() + StrFormat("profiles/user%d.json", mId);
 	ProfileSyncer aSync(aFileName);
 	SyncDetails(aSync);
 	std::ofstream outFile(aFileName);
@@ -114,7 +117,7 @@ void PlayerInfo::SaveDetails()
 //0x469810
 void PlayerInfo::DeleteUserFiles()
 {
-	std::string aFilename = GetAppDataFolder() + StrFormat("savefiles/user%d.json", mId);
+	std::string aFilename = GetAppDataFolder() + StrFormat("profiles/user%d.json", mId);
 	if (std::filesystem::exists(aFilename))
 	{
 		gSexyAppBase->EraseFile(aFilename);
@@ -158,7 +161,10 @@ void PlayerInfo::Reset()
 	memset(mPottedPlant, 0, sizeof(mPottedPlant));
 	memset(mEarnedAchievements, 0, sizeof(mEarnedAchievements));
 	memset(mShownAchievements, 0, sizeof(mShownAchievements));
+	memset(mZombatars, 0, sizeof(mZombatars));
 	mNumPottedPlants = 0;
+	mNumZombatars = 0;
+	mZombatarIndex = 0;
 }
 
 void PlayerInfo::AddCoins(int theAmount)
@@ -364,7 +370,8 @@ void ProfileSyncer::SyncString(const SexyString &theName, SexyString &theStr)
 
 void to_json(nlohmann::json &j, const PottedPlant &p)
 {
-	j = {{"seed_type", (int)p.mSeedType},
+	j = {
+		{"seed_type", (int)p.mSeedType},
 		 {"garden", (int)p.mWhichZenGarden},
 
 		 {"x", p.mX},
@@ -384,7 +391,8 @@ void to_json(nlohmann::json &j, const PottedPlant &p)
 
 		 {"last_need_fulfilled_time", p.mLastNeedFulfilledTime},
 		 {"last_fertilized_time", p.mLastFertilizedTime},
-		 {"last_chocolate_time", p.mLastChocolateTime}};
+		 {"last_chocolate_time", p.mLastChocolateTime}
+	};
 }
 
 void from_json(const nlohmann::json &j, PottedPlant &p)
@@ -410,6 +418,69 @@ void from_json(const nlohmann::json &j, PottedPlant &p)
 	p.mLastNeedFulfilledTime = j.value("last_need_fulfilled_time", 0LL);
 	p.mLastFertilizedTime = j.value("last_fertilized_time", 0LL);
 	p.mLastChocolateTime = j.value("last_chocolate_time", 0LL);
+}
+
+void to_json(nlohmann::json &j, const Zombatar &z)
+{
+	j = {
+		{"skin", (int)z.mSkin},
+		{"skin_color", (int)z.mSkinColor},
+
+		{"clothes", z.mClothes},
+		{"clothes_color", z.mClothesColor},
+
+		{"tidbits", (int)z.mTidbits},
+		{"tidbits_color", (int)z.mTidbitsColor},
+
+		{"accessories", z.mAccessories},
+		{"accessories_color", z.mAccessoriesColor},
+
+		{"facial_hair", (int)z.mFacialHair},
+		{"facial_hair_color", (int)z.mFacialHairColor},
+
+		{"hair", (int)z.mHair},
+		{"hair_color", (int)z.mHairColor},
+
+		{"eyewear", (int)z.mEyewear},
+		{"eyewear_color", (int)z.mEyewearColor},
+
+		{"hat", (int)z.mHat},
+		{"hat_color", (int)z.mHatColor},
+
+		{"backdrop", (int)z.mBackdrop},
+		{"backdrop_color", (int)z.mBackdropColor},
+	};
+}
+
+void from_json(const nlohmann::json &j, Zombatar &z)
+{
+	z.mSkin = (int)j.value("skin", -1);
+	z.mSkinColor = (int)j.value("skin_color", -1);
+
+	z.mClothes = (int)j.value("clothes", -1);
+	z.mClothesColor = (int)j.value("clothes_color", -1);
+
+	z.mTidbits = (int)j.value("tidbits", -1);
+	z.mTidbitsColor = (int)j.value("tidbits_color", -1);
+
+	z.mAccessories = (int)j.value("accessories", -1);
+	z.mAccessoriesColor = (int)j.value("accessories_color", -1);
+
+	z.mFacialHair = (int)j.value("facial_hair", -1);
+	z.mFacialHairColor = (int)j.value("facial_hair_color", -1);
+
+	z.mHair = (int)j.value("hair", -1);
+	z.mHairColor = (int)j.value("hair_color", -1);
+
+	z.mEyewear = (int)j.value("eyewear", -1);
+	z.mEyewearColor = (int)j.value("eyewear_color", -1);
+
+	z.mHat = (int)j.value("hat", -1);
+	z.mHatColor = (int)j.value("hat_color", -1);
+
+	z.mBackdrop = (int)j.value("backdrop", -1);
+	z.mBackdropColor = (int)j.value("backdrop_color", -1);
+
 }
 
 template <typename T, size_t N> void ProfileSyncer::SyncArray(const SexyString &theName, T (&theArray)[N], int &theRealSize)

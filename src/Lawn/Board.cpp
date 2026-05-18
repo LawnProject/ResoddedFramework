@@ -379,7 +379,7 @@ void Board::TryToSaveGame()
 			return;
 		}
 
-		MkDir(GetAppDataFolder() + "savefiles");
+		MkDir(GetAppDataFolder() + StrFormat("savefiles/%d", mApp->mPlayerInfo->mId));
 		mApp->mMusic->GameMusicPause(true);
 		LawnSaveGame(this, aFileName);
 		mApp->ClearUpdateBacklog();
@@ -6054,7 +6054,7 @@ void Board::UpdateTutorial()
 	{
 		DisplayAdvice(
 			"[ADVICE_CLICK_PEASHOOTER]", MessageStyle::MESSAGE_STYLE_TUTORIAL_LEVEL1_STAY, AdviceType::ADVICE_NONE);
-		TutorialArrowShow(mSeedBank->mX + mSeedBank->mSeedPackets[1].mX, mSeedBank->mY + mSeedBank->mSeedPackets[1].mY);
+		TutorialArrowShow(mSeedBank->mX + mSeedBank->mSeedPackets[0].mX, mSeedBank->mY + mSeedBank->mSeedPackets[0].mY);
 		mTutorialTimer = -1;
 	}
 	else if (mTutorialState == TutorialState::TUTORIAL_LEVEL_2_PICK_UP_SUNFLOWER ||

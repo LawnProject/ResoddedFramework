@@ -120,7 +120,7 @@ Checkbox *MakeNewCheckbox(int theId, CheckboxListener *theListener, bool theDefa
 //0x4568D0
 std::string GetSavedGameName(GameMode theGameMode, int theProfileId)
 {
-	return GetAppDataFolder() + StrFormat("savefiles/game%d_%d.lawnsave", theProfileId, (int)theGameMode);
+	return GetAppDataFolder() + StrFormat("savefiles/%d/game%d.lawnsave", theProfileId, (int)theGameMode);
 }
 
 //0x456980

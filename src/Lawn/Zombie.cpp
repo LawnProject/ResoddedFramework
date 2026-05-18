@@ -8,6 +8,7 @@
 #include "Projectile.h"
 #include "../LawnApp.h"
 #include "../Resources.h"
+#include "System/PlayerInfo.h"
 #include "System/Music.h"
 #include "System/Achievements.h"
 #include "Widget/AlmanacDialog.h"
@@ -521,6 +522,8 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
 	{
 		mHasObject = true;
 		LoadPlainZombieReanim();
+		if (mApp->mPlayerInfo != nullptr && mApp->mPlayerInfo->mNumZombatars > 0)
+			SetupZombatar();
 
 		Reanimation *aBodyReanim = mApp->ReanimationGet(mBodyReanimID);
 		Reanimation *aFlagReanim = mApp->AddReanimation(0.0f, 0.0f, 0, ReanimationType::REANIM_FLAG);
@@ -979,6 +982,66 @@ void Zombie::LoadPlainZombieReanim()
 		SetupWaterTrack("Zombie_whitewater");
 		SetupWaterTrack("Zombie_whitewater2");
 	}
+}
+
+void Zombie::SetupZombatar()
+{
+	Reanimation *aBodyReanim = mApp->ReanimationGet(mBodyReanimID);
+	if (aBodyReanim == nullptr)
+		return;
+	ReanimShowPrefix("anim_head", RENDER_GROUP_HIDDEN);
+
+	ReanimatorTrackInstance *aTrackInstance = aBodyReanim->GetTrackInstanceByName("anim_head1");
+	aBodyReanim->AssignRenderGroupToPrefix("anim_hair", RENDER_GROUP_HIDDEN);
+	aTrackInstance->mImageOverride = IMAGE_BLANK;
+	Reanimation *aHeadReanim = mApp->AddReanimation(0.0f, 0.0f, 0, ReanimationType::REANIM_ZOMBATAR_HEAD);
+	aHeadReanim->PlayReanim("anim_head1", ReanimLoopType::REANIM_LOOP, 0, 15.0f);
+	AttachEffect *aAttachEffect = AttachReanim(aTrackInstance->mAttachmentID, aHeadReanim, 0.0f, 0.0f);
+	aBodyReanim->mFrameBasePose = 0;
+	TodScaleRotateTransformMatrix(aAttachEffect->mOffset, -20.0f, -0.0f, 0.2f, 1.0f, 1.0f);
+	mSpecialHeadReanimID = mApp->ReanimationGetID(aHeadReanim);
+
+
+	aBodyReanim->AssignRenderGroupToPrefix("anim_head1", RENDER_GROUP_ZOMBATAR_COSMETICS);
+	aHeadReanim->AssignRenderGroupToPrefix("hats_", RENDER_GROUP_HIDDEN);
+	aHeadReanim->AssignRenderGroupToPrefix("hair_", RENDER_GROUP_HIDDEN);
+	aHeadReanim->AssignRenderGroupToPrefix("facialHair_", RENDER_GROUP_HIDDEN);
+	aHeadReanim->AssignRenderGroupToPrefix("accessories_", RENDER_GROUP_HIDDEN);
+	aHeadReanim->AssignRenderGroupToPrefix("eyeWear_", RENDER_GROUP_HIDDEN);
+	aHeadReanim->AssignRenderGroupToPrefix("tidBits_", RENDER_GROUP_HIDDEN);
+	aHeadReanim->AssignRenderGroupToPrefix("anim_hair", RENDER_GROUP_HIDDEN);
+
+	if (mApp->mPlayerInfo != nullptr)
+		UpdateZombatar(mApp->mPlayerInfo->mZombatars[mApp->mPlayerInfo->mZombatarIndex]);
+}
+
+void Zombie::UpdateZombatar(Zombatar &aZombatar)
+{
+	Reanimation *aHeadReanim = mApp->ReanimationGet(mSpecialHeadReanimID);
+	if (aHeadReanim == nullptr)
+		return;
+	aHeadReanim->AssignRenderGroupToPrefix("hats_", RENDER_GROUP_HIDDEN);
+	aHeadReanim->AssignRenderGroupToPrefix("hair_", RENDER_GROUP_HIDDEN);
+	aHeadReanim->AssignRenderGroupToPrefix("facialHair_", RENDER_GROUP_HIDDEN);
+	aHeadReanim->AssignRenderGroupToPrefix("accessories_", RENDER_GROUP_HIDDEN);
+	aHeadReanim->AssignRenderGroupToPrefix("eyeWear_", RENDER_GROUP_HIDDEN);
+	aHeadReanim->AssignRenderGroupToPrefix("tidBits_", RENDER_GROUP_HIDDEN);
+
+	#define ZOMBATAR_PART_HELPER(prefix, member)                                                                       \
+	{                                                                                                                  \
+		SexyString aNum = StrFormat("%d", aZombatar.member);                                                           \
+		aHeadReanim->AssignRenderGroupToPrefix(                                                                        \
+			StrFormat("%s_%s", prefix, aZombatar.member < 10 ? ("0" + aNum).c_str() : aNum.c_str()).c_str(),           \
+			RENDER_GROUP_NORMAL);                                                                                      \
+	}
+
+	ZOMBATAR_PART_HELPER("hair", mHair);
+	ZOMBATAR_PART_HELPER("tidBits", mTidbits);
+	ZOMBATAR_PART_HELPER("eyeWear", mEyewear);
+	ZOMBATAR_PART_HELPER("accessories", mAccessories);
+	ZOMBATAR_PART_HELPER("facialHair", mFacialHair);
+	ZOMBATAR_PART_HELPER("hats", mHat);
+
 }
 
 //0x524470
@@ -5873,6 +5936,8 @@ void Zombie::DrawReanim(Graphics *g, const ZombieDrawPosition &theDrawPos, int t
 	else
 	{
 		aBodyReanim->DrawRenderGroup(g, theBaseRenderGroup);
+
+		aBodyReanim->DrawRenderGroup(g, RENDER_GROUP_ZOMBATAR_COSMETICS);
 	}
 
 	if (mShieldType != ShieldType::SHIELDTYPE_NONE)

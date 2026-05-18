@@ -79,7 +79,7 @@ void ProfileMgr::Load()
 
 	try
 	{
-		std::string aFileName = GetAppDataFolder() + "savefiles/users.json";
+		std::string aFileName = GetAppDataFolder() + "profiles/users.json";
 		ProfileSyncer aSync(aFileName);
 
 		if (std::filesystem::exists(aFileName))
@@ -109,8 +109,8 @@ void ProfileMgr::Load()
 void ProfileMgr::Save()
 {
 
-	MkDir(GetAppDataFolder() + "savefiles");
-	std::string aFileName = GetAppDataFolder() + "savefiles/users.json";
+	MkDir(GetAppDataFolder() + "profiles");
+	std::string aFileName = GetAppDataFolder() + "profiles/users.json";
 	ProfileSyncer aSync(aFileName);
 	SyncState(aSync);
 	std::ofstream outFile(aFileName);

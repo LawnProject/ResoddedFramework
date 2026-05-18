@@ -2,6 +2,7 @@
 #define __PLAYERINFO_H__
 
 #define MAX_POTTED_PLANTS 200
+#define MAX_NUM_ZOMBATARS 100
 #define PURCHASE_COUNT_OFFSET 1000
 
 #include "../../GameConstants.h"
@@ -36,6 +37,29 @@ class PottedPlant
 
   public:
 	void InitializePottedPlant(SeedType theSeedType);
+};
+
+class Zombatar
+{
+  public:
+	int mSkin;
+	int mSkinColor;
+	int mClothes;
+	int mClothesColor;
+	int mTidbits;
+	int mTidbitsColor;
+	int mAccessories;
+	int mAccessoriesColor;
+	int mFacialHair;
+	int mFacialHairColor;
+	int mHair;
+	int mHairColor;
+	int mEyewear;
+	int mEyewearColor;
+	int mHat;
+	int mHatColor;
+	int mBackdrop;
+	int mBackdropColor;
 };
 
 class ProfileSyncer
@@ -93,9 +117,12 @@ class PlayerInfo
 	bool mHasSeenUpsell;
 	bool mAcceptedZombatarTOS;
 	int mNumPottedPlants;
+	int mZombatarIndex;
+	int mNumZombatars;
 	PottedPlant mPottedPlant[MAX_POTTED_PLANTS];
 	bool mEarnedAchievements[NUM_ACHIEVEMENT_TYPES];
 	bool mShownAchievements[NUM_ACHIEVEMENT_TYPES];
+	Zombatar mZombatars[MAX_NUM_ZOMBATARS];
 
   public:
 	PlayerInfo();

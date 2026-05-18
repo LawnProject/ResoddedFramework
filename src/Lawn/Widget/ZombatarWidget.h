@@ -7,6 +7,7 @@
 using namespace Sexy;
 
 class LawnApp;
+class Zombie;
 
 class ZombatarWidget : public Widget, public ButtonListener
 {
@@ -17,6 +18,9 @@ class ZombatarWidget : public Widget, public ButtonListener
   public:
 	LawnApp *mApp;
 	NewLawnButton *mBackButton;
+	GameButton *mDummyZombatarButton;
+
+	Zombie *mZombie;
 
   public:
 	ZombatarWidget(LawnApp *theApp);
@@ -29,5 +33,7 @@ class ZombatarWidget : public Widget, public ButtonListener
 	virtual void RemovedFromManager(WidgetManager *theWidgetManager);
 	virtual void ButtonPress(int theId, int theClickCount);
 	virtual void ButtonDepress(int theId);
+	virtual void MouseDown(int x, int y, int theClickCount);
+	virtual void MouseUp(int x, int y, int theClickCount);
   private:
 };
