@@ -17,7 +17,7 @@ class ZombatarWidget : public Widget, public ButtonListener
 	};
   public:
 	LawnApp *mApp;
-	NewLawnButton *mBackButton;
+	GameButton *mBackButton;
 	GameButton *mDummyZombatarButton;
 
 	Zombie *mZombie;
@@ -29,10 +29,6 @@ class ZombatarWidget : public Widget, public ButtonListener
 	virtual void Draw(Graphics *g);
 	virtual void Update();
 
-	virtual void AddedToManager(WidgetManager *theWidgetManager);
-	virtual void RemovedFromManager(WidgetManager *theWidgetManager);
-	virtual void ButtonPress(int theId, int theClickCount);
-	virtual void ButtonDepress(int theId);
 	virtual void MouseDown(int x, int y, int theClickCount);
 	virtual void MouseUp(int x, int y, int theClickCount);
   private:

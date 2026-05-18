@@ -18,9 +18,11 @@ ZombatarWidget::ZombatarWidget(LawnApp *theApp)
 	TodLoadResources("DelayLoad_Almanac");
 	TodLoadResources("DelayLoad_Zombatar");
 
-	mBackButton = MakeNewButton(ZombatarWidget::ZOMBATAR_BACK, this, "", nullptr, Sexy::IMAGE_BLANK, Sexy::IMAGE_ZOMBATAR_MAINMENUBACK_HIGHLIGHT, Sexy::IMAGE_ZOMBATAR_MAINMENUBACK_HIGHLIGHT);
+	mBackButton = new GameButton(ZombatarWidget::ZOMBATAR_BACK);
+	mBackButton->mButtonImage = Sexy::IMAGE_BLANK;
+	mBackButton->mOverImage = Sexy::IMAGE_ZOMBATAR_MAINMENUBACK_HIGHLIGHT;
+	mBackButton->mDownImage = Sexy::IMAGE_ZOMBATAR_MAINMENUBACK_HIGHLIGHT;
 	mBackButton->Resize(278, 528, Sexy::IMAGE_ZOMBATAR_MAINMENUBACK_HIGHLIGHT->mWidth, Sexy::IMAGE_ZOMBATAR_MAINMENUBACK_HIGHLIGHT->mHeight);
-	mBackButton->mClip = false;
 
 	mDummyZombatarButton = new GameButton(1);
 	mDummyZombatarButton->mButtonImage = IMAGE_BRAIN;
@@ -48,6 +50,8 @@ ZombatarWidget::~ZombatarWidget()
 	}
 	if (mBackButton)
 		delete mBackButton;
+	if (mDummyZombatarButton)
+		delete mDummyZombatarButton;
 }
 
 void ZombatarWidget::Draw(Graphics *g)
@@ -67,7 +71,9 @@ void ZombatarWidget::Draw(Graphics *g)
 	g->DrawImage(IMAGE_ZOMBATAR_WIDGET_BG, aWidgetX, aWidgetY);
 	g->DrawImage(IMAGE_ZOMBATAR_WIDGET_INNER_BG, aWidgetX + 127, aWidgetY + 100);
 	g->DrawImage(IMAGE_ZOMBATAR_DISPLAY_WINDOW, 5, 0);
+	g->DrawImage(IMAGE_ZOMBATAR_COLORS_BG, 221, 335);
 	mDummyZombatarButton->Draw(g);
+	mBackButton->Draw(g);
 }
 
 void ZombatarWidget::Update()
@@ -75,29 +81,21 @@ void ZombatarWidget::Update()
 	MarkDirty();
 	mZombie->Update();
 	mDummyZombatarButton->Update();
+	mBackButton->Update();
 }
 
-void ZombatarWidget::AddedToManager(WidgetManager *theWidgetManager)
-{
-	Widget::AddedToManager(theWidgetManager);
-	AddWidget(mBackButton);
-}
-
-void ZombatarWidget::RemovedFromManager(WidgetManager *theWidgetManager)
-{
-	Widget::RemovedFromManager(theWidgetManager);
-	RemoveWidget(mBackButton);
-}
-
-void ZombatarWidget::ButtonPress(int theId, int theClickCount)
-{
-	mApp->PlaySample(Sexy::SOUND_BUTTONCLICK);
-}
 void ZombatarWidget::MouseDown(int x, int y, int theClickCount)
 {
 	if (mDummyZombatarButton->IsMouseOver())
 	{
-		
+		mApp->PlaySample(Sexy::SOUND_BUTTONCLICK);
+	}
+}
+
+void ZombatarWidget::MouseUp(int x, int y, int theClickCount)
+{
+	if (mDummyZombatarButton->IsMouseOver())
+	{
 		mApp->mPlayerInfo->mNumZombatars++;
 		mApp->mPlayerInfo->mZombatars[mApp->mPlayerInfo->mZombatarIndex].mHair = 1;
 		mApp->mPlayerInfo->mZombatars[mApp->mPlayerInfo->mZombatarIndex].mHairColor = 0;
@@ -120,20 +118,9 @@ void ZombatarWidget::MouseDown(int x, int y, int theClickCount)
 		mApp->mPlayerInfo->mZombatarIndex = mApp->mPlayerInfo->mNumZombatars - 1;
 		mZombie->UpdateZombatar(mApp->mPlayerInfo->mZombatars[mApp->mPlayerInfo->mZombatarIndex]);
 	}
-}
-
-void ZombatarWidget::MouseUp(int x, int y, int theClickCount)
-{
-
-}
-void ZombatarWidget::ButtonDepress(int theId)
-{
-	switch (theId)
+	else if (mBackButton->IsMouseOver())
 	{
-	case ZombatarWidget::ZOMBATAR_BACK:
 		mApp->mGameSelector->SlideTo(0, 0);
 		mWidgetManager->SetFocus(mApp->mGameSelector);
-		break;
-
 	}
 }
