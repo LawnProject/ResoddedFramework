@@ -1,6 +1,16 @@
 # CmakeLists.txt
 project(SexyAppFramework)
 
+find_package(SDL3 CONFIG REQUIRED)
+find_package(ZLIB REQUIRED)
+find_package(OpenAL CONFIG REQUIRED)
+find_package(Ogg CONFIG REQUIRED)
+find_package(Vorbis CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
+find_package(Freetype REQUIRED)
+find_package(cpptrace CONFIG REQUIRED)
+find_package(CURL CONFIG REQUIRED)
+
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/*.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
@@ -36,12 +46,12 @@ set(SEXY_CRASH_HANDLER "Enable the use of the crash handler" ON)
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC 
-    SDL3::SDL3-static
-    zlibstatic
+    SDL3::SDL3
+    ZLIB::ZLIB
     OpenAL::OpenAL
-    glm
-    ogg
-    freetype
+    glm::glm
+    Ogg::ogg
+    Freetype::Freetype
     Vorbis::vorbisfile
     Vorbis::vorbis
     cpptrace::cpptrace
