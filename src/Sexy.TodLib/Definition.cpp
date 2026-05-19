@@ -6,8 +6,10 @@
 #include "../PakLib/PakInterface.h"
 #include "../SexyAppFramework/PerfTimer.h"
 #include "../SexyAppFramework/XMLParser.h" 
+#include <cstring>
 #include <fstream>
 #include "OriginalCompiledDefinition.h"
+#include "../GameConstants.h"
 
 DefSymbol gTrailFlagDefSymbols[] = {
 	{0, "Loops"},
@@ -163,6 +165,43 @@ DefMap gReanimatorDefMap = {
 static DefLoadResPath gDefLoadResPaths[4] = {
 	{"IMAGE_", ""}, {"IMAGE_", "particles/"}, {"IMAGE_REANIM_", "reanim/"}, {"IMAGE_REANIM_", "images/"}};
 
+#if LAWN_WIDESCREEN
+struct DefinitionFrameworkReanimImage
+{
+	const char *mResourceId;
+	const char *mFilePath;
+};
+
+static const DefinitionFrameworkReanimImage gFrameworkReanimImages[] = {
+	{"IMAGE_REANIM_SELECTORSCREEN_BG_LEFT", "reanim/SelectorScreen_BG_Left"},
+	{"IMAGE_REANIM_SELECTORSCREEN_BG_CENTER", "reanim/SelectorScreen_BG_Center"},
+	{"IMAGE_REANIM_SELECTORSCREEN_BG_RIGHT", "reanim/SelectorScreen_BG_Right"},
+};
+
+static bool DefinitionTryLoadFrameworkReanimOverride(Image **theImage, const SexyString &theName)
+{
+	for (const DefinitionFrameworkReanimImage &aEntry : gFrameworkReanimImages)
+	{
+		if (strcmp(theName.c_str(), aEntry.mResourceId) != 0)
+			continue;
+
+		SharedImageRef aImageRef = gSexyAppBase->GetSharedImage(aEntry.mFilePath);
+		if ((Image *)aImageRef == nullptr)
+			return false;
+
+		TodMarkImageForSanding((Image *)aImageRef);
+		*theImage = (Image *)aImageRef;
+
+		if (gSexyAppBase->mResourceManager->ReplaceImage(aEntry.mResourceId, *theImage))
+			return true;
+
+		TodAddImageToMap(&aImageRef, aEntry.mResourceId);
+		return true;
+	}
+	return false;
+}
+#endif
+
 void *ParticleFieldConstructor(void *thePointer)
 {
 	if (thePointer)
@@ -272,31 +311,22 @@ void DefinitionFree(void* &theMemory)
 }
 
 
-bool DefinitionLoadImage(Image **theImage, const SexyString &theName)
+static bool DefinitionTryLoadImageFromPaths(Image **theImage, const SexyString &theName)
 {
-	// If the texture file path does not exist, there is no need to obtain the texture.
-	if (theName.size() == 0)
+	Image *anExisting = (Image *)gSexyAppBase->mResourceManager->LoadImage(theName);
+	if (anExisting != nullptr)
 	{
-		*theImage = nullptr;
+		*theImage = anExisting;
 		return true;
 	}
 
-	// Try using File Explorer to load textures from XML.
-	Image *anImage = (Image *)gSexyAppBase->mResourceManager->LoadImage(theName);
-	if (anImage)
-	{
-		*theImage = anImage;
-		return true;
-	}
-
-	// Manually load textures from possible texture paths.
 	for (const DefLoadResPath &aLoadResPath : gDefLoadResPaths)
 	{
-		int aNameLen = theName.size();
-		int aPrefixLen = strlen(aLoadResPath.mPrefix);
+		int aNameLen = (int)theName.size();
+		int aPrefixLen = (int)strlen(aLoadResPath.mPrefix);
 		if (aPrefixLen < aNameLen)
 		{
-			SexyString aPathToTry = aLoadResPath.mDirectory + theName.substr(aPrefixLen, aNameLen);
+			SexyString aPathToTry = aLoadResPath.mDirectory + theName.substr(aPrefixLen, aNameLen - aPrefixLen);
 			SharedImageRef aImageRef = gSexyAppBase->GetSharedImage(aPathToTry);
 			if ((Image *)aImageRef != nullptr)
 			{
@@ -308,6 +338,48 @@ bool DefinitionLoadImage(Image **theImage, const SexyString &theName)
 			}
 		}
 	}
+	return false;
+}
+
+bool DefinitionLoadImage(Image **theImage, const SexyString &theName)
+{
+	// If the texture file path does not exist, there is no need to obtain the texture.
+	if (theName.size() == 0)
+	{
+		*theImage = nullptr;
+		return true;
+	}
+
+#if LAWN_WIDESCREEN
+	// Selector BG: use assets/framework/reanim PNGs even when main.pak already registered the id.
+	if (DefinitionTryLoadFrameworkReanimOverride(theImage, theName))
+		return true;
+#endif
+
+	// Reanim tracks often reference the same image name; reuse an existing registration.
+	Image *anImage = (Image *)gSexyAppBase->mResourceManager->LoadImage(theName);
+	if (anImage != nullptr)
+	{
+		*theImage = anImage;
+		return true;
+	}
+
+#if LAWN_WIDESCREEN
+	if (DefinitionTryLoadImageFromPaths(theImage, theName))
+		return true;
+#endif
+
+	// Try using File Explorer to load textures from XML / main.pak.
+	anImage = (Image *)gSexyAppBase->mResourceManager->LoadImage(theName);
+	if (anImage != nullptr)
+	{
+		*theImage = anImage;
+		return true;
+	}
+
+	if (DefinitionTryLoadImageFromPaths(theImage, theName))
+		return true;
+
 	TodTrace("DefinitionLoadImage failed for: %s", theName.c_str());
 	return false;
 }

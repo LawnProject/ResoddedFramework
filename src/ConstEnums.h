@@ -1,11 +1,5 @@
 #pragma once
 
-// Forward-declare LAWN_WIDESCREEN so enum guards work regardless of include order.
-// The canonical definition lives in GameConstants.h
-#ifndef LAWN_WIDESCREEN
-#define LAWN_WIDESCREEN 1
-#endif
-
 enum AchievementID
 {
 	ACHIEVEMENT_HOME_SECURITY = 0,

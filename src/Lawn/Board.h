@@ -1,7 +1,7 @@
 #ifndef __BOARD_H__
 #define __BOARD_H__
 
-#include "../ConstEnums.h"
+#include "../GameConstants.h"
 #include "../Sexy.TodLib/DataArray.h"
 #include "../SexyAppFramework/Widget.h"
 #include "../SexyAppFramework/ButtonListener.h"
@@ -196,6 +196,8 @@ class Board : public Widget, public ButtonListener
 	bool mFinalBossKilled;											  //+0x55F0
 	bool mShowShovel;												  //+0x55F1
 	int mCoinBankFadeCount;											  //+0x55F4
+	int mCoinBankX;
+	int mCoinBankY;
 	DebugTextMode mDebugTextMode;									  //+0x55F8
 	bool mLevelComplete;											  //+0x55FC
 	int mBoardFadeOutCounter;										  //+0x5600

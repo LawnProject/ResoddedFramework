@@ -1,7 +1,6 @@
 #ifndef __CHALLENGE_H__
 #define __CHALLENGE_H__
 
-#include "../ConstEnums.h"
 #include "../GameConstants.h"
 #include "../Sexy.TodLib/FilterEffect.h"
 #include "../SexyAppFramework/Graphics.h"

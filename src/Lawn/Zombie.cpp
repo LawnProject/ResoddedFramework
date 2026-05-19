@@ -4085,7 +4085,11 @@ void Zombie::UpdateZamboni()
 	{
 		mBoard->mIceMinX[mRow] = anIceX;
 	}
+#if LAWN_WIDESCREEN
+	if (anIceX < BOARD_ICE_START)
+#else
 	if (anIceX < 800)
+#endif
 	{
 		mBoard->mIceTimer[mRow] = 3000;
 		if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BOBSLED_BONANZA)

@@ -44,7 +44,7 @@ AlmanacDialog::AlmanacDialog(LawnApp *theApp)
 	mCloseButton->mColors[ButtonWidget::COLOR_LABEL] = aColor;
 	mCloseButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = aColor;
 #if LAWN_WIDESCREEN
-	mCloseButton->Resize(676 + BOARD_ADDITIONAL_WIDTH / 2, 567 + BOARD_OFFSET_Y, 89, 26);
+	mCloseButton->Resize(676 + BOARD_ADDITIONAL_WIDTH, 567 + BOARD_OFFSET_Y, 89, 26);
 #else
 	mCloseButton->Resize(676, 567, 89, 26);
 #endif
@@ -61,7 +61,7 @@ AlmanacDialog::AlmanacDialog(LawnApp *theApp)
 	mIndexButton->mColors[ButtonWidget::COLOR_LABEL] = aColor;
 	mIndexButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = aColor;
 #if LAWN_WIDESCREEN
-	mIndexButton->Resize(32 + BOARD_ADDITIONAL_WIDTH / 2, 567 + BOARD_OFFSET_Y, 164, 26);
+	mIndexButton->Resize(32 + BOARD_ADDITIONAL_WIDTH, 567 + BOARD_OFFSET_Y, 164, 26);
 #else
 	mIndexButton->Resize(32, 567, 164, 26);
 #endif
@@ -80,7 +80,7 @@ AlmanacDialog::AlmanacDialog(LawnApp *theApp)
 	mPlantButton->mColors[ButtonWidget::COLOR_LABEL] = Color::White;
 	mPlantButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color::White;
 #if LAWN_WIDESCREEN
-	mPlantButton->Resize(130 + BOARD_ADDITIONAL_WIDTH / 2, 345 + BOARD_OFFSET_Y, 156, 42);
+	mPlantButton->Resize(130 + BOARD_ADDITIONAL_WIDTH, 345 + BOARD_OFFSET_Y, 156, 42);
 #else
 	mPlantButton->Resize(130, 345, 156, 42);
 #endif
@@ -90,7 +90,7 @@ AlmanacDialog::AlmanacDialog(LawnApp *theApp)
 	mZombieButton = new GameButton(AlmanacDialog::ALMANAC_BUTTON_ZOMBIE);
 	mZombieButton->SetLabel("[VIEW_ZOMBIES]");
 #if LAWN_WIDESCREEN
-	mZombieButton->Resize(487 + BOARD_ADDITIONAL_WIDTH / 2, 345 + BOARD_OFFSET_Y, 210, 48);
+	mZombieButton->Resize(487 + BOARD_ADDITIONAL_WIDTH, 345 + BOARD_OFFSET_Y, 210, 48);
 #else
 	mZombieButton->Resize(487, 345, 210, 48);
 #endif
@@ -101,8 +101,8 @@ AlmanacDialog::AlmanacDialog(LawnApp *theApp)
 	mDescriptionScrollbar->mSliderHeightPercent = 0.57f;
 	mDescriptionScrollbar->mStepMultiplier = 0.55f;
 #if LAWN_WIDESCREEN
-	mDescriptionScrollbar->Resize(735 + BOARD_ADDITIONAL_WIDTH / 2, 377 + BOARD_OFFSET_Y, 8, 140);
-	mDescriptionScrollbar->mAllowedMouseZone = Rect(484 + BOARD_ADDITIONAL_WIDTH / 2, 377 + BOARD_OFFSET_Y, 258, 162);
+	mDescriptionScrollbar->Resize(735 + BOARD_ADDITIONAL_WIDTH, 377 + BOARD_OFFSET_Y, 8, 140);
+	mDescriptionScrollbar->mAllowedMouseZone = Rect(484 + BOARD_ADDITIONAL_WIDTH, 377 + BOARD_OFFSET_Y, 258, 162);
 #else
 	mDescriptionScrollbar->Resize(735, 377, 8, 140);
 	mDescriptionScrollbar->mAllowedMouseZone = Rect(484, 377, 258, 162);
@@ -185,13 +185,8 @@ void AlmanacDialog::SetupPlant()
 	mPlant->mBoard = nullptr;
 	mPlant->mIsOnBoard = false;
 	mPlant->PlantInitialize(0, 0, mSelectedSeed, SEED_NONE);
-#if LAWN_WIDESCREEN
-	mPlant->mX = aPosX + BOARD_ADDITIONAL_WIDTH / 2;
-	mPlant->mY = aPosY + BOARD_OFFSET_Y;
-#else
 	mPlant->mX = aPosX;
 	mPlant->mY = aPosY;
-#endif
 }
 
 //0x401B70
@@ -202,13 +197,8 @@ void AlmanacDialog::SetupZombie()
 	mZombie = new Zombie();
 	mZombie->mBoard = nullptr;
 	mZombie->ZombieInitialize(0, mSelectedZombie, false, nullptr, Zombie::ZOMBIE_WAVE_UI);
-#if LAWN_WIDESCREEN
-	mZombie->mPosX = ALMANAC_ZOMBIE_POSITION_X + BOARD_ADDITIONAL_WIDTH / 2;
-	mZombie->mPosY = ALMANAC_ZOMBIE_POSITION_Y + BOARD_OFFSET_Y;
-#else
 	mZombie->mPosX = ALMANAC_ZOMBIE_POSITION_X;
 	mZombie->mPosY = ALMANAC_ZOMBIE_POSITION_Y;
-#endif
 }
 
 //0x401BE0
@@ -223,24 +213,14 @@ void AlmanacDialog::SetPage(AlmanacPage thePage)
 		mPlant->mBoard = nullptr;
 		mPlant->mIsOnBoard = false;
 		mPlant->PlantInitialize(0, 0, SeedType::SEED_SUNFLOWER, SeedType::SEED_NONE);
-#if LAWN_WIDESCREEN
-		mPlant->mX = ALMANAC_INDEXPLANT_POSITION_X + BOARD_ADDITIONAL_WIDTH / 2;
-		mPlant->mY = ALMANAC_INDEXPLANT_POSITION_Y + BOARD_OFFSET_Y;
-#else
 		mPlant->mX = ALMANAC_INDEXPLANT_POSITION_X;
 		mPlant->mY = ALMANAC_INDEXPLANT_POSITION_Y;
-#endif
 
 		mZombie = new Zombie();
 		mZombie->mBoard = nullptr;
 		mZombie->ZombieInitialize(0, ZombieType::ZOMBIE_NORMAL, false, nullptr, Zombie::ZOMBIE_WAVE_UI);
-#if LAWN_WIDESCREEN
-		mZombie->mPosX = ALMANAC_INDEXZOMBIE_POSITION_X + BOARD_ADDITIONAL_WIDTH / 2;
-		mZombie->mPosY = ALMANAC_INDEXZOMBIE_POSITION_Y;
-#else
 		mZombie->mPosX = ALMANAC_INDEXZOMBIE_POSITION_X;
 		mZombie->mPosY = ALMANAC_INDEXZOMBIE_POSITION_Y;
-#endif
 
 		mIndexButton->mBtnNoDraw = true;
 		mPlantButton->mBtnNoDraw = false;
@@ -412,25 +392,22 @@ void AlmanacDialog::DrawPlants(Graphics *g)
 	{
 		bool aNight = mSelectedSeed == SeedType::SEED_SEASHROOM;
 #if LAWN_WIDESCREEN
-		g->DrawImage(aNight ? Sexy::IMAGE_ALMANAC_GROUNDNIGHTPOOL : Sexy::IMAGE_ALMANAC_GROUNDPOOL, 521 + BOARD_ADDITIONAL_WIDTH / 2, 107 + BOARD_OFFSET_Y);
+		g->DrawImage(aNight ? Sexy::IMAGE_ALMANAC_GROUNDNIGHTPOOL : Sexy::IMAGE_ALMANAC_GROUNDPOOL, 521 + BOARD_ADDITIONAL_WIDTH, 107 + BOARD_OFFSET_Y);
 #else
 		g->DrawImage(aNight ? Sexy::IMAGE_ALMANAC_GROUNDNIGHTPOOL : Sexy::IMAGE_ALMANAC_GROUNDPOOL, 521, 107);
 #endif
 
 		if (mApp->Is3DAccelerated())
 		{
-#if LAWN_WIDESCREEN
-			g->SetClipRect(475 + BOARD_ADDITIONAL_WIDTH / 2, 0, 397, 500);
-			g->mTransY -= 145;
-			g->mTransX += BOARD_ADDITIONAL_WIDTH / 2;
-			mApp->mPoolEffect->PoolEffectDraw(g, aNight);
-			g->mTransY += 145;
-			g->mTransX -= BOARD_ADDITIONAL_WIDTH / 2;
-#else
 			g->SetClipRect(475, 0, 397, 500);
 			g->mTransY -= 145;
+#if LAWN_WIDESCREEN
+			g->mTransX += BOARD_ADDITIONAL_WIDTH;
+#endif
 			mApp->mPoolEffect->PoolEffectDraw(g, aNight);
 			g->mTransY += 145;
+#if LAWN_WIDESCREEN
+			g->mTransX -= BOARD_ADDITIONAL_WIDTH;
 #endif
 			g->ClearClipRect();
 		}
@@ -443,7 +420,7 @@ void AlmanacDialog::DrawPlants(Graphics *g)
 						 ? Sexy::IMAGE_ALMANAC_GROUNDNIGHT
 					 : mSelectedSeed == SeedType::SEED_FLOWERPOT ? Sexy::IMAGE_ALMANAC_GROUNDROOF
 																 : Sexy::IMAGE_ALMANAC_GROUNDDAY,
-					 521 + BOARD_ADDITIONAL_WIDTH / 2,
+					 521 + BOARD_ADDITIONAL_WIDTH,
 					 107 + BOARD_OFFSET_Y);
 #else
 		g->DrawImage(Plant::IsNocturnal(mSelectedSeed) || mSelectedSeed == SeedType::SEED_GRAVEBUSTER ||
@@ -464,7 +441,7 @@ void AlmanacDialog::DrawPlants(Graphics *g)
 	}
 
 #if LAWN_WIDESCREEN
-	g->DrawImage(Sexy::IMAGE_ALMANAC_PLANTCARD, 459 + BOARD_ADDITIONAL_WIDTH / 2, 86 + BOARD_OFFSET_Y);
+	g->DrawImage(Sexy::IMAGE_ALMANAC_PLANTCARD, 459 + BOARD_ADDITIONAL_WIDTH, 86 + BOARD_OFFSET_Y);
 #else
 	g->DrawImage(Sexy::IMAGE_ALMANAC_PLANTCARD, 459, 86);
 #endif
@@ -478,9 +455,9 @@ void AlmanacDialog::DrawPlants(Graphics *g)
 	SexyString aHeaderName = StrFormat("[%s_DESCRIPTION_HEADER]", aPlantDef.mPlantName);
 	SexyString aDescriptionName = StrFormat("[%s_DESCRIPTION]", aPlantDef.mPlantName);
 #if LAWN_WIDESCREEN
-	TodDrawString(g, aName, 617 + BOARD_ADDITIONAL_WIDTH / 2, 288 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT18YELLOW, Color::White, DS_ALIGN_CENTER);
-	int aDistanceHeader = TodDrawStringWrappedHelper(g, TodStringTranslate(aHeaderName), Rect(485 + BOARD_ADDITIONAL_WIDTH / 2, 309 + BOARD_OFFSET_Y, 258, 230), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_LEFT, true);
-	TodDrawStringWrapped(g, aDescriptionName, Rect(485 + BOARD_ADDITIONAL_WIDTH / 2, 309 + aDistanceHeader + BOARD_OFFSET_Y, 258, 230), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_LEFT);
+	TodDrawString(g, aName, 617 + BOARD_ADDITIONAL_WIDTH, 288 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT18YELLOW, Color::White, DS_ALIGN_CENTER);
+	int aDistanceHeader = TodDrawStringWrappedHelper(g, TodStringTranslate(aHeaderName), Rect(485 + BOARD_ADDITIONAL_WIDTH, 309 + BOARD_OFFSET_Y, 258, 230), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_LEFT, true);
+	TodDrawStringWrapped(g, aDescriptionName, Rect(485 + BOARD_ADDITIONAL_WIDTH, 309 + aDistanceHeader + BOARD_OFFSET_Y, 258, 230), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_LEFT);
 #else
 	TodDrawString(g, aName, 617, 288, Sexy::FONT_DWARVENTODCRAFT18YELLOW, Color::White, DS_ALIGN_CENTER);
 	int aDistanceHeader = TodDrawStringWrappedHelper(g, TodStringTranslate(aHeaderName), Rect(485, 309, 258, 230), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_LEFT, true);
@@ -493,7 +470,7 @@ void AlmanacDialog::DrawPlants(Graphics *g)
 			StrFormat("{KEYWORD}{COST}:{STAT} %d", aPlantDef.mSeedCost),"{COST}", "[COST]");
 #if LAWN_WIDESCREEN
 		TodDrawStringWrapped(
-			g, aCostStr, Rect(485 + BOARD_ADDITIONAL_WIDTH / 2, 520 + BOARD_OFFSET_Y, 134, 50), Sexy::FONT_BRIANNETOD12, Color::White, DS_ALIGN_LEFT);
+			g, aCostStr, Rect(485 + BOARD_ADDITIONAL_WIDTH, 520 + BOARD_OFFSET_Y, 134, 50), Sexy::FONT_BRIANNETOD12, Color::White, DS_ALIGN_LEFT);
 #else
 		TodDrawStringWrapped(
 			g, aCostStr, Rect(485, 520, 134, 50), Sexy::FONT_BRIANNETOD12, Color::White, DS_ALIGN_LEFT);
@@ -507,7 +484,7 @@ void AlmanacDialog::DrawPlants(Graphics *g)
 		aRechargeStr = TodReplaceString(aRechargeStr, "{WAIT_TIME}", "[WAIT_TIME]");
 #if LAWN_WIDESCREEN
 		TodDrawStringWrapped(
-			g, aRechargeStr, Rect(600 + BOARD_ADDITIONAL_WIDTH / 2, 520 + BOARD_OFFSET_Y, 139, 50), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_RIGHT);
+			g, aRechargeStr, Rect(600 + BOARD_ADDITIONAL_WIDTH, 520 + BOARD_OFFSET_Y, 139, 50), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_RIGHT);
 #else
 		TodDrawStringWrapped(
 			g, aRechargeStr, Rect(600, 520, 139, 50), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_RIGHT);
@@ -652,7 +629,7 @@ void AlmanacDialog::DrawZombies(Graphics *g)
 						 mZombie->mZombieType == ZombieType::ZOMBIE_BOBSLED
 					 ? Sexy::IMAGE_ALMANAC_GROUNDICE
 					 : Sexy::IMAGE_ALMANAC_GROUNDDAY,
-				 518 + BOARD_ADDITIONAL_WIDTH / 2,
+				 518 + BOARD_ADDITIONAL_WIDTH,
 				 110 + BOARD_OFFSET_Y);
 #else
 	g->DrawImage(mZombie->mZombieType == ZombieType::ZOMBIE_ZAMBONI ||
@@ -697,7 +674,7 @@ void AlmanacDialog::DrawZombies(Graphics *g)
 		mZombie->Draw(&aZombieGraphics);
 	}
 #if LAWN_WIDESCREEN
-	g->DrawImage(Sexy::IMAGE_ALMANAC_ZOMBIECARD, 455 + BOARD_ADDITIONAL_WIDTH / 2, 78 + BOARD_OFFSET_Y);
+	g->DrawImage(Sexy::IMAGE_ALMANAC_ZOMBIECARD, 455 + BOARD_ADDITIONAL_WIDTH, 78 + BOARD_OFFSET_Y);
 #else
 	g->DrawImage(Sexy::IMAGE_ALMANAC_ZOMBIECARD, 455, 78);
 #endif
@@ -706,7 +683,7 @@ void AlmanacDialog::DrawZombies(Graphics *g)
 	SexyString aName = ZombieHasSilhouette(mSelectedZombie) ? "???" : StrFormat("[%s]", aZombieDef.mZombieName);
 #if LAWN_WIDESCREEN
 	TodDrawString(
-		g, aName, 613 + BOARD_ADDITIONAL_WIDTH / 2, 362 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color(190, 255, 235, 255), DS_ALIGN_CENTER);
+		g, aName, 613 + BOARD_ADDITIONAL_WIDTH, 362 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color(190, 255, 235, 255), DS_ALIGN_CENTER);
 #else
 	TodDrawString(
 		g, aName, 613, 362, Sexy::FONT_DWARVENTODCRAFT18GREENINSET, Color(190, 255, 235, 255), DS_ALIGN_CENTER);
@@ -746,8 +723,8 @@ void AlmanacDialog::DrawZombies(Graphics *g)
 
 	int aMaxWidthOffset = 0;
 #if LAWN_WIDESCREEN
-	int aDistanceHeader = TodDrawStringWrappedHelper(g, aHeaderName, Rect(484 + BOARD_ADDITIONAL_WIDTH / 2, 377 + BOARD_OFFSET_Y, 258, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_LEFT, true);
-	int aDescriptionHeight = TodDrawStringWrappedHelper(g, aDescription, Rect(484 + BOARD_ADDITIONAL_WIDTH / 2, 377 + aDistanceHeader + BOARD_OFFSET_Y, 258, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), aAlign, false);
+	int aDistanceHeader = TodDrawStringWrappedHelper(g, aHeaderName, Rect(484 + BOARD_ADDITIONAL_WIDTH, 377 + BOARD_OFFSET_Y, 258, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_LEFT, true);
+	int aDescriptionHeight = TodDrawStringWrappedHelper(g, aDescription, Rect(484 + BOARD_ADDITIONAL_WIDTH, 377 + aDistanceHeader + BOARD_OFFSET_Y, 258, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), aAlign, false);
 #else
 	int aDistanceHeader = TodDrawStringWrappedHelper(g, aHeaderName, Rect(484, 377, 258, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), DS_ALIGN_LEFT, true);
 	int aDescriptionHeight = TodDrawStringWrappedHelper(g, aDescription, Rect(484, 377 + aDistanceHeader, 258, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), aAlign, false);
@@ -765,7 +742,7 @@ void AlmanacDialog::DrawZombies(Graphics *g)
 		mDescriptionScrollbar->mVisible = true;
 	}
 #if LAWN_WIDESCREEN
-	mDescriptionScrollbar->Resize(735 + BOARD_ADDITIONAL_WIDTH / 2, 377 + aDistanceHeader + BOARD_OFFSET_Y, 8, 142 - aDistanceHeader + Sexy::FONT_BRIANNETOD12->GetHeight());
+	mDescriptionScrollbar->Resize(735 + BOARD_ADDITIONAL_WIDTH, 377 + aDistanceHeader + BOARD_OFFSET_Y, 8, 142 - aDistanceHeader + Sexy::FONT_BRIANNETOD12->GetHeight());
 #else
 	mDescriptionScrollbar->Resize(735, 377 + aDistanceHeader, 8, 142 - aDistanceHeader + Sexy::FONT_BRIANNETOD12->GetHeight());
 #endif
@@ -774,14 +751,14 @@ void AlmanacDialog::DrawZombies(Graphics *g)
 	{
 		anOffsetSlider = mDescriptionScrollbar->GetValue() * aDescriptionHeight;
 #if LAWN_WIDESCREEN
-		g->SetClipRect(484 + BOARD_ADDITIONAL_WIDTH / 2, 377 + aDistanceHeader + BOARD_OFFSET_Y, 258, 162 - aDistanceHeader);
+		g->SetClipRect(484 + BOARD_ADDITIONAL_WIDTH, 377 + aDistanceHeader + BOARD_OFFSET_Y, 258, 162 - aDistanceHeader);
 #else
 		g->SetClipRect(484, 377 + aDistanceHeader, 258, 162 - aDistanceHeader);
 #endif
 
 	}
 #if LAWN_WIDESCREEN
-	TodDrawStringWrapped(g, aDescription, Rect(484 + BOARD_ADDITIONAL_WIDTH / 2, 377 + aDistanceHeader - anOffsetSlider + BOARD_OFFSET_Y, 258 - aMaxWidthOffset, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), aAlign);
+	TodDrawStringWrapped(g, aDescription, Rect(484 + BOARD_ADDITIONAL_WIDTH, 377 + aDistanceHeader - anOffsetSlider + BOARD_OFFSET_Y, 258 - aMaxWidthOffset, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), aAlign);
 #else
 	TodDrawStringWrapped(g, aDescription, Rect(484, 377 + aDistanceHeader - anOffsetSlider, 258 - aMaxWidthOffset, 170), Sexy::FONT_BRIANNETOD12, Color(40, 50, 90), aAlign);
 #endif
@@ -828,7 +805,7 @@ void AlmanacDialog::GetSeedPosition(SeedType theSeedType, int &x, int &y)
 	if (theSeedType == SeedType::SEED_IMITATER)
 	{
 #if LAWN_WIDESCREEN
-		x = 20 + BOARD_ADDITIONAL_WIDTH / 2;
+		x = 20 + BOARD_ADDITIONAL_WIDTH;
 		y = 23 + BOARD_OFFSET_Y;
 #else
 		x = 20;
@@ -838,7 +815,7 @@ void AlmanacDialog::GetSeedPosition(SeedType theSeedType, int &x, int &y)
 	else
 	{
 #if LAWN_WIDESCREEN
-		x = theSeedType % 8 * 52 + 26 + BOARD_ADDITIONAL_WIDTH / 2;
+		x = theSeedType % 8 * 52 + 26 + BOARD_ADDITIONAL_WIDTH;
 		y = theSeedType / 8 * 78 + 92 + BOARD_OFFSET_Y;
 #else
 		x = theSeedType % 8 * 52 + 26;
@@ -941,7 +918,7 @@ void AlmanacDialog::GetZombiePosition(ZombieType theZombieType, int &x, int &y)
 	if (theZombieType == ZombieType::ZOMBIE_BOSS)
 	{
 #if LAWN_WIDESCREEN
-		x = 192 + BOARD_ADDITIONAL_WIDTH / 2;
+		x = 192 + BOARD_ADDITIONAL_WIDTH;
 		y = 486 + BOARD_OFFSET_Y;
 #else
 		x = 192;
@@ -951,7 +928,7 @@ void AlmanacDialog::GetZombiePosition(ZombieType theZombieType, int &x, int &y)
 	else
 	{
 #if LAWN_WIDESCREEN
-		x = theZombieType % 5 * 85 + 22 + BOARD_ADDITIONAL_WIDTH / 2;
+		x = theZombieType % 5 * 85 + 22 + BOARD_ADDITIONAL_WIDTH;
 		y = theZombieType / 5 * 80 + 86 + BOARD_OFFSET_Y;
 #else
 		x = theZombieType % 5 * 85 + 22;

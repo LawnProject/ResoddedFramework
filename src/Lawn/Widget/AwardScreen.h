@@ -1,7 +1,7 @@
 #ifndef __AWARDSCREEN_H__
 #define __AWARDSCREEN_H__
 
-#include "../../ConstEnums.h"
+#include "../../GameConstants.h"
 #include "../../SexyAppFramework/Widget.h"
 #include "../LawnCommon.h"
 using namespace Sexy;

@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "Coin.h"
 #include "Board.h"
 #include "Cutscene.h"
@@ -587,11 +589,36 @@ void Coin::UpdateCollected()
 	int aDestX, aDestY;
 	if (IsSun())
 	{
+#if LAWN_WIDESCREEN
+		aDestX = mBoard->mSeedBank->mX + 5;
+		aDestY = std::max(0, mBoard->mSeedBank->mY);
+#else
 		aDestX = 15;
 		aDestY = 0;
+#endif
 	}
 	else if (IsMoney())
 	{
+#if LAWN_WIDESCREEN
+		int aMoneyX;
+		int aMoneyY = -10;
+
+		if (mApp->GetDialog((int)Dialogs::DIALOG_STORE))
+		{
+			aMoneyX = 12;
+			aDestX = STORESCREEN_COINBANK_X + aMoneyX;
+			aDestY = STORESCREEN_COINBANK_Y + aMoneyY;
+		}
+		else
+		{
+			aMoneyX = mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
+							  mApp->mCrazyDaveState != CrazyDaveState::CRAZY_DAVE_OFF
+						  ? -2
+						  : -18;
+			aDestX = mBoard->mCoinBankX + aMoneyX;
+			aDestY = mBoard->mCoinBankY + aMoneyY;
+		}
+#else
 		aDestX = 39;
 		aDestY = 558;
 
@@ -605,6 +632,7 @@ void Coin::UpdateCollected()
 		{
 			aDestX = 442;
 		}
+#endif
 	}
 	else if (IsPresentWithAdvice())
 	{

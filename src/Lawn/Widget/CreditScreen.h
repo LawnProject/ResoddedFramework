@@ -1,7 +1,7 @@
 #ifndef __CREDITSCREEN_H__
 #define __CREDITSCREEN_H__
 
-#include "../../ConstEnums.h"
+#include "../../GameConstants.h"
 #include "../../SexyAppFramework/Widget.h"
 #include "../../SexyAppFramework/PerfTimer.h"
 #include "../../SexyAppFramework/ButtonListener.h"

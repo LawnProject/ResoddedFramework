@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ConstEnums.h"
+#include "../GameConstants.h"
 #include "../SexyAppFramework/Graphics.h"
 
 using namespace Sexy;

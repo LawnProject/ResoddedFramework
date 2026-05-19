@@ -69,6 +69,8 @@ Board::Board(LawnApp *theApp)
 		mBoardRandSeed = Rand();
 	}
 	mCoinBankFadeCount = 0;
+	mCoinBankX = 0;
+	mCoinBankY = 0;
 	mLevel = 0;
 	mCursorObject = new CursorObject();
 	mCursorPreview = new CursorPreview();
@@ -175,6 +177,7 @@ Board::Board(LawnApp *theApp)
 	mDebugTextMode = DebugTextMode::DEBUG_TEXT_NONE;
 	mMenuButton = new GameButton(0);
 	mMenuButton->mDrawStoneButton = true;
+	mMenuButton->mParentWidget = this;
 	mStoreButton = nullptr;
 	mIgnoreMouseUp = false;
 
@@ -6799,6 +6802,18 @@ void Board::DrawIce(Graphics *g, int theGridY)
 	}
 
 	int aBeginningX = mIceMinX[theGridY] + 13, aDeltaX;
+#if LAWN_WIDESCREEN
+	for (int aPosX = aBeginningX; aPosX < BOARD_ICE_START; aPosX += aDeltaX)
+	{
+		if (aPosX == aBeginningX)
+		{
+			aDeltaX = (BOARD_ICE_START - aBeginningX) % aWidth;
+			if (!aDeltaX)
+				aDeltaX = aWidth;
+		}
+		else
+			aDeltaX = aWidth;
+#else
 	for (int aPosX = aBeginningX; aPosX < BOARD_WIDTH; aPosX += aDeltaX)
 	{
 		if (aPosX == aBeginningX)
@@ -6809,6 +6824,7 @@ void Board::DrawIce(Graphics *g, int theGridY)
 		}
 		else
 			aDeltaX = aWidth;
+#endif
 		Rect aRepeatSrcRect(aWidth - aDeltaX, 0, aDeltaX, aHeight);
 		Rect aRepeatDstRect(aPosX, aPosY, aDeltaX, aHeight);
 		g->DrawImage(Sexy::IMAGE_ICE, aRepeatDstRect, aRepeatSrcRect);
@@ -7372,10 +7388,7 @@ void Board::DrawGameObjects(Graphics *g)
 	}
 	{
 		int aZPos;
-#if LAWN_WIDESCREEN
-		aZPos = MakeRenderOrder(RenderLayer::RENDER_LAYER_ABOVE_UI, 0, 0);
-#else
-		if (mTimeStopCounter > 0)
+		if (mTimeStopCounter > 0 || (mApp->mGameScene == GameScenes::SCENE_LEVEL_INTRO && mCutScene->IsPanningLeft()))
 		{
 			aZPos = MakeRenderOrder(RenderLayer::RENDER_LAYER_ABOVE_UI, 0, 0);
 		}
@@ -7392,7 +7405,6 @@ void Board::DrawGameObjects(Graphics *g)
 		{
 			aZPos = MakeRenderOrder(RenderLayer::RENDER_LAYER_ABOVE_UI, 0, 0);
 		}
-#endif
 
 		AddUIRenderItem(aRenderList,
 						aRenderItemCount,
@@ -8759,39 +8771,39 @@ void Board::DrawUIBottom(Graphics *g)
 //0x41A2A0
 void Board::DrawUICoinBank(Graphics *g)
 {
+#if LAWN_WIDESCREEN
+	mCoinBankX = 57;
+	mCoinBankY = BOARD_HEIGHT - Sexy::IMAGE_COINBANK->GetHeight() - 1;
+	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
+		mApp->mCrazyDaveState != CrazyDaveState::CRAZY_DAVE_OFF)
+	{
+		mCoinBankX = BOARD_WIDTH - 350 - mX;
+	}
+#else
+	mCoinBankX = 57;
+	mCoinBankY = 599 - Sexy::IMAGE_COINBANK->GetHeight();
+	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
+		mApp->mCrazyDaveState != CrazyDaveState::CRAZY_DAVE_OFF)
+	{
+		mCoinBankX = 450 - mX;
+	}
+#endif
+
 	if (mApp->mGameScene != GameScenes::SCENE_PLAYING && mApp->mCrazyDaveState == CrazyDaveState::CRAZY_DAVE_OFF)
 		return;
 
 	if (mCoinBankFadeCount <= 0)
 		return;
 
-#if LAWN_WIDESCREEN
-	int aPosX = 57;
-	int aPosY = BOARD_HEIGHT - Sexy::IMAGE_COINBANK->GetHeight() - 1;
-	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
-		mApp->mCrazyDaveState != CrazyDaveState::CRAZY_DAVE_OFF)
-	{
-		aPosX = BOARD_WIDTH - 350 - mX;
-	}
-#else
-	int aPosX = 57;
-	int aPosY = 599 - Sexy::IMAGE_COINBANK->GetHeight();
-	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
-		mApp->mCrazyDaveState != CrazyDaveState::CRAZY_DAVE_OFF)
-	{
-		aPosX = 450 - mX;
-	}
-#endif
-
 	g->SetColorizeImages(true);
 	int anAlpha = ClampInt(255 * mCoinBankFadeCount / 15, 0, 255);
 	g->SetColor(Color(255, 255, 255, anAlpha));
-	g->DrawImage(Sexy::IMAGE_COINBANK, aPosX, aPosY);
+	g->DrawImage(Sexy::IMAGE_COINBANK, mCoinBankX, mCoinBankY);
 
 	g->SetColor(Color(180, 255, 90, anAlpha));
 	g->SetFont(Sexy::FONT_CONTINUUMBOLD14);
 	SexyString aCoinLabel = mApp->GetMoneyString(mApp->mPlayerInfo->mCoins);
-	g->DrawString(aCoinLabel, aPosX + 116 - Sexy::FONT_CONTINUUMBOLD14->StringWidth(aCoinLabel), aPosY + 24);
+	g->DrawString(aCoinLabel, mCoinBankX + 116 - Sexy::FONT_CONTINUUMBOLD14->StringWidth(aCoinLabel), mCoinBankY + 24);
 	g->SetColorizeImages(false);
 }
 
@@ -8956,6 +8968,11 @@ void Board::DrawUITop(Graphics *g)
 	if (StageHasFog())
 	{
 		DrawTopRightUI(g);
+	}
+
+	if (!mMenuButton->mBtnNoDraw)
+	{
+		mMenuButton->Draw(g);
 	}
 
 	if (mTimeStopCounter > 0)
@@ -11104,7 +11121,11 @@ void Board::DoFwoosh(int theRow)
 			aOriReanim->ReanimationDie();
 		}
 
+#if LAWN_WIDESCREEN
+		float aPosX = 750.0f * i / 11.0f + 10.0f + BOARD_ADDITIONAL_WIDTH;
+#else
 		float aPosX = 750.0f * i / 11.0f + 10.0f;
+#endif
 		float aPosY = GetPosYBasedOnRow(aPosX + 10.0f, theRow) - 10.0f;
 		Reanimation *aFwoosh = mApp->AddReanimation(aPosX, aPosY, aRenderOrder, ReanimationType::REANIM_JALAPENO_FIRE);
 		aFwoosh->SetFramesForLayer("anim_flame");

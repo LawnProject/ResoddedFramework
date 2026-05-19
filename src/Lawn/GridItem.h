@@ -1,7 +1,7 @@
 #ifndef __GRIDITEM_H__
 #define __GRIDITEM_H__
 
-#include "../ConstEnums.h"
+#include "../GameConstants.h"
 
 #define NUM_MOTION_TRAIL_FRAMES 12
 

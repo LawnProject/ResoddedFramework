@@ -1,7 +1,7 @@
 #ifndef __LAWN_COMMON_H__
 #define __LAWN_COMMON_H__
 
-#include "../ConstEnums.h"
+#include "../GameConstants.h"
 #include "../SexyAppFramework/Graphics.h"
 #include "../SexyAppFramework/EditWidget.h"
 

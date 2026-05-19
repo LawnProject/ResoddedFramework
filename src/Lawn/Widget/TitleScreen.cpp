@@ -55,7 +55,11 @@ TitleScreen::~TitleScreen()
 
 void TitleScreen::DrawToPreload(Graphics *g)
 {
+#if LAWN_WIDESCREEN
+	g->DrawImageF(IMAGE_PLANTSHADOW, 1000.0f, -50.0f + BOARD_OFFSET_Y);
+#else
 	g->DrawImageF(IMAGE_PLANTSHADOW, 1000.0f, 0.0f);
+#endif
 }
 
 //0x48D730
@@ -477,16 +481,15 @@ void TitleScreen::Update()
 			{
 				aReanimType = ReanimationType::REANIM_LOADBAR_ZOMBIEHEAD;
 			}
-#if LAWN_WIDESCREEN
 			float aGrassX = mStartButton->mX;
+#if LAWN_WIDESCREEN
 			float aPosX = aTriggerPoint[i] + aGrassX - 19.0f;
 			float aPosY = 511.0f + BOARD_OFFSET_Y;
-			Reanimation *aSproutReanim = mApp->AddReanimation(aPosX, aPosY, 0, aReanimType);
 #else
 			float aPosX = aTriggerPoint[i] + 225.0f;
 			float aPosY = 511.0f;
-			Reanimation *aSproutReanim = mApp->AddReanimation(aPosX, aPosY, 0, aReanimType);
 #endif
+			Reanimation *aSproutReanim = mApp->AddReanimation(aPosX, aPosY, 0, aReanimType);
 			aSproutReanim->mAnimRate = 18.0f;
 			aSproutReanim->mLoopType = ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD;
 

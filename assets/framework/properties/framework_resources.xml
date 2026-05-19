@@ -43,6 +43,9 @@
         
         <!-- Widescreen Bush Reanimation Images -->
         <SetDefaults idprefix="IMAGE_REANIM_" path="reanim"/>
+        <Image id="SELECTORSCREEN_BG_LEFT_WIDESCREEN" path="SelectorScreen_BG_Left_Widescreen"/>
+        <Image id="SELECTORSCREEN_BG_CENTER_WIDESCREEN" path="SelectorScreen_BG_Center_Widescreen"/>
+        <Image id="SELECTORSCREEN_BG_RIGHT_WIDESCREEN" path="SelectorScreen_BG_Right_Widescreen"/>
 		<Image id="TREE_BG_WIDESCREEN" path="tree_bg_widescreen"/>
         <Image id="BUSH BASE" path="bush base"/>
         <Image id="BUSH_BASE" path="bush base"/>

@@ -1,7 +1,7 @@
 #ifndef __LAWNAPP_H__
 #define __LAWNAPP_H__
 
-#include "ConstEnums.h"
+#include "GameConstants.h"
 #include "SexyAppFramework/SexyApp.h"
 
 #ifndef SEXY_USE_IMGUI

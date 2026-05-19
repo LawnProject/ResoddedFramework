@@ -284,10 +284,16 @@ void SyncParticleSystem(Board *theBoard, TodParticleSystem *theParticleSystem, S
 void SyncReanimation(Board *theBoard, Reanimation *theReanimation, SaveContext &theContext)
 {
 	theContext.SyncReanimationDef(theReanimation->mDefinition);
+	if (theContext.mFailed)
+		return;
+
 	if (theContext.mReading)
 	{
 		theReanimation->mReanimationHolder = theBoard->mApp->mEffectSystem->mReanimationHolder;
 	}
+
+	if (theReanimation->mDefinition == nullptr)
+		return;
 
 	if (theReanimation->mDefinition->mTrackCount != 0)
 	{

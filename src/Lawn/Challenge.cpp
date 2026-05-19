@@ -2402,22 +2402,38 @@ void Challenge::DrawBackdrop(Graphics *g)
 
 	if (mApp->IsWallnutBowlingLevel() && mShowBowlingLine)
 	{
+#if LAWN_WIDESCREEN
+		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 268 + BOARD_ADDITIONAL_WIDTH, 77 + BOARD_OFFSET_Y);
+#else
 		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 268, 77);
+#endif
 	}
 	if (mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_1 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_2 ||
 		mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_3 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_4 ||
 		mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_5)
 	{
+#if LAWN_WIDESCREEN
+		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 352 + BOARD_ADDITIONAL_WIDTH, 73 + BOARD_OFFSET_Y);
+#else
 		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 352, 73);
+#endif
 	}
 	if (mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_6 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_7 ||
 		mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_8 || mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS)
 	{
+#if LAWN_WIDESCREEN
+		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 432 + BOARD_ADDITIONAL_WIDTH, 73 + BOARD_OFFSET_Y);
+#else
 		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 432, 73);
+#endif
 	}
 	if (mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_9)
 	{
+#if LAWN_WIDESCREEN
+		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 512 + BOARD_ADDITIONAL_WIDTH, 73 + BOARD_OFFSET_Y);
+#else
 		g->DrawImage(Sexy::IMAGE_WALLNUT_BOWLINGSTRIPE, 512, 73);
+#endif
 	}
 
 	if (aGameMode == GAMEMODE_CHALLENGE_SLOT_MACHINE)
@@ -3496,8 +3512,13 @@ bool Challenge::CanTargetZombieWithPortals(Plant *thePlant, Zombie *theZombie)
 		GridItem *aPortal = GetPortalToRight(aGridX, aGridY);
 		if (aGridY == theZombie->mRow)
 		{
+#if LAWN_WIDESCREEN
+			int aRangeLeft = aGridX * 80 + BOARD_ADDITIONAL_WIDTH;
+			int aRangeRight = aPortal ? aPortal->mGridX * 80 + BOARD_ADDITIONAL_WIDTH : 800 + BOARD_ADDITIONAL_WIDTH;
+#else
 			int aRangeLeft = aGridX * 80;
 			int aRangeRight = aPortal ? aPortal->mGridX * 80 : 800;
+#endif
 			if (theZombie->mX > aRangeLeft && theZombie->mX < aRangeRight)
 				return true;
 		}
@@ -4967,7 +4988,11 @@ GridItem *Challenge::IZombieGetBrainTarget(Zombie *theZombie)
 		aZombieRect.mX += 25;
 	}
 
+#if LAWN_WIDESCREEN
+	if (aZombieRect.mX > 20 + BOARD_ADDITIONAL_WIDTH)
+#else
 	if (aZombieRect.mX > 20)
+#endif
 		return nullptr;
 
 	GridItem *aBrain = mBoard->GetGridItemAt(GRIDITEM_IZOMBIE_BRAIN, 0, theZombie->mRow);

@@ -2,7 +2,7 @@
 #define __ATTACHMENT_H__
 
 #include "DataArray.h"
-#include "../ConstEnums.h"
+#include "../GameConstants.h"
 #include "../SexyAppFramework/SexyMatrix.h"
 
 namespace Sexy

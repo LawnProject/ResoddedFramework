@@ -1,7 +1,7 @@
 #ifndef __STORESCREEN_H__
 #define __STORESCREEN_H__
 
-#include "../../ConstEnums.h"
+#include "../../GameConstants.h"
 #include "../System/PlayerInfo.h"
 #include "../../Sexy.TodLib/DataArray.h"
 #include "../../SexyAppFramework/Dialog.h"

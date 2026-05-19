@@ -2489,7 +2489,11 @@ void Plant::UpdateBowling()
 		}
 
 		mX -= aSpeed;
+#if LAWN_WIDESCREEN
+		if (mX > 800 + BOARD_ADDITIONAL_WIDTH)
+#else
 		if (mX > 800)
+#endif
 			Die();
 	}
 

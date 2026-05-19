@@ -1,7 +1,7 @@
 #ifndef __SEEDCHOOSERSCREEN_H__
 #define __SEEDCHOOSERSCREEN_H__
 
-#include "../../ConstEnums.h"
+#include "../../GameConstants.h"
 #include "../../SexyAppFramework/Widget.h"
 using namespace Sexy;
 

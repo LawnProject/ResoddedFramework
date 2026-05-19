@@ -1,7 +1,7 @@
 #ifndef __REANIMATORCACHE_H__
 #define __REANIMATORCACHE_H__
 
-#include "../../ConstEnums.h"
+#include "../../GameConstants.h"
 #include "../../Sexy.TodLib/TodList.h"
 namespace Sexy
 {

@@ -1,7 +1,7 @@
 #ifndef __CHALLENGESCREEN_H__
 #define __CHALLENGESCREEN_H__
 
-#include "../../ConstEnums.h"
+#include "../../GameConstants.h"
 #include "../../SexyAppFramework/Dialog.h"
 using namespace Sexy;
 

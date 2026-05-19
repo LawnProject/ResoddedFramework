@@ -8,7 +8,7 @@
 #include "../../Resources.h"
 #include "NewOptionsDialog.h"
 #include "../ResoddedFramework/SettingsDialog.h"
-#include "../../ConstEnums.h"
+#include "../../GameConstants.h"
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "../../SexyAppFramework/Slider.h"
 #include "../../SexyAppFramework/Checkbox.h"

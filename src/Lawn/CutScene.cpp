@@ -883,7 +883,7 @@ void CutScene::StartLevelIntro()
 
 	if (IsScrolledLeftAtStart())
 	{
-		mBoard->Move(220, 0);
+		mBoard->Move(BOARD_OFFSET_X, 0);
 	}
 	if (IsNonScrollingCutscene() && mCrazyDaveTime == 0)
 	{
@@ -1150,7 +1150,10 @@ void CutScene::AnimateBoard()
 	// ====================================================================================================
 	// ▲ 关卡界面右移的更新
 	// ====================================================================================================
-	int aBoardOffset = IsScrolledLeftAtStart() ? BOARD_OFFSET : 0;
+	int aBoardOffset = IsScrolledLeftAtStart() ? BOARD_OFFSET_X : 0;
+#if LAWN_WIDESCREEN
+	int aStreetOffset = BOARD_IMAGE_WIDTH_OFFSET + BOARD_ADDITIONAL_WIDTH - mApp->mWidth;
+#endif
 	if (mCutsceneTime <= aTimePanRightStart)
 	{
 		mBoard->Move(aBoardOffset, 0);
@@ -1158,9 +1161,9 @@ void CutScene::AnimateBoard()
 	if (mCutsceneTime > aTimePanRightStart && mCutsceneTime <= aTimePanRightEnd)
 	{
 #if LAWN_WIDESCREEN
-		int aStreetOffset = BOARD_IMAGE_WIDTH_OFFSET + BOARD_ADDITIONAL_WIDTH - mApp->mWidth;
-		int aPanOffset =
-			CalcPosition(aTimePanRightStart, aTimePanRightEnd, -aBoardOffset, aStreetOffset);
+		int aPanOffset = CalcPosition(aTimePanRightStart, aTimePanRightEnd, -aBoardOffset, aStreetOffset);
+		mBoard->mRoofPoleOffset = CalcPosition(aTimePanRightStart, aTimePanRightEnd, ROOF_POLE_START, ROOF_POLE_END);
+		mBoard->mRoofTreeOffset = CalcPosition(aTimePanRightStart, aTimePanRightEnd, ROOF_TREE_START, ROOF_TREE_END);
 #else
 		int aPanOffset =
 			CalcPosition(aTimePanRightStart, aTimePanRightEnd, -aBoardOffset, BOARD_IMAGE_WIDTH_OFFSET - mApp->mWidth);
@@ -1218,15 +1221,13 @@ void CutScene::AnimateBoard()
 	if (mCutsceneTime > aTimePanLeftStart)
 	{
 #if LAWN_WIDESCREEN
-		int aStreetOffset = BOARD_IMAGE_WIDTH_OFFSET + BOARD_ADDITIONAL_WIDTH - mApp->mWidth;
 		int aPanOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, aStreetOffset, 0);
 		mBoard->mRoofPoleOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, -BOARD_WIDTH, WIDE_BOARD_WIDTH + 70 - BOARD_ADDITIONAL_WIDTH);
 		mBoard->mRoofTreeOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, -670, WIDE_BOARD_WIDTH + 130 - BOARD_ADDITIONAL_WIDTH);
-		mBoard->Move(-aPanOffset, 0);
 #else
 		int aPanOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, BOARD_IMAGE_WIDTH_OFFSET - mApp->mWidth, 0);
-		mBoard->Move(-aPanOffset, 0);
 #endif
+		mBoard->Move(-aPanOffset, 0);
 	}
 
 	// ====================================================================================================
@@ -1525,6 +1526,11 @@ bool CutScene::IsInShovelTutorial()
 	return mBoard->mTutorialState == TutorialState::TUTORIAL_SHOVEL_PICKUP ||
 		   mBoard->mTutorialState == TutorialState::TUTORIAL_SHOVEL_DIG ||
 		   mBoard->mTutorialState == TutorialState::TUTORIAL_SHOVEL_KEEP_DIGGING;
+}
+
+bool CutScene::IsPanningLeft()
+{
+	return mCutsceneTime <= TimePanLeftEnd + mCrazyDaveTime;
 }
 
 void CutScene::StartSeedChooser()
@@ -1956,7 +1962,7 @@ void CutScene::ClearUpsellBoard()
 	for (int i = 0; i < MAX_GRID_SIZE_Y; i++)
 	{
 		mBoard->mIceTimer[i] = 0;
-		mBoard->mIceMinX[i] = BOARD_WIDTH;
+		mBoard->mIceMinX[i] = BOARD_ICE_START;
 	}
 
 	mBoard->mZombies.DataArrayFreeAll();

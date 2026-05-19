@@ -1,15 +1,11 @@
 #pragma once
 
-#include "ConstEnums.h"
-constexpr const double PI = 3.141592653589793;
-
-// ============================================================
-// * Widescreen Configuration
-//   Set LAWN_WIDESCREEN to 1 to enable widescreen mode.
-// ============================================================
 #ifndef LAWN_WIDESCREEN
 #define LAWN_WIDESCREEN 1
 #endif
+
+#include "ConstEnums.h"
+constexpr const double PI = 3.141592653589793;
 
 // ============================================================
 // * General Constants

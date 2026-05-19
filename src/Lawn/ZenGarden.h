@@ -1,7 +1,7 @@
 #ifndef __ZENGARDEN_H__
 #define __ZENGARDEN_H__
 
-#include "../ConstEnums.h"
+#include "../GameConstants.h"
 
 #define ZEN_MAX_GRIDSIZE_X 8
 #define ZEN_MAX_GRIDSIZE_Y 4

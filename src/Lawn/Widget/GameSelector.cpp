@@ -6,6 +6,7 @@
 #include "../../LawnApp.h"
 #include "AlmanacDialog.h"
 #include "../../Resources.h"
+#include "../../FrameworkResources.h"
 #include "../System/Music.h"
 #include "../ToolTipWidget.h"
 #include "../System/SaveGame.h"
@@ -243,7 +244,11 @@ GameSelector::GameSelector(LawnApp *theApp)
 	mTrophyParticleID = ParticleSystemID::PARTICLESYSTEMID_NULL;
 	mShowStartButton = false;
 
+#if LAWN_WIDESCREEN
+	Reanimation *aSelectorReanim = mApp->AddReanimation(0.5f + BOARD_ADDITIONAL_WIDTH, 0.5f + BOARD_OFFSET_Y, 0, ReanimationType::REANIM_SELECTOR_SCREEN);
+#else
 	Reanimation *aSelectorReanim = mApp->AddReanimation(0.5f, 0.5f, 0, ReanimationType::REANIM_SELECTOR_SCREEN);
+#endif
 	aSelectorReanim->PlayReanim("anim_open", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0, 30.0f);
 	aSelectorReanim->AssignRenderGroupToPrefix("flower", RENDER_GROUP_HIDDEN);
 	aSelectorReanim->AssignRenderGroupToPrefix("leaf", RENDER_GROUP_HIDDEN);
@@ -252,6 +257,10 @@ GameSelector::GameSelector(LawnApp *theApp)
 	anAdventureTrack->mImageOverride = Sexy::IMAGE_REANIM_SELECTORSCREEN_ADVENTURE_BUTTON;
 
 	aSelectorReanim->AssignRenderGroupToTrack("SelectorScreen_BG", 1);
+#if LAWN_WIDESCREEN
+	aSelectorReanim->AssignRenderGroupToPrefix("SelectorScreen_Adventure_", RENDER_GROUP_NORMAL);
+	aSelectorReanim->AssignRenderGroupToPrefix("SelectorScreen_StartAdventure_", RENDER_GROUP_HIDDEN);
+#endif
 	mSelectorReanimID = mApp->ReanimationGetID(aSelectorReanim);
 	mSelectorState = SelectorAnimState::SELECTOR_OPEN;
 	int aFrameStart, aFrameCount;
@@ -277,7 +286,11 @@ GameSelector::GameSelector(LawnApp *theApp)
 
 	for (int i = 0; i < 3; i++)
 	{
+#if LAWN_WIDESCREEN
+		Reanimation *aFlowerReanim = mApp->AddReanimation(0.5f + BOARD_ADDITIONAL_WIDTH, 0.5f + BOARD_OFFSET_Y, 0, ReanimationType::REANIM_SELECTOR_SCREEN);
+#else
 		Reanimation *aFlowerReanim = mApp->AddReanimation(0.5f, 0.5f, 0, ReanimationType::REANIM_SELECTOR_SCREEN);
+#endif
 		std::string aAnimName = Sexy::StrFormat("anim_flower%d", i + 1);
 		aFlowerReanim->PlayReanim(aAnimName.c_str(), ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0, 0.0f);
 		aFlowerReanim->mAnimRate = 0.0f;
@@ -286,7 +299,11 @@ GameSelector::GameSelector(LawnApp *theApp)
 		mFlowerReanimID[i] = mApp->ReanimationGetID(aFlowerReanim);
 	}
 
+#if LAWN_WIDESCREEN
+	Reanimation *aLeafReanim = mApp->AddReanimation(0.5f + BOARD_ADDITIONAL_WIDTH, 0.5f + BOARD_OFFSET_Y, 0, ReanimationType::REANIM_SELECTOR_SCREEN);
+#else
 	Reanimation *aLeafReanim = mApp->AddReanimation(0.5f, 0.5f, 0, ReanimationType::REANIM_SELECTOR_SCREEN);
+#endif
 	aLeafReanim->PlayReanim("anim_grass", ReanimLoopType::REANIM_LOOP, 0, 6.0f);
 	aLeafReanim->mAnimRate = 0.0f;
 	mLeafReanimID = mApp->ReanimationGetID(aLeafReanim);
@@ -454,8 +471,13 @@ void GameSelector::SyncButtons()
 void GameSelector::AddTrophySparkle()
 {
 	TOD_ASSERT(mTrophyParticleID == PARTICLESYSTEMID_NULL);
+#if LAWN_WIDESCREEN
+	TodParticleSystem *aTrophyParticle = mApp->AddTodParticle(
+		85.0f + BOARD_ADDITIONAL_WIDTH, 380.0f + BOARD_OFFSET_Y, RenderLayer::RENDER_LAYER_TOP, ParticleEffect::PARTICLE_TROPHY_SPARKLE);
+#else
 	TodParticleSystem *aTrophyParticle =
 		mApp->AddTodParticle(85.0f, 290.0f, RenderLayer::RENDER_LAYER_TOP, ParticleEffect::PARTICLE_TROPHY_SPARKLE);
+#endif
 	mTrophyParticleID = mApp->ParticleGetID(aTrophyParticle);
 }
 
@@ -599,8 +621,13 @@ void GameSelector::DrawOverlay(Graphics *g)
 		int aRightIdx = aSelectorReanim->FindTrackIndex("SelectorScreen_BG_Right");
 		ReanimatorTransform aTransform;
 		aSelectorReanim->GetCurrentTransform(aRightIdx, &aTransform);
+#if LAWN_WIDESCREEN
+		float aTransAreaX = aTransform.mTransX + aOffsetX + BOARD_ADDITIONAL_WIDTH;
+		float aTransAreaY = aTransform.mTransY + aOffsetY + BOARD_OFFSET_Y;
+#else
 		float aTransAreaX = aTransform.mTransX + aOffsetX;
 		float aTransAreaY = aTransform.mTransY + aOffsetY;
+#endif
 		float aTransSubX = aTransAreaX;
 		float aTransSubY = aTransAreaY;
 
@@ -629,6 +656,38 @@ void GameSelector::DrawOverlay(Graphics *g)
 
 		g->SetColorizeImages(true);
 		g->SetColor(mAdventureButton->mColors[ButtonWidget::COLOR_BKG]);
+#if LAWN_WIDESCREEN
+		TodDrawImageCelF(g,
+						 Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS,
+						 aTransAreaX + 486.0f + 111,
+						 aTransAreaY + 125.0f - 77.5f + 80,
+						 aStage,
+						 0);
+		if (aSub < 10)
+		{
+			TodDrawImageCelF(g,
+							 Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS,
+							 aTransSubX + 512.0f + 111,
+							 aTransSubY + 128.0f - 77.5f + 80,
+							 aSub,
+							 0);
+		}
+		else if (aSub == 10)
+		{
+			TodDrawImageCelF(g,
+							 Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS,
+							 aTransSubX + 506.0f + 111,
+							 aTransSubY + 128.0f - 77.5f + 80,
+							 1,
+							 0);
+			TodDrawImageCelF(g,
+							 Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS,
+							 aTransSubX + 515.0f + 111,
+							 aTransSubY + 129.0f - 77.5f + 80,
+							 0,
+							 0);
+		}
+#else
 		TodDrawImageCelF(g,
 						 Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS,
 						 aTransAreaX + 486.0f,
@@ -647,6 +706,7 @@ void GameSelector::DrawOverlay(Graphics *g)
 			TodDrawImageCelF(
 				g, Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS, aTransSubX + 518.0f, aTransSubY + 51.0f, 0, 0);
 		}
+#endif
 		g->SetColorizeImages(false);
 	}
 
@@ -685,8 +745,17 @@ void GameSelector::DrawOverlay(Graphics *g)
 	if (mHasTrophy)
 	{
 		int aTrophyIndex = mApp->EarnedGoldTrophy() ? 1 : 0;
+#if LAWN_WIDESCREEN
+		TodDrawImageCelF(g,
+						 Sexy::IMAGE_SUNFLOWER_TROPHY,
+						 aTransformLeft.mTransX + 10.0f + BOARD_ADDITIONAL_WIDTH + 370,
+						 aTransformLeft.mTransY + 350.0f + BOARD_OFFSET_Y + 60,
+						 aTrophyIndex,
+						 0);
+#else
 		TodDrawImageCelF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, aTransformLeft.mTransX + 12.0f,
 						 aTransformLeft.mTransY + 345.0f, aTrophyIndex, 0);
+#endif
 
 		TodParticleSystem *aTrophyParticle = mApp->ParticleTryToGet(mTrophyParticleID);
 		if (aTrophyParticle)
@@ -706,15 +775,25 @@ void GameSelector::UpdateTooltip()
 	{
 		int aMouseX = mApp->mWidgetManager->mLastMouseX;
 		int aMouseY = mApp->mWidgetManager->mLastMouseY;
+#if LAWN_WIDESCREEN
+		if (aMouseX > 49 + BOARD_ADDITIONAL_WIDTH && aMouseX < 135 + BOARD_ADDITIONAL_WIDTH && aMouseY > 249 + BOARD_OFFSET_Y &&
+			aMouseY < 475 + BOARD_OFFSET_Y)
+#else
 		if (aMouseX > 49 && aMouseX < 135 && aMouseY > 249 && aMouseY < 475)
+#endif
 		{
 			if (mApp->EarnedGoldTrophy())
 			{
 				mToolTip->SetLabel(LawnApp::Pluralize(mApp->mPlayerInfo->mFinishedAdventure,
 													  "[GOLD_SUNFLOWER_TOOLTIP]",
 													  "[GOLD_SUNFLOWER_TOOLTIP_PLURAL]"));
+#if LAWN_WIDESCREEN
+				mToolTip->mX = 32 + BOARD_ADDITIONAL_WIDTH;
+				mToolTip->mY = 510 + BOARD_OFFSET_Y;
+#else
 				mToolTip->mX = 32;
 				mToolTip->mY = 510;
+#endif
 				mToolTip->mVisible = true;
 			}
 			else
@@ -946,7 +1025,11 @@ void GameSelector::Update()
 	int aLeafTrackIndex = aSelectorReanim->FindTrackIndex("SelectorScreen_BG_Right");
 	ReanimatorTransform aLeafTransform;
 	aSelectorReanim->GetCurrentTransform(aLeafTrackIndex, &aLeafTransform);
+#if LAWN_WIDESCREEN
+	aLeafReanim->SetPosition(aLeafTransform.mTransX - 71.0f + BOARD_ADDITIONAL_WIDTH, aLeafTransform.mTransY - 41.0f + BOARD_OFFSET_Y);
+#else
 	aLeafReanim->SetPosition(aLeafTransform.mTransX - 71.0f, aLeafTransform.mTransY - 41.0f);
+#endif
 	if (--mLeafCounter == 0)
 	{
 		float aRate = RandRangeFloat(3.0f, 12.0f);
@@ -960,6 +1043,24 @@ void GameSelector::Update()
 	if (aHandReanim)
 		aHandReanim->Update();
 
+#if LAWN_WIDESCREEN
+	TrackButton(mAdventureButton,
+				mShowStartButton ? "SelectorScreen_StartAdventure_button" : "SelectorScreen_Adventure_button",
+				BOARD_ADDITIONAL_WIDTH,
+				BOARD_OFFSET_Y);
+	TrackButton(mMinigameButton, "SelectorScreen_Survival_button", BOARD_ADDITIONAL_WIDTH, BOARD_OFFSET_Y);
+	TrackButton(mPuzzleButton, "SelectorScreen_Challenges_button", BOARD_ADDITIONAL_WIDTH, BOARD_OFFSET_Y);
+	TrackButton(mSurvivalButton, "SelectorScreen_ZenGarden_button", BOARD_ADDITIONAL_WIDTH, BOARD_OFFSET_Y);
+	TrackButton(mZenGardenButton, "SelectorScreen_BG_Right", 100.0f + BOARD_ADDITIONAL_WIDTH + 111, 360.0f + BOARD_OFFSET_Y + 80);
+	TrackButton(mOptionsButton, "SelectorScreen_BG_Right", 494.0f + BOARD_ADDITIONAL_WIDTH + 111, 434.0f + BOARD_OFFSET_Y + 80);
+	TrackButton(mQuitButton, "SelectorScreen_BG_Right", 644.0f + BOARD_ADDITIONAL_WIDTH + 111, 469.0f + BOARD_OFFSET_Y + 80);
+	TrackButton(mHelpButton, "SelectorScreen_BG_Right", 576.0f + BOARD_ADDITIONAL_WIDTH + 111, 458.0f + BOARD_OFFSET_Y + 80);
+	TrackButton(mAlmanacButton, "SelectorScreen_BG_Right", 256.0f + BOARD_ADDITIONAL_WIDTH + 111, 387.0f + BOARD_OFFSET_Y + 80);
+	TrackButton(mStoreButton, "SelectorScreen_BG_Right", 334.0f + BOARD_ADDITIONAL_WIDTH + 111, 441.0f + BOARD_OFFSET_Y + 80);
+	TrackButton(mAchievementsButton, "SelectorScreen_BG_Left", 390.0f + BOARD_ADDITIONAL_WIDTH, 540.0f + BOARD_OFFSET_Y);
+	TrackButton(mZombatarButton, "woodsign3", BOARD_ADDITIONAL_WIDTH, BOARD_OFFSET_Y);
+	TrackButton(mChangeUserButton, "woodsign2", 24.0f + BOARD_ADDITIONAL_WIDTH, 10.0f + BOARD_OFFSET_Y);
+#else
 	TrackButton(mAdventureButton,
 				mShowStartButton ? "SelectorScreen_StartAdventure_button" : "SelectorScreen_Adventure_button",
 				0.0f,
@@ -976,6 +1077,7 @@ void GameSelector::Update()
 	TrackButton(mAchievementsButton, "SelectorScreen_BG_Left", 20.0f, 480.0f);
 	TrackButton(mZombatarButton, "woodsign3", 0.0f, 0.0f);
 	TrackButton(mChangeUserButton, "woodsign2", 24.0f, 10.0f);
+#endif
 	aSelectorReanim->SetImageOverride("woodsign2",
 									  (mChangeUserButton->mIsOver || mChangeUserButton->mIsDown)
 										  ? Sexy::IMAGE_REANIM_SELECTORSCREEN_WOODSIGN2_PRESS
@@ -1188,7 +1290,12 @@ void GameSelector::MouseDown(int x, int y, int theClickCount)
 	for (int i = 0; i < 3; i++)
 	{
 		Reanimation *aFlowerReanim = mApp->ReanimationGet(mFlowerReanimID[i]);
+#if LAWN_WIDESCREEN
+		if (aFlowerReanim->mAnimRate <= 0.0f &&
+			Distance2D(x - BOARD_ADDITIONAL_WIDTH, y - BOARD_OFFSET_Y, gFlowerCenter[i][0], gFlowerCenter[i][1]) < 20.0f)
+#else
 		if (aFlowerReanim->mAnimRate <= 0.0f && Distance2D(x, y, gFlowerCenter[i][0], gFlowerCenter[i][1]) < 20.0f)
+#endif
 		{
 			aFlowerReanim->mAnimRate = 24.0f;
 			mApp->PlayFoley(FoleyType::FOLEY_LIMBS_POP);
@@ -1255,7 +1362,11 @@ void GameSelector::ClickedAdventure()
 	mZombatarButton->SetDisabled(true);
 	mZenGardenButton->SetDisabled(true);
 
+#if LAWN_WIDESCREEN
+	Reanimation *aHandReanim = mApp->AddReanimation(-70.0f + BOARD_ADDITIONAL_WIDTH, 10.0f + BOARD_OFFSET_Y, 0, ReanimationType::REANIM_ZOMBIE_HAND);
+#else
 	Reanimation *aHandReanim = mApp->AddReanimation(-70.0f, 10.0f, 0, ReanimationType::REANIM_ZOMBIE_HAND);
+#endif
 	aHandReanim->mLoopType = ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD;
 	mHandReanimID = mApp->ReanimationGetID(aHandReanim);
 	mApp->PlayFoley(FoleyType::FOLEY_DIRT_RISE);

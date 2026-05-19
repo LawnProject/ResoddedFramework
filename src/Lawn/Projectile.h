@@ -1,7 +1,7 @@
 #ifndef __PROJECTILE_H__
 #define __PROJECTILE_H__
 
-#include "../ConstEnums.h"
+#include "../GameConstants.h"
 #include "GameObject.h"
 
 class Plant;
