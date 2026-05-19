@@ -1,4 +1,5 @@
 #include "Resources.h"
+#include "FrameworkResources.h"
 #include "SexyAppFramework/ResourceManager.h"
 using namespace Sexy;
 
@@ -8,6 +9,8 @@ static bool gNeedRecalcVariableToIdMap = false;
 
 bool Sexy::ExtractResourcesByName(ResourceManager *theManager, const char *theName)
 {
+	ResoddedFrameworkExtractResourcesByName(theManager, theName);
+
 	if (strcmp(theName, "DelayLoad_Almanac") == 0)
 		return ExtractDelayLoad_AlmanacResources(theManager);
 	else if (strcmp(theName, "DelayLoad_AwardScreen") == 0)
@@ -280,6 +283,7 @@ bool Sexy::ExtractDelayLoad_Background5Resources(ResourceManager *theManager)
 // DelayLoad_Background6 Resources
 Image *Sexy::IMAGE_BACKGROUND6BOSS;
 Image *Sexy::IMAGE_BACKGROUND6_GAMEOVER_MASK;
+
 
 bool Sexy::ExtractDelayLoad_Background6Resources(ResourceManager *theManager)
 {
@@ -3257,42 +3261,61 @@ static void *gResources[] = {&IMAGE_ALMANAC_INDEXBACK,
 
 Image *Sexy::LoadImageById(ResourceManager *theManager, int theId)
 {
+	if (theId < 0 || theId >= RESOURCE_ID_MAX)
+		return nullptr;
 	return (*((Image **)gResources[theId]) = theManager->LoadImage(GetStringIdById(theId)));
 }
 
 void Sexy::ReplaceImageById(ResourceManager *theManager, int theId, Image *theImage)
 {
+	if (theId < 0 || theId >= RESOURCE_ID_MAX)
+		return;
 	theManager->ReplaceImage(GetStringIdById(theId), theImage);
 	*(Image **)gResources[theId] = theImage;
 }
 
 Image *Sexy::GetImageById(int theId)
 {
+	if (theId < 0 || theId >= RESOURCE_ID_MAX)
+		return nullptr;
 	return *(Image **)gResources[theId];
 }
 
 Font *Sexy::GetFontById(int theId)
 {
+	if (theId < 0 || theId >= RESOURCE_ID_MAX)
+		return nullptr;
 	return *(Font **)gResources[theId];
 }
 
 int Sexy::GetSoundById(int theId)
 {
+	if (theId < 0 || theId >= RESOURCE_ID_MAX)
+		return -1;
 	return *(int *)gResources[theId];
 }
 
 Image *&Sexy::GetImageRefById(int theId)
 {
+	static Image *aNullImage = nullptr;
+	if (theId < 0 || theId >= RESOURCE_ID_MAX)
+		return aNullImage;
 	return *(Image **)gResources[theId];
 }
 
 Font *&Sexy::GetFontRefById(int theId)
 {
+	static Font *aNullFont = nullptr;
+	if (theId < 0 || theId >= RESOURCE_ID_MAX)
+		return aNullFont;
 	return *(Font **)gResources[theId];
 }
 
 int &Sexy::GetSoundRefById(int theId)
 {
+	static int aNullSound = -1;
+	if (theId < 0 || theId >= RESOURCE_ID_MAX)
+		return aNullSound;
 	return *(int *)gResources[theId];
 }
 

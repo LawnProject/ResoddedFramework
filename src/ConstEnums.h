@@ -1,5 +1,11 @@
 #pragma once
 
+// Forward-declare LAWN_WIDESCREEN so enum guards work regardless of include order.
+// The canonical definition lives in GameConstants.h
+#ifndef LAWN_WIDESCREEN
+#define LAWN_WIDESCREEN 1
+#endif
+
 enum AchievementID
 {
 	ACHIEVEMENT_HOME_SECURITY = 0,
@@ -973,6 +979,14 @@ enum ReanimationType
 	REANIM_CREDITS_WEARETHEUNDEAD,
 	REANIM_CREDITS_DISCOLIGHTS,
 	REANIM_FLAG,
+#if LAWN_WIDESCREEN
+	REANIM_BUSH3,
+	REANIM_BUSH4,
+	REANIM_BUSH5,
+	REANIM_BUSH3_NIGHT,
+	REANIM_BUSH4_NIGHT,
+	REANIM_BUSH5_NIGHT,
+#endif
 	NUM_REANIMS
 };
 enum ReanimLoopType
@@ -1023,6 +1037,10 @@ enum RenderObjectType
 	RENDER_ITEM_STORM,
 	RENDER_ITEM_BOTTOM_UI,
 	RENDER_ITEM_BACKDROP,
+#if LAWN_WIDESCREEN
+	RENDER_ITEM_BUSH,
+	RENDER_ITEM_COVER,
+#endif
 	RENDER_ITEM_DOOR_MASK,
 	RENDER_ITEM_COIN_BANK,
 	RENDER_ITEM_PROJECTILE_SHADOW,

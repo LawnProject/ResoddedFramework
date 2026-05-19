@@ -12,6 +12,9 @@
 #include "Coin.h"
 #include "LawnMower.h"
 #include "GridItem.h"
+#if LAWN_WIDESCREEN
+#include "Bush.h"
+#endif
 
 using namespace Sexy;
 
@@ -76,6 +79,9 @@ class RenderItem
 		LawnMower *mMower;
 		BossPart mBossPart;
 		int mBoardGridY;
+#if LAWN_WIDESCREEN
+		Bush *mBush;
+#endif
 	};
 };
 bool RenderItemSortFunc(const RenderItem &theItem1, const RenderItem &theItem2);
@@ -115,6 +121,12 @@ class Board : public Widget, public ButtonListener
 	DataArray<Coin> mCoins;											  //+0xE4
 	DataArray<LawnMower> mLawnMowers;								  //+0x100
 	DataArray<GridItem> mGridItems;									  //+0x11C
+#if LAWN_WIDESCREEN
+	DataArray<Bush> mBushes;                          // Widescreen decorative bushes
+	Bush* mBushList[MAX_GRID_SIZE_Y];                 // One bush per row (indexed 0..5)
+	int mRoofPoleOffset;
+	int mRoofTreeOffset;
+#endif
 	CursorObject *mCursorObject;									  //+0x138
 	CursorPreview *mCursorPreview;									  //+0x13C
 	MessageWidget *mAdvice;											  //+0x140
@@ -283,7 +295,11 @@ class Board : public Widget, public ButtonListener
 	ZombieType PickGraveRisingZombieType(int theZombiePoints);
 	ZombieType PickZombieType(int theZombiePoints, int theWaveIndex, ZombiePicker *theZombiePicker);
 	int PickRowForNewZombie(ZombieType theZombieType);
+#if LAWN_WIDESCREEN
+	/*inline*/ Zombie *AddZombie(ZombieType theZombieType, int theFromWave, bool skipBushAnimation = false);
+#else
 	/*inline*/ Zombie *AddZombie(ZombieType theZombieType, int theFromWave);
+#endif
 	void SpawnZombieWave();
 	void RemoveAllZombies();
 	void RemoveCutsceneZombies();
@@ -303,6 +319,9 @@ class Board : public Widget, public ButtonListener
 	void UpdateLayers();
 	virtual void Draw(Graphics *g);
 	void DrawBackdrop(Graphics *g);
+#if LAWN_WIDESCREEN
+	void DrawCover(Graphics *g);
+#endif
 	virtual void ButtonMouseEnter(int theId)
 	{
 		;
@@ -394,7 +413,11 @@ class Board : public Widget, public ButtonListener
 	bool IterateParticles(TodParticleSystem *&theParticle);
 	bool IterateReanimations(Reanimation *&theReanimation);
 	bool IterateGridItems(GridItem *&theGridItem);
+#if LAWN_WIDESCREEN
+	/*inline*/ Zombie *AddZombieInRow(ZombieType theZombieType, int theRow, int theFromWave, bool skipBushAnimation = false);
+#else
 	/*inline*/ Zombie *AddZombieInRow(ZombieType theZombieType, int theRow, int theFromWave);
+#endif
 	/*inline*/ bool IsPoolSquare(int theGridX, int theGridY);
 	void PickZombieWaves();
 	void StopAllZombieSounds();
@@ -463,6 +486,10 @@ class Board : public Widget, public ButtonListener
 	int GetLiveGargantuarCount();
 	bool HasConveyorBeltSeedBank();
 	/*inline*/ bool StageHasRoof();
+#if LAWN_WIDESCREEN
+	/*inline*/ bool StageHasBushes();
+	void AnimateBush(int theRow);
+#endif
 	void SpawnZombiesFromPool();
 	void SpawnZombiesFromSky();
 	void PickUpTool(GameObjectType theObjectType);
@@ -541,6 +568,10 @@ class Board : public Widget, public ButtonListener
 	void DoTypingCheck(KeyCode theKey);
 	int CountZombieByType(ZombieType theZombieType);
 	static /*inline*/ bool IsZombieTypeSpawnedOnly(ZombieType theZombieType);
+#if LAWN_WIDESCREEN
+	void AddBushes();                          // Initialize decorative bush row for widescreen
+	bool IterateBushes(Bush*& theBush);        // Iterator over mBushes DataArray
+#endif
 };
 extern bool gShownMoreSunTutorial;
 

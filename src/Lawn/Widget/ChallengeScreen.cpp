@@ -11,6 +11,8 @@
 #include "../../SexyAppFramework/Debug.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "../../SexyAppFramework/WidgetManager.h"
+#include "../../GameConstants.h"
+#include "../../FrameworkResources.h"
 
 ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	{ GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_1,              0,   ChallengePage::CHALLENGE_PAGE_SURVIVAL,    0,  0,  "[SURVIVAL_DAY_NORMAL]" },
@@ -113,7 +115,11 @@ ChallengeScreen::ChallengeScreen(LawnApp *theApp, ChallengePage thePage)
 	mBackButton->mTextDownOffsetY = 1;
 	mBackButton->mColors[ButtonWidget::COLOR_LABEL] = Color(42, 42, 90);
 	mBackButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(42, 42, 90);
+#if LAWN_WIDESCREEN
+	mBackButton->Resize(18 + BOARD_OFFSET_X, 568 + BOARD_OFFSET_Y, 111, 26);
+#else
 	mBackButton->Resize(18, 568, 111, 26);
+#endif
 
 	for (int aPageIdx = CHALLENGE_PAGE_SURVIVAL; aPageIdx < MAX_CHALLANGE_PAGES; aPageIdx++)
 	{
@@ -130,7 +136,11 @@ ChallengeScreen::ChallengeScreen(LawnApp *theApp, ChallengePage thePage)
 		aPageButton->SetFont(Sexy::FONT_BRIANNETOD12);
 		aPageButton->mColors[ButtonWidget::COLOR_LABEL] = Color(255, 240, 0);
 		aPageButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(220, 220, 0);
+#if LAWN_WIDESCREEN
+		aPageButton->Resize(200 + 100 * aPageIdx + BOARD_OFFSET_X, 540 + BOARD_OFFSET_Y, 100, 75);
+#else
 		aPageButton->Resize(200 + 100 * aPageIdx, 540, 100, 75);
+#endif
 		if (!ShowPageButtons() || aPageIdx == CHALLENGE_PAGE_SURVIVAL || aPageIdx == CHALLENGE_PAGE_PUZZLE)
 			aPageButton->mVisible = false;
 	}
@@ -144,9 +154,21 @@ ChallengeScreen::ChallengeScreen(LawnApp *theApp, ChallengePage thePage)
 		aChallengeButton->mFrameNoDraw = true;
 		if (aChlDef.mPage == CHALLENGE_PAGE_CHALLENGE || aChlDef.mPage == CHALLENGE_PAGE_LIMBO ||
 			aChlDef.mPage == CHALLENGE_PAGE_PUZZLE)
+		{
+#if LAWN_WIDESCREEN
+			aChallengeButton->Resize(38 + aChlDef.mCol * 155 + BOARD_OFFSET_X, 93 + aChlDef.mRow * 119 + BOARD_OFFSET_Y, 104, 115);
+#else
 			aChallengeButton->Resize(38 + aChlDef.mCol * 155, 93 + aChlDef.mRow * 119, 104, 115);
+#endif
+		}
 		else
+		{
+#if LAWN_WIDESCREEN
+			aChallengeButton->Resize(38 + aChlDef.mCol * 155 + BOARD_OFFSET_X, 125 + aChlDef.mRow * 145 + BOARD_OFFSET_Y, 104, 115);
+#else
 			aChallengeButton->Resize(38 + aChlDef.mCol * 155, 125 + aChlDef.mRow * 145, 104, 115);
+#endif
+		}
 		if (MoreTrophiesNeeded(aChallengeMode))
 		{
 			aChallengeButton->mDoFinger = false;
@@ -559,12 +581,20 @@ void ChallengeScreen::DrawButton(Graphics *g, int theChallengeIndex)
 void ChallengeScreen::Draw(Graphics *g)
 {
 	g->SetLinearBlend(true);
+#if LAWN_WIDESCREEN
+	g->DrawImage(Sexy::IMAGE_CHALLENGE_BACKGROUND_WIDESCREEN, 0, 0);
+#else
 	g->DrawImage(Sexy::IMAGE_CHALLENGE_BACKGROUND, 0, 0);
+#endif
 
 	SexyString aTitleString = mPageIndex == CHALLENGE_PAGE_SURVIVAL ? "[PICK_AREA]"
 							  : mPageIndex == CHALLENGE_PAGE_PUZZLE ? "[SCARY_POTTER]"
 																	: "[PICK_CHALLENGE]";
+#if LAWN_WIDESCREEN
+	TodDrawString(g, aTitleString, 400 + BOARD_OFFSET_X, 58 + BOARD_OFFSET_Y, Sexy::FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
+#else
 	TodDrawString(g, aTitleString, 400, 58, Sexy::FONT_HOUSEOFTERROR28, Color(220, 220, 220), DS_ALIGN_CENTER);
+#endif
 
 	int aTrophiesGot = mApp->GetNumTrophies(mPageIndex);
 	int aTrophiesTotal = mPageIndex == CHALLENGE_PAGE_SURVIVAL	  ? 10
@@ -574,9 +604,17 @@ void ChallengeScreen::Draw(Graphics *g)
 	if (aTrophiesTotal > 0)
 	{
 		SexyString aTrophyString = StrFormat("%d/%d", aTrophiesGot, aTrophiesTotal);
+#if LAWN_WIDESCREEN
+		TodDrawString(g, aTrophyString, 739 + BOARD_ADDITIONAL_WIDTH, 73 + BOARD_OFFSET_Y, Sexy::FONT_DWARVENTODCRAFT15, Color(255, 240, 0), DS_ALIGN_CENTER);
+#else
 		TodDrawString(g, aTrophyString, 739, 73, Sexy::FONT_DWARVENTODCRAFT15, Color(255, 240, 0), DS_ALIGN_CENTER);
+#endif
 	}
+#if LAWN_WIDESCREEN
+	TodDrawImageScaledF(g, Sexy::IMAGE_TROPHY, 718 + BOARD_ADDITIONAL_WIDTH, 26 + BOARD_OFFSET_Y, 0.5f, 0.5f);
+#else
 	TodDrawImageScaledF(g, Sexy::IMAGE_TROPHY, 718, 26, 0.5f, 0.5f);
+#endif
 
 	for (int aChallengeMode = 0; aChallengeMode < NUM_CHALLENGE_MODES; aChallengeMode++)
 		DrawButton(g, aChallengeMode);

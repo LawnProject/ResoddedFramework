@@ -1,4 +1,5 @@
 #pragma once
+#include "GameConstants.h"
 namespace Sexy
 {
 class ResourceManager;
@@ -6,8 +7,6 @@ class Image;
 class Font;
 Image *LoadImageById(ResourceManager *theManager, int theId);
 void ReplaceImageById(ResourceManager *theManager, int theId, Image *theImage);
-bool ExtractResourcesByName(ResourceManager *theManager, const char *theName);
-
 bool ExtractResourcesByName(ResourceManager *theManager, const char *theName);
 
 // DelayLoad_Almanac Resources

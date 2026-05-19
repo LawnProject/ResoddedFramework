@@ -1,6 +1,7 @@
 #ifndef __ALMANACDIALOG_H__
 #define __ALMANACDIALOG_H__
 
+#include "../../GameConstants.h"
 #include "LawnDialog.h"
 
 #define NUM_ALMANAC_SEEDS 49

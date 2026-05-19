@@ -167,7 +167,11 @@ class Zombie : public GameObject
 	Zombie();
 	~Zombie();
 
+#if LAWN_WIDESCREEN
+	void ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Zombie *theParentZombie, int theFromWave, bool theAnimateBush = false);
+#else
 	void ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Zombie *theParentZombie, int theFromWave);
+#endif
 	void Animate();
 	void CheckIfPreyCaught();
 	void EatZombie(Zombie *theZombie);

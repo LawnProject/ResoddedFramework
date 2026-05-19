@@ -11,7 +11,11 @@ void LawnMower::LawnMowerInitialize(int theRow)
 {
 	mApp = (LawnApp *)gSexyAppBase;
 	mRow = theRow;
+#if LAWN_WIDESCREEN
+	mPosX = -160.0f + BOARD_ADDITIONAL_WIDTH;
+#else
 	mPosX = -160.0f;
+#endif
 	mBoard = mApp->mBoard;
 	mRenderOrder = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_LAWN_MOWER, theRow, 0);
 	mPosY = mBoard->GetPosYBasedOnRow(mPosX + 40.0f, theRow) + 23.0f;
@@ -69,7 +73,11 @@ void LawnMower::LawnMowerInitialize(int theRow)
 void LawnMower::UpdatePool()
 {
 	bool isPoolRange = false;
+#if LAWN_WIDESCREEN
+	if (mPosX > 26.0f + BOARD_ADDITIONAL_WIDTH && mPosX < 660.0f + BOARD_ADDITIONAL_WIDTH)
+#else
 	if (mPosX > 26.0f && mPosX < 660.0f)
+#endif
 	{
 		isPoolRange = true;
 	}

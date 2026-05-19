@@ -324,7 +324,7 @@ CreditScreen::CreditScreen(LawnApp *theApp)
 	mDrawBrain = false;
 
 	mMainMenuButton = MakeButton(CreditScreen::Credits_Button_MainMenu, this, "[CREDITS_MAIN_MENU_BUTTON]");
-	mMainMenuButton->Resize(298, 554, 209, 46);
+	mMainMenuButton->Resize(298 + BOARD_ADDITIONAL_WIDTH, 554 + BOARD_OFFSET_Y, 209, 46);
 	mMainMenuButton->SetVisible(false);
 
 	mReplayButton = MakeNewButton(CreditScreen::Credits_Button_Replay,
@@ -338,7 +338,7 @@ CreditScreen::CreditScreen(LawnApp *theApp)
 	mReplayButton->mTextDownOffsetY = 1;
 	mReplayButton->mColors[ButtonWidget::COLOR_LABEL] = Color(255, 255, 255);
 	mReplayButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(213, 159, 43);
-	mReplayButton->Resize(10, 530, 125, 65);
+	mReplayButton->Resize(10 + BOARD_ADDITIONAL_WIDTH, 530 + BOARD_OFFSET_Y, 125, 65);
 	mReplayButton->SetVisible(false);
 	mReplayButton->mTextOffsetX = 33;
 	mReplayButton->mTextOffsetY = -5;
@@ -601,6 +601,7 @@ Reanimation *CreditScreen::PlayReanim(int aIndex)
 
 	aCreditsReanim->mIsAttachment = true;
 	aCreditsReanim->mLoopType = ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD;
+	aCreditsReanim->SetPosition(BOARD_ADDITIONAL_WIDTH, BOARD_OFFSET_Y);
 	mCreditsReanimID = mApp->ReanimationGetID(aCreditsReanim);
 	return aCreditsReanim;
 }

@@ -1,5 +1,3 @@
-﻿#if SEXY_IS_X86
-
 #pragma once
 
 #define COMPILED_LEGACY_DEFINITION_MAGIC 0xDEADFED4L
@@ -39,8 +37,7 @@ namespace LegacyDefinition
 	bool DefReadFromCacheImage(void *&theReadPtr, Image **theImage);
 	bool DefReadFromCacheFont(void *&theReadPtr, Font **theFont);
 	bool DefReadFromCacheFloatTrack(void *&theReadPtr, FloatParameterTrack *theTrack);
-	bool DefMapReadFromCache(void *&theReadPtr, DefMap *theDefMap, void *theDefinition);
+	bool DefMapReadFromCache(void *&theReadPtr, DefMap *theDefMap, void *theDefinition, void *theX86Buffer);
+
+
 }
-
-
-#endif

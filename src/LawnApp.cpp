@@ -2634,7 +2634,11 @@ void LawnApp::CrazyDaveEnter()
 	TOD_ASSERT(mCrazyDaveState == CRAZY_DAVE_OFF);
 	TOD_ASSERT(!ReanimationTryToGet(mCrazyDaveReanimID));
 
+#if LAWN_WIDESCREEN
+	Reanimation *aCrazyDaveReanim = AddReanimation(0.0f + BOARD_ADDITIONAL_WIDTH, 0.0f + BOARD_OFFSET_Y, 0, ReanimationType::REANIM_CRAZY_DAVE);
+#else
 	Reanimation *aCrazyDaveReanim = AddReanimation(0.0f, 0.0f, 0, ReanimationType::REANIM_CRAZY_DAVE);
+#endif
 	aCrazyDaveReanim->mIsAttachment = true;
 	aCrazyDaveReanim->SetBasePoseFromAnim("anim_idle_handing");
 	mCrazyDaveReanimID = ReanimationGetID(aCrazyDaveReanim);
@@ -3056,7 +3060,11 @@ void LawnApp::UpdateCrazyDave()
 		if (mCrazyDaveBlinkCounter <= 0)
 		{
 			mCrazyDaveBlinkCounter = RandRangeInt(400, 800);
+#if LAWN_WIDESCREEN
+			Reanimation *aBlinkReanim = AddReanimation(0.0f + BOARD_ADDITIONAL_WIDTH, 0.0f + BOARD_OFFSET_Y, 0, ReanimationType::REANIM_CRAZY_DAVE);
+#else
 			Reanimation *aBlinkReanim = AddReanimation(0.0f, 0.0f, 0, ReanimationType::REANIM_CRAZY_DAVE);
+#endif
 			aBlinkReanim->SetFramesForLayer("anim_blink");
 			aBlinkReanim->mLoopType = ReanimLoopType::REANIM_PLAY_ONCE_FULL_LAST_FRAME_AND_HOLD;
 			aBlinkReanim->mAnimRate = 15.0f;
@@ -3088,8 +3096,13 @@ void LawnApp::DrawCrazyDave(Graphics *g)
 	if (mCrazyDaveMessageText.size())
 	{
 		Image *aBubbleImage = IMAGE_STORE_SPEECHBUBBLE2;
+#if LAWN_WIDESCREEN
+		int aPosX = 285 + BOARD_ADDITIONAL_WIDTH;
+		int aPosY = 20 + BOARD_OFFSET_Y;
+#else
 		int aPosX = 285;
 		int aPosY = 20;
+#endif
 		if (GetDialog(Dialogs::DIALOG_STORE))
 		{
 			aBubbleImage = IMAGE_STORE_SPEECHBUBBLE;
@@ -3141,7 +3154,22 @@ void LawnApp::DrawCrazyDave(Graphics *g)
 		}
 	}
 
+#if LAWN_WIDESCREEN
+	Graphics *aDaveGraphic = g;
+	if (mGameMode == GameMode::GAMEMODE_UPSELL)
+	{
+		aDaveGraphic->ClearClipRect();
+		aDaveGraphic->mTransX += BOARD_ADDITIONAL_WIDTH;
+		aDaveGraphic->mTransY += BOARD_OFFSET_Y;
+		aCrazyDaveReanim->Draw(aDaveGraphic);
+		aDaveGraphic->mTransX -= BOARD_ADDITIONAL_WIDTH;
+		aDaveGraphic->mTransY -= BOARD_OFFSET_Y;
+	}
+	else
+		aCrazyDaveReanim->Draw(aDaveGraphic);
+#else
 	aCrazyDaveReanim->Draw(g);
+#endif
 }
 
 //0x455670

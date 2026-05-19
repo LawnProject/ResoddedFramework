@@ -11,6 +11,7 @@
 #include "Projectile.h"
 #include "../LawnApp.h"
 #include "../Resources.h"
+#include "../FrameworkResources.h"
 #include "CursorObject.h"
 #include "System/Music.h"
 #include "ToolTipWidget.h"
@@ -2151,15 +2152,15 @@ void Challenge::Update()
 	{
 		ScaryPotterUpdate();
 	}
-	if ((mApp->IsScaryPotterLevel() || mApp->IsWhackAZombieLevel()) && mBoard->mSeedBank->mY < 0)
+	if ((mApp->IsScaryPotterLevel() || mApp->IsWhackAZombieLevel()) && mBoard->mSeedBank->mY < SEED_BANK_OFFSET)
 	{
 		if (mBoard->mSunMoney + mBoard->CountSunBeingCollected() > 0 ||
 			mBoard->mSeedBank->mY > Sexy::IMAGE_SEEDBANK->mWidth)
 		{
 			mBoard->mSeedBank->mY += 2;
-			if (mBoard->mSeedBank->mY > 0)
+			if (mBoard->mSeedBank->mY > SEED_BANK_OFFSET)
 			{
-				mBoard->mSeedBank->mY = 0;
+				mBoard->mSeedBank->mY = SEED_BANK_OFFSET;
 			}
 		}
 	}
@@ -5384,10 +5385,20 @@ void Challenge::TreeOfWisdomDraw(Graphics *g)
 
 	Reanimation *aReanimTree = mApp->ReanimationGet(mReanimChallenge);
 	aReanimTree->mEnableExtraOverlayDraw = false;
+#if LAWN_WIDESCREEN
+	aReanimTree->OverrideScale(1.25f, 1.25f);
+	aReanimTree->SetPosition(BOARD_ADDITIONAL_WIDTH / 2, 0);
+#endif
 	aReanimTree->DrawRenderGroup(g, 1); // 绘制背景
 	for (int i = 0; i < 6; i++)
 	{
+#if LAWN_WIDESCREEN
+		Reanimation *aReanimCloud = mApp->ReanimationGet(mReanimClouds[i]);
+		aReanimCloud->SetPosition(BOARD_ADDITIONAL_WIDTH / 2, 0);
+		aReanimCloud->DrawRenderGroup(g, 0);
+#else
 		mApp->ReanimationGet(mReanimClouds[i])->DrawRenderGroup(g, 0);
+#endif
 	}
 
 	int aHeight = TreeOfWisdomGetSize();
@@ -5434,6 +5445,10 @@ void Challenge::TreeOfWisdomDraw(Graphics *g)
 			aPosX = 390;
 			aPosY = 40;
 		}
+#if LAWN_WIDESCREEN
+		aPosX += BOARD_ADDITIONAL_WIDTH;
+		aPosY += BOARD_OFFSET_Y;
+#endif
 
 		g->DrawImage(Sexy::IMAGE_STORE_SPEECHBUBBLE2, aPosX, aPosY);
 		SexyString aText = StrFormat("[TREE_OF_WISDOM_%d]", mTreeOfWisdomTalkIndex);
@@ -5462,7 +5477,11 @@ void Challenge::TreeOfWisdomDraw(Graphics *g)
 		float aStrHeight = Sexy::FONT_HOUSEOFTERROR16->mAscent * aScale;
 
 		SexyTransform2D aMatrix;
+#if LAWN_WIDESCREEN
+		TodScaleTransformMatrix(aMatrix, 400.0f - aStrWidth * 0.5f + BOARD_OFFSET_X - 30, 20.0f + aStrHeight * 0.5f, aScale, aScale);
+#else
 		TodScaleTransformMatrix(aMatrix, 400.0f - aStrWidth * 0.5f, 20.0f + aStrHeight * 0.5f, aScale, aScale);
+#endif
 		TodDrawStringMatrix(g, Sexy::FONT_HOUSEOFTERROR16, aMatrix, aSizeStr, Color(255, 255, 255));
 	}
 }
@@ -5473,6 +5492,9 @@ void Challenge::TreeOfWisdomInit()
 	ReanimatorEnsureDefinitionLoaded(REANIM_TREEOFWISDOM, true);
 	Reanimation *aReanimTree = mApp->AddReanimation(0.5f, 0.5f, 0, REANIM_TREEOFWISDOM);
 	aReanimTree->mIsAttachment = true;
+#if LAWN_WIDESCREEN
+	aReanimTree->SetImageOverride("bg", Sexy::IMAGE_REANIM_TREE_BG_WIDESCREEN);
+#endif
 	aReanimTree->AssignRenderGroupToPrefix("bg", 1);
 	aReanimTree->AssignRenderGroupToPrefix("tree", 2);
 	aReanimTree->AssignRenderGroupToPrefix("grass", 3);
@@ -5544,13 +5566,18 @@ void Challenge::TreeOfWisdomGrow()
 void Challenge::TreeOfWisdomFertilize()
 {
 	GridItem *aTreeFood = mBoard->mGridItems.DataArrayAlloc();
+#if LAWN_WIDESCREEN
+	aTreeFood->mPosX = 340.0f + BOARD_ADDITIONAL_WIDTH;
+	aTreeFood->mPosY = 300.0f + BOARD_OFFSET_Y;
+#else
 	aTreeFood->mPosX = 340.0f;
 	aTreeFood->mPosY = 300.0f;
+#endif
 	aTreeFood->mGridItemType = GRIDITEM_ZEN_TOOL;
 	aTreeFood->mGridX = 0;
 	aTreeFood->mGridY = 0;
 	aTreeFood->mRenderOrder = Board::MakeRenderOrder(RENDER_LAYER_ABOVE_UI, 0, 0);
-	Reanimation *aReanim = mApp->AddReanimation(340.0f, 300.0f, 0, REANIM_TREEOFWISDOM_TREEFOOD);
+	Reanimation *aReanim = mApp->AddReanimation(aTreeFood->mPosX, aTreeFood->mPosY, 0, REANIM_TREEOFWISDOM_TREEFOOD);
 	aReanim->mLoopType = REANIM_PLAY_ONCE_AND_HOLD;
 	aTreeFood->mGridItemReanimID = mApp->ReanimationGetID(aReanim);
 	aTreeFood->mGridItemState = GRIDITEM_STATE_ZEN_TOOL_FERTILIZER;
@@ -5758,6 +5785,13 @@ bool Challenge::TreeOfWisdomHitTest(int theX, int theY, HitResult *theHitResult)
 {
 	Rect aTreeRect;
 	int aTreeSize = TreeOfWisdomGetSize();
+#if LAWN_WIDESCREEN
+	int aOffsetX = BOARD_ADDITIONAL_WIDTH / 2;
+	if (aTreeSize <= 1)			aTreeRect = Rect(310 + aOffsetX, 275, 175, 175);
+	else if (aTreeSize < 7)		aTreeRect = Rect(290 + aOffsetX, 255, 205, 195);
+	else if (aTreeSize < 12)	aTreeRect = Rect(290 + aOffsetX, 215, 205, 225);
+	else						aTreeRect = Rect(280 + aOffsetX, 155, 225, 305);
+#else
 	if (aTreeSize <= 1)
 		aTreeRect = Rect(310, 275, 175, 175);
 	else if (aTreeSize < 7)
@@ -5766,6 +5800,7 @@ bool Challenge::TreeOfWisdomHitTest(int theX, int theY, HitResult *theHitResult)
 		aTreeRect = Rect(290, 215, 205, 225);
 	else
 		aTreeRect = Rect(280, 155, 225, 305);
+#endif
 
 	if (aTreeRect.Contains(theX, theY))
 	{

@@ -308,8 +308,10 @@ bool DefinitionLoadImage(Image **theImage, const SexyString &theName)
 			}
 		}
 	}
+	TodTrace("DefinitionLoadImage failed for: %s", theName.c_str());
 	return false;
 }
+
 
 bool DefinitionLoadFont(Font **theFont, const SexyString &theName)
 {
@@ -591,12 +593,9 @@ bool DefinitionReadCompiledFile(const SexyString &theCompiledFilePath, DefMap *t
 		}
 		else
 		{
-#if SEXY_IS_X86
 			return LegacyDefinition::DefinitionReadCompiledFile(theCompiledFilePath, theDefMap, theDefinition);
-#else
-			return false;
-#endif
 		}
+
 		
 	}
 

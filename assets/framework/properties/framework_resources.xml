@@ -1,4 +1,9 @@
 <ResourceManifest>
+    <Resources id="LoaderBar">
+        <SetDefaults idprefix="IMAGE_" path="images"/>
+        <Image id="TITLESCREEN_WIDESCREEN" path="titlescreen_widescreen"/>
+    </Resources>
+
     <Resources id="LoadingImages">
         <SetDefaults idprefix="IMAGE_" path="images"/>
         <Image id="SEED_SELECTOR" path="seed_selector"/>
@@ -6,5 +11,85 @@
         <Image id="GAMEPAD_CURSOR_ARROWS" path="board_selector_arrows"/>
 		<Image id="GAMEPAD_CURSOR_FRAME_SHADOW" path="seed_selector_shadow" />
         <Image id="GAMEPAD_CURSOR_ARROWS_SHADOW" path="board_selector_arrows_shadow"/>
+
+        <!-- Widescreen Backgrounds and Decorations -->
+        <Image id="BACKGROUND1_WIDESCREEN" path="background1_widescreen"/>
+        <Image id="BACKGROUND2_WIDESCREEN" path="background2_widescreen"/>
+        <Image id="BACKGROUND3_WIDESCREEN" path="background3_widescreen"/>
+        <Image id="BACKGROUND4_WIDESCREEN" path="background4_widescreen"/>
+        <Image id="BACKGROUND5_WIDESCREEN" path="background5_widescreen"/>
+        <Image id="BACKGROUND6_WIDESCREEN" path="background6boss_widescreen"/>
+        <Image id="BACKGROUND_GREENHOUSE_WIDESCREEN" path="background_greenhouse_widescreen"/>
+        <Image id="BACKGROUND_MUSHROOMGARDEN_WIDESCREEN" path="background_mushroomgarden_widescreen"/>
+        <Image id="BACKGROUND_ZOMBIQUARIUM_WIDESCREEN" path="aquarium1_widescreen"/>
+        <Image id="CHALLENGE_BACKGROUND_WIDESCREEN" path="challenge_background_widescreen"/>
+        <Image id="ALMANAC_INDEXBACK_WIDESCREEN" path="almanac_indexback_widescreen"/>
+        <Image id="ALMANAC_PLANTBACK_WIDESCREEN" path="almanac_plantback_widescreen"/>
+        <Image id="ALMANAC_ZOMBIEBACK_WIDESCREEN" path="almanac_zombieback_widescreen"/>
+        <Image id="SELECTORSCREEN_ACHIEVEMENTS_BG_WIDESCREEN" path="selectorscreen_achievements_bg_widescreen"/>
+        <Image id="ACHEESEMENTS_CHINA_WIDESCREEN" path="acheesements_china_widescreen"/>
+        <Image id="ACHEESEMENTS_HOLE_TILE_WIDESCREEN" path="acheesements_hole_tile_widescreen"/>
+        <Image id="STORE_BACKGROUND_WIDESCREEN" path="store_background_widescreen"/>
+        <Image id="STORE_BACKGROUNDNIGHT_WIDESCREEN" path="store_backgroundnight_widescreen"/>
+
+        <Image id="BACKGROUND1_COVER" path="background1_cover"/>
+        <Image id="BACKGROUND2_COVER" path="background2_cover"/>
+        <Image id="BACKGROUND3_COVER" path="background3_cover"/>
+        <Image id="BACKGROUND4_COVER" path="background4_cover"/>
+        <Image id="BACKGROUND5_TREES" path="background5_trees"/>
+        <Image id="BACKGROUND5_POLE" path="background5_pole"/>
+        <Image id="BACKGROUND6_TREES" path="background6_trees"/>
+        <Image id="BACKGROUND6_POLE" path="background6_pole"/>
+        
+        <!-- Widescreen Bush Reanimation Images -->
+        <SetDefaults idprefix="IMAGE_REANIM_" path="reanim"/>
+		<Image id="TREE_BG_WIDESCREEN" path="tree_bg_widescreen"/>
+        <Image id="BUSH BASE" path="bush base"/>
+        <Image id="BUSH_BASE" path="bush base"/>
+        <Image id="BUSH_COVER" path="bush_cover"/>
+        <Image id="BUSH_COVER_NIGHT" path="bush_cover_night"/>
+        <Image id="B1_1" path="B1_1"/>
+        <Image id="B1_2" path="B1_2"/>
+        <Image id="B1_3" path="B1_3"/>
+        <Image id="B3_1" path="b3_1"/>
+        <Image id="B3_2" path="b3_2"/>
+        <Image id="B3_3" path="b3_3"/>
+        <Image id="B3_4" path="b3_4"/>
+        <Image id="B3_5" path="b3_5"/>
+        <Image id="B3_6" path="b3_6"/>
+        <Image id="B3_7" path="b3_7"/>
+        <Image id="B4_1" path="b4_1"/>
+        <Image id="B4_2" path="b4_2"/>
+        <Image id="B4_3" path="b4_3"/>
+        <Image id="B4_4" path="B4_4"/>
+        <Image id="LEAF" path="leaf"/>
+        <Image id="LEAF1" path="leaf1"/>
+        <Image id="LEAF2" path="leaf2"/>
+        <Image id="LEAF3" path="leaf3"/>
+        <Image id="LEAF4" path="leaf4"/>
+        <Image id="LEAFBUNCH1" path="leafbunch1"/>
+        <Image id="LEAFBUNCH2" path="leafbunch2"/>
+        <Image id="LEAFBUNCH3" path="leafbunch3"/>
+        
+        <Image id="NBUSH BASE" path="Nbush base"/>
+        <Image id="NBUSH_BASE" path="Nbush base"/>
+        <Image id="NB3_1" path="NB3_1"/>
+        <Image id="NB3_2" path="NB3_2"/>
+        <Image id="NB3_3" path="NB3_3"/>
+        <Image id="NB3_4" path="NB3_4"/>
+        <Image id="NB3_5" path="NB3_5"/>
+        <Image id="NB3_6" path="NB3_6"/>
+        <Image id="NB3_7" path="NB3_7"/>
+        <Image id="NB4_1" path="NB4_1"/>
+        <Image id="NB4_2" path="NB4_2"/>
+        <Image id="NB4_3" path="NB4_3"/>
+        <Image id="NB4_4" path="NB4_4"/>
+        <Image id="NB3_COVER" path="NB3_cover"/>
+        <Image id="NLEAF" path="NLeaf"/>
+
+        <!-- Fallbacks for missing night variants -->
+        <Image id="NB1_1" path="B1_1"/>
+        <Image id="NB1_2" path="B1_2"/>
+        <Image id="NB1_3" path="B1_3"/>
     </Resources>
 </ResourceManifest>

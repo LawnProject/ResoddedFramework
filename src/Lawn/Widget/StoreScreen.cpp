@@ -8,6 +8,7 @@
 #include "../SeedPacket.h"
 #include "../../LawnApp.h"
 #include "../../Resources.h"
+#include "../../FrameworkResources.h"
 #include "../System/Music.h"
 #include "SeedChooserScreen.h"
 #include "../../GameConstants.h"
@@ -83,7 +84,11 @@ StoreScreen::StoreScreen(LawnApp *theApp)
 	mBackButton->SetFont(Sexy::FONT_HOUSEOFTERROR20);
 	mBackButton->mColors[ButtonWidget::COLOR_LABEL] = Color(98, 153, 235);
 	mBackButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(167, 192, 235);
+#if LAWN_WIDESCREEN
+	mBackButton->Resize(370 + BOARD_OFFSET_X, 572 + BOARD_OFFSET_Y, aMenuImage->mWidth, aMenuImage->mHeight);
+#else
 	mBackButton->Resize(366, 512, aMenuImage->mWidth, aMenuImage->mHeight);
+#endif
 	mBackButton->mTextOffsetX = -7;
 	mBackButton->mTextOffsetY = 1;
 	mBackButton->mTextDownOffsetX = 2;
@@ -98,7 +103,11 @@ StoreScreen::StoreScreen(LawnApp *theApp)
 	mPrevButton->mDownImage = Sexy::IMAGE_STORE_PREVBUTTONHIGHLIGHT;
 	mPrevButton->mColors[ButtonWidget::COLOR_LABEL] = Color(255, 240, 0);
 	mPrevButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(200, 200, 255);
+#if LAWN_WIDESCREEN
+	mPrevButton->Resize(218 + BOARD_OFFSET_X, 431 + BOARD_OFFSET_Y, aPrevImage->mWidth, aPrevImage->mHeight);
+#else
 	mPrevButton->Resize(252, 402, aPrevImage->mWidth, aPrevImage->mHeight);
+#endif
 
 	mNextButton = new NewLawnButton(nullptr, StoreScreen::StoreScreen_Next, this);
 	mNextButton->mDoFinger = true;
@@ -109,7 +118,11 @@ StoreScreen::StoreScreen(LawnApp *theApp)
 	mNextButton->mDownImage = Sexy::IMAGE_STORE_NEXTBUTTONHIGHLIGHT;
 	mNextButton->mColors[ButtonWidget::COLOR_LABEL] = Color(255, 240, 0);
 	mNextButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(200, 200, 255);
+#if LAWN_WIDESCREEN
+	mNextButton->Resize(618 + BOARD_OFFSET_X, 431 + BOARD_OFFSET_Y, aNextImage->mWidth, aNextImage->mHeight);
+#else
 	mNextButton->Resize(596, 402, aNextImage->mWidth, aNextImage->mHeight);
+#endif
 
 	mOverlayWidget = new StoreScreenOverlay(this);
 	mOverlayWidget->Resize(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
@@ -457,13 +470,47 @@ void StoreScreen::Draw(Graphics *g)
 	int aStoreSignPosY = TodAnimateCurve(50, 110, mStoreTime, -150, 0, CURVE_EASE_IN_OUT);
 	if (mApp->IsNight())
 	{
+#if LAWN_WIDESCREEN
+		g->DrawImage(Sexy::IMAGE_STORE_BACKGROUNDNIGHT_WIDESCREEN, 0, 0);
+#else
 		g->DrawImage(Sexy::IMAGE_STORE_BACKGROUNDNIGHT, 0, 0);
+#endif
 	}
 	else
 	{
+#if LAWN_WIDESCREEN
+		g->DrawImage(Sexy::IMAGE_STORE_BACKGROUND_WIDESCREEN, 0, 0);
+#else
 		g->DrawImage(Sexy::IMAGE_STORE_BACKGROUND, 0, 0);
+#endif
 	}
 
+#if LAWN_WIDESCREEN
+	if (!mHatchTimer && mHatchOpen)
+	{
+		g->DrawImage(Sexy::IMAGE_STORE_CAR, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
+		g->DrawImage(Sexy::IMAGE_STORE_HATCHBACKOPEN, mShakeX + 269 + BOARD_OFFSET_X, mShakeY + BOARD_OFFSET_Y);
+		if (mApp->IsNight())
+		{
+			g->DrawImage(Sexy::IMAGE_STORE_CAR_NIGHT, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
+		}
+	}
+	else
+	{
+		g->DrawImage(Sexy::IMAGE_STORE_CARCLOSED, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
+		if (mApp->IsNight())
+		{
+			g->DrawImage(Sexy::IMAGE_STORE_CAR_NIGHT, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
+			g->DrawImage(Sexy::IMAGE_STORE_CARCLOSED_NIGHT, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
+		}
+	}
+	g->DrawImage(Sexy::IMAGE_STORE_SIGN, 285 + BOARD_OFFSET_X, aStoreSignPosY + BOARD_OFFSET_Y);
+
+	Graphics gCrazyDave = Graphics(*g);
+	gCrazyDave.mTransX -= 66.0f + BOARD_ADDITIONAL_WIDTH / 2;
+	gCrazyDave.mTransY += 68.0f - BOARD_OFFSET_Y;
+	mApp->DrawCrazyDave(&gCrazyDave);
+#else
 	if (!mHatchTimer && mHatchOpen)
 	{
 		g->DrawImage(Sexy::IMAGE_STORE_CAR, mShakeX + 196, mShakeY + 138);
@@ -488,6 +535,7 @@ void StoreScreen::Draw(Graphics *g)
 	gCrazyDave.mTransX -= 42.0f;
 	gCrazyDave.mTransY += 68.0f;
 	mApp->DrawCrazyDave(&gCrazyDave);
+#endif
 
 	if (!mHatchTimer && mHatchOpen)
 	{
@@ -1243,7 +1291,11 @@ void StoreScreen::AdvanceCrazyDaveDialog()
 		mApp->WriteCurrentUserConfig();
 		mApp->PlaySample(Sexy::SOUND_DIAMOND);
 		Coin *aCoin = mCoins.DataArrayAlloc();
+#if LAWN_WIDESCREEN
+		aCoin->CoinInitialize(178 + BOARD_ADDITIONAL_WIDTH / 2, 510 - BOARD_OFFSET_Y, COIN_DIAMOND, COIN_MOTION_FROM_PRESENT);
+#else
 		aCoin->CoinInitialize(80, 520, COIN_DIAMOND, COIN_MOTION_FROM_PRESENT);
+#endif
 		aCoin->mVelX = 0;
 		aCoin->mVelY = -5;
 	}

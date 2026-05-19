@@ -3,6 +3,7 @@
 #include "../../SexyAppFramework/WidgetManager.h"
 #include "../../LawnApp.h"
 #include "../../Resources.h"
+#include "../../FrameworkResources.h"
 #include "../../Sexy.TodLib/TodCommon.h"
 #include "../../SexyAppFramework/SexyMatrix.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
@@ -139,13 +140,27 @@ void TitleScreen::Draw(Graphics *g)
 		return;
 	}
 
+#if LAWN_WIDESCREEN
+	g->DrawImage(IMAGE_TITLESCREEN_WIDESCREEN, 0, 0);
+#else
 	g->DrawImage(IMAGE_TITLESCREEN, 0, 0);
+#endif
 	if (mNeedToInit)
 	{
 		return;
 	}
 
 	int aLogoY;
+#if LAWN_WIDESCREEN
+	if (mTitleStateCounter > 60)
+	{
+		aLogoY = TodAnimateCurve(100, 60, mTitleStateCounter, -150, 10 + BOARD_OFFSET_Y, CURVE_EASE_IN);
+	}
+	else
+	{
+		aLogoY = TodAnimateCurve(60, 50, mTitleStateCounter, 10 + BOARD_OFFSET_Y, 15 + BOARD_OFFSET_Y, CURVE_BOUNCE);
+	}
+#else
 	if (mTitleStateCounter > 60)
 	{
 		aLogoY = TodAnimateCurve(100, 60, mTitleStateCounter, -150, 10, CURVE_EASE_IN);
@@ -154,6 +169,7 @@ void TitleScreen::Draw(Graphics *g)
 	{
 		aLogoY = TodAnimateCurve(60, 50, mTitleStateCounter, 10, 15, CURVE_BOUNCE);
 	}
+#endif
 	g->DrawImage(IMAGE_PVZ_LOGO, mWidth / 2 - IMAGE_PVZ_LOGO->mWidth / 2, aLogoY);
 
 	int aGrassX = mStartButton->mX;
@@ -172,7 +188,11 @@ void TitleScreen::Draw(Graphics *g)
 	else
 	{
 		Graphics aClipG(*g);
+#if LAWN_WIDESCREEN
+		aClipG.ClipRect(240 + BOARD_ADDITIONAL_WIDTH, aGrassY, mCurBarWidth, IMAGE_LOADBAR_GRASS->mHeight);
+#else
 		aClipG.ClipRect(240, aGrassY, mCurBarWidth, IMAGE_LOADBAR_GRASS->mHeight);
+#endif
 		aClipG.DrawImage(IMAGE_LOADBAR_GRASS, aGrassX, aGrassY);
 
 		float aRollLen = mCurBarWidth * 0.94f;
@@ -282,7 +302,11 @@ void TitleScreen::Update()
 
 		mStartButton->mLabel = TodStringTranslate("[LOADING]");
 		mStartButton->SetFont(FONT_BRIANNETOD16);
+#if LAWN_WIDESCREEN
+		mStartButton->Resize(mWidth / 2 - IMAGE_LOADBAR_DIRT->mWidth / 2, 650 + BOARD_OFFSET_Y, mTotalBarWidth, 50);
+#else
 		mStartButton->Resize(mWidth / 2 - IMAGE_LOADBAR_DIRT->mWidth / 2, 650, mTotalBarWidth, 50);
+#endif
 		mStartButton->mVisible = true;
 
 		float aEstimatedTotalLoadTime;
@@ -304,6 +328,16 @@ void TitleScreen::Update()
 	float aLoadingPercent = (aCurrentProgress - mBarStartProgress) / (1 - mBarStartProgress);
 
 	int aButtonY;
+#if LAWN_WIDESCREEN
+	if (mTitleStateCounter > 10)
+	{
+		aButtonY = TodAnimateCurve(60, 10, mTitleStateCounter, 650 + BOARD_OFFSET_Y, 534 + BOARD_OFFSET_Y, TodCurves::CURVE_EASE_IN);
+	}
+	else
+	{
+		aButtonY = TodAnimateCurve(10, 0, mTitleStateCounter, 534 + BOARD_OFFSET_Y, 529 + BOARD_OFFSET_Y, TodCurves::CURVE_BOUNCE);
+	}
+#else
 	if (mTitleStateCounter > 10)
 	{
 		aButtonY = TodAnimateCurve(60, 10, mTitleStateCounter, 650, 534, TodCurves::CURVE_EASE_IN);
@@ -312,6 +346,7 @@ void TitleScreen::Update()
 	{
 		aButtonY = TodAnimateCurve(10, 0, mTitleStateCounter, 534, 529, TodCurves::CURVE_BOUNCE);
 	}
+#endif
 	mStartButton->Resize(mStartButton->mX, aButtonY, mTotalBarWidth, mStartButton->mHeight);
 
 	if (mTitleStateCounter > 0)
@@ -442,9 +477,16 @@ void TitleScreen::Update()
 			{
 				aReanimType = ReanimationType::REANIM_LOADBAR_ZOMBIEHEAD;
 			}
+#if LAWN_WIDESCREEN
+			float aGrassX = mStartButton->mX;
+			float aPosX = aTriggerPoint[i] + aGrassX - 19.0f;
+			float aPosY = 511.0f + BOARD_OFFSET_Y;
+			Reanimation *aSproutReanim = mApp->AddReanimation(aPosX, aPosY, 0, aReanimType);
+#else
 			float aPosX = aTriggerPoint[i] + 225.0f;
 			float aPosY = 511.0f;
 			Reanimation *aSproutReanim = mApp->AddReanimation(aPosX, aPosY, 0, aReanimType);
+#endif
 			aSproutReanim->mAnimRate = 18.0f;
 			aSproutReanim->mLoopType = ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD;
 

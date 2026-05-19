@@ -120,8 +120,14 @@ void CutScene::PlaceAZombie(ZombieType theZombieType, int theGridX, int theGridY
 
 	Zombie *aZombie = mBoard->AddZombieInRow(theZombieType, theGridY, -2);
 	TOD_ASSERT(aZombie);
+#if LAWN_WIDESCREEN
+	bool aStageHasRoof = mBoard->StageHasRoof();
+	aZombie->mPosX = theGridX * STREET_ZOMBIE_GRID_SIZE_X + (aStageHasRoof ? STREET_ZOMBIE_ROOF_START_X : STREET_ZOMBIE_START_X) + BOARD_ADDITIONAL_WIDTH;
+	aZombie->mPosY = theGridY * STREET_ZOMBIE_GRID_SIZE_Y + STREET_ZOMBIE_START_Y + BOARD_OFFSET_Y;
+#else
 	aZombie->mPosX = theGridX * 56 + 830;
 	aZombie->mPosY = theGridY * 90 + 70;
+#endif
 	if (theGridX % 2 == 1)
 	{
 		aZombie->mPosY += 30.0f;
@@ -167,15 +173,25 @@ void CutScene::PlaceAZombie(ZombieType theZombieType, int theGridX, int theGridY
 	{
 		aZombie->mRenderOrder = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_GROUND, 0, 0);
 		aZombie->mRow = 0;
+#if LAWN_WIDESCREEN
+		aZombie->mPosX = theGridX * 50.0f + 950.0f + BOARD_ADDITIONAL_WIDTH;
+		aZombie->mPosY = 50.0f + BOARD_OFFSET_Y;
+#else
 		aZombie->mPosX = theGridX * 50.0f + 950.0f;
 		aZombie->mPosY = 50.0f;
+#endif
 	}
 	else if (theZombieType == ZombieType::ZOMBIE_BOBSLED)
 	{
 		aZombie->mRenderOrder = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_LAWN, 0, 1000);
 		aZombie->mRow = 0;
+#if LAWN_WIDESCREEN
+		aZombie->mPosX = 1105.0f + BOARD_ADDITIONAL_WIDTH;
+		aZombie->mPosY = 480.0f + BOARD_OFFSET_Y;
+#else
 		aZombie->mPosX = 1105.0f;
 		aZombie->mPosY = 480.0f;
+#endif
 	}
 }
 
@@ -675,7 +691,11 @@ void CutScene::StartLevelIntro()
 	mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X, -IMAGE_SEEDBANK->GetHeight());
 	mBoard->mMenuButton->mBtnNoDraw = true;
 	mApp->mSeedChooserScreen->mMouseVisible = false;
+#if LAWN_WIDESCREEN
+	mApp->mSeedChooserScreen->Move(BOARD_ADDITIONAL_WIDTH, SEED_CHOOSER_OFFSET_Y);
+#else
 	mApp->mSeedChooserScreen->Move(0, SEED_CHOOSER_OFFSET_Y);
+#endif
 	mApp->mSeedChooserScreen->mMenuButton->mBtnNoDraw = true;
 	mBoard->mShowShovel = false;
 	mBoard->mSeedBank->mCutSceneDarken = 255;
@@ -958,10 +978,11 @@ void CutScene::CancelIntro()
 	if (mCutsceneTime < mCrazyDaveTime + TimePanRightEnd)
 	{
 		mCutsceneTime = TimeSeedChoserSlideOnEnd + mCrazyDaveTime - 20;
-		if (!IsNonScrollingCutscene())
-		{
+#if LAWN_WIDESCREEN
+			mBoard->Move(mApp->mWidth - BOARD_IMAGE_WIDTH_OFFSET - BOARD_ADDITIONAL_WIDTH, 0);
+#else
 			mBoard->Move(mApp->mWidth - BOARD_IMAGE_WIDTH_OFFSET, 0);
-		}
+#endif
 		if (mBoard->mAdvice->mMessageStyle == MessageStyle::MESSAGE_STYLE_HOUSE_NAME)
 		{
 			mBoard->ClearAdvice(AdviceType::ADVICE_NONE);
@@ -1009,7 +1030,7 @@ void CutScene::CancelIntro()
 		}
 		if (!mApp->IsChallengeWithoutSeedBank())
 		{
-			mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X_END, 0);
+			mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X_END, SEED_BANK_OFFSET);
 		}
 
 		mBoard->mEnableGraveStones = true;
@@ -1136,8 +1157,14 @@ void CutScene::AnimateBoard()
 	}
 	if (mCutsceneTime > aTimePanRightStart && mCutsceneTime <= aTimePanRightEnd)
 	{
+#if LAWN_WIDESCREEN
+		int aStreetOffset = BOARD_IMAGE_WIDTH_OFFSET + BOARD_ADDITIONAL_WIDTH - mApp->mWidth;
+		int aPanOffset =
+			CalcPosition(aTimePanRightStart, aTimePanRightEnd, -aBoardOffset, aStreetOffset);
+#else
 		int aPanOffset =
 			CalcPosition(aTimePanRightStart, aTimePanRightEnd, -aBoardOffset, BOARD_IMAGE_WIDTH_OFFSET - mApp->mWidth);
+#endif
 		mBoard->Move(-aPanOffset, 0);
 	}
 
@@ -1154,10 +1181,17 @@ void CutScene::AnimateBoard()
 		// ====================================================================================================
 		if (mCutsceneTime > aTimeSeedChoserSlideOnStart && mCutsceneTime <= aTimeSeedChoserSlideOnEnd)
 		{
+#if LAWN_WIDESCREEN
+			aSeedChoser->Move(
+				BOARD_ADDITIONAL_WIDTH, CalcPosition(aTimeSeedChoserSlideOnStart, aTimeSeedChoserSlideOnEnd, SEED_CHOOSER_OFFSET_Y, BOARD_OFFSET_Y));
+			aSeedChoser->mMenuButton->mY =
+				CalcPosition(aTimeSeedChoserSlideOnStart, aTimeSeedChoserSlideOnEnd, -50, 0);
+#else
 			aSeedChoser->Move(
 				0, CalcPosition(aTimeSeedChoserSlideOnStart, aTimeSeedChoserSlideOnEnd, SEED_CHOOSER_OFFSET_Y, 0));
 			aSeedChoser->mMenuButton->mY =
 				CalcPosition(aTimeSeedChoserSlideOnStart, aTimeSeedChoserSlideOnEnd, -50, -10);
+#endif
 			aSeedChoser->mMenuButton->mBtnNoDraw = false;
 		}
 		// ====================================================================================================
@@ -1167,8 +1201,13 @@ void CutScene::AnimateBoard()
 		int aTimeSeedChoserSlideOffEnd = TimeSeedChoserSlideOffEnd + mCrazyDaveTime;
 		if (mCutsceneTime > aTimeSeedChoserSlideOffStart && mCutsceneTime <= aTimeSeedChoserSlideOffEnd)
 		{
+#if LAWN_WIDESCREEN
+			aSeedChoser->Move(
+				BOARD_ADDITIONAL_WIDTH, CalcPosition(aTimeSeedChoserSlideOffStart, aTimeSeedChoserSlideOffEnd, BOARD_OFFSET_Y, SEED_CHOOSER_OFFSET_Y));
+#else
 			aSeedChoser->Move(
 				0, CalcPosition(aTimeSeedChoserSlideOffStart, aTimeSeedChoserSlideOffEnd, 0, SEED_CHOOSER_OFFSET_Y));
+#endif
 			aSeedChoser->mMenuButton->mDisabled = true;
 		}
 	}
@@ -1178,8 +1217,16 @@ void CutScene::AnimateBoard()
 	// ====================================================================================================
 	if (mCutsceneTime > aTimePanLeftStart)
 	{
+#if LAWN_WIDESCREEN
+		int aStreetOffset = BOARD_IMAGE_WIDTH_OFFSET + BOARD_ADDITIONAL_WIDTH - mApp->mWidth;
+		int aPanOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, aStreetOffset, 0);
+		mBoard->mRoofPoleOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, -BOARD_WIDTH, WIDE_BOARD_WIDTH + 70 - BOARD_ADDITIONAL_WIDTH);
+		mBoard->mRoofTreeOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, -670, WIDE_BOARD_WIDTH + 130 - BOARD_ADDITIONAL_WIDTH);
+		mBoard->Move(-aPanOffset, 0);
+#else
 		int aPanOffset = CalcPosition(aTimePanLeftStart, aTimePanLeftEnd, BOARD_IMAGE_WIDTH_OFFSET - mApp->mWidth, 0);
 		mBoard->Move(-aPanOffset, 0);
+#endif
 	}
 
 	// ====================================================================================================
@@ -1196,7 +1243,7 @@ void CutScene::AnimateBoard()
 	if (!mApp->IsChallengeWithoutSeedBank() && mCutsceneTime > aTimeSeedBankOnStart &&
 		mCutsceneTime <= aTimeSeedBankOnEnd)
 	{
-		int aSeedBankY = CalcPosition(aTimeSeedBankOnStart, aTimeSeedBankOnEnd, -IMAGE_SEEDBANK->GetHeight(), 0);
+		int aSeedBankY = CalcPosition(aTimeSeedBankOnStart, aTimeSeedBankOnEnd, -IMAGE_SEEDBANK->GetHeight(), SEED_BANK_OFFSET);
 		mBoard->mSeedBank->Move(SEED_BANK_OFFSET_X, aSeedBankY);
 	}
 	int aTimeSeedBankRightStart = TimeSeedBankRightStart + mCrazyDaveTime;
@@ -1226,15 +1273,42 @@ void CutScene::AnimateBoard()
 			mApp->PlayFoley(FoleyType::FOLEY_DIGGER);
 			if (mBoard->mLevel == 1)
 			{
+#if LAWN_WIDESCREEN
+				mApp->AddReanimation(
+					0 + BOARD_ADDITIONAL_WIDTH, 0 + BOARD_OFFSET_Y, Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 0), ReanimationType::REANIM_SODROLL);
+				mApp->AddTodParticle(35 + BOARD_ADDITIONAL_WIDTH,
+									 348 + BOARD_OFFSET_Y,
+									 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 1),
+									 ParticleEffect::PARTICLE_SOD_ROLL);
+#else
 				mApp->AddReanimation(
 					0, 0, Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 0), ReanimationType::REANIM_SODROLL);
 				mApp->AddTodParticle(35,
 									 348,
 									 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 1),
 									 ParticleEffect::PARTICLE_SOD_ROLL);
+#endif
 			}
 			else if (mBoard->mLevel == 2)
 			{
+#if LAWN_WIDESCREEN
+				mApp->AddReanimation(0 + BOARD_ADDITIONAL_WIDTH,
+									 -102 + BOARD_OFFSET_Y,
+									 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 0),
+									 ReanimationType::REANIM_SODROLL);
+				mApp->AddReanimation(0 + BOARD_ADDITIONAL_WIDTH,
+									 111 + BOARD_OFFSET_Y,
+									 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 0),
+									 ReanimationType::REANIM_SODROLL);
+				mApp->AddTodParticle(35 + BOARD_ADDITIONAL_WIDTH,
+									 246 + BOARD_OFFSET_Y,
+									 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 1),
+									 ParticleEffect::PARTICLE_SOD_ROLL);
+				mApp->AddTodParticle(35 + BOARD_ADDITIONAL_WIDTH,
+									 459 + BOARD_OFFSET_Y,
+									 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 1),
+									 ParticleEffect::PARTICLE_SOD_ROLL);
+#else
 				mApp->AddReanimation(0,
 									 -102,
 									 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 0),
@@ -1251,9 +1325,28 @@ void CutScene::AnimateBoard()
 									 459,
 									 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 1),
 									 ParticleEffect::PARTICLE_SOD_ROLL);
+#endif
 			}
 			else if (mBoard->mLevel == 4)
 			{
+#if LAWN_WIDESCREEN
+				mApp->AddReanimation(-3 + BOARD_ADDITIONAL_WIDTH,
+									 -198 + BOARD_OFFSET_Y,
+									 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 0),
+									 ReanimationType::REANIM_SODROLL);
+				mApp->AddReanimation(-3 + BOARD_ADDITIONAL_WIDTH,
+									 203 + BOARD_OFFSET_Y,
+									 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 0),
+									 ReanimationType::REANIM_SODROLL);
+				mApp->AddTodParticle(32 + BOARD_ADDITIONAL_WIDTH,
+									 150 + BOARD_OFFSET_Y,
+									 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 1),
+									 ParticleEffect::PARTICLE_SOD_ROLL);
+				mApp->AddTodParticle(32 + BOARD_ADDITIONAL_WIDTH,
+									 511 + BOARD_OFFSET_Y,
+									 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 1),
+									 ParticleEffect::PARTICLE_SOD_ROLL);
+#else
 				mApp->AddReanimation(-3,
 									 -198,
 									 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 0),
@@ -1270,6 +1363,7 @@ void CutScene::AnimateBoard()
 									 511,
 									 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_TOP, 0, 1),
 									 ParticleEffect::PARTICLE_SOD_ROLL);
+#endif
 			}
 		}
 
@@ -1314,8 +1408,13 @@ void CutScene::AnimateBoard()
 				if (aLawnMower)
 				{
 					aLawnMower->mVisible = true;
+#if LAWN_WIDESCREEN
+					aLawnMower->mPosX =
+						CalcPosition(aTimeLawnMowerStart, aTimeLawnMowerStart + TimeLawnMowerDuration, -80 + BOARD_ADDITIONAL_WIDTH, -21 + BOARD_ADDITIONAL_WIDTH);
+#else
 					aLawnMower->mPosX =
 						CalcPosition(aTimeLawnMowerStart, aTimeLawnMowerStart + TimeLawnMowerDuration, -80, -21);
+#endif
 				}
 			}
 		}
@@ -1373,10 +1472,17 @@ void CutScene::AnimateBoard()
 		TimeReadySetPlantStart + mLawnMowerTime + mSodTime + mGraveStoneTime + mCrazyDaveTime + mFogTime + mBossTime;
 	if (mReadySetPlantTime > 0 && mCutsceneTime == aTimeReadySetPlant)
 	{
+#if LAWN_WIDESCREEN
+		mApp->AddReanimation(400 + BOARD_ADDITIONAL_WIDTH,
+							 324 + BOARD_OFFSET_Y,
+							 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_SCREEN_FADE, 0, 0),
+							 ReanimationType::REANIM_READYSETPLANT);
+#else
 		mApp->AddReanimation(400,
 							 324,
 							 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_SCREEN_FADE, 0, 0),
 							 ReanimationType::REANIM_READYSETPLANT);
+#endif
 		mApp->PlaySample(SOUND_READYSETPLANT);
 		if (!mApp->IsFinalBossLevel())
 		{
@@ -1564,8 +1670,13 @@ void CutScene::UpdateZombiesWon()
 	{
 		ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_ZOMBIES_WON, true);
 		int aRenderPosition = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_SCREEN_FADE, 0, 0);
+#if LAWN_WIDESCREEN
+		Reanimation *aReanimation =
+			mApp->AddReanimation(-BOARD_OFFSET_X + BOARD_ADDITIONAL_WIDTH, BOARD_OFFSET_Y, aRenderPosition, ReanimationType::REANIM_ZOMBIES_WON);
+#else
 		Reanimation *aReanimation =
 			mApp->AddReanimation(-BOARD_OFFSET, 0, aRenderPosition, ReanimationType::REANIM_ZOMBIES_WON);
+#endif
 		aReanimation->mAnimRate = 12.0f;
 		aReanimation->mLoopType = ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD;
 		aReanimation->GetTrackInstanceByName("fullscreen")->mTrackColor = Color::Black;
@@ -2197,8 +2308,13 @@ void CutScene::UpdateUpsell()
 	{
 		if (!mCrazyDaveCountDown)
 		{
+#if LAWN_WIDESCREEN
+			mBoard->mStoreButton->Resize(510 + BOARD_ADDITIONAL_WIDTH, 420 + BOARD_OFFSET_Y, 210, 46);
+			mBoard->mMenuButton->Resize(510 + BOARD_ADDITIONAL_WIDTH, 480 + BOARD_OFFSET_Y, 210, 46);
+#else
 			mBoard->mStoreButton->Resize(510, 420, 210, 46);
 			mBoard->mMenuButton->Resize(510, 480, 210, 46);
+#endif
 			mBoard->mMenuButton->mBtnNoDraw = false;
 			mBoard->mStoreButton->mBtnNoDraw = false;
 		}
@@ -2300,10 +2416,17 @@ void CutScene::UpdateUpsell()
 		ClearUpsellBoard();
 		mApp->PlaySample(SOUND_FINALWAVE);
 		mUpsellHideBoard = true;
+#if LAWN_WIDESCREEN
+		mApp->AddTodParticle(592 + BOARD_ADDITIONAL_WIDTH,
+							 240 + BOARD_OFFSET_Y,
+							 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_SCREEN_FADE, 0, 0),
+							 ParticleEffect::PARTICLE_PERSENT_PICK_UP_ARROW);
+#else
 		mApp->AddTodParticle(592,
 							 240,
 							 Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_SCREEN_FADE, 0, 0),
 							 ParticleEffect::PARTICLE_PERSENT_PICK_UP_ARROW);
+#endif
 		break;
 
 	case 3316: // “这足够把你的脑子吹到火星，再吹回来！”
@@ -2326,7 +2449,11 @@ void CutScene::DrawUpsell(Graphics *g)
 	if (mCrazyDaveLastTalkIndex == 3315) // “大地科塔！”
 	{
 		Reanimation aReanim;
+#if LAWN_WIDESCREEN
+		aReanim.ReanimationInitializeType(565 + BOARD_ADDITIONAL_WIDTH, 360 + BOARD_OFFSET_Y, ReanimationType::REANIM_FLOWER_POT);
+#else
 		aReanim.ReanimationInitializeType(565, 360, ReanimationType::REANIM_FLOWER_POT);
+#endif
 		aReanim.SetFramesForLayer("anim_zengarden");
 		aReanim.OverrideScale(1.3f, 1.3f);
 		aReanim.Draw(g);
@@ -2406,7 +2533,11 @@ void CutScene::DrawIntro(Graphics *g)
 		TodDrawString(g,
 					  "[INTRO_PRESENTS]",
 					  BOARD_WIDTH / 2 - mBoard->mX,
+#if LAWN_WIDESCREEN
+					  310 + BOARD_OFFSET_Y - mBoard->mY,
+#else
 					  310 - mBoard->mY,
+#endif
 					  FONT_BRIANNETOD32,
 					  Color(255, 255, 255, anAlpha),
 					  DrawStringJustification::DS_ALIGN_CENTER);

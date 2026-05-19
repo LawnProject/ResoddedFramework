@@ -35,7 +35,7 @@ enum JSONRegistryType
 	TYPE_LAST
 };
 
-enum RenderingBackend;
+enum RenderingBackend : int;
 
 class WidgetManager;
 class DDInterface;

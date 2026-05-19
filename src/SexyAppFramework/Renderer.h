@@ -60,7 +60,7 @@ namespace Sexy
 		ERROR_VSYNC,
 	};
 
-	enum RenderingBackend
+	enum RenderingBackend : int
 	{
 		BACKEND_NONE = 0,
 #if SEXY_USE_OPENGL

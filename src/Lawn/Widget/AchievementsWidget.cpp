@@ -7,6 +7,7 @@
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "../../GameConstants.h"
 #include "../../Resources.h"
+#include "../../FrameworkResources.h"
 
 int gDefaultScrollValue = 30;
 
@@ -14,7 +15,11 @@ AchievementsWidget::AchievementsWidget(LawnApp *theApp)
 {
 	mApp = theApp;
 	mWidth = BOARD_WIDTH;
+#if LAWN_WIDESCREEN
+	mHeight = IMAGE_ACHEESEMENTS_CHINA_WIDESCREEN->mHeight + IMAGE_SELECTORSCREEN_ACHIEVEMENTS_BG_WIDESCREEN->mHeight + 15700;
+#else
 	mHeight = IMAGE_ACHEESEMENTS_CHINA->mHeight + IMAGE_SELECTORSCREEN_ACHIEVEMENTS_BG->mHeight + 15700;
+#endif
 	mScrollValue = 0;
 	mScrollDirection = -1;
 	mScrollDecay = 1;
@@ -23,13 +28,13 @@ AchievementsWidget::AchievementsWidget(LawnApp *theApp)
 	mBackButton =
 		MakeNewButton(AchievementsWidget::ACHIEVEMENTS_BACK, this, "", nullptr, Sexy::IMAGE_BLANK,
 								Sexy::IMAGE_ACHEESEMENTS_BACK_HIGHLIGHT, Sexy::IMAGE_ACHEESEMENTS_BACK_HIGHLIGHT);
-	mBackButton->Resize(128, 55, Sexy::IMAGE_ACHEESEMENTS_MORE_ROCK->mWidth, Sexy::IMAGE_ACHEESEMENTS_MORE_ROCK->mHeight);
+	mBackButton->Resize(128 + BOARD_ADDITIONAL_WIDTH, 55, Sexy::IMAGE_ACHEESEMENTS_MORE_ROCK->mWidth, Sexy::IMAGE_ACHEESEMENTS_MORE_ROCK->mHeight);
 	mBackButton->mClip = false;
 
 	mMoreButton =
 		MakeNewButton(AchievementsWidget::ACHIEVEMENTS_MORE, this, "", nullptr, Sexy::IMAGE_ACHEESEMENTS_MORE_BUTTON,
 								Sexy::IMAGE_ACHEESEMENTS_MORE_BUTTON_HIGHLIGHT, Sexy::IMAGE_ACHEESEMENTS_MORE_BUTTON_HIGHLIGHT);
-	mMoreButton->Resize(700, 450, Sexy::IMAGE_ACHEESEMENTS_MORE_BUTTON->mWidth - 25, Sexy::IMAGE_ACHEESEMENTS_MORE_BUTTON->mHeight - 50);
+	mMoreButton->Resize(700 + BOARD_ADDITIONAL_WIDTH, 450, Sexy::IMAGE_ACHEESEMENTS_MORE_BUTTON->mWidth - 25, Sexy::IMAGE_ACHEESEMENTS_MORE_BUTTON->mHeight - 50);
 	mMoreButton->mClip = false;
 }
 
@@ -73,27 +78,42 @@ void AchievementsWidget::KeyDown(KeyCode theKey)
 
 void AchievementsWidget::Draw(Graphics *g)
 {
-	g->DrawImage(IMAGE_SELECTORSCREEN_ACHIEVEMENTS_BG, 0, 0);
+#if LAWN_WIDESCREEN
+	g->DrawImage(IMAGE_SELECTORSCREEN_ACHIEVEMENTS_BG_WIDESCREEN, 0, 0);
+	int aTileY = IMAGE_SELECTORSCREEN_ACHIEVEMENTS_BG_WIDESCREEN->GetHeight();
+#else
+	g->DrawImage(IMAGE_SELECTORSCREEN_ACHIEVEMENTS_BG, BOARD_ADDITIONAL_WIDTH, 0);
 	int aTileY = IMAGE_SELECTORSCREEN_ACHIEVEMENTS_BG->GetHeight();
+#endif
 	for (int i = 1; i <= 70; i++)
 	{
-		g->DrawImage(IMAGE_ACHEESEMENTS_HOLE_TILE, 0, aTileY);
+#if LAWN_WIDESCREEN
+		g->DrawImage(IMAGE_ACHEESEMENTS_HOLE_TILE_WIDESCREEN, 0, aTileY);
+		aTileY += IMAGE_ACHEESEMENTS_HOLE_TILE_WIDESCREEN->GetHeight();
+#else
+		g->DrawImage(IMAGE_ACHEESEMENTS_HOLE_TILE, BOARD_ADDITIONAL_WIDTH, aTileY);
 		aTileY += IMAGE_ACHEESEMENTS_HOLE_TILE->GetHeight();
+#endif
 	}
 
-	g->DrawImage(IMAGE_ACHEESEMENTS_BOOKWORM, 0, 1125);
-	g->DrawImage(IMAGE_ACHEESEMENTS_BEJEWELED, 0, 2250);
-	g->DrawImage(IMAGE_ACHEESEMENTS_CHUZZLE, 0, 4500);
-	g->DrawImage(IMAGE_ACHEESEMENTS_PEGGLE, 0, 6750);
-	g->DrawImage(IMAGE_ACHEESEMENTS_PIPE, 0, 9000);
-	g->DrawImage(IMAGE_ACHEESEMENTS_ZUMA, 0, 11250);
-	g->DrawImage(IMAGE_ACHEESEMENTS_CHINA, 0, mHeight - IMAGE_ACHEESEMENTS_CHINA->mHeight - 50);
+	g->DrawImage(IMAGE_ACHEESEMENTS_BOOKWORM, BOARD_ADDITIONAL_WIDTH, 1125);
+	g->DrawImage(IMAGE_ACHEESEMENTS_BEJEWELED, BOARD_ADDITIONAL_WIDTH, 2250);
+	g->DrawImage(IMAGE_ACHEESEMENTS_CHUZZLE, BOARD_ADDITIONAL_WIDTH, 4500);
+	g->DrawImage(IMAGE_ACHEESEMENTS_PEGGLE, BOARD_ADDITIONAL_WIDTH, 6750);
+	g->DrawImage(IMAGE_ACHEESEMENTS_PIPE, BOARD_ADDITIONAL_WIDTH, 9000);
+	g->DrawImage(IMAGE_ACHEESEMENTS_ZUMA, BOARD_ADDITIONAL_WIDTH, 11250);
+
+#if LAWN_WIDESCREEN
+	g->DrawImage(IMAGE_ACHEESEMENTS_CHINA_WIDESCREEN, 0, mHeight - IMAGE_ACHEESEMENTS_CHINA_WIDESCREEN->mHeight - 50);
+#else
+	g->DrawImage(IMAGE_ACHEESEMENTS_CHINA, BOARD_ADDITIONAL_WIDTH, mHeight - IMAGE_ACHEESEMENTS_CHINA->mHeight - 50);
+#endif
 
 	for (int i = 0; i < NUM_ACHIEVEMENT_TYPES; i++)
 	{
 		bool aHasAchievement = (mApp->mPlayerInfo != nullptr && mApp->mPlayerInfo->mEarnedAchievements[i]);
 		int anAchivementOffset = 57 * (i / 2);
-		int aImageXPos = i % 2 == 0 ? 120 : 410;
+		int aImageXPos = (i % 2 == 0 ? 120 : 410) + BOARD_ADDITIONAL_WIDTH;
 		int aImageYPos = 178 + anAchivementOffset;
 		int aTextXPos = aImageXPos + 70;
 		int aTextYPos = aImageYPos + 16;
@@ -120,7 +140,7 @@ void AchievementsWidget::Draw(Graphics *g)
 		g->WriteWordWrapped(aPos, TodStringTranslate(aDefinition.mDescription), 12);
 	}
 
-	g->DrawImage(IMAGE_ACHEESEMENTS_MORE_ROCK, 700, 450);
+	g->DrawImage(IMAGE_ACHEESEMENTS_MORE_ROCK, 700 + BOARD_ADDITIONAL_WIDTH, 450);
 }
 
 void AchievementsWidget::Update()

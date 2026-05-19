@@ -83,13 +83,21 @@ Zombie::Zombie()
 }
 
 //0x522580
+#if LAWN_WIDESCREEN
+void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Zombie *theParentZombie, int theFromWave, bool theAnimateBush)
+#else
 void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Zombie *theParentZombie, int theFromWave)
+#endif
 {
 	TOD_ASSERT(theType >= 0 && theType <= ZombieType::NUM_ZOMBIE_TYPES);
 
 	mFromWave = theFromWave;
 	mRow = theRow;
+#if LAWN_WIDESCREEN
+	mPosX = 780 + Rand(ZOMBIE_START_RANDOM_OFFSET) + BOARD_ADDITIONAL_WIDTH;
+#else
 	mPosX = 780 + Rand(ZOMBIE_START_RANDOM_OFFSET);
+#endif
 	mPosY = GetPosYBasedOnRow(theRow);
 	mVelX = 0.0f;
 	mVelZ = 0.0f;
@@ -615,8 +623,13 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
 		break;
 
 	case ZombieType::ZOMBIE_BOSS: //0x5235BE
+#if LAWN_WIDESCREEN
+		mPosX = BOARD_ADDITIONAL_WIDTH;
+		mPosY = BOARD_OFFSET_Y;
+#else
 		mPosX = 0.0f;
 		mPosY = 0.0f;
+#endif
 		mZombieRect = Rect(700, 80, 90, 430);
 		mZombieAttackRect = Rect(0, 0, 0, 0);
 		aRenderLayer = RenderLayer::RENDER_LAYER_TOP;
@@ -826,6 +839,10 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
 	{
 		PlayZombieAppearSound();
 		StartZombieSound();
+#if LAWN_WIDESCREEN
+		if (theAnimateBush)
+			mBoard->AnimateBush(theRow);
+#endif
 	}
 
 	UpdateReanim();
@@ -1532,7 +1549,11 @@ void Zombie::UpdateZombieCatapult()
 {
 	if (mZombiePhase == ZombiePhase::PHASE_ZOMBIE_NORMAL)
 	{
+#if LAWN_WIDESCREEN
+		if (mPosX <= 650 + BOARD_ADDITIONAL_WIDTH && FindCatapultTarget() && mSummonCounter > 0)
+#else
 		if (mPosX <= 650 && FindCatapultTarget() && mSummonCounter > 0)
+#endif
 		{
 			mZombiePhase = ZombiePhase::PHASE_CATAPULT_LAUNCHING;
 			mPhaseCounter = 300;
@@ -1620,7 +1641,11 @@ void Zombie::LandFlyer(unsigned int theDamageFlags)
 //0x525BE0
 void Zombie::UpdateZombieFlyer()
 {
+#if LAWN_WIDESCREEN
+	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_HIGH_GRAVITY && mPosX < 720.0f + BOARD_ADDITIONAL_WIDTH)
+#else
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_HIGH_GRAVITY && mPosX < 720.0f)
+#endif
 	{
 		mAltitude -= 0.1f;
 		if (mAltitude < -35.0f)
@@ -1784,7 +1809,11 @@ void Zombie::UpdateZombieDolphinRider()
 	bool aBackwards = IsWalkingBackwards();
 	if (mZombiePhase == ZombiePhase::PHASE_DOLPHIN_WALKING && !aBackwards)
 	{
+#if LAWN_WIDESCREEN
+		if (mX > 700 + BOARD_ADDITIONAL_WIDTH && mX <= 720 + BOARD_ADDITIONAL_WIDTH)
+#else
 		if (mX > 700 && mX <= 720)
+#endif
 		{
 			mZombiePhase = ZombiePhase::PHASE_DOLPHIN_INTO_POOL;
 			PlayZombieReanim("anim_jumpinpool", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 16.0f);
@@ -1813,7 +1842,11 @@ void Zombie::UpdateZombieDolphinRider()
 	}
 	else if (mZombiePhase == ZombiePhase::PHASE_DOLPHIN_RIDING)
 	{
+#if LAWN_WIDESCREEN
+		if (mX <= 10 + BOARD_ADDITIONAL_WIDTH)
+#else
 		if (mX <= 10)
+#endif
 		{
 			mAltitude = -40.0f;
 			mZombieHeight = ZombieHeight::HEIGHT_OUT_OF_POOL;
@@ -1887,7 +1920,11 @@ void Zombie::UpdateZombieDolphinRider()
 	}
 	else if (mZombiePhase == ZombiePhase::PHASE_DOLPHIN_WALKING_IN_POOL)
 	{
+#if LAWN_WIDESCREEN
+		if ((mX <= 10 + BOARD_ADDITIONAL_WIDTH && !aBackwards) || (mX > 680 + BOARD_ADDITIONAL_WIDTH && aBackwards))
+#else
 		if ((mX <= 10 && !aBackwards) || (mX > 680 && aBackwards))
+#endif
 		{
 			mAltitude = -40.0f;
 			mZombieHeight = ZombieHeight::HEIGHT_OUT_OF_POOL;
@@ -1906,7 +1943,11 @@ void Zombie::UpdateZombieSnorkel()
 	bool aBackwards = IsWalkingBackwards();
 	if (mZombiePhase == ZombiePhase::PHASE_SNORKEL_WALKING && !aBackwards)
 	{
+#if LAWN_WIDESCREEN
+		if (mX > 700 + BOARD_ADDITIONAL_WIDTH && mX <= 720 + BOARD_ADDITIONAL_WIDTH)
+#else
 		if (mX > 700 && mX <= 720)
+#endif
 		{
 			mVelX = 0.2f;
 			mZombiePhase = ZombiePhase::PHASE_SNORKEL_INTO_POOL;
@@ -1940,7 +1981,11 @@ void Zombie::UpdateZombieSnorkel()
 		{
 			TakeDamage(1800, 9U);
 		}
+#if LAWN_WIDESCREEN
+		else if (mX <= 25 + BOARD_ADDITIONAL_WIDTH && !aBackwards)
+#else
 		else if (mX <= 25 && !aBackwards)
+#endif
 		{
 			mAltitude = -90.0f;
 			mPosX -= 15.0f;
@@ -1950,7 +1995,11 @@ void Zombie::UpdateZombieSnorkel()
 			PoolSplash(false);
 			StartWalkAnim(0);
 		}
+#if LAWN_WIDESCREEN
+		else if (mX > 640 + BOARD_ADDITIONAL_WIDTH && aBackwards)
+#else
 		else if (mX > 640 && aBackwards)
+#endif
 		{
 			mAltitude = -90.0f;
 			mPosX += 15.0f;
@@ -2162,7 +2211,11 @@ void Zombie::UpdateZombieGargantuar()
 		return;
 	}
 
+#if LAWN_WIDESCREEN
+	float aThrowingDistance = mPosX - 360.0f - BOARD_ADDITIONAL_WIDTH;
+#else
 	float aThrowingDistance = mPosX - 360.0f;
+#endif
 	if (mZombiePhase == ZombiePhase::PHASE_GARGANTUAR_THROWING)
 	{
 		Reanimation *aBodyReanim = mApp->ReanimationGet(mBodyReanimID);
@@ -2236,7 +2289,11 @@ void Zombie::UpdateZombieGargantuar()
 	if (IsImmobilizied() || !mHasHead)
 		return;
 
+#if LAWN_WIDESCREEN
+	if (mHasObject && mBodyHealth < mBodyMaxHealth / 2 && aThrowingDistance > 40.0f - BOARD_ADDITIONAL_WIDTH)
+#else
 	if (mHasObject && mBodyHealth < mBodyMaxHealth / 2 && aThrowingDistance > 40.0f)
+#endif
 	{
 		mZombiePhase = ZombiePhase::PHASE_GARGANTUAR_THROWING;
 		PlayZombieReanim("anim_throw", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 24.0f);
@@ -2724,7 +2781,11 @@ void Zombie::UpdateZombieDigger()
 {
 	if (mZombiePhase == ZombiePhase::PHASE_DIGGER_TUNNELING)
 	{
+#if LAWN_WIDESCREEN
+		if (mPosX < 10.0f + BOARD_ADDITIONAL_WIDTH)
+#else
 		if (mPosX < 10.0f)
+#endif
 		{
 			mAltitude = -120.0f;
 			mZombiePhase = ZombiePhase::PHASE_DIGGER_RISING;
@@ -2993,7 +3054,11 @@ void Zombie::UpdateZombieDancer()
 		mSummonCounter--;
 		if (mSummonCounter == 0)
 		{
+#if LAWN_WIDESCREEN
+			if (GetDancerFrame() == 12 && mHasHead && mPosX < 700.0f + BOARD_ADDITIONAL_WIDTH)
+#else
 			if (GetDancerFrame() == 12 && mHasHead && mPosX < 700.0f)
+#endif
 			{
 				mZombiePhase = ZombiePhase::PHASE_DANCER_SNAPPING_FINGERS_WITH_LIGHT;
 				PlayZombieReanim("anim_point", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 20, 24.0f);
@@ -3983,10 +4048,17 @@ bool Zombie::ZombieNotWalking()
 //0x52A7B0
 void Zombie::UpdateZamboni()
 {
+#if LAWN_WIDESCREEN
+	if (mPosX > 400.0f + BOARD_ADDITIONAL_WIDTH && !mFlatTires)
+	{
+		mVelX = TodAnimateCurveFloat(700 + BOARD_ADDITIONAL_WIDTH, 300 + BOARD_ADDITIONAL_WIDTH, mPosX, 0.25f, 0.05f, TodCurves::CURVE_LINEAR);
+	}
+#else
 	if (mPosX > 400.0f && !mFlatTires)
 	{
 		mVelX = TodAnimateCurveFloat(700, 300, mPosX, 0.25f, 0.05f, TodCurves::CURVE_LINEAR);
 	}
+#endif
 	else if (mFlatTires && mVelX > 0.0005f)
 	{
 		mVelX -= 0.0005f;
@@ -3995,11 +4067,19 @@ void Zombie::UpdateZamboni()
 	int anIceX = mPosX + 118;
 	if (mBoard->StageHasRoof())
 	{
+#if LAWN_WIDESCREEN
+		anIceX = std::max(anIceX, 500 + BOARD_ADDITIONAL_WIDTH);
+#else
 		anIceX = std::max(anIceX, 500);
+#endif
 	}
 	else
 	{
+#if LAWN_WIDESCREEN
+		anIceX = std::max(anIceX, 25 + BOARD_ADDITIONAL_WIDTH);
+#else
 		anIceX = std::max(anIceX, 25);
+#endif
 	}
 	if (anIceX < mBoard->mIceMinX[mRow])
 	{
@@ -4228,7 +4308,11 @@ void Zombie::UpdateZombiePosition()
 	if (mBlowingAway)
 	{
 		mPosX += 10.0f;
+#if LAWN_WIDESCREEN
+		if (mX > 850 + BOARD_ADDITIONAL_WIDTH)
+#else
 		if (mX > 850)
+#endif
 		{
 			DieWithLoot();
 			return;
@@ -4510,7 +4594,7 @@ void Zombie::UpdateActions()
 //0x52B280
 void Zombie::CheckForBoardEdge()
 {
-	if (IsWalkingBackwards() && mPosX > 850.0f)
+	if (IsWalkingBackwards() && mPosX > BOARD_WIDTH + 50)
 	{
 		DieNoLoot();
 		return;
@@ -4520,17 +4604,17 @@ void Zombie::CheckForBoardEdge()
 	if (mZombieType == ZombieType::ZOMBIE_GARGANTUAR || mZombieType == ZombieType::ZOMBIE_REDEYE_GARGANTUAR ||
 		mZombieType == ZombieType::ZOMBIE_POLEVAULTER)
 	{
-		aEdgeX = -150;
+		aEdgeX -= 50;
 	}
 	else if (mZombieType == ZombieType::ZOMBIE_CATAPULT || mZombieType == ZombieType::ZOMBIE_FOOTBALL ||
 			 mZombieType == ZombieType::ZOMBIE_ZAMBONI)
 	{
-		aEdgeX = -175;
+		aEdgeX -= 75;
 	}
 	else if (mZombieType == ZombieType::ZOMBIE_BACKUP_DANCER || mZombieType == ZombieType::ZOMBIE_DANCER ||
 			 mZombieType == ZombieType::ZOMBIE_SNORKEL)
 	{
-		aEdgeX = -130;
+		aEdgeX -= 30;
 	}
 
 	if (mX <= aEdgeX && mHasHead)
@@ -5924,7 +6008,11 @@ void Zombie::DrawBungeeCord(Graphics *g, int theOffsetX, int theOffsetY)
 		}
 	}
 
+#if LAWN_WIDESCREEN
+	for (float y = aPosY - aCordCelHeight; y > -aCordCelHeight - BOARD_OFFSET_Y; y -= aCordCelHeight)
+#else
 	for (float y = aPosY - aCordCelHeight; y > -aCordCelHeight; y -= aCordCelHeight)
+#endif
 	{
 		TodDrawImageScaledF(
 			g, IMAGE_BUNGEECORD, theOffsetX + 61.0f - 4.0f / mScaleZombie, y - mPosY, mScaleZombie, mScaleZombie);
@@ -6557,7 +6645,11 @@ void Zombie::ZamboniDeath(unsigned int theDamageFlags)
 		mApp->AddTodParticle(mPosX + 29.0f, mPosY + 114.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_ZAMBONI_TIRE);
 		mVelX = 0.0f;
 
+#if LAWN_WIDESCREEN
+		if (Rand(4) == 0 && mPosX < 600.0f + BOARD_ADDITIONAL_WIDTH)
+#else
 		if (Rand(4) == 0 && mPosX < 600.0f)
+#endif
 		{
 			PlayZombieReanim("anim_wheelie2", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 10, 10.0f);
 			mPhaseCounter = 280;
@@ -6994,8 +7086,13 @@ void Zombie::CheckForPool()
 		return;
 	}
 
+#if LAWN_WIDESCREEN
+	bool aIsPoolSquare = mBoard->IsPoolSquare(mBoard->PixelToGridX(mX + 75, mY), mRow) &&
+						 mBoard->IsPoolSquare(mBoard->PixelToGridX(mX + 45, mY), mRow) && mX < 680 + BOARD_ADDITIONAL_WIDTH;
+#else
 	bool aIsPoolSquare = mBoard->IsPoolSquare(mBoard->PixelToGridX(mX + 75, mY), mRow) &&
 						 mBoard->IsPoolSquare(mBoard->PixelToGridX(mX + 45, mY), mRow) && mX < 680;
+#endif
 
 	if (!mInPool && aIsPoolSquare)
 	{
@@ -9456,15 +9553,28 @@ bool Zombie::SetupDrawZombieWon(Graphics *g)
 	{
 	case BackgroundType::BACKGROUND_1_DAY:
 	case BackgroundType::BACKGROUND_2_NIGHT:
+#if LAWN_WIDESCREEN
+		g->ClipRect(-123 + BOARD_ADDITIONAL_WIDTH - mX, -mY, BOARD_WIDTH, BOARD_HEIGHT);
+#else
 		g->ClipRect(-123 - mX, -mY, BOARD_WIDTH, BOARD_HEIGHT);
+#endif
 		break;
 	case BackgroundType::BACKGROUND_3_POOL:
 	case BackgroundType::BACKGROUND_4_FOG:
+#if LAWN_WIDESCREEN
+		g->ClipRect(-172 + BOARD_ADDITIONAL_WIDTH - mX, -mY, BOARD_WIDTH, BOARD_HEIGHT);
+#else
 		g->ClipRect(-172 - mX, -mY, BOARD_WIDTH, BOARD_HEIGHT);
+#endif
 		break;
 	case BackgroundType::BACKGROUND_5_ROOF:
 	case BackgroundType::BACKGROUND_6_BOSS:
+#if LAWN_WIDESCREEN
+		if (mBoard->mCutScene->mCutsceneTime > 1500)
+			g->ClipRect(-220 + BOARD_ADDITIONAL_WIDTH - mX, -mY, BOARD_WIDTH, 187 + BOARD_OFFSET_Y);
+#else
 		g->ClipRect(-220 - mX, -mY, BOARD_WIDTH, 187);
+#endif
 		break;
 	}
 
@@ -9741,6 +9851,9 @@ void Zombie::UpdateZombieChimney()
 	if (mBoard->mBackground == BackgroundType::BACKGROUND_5_ROOF ||
 		mBoard->mBackground == BackgroundType::BACKGROUND_6_BOSS)
 	{
+#if LAWN_WIDESCREEN
+		mPosY = 250.0f + BOARD_OFFSET_Y;
+#endif
 		mAltitude = TodAnimateCurve(4000, 5000, mBoard->mCutScene->mCutsceneTime, 200, 0, TodCurves::CURVE_EASE_IN);
 	}
 }
@@ -9794,8 +9907,13 @@ void Zombie::WalkIntoHouse()
 	else if (mBoard->mBackground == BackgroundType::BACKGROUND_5_ROOF ||
 			 mBoard->mBackground == BackgroundType::BACKGROUND_6_BOSS)
 	{
+#if LAWN_WIDESCREEN
+		mPosX = -180.0f + BOARD_ADDITIONAL_WIDTH;
+		mPosY = 250.0f + BOARD_OFFSET_Y;
+#else
 		mPosX = -180.0f;
 		mPosY = 250.0f;
+#endif
 		mZombieHeight = ZombieHeight::HEIGHT_IN_TO_CHIMNEY;
 		mRenderOrder = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_GRAVE_STONE, 0, 2);
 
@@ -9844,6 +9962,8 @@ void Zombie::DrawBossFireBall(Graphics *g, const ZombieDrawPosition &theDrawPos)
 		g->SetDrawMode(Graphics::DRAWMODE_NORMAL);
 		aFireBallReanim->DrawRenderGroup(g, RENDER_GROUP_BOSS_FIREBALL_TOP);
 	}
+
+	g->Translate(mX, mY);
 }
 
 //0x5349E0
@@ -9995,7 +10115,11 @@ void Zombie::BossSpawnContact()
 	}
 
 	Zombie *aZombie = mBoard->AddZombieInRow(aZombieType, mTargetRow, 0);
+#if LAWN_WIDESCREEN
+	aZombie->mPosX = 600.0f + BOARD_ADDITIONAL_WIDTH;
+#else
 	aZombie->mPosX = 600.0f;
+#endif
 }
 
 //0x534E30
@@ -10298,7 +10422,11 @@ void Zombie::BossHeadSpitContact()
 	Reanimation *aFireBallReanim;
 	if (mIsFireBall)
 	{
+#if LAWN_WIDESCREEN
+		aFireBallReanim = mApp->AddReanimation(455.0f + BOARD_ADDITIONAL_WIDTH, aPosY, mRenderOrder + 1, ReanimationType::REANIM_BOSS_FIREBALL);
+#else
 		aFireBallReanim = mApp->AddReanimation(455.0f, aPosY, mRenderOrder + 1, ReanimationType::REANIM_BOSS_FIREBALL);
+#endif
 		aFireBallReanim->PlayReanim("anim_form", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0, 16.0f);
 		aFireBallReanim->mIsAttachment = true;
 		aFireBallReanim->AssignRenderGroupToTrack("additive", RENDER_GROUP_BOSS_FIREBALL_ADDITIVE);
@@ -10306,7 +10434,11 @@ void Zombie::BossHeadSpitContact()
 	}
 	else
 	{
+#if LAWN_WIDESCREEN
+		aFireBallReanim = mApp->AddReanimation(455.0f + BOARD_ADDITIONAL_WIDTH, aPosY, mRenderOrder + 1, ReanimationType::REANIM_BOSS_ICEBALL);
+#else
 		aFireBallReanim = mApp->AddReanimation(455.0f, aPosY, mRenderOrder + 1, ReanimationType::REANIM_BOSS_ICEBALL);
+#endif
 		aFireBallReanim->PlayReanim("anim_form", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0, 16.0f);
 		aFireBallReanim->mIsAttachment = true;
 		aFireBallReanim->AssignRenderGroupToTrack("ice_highlight", RENDER_GROUP_BOSS_FIREBALL_ADDITIVE);

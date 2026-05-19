@@ -608,7 +608,11 @@ void Coin::UpdateCollected()
 	}
 	else if (IsPresentWithAdvice())
 	{
+#if LAWN_WIDESCREEN
+		aDestX = 35 + BOARD_ADDITIONAL_WIDTH;
+#else
 		aDestX = 35;
+#endif
 		aDestY = 487;
 	}
 	else if (mType == CoinType::COIN_AWARD_PRESENT || mType == CoinType::COIN_PRESENT_PLANT)
@@ -632,8 +636,13 @@ void Coin::UpdateCollected()
 	}
 	else
 	{
+#if LAWN_WIDESCREEN
+		aDestX = 400 - mWidth / 2 + BOARD_ADDITIONAL_WIDTH;
+		aDestY = 200 - mHeight / 2 + BOARD_OFFSET_Y;
+#else
 		aDestX = 400 - mWidth / 2;
 		aDestY = 200 - mHeight / 2;
+#endif
 		mDisappearCounter++;
 	}
 

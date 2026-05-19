@@ -44,7 +44,7 @@ class ButtonWidget;
 class Version;
 }; // namespace Sexy
 
-enum FoleyType;
+#include "Sexy.TodLib/TodFoley.h"
 
 using namespace Sexy;
 
@@ -379,7 +379,12 @@ class LawnApp : public SexyApp
 	/*inline*/ bool CanDoDaisyMode();
 	virtual void SwitchScreenMode(bool wantWindowed, bool is3d, bool force = false);
 	static /*inline*/ void CenterDialog(Dialog *theDialog, int theWidth, int theHeight);
+#if LAWN_WIDESCREEN
+	bool mLawnWidescreen;
+#endif
 };
+
+
 
 SexyString LawnGetCurrentLevelName();
 bool LawnGetCloseRequest();

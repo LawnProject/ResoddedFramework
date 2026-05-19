@@ -3,6 +3,7 @@
 #include "../../LawnApp.h"
 #include "../../Resources.h"
 #include "../../Sexy.TodLib/EffectSystem.h"
+#include "../../Sexy.TodLib/TodCommon.h"
 #include "SaveGame.h"
 
 
@@ -144,19 +145,36 @@ void SaveContext::SyncTrailDef(TrailDefinition *&theDefinition)
 	}
 }
 
+static bool IsValidLoadedImage(Image* theImage)
+{
+	if (theImage == nullptr)
+		return false;
+
+	std::string aPath;
+	return TodFindImagePath(theImage, &aPath);
+}
+
 void SaveContext::SyncImage(Image *&theImage)
 {
 	if (mReading)
 	{
 		ResourceId aResID;
 		Sync((int &)aResID);
-		if (aResID == Sexy::ResourceId::RESOURCE_ID_MAX)
+		if (aResID == Sexy::ResourceId::RESOURCE_ID_MAX || (int)aResID < 0 || (int)aResID >= RESOURCE_ID_MAX)
 		{
 			theImage = nullptr;
 		}
 		else
 		{
-			theImage = GetImageById(aResID);
+			Image* aImage = GetImageById(aResID);
+			if (IsValidLoadedImage(aImage))
+			{
+				theImage = aImage;
+			}
+			else
+			{
+				theImage = nullptr;
+			}
 		}
 	}
 	else

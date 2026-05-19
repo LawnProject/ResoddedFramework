@@ -49,12 +49,18 @@ SeedChooserScreen::SeedChooserScreen()
 	mStartButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color::White;
 	mStartButton->Resize(154, 545, 156, 42);
 	mStartButton->mTextOffsetY = -1;
+#if LAWN_WIDESCREEN
+	mStartButton->mParentWidget = this;
+#endif
 	EnableStartButton(false);
 
 	mMenuButton = new GameButton(SeedChooserScreen::SeedChooserScreen_Menu);
 	mMenuButton->SetLabel("[MENU_BUTTON]");
 	mMenuButton->Resize(681, -10, 117, 46);
 	mMenuButton->mDrawStoneButton = true;
+#if LAWN_WIDESCREEN
+	mMenuButton->mParentWidget = this;
+#endif
 
 	mRandomButton = new GameButton(SeedChooserScreen::SeedChooserScreen_Random);
 	mRandomButton->SetLabel("(Debug Play)");
@@ -65,6 +71,9 @@ SeedChooserScreen::SeedChooserScreen()
 	mRandomButton->mColors[0] = Color(255, 240, 0);
 	mRandomButton->mColors[1] = Color(200, 200, 255);
 	mRandomButton->Resize(332, 546, 100, 30);
+#if LAWN_WIDESCREEN
+	mRandomButton->mParentWidget = this;
+#endif
 	if (!mApp->mTodCheatKeys)
 	{
 		mRandomButton->mBtnNoDraw = true;
@@ -415,11 +424,6 @@ void SeedChooserScreen::Draw(Graphics *g)
 
 			int aPosX = aChosenSeed.mX;
 			int aPosY = aChosenSeed.mY;
-			if (aSeedState == SEED_IN_BANK)
-			{
-				aPosX -= mX;
-				aPosY -= mY;
-			}
 			DrawSeedPacket(
 				g, aPosX, aPosY, aChosenSeed.mSeedType, aChosenSeed.mImitaterType, 0, aGrayed ? 115 : 255, true, false);
 		}
@@ -550,8 +554,8 @@ void SeedChooserScreen::Update()
 {
 	Widget::Update();
 
-	mLastMouseX = mApp->mWidgetManager->mLastMouseX;
-	mLastMouseY = mApp->mWidgetManager->mLastMouseY;
+	mLastMouseX = mApp->mWidgetManager->mLastMouseX - mX;
+	mLastMouseY = mApp->mWidgetManager->mLastMouseY - mY;
 
 	mSeedChooserAge++;
 	mToolTip->Update();
