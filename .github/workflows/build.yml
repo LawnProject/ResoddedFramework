@@ -6,6 +6,13 @@ on:
     branches: [dev, main]
   pull_request:
     branches: [dev, main]
+    
+permissions:
+  contents: write
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  VCPKG_FEATURE_FLAGS: dependencygraph
 
 jobs:
   build:
@@ -18,18 +25,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
-
-      - name: Cache CMake build
-        uses: actions/cache@v4
-        with:
-          path: out/build/msvc/${{ matrix.preset }}
-          key: ${{ runner.os }}-${{ matrix.preset }}-${{ hashFiles('CMakeLists.txt', 'CMakePresets.json', 'thirdparty/CMakeLists.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.preset }}-
+                
+      - name: Run vcpkg
+        run: ${{ github.workspace }}/vcpkg/vcpkg install --dry-run
 
       - name: Setup CMake
-        env:
-          VCPKG_ROOT: ${{ env.VCPKG_INSTALLATION_ROOT }}
         uses: lukka/get-cmake@latest
         with:
           cmakeVersion: '3.28'
