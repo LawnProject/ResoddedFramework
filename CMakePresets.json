@@ -2,13 +2,15 @@
   "version": 6,
   "configurePresets": [
     {
-      "name": "windows-msvc-base",
+      "name": "windows-msvc-x64-base",
       "hidden": true,
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/msvc/${presetName}",
       "installDir": "${sourceDir}/out/install/${presetName}",
       "cacheVariables": {
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/msvc/install/${presetName}",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x64-windows-static"
       },
       "toolset": {
         "value": "host=x64",
@@ -19,10 +21,31 @@
         "lhs": "${hostSystemName}",
         "rhs": "Windows"
       }
+    },    
+    {
+      "name": "windows-msvc-x86-base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/msvc/${presetName}",
+      "installDir": "${sourceDir}/out/install/${presetName}",
+      "cacheVariables": {
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/msvc/install/${presetName}",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x86-windows-static"
+      },
+      "toolset": {
+        "value": "host=x86",
+        "strategy": "external"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
     },
     {
       "name": "windows-x64-debug-msvc",
-      "inherits": "windows-msvc-base",
+      "inherits": "windows-msvc-x64-base",
       "architecture": {
         "value": "x64",
         "strategy": "external"
@@ -31,7 +54,7 @@
     },
     {
       "name": "windows-x86-debug-msvc",
-      "inherits": "windows-msvc-base",
+      "inherits": "windows-msvc-x86-base",
       "architecture": {
         "value": "x86",
         "strategy": "external"
@@ -40,7 +63,7 @@
     },
     {
       "name": "windows-x64-release-msvc",
-      "inherits": "windows-msvc-base",
+      "inherits": "windows-msvc-x64-base",
       "architecture": {
         "value": "x64",
         "strategy": "external"
@@ -49,7 +72,7 @@
     },
     {
       "name": "windows-x86-release-msvc",
-      "inherits": "windows-msvc-base",
+      "inherits": "windows-msvc-x86-base",
       "architecture": {
         "value": "x86",
         "strategy": "external"

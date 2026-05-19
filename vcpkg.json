@@ -1,0 +1,13 @@
+{
+  "dependencies": [
+    "cpptrace",
+    "curl",
+    "freetype",
+    "glm",
+    "libogg",
+    "libvorbis",
+    "openal-soft",
+    "sdl3",
+    "zlib"
+  ]
+}

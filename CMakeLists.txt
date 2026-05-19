@@ -8,6 +8,10 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
+if (MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>") # a stupid fix
+endif()
+
 option(GITHUB_ACTIONS "Building in GitHub Actions" OFF)
 
 if(MSVC AND GITHUB_ACTIONS)
@@ -23,7 +27,6 @@ set(CMAKE_CXX_EXTENSIONS ON)
 # woohooo now we can use folder filters
 set(CMAKE_USE_FOLDERS ON)
 
-add_subdirectory(thirdparty)
 add_subdirectory(src/ImageLib)
 add_subdirectory(src/PakLib)
 add_subdirectory(src/SexyAppFramework)
