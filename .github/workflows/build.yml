@@ -28,6 +28,8 @@ jobs:
             ${{ runner.os }}-${{ matrix.preset }}-
 
       - name: Setup CMake
+        env:
+          VCPKG_ROOT: ${{ env.VCPKG_INSTALLATION_ROOT }}
         uses: lukka/get-cmake@latest
         with:
           cmakeVersion: '3.28'
