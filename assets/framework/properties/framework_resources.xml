@@ -31,6 +31,21 @@
         <Image id="ACHEESEMENTS_HOLE_TILE_WIDESCREEN" path="acheesements_hole_tile_widescreen"/>
         <Image id="STORE_BACKGROUND_WIDESCREEN" path="store_background_widescreen"/>
         <Image id="STORE_BACKGROUNDNIGHT_WIDESCREEN" path="store_backgroundnight_widescreen"/>
+        <Image id="STORE_CAR_WIDESCREEN" path="Store_Car_widescreen"/>
+        <Image id="STORE_CAR_NIGHT_WIDESCREEN" path="Store_Car_night_widescreen"/>
+        <Image id="STORE_CARCLOSED_WIDESCREEN" path="Store_CarClosed_widescreen"/>
+        <Image id="STORE_CARCLOSED_NIGHT_WIDESCREEN" path="Store_CarClosed_night_widescreen"/>
+        <Image id="STORE_HATCHBACKOPEN_WIDESCREEN" path="Store_HatchbackOpen_widescreen"/>
+        <Image id="STORE_SIGN_WIDESCREEN" path="Store_Sign_widescreen"/>
+        <Image id="STORE_MAINMENUBUTTON_WIDESCREEN" path="Store_MainMenuButton"/>
+        <Image id="STORE_MAINMENUBUTTONDOWN_WIDESCREEN" path="Store_MainMenuButtonDown"/>
+        <Image id="STORE_MAINMENUBUTTONHIGHLIGHT_WIDESCREEN" path="Store_MainMenuButtonHighlight"/>
+        <Image id="STORE_PREVBUTTON_WIDESCREEN" path="Store_PrevButton"/>
+        <Image id="STORE_PREVBUTTONHIGHLIGHT_WIDESCREEN" path="Store_PrevButtonHighlight"/>
+        <Image id="STORE_PREVBUTTONDISABLED_WIDESCREEN" path="Store_PrevButtonDisabled"/>
+        <Image id="STORE_NEXTBUTTON_WIDESCREEN" path="Store_NextButton"/>
+        <Image id="STORE_NEXTBUTTONHIGHLIGHT_WIDESCREEN" path="Store_NextButtonHighlight"/>
+        <Image id="STORE_NEXTBUTTONDISABLED_WIDESCREEN" path="Store_NextButtonDisabled"/>
 
         <Image id="BACKGROUND1_COVER" path="background1_cover"/>
         <Image id="BACKGROUND2_COVER" path="background2_cover"/>
@@ -46,6 +61,8 @@
         <Image id="SELECTORSCREEN_BG_LEFT_WIDESCREEN" path="SelectorScreen_BG_Left_Widescreen"/>
         <Image id="SELECTORSCREEN_BG_CENTER_WIDESCREEN" path="SelectorScreen_BG_Center_Widescreen"/>
         <Image id="SELECTORSCREEN_BG_RIGHT_WIDESCREEN" path="SelectorScreen_BG_Right_Widescreen"/>
+        <Image id="SELECTORSCREEN_BG_WIDESCREEN" path="SelectorScreen_BG_Widescreen"/>
+        <Image id="SELECTORSCREEN_WOODSIGN1_WIDESCREEN" path="SelectorScreen_WoodSign1_Widescreen"/>
 		<Image id="TREE_BG_WIDESCREEN" path="tree_bg_widescreen"/>
         <Image id="BUSH BASE" path="bush base"/>
         <Image id="BUSH_BASE" path="bush base"/>

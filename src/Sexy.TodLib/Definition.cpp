@@ -173,9 +173,13 @@ struct DefinitionFrameworkReanimImage
 };
 
 static const DefinitionFrameworkReanimImage gFrameworkReanimImages[] = {
-	{"IMAGE_REANIM_SELECTORSCREEN_BG_LEFT", "reanim/SelectorScreen_BG_Left"},
-	{"IMAGE_REANIM_SELECTORSCREEN_BG_CENTER", "reanim/SelectorScreen_BG_Center"},
-	{"IMAGE_REANIM_SELECTORSCREEN_BG_RIGHT", "reanim/SelectorScreen_BG_Right"},
+	{"IMAGE_REANIM_SELECTORSCREEN_WOODSIGN1", "reanim/SelectorScreen_WoodSign1_Widescreen"},
+	{"IMAGE_REANIM_SELECTORSCREEN_BG_LEFT", "reanim/SelectorScreen_BG_Left_Widescreen"},
+	{"IMAGE_REANIM_SELECTORSCREEN_BG_CENTER", "reanim/SelectorScreen_BG_Center_Widescreen"},
+	{"IMAGE_REANIM_SELECTORSCREEN_BG_RIGHT", "reanim/SelectorScreen_BG_Right_Widescreen"},
+	{"IMAGE_REANIM_SELECTORSCREEN_BG_LEFT_WIDESCREEN", "reanim/SelectorScreen_BG_Left_Widescreen"},
+	{"IMAGE_REANIM_SELECTORSCREEN_BG_CENTER_WIDESCREEN", "reanim/SelectorScreen_BG_Center_Widescreen"},
+	{"IMAGE_REANIM_SELECTORSCREEN_BG_RIGHT_WIDESCREEN", "reanim/SelectorScreen_BG_Right_Widescreen"},
 };
 
 static bool DefinitionTryLoadFrameworkReanimOverride(Image **theImage, const SexyString &theName)

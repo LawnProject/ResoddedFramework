@@ -445,6 +445,10 @@ void LawnApp::PreNewGame(GameMode theGameMode, bool theLookForSavedGame)
 	//	return;
 	//}
 
+	// Debug Fast Load and similar paths can reach here with the selector still active;
+	// Board construction frees the effect system, so the selector must be gone first.
+	KillGameSelector();
+
 	mGameMode = theGameMode;
 	if (theLookForSavedGame && TryLoadGame())
 		return;

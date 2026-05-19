@@ -8513,6 +8513,37 @@ void Board::DrawDebugText(Graphics *g)
 	g->DrawStringWordWrapped(aText, 10, 90);
 }
 
+// Extrapolates grid lines past the playable array (e.g. column MAX_GRID_SIZE_X).
+static int GridDebugPixelX(Board *theBoard, int theGridX)
+{
+	if (theGridX >= 0 && theGridX < MAX_GRID_SIZE_X)
+		return theBoard->GridToPixelX(theGridX, 0);
+
+#if LAWN_WIDESCREEN
+	return theGridX * 80 + LAWN_XMIN + BOARD_ADDITIONAL_WIDTH;
+#else
+	return theGridX * 80 + LAWN_XMIN;
+#endif
+}
+
+static int GridDebugPixelY(Board *theBoard, int theGridX, int theGridY)
+{
+	if (theGridX >= 0 && theGridX < MAX_GRID_SIZE_X && theGridY >= 0 && theGridY < MAX_GRID_SIZE_Y)
+		return theBoard->GridToPixelY(theGridX, theGridY);
+
+	int aSlopeOffset = 0;
+	if (theBoard->StageHasRoof() && theGridX < 5)
+		aSlopeOffset = (5 - theGridX) * 20;
+
+	int aYStep = (theBoard->StageHasPool() || theBoard->StageHasRoof()) ? 85 : 100;
+	int aYBase = theBoard->StageHasRoof() ? (LAWN_YMIN - 10) : LAWN_YMIN;
+#if LAWN_WIDESCREEN
+	return theGridY * aYStep + aSlopeOffset + aYBase + BOARD_OFFSET_Y;
+#else
+	return theGridY * aYStep + aSlopeOffset + aYBase;
+#endif
+}
+
 //0x419AE0
 void Board::DrawDebugObjectRects(Graphics *g)
 {
@@ -8581,43 +8612,25 @@ void Board::DrawDebugObjectRects(Graphics *g)
 	}
 	else if (mDebugTextMode == DebugTextMode::DEBUG_TEXT_GRID)
 	{
-		g->SetColor(Color(0, 255, 0));
-
-		auto getX = [&](int gx) {
-			return (gx < MAX_GRID_SIZE_X) ? GridToPixelX(gx, 0) : (gx * 80 + LAWN_XMIN);
-		};
-
-		auto getY = [&](int gx, int gy) {
-			if (gx < MAX_GRID_SIZE_X && gy < MAX_GRID_SIZE_Y)
-				return GridToPixelY(gx, gy);
-
-			int aSlopeOffset = 0;
-			if (StageHasRoof())
-			{
-				int aCheckX = std::min(gx, (int)MAX_GRID_SIZE_X - 1);
-				if (aCheckX < 5) aSlopeOffset = (5 - aCheckX) * 20;
-			}
-
-			int aYStep = (StageHasPool() || StageHasRoof()) ? 85 : 100;
-			int aYBase = StageHasRoof() ? (LAWN_YMIN - 10) : LAWN_YMIN;
-			return gy * aYStep + aSlopeOffset + aYBase;
-		};
-
-		int aNumRows = StageHas6Rows() ? 6 : 5;
+		int aNumRows = StageHas6Rows() ? MAX_GRID_SIZE_Y : (MAX_GRID_SIZE_Y - 1);
 
 		g->SetColor(Color(255, 0, 0));
 		for (int j = 0; j <= aNumRows; j++)
 		{
 			for (int i = 0; i < MAX_GRID_SIZE_X; i++)
 			{
-				g->DrawLine(getX(i), getY(i, j), getX(i + 1), getY(i + 1, j));
+				g->DrawLine(
+					GridDebugPixelX(this, i), GridDebugPixelY(this, i, j),
+					GridDebugPixelX(this, i + 1), GridDebugPixelY(this, i + 1, j));
 			}
 		}
 
 		g->SetColor(Color(0, 255, 0));
 		for (int i = 0; i <= MAX_GRID_SIZE_X; i++)
 		{
-			g->DrawLine(getX(i), getY(i, 0), getX(i), getY(i, aNumRows));
+			g->DrawLine(
+				GridDebugPixelX(this, i), GridDebugPixelY(this, i, 0),
+				GridDebugPixelX(this, i), GridDebugPixelY(this, i, aNumRows));
 		}
 	}
 }
@@ -8627,25 +8640,26 @@ void Board::DrawDebugGrid(Graphics *g)
 	if (mDebugTextMode != DebugTextMode::DEBUG_TEXT_GRID)
 		return;
 
-	//TODO: complete so the last row and column are drawn
-	for (int x = 0; x < MAX_GRID_SIZE_X - 1; x++)
+	const int aNumRows = StageHas6Rows() ? MAX_GRID_SIZE_Y : (MAX_GRID_SIZE_Y - 1);
+
+	for (int x = 0; x < MAX_GRID_SIZE_X; x++)
 	{
-		for (int y = 0; y < MAX_GRID_SIZE_Y - 1; y++)
+		for (int y = 0; y < aNumRows; y++)
 		{
-			if (mGridSquareType[x][y] == GridSquareType::GRIDSQUARE_NONE || y >= MAX_GRID_SIZE_Y - (StageHas6Rows() ? 0 : 1))
+			if (mGridSquareType[x][y] == GridSquareType::GRIDSQUARE_NONE)
 				continue;
 
-			int x1 = GridToPixelX(x, y);
-			int y1 = GridToPixelY(x, y);
+			int x1 = GridDebugPixelX(this, x);
+			int y1 = GridDebugPixelY(this, x, y);
 
-			int x2 = GridToPixelX(x + 1, y);
-			int y2 = GridToPixelY(x + 1, y);
+			int x2 = GridDebugPixelX(this, x + 1);
+			int y2 = GridDebugPixelY(this, x + 1, y);
 
-			int x3 = GridToPixelX(x + 1, y + 1);
-			int y3 = GridToPixelY(x + 1, y + 1);
+			int x3 = GridDebugPixelX(this, x + 1);
+			int y3 = GridDebugPixelY(this, x + 1, y + 1);
 
-			int x4 = GridToPixelX(x, y + 1);
-			int y4 = GridToPixelY(x, y + 1);
+			int x4 = GridDebugPixelX(this, x);
+			int y4 = GridDebugPixelY(this, x, y + 1);
 
 			Color aColor = (mGridSquareType[x][y] == GridSquareType::GRIDSQUARE_POOL) ? Color(0, 0, 255) : Color(255, 0, 0);
 

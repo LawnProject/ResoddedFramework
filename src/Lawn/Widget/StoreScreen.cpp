@@ -77,10 +77,17 @@ StoreScreen::StoreScreen(LawnApp *theApp)
 	mBackButton = new NewLawnButton(nullptr, StoreScreen::StoreScreen_Back, this);
 	mBackButton->mDoFinger = true;
 	mBackButton->SetLabel("[STORE_MAIN_MENU_BUTTON]");
+#if LAWN_WIDESCREEN
+	Image *aMenuImage = Sexy::IMAGE_STORE_MAINMENUBUTTON_WIDESCREEN;
+	mBackButton->mButtonImage = aMenuImage;
+	mBackButton->mOverImage = Sexy::IMAGE_STORE_MAINMENUBUTTONHIGHLIGHT_WIDESCREEN;
+	mBackButton->mDownImage = Sexy::IMAGE_STORE_MAINMENUBUTTONDOWN_WIDESCREEN;
+#else
 	Image *aMenuImage = Sexy::IMAGE_STORE_MAINMENUBUTTON;
 	mBackButton->mButtonImage = aMenuImage;
 	mBackButton->mOverImage = Sexy::IMAGE_STORE_MAINMENUBUTTONHIGHLIGHT;
 	mBackButton->mDownImage = Sexy::IMAGE_STORE_MAINMENUBUTTONDOWN;
+#endif
 	mBackButton->SetFont(Sexy::FONT_HOUSEOFTERROR20);
 	mBackButton->mColors[ButtonWidget::COLOR_LABEL] = Color(98, 153, 235);
 	mBackButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(167, 192, 235);
@@ -97,10 +104,17 @@ StoreScreen::StoreScreen(LawnApp *theApp)
 	mPrevButton = new NewLawnButton(nullptr, StoreScreen::StoreScreen_Prev, this);
 	mPrevButton->mDoFinger = true;
 	mPrevButton->SetLabel("");
+#if LAWN_WIDESCREEN
+	Image *aPrevImage = Sexy::IMAGE_STORE_PREVBUTTON_WIDESCREEN;
+	mPrevButton->mButtonImage = aPrevImage;
+	mPrevButton->mOverImage = Sexy::IMAGE_STORE_PREVBUTTONHIGHLIGHT_WIDESCREEN;
+	mPrevButton->mDownImage = Sexy::IMAGE_STORE_PREVBUTTONHIGHLIGHT_WIDESCREEN;
+#else
 	Image *aPrevImage = Sexy::IMAGE_STORE_PREVBUTTON;
 	mPrevButton->mButtonImage = aPrevImage;
 	mPrevButton->mOverImage = Sexy::IMAGE_STORE_PREVBUTTONHIGHLIGHT;
 	mPrevButton->mDownImage = Sexy::IMAGE_STORE_PREVBUTTONHIGHLIGHT;
+#endif
 	mPrevButton->mColors[ButtonWidget::COLOR_LABEL] = Color(255, 240, 0);
 	mPrevButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(200, 200, 255);
 #if LAWN_WIDESCREEN
@@ -112,10 +126,17 @@ StoreScreen::StoreScreen(LawnApp *theApp)
 	mNextButton = new NewLawnButton(nullptr, StoreScreen::StoreScreen_Next, this);
 	mNextButton->mDoFinger = true;
 	mNextButton->SetLabel("");
+#if LAWN_WIDESCREEN
+	Image *aNextImage = Sexy::IMAGE_STORE_NEXTBUTTON_WIDESCREEN;
+	mNextButton->mButtonImage = aNextImage;
+	mNextButton->mOverImage = Sexy::IMAGE_STORE_NEXTBUTTONHIGHLIGHT_WIDESCREEN;
+	mNextButton->mDownImage = Sexy::IMAGE_STORE_NEXTBUTTONHIGHLIGHT_WIDESCREEN;
+#else
 	Image *aNextImage = Sexy::IMAGE_STORE_NEXTBUTTON;
 	mNextButton->mButtonImage = aNextImage;
 	mNextButton->mOverImage = Sexy::IMAGE_STORE_NEXTBUTTONHIGHLIGHT;
 	mNextButton->mDownImage = Sexy::IMAGE_STORE_NEXTBUTTONHIGHLIGHT;
+#endif
 	mNextButton->mColors[ButtonWidget::COLOR_LABEL] = Color(255, 240, 0);
 	mNextButton->mColors[ButtonWidget::COLOR_LABEL_HILITE] = Color(200, 200, 255);
 #if LAWN_WIDESCREEN
@@ -129,9 +150,14 @@ StoreScreen::StoreScreen(LawnApp *theApp)
 
 	if (!IsPageShown(STORE_PAGE_PLANT_UPGRADES))
 	{
+#if LAWN_WIDESCREEN
+		mPrevButton->mDisabledImage = Sexy::IMAGE_STORE_PREVBUTTONDISABLED_WIDESCREEN;
+		mNextButton->mDisabledImage = Sexy::IMAGE_STORE_NEXTBUTTONDISABLED_WIDESCREEN;
+#else
 		mPrevButton->mDisabledImage = Sexy::IMAGE_STORE_PREVBUTTONDISABLED;
-		mPrevButton->SetDisabled(true);
 		mNextButton->mDisabledImage = Sexy::IMAGE_STORE_NEXTBUTTONDISABLED;
+#endif
+		mPrevButton->SetDisabled(true);
 		mNextButton->SetDisabled(true);
 	}
 	mDrawnOnce = false;
@@ -488,23 +514,23 @@ void StoreScreen::Draw(Graphics *g)
 #if LAWN_WIDESCREEN
 	if (!mHatchTimer && mHatchOpen)
 	{
-		g->DrawImage(Sexy::IMAGE_STORE_CAR, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
-		g->DrawImage(Sexy::IMAGE_STORE_HATCHBACKOPEN, mShakeX + 269 + BOARD_OFFSET_X, mShakeY + BOARD_OFFSET_Y);
+		g->DrawImage(Sexy::IMAGE_STORE_CAR_WIDESCREEN, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
+		g->DrawImage(Sexy::IMAGE_STORE_HATCHBACKOPEN_WIDESCREEN, mShakeX + 269 + BOARD_OFFSET_X, mShakeY + BOARD_OFFSET_Y);
 		if (mApp->IsNight())
 		{
-			g->DrawImage(Sexy::IMAGE_STORE_CAR_NIGHT, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
+			g->DrawImage(Sexy::IMAGE_STORE_CAR_NIGHT_WIDESCREEN, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
 		}
 	}
 	else
 	{
-		g->DrawImage(Sexy::IMAGE_STORE_CARCLOSED, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
+		g->DrawImage(Sexy::IMAGE_STORE_CARCLOSED_WIDESCREEN, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
 		if (mApp->IsNight())
 		{
-			g->DrawImage(Sexy::IMAGE_STORE_CAR_NIGHT, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
-			g->DrawImage(Sexy::IMAGE_STORE_CARCLOSED_NIGHT, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
+			g->DrawImage(Sexy::IMAGE_STORE_CAR_NIGHT_WIDESCREEN, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
+			g->DrawImage(Sexy::IMAGE_STORE_CARCLOSED_NIGHT_WIDESCREEN, mShakeX + 166 + BOARD_OFFSET_X, mShakeY + 138 + BOARD_OFFSET_Y);
 		}
 	}
-	g->DrawImage(Sexy::IMAGE_STORE_SIGN, 285 + BOARD_OFFSET_X, aStoreSignPosY + BOARD_OFFSET_Y);
+	g->DrawImage(Sexy::IMAGE_STORE_SIGN_WIDESCREEN, 285 + BOARD_OFFSET_X, aStoreSignPosY);
 
 	Graphics gCrazyDave = Graphics(*g);
 	gCrazyDave.mTransX -= 66.0f + BOARD_ADDITIONAL_WIDTH / 2;

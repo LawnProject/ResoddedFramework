@@ -134,7 +134,7 @@ GameSelector::GameSelector(LawnApp *theApp)
 									Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL_PRESS);
 	mAchievementsButton->Resize(0, mApp->mHeight - Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mHeight - 35, Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mWidth, Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mHeight);
 	mAchievementsButton->mClip = false;
-	mAchievementsButton->mBtnNoDraw = mHasTrophy;
+	mAchievementsButton->mBtnNoDraw = true;
 	mAchievementsButton->mMouseVisible = false;
 
 	mZombatarButton = MakeNewButton(GameSelector::GameSelector_Zombatar, this, "", nullptr, Sexy::IMAGE_BLANK, Sexy::IMAGE_BLANK, Sexy::IMAGE_BLANK);
@@ -258,6 +258,10 @@ GameSelector::GameSelector(LawnApp *theApp)
 
 	aSelectorReanim->AssignRenderGroupToTrack("SelectorScreen_BG", 1);
 #if LAWN_WIDESCREEN
+	if (Sexy::IMAGE_REANIM_SELECTORSCREEN_BG_WIDESCREEN != nullptr)
+		aSelectorReanim->SetImageOverride("SelectorScreen_BG", Sexy::IMAGE_REANIM_SELECTORSCREEN_BG_WIDESCREEN);
+	if (Sexy::IMAGE_REANIM_SELECTORSCREEN_WOODSIGN1_WIDESCREEN != nullptr)
+		aSelectorReanim->SetImageOverride("woodsign1", Sexy::IMAGE_REANIM_SELECTORSCREEN_WOODSIGN1_WIDESCREEN);
 	aSelectorReanim->AssignRenderGroupToPrefix("SelectorScreen_Adventure_", RENDER_GROUP_NORMAL);
 	aSelectorReanim->AssignRenderGroupToPrefix("SelectorScreen_StartAdventure_", RENDER_GROUP_HIDDEN);
 #endif
@@ -475,8 +479,15 @@ void GameSelector::AddTrophySparkle()
 	TodParticleSystem *aTrophyParticle = mApp->AddTodParticle(
 		85.0f + BOARD_ADDITIONAL_WIDTH, 380.0f + BOARD_OFFSET_Y, RenderLayer::RENDER_LAYER_TOP, ParticleEffect::PARTICLE_TROPHY_SPARKLE);
 #else
-	TodParticleSystem *aTrophyParticle =
-		mApp->AddTodParticle(85.0f, 290.0f, RenderLayer::RENDER_LAYER_TOP, ParticleEffect::PARTICLE_TROPHY_SPARKLE);
+	Reanimation *aSelectorReanim = mApp->ReanimationGet(mSelectorReanimID);
+	int aLeftIdx = aSelectorReanim->FindTrackIndex("SelectorScreen_BG_Left");
+	ReanimatorTransform aTransformLeft;
+	aSelectorReanim->GetCurrentTransform(aLeftIdx, &aTransformLeft);
+	TodParticleSystem *aTrophyParticle = mApp->AddTodParticle(
+		aTransformLeft.mTransX + aSelectorReanim->mOverlayMatrix.m02 + 85.0f,
+		aTransformLeft.mTransY + aSelectorReanim->mOverlayMatrix.m12 + 290.0f,
+		RenderLayer::RENDER_LAYER_TOP,
+		ParticleEffect::PARTICLE_TROPHY_SPARKLE);
 #endif
 	mTrophyParticleID = mApp->ParticleGetID(aTrophyParticle);
 }
@@ -556,10 +567,16 @@ void GameSelector::Draw(Graphics *g)
 		return;
 
 	g->SetLinearBlend(true);
-	Reanimation *aSelectorReanim = mApp->ReanimationGet(mSelectorReanimID);
+	Reanimation *aSelectorReanim = mApp->ReanimationTryToGet(mSelectorReanimID);
+	if (!aSelectorReanim)
+		return;
 	aSelectorReanim->DrawRenderGroup(g, 1); // "SelectorScreen_BG"
 	for (int i = 0; i < 6; i++)
-		mApp->ReanimationGet(mCloudReanimID[i])->Draw(g);
+	{
+		Reanimation *aCloudReanim = mApp->ReanimationTryToGet(mCloudReanimID[i]);
+		if (aCloudReanim)
+			aCloudReanim->Draw(g);
+	}
 	aSelectorReanim->DrawRenderGroup(g, RENDER_GROUP_NORMAL);
 
 	if (mSelectorState == SelectorAnimState::SELECTOR_OPEN)
@@ -625,8 +642,10 @@ void GameSelector::DrawOverlay(Graphics *g)
 		float aTransAreaX = aTransform.mTransX + aOffsetX + BOARD_ADDITIONAL_WIDTH;
 		float aTransAreaY = aTransform.mTransY + aOffsetY + BOARD_OFFSET_Y;
 #else
-		float aTransAreaX = aTransform.mTransX + aOffsetX;
-		float aTransAreaY = aTransform.mTransY + aOffsetY;
+		float aReanimX = aSelectorReanim->mOverlayMatrix.m02;
+		float aReanimY = aSelectorReanim->mOverlayMatrix.m12;
+		float aTransAreaX = aTransform.mTransX + aOffsetX + aReanimX;
+		float aTransAreaY = aTransform.mTransY + aOffsetY + aReanimY;
 #endif
 		float aTransSubX = aTransAreaX;
 		float aTransSubY = aTransAreaY;
@@ -687,6 +706,24 @@ void GameSelector::DrawOverlay(Graphics *g)
 							 0,
 							 0);
 		}
+
+		if (mHasTrophy)
+		{
+			int aLeftIdx = aSelectorReanim->FindTrackIndex("SelectorScreen_BG_Left");
+			ReanimatorTransform aTransformLeft;
+			aSelectorReanim->GetCurrentTransform(aLeftIdx, &aTransformLeft);
+			int aTrophyIndex = mApp->EarnedGoldTrophy() ? 1 : 0;
+			TodDrawImageCelF(g,
+							 Sexy::IMAGE_SUNFLOWER_TROPHY,
+							 aTransformLeft.mTransX + 10.0f + BOARD_ADDITIONAL_WIDTH + 370,
+							 aTransformLeft.mTransY + 350.0f + BOARD_OFFSET_Y + 60,
+							 aTrophyIndex,
+							 0);
+
+			TodParticleSystem *aTrophyParticle = mApp->ParticleTryToGet(mTrophyParticleID);
+			if (aTrophyParticle)
+				aTrophyParticle->Draw(g);
+		}
 #else
 		TodDrawImageCelF(g,
 						 Sexy::IMAGE_SELECTORSCREEN_LEVELNUMBERS,
@@ -723,9 +760,15 @@ void GameSelector::DrawOverlay(Graphics *g)
 		aHandReanim->Draw(g);
 		g->ClearClipRect();
 	}
-	mApp->ReanimationGet(mLeafReanimID)->Draw(g);
+	Reanimation *aLeafReanim = mApp->ReanimationTryToGet(mLeafReanimID);
+	if (aLeafReanim)
+		aLeafReanim->Draw(g);
 	for (int i = 0; i < 3; i++)
-		mApp->ReanimationGet(mFlowerReanimID[i])->Draw(g);
+	{
+		Reanimation *aFlowerReanim = mApp->ReanimationTryToGet(mFlowerReanimID[i]);
+		if (aFlowerReanim)
+			aFlowerReanim->Draw(g);
+	}
 
 	if (mApp->mBetaValidate)
 	{
@@ -738,29 +781,28 @@ void GameSelector::DrawOverlay(Graphics *g)
 			g->DrawString("BETA BUILD: DO NOT DISTRIBUTE", 27, 594);
 	}
 
-	Reanimation *aSelectorReanim = mApp->ReanimationGet(mSelectorReanimID);
-	int aLeftIdx = aSelectorReanim->FindTrackIndex("SelectorScreen_BG_Left");
-	ReanimatorTransform aTransformLeft;
-	aSelectorReanim->GetCurrentTransform(aLeftIdx, &aTransformLeft);
+#if !LAWN_WIDESCREEN
 	if (mHasTrophy)
 	{
+		Reanimation *aSelectorReanim = mApp->ReanimationGet(mSelectorReanimID);
+		float aReanimX = aSelectorReanim->mOverlayMatrix.m02;
+		float aReanimY = aSelectorReanim->mOverlayMatrix.m12;
+		int aLeftIdx = aSelectorReanim->FindTrackIndex("SelectorScreen_BG_Left");
+		ReanimatorTransform aTransformLeft;
+		aSelectorReanim->GetCurrentTransform(aLeftIdx, &aTransformLeft);
 		int aTrophyIndex = mApp->EarnedGoldTrophy() ? 1 : 0;
-#if LAWN_WIDESCREEN
 		TodDrawImageCelF(g,
 						 Sexy::IMAGE_SUNFLOWER_TROPHY,
-						 aTransformLeft.mTransX + 10.0f + BOARD_ADDITIONAL_WIDTH + 370,
-						 aTransformLeft.mTransY + 350.0f + BOARD_OFFSET_Y + 60,
+						 aTransformLeft.mTransX + aReanimX + 12.0f,
+						 aTransformLeft.mTransY + aReanimY + 345.0f,
 						 aTrophyIndex,
 						 0);
-#else
-		TodDrawImageCelF(g, Sexy::IMAGE_SUNFLOWER_TROPHY, aTransformLeft.mTransX + 12.0f,
-						 aTransformLeft.mTransY + 345.0f, aTrophyIndex, 0);
-#endif
 
 		TodParticleSystem *aTrophyParticle = mApp->ParticleTryToGet(mTrophyParticleID);
 		if (aTrophyParticle)
 			aTrophyParticle->Draw(g);
 	}
+#endif
 
 	mToolTip->Draw(g);
 }
@@ -776,8 +818,7 @@ void GameSelector::UpdateTooltip()
 		int aMouseX = mApp->mWidgetManager->mLastMouseX;
 		int aMouseY = mApp->mWidgetManager->mLastMouseY;
 #if LAWN_WIDESCREEN
-		if (aMouseX > 49 + BOARD_ADDITIONAL_WIDTH && aMouseX < 135 + BOARD_ADDITIONAL_WIDTH && aMouseY > 249 + BOARD_OFFSET_Y &&
-			aMouseY < 475 + BOARD_OFFSET_Y)
+		if (Rect(50 + BOARD_ADDITIONAL_WIDTH, 325 + BOARD_OFFSET_Y, 85, 142).Contains(aMouseX, aMouseY))
 #else
 		if (aMouseX > 49 && aMouseX < 135 && aMouseY > 249 && aMouseY < 475)
 #endif
@@ -799,8 +840,13 @@ void GameSelector::UpdateTooltip()
 			else
 			{
 				mToolTip->SetLabel("[SILVER_SUNFLOWER_TOOLTIP]");
+#if LAWN_WIDESCREEN
+				mToolTip->mX = 20 + BOARD_ADDITIONAL_WIDTH;
+				mToolTip->mY = 495 + BOARD_OFFSET_Y;
+#else
 				mToolTip->mX = 20;
 				mToolTip->mY = 495;
+#endif
 				mToolTip->mVisible = true;
 			}
 
@@ -884,6 +930,13 @@ void GameSelector::Update()
 		mStartingGameCounter++;
 		if (mStartingGameCounter > 450)
 		{
+			mSelectorReanimID = ReanimationID::REANIMATIONID_NULL;
+			mLeafReanimID = ReanimationID::REANIMATIONID_NULL;
+			mHandReanimID = ReanimationID::REANIMATIONID_NULL;
+			for (int i = 0; i < 6; i++)
+				mCloudReanimID[i] = ReanimationID::REANIMATIONID_NULL;
+			for (int i = 0; i < 3; i++)
+				mFlowerReanimID[i] = ReanimationID::REANIMATIONID_NULL;
 			mApp->KillGameSelector();
 
 			if (mApp->IsIceDemo())
@@ -925,7 +978,10 @@ void GameSelector::Update()
 			mApp->PlaySample(Sexy::SOUND_EVILLAUGH);
 	}
 
-	Reanimation *aSelectorReanim = mApp->ReanimationGet(mSelectorReanimID);
+	Reanimation *aSelectorReanim = mApp->ReanimationTryToGet(mSelectorReanimID);
+	if (!aSelectorReanim)
+		return;
+
 	switch (mSelectorState)
 	{
 	case SelectorAnimState::SELECTOR_OPEN:
@@ -1005,7 +1061,9 @@ void GameSelector::Update()
 
 	for (int i = 0; i < 6; i++)
 	{
-		Reanimation *aCloudReanim = mApp->ReanimationGet(mCloudReanimID[i]);
+		Reanimation *aCloudReanim = mApp->ReanimationTryToGet(mCloudReanimID[i]);
+		if (!aCloudReanim)
+			continue;
 		if (mCloudCounter[i] > 0)
 		{
 			if (--mCloudCounter[i] == 0)
@@ -1020,25 +1078,34 @@ void GameSelector::Update()
 	}
 	aSelectorReanim->Update();
 
-	Reanimation *aLeafReanim = mApp->ReanimationGet(mLeafReanimID);
-	aLeafReanim->Update();
+	Reanimation *aLeafReanim = mApp->ReanimationTryToGet(mLeafReanimID);
+	if (aLeafReanim)
+	{
+		aLeafReanim->Update();
 	int aLeafTrackIndex = aSelectorReanim->FindTrackIndex("SelectorScreen_BG_Right");
 	ReanimatorTransform aLeafTransform;
 	aSelectorReanim->GetCurrentTransform(aLeafTrackIndex, &aLeafTransform);
 #if LAWN_WIDESCREEN
-	aLeafReanim->SetPosition(aLeafTransform.mTransX - 71.0f + BOARD_ADDITIONAL_WIDTH, aLeafTransform.mTransY - 41.0f + BOARD_OFFSET_Y);
+	aLeafReanim->SetPosition(aLeafTransform.mTransX - 71.0f + BOARD_ADDITIONAL_WIDTH,
+							 aLeafTransform.mTransY - 41.0f + BOARD_OFFSET_Y);
 #else
-	aLeafReanim->SetPosition(aLeafTransform.mTransX - 71.0f, aLeafTransform.mTransY - 41.0f);
+	aLeafReanim->SetPosition(aLeafTransform.mTransX - 71.0f + aSelectorReanim->mOverlayMatrix.m02,
+							 aLeafTransform.mTransY - 41.0f + aSelectorReanim->mOverlayMatrix.m12);
 #endif
-	if (--mLeafCounter == 0)
-	{
-		float aRate = RandRangeFloat(3.0f, 12.0f);
-		aLeafReanim->PlayReanim("anim_grass", ReanimLoopType::REANIM_LOOP, 20, aRate);
-		mLeafCounter = RandRangeInt(200, 400);
+		if (--mLeafCounter == 0)
+		{
+			float aRate = RandRangeFloat(3.0f, 12.0f);
+			aLeafReanim->PlayReanim("anim_grass", ReanimLoopType::REANIM_LOOP, 20, aRate);
+			mLeafCounter = RandRangeInt(200, 400);
+		}
 	}
 
 	for (int i = 0; i < 6; i++)
-		mApp->ReanimationGet(mCloudReanimID[i])->Update();
+	{
+		Reanimation *aCloudReanim = mApp->ReanimationTryToGet(mCloudReanimID[i]);
+		if (aCloudReanim)
+			aCloudReanim->Update();
+	}
 	Reanimation *aHandReanim = mApp->ReanimationTryToGet(mHandReanimID);
 	if (aHandReanim)
 		aHandReanim->Update();
@@ -1091,13 +1158,20 @@ void GameSelector::Update()
 //0x44BB20
 void GameSelector::TrackButton(DialogButton *theButton, const char *theTrackName, float theOffsetX, float theOffsetY)
 {
-	Reanimation *aSelectorReanim = mApp->ReanimationGet(mSelectorReanimID);
+	Reanimation *aSelectorReanim = mApp->ReanimationTryToGet(mSelectorReanimID);
+	if (!aSelectorReanim)
+		return;
 	int aTrackIndex = aSelectorReanim->FindTrackIndex(theTrackName);
 	ReanimatorTransform aTransform;
 	aSelectorReanim->GetCurrentTransform(aTrackIndex, &aTransform);
 
+#if LAWN_WIDESCREEN
 	theButton->mX = (int)(aTransform.mTransX + theOffsetX);
 	theButton->mY = (int)(aTransform.mTransY + theOffsetY);
+#else
+	theButton->mX = (int)(aTransform.mTransX + theOffsetX + aSelectorReanim->mOverlayMatrix.m02);
+	theButton->mY = (int)(aTransform.mTransY + theOffsetY + aSelectorReanim->mOverlayMatrix.m12);
+#endif
 }
 
 //0x44BBC0
@@ -1289,7 +1363,9 @@ void GameSelector::MouseDown(int x, int y, int theClickCount)
 {
 	for (int i = 0; i < 3; i++)
 	{
-		Reanimation *aFlowerReanim = mApp->ReanimationGet(mFlowerReanimID[i]);
+		Reanimation *aFlowerReanim = mApp->ReanimationTryToGet(mFlowerReanimID[i]);
+		if (!aFlowerReanim)
+			continue;
 #if LAWN_WIDESCREEN
 		if (aFlowerReanim->mAnimRate <= 0.0f &&
 			Distance2D(x - BOARD_ADDITIONAL_WIDTH, y - BOARD_OFFSET_Y, gFlowerCenter[i][0], gFlowerCenter[i][1]) < 20.0f)
@@ -1470,6 +1546,7 @@ void GameSelector::ButtonDepress(int theId)
 			mApp->mZenGarden->SetupForZenTutorial();
 		break;
 	case GameSelector::GameSelector_Achievements:
+		mAchievementsWidget->mScrollPosition = 0;
 		SlideTo(0, -mApp->mHeight);
 		mWidgetManager->SetFocus(mAchievementsWidget);
 		break;

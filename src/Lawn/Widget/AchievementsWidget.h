@@ -18,6 +18,7 @@ class AchievementsWidget : public Widget, public ButtonListener
 	};
   public:
 	LawnApp *mApp;
+	int mScrollPosition;
 	int mScrollValue;
 	int mScrollDirection;
 	int mScrollDecay;
