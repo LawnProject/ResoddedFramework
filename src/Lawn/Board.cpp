@@ -1751,7 +1751,8 @@ void Board::StartLevel()
 
 	if (mApp->IsSurvivalMode() && mChallenge->mSurvivalStage > 0)
 	{
-		mApp->EraseFile(GetSavedGameName(mApp->mGameMode, mApp->mPlayerInfo->mId));
+		mApp->EraseFile(GetSavedGameName(mApp->mGameMode, mApp->mPlayerInfo->mId) + ".data");
+		mApp->EraseFile(GetSavedGameName(mApp->mGameMode, mApp->mPlayerInfo->mId) + ".schema");
 		FreezeEffectsForCutscene(false);
 		mApp->mSoundSystem->GamePause(false);
 	}

@@ -45,10 +45,10 @@ class SeedPacket : public GameObject
 class SeedBank : public GameObject
 {
   public:
-	int mNumPackets;					   //+0x24
-	SeedPacket mSeedPackets[SEEDBANK_MAX]; //+0x28
-	int mCutSceneDarken;				   //+0x348
-	int mConveyorBeltCounter;			   //+0x34C
+	int mNumPackets;
+	SeedPacket mSeedPackets[SEEDBANK_MAX];
+	int mCutSceneDarken;
+	int mConveyorBeltCounter;
 #if SEXY_USE_CONTROLLER
 	int mIndexGamepad;
 	float mAxisProgress;

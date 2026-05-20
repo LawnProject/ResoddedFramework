@@ -1173,7 +1173,8 @@ void GameSelector::KeyChar(SexyChar theChar)
 					mApp->mPlayerInfo->mChallengeRecords[i - 1] = 20;
 			SyncProfile(true);
 
-			mApp->EraseFile(GetSavedGameName(GameMode::GAMEMODE_ADVENTURE, mApp->mPlayerInfo->mId));
+			mApp->EraseFile(GetSavedGameName(GameMode::GAMEMODE_ADVENTURE, mApp->mPlayerInfo->mId) + ".data");
+			mApp->EraseFile(GetSavedGameName(GameMode::GAMEMODE_ADVENTURE, mApp->mPlayerInfo->mId) + ".schema");
 		}
 		else if(theChar == 'p' || theChar == 'P')
 		{
