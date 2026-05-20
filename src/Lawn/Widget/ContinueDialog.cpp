@@ -120,7 +120,8 @@ void ContinueDialog::ButtonDepress(int theId)
 		if (mApp->mBoard->mNextSurvivalStageCounter != 1)
 		{
 			std::string aFileName = GetSavedGameName(mApp->mGameMode, mApp->mPlayerInfo->mId);
-			mApp->EraseFile(aFileName);
+			mApp->EraseFile(aFileName + ".data");
+			mApp->EraseFile(aFileName + ".schema");
 		}
 
 		RestartLoopingSounds();

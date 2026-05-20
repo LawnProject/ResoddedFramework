@@ -6,45 +6,58 @@
 #include "../../Sexy.TodLib/TodCommon.h"
 #include "SaveGame.h"
 
+static constexpr uint32_t SAVE_VERSION = 1;
 
-static constexpr char SAVE_HEADER_MAGIC[8] = 
-{'R', 'E', 'S', 'O', 'D', 'D', 'E', 'D'};
-static constexpr uint32_t SAVE_HEADER_VERSION = 1;
+template <typename T> void SaveContext::SyncVar(T &aValue, const std::string &aName)
+{
+	if (mReading)
+	{
+		if (mSchemeEntries.find(aName) == mSchemeEntries.end())
+		{
+			TodTraceAndLog("Couldn't find schema entry: %s", aName.c_str());
+			return;
+		}
+		SaveSchemeEntry anEntry = mSchemeEntries[aName];
+		mBinaryReader->seekg(anEntry.mOffset);
+		mBinaryReader->read(reinterpret_cast<char *>(&aValue), anEntry.mSize);
+	}
+	else
+	{
+		mSchema += StrFormat("%s|%d|%d\n", aName.c_str(), mCurrentOffset, sizeof(aValue));
+		mWriter->write(reinterpret_cast<char *>(&aValue), sizeof(aValue));
+		mCurrentOffset += sizeof(aValue);
+	}
+}
 
-#define SYNC_VARIABLE(obj, name) theContext.Sync(obj->name)
-#define SYNC_ARRAY(obj, name) theContext.SyncBytes(obj->name, sizeof(obj->name))
+void SaveContext::SyncBytes(void *aValue, size_t aSize, const std::string &aName)
+{
+	if (mReading)
+	{
+		if (mSchemeEntries.find(aName) == mSchemeEntries.end())
+		{
+			TodTraceAndLog("Couldn't find schema entry: %s", aName.c_str());
+			return;
+		}
+		SaveSchemeEntry anEntry = mSchemeEntries[aName];
+		mBinaryReader->seekg(anEntry.mOffset);
+		mBinaryReader->read(reinterpret_cast<char *>(aValue), anEntry.mSize);
+	}
+	else
+	{
+		mSchema += StrFormat("%s|%d|%d\n", aName.c_str(), mCurrentOffset, aSize);
+		mWriter->write(reinterpret_cast<char *>(aValue), aSize);
+		mCurrentOffset += aSize;
+	}
+}
 
-#define SYNC_BOARD_VARIABLE(name) SYNC_VARIABLE(theBoard, name)
-#define SYNC_BOARD_ARRAY(name) SYNC_ARRAY(theBoard, name)
 
-#define SYNC_CHALLENGE_VARIABLE(name) SYNC_VARIABLE(theBoard->mChallenge, name)
-#define SYNC_CHALLENGE_ARRAY(name) SYNC_ARRAY(theBoard->mChallenge, name)
 
-#define SYNC_MUSIC_VARIABLE(name) SYNC_VARIABLE(theBoard->mApp->mMusic, name)
-
-#define SYNC_SEEDBANK_VARIABLE(name) SYNC_VARIABLE(theBoard->mSeedBank, name)
-#define SYNC_SEEDBANK_ARRAY(name) SYNC_ARRAY(theBoard->mSeedBank, name)
-
-#define SYNC_ADVICE_VARIABLE(name) SYNC_VARIABLE(theBoard->mAdvice, name)
-#define SYNC_ADVICE_ARRAY(name) SYNC_ARRAY(theBoard->mAdvice, name)
-
-#define SYNC_CURSOR_PREVIEW_VARIABLE(name) SYNC_VARIABLE(theBoard->mCursorPreview, name)
-
-#define SYNC_CURSOR_OBJECT_VARIABLE(name) SYNC_VARIABLE(theBoard->mCursorObject, name)
-
-#define SYNC_DATA_ARRAY(type, arr)                                                           \
-	theContext.Sync(arr.mMaxUsedCount);                                                      \
-	theContext.Sync(arr.mNextKey);                                                           \
-	theContext.Sync(arr.mFreeListHead);                                                      \
-	theContext.Sync(arr.mSize);																 \
-	theContext.SyncBytes(arr.mBlock, sizeof(DataArray<type>::DataArrayItem) * arr.mMaxUsedCount);
-
-void SaveContext::SyncReanimationDef(ReanimatorDefinition *&theDefinition)
+void SaveContext::SyncReanimationDef(ReanimatorDefinition *&theDefinition, const std::string &theOwner)
 {
 	if (mReading)
 	{
 		int aReanimType;
-		Sync(aReanimType);
+		SyncVar(aReanimType, StrFormat("ReanimationDefinition_%s", theOwner.c_str()));
 		if (aReanimType == (int)ReanimationType::REANIM_NONE)
 		{
 			theDefinition = nullptr;
@@ -71,16 +84,16 @@ void SaveContext::SyncReanimationDef(ReanimatorDefinition *&theDefinition)
 				break;
 			}
 		}
-		Sync(aReanimType);
+		SyncVar(aReanimType, StrFormat("ReanimationDefinition_%s", theOwner.c_str()));
 	}
 }
 
-void SaveContext::SyncParticleDef(TodParticleDefinition *&theDefinition)
+void SaveContext::SyncParticleDef(TodParticleDefinition *&theDefinition, const std::string &theOwner)
 {
 	if (mReading)
 	{
 		int aParticleType;
-		Sync(aParticleType);
+		SyncVar(aParticleType, StrFormat("ParticleDefinition_%s", theOwner.c_str()));
 		if (aParticleType == (int)ParticleEffect::PARTICLE_NONE)
 		{
 			theDefinition = nullptr;
@@ -106,16 +119,16 @@ void SaveContext::SyncParticleDef(TodParticleDefinition *&theDefinition)
 				break;
 			}
 		}
-		Sync(aParticleType);
+		SyncVar(aParticleType, StrFormat("ParticleDefinition_%s", theOwner.c_str()));
 	}
 }
 
-void SaveContext::SyncTrailDef(TrailDefinition *&theDefinition)
+void SaveContext::SyncTrailDef(TrailDefinition *&theDefinition, const std::string &theOwner)
 {
 	if (mReading)
 	{
 		int aTrailType;
-		Sync(aTrailType);
+		SyncVar(aTrailType, StrFormat("TrailDefinition_%s", theOwner.c_str()));
 		if (aTrailType == TrailType::TRAIL_NONE)
 		{
 			theDefinition = nullptr;
@@ -141,7 +154,7 @@ void SaveContext::SyncTrailDef(TrailDefinition *&theDefinition)
 				break;
 			}
 		}
-		Sync(aTrailType);
+		SyncVar(aTrailType, StrFormat("TrailDefinition_%s", theOwner.c_str()));
 	}
 }
 
@@ -154,13 +167,13 @@ static bool IsValidLoadedImage(Image* theImage)
 	return TodFindImagePath(theImage, &aPath);
 }
 
-void SaveContext::SyncImage(Image *&theImage)
+void SaveContext::SyncImage(Image *&theImage, const std::string &theOwner)
 {
 	if (mReading)
 	{
 		ResourceId aResID;
-		Sync((int &)aResID);
-		if (aResID == Sexy::ResourceId::RESOURCE_ID_MAX || (int)aResID < 0 || (int)aResID >= RESOURCE_ID_MAX)
+		SyncVar((int &)aResID, StrFormat("IMAGE_%s", theOwner.c_str()));
+		if (aResID == Sexy::ResourceId::RESOURCE_ID_MAX)
 		{
 			theImage = nullptr;
 		}
@@ -188,11 +201,11 @@ void SaveContext::SyncImage(Image *&theImage)
 		{
 			aResID = Sexy::ResourceId::RESOURCE_ID_MAX;
 		}
-		Sync((int &)aResID);
+		SyncVar((int &)aResID, StrFormat("IMAGE_%s", theOwner.c_str()));
 	}
 }
 
-void SyncDataIDList(TodList<unsigned int> *theDataIDList, SaveContext &theContext, TodAllocator *theAllocator)
+void SyncDataIDList(TodList<unsigned int> *theDataIDList, SaveContext &theContext, TodAllocator *theAllocator, const std::string &aListOwner)
 {
 	try
 	{
@@ -207,22 +220,24 @@ void SyncDataIDList(TodList<unsigned int> *theDataIDList, SaveContext &theContex
 			}
 
 			int aCount;
-			theContext.Sync(aCount);
+			theContext.SyncVar(aCount, StrFormat("%s_List_Size", aListOwner.c_str()));
 			for (int i = 0; i < aCount; i++)
 			{
 				unsigned int aDataID;
-				theContext.SyncBytes(&aDataID, sizeof(aDataID));
+				theContext.SyncBytes(&aDataID, sizeof(aDataID), StrFormat("%s_List_Data[%d]", aListOwner.c_str(), i));
 				theDataIDList->AddTail(aDataID);
 			}
 		}
 		else
 		{
 			int aCount = theDataIDList->mSize;
-			theContext.Sync(aCount);
+			theContext.SyncVar(aCount, StrFormat("%s_List_Size", aListOwner.c_str()));
+			int i = 0;
 			for (TodListNode<unsigned int> *aNode = theDataIDList->mHead; aNode != nullptr; aNode = aNode->mNext)
 			{
 				unsigned int aDataID = aNode->mValue;
-				theContext.SyncBytes(&aDataID, sizeof(aDataID));
+				theContext.SyncBytes(&aDataID, sizeof(aDataID), StrFormat("%s_List_Data[%d]", aListOwner.c_str(), i));
+				i++;
 			}
 		}
 	}
@@ -234,22 +249,23 @@ void SyncDataIDList(TodList<unsigned int> *theDataIDList, SaveContext &theContex
 
 void SyncParticleEmitter(TodParticleSystem *theParticleSystem, TodParticleEmitter *theParticleEmitter, SaveContext &theContext)
 {
+	std::string aIDStr = StrFormat("%u", theParticleSystem->mParticleHolder->mEmitters.DataArrayGetID(theParticleEmitter));
 	int aEmitterDefIndex = 0;
 	if (theContext.mReading)
 	{
-		theContext.Sync(aEmitterDefIndex);
+		theContext.SyncVar(aEmitterDefIndex, StrFormat("ParticleEmitterDefinition_%s", aIDStr.c_str()));
 		theParticleEmitter->mParticleSystem = theParticleSystem;
 		theParticleEmitter->mEmitterDef = &theParticleSystem->mParticleDef->mEmitterDefs[aEmitterDefIndex];
 	}
 	else
 	{
 		aEmitterDefIndex = (int)(theParticleEmitter->mEmitterDef - theParticleSystem->mParticleDef->mEmitterDefs);
-		theContext.Sync(aEmitterDefIndex);
+		theContext.SyncVar(aEmitterDefIndex, StrFormat("ParticleEmitterDefinition_%s", aIDStr.c_str()));
 	}
 
-	theContext.SyncImage(theParticleEmitter->mImageOverride);
+	theContext.SyncImage(theParticleEmitter->mImageOverride, StrFormat("ParticleEmitter_%s", aIDStr.c_str()));
 	SyncDataIDList((TodList<unsigned int> *)&theParticleEmitter->mParticleList, theContext,
-				   &theParticleSystem->mParticleHolder->mParticleListNodeAllocator);
+				   &theParticleSystem->mParticleHolder->mParticleListNodeAllocator, StrFormat("ParticleEmitter_%s", aIDStr.c_str()));
 	for (TodListNode<ParticleID> *aNode = theParticleEmitter->mParticleList.mHead; aNode != nullptr;
 		 aNode = aNode->mNext)
 	{
@@ -264,14 +280,17 @@ void SyncParticleEmitter(TodParticleSystem *theParticleSystem, TodParticleEmitte
 
 void SyncParticleSystem(Board *theBoard, TodParticleSystem *theParticleSystem, SaveContext &theContext)
 {
-	theContext.SyncParticleDef(theParticleSystem->mParticleDef);
+	std::string aIDStr = StrFormat("%u", theBoard->mApp->mEffectSystem->mParticleHolder->mParticleSystems.DataArrayGetID(theParticleSystem));
+
+	theContext.SyncParticleDef(theParticleSystem->mParticleDef, StrFormat("ParticleSystem_%s", aIDStr.c_str()));
 	if (theContext.mReading)
 	{
 		theParticleSystem->mParticleHolder = theBoard->mApp->mEffectSystem->mParticleHolder;
 	}
 
 	SyncDataIDList((TodList<unsigned int> *)&theParticleSystem->mEmitterList, theContext,
-				   &theParticleSystem->mParticleHolder->mEmitterListNodeAllocator);
+				   &theParticleSystem->mParticleHolder->mEmitterListNodeAllocator,
+				   StrFormat("ParticleSystem_%s", aIDStr.c_str()));
 	for (TodListNode<ParticleEmitterID> *aNode = theParticleSystem->mEmitterList.mHead; aNode != nullptr;
 		 aNode = aNode->mNext)
 	{
@@ -283,10 +302,8 @@ void SyncParticleSystem(Board *theBoard, TodParticleSystem *theParticleSystem, S
 
 void SyncReanimation(Board *theBoard, Reanimation *theReanimation, SaveContext &theContext)
 {
-	theContext.SyncReanimationDef(theReanimation->mDefinition);
-	if (theContext.mFailed)
-		return;
-
+	std::string aIDStr = StrFormat("%u", theBoard->mApp->mEffectSystem->mReanimationHolder->mReanimations.DataArrayGetID(theReanimation));
+	theContext.SyncReanimationDef(theReanimation->mDefinition, StrFormat("Reanimation_%s", aIDStr.c_str()));
 	if (theContext.mReading)
 	{
 		theReanimation->mReanimationHolder = theBoard->mApp->mEffectSystem->mReanimationHolder;
@@ -302,12 +319,12 @@ void SyncReanimation(Board *theBoard, Reanimation *theReanimation, SaveContext &
 		{
 			theReanimation->mTrackInstances = (ReanimatorTrackInstance *)FindGlobalAllocator(aSize)->Calloc(aSize);
 		}
-		theContext.SyncBytes(theReanimation->mTrackInstances, aSize);
+		theContext.SyncBytes(theReanimation->mTrackInstances, aSize, StrFormat("Reanimation_%s_Tracks", aIDStr.c_str()));
 
 		for (int aTrackIndex = 0; aTrackIndex < theReanimation->mDefinition->mTrackCount; aTrackIndex++)
 		{
 			ReanimatorTrackInstance &aTrackInstance = theReanimation->mTrackInstances[aTrackIndex];
-			theContext.SyncImage(aTrackInstance.mImageOverride);
+			theContext.SyncImage(aTrackInstance.mImageOverride, StrFormat("Reanimation_%s_Track[%d]", aIDStr.c_str(), aTrackIndex));
 
 			if (theContext.mReading)
 			{
@@ -327,220 +344,290 @@ void SyncReanimation(Board *theBoard, Reanimation *theReanimation, SaveContext &
 
 void SyncTrail(Board *theBoard, Trail *theTrail, SaveContext &theContext)
 {
-	theContext.SyncTrailDef(theTrail->mDefinition);
+	theContext.SyncTrailDef(theTrail->mDefinition, StrFormat("Trail_%u", theBoard->mApp->mEffectSystem->mTrailHolder->mTrails.DataArrayGetID(theTrail)));
 	if (theContext.mReading)
 	{
 		theTrail->mTrailHolder = theBoard->mApp->mEffectSystem->mTrailHolder;
 	}
 }
 
-void LawnSyncGame(Board* theBoard, SaveContext theContext)
+void SaveContext::LoadScheme(std::string thePath)
+{
+	std::ifstream aReader(thePath, std::ios::binary);
+	std::string aLine;
+	mSchemeEntries.clear();
+	while (std::getline(aReader, aLine))
+	{
+		SaveSchemeEntry anEntry;
+		std::vector<std::string> aSeparatedLine;
+		size_t start = 0;
+		size_t end = aLine.find("|");
+
+		if (end == std::string::npos)
+		{
+			continue;
+		}
+
+		while (end != std::string::npos)
+		{
+			aSeparatedLine.push_back(aLine.substr(start, end - start));
+			start = end + 1;
+			end = aLine.find("|", start);
+		}
+
+		aSeparatedLine.push_back(aLine.substr(start));
+		size_t aCurrentIndex = 0;
+		std::string aVarName = "VAL_UNKNOWN";
+		for (auto& aValue : aSeparatedLine)
+		{
+			switch (aCurrentIndex)
+			{
+				case 0:
+					aVarName = aValue;
+					break;
+				case 1:
+					sscanf(aValue.c_str(), "%zu", &anEntry.mOffset);
+					break;
+				case 2:
+					sscanf(aValue.c_str(), "%zu", &anEntry.mSize);
+					aCurrentIndex = -1;
+					break;
+			}
+			aCurrentIndex++;
+		}
+		mSchemeEntries.insert({aVarName, anEntry});
+	}
+}
+
+
+#define SYNC_VAR(name) theContext.SyncVar(name, #name)
+#define SYNC_ARRAY(name) theContext.SyncBytes(name, sizeof(name), #name)
+#define SYNC_CLASS(obj) theContext.SyncBytes(obj, sizeof(*obj), #obj)
+#define SYNC_DATA_ARRAY(type, arr)                                                                                     \
+	theContext.SyncVar(arr.mMaxUsedCount, #arr ".mMaxUsedCount");                                                      \
+	theContext.SyncVar(arr.mNextKey, #arr ".mNextKey");                                                                \
+	theContext.SyncVar(arr.mFreeListHead, #arr ".mFreeListHead");                                                      \
+	theContext.SyncVar(arr.mSize, #arr ".mSize");                                                                      \
+	theContext.SyncBytes(arr.mBlock, sizeof(DataArray<type>::DataArrayItem) * arr.mMaxUsedCount, #arr ".mBlock");
+
+#define SYNC_GAMEOBJECT(obj) \
+	theContext.SyncVar(obj->mX, #obj "->mX");                                                                        \
+	theContext.SyncVar(obj->mY, #obj "->mY");                                                                        \
+	theContext.SyncVar(obj->mWidth, #obj "->mWidth");                                                                \
+	theContext.SyncVar(obj->mHeight, #obj "->mHeight");                                                              \
+	theContext.SyncVar(obj->mVisible, #obj "->mVisible");															 \
+	theContext.SyncVar(obj->mRow, #obj "->mRow");                                                                    \
+	theContext.SyncVar(obj->mRenderOrder, #obj "->mRenderOrder");                                                    \
+
+void LawnSyncGame(Board* theBoard, SaveContext &theContext)
 {
 
-	SYNC_BOARD_ARRAY(mGridSquareType);
-	SYNC_BOARD_ARRAY(mGridCelLook);
-	SYNC_BOARD_ARRAY(mGridCelOffset);
-	SYNC_BOARD_ARRAY(mGridCelFog);
+	SYNC_ARRAY(theBoard->mGridSquareType);
+	SYNC_ARRAY(theBoard->mGridCelLook);
+	SYNC_ARRAY(theBoard->mGridCelOffset);
+	SYNC_ARRAY(theBoard->mGridCelFog);
 
-	SYNC_BOARD_VARIABLE(mEnableGraveStones);
-	SYNC_BOARD_VARIABLE(mSpecialGraveStoneX);
-	SYNC_BOARD_VARIABLE(mSpecialGraveStoneY);
-	SYNC_BOARD_VARIABLE(mFogOffset);
-	SYNC_BOARD_VARIABLE(mFogBlownCountDown);
+	SYNC_VAR(theBoard->mEnableGraveStones);
+	SYNC_VAR(theBoard->mSpecialGraveStoneX);
+	SYNC_VAR(theBoard->mSpecialGraveStoneY);
+	SYNC_VAR(theBoard->mFogOffset);
+	SYNC_VAR(theBoard->mFogBlownCountDown);
 
-	SYNC_BOARD_ARRAY(mPlantRow);
-	SYNC_BOARD_ARRAY(mWaveRowGotLawnMowered);
+	SYNC_ARRAY(theBoard->mPlantRow);
+	SYNC_ARRAY(theBoard->mWaveRowGotLawnMowered);
 
-	SYNC_BOARD_VARIABLE(mBonusLawnMowersRemaining);
+	SYNC_VAR(theBoard->mBonusLawnMowersRemaining);
 
-	SYNC_BOARD_ARRAY(mIceMinX);
-	SYNC_BOARD_ARRAY(mIceTimer);
-	SYNC_BOARD_ARRAY(mIceParticleID);
-	SYNC_BOARD_ARRAY(mRowPickingArray);
+	SYNC_ARRAY(theBoard->mIceMinX);
+	SYNC_ARRAY(theBoard->mIceTimer);
+	SYNC_ARRAY(theBoard->mIceParticleID);
+	SYNC_ARRAY(theBoard->mRowPickingArray);
 
-	SYNC_BOARD_ARRAY(mZombiesInWave);
-	SYNC_BOARD_ARRAY(mZombieAllowed);
+	SYNC_ARRAY(theBoard->mZombiesInWave);
+	SYNC_ARRAY(theBoard->mZombieAllowed);
 
-	SYNC_BOARD_VARIABLE(mSunCountDown);
-	SYNC_BOARD_VARIABLE(mNumSunsFallen);
-	SYNC_BOARD_VARIABLE(mShakeCounter);
-	SYNC_BOARD_VARIABLE(mShakeAmountX);
-	SYNC_BOARD_VARIABLE(mShakeAmountY);
+	SYNC_VAR(theBoard->mSunCountDown);
+	SYNC_VAR(theBoard->mNumSunsFallen);
+	SYNC_VAR(theBoard->mShakeCounter);
+	SYNC_VAR(theBoard->mShakeAmountX);
+	SYNC_VAR(theBoard->mShakeAmountY);
 
-	SYNC_BOARD_VARIABLE(mBackground);
-	SYNC_BOARD_VARIABLE(mLevel);
-	SYNC_BOARD_VARIABLE(mSodPosition);
+	SYNC_VAR(theBoard->mBackground);
+	SYNC_VAR(theBoard->mLevel);
+	SYNC_VAR(theBoard->mSodPosition);
 
-	SYNC_BOARD_VARIABLE(mPrevMouseX);
-	SYNC_BOARD_VARIABLE(mPrevMouseY);
+	SYNC_VAR(theBoard->mPrevMouseX);
+	SYNC_VAR(theBoard->mPrevMouseY);
 
-	SYNC_BOARD_VARIABLE(mSunMoney);
-	SYNC_BOARD_VARIABLE(mNumWaves);
-	SYNC_BOARD_VARIABLE(mMainCounter);
-	SYNC_BOARD_VARIABLE(mEffectCounter);
-	SYNC_BOARD_VARIABLE(mDrawCount);
-	SYNC_BOARD_VARIABLE(mRiseFromGraveCounter);
-	SYNC_BOARD_VARIABLE(mOutOfMoneyCounter);
+	SYNC_VAR(theBoard->mSunMoney);
+	SYNC_VAR(theBoard->mNumWaves);
+	SYNC_VAR(theBoard->mMainCounter);
+	SYNC_VAR(theBoard->mEffectCounter);
+	SYNC_VAR(theBoard->mDrawCount);
+	SYNC_VAR(theBoard->mRiseFromGraveCounter);
+	SYNC_VAR(theBoard->mOutOfMoneyCounter);
 
-	SYNC_BOARD_VARIABLE(mCurrentWave);
-	SYNC_BOARD_VARIABLE(mTotalSpawnedWaves);
+	SYNC_VAR(theBoard->mCurrentWave);
+	SYNC_VAR(theBoard->mTotalSpawnedWaves);
 
-	SYNC_BOARD_VARIABLE(mTutorialState);
-	SYNC_BOARD_VARIABLE(mTutorialParticleID);
-	SYNC_BOARD_VARIABLE(mTutorialTimer);
+	SYNC_VAR(theBoard->mTutorialState);
+	SYNC_VAR(theBoard->mTutorialParticleID);
+	SYNC_VAR(theBoard->mTutorialTimer);
 
-	SYNC_BOARD_VARIABLE(mLastBungeeWave);
-	SYNC_BOARD_VARIABLE(mZombieHealthToNextWave);
-	SYNC_BOARD_VARIABLE(mZombieHealthWaveStart);
+	SYNC_VAR(theBoard->mLastBungeeWave);
+	SYNC_VAR(theBoard->mZombieHealthToNextWave);
+	SYNC_VAR(theBoard->mZombieHealthWaveStart);
 
-	SYNC_BOARD_VARIABLE(mZombieCountDown);
-	SYNC_BOARD_VARIABLE(mZombieCountDownStart);
-	SYNC_BOARD_VARIABLE(mHugeWaveCountDown);
+	SYNC_VAR(theBoard->mZombieCountDown);
+	SYNC_VAR(theBoard->mZombieCountDownStart);
+	SYNC_VAR(theBoard->mHugeWaveCountDown);
 
-	SYNC_BOARD_ARRAY(mHelpDisplayed);
-	SYNC_BOARD_VARIABLE(mHelpIndex);
+	SYNC_ARRAY(theBoard->mHelpDisplayed);
+	SYNC_VAR(theBoard->mHelpIndex);
 
-	SYNC_BOARD_VARIABLE(mFinalBossKilled);
-	SYNC_BOARD_VARIABLE(mShowShovel);
-	SYNC_BOARD_VARIABLE(mCoinBankFadeCount);
-	SYNC_BOARD_VARIABLE(mDebugTextMode);
+	SYNC_VAR(theBoard->mFinalBossKilled);
+	SYNC_VAR(theBoard->mShowShovel);
+	SYNC_VAR(theBoard->mCoinBankFadeCount);
+	SYNC_VAR(theBoard->mDebugTextMode);
 
-	SYNC_BOARD_VARIABLE(mLevelComplete);
-	SYNC_BOARD_VARIABLE(mBoardFadeOutCounter);
-	SYNC_BOARD_VARIABLE(mNextSurvivalStageCounter);
-	SYNC_BOARD_VARIABLE(mScoreNextMowerCounter);
+	SYNC_VAR(theBoard->mLevelComplete);
+	SYNC_VAR(theBoard->mBoardFadeOutCounter);
+	SYNC_VAR(theBoard->mNextSurvivalStageCounter);
+	SYNC_VAR(theBoard->mScoreNextMowerCounter);
 
-	SYNC_BOARD_VARIABLE(mLevelAwardSpawned);
-	SYNC_BOARD_VARIABLE(mProgressMeterWidth);
-	SYNC_BOARD_VARIABLE(mFlagRaiseCounter);
-	SYNC_BOARD_VARIABLE(mIceTrapCounter);
+	SYNC_VAR(theBoard->mLevelAwardSpawned);
+	SYNC_VAR(theBoard->mProgressMeterWidth);
+	SYNC_VAR(theBoard->mFlagRaiseCounter);
+	SYNC_VAR(theBoard->mIceTrapCounter);
 
-	SYNC_BOARD_VARIABLE(mBoardRandSeed);
-	SYNC_BOARD_VARIABLE(mPoolSparklyParticleID);
+	SYNC_VAR(theBoard->mBoardRandSeed);
+	SYNC_VAR(theBoard->mPoolSparklyParticleID);
 
-	SYNC_BOARD_ARRAY(mFwooshID);
+	SYNC_ARRAY(theBoard->mFwooshID);
 
-	SYNC_BOARD_VARIABLE(mFwooshCountDown);
-	SYNC_BOARD_VARIABLE(mTimeStopCounter);
+	SYNC_VAR(theBoard->mFwooshCountDown);
+	SYNC_VAR(theBoard->mTimeStopCounter);
 
-	SYNC_BOARD_VARIABLE(mDroppedFirstCoin);
-	SYNC_BOARD_VARIABLE(mFinalWaveSoundCounter);
+	SYNC_VAR(theBoard->mDroppedFirstCoin);
+	SYNC_VAR(theBoard->mFinalWaveSoundCounter);
 
-	SYNC_BOARD_VARIABLE(mCobCannonCursorDelayCounter);
-	SYNC_BOARD_VARIABLE(mCobCannonMouseX);
-	SYNC_BOARD_VARIABLE(mCobCannonMouseY);
+	SYNC_VAR(theBoard->mCobCannonCursorDelayCounter);
+	SYNC_VAR(theBoard->mCobCannonMouseX);
+	SYNC_VAR(theBoard->mCobCannonMouseY);
 
-	SYNC_BOARD_VARIABLE(mKilledYeti);
+	SYNC_VAR(theBoard->mKilledYeti);
 
-	SYNC_BOARD_VARIABLE(mMustacheMode);
-	SYNC_BOARD_VARIABLE(mSuperMowerMode);
-	SYNC_BOARD_VARIABLE(mFutureMode);
-	SYNC_BOARD_VARIABLE(mPinataMode);
-	SYNC_BOARD_VARIABLE(mDanceMode);
-	SYNC_BOARD_VARIABLE(mDaisyMode);
-	SYNC_BOARD_VARIABLE(mSukhbirMode);
+	SYNC_VAR(theBoard->mMustacheMode);
+	SYNC_VAR(theBoard->mSuperMowerMode);
+	SYNC_VAR(theBoard->mFutureMode);
+	SYNC_VAR(theBoard->mPinataMode);
+	SYNC_VAR(theBoard->mDanceMode);
+	SYNC_VAR(theBoard->mDaisyMode);
+	SYNC_VAR(theBoard->mSukhbirMode);
 
-	SYNC_BOARD_VARIABLE(mPrevBoardResult);
+	SYNC_VAR(theBoard->mPrevBoardResult);
 
-	SYNC_BOARD_VARIABLE(mTriggeredLawnMowers);
-	SYNC_BOARD_VARIABLE(mPlayTimeActiveLevel);
-	SYNC_BOARD_VARIABLE(mPlayTimeInactiveLevel);
+	SYNC_VAR(theBoard->mTriggeredLawnMowers);
+	SYNC_VAR(theBoard->mPlayTimeActiveLevel);
+	SYNC_VAR(theBoard->mPlayTimeInactiveLevel);
 
-	SYNC_BOARD_VARIABLE(mMaxSunPlants);
+	SYNC_VAR(theBoard->mMaxSunPlants);
 
-	SYNC_BOARD_VARIABLE(mStartDrawTime);
-	SYNC_BOARD_VARIABLE(mIntervalDrawTime);
-	SYNC_BOARD_VARIABLE(mIntervalDrawCountStart);
+	SYNC_VAR(theBoard->mStartDrawTime);
+	SYNC_VAR(theBoard->mIntervalDrawTime);
+	SYNC_VAR(theBoard->mIntervalDrawCountStart);
 
-	SYNC_BOARD_VARIABLE(mMinFPS);
-	SYNC_BOARD_VARIABLE(mPreloadTime);
-	SYNC_BOARD_VARIABLE(mGameID);
+	SYNC_VAR(theBoard->mMinFPS);
+	SYNC_VAR(theBoard->mPreloadTime);
+	SYNC_VAR(theBoard->mGameID);
 
-	SYNC_BOARD_VARIABLE(mGravesCleared);
-	SYNC_BOARD_VARIABLE(mPlantsEaten);
-	SYNC_BOARD_VARIABLE(mPlantsShoveled);
-	SYNC_BOARD_VARIABLE(mCoinsCollected);
-	SYNC_BOARD_VARIABLE(mDiamondsCollected);
-	SYNC_BOARD_VARIABLE(mPottedPlantsCollected);
-	SYNC_BOARD_VARIABLE(mChocolateCollected);
+	SYNC_VAR(theBoard->mGravesCleared);
+	SYNC_VAR(theBoard->mPlantsEaten);
+	SYNC_VAR(theBoard->mPlantsShoveled);
+	SYNC_VAR(theBoard->mCoinsCollected);
+	SYNC_VAR(theBoard->mDiamondsCollected);
+	SYNC_VAR(theBoard->mPottedPlantsCollected);
+	SYNC_VAR(theBoard->mChocolateCollected);
 
-	SYNC_CHALLENGE_VARIABLE(mBeghouledMouseCapture);
-	SYNC_CHALLENGE_VARIABLE(mBeghouledMouseDownX);
-	SYNC_CHALLENGE_VARIABLE(mBeghouledMouseDownY);
+	SYNC_VAR(theBoard->mChallenge->mBeghouledMouseCapture);
+	SYNC_VAR(theBoard->mChallenge->mBeghouledMouseDownX);
+	SYNC_VAR(theBoard->mChallenge->mBeghouledMouseDownY);
 
-	SYNC_CHALLENGE_VARIABLE(mBeghouledMatchesThisMove);
-	SYNC_CHALLENGE_VARIABLE(mChallengeState);
-	SYNC_CHALLENGE_VARIABLE(mChallengeStateCounter);
-	SYNC_CHALLENGE_VARIABLE(mConveyorBeltCounter);
-	SYNC_CHALLENGE_VARIABLE(mChallengeScore);
-	SYNC_CHALLENGE_VARIABLE(mShowBowlingLine);
-	SYNC_CHALLENGE_VARIABLE(mLastConveyorSeedType);
-	SYNC_CHALLENGE_VARIABLE(mSurvivalStage);
-	SYNC_CHALLENGE_VARIABLE(mSlotMachineRollCount);
-	SYNC_CHALLENGE_VARIABLE(mReanimChallenge);
+	SYNC_VAR(theBoard->mChallenge->mBeghouledMatchesThisMove);
+	SYNC_VAR(theBoard->mChallenge->mChallengeState);
+	SYNC_VAR(theBoard->mChallenge->mChallengeStateCounter);
+	SYNC_VAR(theBoard->mChallenge->mConveyorBeltCounter);
+	SYNC_VAR(theBoard->mChallenge->mChallengeScore);
+	SYNC_VAR(theBoard->mChallenge->mShowBowlingLine);
+	SYNC_VAR(theBoard->mChallenge->mLastConveyorSeedType);
+	SYNC_VAR(theBoard->mChallenge->mSurvivalStage);
+	SYNC_VAR(theBoard->mChallenge->mSlotMachineRollCount);
+	SYNC_VAR(theBoard->mChallenge->mReanimChallenge);
 
-	SYNC_CHALLENGE_VARIABLE(mChallengeGridX);
-	SYNC_CHALLENGE_VARIABLE(mChallengeGridY);
-	SYNC_CHALLENGE_VARIABLE(mScaryPotterPots);
-	SYNC_CHALLENGE_VARIABLE(mRainCounter);
-	SYNC_CHALLENGE_VARIABLE(mTreeOfWisdomTalkIndex);
+	SYNC_VAR(theBoard->mChallenge->mChallengeGridX);
+	SYNC_VAR(theBoard->mChallenge->mChallengeGridY);
+	SYNC_VAR(theBoard->mChallenge->mScaryPotterPots);
+	SYNC_VAR(theBoard->mChallenge->mRainCounter);
+	SYNC_VAR(theBoard->mChallenge->mTreeOfWisdomTalkIndex);
 
-	SYNC_CHALLENGE_ARRAY(mBeghouledEated);
-	SYNC_CHALLENGE_ARRAY(mBeghouledPurcasedUpgrade);
-	SYNC_CHALLENGE_ARRAY(mReanimClouds);
-	SYNC_CHALLENGE_ARRAY(mCloudsCounter);
+	SYNC_ARRAY(theBoard->mChallenge->mBeghouledEated);
+	SYNC_ARRAY(theBoard->mChallenge->mBeghouledPurcasedUpgrade);
+	SYNC_ARRAY(theBoard->mChallenge->mReanimClouds);
+	SYNC_ARRAY(theBoard->mChallenge->mCloudsCounter);
 
-	SYNC_MUSIC_VARIABLE(mCurMusicTune);
-	SYNC_MUSIC_VARIABLE(mCurMusicFileMain);
-	SYNC_MUSIC_VARIABLE(mCurMusicFileDrums);
-	SYNC_MUSIC_VARIABLE(mCurMusicFileHihats);
-	SYNC_MUSIC_VARIABLE(mBurstOverride);
-	SYNC_MUSIC_VARIABLE(mBaseBPM);
-	SYNC_MUSIC_VARIABLE(mBaseModSpeed);
-	SYNC_MUSIC_VARIABLE(mMusicBurstState);
-	SYNC_MUSIC_VARIABLE(mBurstStateCounter);
-	SYNC_MUSIC_VARIABLE(mMusicDrumsState);
-	SYNC_MUSIC_VARIABLE(mQueuedDrumTrackPackedOrder);
-	SYNC_MUSIC_VARIABLE(mDrumsStateCounter);
-	SYNC_MUSIC_VARIABLE(mPauseOffset);
-	SYNC_MUSIC_VARIABLE(mPauseOffsetDrums);
-	SYNC_MUSIC_VARIABLE(mPaused);
-	SYNC_MUSIC_VARIABLE(mMusicDisabled);
-	SYNC_MUSIC_VARIABLE(mFadeOutCounter);
-	SYNC_MUSIC_VARIABLE(mFadeOutDuration);
-	SYNC_MUSIC_VARIABLE(mQueuedDrumTrackPosition);
+	SYNC_VAR(theBoard->mApp->mMusic->mCurMusicTune);
+	SYNC_VAR(theBoard->mApp->mMusic->mCurMusicFileMain);
+	SYNC_VAR(theBoard->mApp->mMusic->mCurMusicFileDrums);
+	SYNC_VAR(theBoard->mApp->mMusic->mCurMusicFileHihats);
+	SYNC_VAR(theBoard->mApp->mMusic->mBurstOverride);
+	SYNC_VAR(theBoard->mApp->mMusic->mBaseBPM);
+	SYNC_VAR(theBoard->mApp->mMusic->mBaseModSpeed);
+	SYNC_VAR(theBoard->mApp->mMusic->mMusicBurstState);
+	SYNC_VAR(theBoard->mApp->mMusic->mBurstStateCounter);
+	SYNC_VAR(theBoard->mApp->mMusic->mMusicDrumsState);
+	SYNC_VAR(theBoard->mApp->mMusic->mQueuedDrumTrackPackedOrder);
+	SYNC_VAR(theBoard->mApp->mMusic->mDrumsStateCounter);
+	SYNC_VAR(theBoard->mApp->mMusic->mPauseOffset);
+	SYNC_VAR(theBoard->mApp->mMusic->mPauseOffsetDrums);
+	SYNC_VAR(theBoard->mApp->mMusic->mPaused);
+	SYNC_VAR(theBoard->mApp->mMusic->mMusicDisabled);
+	SYNC_VAR(theBoard->mApp->mMusic->mFadeOutCounter);
+	SYNC_VAR(theBoard->mApp->mMusic->mFadeOutDuration);
+	SYNC_VAR(theBoard->mApp->mMusic->mQueuedDrumTrackPosition);
 
-	SYNC_SEEDBANK_VARIABLE(mX); // This is one of the only variables we need to sync that isn't defined in the class
-	SYNC_SEEDBANK_VARIABLE(mY);
-	SYNC_SEEDBANK_VARIABLE(mWidth);
-	SYNC_SEEDBANK_VARIABLE(mNumPackets);
-	SYNC_SEEDBANK_ARRAY(mSeedPackets);
-	SYNC_SEEDBANK_VARIABLE(mCutSceneDarken);
-	SYNC_SEEDBANK_VARIABLE(mConveyorBeltCounter);
+	SYNC_GAMEOBJECT(theBoard->mSeedBank);
+	SYNC_VAR(theBoard->mSeedBank->mNumPackets);
+	SYNC_ARRAY(theBoard->mSeedBank->mSeedPackets);
+	SYNC_VAR(theBoard->mSeedBank->mCutSceneDarken);
+	SYNC_VAR(theBoard->mSeedBank->mConveyorBeltCounter);
+#if SEXY_USE_CONTROLLER
+	SYNC_VAR(theBoard->mSeedBank->mIndexGamepad);
+	SYNC_VAR(theBoard->mSeedBank->mAxisProgress);
+#endif
 
-	SYNC_ADVICE_ARRAY(mLabel);
-	SYNC_ADVICE_VARIABLE(mDisplayTime);
-	SYNC_ADVICE_VARIABLE(mDuration);
-	SYNC_ADVICE_VARIABLE(mMessageStyle);
-	SYNC_ADVICE_ARRAY(mTextReanimID);
-	SYNC_ADVICE_VARIABLE(mReanimType);
-	SYNC_ADVICE_VARIABLE(mSlideOffTime);
-	SYNC_ADVICE_ARRAY(mLabelNext);
-	SYNC_ADVICE_VARIABLE(mMessageStyleNext);
+	SYNC_ARRAY(theBoard->mAdvice->mLabel);
+	SYNC_VAR(theBoard->mAdvice->mDisplayTime);
+	SYNC_VAR(theBoard->mAdvice->mDuration);
+	SYNC_VAR(theBoard->mAdvice->mMessageStyle);
+	SYNC_ARRAY(theBoard->mAdvice->mTextReanimID);
+	SYNC_VAR(theBoard->mAdvice->mReanimType);
+	SYNC_VAR(theBoard->mAdvice->mSlideOffTime);
+	SYNC_ARRAY(theBoard->mAdvice->mLabelNext);
+	SYNC_VAR(theBoard->mAdvice->mMessageStyleNext);
 
-	SYNC_CURSOR_PREVIEW_VARIABLE(mGridX);
-	SYNC_CURSOR_PREVIEW_VARIABLE(mGridY);
+	SYNC_VAR(theBoard->mCursorPreview->mGridX);
+	SYNC_VAR(theBoard->mCursorPreview->mGridY);
 
-	SYNC_CURSOR_OBJECT_VARIABLE(mSeedBankIndex);
-	SYNC_CURSOR_OBJECT_VARIABLE(mType);
-	SYNC_CURSOR_OBJECT_VARIABLE(mImitaterType);
-	SYNC_CURSOR_OBJECT_VARIABLE(mCursorType);
-	SYNC_CURSOR_OBJECT_VARIABLE(mCoinID);
-	SYNC_CURSOR_OBJECT_VARIABLE(mGlovePlantID);
-	SYNC_CURSOR_OBJECT_VARIABLE(mDuplicatorPlantID);
-	SYNC_CURSOR_OBJECT_VARIABLE(mCobCannonPlantID);
-	SYNC_CURSOR_OBJECT_VARIABLE(mHammerDownCounter);
-	SYNC_CURSOR_OBJECT_VARIABLE(mReanimCursorID);
+	SYNC_VAR(theBoard->mCursorObject->mSeedBankIndex);
+	SYNC_VAR(theBoard->mCursorObject->mType);
+	SYNC_VAR(theBoard->mCursorObject->mImitaterType);
+	SYNC_VAR(theBoard->mCursorObject->mCursorType);
+	SYNC_VAR(theBoard->mCursorObject->mCoinID);
+	SYNC_VAR(theBoard->mCursorObject->mGlovePlantID);
+	SYNC_VAR(theBoard->mCursorObject->mDuplicatorPlantID);
+	SYNC_VAR(theBoard->mCursorObject->mCobCannonPlantID);
+	SYNC_VAR(theBoard->mCursorObject->mHammerDownCounter);
+	SYNC_VAR(theBoard->mCursorObject->mReanimCursorID);
 
 	SYNC_DATA_ARRAY(Zombie, theBoard->mZombies)
 	SYNC_DATA_ARRAY(Plant, theBoard->mPlants)
@@ -615,44 +702,35 @@ void LawnSyncGame(Board* theBoard, SaveContext theContext)
 		aGridItem->mBoard = theBoard;
 	}
 
-	theBoard->mAdvice->mApp = theBoard->mApp;
-	theBoard->mCursorObject->mApp = theBoard->mApp;
-	theBoard->mCursorObject->mBoard = theBoard;
-	theBoard->mCursorPreview->mApp = theBoard->mApp;
-	theBoard->mCursorPreview->mBoard = theBoard;
-	theBoard->mSeedBank->mApp = theBoard->mApp;
-	theBoard->mSeedBank->mBoard = theBoard;
-	for (int i = 0; i < SEEDBANK_MAX; i++)
+	if (theContext.mReading)
 	{
-		theBoard->mSeedBank->mSeedPackets[i].mApp = theBoard->mApp;
-		theBoard->mSeedBank->mSeedPackets[i].mBoard = theBoard;
+		theBoard->mAdvice->mApp = theBoard->mApp;
+		theBoard->mCursorObject->mApp = theBoard->mApp;
+		theBoard->mCursorObject->mBoard = theBoard;
+		theBoard->mCursorPreview->mApp = theBoard->mApp;
+		theBoard->mCursorPreview->mBoard = theBoard;
+		theBoard->mSeedBank->mApp = theBoard->mApp;
+		theBoard->mSeedBank->mBoard = theBoard;
+		for (int i = 0; i < SEEDBANK_MAX; i++)
+		{
+			theBoard->mSeedBank->mSeedPackets[i].mApp = theBoard->mApp;
+			theBoard->mSeedBank->mSeedPackets[i].mBoard = theBoard;
+		}
+		theBoard->mChallenge->mApp = theBoard->mApp;
+		theBoard->mChallenge->mBoard = theBoard;
+		theBoard->mApp->mMusic->mApp = theBoard->mApp;
+		theBoard->mApp->mMusic->mMusicInterface = theBoard->mApp->mMusicInterface;
 	}
-	theBoard->mChallenge->mApp = theBoard->mApp;
-	theBoard->mChallenge->mBoard = theBoard;
-	theBoard->mApp->mMusic->mApp = theBoard->mApp;
-	theBoard->mApp->mMusic->mMusicInterface = theBoard->mApp->mMusicInterface;
+
 }
 
 bool LawnLoadGame(Board *theBoard, const std::string &theFilePath)
 {
-	std::ifstream aReader(theFilePath, std::ios::binary);
-	SaveContext theContext{nullptr, &aReader, false};
+	std::ifstream aReader(theFilePath + ".data", std::ios::binary);
+	SaveContext theContext;
+	theContext.mBinaryReader = &aReader;
 	theContext.mReading = true;
-	char aMagic[8];
-	theContext.SyncBytes(aMagic, sizeof(aMagic));
-	if (memcmp(aMagic, SAVE_HEADER_MAGIC, sizeof(SAVE_HEADER_MAGIC)) != 0)
-	{
-		TodErrorMessageBox("Invalid Save File Magic", "Save File Error");
-		return false;
-	}
-
-	uint32_t aVersion = 0;
-	theContext.Sync(aVersion);
-	if (aVersion != SAVE_HEADER_VERSION)
-	{
-		TodErrorMessageBox(StrFormat("Invalid Version: %d", aVersion).c_str(), "Save File Error");
-		return false;
-	}
+	theContext.LoadScheme(theFilePath + ".schema");
 
 	LawnSyncGame(theBoard, theContext);
 	if (aReader.fail())
@@ -666,22 +744,17 @@ bool LawnLoadGame(Board *theBoard, const std::string &theFilePath)
 
 bool LawnSaveGame(Board *theBoard, const std::string &theFilePath)
 {
-	std::string aTempPath = theFilePath + ".tmp";
-	std::ofstream aWriter(aTempPath, std::ios::binary);
-	SaveContext theContext{&aWriter, nullptr, false};
-	theContext.mReading = false;
+	std::ofstream aWriter(theFilePath + ".data", std::ios::binary);
+	std::ofstream aSchemaWriter(theFilePath + ".schema", std::ios::binary);
 
-	theContext.SyncBytes((void *)&SAVE_HEADER_MAGIC, sizeof(SAVE_HEADER_MAGIC));
-	theContext.Sync(SAVE_HEADER_VERSION);
+	SaveContext theContext;
+	theContext.mWriter = &aWriter;
+	theContext.mReading = false;
+	theContext.mCurrentOffset = 0;
 
 	LawnSyncGame(theBoard, theContext);
-
+	aSchemaWriter << theContext.mSchema;
+	aSchemaWriter.close();
 	aWriter.close();
-	if (aWriter.fail())
-	{
-		std::remove(aTempPath.c_str());
-		return false;
-	}
-	std::rename(aTempPath.c_str(), theFilePath.c_str());
 	return true;
 }

@@ -125,7 +125,8 @@ void PlayerInfo::DeleteUserFiles()
 		for (int i = 0; i < (int)GameMode::NUM_GAME_MODES; i++)
 		{
 			std::string aFileName = GetSavedGameName((GameMode)i, mId);
-			gSexyAppBase->EraseFile(aFileName);
+			gSexyAppBase->EraseFile(aFileName + ".data");
+			gSexyAppBase->EraseFile(aFileName + ".schema");
 		}
 	}
 }

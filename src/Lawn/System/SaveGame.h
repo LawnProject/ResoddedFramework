@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <map>
 #include "../../Sexy.TodLib/TodList.h"
 #include "../../Sexy.TodLib/TodParticle.h"
 #include "../../Sexy.TodLib/Reanimator.h"
@@ -26,35 +27,30 @@ class Image;
 }
 using namespace Sexy;
 
+struct SaveSchemeEntry
+{
+	size_t mOffset;
+	size_t mSize;
+};
 
 class SaveContext
 {
 	  public:
 		std::ofstream *mWriter;
-		std::ifstream *mReader;
+		size_t mCurrentOffset;
+		std::string mSchema;
+		std::ifstream *mBinaryReader;
+		std::map<std::string, SaveSchemeEntry> mSchemeEntries;
 		bool mReading;
 		bool mFailed;
 
-		template <typename T> void Sync(T &theValue)
-		{
-			if (mReading)
-				mReader->read((char *)(&theValue), sizeof(T));
-			else
-				mWriter->write(reinterpret_cast<const char *>(&theValue), sizeof(T));
-		}
-
-		void SyncBytes(void *theData, size_t theSize)
-		{
-			if (mReading)
-				mReader->read(reinterpret_cast<char *>(theData), theSize);
-			else
-				mWriter->write(reinterpret_cast<const char *>(theData), theSize);
-		}
-
-		void SyncReanimationDef(ReanimatorDefinition *&theDefinition);
-		void SyncParticleDef(TodParticleDefinition *&theDefinition);
-		void SyncTrailDef(TrailDefinition *&theDefinition);
-		void SyncImage(Image *&theImage);
+		template <typename T> void SyncVar(T &aValue, const std::string &aName);
+		void SyncBytes(void *aValue, size_t aSize, const std::string &aName);
+		void SyncReanimationDef(ReanimatorDefinition *&theDefinition, const std::string &theOwner);
+		void SyncParticleDef(TodParticleDefinition *&theDefinition, const std::string &theOwner);
+		void SyncTrailDef(TrailDefinition *&theDefinition, const std::string &theOwner);
+		void SyncImage(Image *&theImage, const std::string &theOwner);
+		void LoadScheme(std::string thePath);
 };
 
 bool LawnLoadGame(Board *theBoard, const std::string &theFilePath);
