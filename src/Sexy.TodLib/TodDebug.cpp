@@ -210,8 +210,8 @@ void TodTraceAndLog(const char *theFormat, ...)
 void TodTraceWithoutSpamming(const char *theFormat, ...)
 {
 #ifdef _DEBUG
-	static __time64_t gLastTraceTime = 0i64;
-	__time64_t aTime = _time64(nullptr);
+	static uint64_t gLastTraceTime = 00;
+	uint64_t aTime = std::time(nullptr);
 	if (aTime < gLastTraceTime)
 	{
 		return;

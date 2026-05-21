@@ -55,7 +55,9 @@
 #include "Lawn/ResoddedFramework/UpdateChecker.h"
 
 #include <PakInterface.h>
+
 #include <filesystem>
+#include <ctime>
 
 #if LAWN_DEBUG_TOOLS
 #include "Lawn/ResoddedFramework/DebuggerWindow.h"
@@ -123,7 +125,7 @@ LawnApp::LawnApp()
 	mHeight = BOARD_HEIGHT;
 	mFullscreenBits = 32;
 	mAppCounter = 0;
-	mAppRandSeed = _time64(nullptr);
+	mAppRandSeed = std::time(nullptr);
 	mTrialType = TrialType::TRIALTYPE_NONE;
 	mDebugTrialLocked = false;
 	mMuteSoundsForCutscene = false;
@@ -1282,7 +1284,7 @@ void LawnApp::Init()
 	//	gSexyCache->Disconnect();
 	//}
 
-	SDL_GetCurrentTime(&mSessionID);
+	mSessionID = std::time(nullptr);
 	mPlayTimeActiveSession = 0;
 	mPlayTimeInactiveSession = 0;
 	mBoardResult = BoardResult::BOARDRESULT_NONE;

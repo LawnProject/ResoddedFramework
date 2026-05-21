@@ -4049,9 +4049,15 @@ void SexyAppBase::MakeWindow()
 			SDL_Rect aUsableBounds{};
 			SDL_GetDisplayUsableBounds(SDL_GetDisplayForWindow(mWindow->mInternalWindow), &aUsableBounds);
 
+
 			int aWidth = (mPreferredSize.mWidth == -1) ? mWidth : mPreferredSize.mWidth;
 
 			int aHeight = (mPreferredSize.mHeight == -1) ? mHeight : mPreferredSize.mHeight;
+
+			if (aUsableBounds.w <= aWidth || aUsableBounds.h <= aHeight)
+			{
+				SDL_MaximizeWindow(mWindow->mInternalWindow);
+			}
 
 			int aPlaceX = aUsableBounds.x + (aUsableBounds.w - aWidth) / 2;
 			int aPlaceY = aUsableBounds.y + (int)((aUsableBounds.h - aHeight) * 0.382f);

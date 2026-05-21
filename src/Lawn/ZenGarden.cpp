@@ -537,7 +537,7 @@ void ZenGarden::MouseDownWithMoneySign(Plant *thePlant)
 void ZenGarden::PlantFertilized(Plant *thePlant)
 {
 	PottedPlant *aPottedPlant = PottedPlantFromIndex(thePlant->mPottedPlantIndex);
-	aPottedPlant->mLastFertilizedTime = _time64(nullptr);
+	aPottedPlant->mLastFertilizedTime = std::time(nullptr);
 	aPottedPlant->mPlantAge = (PottedPlantAge)((int)aPottedPlant->mPlantAge + 1);
 	aPottedPlant->mPlantNeed = PottedPlantNeed::PLANTNEED_NONE;
 	aPottedPlant->mTimesFed = 0;
@@ -582,7 +582,7 @@ void ZenGarden::PlantFertilized(Plant *thePlant)
 void ZenGarden::PlantFulfillNeed(Plant *thePlant)
 {
 	PottedPlant *aPottedPlant = PottedPlantFromIndex(thePlant->mPottedPlantIndex);
-	aPottedPlant->mLastNeedFulfilledTime = _time64(nullptr);
+	aPottedPlant->mLastNeedFulfilledTime = std::time(nullptr);
 	aPottedPlant->mPlantNeed = PottedPlantNeed::PLANTNEED_NONE;
 	aPottedPlant->mTimesFed = 0;
 
@@ -662,7 +662,7 @@ void ZenGarden::PlantWatered(Plant *thePlant)
 	{
 		aTimeSpan = 9;
 	}
-	aPottedPlant->mLastWateredTime = _time64(nullptr) - (__time64_t)aTimeSpan;
+	aPottedPlant->mLastWateredTime = std::time(nullptr) - (std::time_t)aTimeSpan;
 
 	mApp->PlayFoley(FoleyType::FOLEY_SPAWN_SUN);
 	mBoard->AddCoin(thePlant->mX + 40, thePlant->mY, CoinType::COIN_SILVER, CoinMotion::COIN_MOTION_COIN);
@@ -797,7 +797,7 @@ void ZenGarden::RemoveHappyEffect(Plant *thePlant)
 //0x51E890
 bool ZenGarden::WasPlantNeedFulfilledToday(PottedPlant *thePottedPlant)
 {
-	__time64_t aNow = _time64(nullptr);
+	std::time_t aNow = std::time(nullptr);
 	if (aNow - thePottedPlant->mLastNeedFulfilledTime < 3600)
 	{
 		return true;
@@ -812,7 +812,7 @@ bool ZenGarden::WasPlantNeedFulfilledToday(PottedPlant *thePottedPlant)
 //0x51E910
 bool ZenGarden::PlantShouldRefreshNeed(PottedPlant *thePottedPlant)
 {
-	__time64_t aNow = _time64(nullptr);
+	std::time_t aNow = std::time(nullptr);
 	if (aNow - thePottedPlant->mLastWateredTime < 3600)
 	{
 		return false;
@@ -833,7 +833,7 @@ void ZenGarden::RefreshPlantNeeds(PottedPlant *thePottedPlant)
 
 	if (Plant::IsAquatic(thePottedPlant->mSeedType))
 	{
-		thePottedPlant->mLastWateredTime = _time64(nullptr);
+		thePottedPlant->mLastWateredTime = std::time(nullptr);
 		thePottedPlant->mPlantNeed = (PottedPlantNeed)RandRangeInt((int)PottedPlantNeed::PLANTNEED_BUGSPRAY,
 																   (int)PottedPlantNeed::PLANTNEED_PHONOGRAPH);
 	}
@@ -861,7 +861,7 @@ void ZenGarden::UpdatePlantNeeds()
 
 bool ZenGarden::WasPlantFertilizedInLastHour(PottedPlant *thePottedPlant)
 {
-	return _time64(nullptr) - thePottedPlant->mLastFertilizedTime < 3600;
+	return std::time(nullptr) - thePottedPlant->mLastFertilizedTime < 3600;
 }
 
 //0x51EA30
@@ -877,7 +877,7 @@ PottedPlantNeed ZenGarden::GetPlantsNeed(PottedPlant *thePottedPlant)
 		return PottedPlantNeed::PLANTNEED_NONE;
 	}
 
-	__time64_t aNow = _time64(nullptr);
+	std::time_t aNow = std::time(nullptr);
 	bool aTooLongSinceWatering = aNow - thePottedPlant->mLastWateredTime > 15;
 	bool aTooShortSinceWatering = aNow - thePottedPlant->mLastWateredTime < 3;
 
@@ -1050,7 +1050,7 @@ void ZenGarden::MouseDownWithFeedingTool(int x, int y, CursorType theCursorType)
 void ZenGarden::FeedChocolateToPlant(Plant *thePlant)
 {
 	PottedPlant *aPottedPlant = PottedPlantFromIndex(thePlant->mPottedPlantIndex);
-	aPottedPlant->mLastChocolateTime = _time64(nullptr);
+	aPottedPlant->mLastChocolateTime = std::time(nullptr);
 	thePlant->mLaunchCounter = 60;
 	mApp->AddTodParticle(thePlant->mX + 40.0f,
 						 thePlant->mY + 40.0f,
@@ -2334,7 +2334,7 @@ void ZenGarden::SetPlantAnimSpeed(Plant *thePlant)
 int ZenGarden::PlantGetMinutesSinceHappy(Plant *thePlant)
 {
 	PottedPlant *aPottedPlant = PottedPlantFromIndex(thePlant->mPottedPlantIndex);
-	int aMinutes = (_time64(nullptr) - aPottedPlant->mLastNeedFulfilledTime) / 60;
+	int aMinutes = (std::time(nullptr) - aPottedPlant->mLastNeedFulfilledTime) / 60;
 	if (PlantHighOnChocolate(aPottedPlant))
 	{
 		aMinutes = 0;
@@ -2381,7 +2381,7 @@ void ZenGarden::ResetPlantTimers(PottedPlant *thePottedPlant)
 void ZenGarden::PottedPlantUpdate(Plant *thePlant)
 {
 	PottedPlant *aPottedPlant = PottedPlantFromIndex(thePlant->mPottedPlantIndex);
-	__time64_t aNow = _time64(nullptr);
+	std::time_t aNow = std::time(nullptr);
 	if (aPottedPlant->mLastWateredTime > aNow || aPottedPlant->mLastNeedFulfilledTime > aNow ||
 		aPottedPlant->mLastFertilizedTime > aNow || aPottedPlant->mLastChocolateTime > aNow)
 	{
@@ -2456,7 +2456,7 @@ bool ZenGarden::IsStinkyHighOnChocolate()
 
 bool ZenGarden::PlantHighOnChocolate(PottedPlant *thePottedPlant)
 {
-	return _time64(nullptr) - thePottedPlant->mLastChocolateTime < 300;
+	return std::time(nullptr) - thePottedPlant->mLastChocolateTime < 300;
 }
 
 bool ZenGarden::IsStinkySleeping()
