@@ -27,6 +27,9 @@ set(CMAKE_CXX_EXTENSIONS ON)
 # woohooo now we can use folder filters
 set(CMAKE_USE_FOLDERS ON)
 
+# Use FetchContent para las dependencias en lugar de vcpkg
+include(FetchContent)
+
 add_subdirectory(src/ImageLib)
 add_subdirectory(src/PakLib)
 add_subdirectory(src/SexyAppFramework)

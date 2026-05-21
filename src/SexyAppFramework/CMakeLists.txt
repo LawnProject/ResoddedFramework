@@ -1,7 +1,19 @@
 # CmakeLists.txt
 project(SexyAppFramework)
 
-find_package(SDL3 CONFIG REQUIRED)
+include(FetchContent)
+
+# SDL3 - Descargar si no se encuentra con find_package
+find_package(SDL3 CONFIG QUIET)
+if(NOT SDL3_FOUND)
+    message(STATUS "SDL3 no encontrado, descargando...")
+    FetchContent_Declare(SDL3
+        URL https://github.com/libsdl-org/SDL/releases/download/release-3.0.0/SDL3-3.0.0.zip
+        DOWNLOAD_EXTRACT_TIMESTAMP ON
+    )
+    FetchContent_MakeAvailable(SDL3)
+endif()
+
 find_package(ZLIB REQUIRED)
 find_package(OpenAL CONFIG REQUIRED)
 find_package(Ogg CONFIG REQUIRED)
