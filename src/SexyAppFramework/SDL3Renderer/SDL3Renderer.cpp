@@ -137,7 +137,7 @@ bool SDL3Renderer::Redraw(Rect *theClipRect)
 
 	SDL_SetRenderTarget(mBackendRenderer, nullptr);
 
-	SDL_SetRenderDrawColor(mBackendRenderer, 0, 0, 0, 0);
+	SDL_SetRenderDrawColor(mBackendRenderer, 0, 0, 0, 255);
 	SDL_SetTextureBlendMode(mTargetTexture, SDL_BLENDMODE_BLEND);
 	SDL_RenderClear(mBackendRenderer);
 

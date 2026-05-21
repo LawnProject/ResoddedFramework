@@ -3542,9 +3542,27 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 	while (SDL_PollEvent(&event))
 	{
 #if SEXY_USE_IMGUI
-		ImGui_ImplSDL3_ProcessEvent(&event);
+#if SEXY_USE_SDL3_RENDERER
+		if (mRenderer->mCurrentBackend == RenderingBackend::BACKEND_SDL3 &&
+			(event.type == SDL_EVENT_MOUSE_BUTTON_DOWN || event.type == SDL_EVENT_MOUSE_BUTTON_UP ||
+			 event.type == SDL_EVENT_MOUSE_MOTION))
+		{
+			SDL_Event aConvertedEvent = SDL_Event(event);
+			int x = aConvertedEvent.motion.x;
+			int y = aConvertedEvent.motion.y;
+
+			mWidgetManager->RemapMouse(x, y);
+			aConvertedEvent.motion.x = x;
+			aConvertedEvent.motion.y = y;
+			ImGui_ImplSDL3_ProcessEvent(&aConvertedEvent);
+
+		}
+		else
+#endif
+			ImGui_ImplSDL3_ProcessEvent(&event);
 		if (ImGui::GetIO().WantCaptureMouse)
 			break;
+
 #endif
 		if ((mRecordingDemoBuffer) && (!mShutdown))
 		{

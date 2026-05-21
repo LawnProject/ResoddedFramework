@@ -360,8 +360,13 @@ void SettingsDialog::ListClicked(int theId, int theIdx, int theClickCount)
 			int aCurrentY;
 			SDL_GetWindowPosition(mApp->mWindow->mInternalWindow, &aCurrentX, &aCurrentY);
 			int aNewX = aCurrentX - ((mValidSizes[theIdx].mWidth - mApp->mRenderer->mPresentationRect.mWidth) / 2);
-
 			int aNewY = aCurrentY - ((mValidSizes[theIdx].mHeight - mApp->mRenderer->mPresentationRect.mHeight) / 2);
+			SDL_Rect aUsableBounds{};
+			SDL_GetDisplayUsableBounds(SDL_GetDisplayForWindow(mApp->mWindow->mInternalWindow), &aUsableBounds);
+			if (aNewX < 0)
+				aNewX = aUsableBounds.x + 50;
+			if (aNewY < 0)
+				aNewY = aUsableBounds.y + 50;
 			SDL_SetWindowPosition(mApp->mWindow->mInternalWindow, aNewX, aNewY);
 
 			//Send events to the app to update the engine as a whole

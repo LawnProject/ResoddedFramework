@@ -345,11 +345,13 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 	}
 		
 	// Draw to FBO Here:
-	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, mWidth, mHeight);
 	glScissor(0, 0, mWidth, mHeight);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); 
 
 	glClear(GL_COLOR_BUFFER_BIT);
+	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 
 	glBindVertexArray(mVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, mVBO);

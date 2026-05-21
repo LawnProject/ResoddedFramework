@@ -36,20 +36,22 @@ void ImGuiManager::Frame()
 		}
 #endif
 #if SEXY_USE_SDL3_RENDERER
-		case RenderingBackend::BACKEND_SDL3: 
+		case RenderingBackend::BACKEND_SDL3: //FIXME ! figure out the SDL_Renderer backend so the window can't go past the letterbox
 		{
 			ImGui_ImplSDLRenderer3_NewFrame();
 			break;
 		}
 #endif
 	}
-		ImGui_ImplSDL3_NewFrame();
+	ImGui_ImplSDL3_NewFrame();
 
 	ImGui::NewFrame();
 	for (const auto &entry : mWindows)
 	{
-		if (entry->mEnabled)
-			entry->Update();
+		if (!entry->mEnabled)
+			continue;
+
+		entry->Update();
 	}
 	ImGui::Render();
 }
@@ -127,7 +129,10 @@ void ImGuiManager::Init()
 		Reset();
 	ImGui::CreateContext();
 	ImGuiIO &io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+#if SEXY_USE_OPENGL
+	if (mApp->mRenderer->mCurrentBackend == RenderingBackend::BACKEND_OPENGL)
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+#endif
 	io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 	(void)io;
 	ImGui::StyleColorsDark();
