@@ -10,6 +10,17 @@
 #include "../../SexyAppFramework/WidgetManager.h"
 
 
+Color gSkinColors[12] = {
+	Color(134, 147, 122), Color(79, 135, 94), Color(127, 135, 94),	Color(120, 130, 50),
+	Color(156, 163, 105), Color(96, 151, 11), Color(147, 184, 77),	Color(82, 143, 54),
+	Color(121, 168, 99),  Color(65, 156, 74), Color(107, 178, 114), Color(104, 121, 90),
+};
+Color gMoreColors[17] = {Color(151, 33, 33),  Color(199, 53, 53),  Color(220, 112, 47),	 Color(251, 251, 172),
+						 Color(240, 210, 87), Color(165, 126, 65), Color(106, 72, 32),	 Color(72, 35, 5),
+						 Color(50, 56, 61),	  Color(0, 0, 0),	   Color(197, 239, 239), Color(63, 109, 242),
+						 Color(13, 202, 151), Color(158, 183, 19), Color(30, 210, 64),	 Color(225, 65, 230),
+						 Color(128, 47, 204)};
+
 ZombatarWidget::ZombatarWidget(LawnApp *theApp)
 {
 	mPage = PAGE_SKIN;
@@ -18,6 +29,10 @@ ZombatarWidget::ZombatarWidget(LawnApp *theApp)
 	mHeight = BOARD_HEIGHT;
 	TodLoadResources("DelayLoad_Almanac");
 	TodLoadResources("DelayLoad_Zombatar");
+	mZombatar = nullptr;
+
+	if (mApp->mPlayerInfo->mZombatarIndex > -1)
+		mZombatar = &mApp->mPlayerInfo->mZombatars[mApp->mPlayerInfo->mZombatarIndex];
 
 	mBackButton = new GameButton(ZombatarWidget::ZOMBATAR_BACK);
 	mBackButton->mButtonImage = Sexy::IMAGE_BLANK;
@@ -314,11 +329,23 @@ void ZombatarWidget::ChangePage(ZombatarPage thePage)
 
 void ZombatarWidget::DrawPortrait(Graphics *g, int theX, int theY)
 {
+	int aSkinIndex = mZombatar ? mZombatar->mSkinColor : 0;
+	int aBackdropColor = mZombatar ? mZombatar->mBackdropColor : -1;
+	int aBackdropIndex = mZombatar ? mZombatar->mBackdrop : 0;
 	g->PushState();
 	g->Translate(theX, theY);
-
+	g->SetColorizeImages(true);
+	g->SetColor(Color::White);
+	if (aBackdropIndex == 0 && aBackdropColor != -1)
+	{
+		g->SetColor(gMoreColors[aBackdropColor]);
+	}
 	g->DrawImage(Sexy::IMAGE_ZOMBATAR_BACKGROUND_BLANK, 0, 0);
+	g->SetColor(gSkinColors[aSkinIndex]);
 	g->DrawImage(Sexy::IMAGE_ZOMBATAR_ZOMBIE_BLANK_SKIN, 38, 40);
+	g->SetColor(Color::White);
+	g->SetColorizeImages(false);
+
 	g->DrawImage(Sexy::IMAGE_ZOMBATAR_ZOMBIE_BLANK, 38, 40);
 
 	g->PopState();
