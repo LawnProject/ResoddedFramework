@@ -61,6 +61,36 @@ ZombatarWidget::ZombatarWidget(LawnApp *theApp)
 	mTidbitsButton->mDownImage = Sexy::IMAGE_ZOMBATAR_TIDBITS_BUTTON_OVER;
 	mTidbitsButton->Resize(58, 236, Sexy::IMAGE_ZOMBATAR_TIDBITS_BUTTON_HIGHLIGHT->mWidth, Sexy::IMAGE_ZOMBATAR_TIDBITS_BUTTON_HIGHLIGHT->mHeight);
 
+	mEyewearButton = new GameButton(ZombatarWidget::ZOMBATAR_TIDBITS);
+	mEyewearButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_EYEWEAR_BUTTON;
+	mEyewearButton->mOverImage = Sexy::IMAGE_ZOMBATAR_EYEWEAR_BUTTON_OVER;
+	mEyewearButton->mDownImage = Sexy::IMAGE_ZOMBATAR_EYEWEAR_BUTTON_OVER;
+	mEyewearButton->Resize(58, 272, Sexy::IMAGE_ZOMBATAR_EYEWEAR_BUTTON_HIGHLIGHT->mWidth, Sexy::IMAGE_ZOMBATAR_EYEWEAR_BUTTON_HIGHLIGHT->mHeight);
+
+	mClothesButton = new GameButton(ZombatarWidget::ZOMBATAR_CLOTHES);
+	mClothesButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_CLOTHES_BUTTON;
+	mClothesButton->mOverImage = Sexy::IMAGE_ZOMBATAR_CLOTHES_BUTTON_OVER;
+	mClothesButton->mDownImage = Sexy::IMAGE_ZOMBATAR_CLOTHES_BUTTON_OVER;
+	mClothesButton->Resize(58, 308, Sexy::IMAGE_ZOMBATAR_CLOTHES_BUTTON_HIGHLIGHT->mWidth, Sexy::IMAGE_ZOMBATAR_CLOTHES_BUTTON_HIGHLIGHT->mHeight);
+
+	mAccessoriesButton = new GameButton(ZombatarWidget::ZOMBATAR_CLOTHES);
+	mAccessoriesButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_ACCESSORY_BUTTON;
+	mAccessoriesButton->mOverImage = Sexy::IMAGE_ZOMBATAR_ACCESSORY_BUTTON_OVER;
+	mAccessoriesButton->mDownImage = Sexy::IMAGE_ZOMBATAR_ACCESSORY_BUTTON_OVER;
+	mAccessoriesButton->Resize(58, 344, Sexy::IMAGE_ZOMBATAR_ACCESSORY_BUTTON_HIGHLIGHT->mWidth, Sexy::IMAGE_ZOMBATAR_ACCESSORY_BUTTON_HIGHLIGHT->mHeight);
+
+	mHatsButton = new GameButton(ZombatarWidget::ZOMBATAR_HATS);
+	mHatsButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_HATS_BUTTON;
+	mHatsButton->mOverImage = Sexy::IMAGE_ZOMBATAR_HATS_BUTTON_OVER;
+	mHatsButton->mDownImage = Sexy::IMAGE_ZOMBATAR_HATS_BUTTON_OVER;
+	mHatsButton->Resize(58, 380, Sexy::IMAGE_ZOMBATAR_HATS_BUTTON_HIGHLIGHT->mWidth, Sexy::IMAGE_ZOMBATAR_HATS_BUTTON_HIGHLIGHT->mHeight);
+
+	mBackdropsButton = new GameButton(ZombatarWidget::ZOMBATAR_HATS);
+	mBackdropsButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_BACKDROPS_BUTTON;
+	mBackdropsButton->mOverImage = Sexy::IMAGE_ZOMBATAR_BACKDROPS_BUTTON_OVER;
+	mBackdropsButton->mDownImage = Sexy::IMAGE_ZOMBATAR_BACKDROPS_BUTTON_OVER;
+	mBackdropsButton->Resize(58, 416, Sexy::IMAGE_ZOMBATAR_BACKDROPS_BUTTON_HIGHLIGHT->mWidth, Sexy::IMAGE_ZOMBATAR_BACKDROPS_BUTTON_HIGHLIGHT->mHeight);
+
 	mZombie = new Zombie();
 	mZombie->mBoard = nullptr;
 	mZombie->ZombieInitialize(0, ZombieType::ZOMBIE_FLAG, false, nullptr, Zombie::ZOMBIE_WAVE_UI);
@@ -94,6 +124,16 @@ ZombatarWidget::~ZombatarWidget()
 		delete mFacialHairButton;
 	if (mTidbitsButton)
 		delete mTidbitsButton;
+	if (mEyewearButton)
+		delete mEyewearButton;
+	if (mClothesButton)
+		delete mClothesButton;
+	if (mAccessoriesButton)
+		delete mAccessoriesButton;
+	if (mHatsButton)
+		delete mHatsButton;
+	if (mBackdropsButton)
+		delete mBackdropsButton;
 }
 
 void ZombatarWidget::ChangePage(ZombatarPage thePage)
@@ -128,6 +168,41 @@ void ZombatarWidget::ChangePage(ZombatarPage thePage)
 			mToggledButton->mDownImage = Sexy::IMAGE_ZOMBATAR_TIDBITS_BUTTON_OVER;
 			break;
 		}
+		case PAGE_EYEWEAR: 
+		{
+			mToggledButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_EYEWEAR_BUTTON;
+			mToggledButton->mOverImage = Sexy::IMAGE_ZOMBATAR_EYEWEAR_BUTTON_OVER;
+			mToggledButton->mDownImage = Sexy::IMAGE_ZOMBATAR_EYEWEAR_BUTTON_OVER;
+			break;
+		}
+		case PAGE_CLOTHES: 
+		{
+			mToggledButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_CLOTHES_BUTTON;
+			mToggledButton->mOverImage = Sexy::IMAGE_ZOMBATAR_CLOTHES_BUTTON_OVER;
+			mToggledButton->mDownImage = Sexy::IMAGE_ZOMBATAR_CLOTHES_BUTTON_OVER;
+			break;
+		}
+		case PAGE_ACCESSORIES: 
+		{
+			mToggledButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_ACCESSORY_BUTTON;
+			mToggledButton->mOverImage = Sexy::IMAGE_ZOMBATAR_ACCESSORY_BUTTON_OVER;
+			mToggledButton->mDownImage = Sexy::IMAGE_ZOMBATAR_ACCESSORY_BUTTON_OVER;
+			break;
+		}
+		case PAGE_HATS: 
+		{
+			mToggledButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_HATS_BUTTON;
+			mToggledButton->mOverImage = Sexy::IMAGE_ZOMBATAR_HATS_BUTTON_OVER;
+			mToggledButton->mDownImage = Sexy::IMAGE_ZOMBATAR_HATS_BUTTON_OVER;
+			break;
+		}
+		case PAGE_BACKDROPS: 
+		{
+			mToggledButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_BACKDROPS_BUTTON;
+			mToggledButton->mOverImage = Sexy::IMAGE_ZOMBATAR_BACKDROPS_BUTTON_OVER;
+			mToggledButton->mDownImage = Sexy::IMAGE_ZOMBATAR_BACKDROPS_BUTTON_OVER;
+			break;
+		}
 	}
 	mToggledButton->mDisabled = false;
 	mPage = thePage;
@@ -153,40 +228,100 @@ void ZombatarWidget::ChangePage(ZombatarPage thePage)
 			mToggledButton = mTidbitsButton;
 			break;
 		}
+		case PAGE_EYEWEAR:
+		{
+			mToggledButton = mEyewearButton;
+			break;
+		}
+		case PAGE_CLOTHES:
+		{
+			mToggledButton = mClothesButton;
+			break;
+		}
+		case PAGE_ACCESSORIES:
+		{
+			mToggledButton = mAccessoriesButton;
+			break;
+		}
+		case PAGE_HATS:
+		{
+			mToggledButton = mHatsButton;
+			break;
+		}
+		case PAGE_BACKDROPS:
+		{
+			mToggledButton = mBackdropsButton;
+			break;
+		}
 	}
+
+	Image *aNewImage = nullptr;
 	switch (mPage)
 	{
 		case PAGE_SKIN: 
 		{
-			mToggledButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_SKIN_BUTTON_HIGHLIGHT;
-			mToggledButton->mOverImage = Sexy::IMAGE_ZOMBATAR_SKIN_BUTTON_HIGHLIGHT;
-			mToggledButton->mDownImage = Sexy::IMAGE_ZOMBATAR_SKIN_BUTTON_HIGHLIGHT;
+			aNewImage = Sexy::IMAGE_ZOMBATAR_SKIN_BUTTON_HIGHLIGHT;
 			break;
 		}
 		case PAGE_HAIR: 
 		{
-			mToggledButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_HAIR_BUTTON_HIGHLIGHT;
-			mToggledButton->mOverImage = Sexy::IMAGE_ZOMBATAR_HAIR_BUTTON_HIGHLIGHT;
-			mToggledButton->mDownImage = Sexy::IMAGE_ZOMBATAR_HAIR_BUTTON_HIGHLIGHT;
+			aNewImage = Sexy::IMAGE_ZOMBATAR_HAIR_BUTTON_HIGHLIGHT;
 			break;
 		}
 		case PAGE_FACIAL_HAIR: 
 		{
-			mToggledButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_FACIAL_HAIR_BUTTON_HIGHLIGHT;
-			mToggledButton->mOverImage = Sexy::IMAGE_ZOMBATAR_FACIAL_HAIR_BUTTON_HIGHLIGHT;
-			mToggledButton->mDownImage = Sexy::IMAGE_ZOMBATAR_FACIAL_HAIR_BUTTON_HIGHLIGHT;
+			aNewImage = Sexy::IMAGE_ZOMBATAR_FACIAL_HAIR_BUTTON_HIGHLIGHT;
 			break;
 		}
 		case PAGE_TIDBITS: 
 		{
-			mToggledButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_TIDBITS_BUTTON_HIGHLIGHT;
-			mToggledButton->mOverImage = Sexy::IMAGE_ZOMBATAR_TIDBITS_BUTTON_HIGHLIGHT;
-			mToggledButton->mDownImage = Sexy::IMAGE_ZOMBATAR_TIDBITS_BUTTON_HIGHLIGHT;
+			aNewImage = Sexy::IMAGE_ZOMBATAR_TIDBITS_BUTTON_HIGHLIGHT;
+			break;
+		}
+		case PAGE_EYEWEAR: 
+		{
+			aNewImage = Sexy::IMAGE_ZOMBATAR_EYEWEAR_BUTTON_HIGHLIGHT;
+			break;
+		}
+		case PAGE_CLOTHES: 
+		{
+			aNewImage = Sexy::IMAGE_ZOMBATAR_CLOTHES_BUTTON_HIGHLIGHT;
+			break;
+		}
+		case PAGE_ACCESSORIES: 
+		{
+			aNewImage = Sexy::IMAGE_ZOMBATAR_ACCESSORY_BUTTON_HIGHLIGHT;
+			break;
+		}
+		case PAGE_HATS: 
+		{
+			aNewImage = Sexy::IMAGE_ZOMBATAR_HATS_BUTTON_HIGHLIGHT;
+			break;
+		}
+		case PAGE_BACKDROPS: 
+		{
+			aNewImage = Sexy::IMAGE_ZOMBATAR_BACKDROPS_BUTTON_HIGHLIGHT;
 			break;
 		}
 	}
+
+	mToggledButton->mButtonImage = aNewImage;
+	mToggledButton->mOverImage = aNewImage;
+	mToggledButton->mDownImage = aNewImage;
 	mToggledButton->mDisabled = true;
 
+}
+
+void ZombatarWidget::DrawPortrait(Graphics *g, int theX, int theY)
+{
+	g->PushState();
+	g->Translate(theX, theY);
+
+	g->DrawImage(Sexy::IMAGE_ZOMBATAR_BACKGROUND_BLANK, 0, 0);
+	g->DrawImage(Sexy::IMAGE_ZOMBATAR_ZOMBIE_BLANK_SKIN, 38, 40);
+	g->DrawImage(Sexy::IMAGE_ZOMBATAR_ZOMBIE_BLANK, 38, 40);
+
+	g->PopState();
 }
 
 void ZombatarWidget::Draw(Graphics *g)
@@ -201,6 +336,8 @@ void ZombatarWidget::Draw(Graphics *g)
 
 	g->ClearClipRect();
 
+	DrawPortrait(g, 592, 115);
+
 	int aWidgetX = 25;
 	int aWidgetY = 25;
 	g->DrawImage(IMAGE_ZOMBATAR_WIDGET_BG, aWidgetX, aWidgetY);
@@ -214,6 +351,11 @@ void ZombatarWidget::Draw(Graphics *g)
 	mHairButton->Draw(g);
 	mFacialHairButton->Draw(g);
 	mTidbitsButton->Draw(g);
+	mEyewearButton->Draw(g);
+	mClothesButton->Draw(g);
+	mAccessoriesButton->Draw(g);
+	mHatsButton->Draw(g);
+	mBackdropsButton->Draw(g);
 }
 
 void ZombatarWidget::Update()
@@ -228,11 +370,17 @@ void ZombatarWidget::Update()
 	mHairButton->Update();
 	mFacialHairButton->Update();
 	mTidbitsButton->Update();
+	mEyewearButton->Update();
+	mClothesButton->Update();
+	mHatsButton->Update();
+	mAccessoriesButton->Update();
+	mBackdropsButton->Update();
 	if (mHasFocus)
 	{
 		if (mViewButton->IsMouseOver() || mBackButton->IsMouseOver() || mFinishedButton->IsMouseOver() ||
 			mSkinButton->IsMouseOver() || mHairButton->IsMouseOver() || mFacialHairButton->IsMouseOver() ||
-			mTidbitsButton->IsMouseOver())
+			mTidbitsButton->IsMouseOver() || mEyewearButton->IsMouseOver() || mClothesButton->IsMouseOver() ||
+			mAccessoriesButton->IsMouseOver() || mHatsButton->IsMouseOver() || mBackdropsButton->IsMouseOver())
 		{
 			mApp->SetCursor(CURSOR_HAND);
 		}
@@ -280,5 +428,25 @@ void ZombatarWidget::MouseUp(int x, int y, int theClickCount)
 	else if (mTidbitsButton->IsMouseOver())
 	{
 		ChangePage(PAGE_TIDBITS);
+	}
+	else if (mEyewearButton->IsMouseOver())
+	{
+		ChangePage(PAGE_EYEWEAR);
+	}
+	else if (mClothesButton->IsMouseOver())
+	{
+		ChangePage(PAGE_CLOTHES);
+	}
+	else if (mAccessoriesButton->IsMouseOver())
+	{
+		ChangePage(PAGE_ACCESSORIES);
+	}
+	else if (mHatsButton->IsMouseOver())
+	{
+		ChangePage(PAGE_HATS);
+	}
+	else if (mBackdropsButton->IsMouseOver())
+	{
+		ChangePage(PAGE_BACKDROPS);
 	}
 }
