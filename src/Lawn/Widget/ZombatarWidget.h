@@ -53,6 +53,11 @@ class ZombatarWidget : public Widget, public ButtonListener
 	GameButton *mHairButton;
 	GameButton *mFacialHairButton;
 	GameButton *mTidbitsButton;
+	GameButton *mEyewearButton;
+	GameButton *mClothesButton;
+	GameButton *mAccessoriesButton;
+	GameButton *mHatsButton;
+	GameButton *mBackdropsButton;
 
 	ZombatarPage mPage;
 	Zombie *mZombie;
@@ -63,6 +68,7 @@ class ZombatarWidget : public Widget, public ButtonListener
 
 	void ChangePage(ZombatarPage thePage);
 
+	void DrawPortrait(Graphics *g, int theX, int theY);
 	virtual void Draw(Graphics *g);
 	virtual void Update();
 
