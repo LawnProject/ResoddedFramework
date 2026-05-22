@@ -224,6 +224,18 @@ void AchievementsWidget::Update()
 	mMoreButton->mY = mY + 450 + mScrollPosition;
 #endif
 
+	if (mHasFocus)
+	{
+		if ((mMoreButton->mIsOver && !mMoreButton->mDisabled) || (mBackButton->mIsOver && !mBackButton->mDisabled))
+		{
+			mApp->SetCursor(CURSOR_HAND);
+		}
+		else
+		{
+			mApp->SetCursor(CURSOR_POINTER);
+		}
+	}
+
 	if (mScrollValue == 0)
 		return;
 	

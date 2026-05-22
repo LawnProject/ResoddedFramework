@@ -165,7 +165,7 @@ void PlayerInfo::Reset()
 	memset(mZombatars, 0, sizeof(mZombatars));
 	mNumPottedPlants = 0;
 	mNumZombatars = 0;
-	mZombatarIndex = 0;
+	mZombatarIndex = -1;
 }
 
 void PlayerInfo::AddCoins(int theAmount)

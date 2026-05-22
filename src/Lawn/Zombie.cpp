@@ -1011,7 +1011,7 @@ void Zombie::SetupZombatar()
 	aHeadReanim->AssignRenderGroupToPrefix("tidBits_", RENDER_GROUP_HIDDEN);
 	aHeadReanim->AssignRenderGroupToPrefix("anim_hair", RENDER_GROUP_HIDDEN);
 
-	if (mApp->mPlayerInfo != nullptr)
+	if (mApp->mPlayerInfo != nullptr && mApp->mPlayerInfo->mZombatarIndex > -1)
 		UpdateZombatar(mApp->mPlayerInfo->mZombatars[mApp->mPlayerInfo->mZombatarIndex]);
 }
 
@@ -1026,21 +1026,60 @@ void Zombie::UpdateZombatar(Zombatar &aZombatar)
 	aHeadReanim->AssignRenderGroupToPrefix("accessories_", RENDER_GROUP_HIDDEN);
 	aHeadReanim->AssignRenderGroupToPrefix("eyeWear_", RENDER_GROUP_HIDDEN);
 	aHeadReanim->AssignRenderGroupToPrefix("tidBits_", RENDER_GROUP_HIDDEN);
-
+/*
 	#define ZOMBATAR_PART_HELPER(prefix, member)                                                                       \
+	if (aZombatar.member != -1)																						   \
 	{                                                                                                                  \
 		SexyString aNum = StrFormat("%d", aZombatar.member);                                                           \
 		aHeadReanim->AssignRenderGroupToPrefix(                                                                        \
 			StrFormat("%s_%s", prefix, aZombatar.member < 10 ? ("0" + aNum).c_str() : aNum.c_str()).c_str(),           \
 			RENDER_GROUP_NORMAL);                                                                                      \
 	}
+*/
 
-	ZOMBATAR_PART_HELPER("hair", mHair);
-	ZOMBATAR_PART_HELPER("tidBits", mTidbits);
-	ZOMBATAR_PART_HELPER("eyeWear", mEyewear);
-	ZOMBATAR_PART_HELPER("accessories", mAccessories);
-	ZOMBATAR_PART_HELPER("facialHair", mFacialHair);
-	ZOMBATAR_PART_HELPER("hats", mHat);
+	if (aZombatar.mHair != -1)
+	{
+		SexyString aNum = StrFormat("%d", aZombatar.mHair);
+		aHeadReanim->AssignRenderGroupToPrefix(
+			StrFormat("%s_%s", "hair", aZombatar.mHair < 10 ? ("0" + aNum).c_str() : aNum.c_str()).c_str(),
+			RENDER_GROUP_NORMAL);
+	};
+	if (aZombatar.mTidbits != -1)
+	{
+		SexyString aNum = StrFormat("%d", aZombatar.mTidbits);
+		aHeadReanim->AssignRenderGroupToPrefix(
+			StrFormat("%s_%s", "tidBits", aZombatar.mTidbits < 10 ? ("0" + aNum).c_str() : aNum.c_str()).c_str(),
+			RENDER_GROUP_NORMAL);
+	};
+	if (aZombatar.mEyewear != -1)
+	{
+		SexyString aNum = StrFormat("%d", aZombatar.mEyewear);
+		aHeadReanim->AssignRenderGroupToPrefix(
+			StrFormat("%s_%s", "eyeWear", aZombatar.mEyewear < 10 ? ("0" + aNum).c_str() : aNum.c_str()).c_str(),
+			RENDER_GROUP_NORMAL);
+	};
+	if (aZombatar.mAccessories != -1)
+	{
+		SexyString aNum = StrFormat("%d", aZombatar.mAccessories);
+		aHeadReanim->AssignRenderGroupToPrefix(
+			StrFormat("%s_%s", "accessories", aZombatar.mAccessories < 10 ? ("0" + aNum).c_str() : aNum.c_str())
+				.c_str(),
+			RENDER_GROUP_NORMAL);
+	};
+	if (aZombatar.mFacialHair != -1)
+	{
+		SexyString aNum = StrFormat("%d", aZombatar.mFacialHair);
+		aHeadReanim->AssignRenderGroupToPrefix(
+			StrFormat("%s_%s", "facialHair", aZombatar.mFacialHair < 10 ? ("0" + aNum).c_str() : aNum.c_str()).c_str(),
+			RENDER_GROUP_NORMAL);
+	};
+	if (aZombatar.mHat != -1)
+	{
+		SexyString aNum = StrFormat("%d", aZombatar.mHat);
+		aHeadReanim->AssignRenderGroupToPrefix(
+			StrFormat("%s_%s", "hats", aZombatar.mHat < 10 ? ("0" + aNum).c_str() : aNum.c_str()).c_str(),
+			RENDER_GROUP_NORMAL);
+	};
 
 }
 

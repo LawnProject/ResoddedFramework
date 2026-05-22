@@ -1153,6 +1153,29 @@ void GameSelector::Update()
 									  (mZombatarButton->mIsOver || mZombatarButton->mIsDown)
 										  ? Sexy::IMAGE_REANIM_SELECTORSCREEN_WOODSIGN3_PRESS
 										  : nullptr);
+
+	if (mHasFocus)
+	{
+		if ((mMinigameButton->mIsOver && !mMinigameButton->mDisabled) ||
+			(mPuzzleButton->mIsOver && !mPuzzleButton->mDisabled) ||
+			(mSurvivalButton->mIsOver && !mSurvivalButton->mDisabled) ||
+			(mZenGardenButton->mIsOver && !mZenGardenButton->mDisabled) ||
+			(mOptionsButton->mIsOver && !mOptionsButton->mDisabled) ||
+			(mQuitButton->mIsOver && !mQuitButton->mDisabled) || (mHelpButton->mIsOver && !mHelpButton->mDisabled) ||
+			(mAlmanacButton->mIsOver && !mAlmanacButton->mDisabled) ||
+			(mStoreButton->mIsOver && !mStoreButton->mDisabled) ||
+			(mAchievementsButton->mIsOver && !mAchievementsButton->mDisabled) ||
+			(mZombatarButton->mIsOver && !mZombatarButton->mDisabled) ||
+			(mChangeUserButton->mIsOver && !mChangeUserButton->mDisabled))
+		{
+			mApp->SetCursor(CURSOR_HAND);
+		}
+		else
+		{
+			mApp->SetCursor(CURSOR_POINTER);
+		}
+	}
+
 }
 
 //0x44BB20
