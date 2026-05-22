@@ -126,10 +126,20 @@ void AchievementsWidget::Draw(Graphics *g)
 void AchievementsWidget::Update()
 {
 	MarkDirty();
-	mBackButton->MarkDirty();
-	mMoreButton->MarkDirty();
 	mMoreButton->mY = mY + 450;
 	mBackButton->mY = mY + 55;
+
+	if (mHasFocus)
+	{
+		if ((mMoreButton->mIsOver && !mMoreButton->mDisabled) || (mBackButton->mIsOver && !mBackButton->mDisabled))
+		{
+			mApp->SetCursor(CURSOR_HAND);
+		}
+		else
+		{
+			mApp->SetCursor(CURSOR_POINTER);
+		}
+	}
 
 	if (mScrollValue == 0)
 		return;

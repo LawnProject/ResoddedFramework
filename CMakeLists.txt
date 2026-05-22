@@ -1,6 +1,6 @@
 # CMakeLists.txt
 cmake_minimum_required(VERSION 3.28 FATAL_ERROR)
-project(GardenersDecomp LANGUAGES C CXX)
+project(ResoddedFramework LANGUAGES C CXX)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
