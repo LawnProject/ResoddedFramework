@@ -6,24 +6,12 @@
 #include "../SexyAppFramework/PerfTimer.h"
 #include <zlib.h>
 
-
 bool LegacyDefinition::DefReadFromCacheArray(void *&theReadPtr, DefinitionArrayDef *theArray, DefMap *theDefMap)
 {
 	int aDefSize;
-<<<<<<< HEAD
 	SMemR(theReadPtr, &aDefSize, sizeof(int)); // Size of the structure on x86
 
-
 	if (theArray->mArrayCount == 0)
-=======
-	SMemR(theReadPtr, &aDefSize, sizeof(int)); // 先读取一个整数表示 theDefMap 描述的定义结构类的大小
-	if (aDefSize != theDefMap->mDefSize)	   // 比较其与当前给出的定义结构图声明的大小是否一致
-	{
-		TodTrace("[TodLib] - cache has old def: array size");
-		return false;
-	}
-	if (theArray->mArrayCount == 0) // 如果类中没有实例，则无需读取
->>>>>>> 4fceb46 (organized the traces so you can tell what part of the engine it came from)
 		return true;
 
 	int aTargetArraySize = theDefMap->mDefSize * theArray->mArrayCount;
@@ -45,8 +33,6 @@ bool LegacyDefinition::DefReadFromCacheArray(void *&theReadPtr, DefinitionArrayD
 	}
 	return true;
 }
-
-
 
 bool LegacyDefinition::DefReadFromCacheFloatTrack(void *&theReadPtr, FloatParameterTrack *theTrack)
 {
@@ -103,7 +89,8 @@ bool LegacyDefinition::DefReadFromCacheFont(void *&theReadPtr, Font **theFont)
 	return aFontName[0] == '\0' || DefinitionLoadFont(theFont, aFontName);
 }
 
-bool LegacyDefinition::DefMapReadFromCache(void *&theReadPtr, DefMap *theDefMap, void *theDefinition, void *theX86Buffer)
+bool LegacyDefinition::DefMapReadFromCache(void *&theReadPtr, DefMap *theDefMap, void *theDefinition,
+										   void *theX86Buffer)
 {
 	// Map fields from x86 buffer to x64 structure.
 	int aCurrentX86Offset = 0;
@@ -133,14 +120,14 @@ bool LegacyDefinition::DefMapReadFromCache(void *&theReadPtr, DefMap *theDefMap,
 			aSucceed = LegacyDefinition::DefReadFromCacheString(theReadPtr, (char **)aDest);
 			aCurrentX86Offset += 4; // x86 pointer
 			break;
-		case DefFieldType::DT_ARRAY:
-		{
+		case DefFieldType::DT_ARRAY: {
 			// Read the count from the x86 buffer (it was at offset 4 after the pointer)
 			int aArrayCount = *(int *)((uintptr_t)aSrc + 4);
 			if (aArrayCount < 0 || aArrayCount > 1000000)
 				return false;
 			((DefinitionArrayDef *)aDest)->mArrayCount = aArrayCount;
-			aSucceed = LegacyDefinition::DefReadFromCacheArray(theReadPtr, (DefinitionArrayDef *)aDest, (DefMap *)aField->mExtraData);
+			aSucceed = LegacyDefinition::DefReadFromCacheArray(theReadPtr, (DefinitionArrayDef *)aDest,
+															   (DefMap *)aField->mExtraData);
 			aCurrentX86Offset += 8; // x86 pointer + count
 			break;
 		}
@@ -165,7 +152,6 @@ bool LegacyDefinition::DefMapReadFromCache(void *&theReadPtr, DefMap *theDefMap,
 	return true;
 }
 
-
 uint32_t LegacyDefinition::DefinitionCalcHashSymbolMap(int aSchemaHash, DefSymbol *theSymbolMap)
 
 {
@@ -178,8 +164,7 @@ uint32_t LegacyDefinition::DefinitionCalcHashSymbolMap(int aSchemaHash, DefSymbo
 	return aSchemaHash;
 }
 
-uint32_t LegacyDefinition::DefinitionCalcHashDefMap(int aSchemaHash,
-													DefMap *theDefMap,
+uint32_t LegacyDefinition::DefinitionCalcHashDefMap(int aSchemaHash, DefMap *theDefMap,
 													TodList<DefMap *> &theProgressMaps)
 {
 	for (TodListNode<DefMap *> *aNode = theProgressMaps.mHead; aNode != nullptr; aNode = aNode->mNext)
@@ -199,7 +184,8 @@ uint32_t LegacyDefinition::DefinitionCalcHashDefMap(int aSchemaHash,
 			aSchemaHash = LegacyDefinition::DefinitionCalcHashSymbolMap(aSchemaHash, (DefSymbol *)aField->mExtraData);
 			break;
 		case DefFieldType::DT_ARRAY:
-			aSchemaHash = LegacyDefinition::DefinitionCalcHashDefMap(aSchemaHash, (DefMap *)aField->mExtraData, theProgressMaps);
+			aSchemaHash =
+				LegacyDefinition::DefinitionCalcHashDefMap(aSchemaHash, (DefMap *)aField->mExtraData, theProgressMaps);
 			break;
 		}
 	}
@@ -214,7 +200,8 @@ uint32_t LegacyDefinition::DefinitionCalcHash(DefMap *theDefMap)
 	return aResult;
 }
 
-bool LegacyDefinition::DefinitionReadCompiledFile(const SexyString &theCompiledFilePath, DefMap *theDefMap, void *theDefinition)
+bool LegacyDefinition::DefinitionReadCompiledFile(const SexyString &theCompiledFilePath, DefMap *theDefMap,
+												  void *theDefinition)
 {
 	PerfTimer aTimer;
 	aTimer.Start();
@@ -231,7 +218,7 @@ bool LegacyDefinition::DefinitionReadCompiledFile(const SexyString &theCompiledF
 		p_fclose(pFile);		   // Close the resource file stream and free up the memory occupied by pFile
 		if (aReadCompressedFailed) // Determine whether the reading is successful
 		{
-			TodTrace("[TodLib] - Failed to read compiled file: %s\n", theCompiledFilePath.c_str());
+			TodTrace("Failed to read compiled file: %s\n", theCompiledFilePath.c_str());
 			DefinitionFree(aCompressedBuffer);
 		}
 		else
@@ -248,48 +235,48 @@ bool LegacyDefinition::DefinitionReadCompiledFile(const SexyString &theCompiledF
 					theDefMap->mDefSize +
 						sizeof(
 							uint32_t)) // Detect whether the length of the decompressed data is sufficient for the length of "define data + a check value to record data"
-					TodTrace("[TodLib] - Compiled file size too small: %s\n", theCompiledFilePath.c_str());
+					TodTrace("Compiled file size too small: %s\n", theCompiledFilePath.c_str());
 				else
 				{
 					// A pointer to copy a copy of the decompressed data is used to move when reading, and the original pointer will be used to calculate the size of the read area and delete[] operations in the future.
 					void *aBufferPtr = aUncompressedBuffer;
 					uint32_t aCashHash;
 					SMemR(aBufferPtr, &aCashHash, sizeof(uint32_t)); //Read the CRC check value of the record
-					if (false && aCashHash != aDefHash) // Bypassed for x64 compatibility
-						TodTrace("[TodLib] - Compiled file schema wrong: %s\n", theCompiledFilePath.c_str());
+					if (false && aCashHash != aDefHash)				 // Bypassed for x64 compatibility
+						TodTrace("Compiled file schema wrong: %s\n", theCompiledFilePath.c_str());
 					else
 					{
 						// Calculate root x86 size
 						int aX86Size = 0;
 						for (DefField *aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++)
 						{
-							if (aField->mFieldType == DefFieldType::DT_VECTOR2 || aField->mFieldType == DefFieldType::DT_ARRAY)
+							if (aField->mFieldType == DefFieldType::DT_VECTOR2 ||
+								aField->mFieldType == DefFieldType::DT_ARRAY)
 								aX86Size += 8;
 							else
 								aX86Size += 4;
 						}
-						
+
 						// ReanimatorDefinition has an unmapped pointer `mReanimAtlas` at the end
-						// which takes 4 bytes on x86. We must include it so the stream pointer 
+						// which takes 4 bytes on x86. We must include it so the stream pointer
 						// correctly advances to the start of the dynamic array data.
-						if (aX86Size == 12) 
+						if (aX86Size == 12)
 							aX86Size = 16;
 
 						void *aX86Buffer = _alloca(aX86Size);
 						SMemR(aBufferPtr, aX86Buffer, aX86Size);
 
-						bool aResult = LegacyDefinition::DefMapReadFromCache(aBufferPtr, theDefMap, theDefinition, aX86Buffer);
+						bool aResult =
+							LegacyDefinition::DefMapReadFromCache(aBufferPtr, theDefMap, theDefinition, aX86Buffer);
 
 						size_t aReadMemSize = (uintptr_t)aBufferPtr - (uintptr_t)aUncompressedBuffer;
 						DefinitionFree(aUncompressedBuffer);
 
 						// We also bypass the read size check because structure sizes differ.
 						if (aResult && false && aReadMemSize != aUncompressedSize)
-							TodTrace("[TodLib] - Compiled file wrong size: %s\n", theCompiledFilePath.c_str());
+							TodTrace("Compiled file wrong size: %s\n", theCompiledFilePath.c_str());
 						return aResult;
-
 					}
-
 				}
 			}
 			DefinitionFree(aUncompressedBuffer);
@@ -298,8 +285,7 @@ bool LegacyDefinition::DefinitionReadCompiledFile(const SexyString &theCompiledF
 	return false;
 }
 
-void *LegacyDefinition::DefinitionUncompressCompiledBuffer(void *theCompressedBuffer,
-														   size_t theCompressedBufferSize,
+void *LegacyDefinition::DefinitionUncompressCompiledBuffer(void *theCompressedBuffer, size_t theCompressedBufferSize,
 														   size_t &theUncompressedSize,
 														   const SexyString &theCompiledFilePath)
 {
@@ -307,23 +293,21 @@ void *LegacyDefinition::DefinitionUncompressCompiledBuffer(void *theCompressedBu
 	// theCompressedBuffer The first two four-byte bytes contain special data, and this check verifies whether its length is sufficient for 8 bytes (i.e., 2 four-byte bytes).
 	if (theCompressedBufferSize < 8)
 	{
-		TodTrace("[TodLib] - Compile def too small", theCompiledFilePath.c_str());
+		TodTrace("Compile def too small", theCompiledFilePath.c_str());
 		return nullptr;
 	}
 	// 将 theCompressedBuffer 的前两个四字节视为一个 CompressedDefinitionHeader
 	LegacyDefinition::CompressedDefinitionHeader *aHeader = (CompressedDefinitionHeader *)theCompressedBuffer;
 	if (aHeader->mCookie != COMPILED_LEGACY_DEFINITION_MAGIC)
 	{
-		TodTrace("[TodLib] - Compiled fire cookie wrong: %s\n", theCompiledFilePath.c_str());
+		TodTrace("Compiled fire cookie wrong: %s\n", theCompiledFilePath.c_str());
 		return nullptr;
 	}
 	Bytef *aUncompressedBuffer = (Bytef *)DefinitionAlloc(aHeader->mUncompressedSize);
 	theCompressedBufferSize = aHeader->mUncompressedSize; //my addition
 	Bytef *aSrc = (Bytef *)theCompressedBuffer +
 				  sizeof(LegacyDefinition::CompressedDefinitionHeader); // 实际解压数据从第 3 个四字节开始
-	int aResult = uncompress(aUncompressedBuffer,
-							 (uLongf *)&theCompressedBufferSize,
-							 aSrc,
+	int aResult = uncompress(aUncompressedBuffer, (uLongf *)&theCompressedBufferSize, aSrc,
 							 sz - sizeof(LegacyDefinition::CompressedDefinitionHeader));
 	TOD_ASSERT(aResult == Z_OK);
 	TOD_ASSERT(theCompressedBufferSize == aHeader->mUncompressedSize);
