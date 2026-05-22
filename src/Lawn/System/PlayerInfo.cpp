@@ -457,28 +457,28 @@ void from_json(const nlohmann::json &j, Zombatar &z)
 	z.mSkinColor = (int)j.value("skin_color", 0);
 
 	z.mClothes = (int)j.value("clothes", -1);
-	z.mClothesColor = (int)j.value("clothes_color", -1);
+	z.mClothesColor = (int)j.value("clothes_color", 17);
 
 	z.mTidbits = (int)j.value("tidbits", -1);
-	z.mTidbitsColor = (int)j.value("tidbits_color", -1);
+	z.mTidbitsColor = (int)j.value("tidbits_color", 17);
 
 	z.mAccessories = (int)j.value("accessories", -1);
-	z.mAccessoriesColor = (int)j.value("accessories_color", -1);
+	z.mAccessoriesColor = (int)j.value("accessories_color", 17);
 
 	z.mFacialHair = (int)j.value("facial_hair", -1);
-	z.mFacialHairColor = (int)j.value("facial_hair_color", -1);
+	z.mFacialHairColor = (int)j.value("facial_hair_color", 17);
 
 	z.mHair = (int)j.value("hair", -1);
-	z.mHairColor = (int)j.value("hair_color", -1);
+	z.mHairColor = (int)j.value("hair_color", 17);
 
 	z.mEyewear = (int)j.value("eyewear", -1);
-	z.mEyewearColor = (int)j.value("eyewear_color", -1);
+	z.mEyewearColor = (int)j.value("eyewear_color", 17);
 
 	z.mHat = (int)j.value("hat", -1);
-	z.mHatColor = (int)j.value("hat_color", -1);
+	z.mHatColor = (int)j.value("hat_color", 17);
 
 	z.mBackdrop = (int)j.value("backdrop", 0);
-	z.mBackdropColor = (int)j.value("backdrop_color", -1);
+	z.mBackdropColor = (int)j.value("backdrop_color", 17);
 
 }
 

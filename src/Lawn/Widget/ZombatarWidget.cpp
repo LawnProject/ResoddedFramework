@@ -2,7 +2,6 @@
 #include "GameSelector.h"
 #include "../../LawnApp.h"
 #include "../Zombie.h"
-#include "../System/PlayerInfo.h"
 #include "../../GameConstants.h"
 #include "../../Resources.h"
 #include "../../Sexy.TodLib/TodCommon.h"
@@ -15,11 +14,13 @@ Color gSkinColors[12] = {
 	Color(156, 163, 105), Color(96, 151, 11), Color(147, 184, 77),	Color(82, 143, 54),
 	Color(121, 168, 99),  Color(65, 156, 74), Color(107, 178, 114), Color(104, 121, 90),
 };
-Color gMoreColors[17] = {Color(151, 33, 33),  Color(199, 53, 53),  Color(220, 112, 47),	 Color(251, 251, 172),
+Color gMoreColors[18] = {Color(151, 33, 33),  Color(199, 53, 53),  Color(220, 112, 47),	 Color(251, 251, 172),
 						 Color(240, 210, 87), Color(165, 126, 65), Color(106, 72, 32),	 Color(72, 35, 5),
 						 Color(50, 56, 61),	  Color(0, 0, 0),	   Color(197, 239, 239), Color(63, 109, 242),
 						 Color(13, 202, 151), Color(158, 183, 19), Color(30, 210, 64),	 Color(225, 65, 230),
-						 Color(128, 47, 204)};
+						 Color(128, 47, 204), Color::White};
+
+Rect mColorRects[18];
 
 ZombatarWidget::ZombatarWidget(LawnApp *theApp)
 {
@@ -29,10 +30,23 @@ ZombatarWidget::ZombatarWidget(LawnApp *theApp)
 	mHeight = BOARD_HEIGHT;
 	TodLoadResources("DelayLoad_Almanac");
 	TodLoadResources("DelayLoad_Zombatar");
-	mZombatar = nullptr;
-
-	if (mApp->mPlayerInfo->mZombatarIndex > -1)
-		mZombatar = &mApp->mPlayerInfo->mZombatars[mApp->mPlayerInfo->mZombatarIndex];
+	mZombatar.mSkinColor = 0;
+	mZombatar.mClothes = -1;
+	mZombatar.mClothesColor = 17;
+	mZombatar.mTidbits = -1;
+	mZombatar.mTidbitsColor = 17;
+	mZombatar.mAccessories = -1;
+	mZombatar.mAccessoriesColor = 17;
+	mZombatar.mFacialHair = -1;
+	mZombatar.mFacialHairColor = 17;
+	mZombatar.mHair =-1;
+	mZombatar.mHairColor = 17;
+	mZombatar.mEyewear = -1;
+	mZombatar.mEyewearColor = 17;
+	mZombatar.mHat = -1;
+	mZombatar.mHatColor = 17;
+	mZombatar.mBackdrop = 0;
+	mZombatar.mBackdropColor = 17;
 
 	mBackButton = new GameButton(ZombatarWidget::ZOMBATAR_BACK);
 	mBackButton->mButtonImage = Sexy::IMAGE_BLANK;
@@ -112,6 +126,14 @@ ZombatarWidget::ZombatarWidget(LawnApp *theApp)
 	mZombie->mPosX = 641;
 	mZombie->mPosY = 350;
 	mZombie->SetupZombatar();
+
+	for (int i = 0; i < 18; i++)
+	{
+		mColorRects[i] = Rect(238 + (i % 9) * (Sexy::IMAGE_ZOMBATAR_COLORPICKER->mWidth + 4),
+							  367 + (i / 9) * (Sexy::IMAGE_ZOMBATAR_COLORPICKER->mHeight + 4),
+							  Sexy::IMAGE_ZOMBATAR_COLORPICKER->mWidth, 
+							  Sexy::IMAGE_ZOMBATAR_COLORPICKER->mHeight);
+	}
 
 	ChangePage(mPage);
 }
@@ -324,19 +346,53 @@ void ZombatarWidget::ChangePage(ZombatarPage thePage)
 	mToggledButton->mOverImage = aNewImage;
 	mToggledButton->mDownImage = aNewImage;
 	mToggledButton->mDisabled = true;
+}
 
+int ZombatarWidget::GetPageColorIndex(ZombatarPage thePage)
+{
+
+	switch (thePage)
+	{
+		case PAGE_SKIN: {
+			return mZombatar.mSkinColor;
+		}
+		case PAGE_HAIR: {
+			return mZombatar.mHairColor;
+		}
+		case PAGE_FACIAL_HAIR: {
+			return mZombatar.mFacialHairColor;
+		}
+		case PAGE_TIDBITS: {
+			return mZombatar.mTidbitsColor;
+		}
+		case PAGE_EYEWEAR: {
+			return mZombatar.mEyewearColor;
+		}
+		case PAGE_CLOTHES: {
+			return mZombatar.mClothesColor;
+		}
+		case PAGE_ACCESSORIES: {
+			return mZombatar.mAccessoriesColor;
+		}
+		case PAGE_HATS: {
+			return mZombatar.mHatColor;
+		}
+		case PAGE_BACKDROPS: {
+			return mZombatar.mBackdropColor;
+		}
+	}
 }
 
 void ZombatarWidget::DrawPortrait(Graphics *g, int theX, int theY)
 {
-	int aSkinIndex = mZombatar ? mZombatar->mSkinColor : 0;
-	int aBackdropColor = mZombatar ? mZombatar->mBackdropColor : -1;
-	int aBackdropIndex = mZombatar ? mZombatar->mBackdrop : 0;
+	int aSkinIndex = mZombatar.mSkinColor;
+	int aBackdropColor = mZombatar.mBackdropColor;
+	int aBackdropIndex = mZombatar.mBackdrop;
 	g->PushState();
 	g->Translate(theX, theY);
 	g->SetColorizeImages(true);
 	g->SetColor(Color::White);
-	if (aBackdropIndex == 0 && aBackdropColor != -1)
+	if (aBackdropIndex == 0 && aBackdropColor != 17)
 	{
 		g->SetColor(gMoreColors[aBackdropColor]);
 	}
@@ -371,6 +427,30 @@ void ZombatarWidget::Draw(Graphics *g)
 	g->DrawImage(IMAGE_ZOMBATAR_WIDGET_INNER_BG, aWidgetX + 127, aWidgetY + 100);
 	g->DrawImage(IMAGE_ZOMBATAR_DISPLAY_WINDOW, 5, 0);
 	g->DrawImage(IMAGE_ZOMBATAR_COLORS_BG, 221, 335);
+	int aMaxColor = 18;
+	if (mPage == PAGE_SKIN)
+		aMaxColor = 12;
+	int aCurrentItemColor = GetPageColorIndex(mPage);
+	for (int i = 0; i < aMaxColor; i++)
+	{
+
+		g->SetColorizeImages(true);
+		g->SetColor(mPage == PAGE_SKIN ? gSkinColors[i] : gMoreColors[i]);
+		if (aCurrentItemColor != i)
+		{
+			g->mColor.mAlpha = 66;
+			if (mColorRects[i].Contains(mWidgetManager->mLastMouseX, mWidgetManager->mLastMouseY))
+			{
+				g->mColor.mAlpha = 127;
+			}
+		}
+			
+
+		g->DrawImage(i == 17 ? Sexy::IMAGE_ZOMBATAR_COLORPICKER_NONE : Sexy::IMAGE_ZOMBATAR_COLORPICKER, mColorRects[i],
+					 Rect(0, 0, Sexy::IMAGE_ZOMBATAR_COLORPICKER->mWidth, Sexy::IMAGE_ZOMBATAR_COLORPICKER->mHeight));
+		g->SetColorizeImages(false);
+
+	}
 	mBackButton->Draw(g);
 	mViewButton->Draw(g);
 	mFinishedButton->Draw(g);
@@ -402,12 +482,25 @@ void ZombatarWidget::Update()
 	mHatsButton->Update();
 	mAccessoriesButton->Update();
 	mBackdropsButton->Update();
+	bool anOverlapsColor = false;
+	int aMaxColor = 18;
+	if (mPage == PAGE_SKIN)
+		aMaxColor = 12;
+	for (int i = 0; i < aMaxColor; i++)
+	{
+		if (mColorRects[i].Contains(mWidgetManager->mLastMouseX, mWidgetManager->mLastMouseY))
+		{
+			anOverlapsColor = true;
+			break;
+		}
+	}
 	if (mHasFocus)
 	{
 		if (mViewButton->IsMouseOver() || mBackButton->IsMouseOver() || mFinishedButton->IsMouseOver() ||
 			mSkinButton->IsMouseOver() || mHairButton->IsMouseOver() || mFacialHairButton->IsMouseOver() ||
 			mTidbitsButton->IsMouseOver() || mEyewearButton->IsMouseOver() || mClothesButton->IsMouseOver() ||
-			mAccessoriesButton->IsMouseOver() || mHatsButton->IsMouseOver() || mBackdropsButton->IsMouseOver())
+			mAccessoriesButton->IsMouseOver() || mHatsButton->IsMouseOver() || mBackdropsButton->IsMouseOver() ||
+			anOverlapsColor)
 		{
 			mApp->SetCursor(CURSOR_HAND);
 		}
@@ -437,12 +530,13 @@ void ZombatarWidget::MouseUp(int x, int y, int theClickCount)
 	}
 	else if (mFinishedButton->IsMouseOver())
 	{
-
+		mApp->mPlayerInfo->mNumZombatars++;
+		mApp->mPlayerInfo->mZombatarIndex = mApp->mPlayerInfo->mNumZombatars - 1;
+		mApp->mPlayerInfo->mZombatars[mApp->mPlayerInfo->mZombatarIndex] = mZombatar;
 	}
 	else if (mSkinButton->IsMouseOver())
 	{
 		ChangePage(PAGE_SKIN);
-
 	}
 	else if (mHairButton->IsMouseOver())
 	{
@@ -475,5 +569,64 @@ void ZombatarWidget::MouseUp(int x, int y, int theClickCount)
 	else if (mBackdropsButton->IsMouseOver())
 	{
 		ChangePage(PAGE_BACKDROPS);
+	}
+
+	int aMaxColor = 18;
+	if (mPage == PAGE_SKIN)
+		aMaxColor = 12;
+	for (int i = 0; i < aMaxColor; i++)
+	{
+		if (mColorRects[i].Contains(mWidgetManager->mLastMouseX, mWidgetManager->mLastMouseY))
+		{
+			switch (mPage)
+			{
+				case PAGE_SKIN: 
+				{
+					mZombatar.mSkinColor = i;
+					break;
+				}
+				case PAGE_HAIR: 
+				{
+					mZombatar.mHairColor = i;
+					break;
+				}
+				case PAGE_FACIAL_HAIR: 
+				{
+					mZombatar.mFacialHairColor = i;
+					break;
+				}
+				case PAGE_TIDBITS: 
+				{
+					mZombatar.mTidbitsColor = i;
+					break;
+				}
+				case PAGE_EYEWEAR: 
+				{
+					mZombatar.mEyewearColor = i;
+					break;
+				}
+				case PAGE_CLOTHES: 
+				{
+					mZombatar.mClothesColor = i;
+					break;
+				}
+				case PAGE_ACCESSORIES: 
+				{
+					mZombatar.mAccessoriesColor = i;
+					break;
+				}
+				case PAGE_HATS: 
+				{
+					mZombatar.mHatColor = i;
+					break;
+				}
+				case PAGE_BACKDROPS: 
+				{
+					mZombatar.mBackdropColor = i;
+					break;
+				}
+			}
+			break;
+		}
 	}
 }

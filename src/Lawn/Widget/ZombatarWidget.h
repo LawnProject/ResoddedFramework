@@ -3,12 +3,13 @@
 #include "../../SexyAppFramework/Widget.h"
 #include "../../SexyAppFramework/ButtonListener.h"
 #include "GameButton.h"
+#include "../System/PlayerInfo.h"
+
 
 using namespace Sexy;
 
 class LawnApp;
 class Zombie;
-class Zombatar;
 
 enum ZombatarPage
 {
@@ -61,7 +62,7 @@ class ZombatarWidget : public Widget, public ButtonListener
 	GameButton *mBackdropsButton;
 
 	ZombatarPage mPage;
-	Zombatar *mZombatar;
+	Zombatar mZombatar;
 	Zombie *mZombie;
 
   public:
@@ -69,6 +70,7 @@ class ZombatarWidget : public Widget, public ButtonListener
 	~ZombatarWidget();
 
 	void ChangePage(ZombatarPage thePage);
+	int GetPageColorIndex(ZombatarPage thePage);
 
 	void DrawPortrait(Graphics *g, int theX, int theY);
 	virtual void Draw(Graphics *g);
@@ -80,4 +82,4 @@ class ZombatarWidget : public Widget, public ButtonListener
 };
 
 extern Color gSkinColors[12];
-extern Color gMoreColors[17];
+extern Color gMoreColors[18];
