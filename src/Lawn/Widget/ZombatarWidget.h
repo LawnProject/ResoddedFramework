@@ -8,6 +8,7 @@ using namespace Sexy;
 
 class LawnApp;
 class Zombie;
+class Zombatar;
 
 enum ZombatarPage
 {
@@ -60,6 +61,7 @@ class ZombatarWidget : public Widget, public ButtonListener
 	GameButton *mBackdropsButton;
 
 	ZombatarPage mPage;
+	Zombatar *mZombatar;
 	Zombie *mZombie;
 
   public:
@@ -76,3 +78,6 @@ class ZombatarWidget : public Widget, public ButtonListener
 	virtual void MouseUp(int x, int y, int theClickCount);
   private:
 };
+
+extern Color gSkinColors[12];
+extern Color gMoreColors[17];

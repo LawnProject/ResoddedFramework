@@ -42,7 +42,6 @@ class PottedPlant
 class Zombatar
 {
   public:
-	int mSkin;
 	int mSkinColor;
 	int mClothes;
 	int mClothesColor;

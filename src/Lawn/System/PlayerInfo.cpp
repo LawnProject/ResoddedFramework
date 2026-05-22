@@ -424,7 +424,6 @@ void from_json(const nlohmann::json &j, PottedPlant &p)
 void to_json(nlohmann::json &j, const Zombatar &z)
 {
 	j = {
-		{"skin", (int)z.mSkin},
 		{"skin_color", (int)z.mSkinColor},
 
 		{"clothes", z.mClothes},
@@ -455,8 +454,7 @@ void to_json(nlohmann::json &j, const Zombatar &z)
 
 void from_json(const nlohmann::json &j, Zombatar &z)
 {
-	z.mSkin = (int)j.value("skin", -1);
-	z.mSkinColor = (int)j.value("skin_color", -1);
+	z.mSkinColor = (int)j.value("skin_color", 0);
 
 	z.mClothes = (int)j.value("clothes", -1);
 	z.mClothesColor = (int)j.value("clothes_color", -1);
@@ -479,7 +477,7 @@ void from_json(const nlohmann::json &j, Zombatar &z)
 	z.mHat = (int)j.value("hat", -1);
 	z.mHatColor = (int)j.value("hat_color", -1);
 
-	z.mBackdrop = (int)j.value("backdrop", -1);
+	z.mBackdrop = (int)j.value("backdrop", 0);
 	z.mBackdropColor = (int)j.value("backdrop_color", -1);
 
 }
