@@ -754,6 +754,28 @@ void ZombatarWidget::MouseUp(int x, int y, int theClickCount)
 	{
 		mApp->mGameSelector->SlideTo(0, 0);
 		mWidgetManager->SetFocus(mApp->mGameSelector);
+		mZombatar.mSkinColor = 0;
+		mZombatar.mClothes = -1;
+		mZombatar.mClothesColor = 17;
+		mZombatar.mTidbits = -1;
+		mZombatar.mTidbitsColor = 17;
+		mZombatar.mAccessories = -1;
+		mZombatar.mAccessoriesColor = 17;
+		mZombatar.mFacialHair = -1;
+		mZombatar.mFacialHairColor = 17;
+		mZombatar.mHair = -1;
+		mZombatar.mHairColor = 17;
+		mZombatar.mEyewear = -1;
+		mZombatar.mEyewearColor = 17;
+		mZombatar.mHat = -1;
+		mZombatar.mHatColor = 17;
+		mZombatar.mBackdrop = 0;
+		mZombatar.mBackdropColor = 17;
+		ChangePage(PAGE_SKIN);
+		if (mApp->mPlayerInfo->mNumZombatars <= 0)
+			ChangeState(STATE_AVATAR_CREATION);
+		else
+			ChangeState(STATE_AVATAR_LIST);
 	}
 	else if (mNextButton->IsMouseOver())
 	{
