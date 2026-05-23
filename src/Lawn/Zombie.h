@@ -164,6 +164,7 @@ class Zombie : public GameObject
 	bool mIsFireBall;								  //+0x14C
 	ReanimationID mMoweredReanimID;					  //+0x150
 	int mLastPortalX;	
+	bool mHasSetupZombatar;
 
 	ReanimationID mBaseHeadReanimID;
 	ReanimationID mTidbitsReanimID;

@@ -12,6 +12,7 @@
 #include "System/Music.h"
 #include "System/Achievements.h"
 #include "Widget/AlmanacDialog.h"
+#include "Widget/ZombatarWidget.h"
 #include "../Sexy.TodLib/TodFoley.h"
 #include "../Sexy.TodLib/TodDebug.h"
 #include "../Sexy.TodLib/TodCommon.h"
@@ -159,6 +160,7 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
 	mEyewearReanimID = ReanimationID::REANIMATIONID_NULL;
 	mHatReanimID = ReanimationID::REANIMATIONID_NULL;
 	mBaseHeadReanimID = ReanimationID::REANIMATIONID_NULL;
+	mHasSetupZombatar = false;
 
 	mTargetRow = -1;
 	mFireballRow = -1;
@@ -522,8 +524,6 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
 	{
 		mHasObject = true;
 		LoadPlainZombieReanim();
-		if (mApp->mPlayerInfo != nullptr && mApp->mPlayerInfo->mNumZombatars > 0)
-			SetupZombatar();
 
 		Reanimation *aBodyReanim = mApp->ReanimationGet(mBodyReanimID);
 		Reanimation *aFlagReanim = mApp->AddReanimation(0.0f, 0.0f, 0, ReanimationType::REANIM_FLAG);
@@ -532,6 +532,12 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
 		ReanimatorTrackInstance *aTrackInstance = aBodyReanim->GetTrackInstanceByName("Zombie_flaghand");
 		AttachReanim(aTrackInstance->mAttachmentID, aFlagReanim, 0.0f, 0.0f);
 		aBodyReanim->mFrameBasePose = 0;
+
+		if (mApp->mPlayerInfo != nullptr && mApp->mPlayerInfo->mNumZombatars > 0 && mApp->mPlayerInfo->mZombatarIndex > -1)
+		{
+			SetupZombatar();
+			UpdateZombatar(mApp->mPlayerInfo->mZombatars[mApp->mPlayerInfo->mZombatarIndex]);
+		}
 
 		mPosX = WIDE_BOARD_WIDTH;
 		break;
@@ -978,7 +984,7 @@ void Zombie::LoadPlainZombieReanim()
 void Zombie::SetupZombatar()
 {
 	Reanimation *aBodyReanim = mApp->ReanimationGet(mBodyReanimID);
-	if (aBodyReanim == nullptr)
+	if (aBodyReanim == nullptr || mHasSetupZombatar)
 		return;
 	ReanimShowPrefix("anim_head", RENDER_GROUP_HIDDEN);
 
@@ -1032,8 +1038,8 @@ void Zombie::SetupZombatar()
 	CREATE_REANIM(mEyewearReanimID)
 	CREATE_REANIM(mHatReanimID)
 
-	if (mApp->mPlayerInfo != nullptr && mApp->mPlayerInfo->mZombatarIndex > -1)
-		UpdateZombatar(mApp->mPlayerInfo->mZombatars[mApp->mPlayerInfo->mZombatarIndex]);
+	mHasSetupZombatar = true;
+	ResetZombatar();
 }
 
 void Zombie::UpdateZombatar(Zombatar &aZombatar)
@@ -1045,14 +1051,22 @@ void Zombie::UpdateZombatar(Zombatar &aZombatar)
 	Reanimation *aEyewearReanim = mApp->ReanimationGet(mEyewearReanimID);
 	Reanimation *aHatReanim = mApp->ReanimationGet(mHatReanimID);
 
+	//todo:make color work
 	ResetZombatar();
-
+	if (aZombatar.mHat != -1)
+	{
+		SexyString aNum = StrFormat("%d", aZombatar.mHat);
+		aHatReanim->AssignRenderGroupToPrefix(
+			StrFormat("%s_%s", "hats", aZombatar.mHat < 10 ? ("0" + aNum).c_str() : aNum.c_str()).c_str(),
+			RENDER_GROUP_NORMAL);
+	};
 	if (aZombatar.mHair != -1)
 	{
 		SexyString aNum = StrFormat("%d", aZombatar.mHair);
 		aHairReanim->AssignRenderGroupToPrefix(
 			StrFormat("%s_%s", "hair", aZombatar.mHair < 10 ? ("0" + aNum).c_str() : aNum.c_str()).c_str(),
 			RENDER_GROUP_NORMAL);
+		aHairReanim->mColorOverride = gMoreColors[aZombatar.mHairColor];
 	};
 	if (aZombatar.mTidbits != -1)
 	{
@@ -1060,6 +1074,7 @@ void Zombie::UpdateZombatar(Zombatar &aZombatar)
 		aTidbitsReanim->AssignRenderGroupToPrefix(
 			StrFormat("%s_%s", "tidBits", aZombatar.mTidbits < 10 ? ("0" + aNum).c_str() : aNum.c_str()).c_str(),
 			RENDER_GROUP_NORMAL);
+		aTidbitsReanim->mColorOverride = gMoreColors[aZombatar.mTidbitsColor];
 	};
 	if (aZombatar.mEyewear != -1)
 	{
@@ -1067,6 +1082,7 @@ void Zombie::UpdateZombatar(Zombatar &aZombatar)
 		aEyewearReanim->AssignRenderGroupToPrefix(
 			StrFormat("%s_%s", "eyeWear", aZombatar.mEyewear < 10 ? ("0" + aNum).c_str() : aNum.c_str()).c_str(),
 			RENDER_GROUP_NORMAL);
+		aEyewearReanim->mColorOverride = gMoreColors[aZombatar.mEyewearColor];
 	};
 	if (aZombatar.mAccessories != -1)
 	{
@@ -1075,6 +1091,7 @@ void Zombie::UpdateZombatar(Zombatar &aZombatar)
 			StrFormat("%s_%s", "accessories", aZombatar.mAccessories < 10 ? ("0" + aNum).c_str() : aNum.c_str())
 				.c_str(),
 			RENDER_GROUP_NORMAL);
+		aAccessoriesReanim->mColorOverride = gMoreColors[aZombatar.mAccessoriesColor];
 	};
 	if (aZombatar.mFacialHair != -1)
 	{
@@ -1082,34 +1099,42 @@ void Zombie::UpdateZombatar(Zombatar &aZombatar)
 		aFacialHairReanim->AssignRenderGroupToPrefix(
 			StrFormat("%s_%s", "facialHair", aZombatar.mFacialHair < 10 ? ("0" + aNum).c_str() : aNum.c_str()).c_str(),
 			RENDER_GROUP_NORMAL);
-	};
-	if (aZombatar.mHat != -1)
-	{
-		SexyString aNum = StrFormat("%d", aZombatar.mHat);
-		aHatReanim->AssignRenderGroupToPrefix(
-			StrFormat("%s_%s", "hats", aZombatar.mHat < 10 ? ("0" + aNum).c_str() : aNum.c_str()).c_str(),
-			RENDER_GROUP_NORMAL);
+		aFacialHairReanim->mColorOverride = gMoreColors[aZombatar.mFacialHairColor];
 	};
 
 }
 
 void Zombie::ResetZombatar()
 {
+	Reanimation *aBodyReanim = mApp->ReanimationGet(mBodyReanimID);
+	if (aBodyReanim == nullptr)
+		return;
+	ReanimShowPrefix("anim_head", RENDER_GROUP_HIDDEN);
+
+	ReanimatorTrackInstance *aTrackInstance = aBodyReanim->GetTrackInstanceByName("anim_head1");
+	aBodyReanim->AssignRenderGroupToPrefix("anim_hair", RENDER_GROUP_HIDDEN);
+	aTrackInstance->mImageOverride = IMAGE_BLANK;
+	aBodyReanim->AssignRenderGroupToPrefix("anim_head1", RENDER_GROUP_ZOMBATAR_COSMETICS);
 	Reanimation *aTidbitsReanim = mApp->ReanimationGet(mTidbitsReanimID);
 	Reanimation *aAccessoriesReanim = mApp->ReanimationGet(mAccessoriesReanimID);
 	Reanimation *aFacialHairReanim = mApp->ReanimationGet(mFacialHairReanimID);
 	Reanimation *aHairReanim = mApp->ReanimationGet(mHairReanimID);
 	Reanimation *aEyewearReanim = mApp->ReanimationGet(mEyewearReanimID);
 	Reanimation *aHatReanim = mApp->ReanimationGet(mHatReanimID);
+	Reanimation *aHeadReanim = mApp->ReanimationGet(mBaseHeadReanimID);
 
 #define RESET_REANIM(reanim)                                                                                           \
-	reanim->AssignRenderGroupToPrefix("hats_", RENDER_GROUP_HIDDEN);                                                   \
-	reanim->AssignRenderGroupToPrefix("hair_", RENDER_GROUP_HIDDEN);                                                   \
-	reanim->AssignRenderGroupToPrefix("facialHair_", RENDER_GROUP_HIDDEN);                                             \
-	reanim->AssignRenderGroupToPrefix("accessories_", RENDER_GROUP_HIDDEN);                                            \
-	reanim->AssignRenderGroupToPrefix("eyeWear_", RENDER_GROUP_HIDDEN);                                                \
-	reanim->AssignRenderGroupToPrefix("tidBits_", RENDER_GROUP_HIDDEN);
+	if (reanim) \
+	{ \
+		reanim->AssignRenderGroupToPrefix("hats_", RENDER_GROUP_HIDDEN);\
+		reanim->AssignRenderGroupToPrefix("hair_", RENDER_GROUP_HIDDEN);\
+		reanim->AssignRenderGroupToPrefix("facialHair_", RENDER_GROUP_HIDDEN);\
+		reanim->AssignRenderGroupToPrefix("accessories_", RENDER_GROUP_HIDDEN);\
+		reanim->AssignRenderGroupToPrefix("eyeWear_", RENDER_GROUP_HIDDEN); \
+		reanim->AssignRenderGroupToPrefix("tidBits_", RENDER_GROUP_HIDDEN); \
+	} \
 
+	RESET_REANIM(aHeadReanim)
 	RESET_REANIM(aTidbitsReanim)
 	RESET_REANIM(aAccessoriesReanim)
 	RESET_REANIM(aFacialHairReanim)
