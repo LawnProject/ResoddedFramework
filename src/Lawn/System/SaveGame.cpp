@@ -702,26 +702,23 @@ void LawnSyncGame(Board* theBoard, SaveContext &theContext)
 		aGridItem->mBoard = theBoard;
 	}
 
-	if (theContext.mReading)
+	//Always resync. just incase
+	theBoard->mAdvice->mApp = theBoard->mApp;
+	theBoard->mCursorObject->mApp = theBoard->mApp;
+	theBoard->mCursorObject->mBoard = theBoard;
+	theBoard->mCursorPreview->mApp = theBoard->mApp;
+	theBoard->mCursorPreview->mBoard = theBoard;
+	theBoard->mSeedBank->mApp = theBoard->mApp;
+	theBoard->mSeedBank->mBoard = theBoard;
+	for (int i = 0; i < SEEDBANK_MAX; i++)
 	{
-		theBoard->mAdvice->mApp = theBoard->mApp;
-		theBoard->mCursorObject->mApp = theBoard->mApp;
-		theBoard->mCursorObject->mBoard = theBoard;
-		theBoard->mCursorPreview->mApp = theBoard->mApp;
-		theBoard->mCursorPreview->mBoard = theBoard;
-		theBoard->mSeedBank->mApp = theBoard->mApp;
-		theBoard->mSeedBank->mBoard = theBoard;
-		for (int i = 0; i < SEEDBANK_MAX; i++)
-		{
-			theBoard->mSeedBank->mSeedPackets[i].mApp = theBoard->mApp;
-			theBoard->mSeedBank->mSeedPackets[i].mBoard = theBoard;
-		}
-		theBoard->mChallenge->mApp = theBoard->mApp;
-		theBoard->mChallenge->mBoard = theBoard;
-		theBoard->mApp->mMusic->mApp = theBoard->mApp;
-		theBoard->mApp->mMusic->mMusicInterface = theBoard->mApp->mMusicInterface;
+		theBoard->mSeedBank->mSeedPackets[i].mApp = theBoard->mApp;
+		theBoard->mSeedBank->mSeedPackets[i].mBoard = theBoard;
 	}
-
+	theBoard->mChallenge->mApp = theBoard->mApp;
+	theBoard->mChallenge->mBoard = theBoard;
+	theBoard->mApp->mMusic->mApp = theBoard->mApp;
+	theBoard->mApp->mMusic->mMusicInterface = theBoard->mApp->mMusicInterface;
 }
 
 bool LawnLoadGame(Board *theBoard, const std::string &theFilePath)
