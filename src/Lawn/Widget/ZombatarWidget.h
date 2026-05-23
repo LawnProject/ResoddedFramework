@@ -24,6 +24,15 @@ enum ZombatarPage
 	PAGE_BACKDROPS,
 };
 
+enum ZombatarState
+{
+	STATE_AVATAR_LIST,
+	STATE_AVATAR_TRANSITION,
+	STATE_AVATAR_CREATION,
+	STATE_CONFIRM_TRANSITION,
+	STATE_CONFIRM,
+};
+
 class ZombatarWidget : public Widget, public ButtonListener
 {
 	enum
@@ -31,6 +40,11 @@ class ZombatarWidget : public Widget, public ButtonListener
 		ZOMBATAR_BACK = 300,
 		ZOMBATAR_VIEW,
 		ZOMBATAR_FINISHED,
+		ZOMBATAR_BACK_AVATAR,
+		ZOMBATAR_NEW,
+		ZOMBATAR_LEFT,
+		ZOMBATAR_RIGHT,
+		ZOMBATAR_DELETE,
 		ZOMBATAR_SKIN,
 		ZOMBATAR_HAIR,
 		ZOMBATAR_FACIAL_HAIR,
@@ -46,6 +60,11 @@ class ZombatarWidget : public Widget, public ButtonListener
 	GameButton *mBackButton;
 	GameButton *mViewButton;
 	GameButton *mFinishedButton;
+	GameButton *mAvatarBackButton;
+	GameButton *mDeleteZombatarButton;
+	GameButton *mNewZombatarButton;
+	GameButton *mNextButton;
+	GameButton *mPrevButton;
 
 
 	GameButton *mToggledButton;
@@ -61,7 +80,11 @@ class ZombatarWidget : public Widget, public ButtonListener
 	GameButton *mHatsButton;
 	GameButton *mBackdropsButton;
 
+	Rect mColorRects[18];
+
 	ZombatarPage mPage;
+	ZombatarState mState;
+	int mTransitionTimer;
 	Zombatar mZombatar;
 	Zombie *mZombie;
 
@@ -70,11 +93,14 @@ class ZombatarWidget : public Widget, public ButtonListener
 	~ZombatarWidget();
 
 	void ChangePage(ZombatarPage thePage);
+	void ChangeState(ZombatarState theState);
 	int GetPageColorIndex(ZombatarPage thePage);
 
-	void DrawPortrait(Graphics *g, int theX, int theY);
+	void DrawCurrentPortrait(Graphics *g, int theX, int theY);
+	void DrawIndexedPortrait(int theIndex, Graphics *g, int theX, int theY);
 	virtual void Draw(Graphics *g);
 	virtual void Update();
+	void DeleteCurrentZombatar();
 
 	virtual void MouseDown(int x, int y, int theClickCount);
 	virtual void MouseUp(int x, int y, int theClickCount);
