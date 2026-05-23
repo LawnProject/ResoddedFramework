@@ -591,6 +591,12 @@ void ZombatarWidget::Draw(Graphics *g)
 
 	}
 
+	if (mPage == PAGE_SKIN)
+	{
+		TodDrawStringWrapped(g, "[ZOMBATAR_START_TEXT]", Rect(145, 185, 420, 120), Sexy::FONT_DWARVENTODCRAFT15,
+							 Color(208, 190, 44), DS_ALIGN_CENTER);
+	}
+
 	mSkinButton->Draw(g);
 	mHairButton->Draw(g);
 	mFacialHairButton->Draw(g);
@@ -633,6 +639,10 @@ void ZombatarWidget::Draw(Graphics *g)
 	{
 		g->DrawImage(IMAGE_ZOMBATAR_WIDGET_BG, aWidgetX, aWidgetY);
 		mAvatarBackButton->Draw(g);
+		TodDrawString(g, "[ZOMBATAR_FINISHED_WARNING_HEADER]", 305, 185, Sexy::FONT_HOUSEOFTERROR28, Color(254, 227, 0), DS_ALIGN_CENTER);
+		TodDrawString(g, "[ZOMBATAR_FINISHED_BUTTON_TEXT]", 195, 335, Sexy::FONT_BRIANNETOD12, Color(255, 255, 255), DS_ALIGN_CENTER);
+		TodDrawString(g, "[ZOMBATAR_BACK_BUTTON_TEXT]", 435, 335, Sexy::FONT_BRIANNETOD12, Color(255, 255, 255), DS_ALIGN_CENTER);
+		TodDrawStringWrapped(g, "[ZOMBATAR_FINISHED_WARNING_TEXT]", Rect(70, 225, 480, 80), Sexy::FONT_CONTINUUMBOLD14, Color(255, 255, 255), DS_ALIGN_CENTER);
 	}
 
 	mFinishedButton->Draw(g);

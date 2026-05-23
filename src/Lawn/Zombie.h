@@ -234,6 +234,7 @@ class Zombie : public GameObject
 	void CheckForZombieStep();
 	void SetupZombatar();
 	void UpdateZombatar(Zombatar &aZombatar);
+	void ResetZombatar();
 	void CountExpectedMowers()
 	{
 		;

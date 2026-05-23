@@ -1062,21 +1062,7 @@ void Zombie::UpdateZombatar(Zombatar &aZombatar)
 	Reanimation *aEyewearReanim = mApp->ReanimationGet(mEyewearReanimID);
 	Reanimation *aHatReanim = mApp->ReanimationGet(mHatReanimID);
 
-#define RESET_REANIM(reanim) \
-	reanim->AssignRenderGroupToPrefix("hats_", RENDER_GROUP_HIDDEN);\
-	reanim->AssignRenderGroupToPrefix("hair_", RENDER_GROUP_HIDDEN);\
-	reanim->AssignRenderGroupToPrefix("facialHair_", RENDER_GROUP_HIDDEN);\
-	reanim->AssignRenderGroupToPrefix("accessories_", RENDER_GROUP_HIDDEN);\
-	reanim->AssignRenderGroupToPrefix("eyeWear_", RENDER_GROUP_HIDDEN);\
-	reanim->AssignRenderGroupToPrefix("tidBits_", RENDER_GROUP_HIDDEN);\
-
-
-	RESET_REANIM(aTidbitsReanim)
-	RESET_REANIM(aAccessoriesReanim)
-	RESET_REANIM(aFacialHairReanim)
-	RESET_REANIM(aHairReanim)
-	RESET_REANIM(aEyewearReanim)
-	RESET_REANIM(aHatReanim)
+	ResetZombatar();
 
 	if (aZombatar.mHair != -1)
 	{
@@ -1122,6 +1108,31 @@ void Zombie::UpdateZombatar(Zombatar &aZombatar)
 			RENDER_GROUP_NORMAL);
 	};
 
+}
+
+void Zombie::ResetZombatar()
+{
+	Reanimation *aTidbitsReanim = mApp->ReanimationGet(mTidbitsReanimID);
+	Reanimation *aAccessoriesReanim = mApp->ReanimationGet(mAccessoriesReanimID);
+	Reanimation *aFacialHairReanim = mApp->ReanimationGet(mFacialHairReanimID);
+	Reanimation *aHairReanim = mApp->ReanimationGet(mHairReanimID);
+	Reanimation *aEyewearReanim = mApp->ReanimationGet(mEyewearReanimID);
+	Reanimation *aHatReanim = mApp->ReanimationGet(mHatReanimID);
+
+#define RESET_REANIM(reanim)                                                                                           \
+	reanim->AssignRenderGroupToPrefix("hats_", RENDER_GROUP_HIDDEN);                                                   \
+	reanim->AssignRenderGroupToPrefix("hair_", RENDER_GROUP_HIDDEN);                                                   \
+	reanim->AssignRenderGroupToPrefix("facialHair_", RENDER_GROUP_HIDDEN);                                             \
+	reanim->AssignRenderGroupToPrefix("accessories_", RENDER_GROUP_HIDDEN);                                            \
+	reanim->AssignRenderGroupToPrefix("eyeWear_", RENDER_GROUP_HIDDEN);                                                \
+	reanim->AssignRenderGroupToPrefix("tidBits_", RENDER_GROUP_HIDDEN);
+
+	RESET_REANIM(aTidbitsReanim)
+	RESET_REANIM(aAccessoriesReanim)
+	RESET_REANIM(aFacialHairReanim)
+	RESET_REANIM(aHairReanim)
+	RESET_REANIM(aEyewearReanim)
+	RESET_REANIM(aHatReanim)
 }
 
 //0x524470

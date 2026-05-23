@@ -558,7 +558,9 @@ void GameSelector::SyncProfile(bool theShowLoading)
 		mZombatarWidget->ChangeState(STATE_AVATAR_CREATION);
 	else
 		mZombatarWidget->ChangeState(STATE_AVATAR_LIST);
-	mZombatarWidget->mZombie->UpdateZombatar(mApp->mPlayerInfo->mZombatars[mApp->mPlayerInfo->mZombatarIndex]);
+	mZombatarWidget->mZombie->ResetZombatar();
+	if (mApp->mPlayerInfo->mZombatarIndex >= 0)
+		mZombatarWidget->mZombie->UpdateZombatar(mApp->mPlayerInfo->mZombatars[mApp->mPlayerInfo->mZombatarIndex]);
 	SyncButtons();
 	AlmanacInitForPlayer();
 	BoardInitForPlayer();
