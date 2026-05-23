@@ -81,7 +81,9 @@ class ZombatarWidget : public Widget, public ButtonListener
 	GameButton *mBackdropsButton;
 
 	Rect mColorRects[18];
+	Rect mItemRects[18];
 
+	int mSubPage;
 	ZombatarPage mPage;
 	ZombatarState mState;
 	int mTransitionTimer;
@@ -95,6 +97,8 @@ class ZombatarWidget : public Widget, public ButtonListener
 	void ChangePage(ZombatarPage thePage);
 	void ChangeState(ZombatarState theState);
 	int GetPageColorIndex(ZombatarPage thePage);
+	int GetPageItemIndex(ZombatarPage thePage);
+	int GetItemCount(ZombatarPage thePage);
 
 	void DrawCurrentPortrait(Graphics *g, int theX, int theY);
 	void DrawIndexedPortrait(int theIndex, Graphics *g, int theX, int theY);
