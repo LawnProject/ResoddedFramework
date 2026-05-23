@@ -522,7 +522,7 @@ void GameSelector::SyncProfile(bool theShowLoading)
 	if (mHasTrophy && mSelectorState != SelectorAnimState::SELECTOR_OPEN)
 		AddTrophySparkle();
 
-	if (mApp->mPlayerInfo != nullptr && mApp->mPlayerInfo->mNumZombatars > 0 && mApp->mPlayerInfo->mZombatarIndex > -1)
+	if (mApp->mPlayerInfo != nullptr)
 	{
 		mZombatarWidget->mZombie->ResetZombatar();
 
