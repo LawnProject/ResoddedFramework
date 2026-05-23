@@ -39,7 +39,7 @@ ZombatarWidget::ZombatarWidget(LawnApp *theApp)
 	mWidth = BOARD_WIDTH;
 	mHeight = BOARD_HEIGHT;
 	mTransitionTimer = 0;
-	if (mApp->mPlayerInfo->mNumZombatars == 0)
+	if (mApp->mPlayerInfo->mNumZombatars <= 0)
 		mState = STATE_AVATAR_CREATION;
 	else
 		mState = STATE_AVATAR_LIST;

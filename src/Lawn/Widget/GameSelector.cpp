@@ -554,6 +554,11 @@ void GameSelector::SyncProfile(bool theShowLoading)
 	if (mHasTrophy && mSelectorState != SelectorAnimState::SELECTOR_OPEN)
 		AddTrophySparkle();
 
+	if (mApp->mPlayerInfo->mNumZombatars <= 0)
+		mZombatarWidget->ChangeState(STATE_AVATAR_CREATION);
+	else
+		mZombatarWidget->ChangeState(STATE_AVATAR_LIST);
+	mZombatarWidget->mZombie->UpdateZombatar(mApp->mPlayerInfo->mZombatars[mApp->mPlayerInfo->mZombatarIndex]);
 	SyncButtons();
 	AlmanacInitForPlayer();
 	BoardInitForPlayer();

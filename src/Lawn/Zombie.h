@@ -163,7 +163,16 @@ class Zombie : public GameObject
 	int mFireballRow;								  //+0x148
 	bool mIsFireBall;								  //+0x14C
 	ReanimationID mMoweredReanimID;					  //+0x150
-	int mLastPortalX;								  //+0x154
+	int mLastPortalX;	
+
+	ReanimationID mBaseHeadReanimID;
+	ReanimationID mTidbitsReanimID;
+	ReanimationID mAccessoriesReanimID;
+	ReanimationID mFacialHairReanimID;
+	ReanimationID mHairReanimID;
+	ReanimationID mEyewearReanimID;
+	ReanimationID mHatReanimID;
+
 
   public:
 	Zombie();
