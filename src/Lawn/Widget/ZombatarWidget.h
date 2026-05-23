@@ -232,7 +232,7 @@ class ZombatarWidget : public Widget, public ButtonListener
 
 	void DrawCurrentPortrait(Graphics *g, int theX, int theY);
 	void DrawIndexedPortrait(int theIndex, Graphics *g, int theX, int theY);
-	void DrawPortraitItem(int theItem, Graphics *g);
+	void DrawPortraitItem(int theItem, Graphics *g, const Zombatar &theZombatarInstance);
 	virtual void Draw(Graphics *g);
 	virtual void Update();
 	void DeleteCurrentZombatar();

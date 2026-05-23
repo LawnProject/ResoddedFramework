@@ -46,22 +46,22 @@ PortraitItem gPortraitItems[ZombatarItem::NUM_ZOMBATAR_ITEMS]
 	{&IMAGE_ZOMBATAR_HATS_13, nullptr, true, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_HATS_14, nullptr, true, 0, 0, 0, 0},
 
-	{&IMAGE_ZOMBATAR_HAIR_1, &IMAGE_ZOMBATAR_HAIR_1_MASK, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_2, &IMAGE_ZOMBATAR_HAIR_2_MASK, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_3, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_4, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_5, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_6, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_7, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_8, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_9, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_10, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_11, &IMAGE_ZOMBATAR_HAIR_11_MASK, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_12, &IMAGE_ZOMBATAR_HAIR_12_MASK, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_13, &IMAGE_ZOMBATAR_HAIR_13_MASK, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_14, &IMAGE_ZOMBATAR_HAIR_14_MASK, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_15, &IMAGE_ZOMBATAR_HAIR_15_MASK, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_16, nullptr, false, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_1, &IMAGE_ZOMBATAR_HAIR_1_MASK, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_2, &IMAGE_ZOMBATAR_HAIR_2_MASK, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_3, nullptr, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_4, nullptr, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_5, nullptr, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_6, nullptr, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_7, nullptr, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_8, nullptr, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_9, nullptr, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_10, nullptr, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_11, &IMAGE_ZOMBATAR_HAIR_11_MASK, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_12, &IMAGE_ZOMBATAR_HAIR_12_MASK, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_13, &IMAGE_ZOMBATAR_HAIR_13_MASK, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_14, &IMAGE_ZOMBATAR_HAIR_14_MASK, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_15, &IMAGE_ZOMBATAR_HAIR_15_MASK, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_16, nullptr, true, 0, 0, 0, 0},
 
 	{&IMAGE_ZOMBATAR_EYEWEAR_1, &IMAGE_ZOMBATAR_EYEWEAR_1_MASK, false, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_EYEWEAR_2, &IMAGE_ZOMBATAR_EYEWEAR_2_MASK, false, 0, 0, 0, 0},
@@ -189,7 +189,7 @@ ZombatarWidget::ZombatarWidget(LawnApp *theApp)
 	mZombatar.mEyewearColor = 17;
 	mZombatar.mHat = -1;
 	mZombatar.mHatColor = 17;
-	mZombatar.mBackdrop = 0;
+	mZombatar.mBackdrop = 4;
 	mZombatar.mBackdropColor = 17;
 
 	mBackButton = new GameButton(ZombatarWidget::ZOMBATAR_BACK);
@@ -694,24 +694,38 @@ void ZombatarWidget::DrawIndexedPortrait(int theIndex, Graphics *g, int theX, in
 	else
 		aZombatar = mZombatar; // the placeholder/ current zombatar
 	int aSkinIndex = aZombatar.mSkinColor;
-	int aBackdropColor = aZombatar.mBackdropColor;
-	int aBackdropIndex = aZombatar.mBackdrop;
+
 	g->PushState();
 	g->Translate(theX, theY);
 	g->SetColorizeImages(true);
 	g->SetColor(Color::White);
-	DrawPortraitItem(ZOMBATAR_BACKGROUND_CRAZYDAVE + aBackdropIndex, g);
+	DrawPortraitItem(ZOMBATAR_BACKGROUND_CRAZYDAVE + aZombatar.mBackdrop, g, aZombatar);
 	g->SetColor(gSkinColors[aSkinIndex]);
 	g->DrawImage(Sexy::IMAGE_ZOMBATAR_ZOMBIE_BLANK_SKIN, 38, 40);
 	g->SetColor(Color::White);
+
 	g->SetColorizeImages(false);
 
 	g->DrawImage(Sexy::IMAGE_ZOMBATAR_ZOMBIE_BLANK, 38, 40);
+	if (aZombatar.mClothes != -1)
+		DrawPortraitItem(ZOMBATAR_CLOTHES_1 + aZombatar.mClothes, g, aZombatar);
+	if (aZombatar.mAccessoriesColor != -1)
+		DrawPortraitItem(ZOMBATAR_ACCESSORY_1 + aZombatar.mAccessories, g, aZombatar);
+	if (aZombatar.mTidbits != -1)
+		DrawPortraitItem(ZOMBATAR_TIDBITS_1 + aZombatar.mTidbits, g, aZombatar);
+	if (aZombatar.mFacialHair != -1)
+		DrawPortraitItem(ZOMBATAR_FACIALHAIR_1 + aZombatar.mFacialHair, g, aZombatar);
+	if (aZombatar.mHair != -1)
+		DrawPortraitItem(ZOMBATAR_HAIR_1 + aZombatar.mHair, g, aZombatar);
+	if (aZombatar.mEyewear != -1)
+		DrawPortraitItem(ZOMBATAR_EYEWEAR_1 + aZombatar.mEyewear, g, aZombatar);
+	if (aZombatar.mHat != -1)
+		DrawPortraitItem(ZOMBATAR_HATS_1 + aZombatar.mHat, g, aZombatar);
 
 	g->PopState();
 }
 
-void ZombatarWidget::DrawPortraitItem(int theItem, Graphics *g)
+void ZombatarWidget::DrawPortraitItem(int theItem, Graphics *g, const Zombatar &theZombatarInstance)
 {
 	g->PushState();
 	PortraitItem anItem = gPortraitItems[theItem];
@@ -721,19 +735,19 @@ void ZombatarWidget::DrawPortraitItem(int theItem, Graphics *g)
 	if (anItem.mAllowColor)
 	{
 		if (theItem >= ZOMBATAR_HATS_1 && theItem <= ZOMBATAR_HATS_14)
-			g->SetColor(gMoreColors[mZombatar.mHatColor]);
+			g->SetColor(gMoreColors[theZombatarInstance.mHatColor]);
 		else if (theItem >= ZOMBATAR_HAIR_1 && theItem <= ZOMBATAR_HAIR_16)
-			g->SetColor(gMoreColors[mZombatar.mHairColor]);
+			g->SetColor(gMoreColors[theZombatarInstance.mHairColor]);
 		else if (theItem >= ZOMBATAR_EYEWEAR_1 && theItem <= ZOMBATAR_EYEWEAR_16)
-			g->SetColor(gMoreColors[mZombatar.mHairColor]);
+			g->SetColor(gMoreColors[theZombatarInstance.mHairColor]);
 		else if (theItem >= ZOMBATAR_FACIALHAIR_1 && theItem <= ZOMBATAR_FACIALHAIR_24)
-			g->SetColor(gMoreColors[mZombatar.mFacialHairColor]);
+			g->SetColor(gMoreColors[theZombatarInstance.mFacialHairColor]);
 		else if (theItem >= ZOMBATAR_TIDBITS_1 && theItem <= ZOMBATAR_TIDBITS_14)
-			g->SetColor(gMoreColors[mZombatar.mTidbits]);
+			g->SetColor(gMoreColors[theZombatarInstance.mTidbits]);
 		else if (theItem >= ZOMBATAR_ACCESSORY_1 && theItem <= ZOMBATAR_ACCESSORY_16)
-			g->SetColor(gMoreColors[mZombatar.mAccessoriesColor]);
+			g->SetColor(gMoreColors[theZombatarInstance.mAccessoriesColor]);
 		else if (theItem >= ZOMBATAR_BACKGROUND_CRAZYDAVE && theItem <= ZOMBATAR_BACKGROUND_BLANK)
-			g->SetColor(gMoreColors[mZombatar.mBackdropColor]);
+			g->SetColor(gMoreColors[theZombatarInstance.mBackdropColor]);
 	}
 	if (anItem.mColor == nullptr)
 		g->DrawImage(*anItem.mLine, anItem.mOffsetX, anItem.mOffsetY);
@@ -1014,7 +1028,7 @@ void ZombatarWidget::DeleteCurrentZombatar()
 		mZombatar.mEyewearColor = 17;
 		mZombatar.mHat = -1;
 		mZombatar.mHatColor = 17;
-		mZombatar.mBackdrop = 0;
+		mZombatar.mBackdrop = 4;
 		mZombatar.mBackdropColor = 17;
 	}
 }
@@ -1045,7 +1059,7 @@ void ZombatarWidget::MouseUp(int x, int y, int theClickCount)
 		mZombatar.mEyewearColor = 17;
 		mZombatar.mHat = -1;
 		mZombatar.mHatColor = 17;
-		mZombatar.mBackdrop = 0;
+		mZombatar.mBackdrop = 4;
 		mZombatar.mBackdropColor = 17;
 		mZombie->ResetZombatar();
 		ChangePage(PAGE_SKIN);
@@ -1101,7 +1115,7 @@ void ZombatarWidget::MouseUp(int x, int y, int theClickCount)
 		mZombatar.mEyewearColor = 17;
 		mZombatar.mHat = -1;
 		mZombatar.mHatColor = 17;
-		mZombatar.mBackdrop = 0;
+		mZombatar.mBackdrop = 4;
 		mZombatar.mBackdropColor = 17;
 	}
 	else if (mFinishedButton->IsMouseOver())
