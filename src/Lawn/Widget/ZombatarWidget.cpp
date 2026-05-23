@@ -8,6 +8,9 @@
 #include "../../Sexy.TodLib/TodCommon.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "../../SexyAppFramework/WidgetManager.h"
+#include "../../SexyAppFramework/Renderer.h"
+#include "../../SexyAppFramework/GPUImage.h"
+#include "../../ImageLib/ImageLib.h"
 
 
 Color gSkinColors[12] = {
@@ -538,6 +541,30 @@ void ZombatarWidget::MouseUp(int x, int y, int theClickCount)
 		mApp->mPlayerInfo->mNumZombatars++;
 		mApp->mPlayerInfo->mZombatarIndex = mApp->mPlayerInfo->mNumZombatars - 1;
 		mApp->mPlayerInfo->mZombatars[mApp->mPlayerInfo->mZombatarIndex] = mZombatar;
+
+		GPUImage *anExportImage = mApp->mRenderer->NewGPUImage();
+
+		int aBitsCount = Sexy::IMAGE_ZOMBATAR_BACKGROUND_BLANK->mWidth * Sexy::IMAGE_ZOMBATAR_BACKGROUND_BLANK->mHeight;
+		anExportImage->mBits = new uint32_t[aBitsCount + 1];
+		anExportImage->mWidth = Sexy::IMAGE_ZOMBATAR_BACKGROUND_BLANK->mWidth;
+		anExportImage->mHeight = Sexy::IMAGE_ZOMBATAR_BACKGROUND_BLANK->mHeight;
+		anExportImage->mHasTrans = false;
+		anExportImage->mHasAlpha = false;
+		memset(anExportImage->mBits, 0, aBitsCount * 4);
+		anExportImage->mBits[aBitsCount] = Sexy::MEMORYCHECK_ID;
+
+		Graphics aGraphics(anExportImage);
+		aGraphics.SetLinearBlend(true);
+		DrawPortrait(&aGraphics, 0, 0);
+
+		ImageLib::Image aImage;
+		aImage.mWidth = anExportImage->mWidth;
+		aImage.mHeight = anExportImage->mHeight;
+		aImage.mNumChannels = 4;
+		aImage.mBits = new uint32_t[aBitsCount + 1];
+		memcpy(aImage.mBits, anExportImage->GetBits(), aBitsCount * 4);
+		ImageLib::WriteImage(StrFormat("Zombatar_%d", mApp->mPlayerInfo->mNumZombatars), &aImage, ".png");
+		delete anExportImage;
 	}
 	else if (mSkinButton->IsMouseOver())
 	{
