@@ -26,6 +26,7 @@
 #include "Lawn/Widget/StoreScreen.h"
 #include "Lawn/Widget/CheatDialog.h"
 #include "Lawn/Widget/GameSelector.h"
+#include "Lawn/Widget/ZombatarWidget.h"
 #include "Lawn/Widget/ZombatarTOS.h"
 #include "Lawn/Widget/CreditScreen.h"
 #include "Sexy.TodLib/EffectSystem.h"
@@ -2001,6 +2002,11 @@ void LawnApp::ButtonDepress(int theId)
 		case Dialogs::DIALOG_CONFIRM_UPDATE_CHECK:
 			KillDialog(Dialogs::DIALOG_CONFIRM_UPDATE_CHECK);
 			CheckForUpdates();
+			return;
+
+		case Dialogs::DIALOG_ZOMBATAR_DELETE:
+			KillDialog(Dialogs::DIALOG_ZOMBATAR_DELETE);
+			mGameSelector->mZombatarWidget->DeleteCurrentZombatar();
 			return;
 
 		case Dialogs::DIALOG_QUIT:
