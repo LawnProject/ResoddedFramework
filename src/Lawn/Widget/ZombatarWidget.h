@@ -130,7 +130,6 @@ enum ZombatarItem
 	ZOMBATAR_ACCESSORY_13,
 	ZOMBATAR_ACCESSORY_14,
 	ZOMBATAR_ACCESSORY_15,
-	ZOMBATAR_ACCESSORY_16,
 
 	ZOMBATAR_BACKGROUND_CRAZYDAVE,
 	ZOMBATAR_BACKGROUND_MENU,
@@ -235,6 +234,7 @@ class ZombatarWidget : public Widget, public ButtonListener
 	void DrawPortraitItem(int theItem, Graphics *g, const Zombatar &theZombatarInstance);
 	virtual void Draw(Graphics *g);
 	virtual void Update();
+	void ResetPortrait();
 	void DeleteCurrentZombatar();
 
 	virtual void MouseDown(int x, int y, int theClickCount);
