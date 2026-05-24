@@ -817,8 +817,11 @@ void ZombatarWidget::Draw(Graphics *g)
 	g->DrawImage(IMAGE_ZOMBATAR_COLORS_BG, 221, 335);
 
 	int aCurrentItemIndex = GetPageItemIndex(mPage);
+	int aItemIndex = ItemTypeOffset(mPage) + aCurrentItemIndex;
 	for (int i = 0; i < GetItemCount(mPage) + 1; i++)
 	{
+		int aProcessedIndex = ItemTypeOffset(mPage) + i;
+
 		if (mPage == PAGE_BACKDROPS && GetItemCount(mPage) == i)
 			continue;
 		g->SetColor(Color::White);
@@ -843,10 +846,18 @@ void ZombatarWidget::Draw(Graphics *g)
 		if (GetItemCount(mPage) == i)
 			aBGImage = Sexy::IMAGE_ZOMBATAR_ACCESSORY_BG_NONE;
 		g->DrawImage(aBGImage, mItemRects[i], Rect(0, 0, Sexy::IMAGE_ZOMBATAR_ACCESSORY_BG->mWidth, Sexy::IMAGE_ZOMBATAR_ACCESSORY_BG->mHeight));
+		if (GetItemCount(mPage) != i)
+		{
+			if (gPortraitItems[aProcessedIndex].mColor != nullptr)
+				g->DrawImage(*gPortraitItems[aProcessedIndex].mColor, mItemRects[i], Rect(0, 0, (*gPortraitItems[aProcessedIndex].mColor)->mWidth, (*gPortraitItems[aProcessedIndex].mColor)->mHeight));
+
+			g->DrawImage(*gPortraitItems[aProcessedIndex].mLine, mItemRects[i], Rect(0, 0, (*gPortraitItems[aProcessedIndex].mLine)->mWidth, (*gPortraitItems[aProcessedIndex].mLine)->mHeight));
+
+		}
 
 		g->SetColorizeImages(false);
 	}
-	int aItemIndex = ItemTypeOffset(mPage) + aCurrentItemIndex;
+	
 	if (mPage == PAGE_SKIN || (aCurrentItemIndex != -1 && gPortraitItems[aItemIndex].mAllowColor))
 	{
 		int aMaxColor = 18;
