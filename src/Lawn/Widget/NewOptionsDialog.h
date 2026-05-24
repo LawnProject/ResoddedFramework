@@ -39,6 +39,9 @@ class NewOptionsDialog : public Sexy::Dialog, public Sexy::SliderListener, publi
 	NewLawnButton *mBackToGameButton;
 	NewLawnButton *mSettingsButton;
 	bool mFromGameSelector;
+	#if SEXY_USE_CONTROLLER
+	bool mAwaitRelease;
+	#endif
 
   public:
 	NewOptionsDialog(LawnApp *theApp, bool theFromGameSelector);
@@ -49,6 +52,7 @@ class NewOptionsDialog : public Sexy::Dialog, public Sexy::SliderListener, publi
 	void RemovedFromManager(Sexy::WidgetManager *theWidgetManager);
 	void Resize(int theX, int theY, int theWidth, int theHeight);
 	void Draw(Sexy::Graphics *g);
+	void Update();
 	void SliderVal(int theId, double theVal);
 	void CheckboxChecked(int theId, bool checked);
 	void ButtonPress(int theId);

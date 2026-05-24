@@ -26,6 +26,7 @@
 #include "../Sexy.TodLib/TodStringFile.h"
 #include "../SexyAppFramework/ImageFont.h"
 #include <bass.h>
+#include "../SexyAppFramework/SexyMatrix.h"
 #include "../SexyAppFramework/SoundManager.h"
 #include "../SexyAppFramework/ButtonWidget.h"
 #include "../SexyAppFramework/WidgetManager.h"
@@ -6638,7 +6639,7 @@ void Board::Update()
 			if (aPressedStart && mApp->CanPauseNow())
 			{
 				mApp->PlaySample(Sexy::SOUND_PAUSE);
-				mApp->DoPauseDialog();
+				mApp->DoNewOptions(false);
 			}
 
 			gamepad_buttons_end:;
@@ -7339,24 +7340,60 @@ void Board::DrawGameObjects(Graphics *g)
 #if SEXY_USE_CONTROLLER
 			if (mApp->UsingGamepad())
 			{
-				// Slower, smoother glowing animation per user request
 				float aPulse = 1.0f + 0.02f * sinf(mMainCounter * 0.05f); 
 				int aW = (int)(80 * aPulse);
 				int aH = (int)(100 * aPulse);
 				int aX = (int)mVisualGamepadX - (aW - 80) / 2;
 				int aY = (int)mVisualGamepadY - (aH - 100) / 2;
 
+				g->DrawImage(IMAGE_GAMEPAD_ARROW, mGamepadX - IMAGE_GAMEPAD_ARROW->mWidth / 2,
+							 mGamepadY - IMAGE_GAMEPAD_ARROW->mHeight / 2 - 50 - (10 * sinf(mMainCounter * 0.05f)));
+
 				g->SetColorizeImages(true);
-				// Soft white-yellow glow using the main frame
 				g->SetColor(Color(255, 255, 255, 200 + (int)(55 * sinf(mMainCounter * 0.05f))));
-				g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_FRAME, aX, aY, aW, aH);
+				g->DrawImage(IMAGE_GAMEPAD_SELECTOR_SHADOW, mGamepadX - IMAGE_GAMEPAD_SELECTOR_SHADOW->mWidth / 2, mGamepadY - IMAGE_GAMEPAD_SELECTOR_SHADOW->mHeight / 2);
+
+				if (StageHasRoof())
+				{
+					SexyMatrix3 aMatrix;
+					TodScaleTransformMatrix(aMatrix, aX + IMAGE_GAMEPAD_CURSOR_FRAME->mWidth / 2 - 12,
+											aY + IMAGE_GAMEPAD_CURSOR_FRAME->mHeight / 2 - 12,
+											(float)aW / IMAGE_GAMEPAD_CURSOR_FRAME->mWidth,
+											(float)aH / IMAGE_GAMEPAD_CURSOR_FRAME->mHeight);
+					int aGridX = PixelToGridXKeepOnBoard(aX, aY);
+					if (aGridX <= 4)
+					{
+						aMatrix.m10 = tan(DEG_TO_RAD(-6));
+					}
+					TodBltMatrix(g, IMAGE_GAMEPAD_CURSOR_FRAME, aMatrix, g->mClipRect, Color(255, 255, 255, 200 + (int)(55 * sinf(mMainCounter * 0.05f))), g->mDrawMode,
+								 Rect(0, 0, IMAGE_GAMEPAD_CURSOR_FRAME->mWidth, IMAGE_GAMEPAD_CURSOR_FRAME->mHeight));
+
+
+					TodScaleTransformMatrix(aMatrix, aX + IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mWidth - 8,
+						aY + IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mHeight - 8,
+						(float)(aW - 8) / IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mWidth,
+						(float)(aH - 8) / IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mHeight);
+
+					if (aGridX <= 4)
+					{
+						aMatrix.m10 = tan(DEG_TO_RAD(-6));
+					}
+					TodBltMatrix(
+						g, IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW, aMatrix, g->mClipRect, Color(255, 255, 200, 80 + (int)(40 * cosf(mMainCounter * 0.05f))), Graphics::DRAWMODE_ADDITIVE,
+						Rect(0, 0, IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mWidth, IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mHeight));
 				
-				// Use the dedicated shadow image for the inner light/shadow effect
-				g->SetDrawMode(Graphics::DRAWMODE_ADDITIVE);
-				g->SetColor(Color(255, 255, 200, 80 + (int)(40 * cosf(mMainCounter * 0.05f))));
-				g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW, aX + 4, aY + 4, aW - 8, aH - 8);
-				g->SetDrawMode(Graphics::DRAWMODE_NORMAL);
-				
+				}
+				else
+				{
+					g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_FRAME, aX, aY, aW, aH);
+
+					g->SetDrawMode(Graphics::DRAWMODE_ADDITIVE);
+					g->SetColor(Color(255, 255, 200, 80 + (int)(40 * cosf(mMainCounter * 0.05f))));
+					g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW, aX + 4, aY + 4, aW - 8, aH - 8);
+					g->SetDrawMode(Graphics::DRAWMODE_NORMAL);
+				}
+
+
 				g->SetColorizeImages(false);
 			}
 #endif
@@ -8296,7 +8333,6 @@ void Board::DrawDebugGrid(Graphics *g)
 	if (mDebugTextMode != DebugTextMode::DEBUG_TEXT_GRID)
 		return;
 
-	//TODO: complete so the last row and column are drawn
 	for (int x = 0; x < MAX_GRID_SIZE_X - 1; x++)
 	{
 		for (int y = 0; y < MAX_GRID_SIZE_Y - 1; y++)

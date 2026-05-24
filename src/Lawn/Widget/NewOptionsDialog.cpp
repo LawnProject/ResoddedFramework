@@ -21,6 +21,9 @@ using namespace Sexy;
 NewOptionsDialog::NewOptionsDialog(LawnApp *theApp, bool theFromGameSelector)
 	: Dialog(nullptr, nullptr, Dialogs::DIALOG_NEWOPTIONS, true, "Options", "", "", Dialog::BUTTONS_NONE)
 {
+#if SEXY_USE_CONTROLLER
+	mAwaitRelease = true;
+#endif
 	mApp = theApp;
 	mFromGameSelector = theFromGameSelector;
 	SetColor(Dialog::COLOR_BUTTON_TEXT, Color(255, 255, 100));
@@ -191,6 +194,24 @@ void NewOptionsDialog::Draw(Sexy::Graphics *g)
 				  FONT_DWARVENTODCRAFT18,
 				  aTextColor,
 				  DrawStringJustification::DS_ALIGN_RIGHT);
+}
+
+void NewOptionsDialog::Update()
+{
+#if SEXY_USE_CONTROLLER
+	Gamepad *aPad = mApp->mGamepads[0];
+	if (aPad != nullptr)
+	{
+		if (aPad->IsButtonJustPressed(GamepadButtons::BUTTON_START) && !mAwaitRelease)
+		{
+			ButtonDepress(Dialog::ID_OK);
+		}
+		if (mAwaitRelease && !aPad->IsButtonJustReleased(GamepadButtons::BUTTON_START))
+		{
+			mAwaitRelease = false;
+		}
+	}
+	#endif
 }
 
 //0x45CF50
