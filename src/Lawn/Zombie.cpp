@@ -3741,36 +3741,43 @@ void Zombie::DropHead(unsigned int theDamageFlags)
 	{
 		mApp->ReanimationGet(mTidbitsReanimID)->ReanimationDie();
 		mTidbitsReanimID = ReanimationID::REANIMATIONID_NULL;
+		mZombatar = nullptr;
 	}
 	if (mAccessoriesReanimID != ReanimationID::REANIMATIONID_NULL)
 	{
 		mApp->ReanimationGet(mAccessoriesReanimID)->ReanimationDie();
 		mAccessoriesReanimID = ReanimationID::REANIMATIONID_NULL;
+		mZombatar = nullptr;
 	}
 	if (mFacialHairReanimID != ReanimationID::REANIMATIONID_NULL)
 	{
 		mApp->ReanimationGet(mFacialHairReanimID)->ReanimationDie();
 		mFacialHairReanimID = ReanimationID::REANIMATIONID_NULL;
+		mZombatar = nullptr;
 	}
 	if (mHairReanimID != ReanimationID::REANIMATIONID_NULL)
 	{
 		mApp->ReanimationGet(mHairReanimID)->ReanimationDie();
 		mHairReanimID = ReanimationID::REANIMATIONID_NULL;
+		mZombatar = nullptr;
 	}
 	if (mEyewearReanimID != ReanimationID::REANIMATIONID_NULL)
 	{
 		mApp->ReanimationGet(mEyewearReanimID)->ReanimationDie();
 		mEyewearReanimID = ReanimationID::REANIMATIONID_NULL;
+		mZombatar = nullptr;
 	}
 	if (mHatReanimID != ReanimationID::REANIMATIONID_NULL)
 	{
 		mApp->ReanimationGet(mHatReanimID)->ReanimationDie();
 		mHatReanimID = ReanimationID::REANIMATIONID_NULL;
+		mZombatar = nullptr;
 	}
 	if (mBaseHeadReanimID != ReanimationID::REANIMATIONID_NULL)
 	{
 		mApp->ReanimationGet(mBaseHeadReanimID)->ReanimationDie();
 		mBaseHeadReanimID = ReanimationID::REANIMATIONID_NULL;
+		mZombatar = nullptr;
 	}
 
 	if (Zombie::IsZombotany(mZombieType))
