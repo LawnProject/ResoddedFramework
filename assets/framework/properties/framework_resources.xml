@@ -26,6 +26,7 @@
         <Image id="ALMANAC_INDEXBACK_WIDESCREEN" path="almanac_indexback_widescreen"/>
         <Image id="ALMANAC_PLANTBACK_WIDESCREEN" path="almanac_plantback_widescreen"/>
         <Image id="ALMANAC_ZOMBIEBACK_WIDESCREEN" path="almanac_zombieback_widescreen"/>
+        <Image id="ZOMBATAR_BG_WIDESCREEN" path="reloaded/zombatar_bg_widescreen"/>
         <Image id="SELECTORSCREEN_ACHIEVEMENTS_BG_WIDESCREEN" path="selectorscreen_achievements_bg_widescreen"/>
         <Image id="ACHEESEMENTS_CHINA_WIDESCREEN" path="acheesements_china_widescreen"/>
         <Image id="ACHEESEMENTS_HOLE_TILE_WIDESCREEN" path="acheesements_hole_tile_widescreen"/>

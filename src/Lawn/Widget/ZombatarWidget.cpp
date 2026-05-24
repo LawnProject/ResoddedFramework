@@ -4,6 +4,7 @@
 #include "../Zombie.h"
 #include "../../GameConstants.h"
 #include "../../Resources.h"
+#include "../../FrameworkResources.h"
 #include "../../Sexy.TodLib/TodCommon.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "../../SexyAppFramework/WidgetManager.h"
@@ -409,7 +410,11 @@ void ZombatarWidget::DrawPortrait(Graphics *g, int theX, int theY)
 
 void ZombatarWidget::Draw(Graphics *g)
 {
+#if LAWN_WIDESCREEN
+	g->DrawImage(Sexy::IMAGE_ZOMBATAR_BG_WIDESCREEN, 0, 0);
+#else
 	g->DrawImage(IMAGE_ZOMBATAR_MAIN_BG, 0, 0);
+#endif
 	g->ClipRect(600, 300, 170, 200);
 	g->DrawImage(IMAGE_ALMANAC_GROUNDDAY, 600, 300);
 

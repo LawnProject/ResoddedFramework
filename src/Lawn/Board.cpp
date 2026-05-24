@@ -7776,6 +7776,11 @@ void Board::DrawProgressMeter(Graphics *g)
 #else
 	int aPosX = aCelWidth / 2 + 600;
 #endif
+#if LAWN_WIDESCREEN
+	int aTextPosY = aImagePosY + 14;
+#else
+	int aTextPosY = 589;
+#endif
 	Color aColor(224, 187, 98);
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED ||
 		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_BEGHOULED_TWIST)
@@ -7783,41 +7788,45 @@ void Board::DrawProgressMeter(Graphics *g)
 		SexyString aMatchStr =
 			StrFormat("%d / %d %s", mChallenge->mChallengeScore, 75, TodStringTranslate("[MATCHES]").c_str());
 		TodDrawString(
-			g, aMatchStr, aPosX, 589, Sexy::FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
+			g, aMatchStr, aPosX, aTextPosY, Sexy::FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
 	}
 	else if (mApp->IsSquirrelLevel())
 	{
 		SexyString aMatchStr =
 			StrFormat("%d / %d %s", mChallenge->mChallengeScore, 7, TodStringTranslate("[SQUIRRELS]").c_str());
 		TodDrawString(
-			g, aMatchStr, aPosX, 589, Sexy::FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
+			g, aMatchStr, aPosX, aTextPosY, Sexy::FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
 	}
 	else if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_SLOT_MACHINE)
 	{
 		int aSunMoney = ClampInt(mSunMoney, 0, 2000);
 		SexyString aMatchStr = StrFormat("%d / %d %s", aSunMoney, 2000, TodStringTranslate("[SUN]").c_str());
 		TodDrawString(
-			g, aMatchStr, aPosX, 589, Sexy::FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
+			g, aMatchStr, aPosX, aTextPosY, Sexy::FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
 	}
 	else if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZOMBIQUARIUM)
 	{
 		int aSunMoney = ClampInt(mSunMoney, 0, 1000);
 		SexyString aMatchStr = StrFormat("%d / %d %s", aSunMoney, 1000, TodStringTranslate("[SUN]").c_str());
 		TodDrawString(
-			g, aMatchStr, aPosX, 589, Sexy::FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
+			g, aMatchStr, aPosX, aTextPosY, Sexy::FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
 	}
 	else if (mApp->IsIZombieLevel())
 	{
 		SexyString aMatchStr =
 			StrFormat("%d / %d %s", mChallenge->mChallengeScore, 5, TodStringTranslate("[BRAINS]").c_str());
 		TodDrawString(
-			g, aMatchStr, aPosX, 589, Sexy::FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
+			g, aMatchStr, aPosX, aTextPosY, Sexy::FONT_DWARVENTODCRAFT12, aColor, DrawStringJustification::DS_ALIGN_CENTER);
 	}
 	else if (ProgressMeterHasFlags())
 	{
 		int aNumWavesPerFlag = GetNumWavesPerFlag();
 		int aNumFlagWaves = mNumWaves / aNumWavesPerFlag;
+#if LAWN_WIDESCREEN
+		int aFlagsPosEnd = aImagePosX + aCelWidth - 10;
+#else
 		int aFlagsPosEnd = 590 + aCelWidth; // 旗帜区域的右界横坐标
+#endif
 		for (int aFlagWave = 1; aFlagWave <= aNumFlagWaves; aFlagWave++)
 		{
 			// 取得旗帜升起时的高度偏移

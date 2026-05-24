@@ -134,7 +134,6 @@ GameSelector::GameSelector(LawnApp *theApp)
 									Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL_PRESS);
 	mAchievementsButton->Resize(0, mApp->mHeight - Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mHeight - 35, Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mWidth, Sexy::IMAGE_SELECTORSCREEN_ACHIEVEMENTS_PEDESTAL->mHeight);
 	mAchievementsButton->mClip = false;
-	mAchievementsButton->mBtnNoDraw = true;
 	mAchievementsButton->mMouseVisible = false;
 
 	mZombatarButton = MakeNewButton(GameSelector::GameSelector_Zombatar, this, "", nullptr, Sexy::IMAGE_BLANK, Sexy::IMAGE_BLANK, Sexy::IMAGE_BLANK);
