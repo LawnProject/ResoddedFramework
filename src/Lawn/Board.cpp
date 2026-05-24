@@ -6699,18 +6699,24 @@ void Board::Update()
 			// ---------------------------------------------------
 			if (aPressedWest)
 			{
-				if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_NORMAL)
-				{
-					// Holding anything (shovel, seed, etc) — return it
-					RefreshSeedPacketFromCursor();
-				}
-				else if (mApp->IsWhackAZombieLevel() || mApp->IsScaryPotterLevel() || mApp->IsIZombieLevel())
+				if (mApp->IsWhackAZombieLevel() || mApp->IsScaryPotterLevel() || mApp->IsIZombieLevel())
 				{
 					// Whack-a-Zombie / Hammer logic: X button hits the mole/pot
 					MouseDown(aVX, aVY, 1);
 					MouseUp(aVX, aVY, 1);
 					aPad->AddRumbleEffect(0.1f, 0.1f, 30);
 				}
+				else if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZOMBIQUARIUM)
+				{
+					MouseDown(aVX, aVY, 1);
+					MouseUp(aVX, aVY, 1);
+				}
+				if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_NORMAL)
+				{
+					// Holding anything (shovel, seed, etc) — return it
+					RefreshSeedPacketFromCursor();
+				}
+
 			}
 
 			// ---------------------------------------------------

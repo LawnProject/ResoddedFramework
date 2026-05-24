@@ -849,7 +849,7 @@ void ZombatarWidget::Draw(Graphics *g)
 	int aItemIndex = ItemTypeOffset(mPage) + aCurrentItemIndex;
 	for (int i = 0; i < GetItemCount(mPage) + 1; i++)
 	{
-		int aProcessedIndex = ItemTypeOffset(mPage) + i;
+		int aProcessedIndex = ItemTypeOffset(mPage) + i + (mSubPage * 17);
 		int aPageIndex = i + (mSubPage * 17);
 
 		if (mPage == PAGE_BACKDROPS && GetItemCount(mPage) == i)
@@ -1225,6 +1225,70 @@ void ZombatarWidget::GetPortraitItemOffset(int theItem, int *theOffsetX, int *th
 			*theOffsetX = -1.0f;
 			*theOffsetY = -10.0f;
 			break;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_1:
+			*theOffsetY = 40.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_2:
+			*theOffsetX = 10.0f;
+			*theOffsetY = 10.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_3:
+			*theOffsetX = 7.0f;
+			*theOffsetY = 20.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_5:
+			*theOffsetX = 12.0f;
+			*theOffsetY = 20.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_6:
+			*theOffsetX = 8.0f;
+			*theOffsetY = 20.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_7:
+			*theOffsetY = 40.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_14:
+			*theOffsetY = 40.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_15:
+			*theOffsetX = 20.0f;
+			*theOffsetY = 40.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_16:
+			*theOffsetX = 20.0f;
+			*theOffsetY = 40.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_17:
+			*theOffsetX = 7.0f;
+			*theOffsetY = 20.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_21:
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_20:
+			*theOffsetX = 30.0f;
+			*theOffsetY = 20.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_22:
+			*theOffsetX = 10.0f;
+			*theOffsetY = 20.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_23:
+			*theOffsetX = 20.0f;
+			*theOffsetY = 20.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_ACCESSORY_1:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_2:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_4:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_5:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_6:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_8:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_9:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_11:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_12:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_13:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_14:
+			*theOffsetX = 20.0f;
+			*theOffsetY = 20.0f;
+			break;
 	}
 }
 
@@ -1466,7 +1530,50 @@ void ZombatarWidget::GetPortraitItemScale(int theItem, float *theScaleX, float *
 		case ZombatarItem::ZOMBATAR_ACCESSORY_14:
 			*theScaleX = 1.0f;
 			*theScaleY = 1.0f;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_19:
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_1:
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_12:
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_11:
+			*theScaleX = 0.5f;
+			*theScaleY = 0.5f;
 			break;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_7:
+			*theScaleX = 0.4f;
+			*theScaleY = 0.4f;
+			break;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_22:
+
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_14:
+			*theScaleX = 0.35f;
+			*theScaleY = 0.35f;
+			break;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_2:
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_3:
+
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_4:
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_6:
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_8:
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_9:
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_10:
+
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_13:
+
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_15:
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_16:
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_17:
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_18:
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_20:
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_21:
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_23:
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_24:
+			*theScaleX = 0.6f;
+			*theScaleY = 0.6f;
+			break;
+		case ZombatarItem::ZOMBATAR_FACIALHAIR_5:
+			*theScaleX = 0.9f;
+			*theScaleY = 0.9f;
+			break;
+
 	}
 }
 
