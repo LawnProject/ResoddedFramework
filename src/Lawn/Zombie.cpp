@@ -1103,9 +1103,30 @@ void Zombie::UpdateZombatar(Zombatar &aZombatar)
 	};
 	if (aZombatar.mAccessories != -1)
 	{
-		SexyString aNum = StrFormat("%d", aZombatar.mAccessories);
+		int aCorrectAccessory = aZombatar.mAccessories;
+		if (aCorrectAccessory == 5)
+			aCorrectAccessory = 14;
+		else if (aCorrectAccessory == 6)
+			aCorrectAccessory = 5;
+		else if (aCorrectAccessory == 7)
+			aCorrectAccessory = 6;
+		else if (aCorrectAccessory == 8)
+			aCorrectAccessory = 12;
+		else if (aCorrectAccessory == 9)
+			aCorrectAccessory = 7;
+		else if (aCorrectAccessory == 10)
+			aCorrectAccessory = 9;
+		else if (aCorrectAccessory == 11)
+			aCorrectAccessory = 10;
+		else if (aCorrectAccessory == 12)
+			aCorrectAccessory = 11;
+		else if (aCorrectAccessory == 14)
+			aCorrectAccessory = 8;
+
+
+		SexyString aNum = StrFormat("%d", aCorrectAccessory);
 		aAccessoriesReanim->AssignRenderGroupToPrefix(
-			StrFormat("%s_%s", "accessories", aZombatar.mAccessories < 10 ? ("0" + aNum).c_str() : aNum.c_str())
+			StrFormat("%s_%s", "accessories", aCorrectAccessory < 10 ? ("0" + aNum).c_str() : aNum.c_str())
 				.c_str(),
 			RENDER_GROUP_NORMAL);
 		aAccessoriesReanim->mColorOverride = gMoreColors[aZombatar.mAccessoriesColor];

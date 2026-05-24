@@ -236,6 +236,8 @@ class ZombatarWidget : public Widget, public ButtonListener
 	virtual void Update();
 	void ResetPortrait();
 	void DeleteCurrentZombatar();
+	void GetPortraitItemOffset(int theItem, int *theOffsetX, int *theOffsetY);
+	void GetPortraitItemScale(int theItem, float *theScaleX, float *theScaleY);
 
 	virtual void MouseDown(int x, int y, int theClickCount);
 	virtual void MouseUp(int x, int y, int theClickCount);
@@ -251,9 +253,9 @@ class PortraitItem
 	Image **mLine;
 	Image **mColor;
 	bool mAllowColor;
-	int mOffsetX;
-	int mOffsetY;
-	int mColorOffsetX;
-	int mColorOffsetY;
+	float mOffsetX;
+	float mOffsetY;
+	float mColorOffsetX;
+	float mColorOffsetY;
 };
 extern PortraitItem gPortraitItems[ZombatarItem::NUM_ZOMBATAR_ITEMS];

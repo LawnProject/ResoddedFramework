@@ -18,67 +18,69 @@
 
 PortraitItem gPortraitItems[ZombatarItem::NUM_ZOMBATAR_ITEMS]
 {
-	{&IMAGE_ZOMBATAR_CLOTHES_1, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_CLOTHES_2, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_CLOTHES_3, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_CLOTHES_4, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_CLOTHES_5, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_CLOTHES_6, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_CLOTHES_7, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_CLOTHES_8, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_CLOTHES_9, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_CLOTHES_10, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_CLOTHES_11, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_CLOTHES_12, nullptr, false, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_CLOTHES_1, nullptr, false, 49, 69, 0, 0},
+	{&IMAGE_ZOMBATAR_CLOTHES_2, nullptr, false, 37, 59, 0, 0},
+	{&IMAGE_ZOMBATAR_CLOTHES_3, nullptr, false, 48, 70, 0, 0},
+	{&IMAGE_ZOMBATAR_CLOTHES_4, nullptr, false, 38, 70, 0, 0},
+	{&IMAGE_ZOMBATAR_CLOTHES_5, nullptr, false, 52, 74, 0, 0},
+	{&IMAGE_ZOMBATAR_CLOTHES_6, nullptr, false, 54, 69, 0, 0},
+	{&IMAGE_ZOMBATAR_CLOTHES_7, nullptr, false, 39, 64, 0, 0},
+	{&IMAGE_ZOMBATAR_CLOTHES_8, nullptr, false, 50, 69, 0, 0},
+	{&IMAGE_ZOMBATAR_CLOTHES_9, nullptr, false, 51, 61, 0, 0},
+	{&IMAGE_ZOMBATAR_CLOTHES_10, nullptr, false, 46, 68, 0, 0},
+	{&IMAGE_ZOMBATAR_CLOTHES_11, nullptr, false, 46, 70, 0, 0},
+	{&IMAGE_ZOMBATAR_CLOTHES_12, nullptr, false, 41, 73, 0, 0},
 
-	{&IMAGE_ZOMBATAR_HATS_1, &IMAGE_ZOMBATAR_HATS_1_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HATS_2, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HATS_3, &IMAGE_ZOMBATAR_HATS_3_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HATS_4, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HATS_5, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HATS_6, &IMAGE_ZOMBATAR_HATS_6_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HATS_7, &IMAGE_ZOMBATAR_HATS_7_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HATS_8, &IMAGE_ZOMBATAR_HATS_8_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HATS_9, &IMAGE_ZOMBATAR_HATS_9_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HATS_10, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HATS_11, &IMAGE_ZOMBATAR_HATS_11_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HATS_12, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HATS_13, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HATS_14, nullptr, true, 0, 0, 0, 0},
 
-	{&IMAGE_ZOMBATAR_HAIR_1, &IMAGE_ZOMBATAR_HAIR_1_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_2, &IMAGE_ZOMBATAR_HAIR_2_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_3, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_4, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_5, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_6, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_7, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_8, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_9, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_10, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_11, &IMAGE_ZOMBATAR_HAIR_11_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_12, &IMAGE_ZOMBATAR_HAIR_12_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_13, &IMAGE_ZOMBATAR_HAIR_13_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_14, &IMAGE_ZOMBATAR_HAIR_14_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_15, &IMAGE_ZOMBATAR_HAIR_15_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_HAIR_16, nullptr, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HATS_1, &IMAGE_ZOMBATAR_HATS_1_MASK, true, -10, -35, -2, -1},
+	{&IMAGE_ZOMBATAR_HATS_2, nullptr, true, 9, -28, 0, 0},
+	{&IMAGE_ZOMBATAR_HATS_3, &IMAGE_ZOMBATAR_HATS_3_MASK, true, 15, -20, -15, 1},
+	{&IMAGE_ZOMBATAR_HATS_4, nullptr, true, -27, -30, 0, 0},
+	{&IMAGE_ZOMBATAR_HATS_5, nullptr, true, 3, -24, 0, 0},
+	{&IMAGE_ZOMBATAR_HATS_6, &IMAGE_ZOMBATAR_HATS_6_MASK, true, -20, -37, -4, 2},
+	{&IMAGE_ZOMBATAR_HATS_7, &IMAGE_ZOMBATAR_HATS_7_MASK, true, 15, -23, 1, -15},
+	{&IMAGE_ZOMBATAR_HATS_8, &IMAGE_ZOMBATAR_HATS_8_MASK, true, -35, -40, 2, 2},
+	{&IMAGE_ZOMBATAR_HATS_9, &IMAGE_ZOMBATAR_HATS_9_MASK, true, 0, -40, 2, 2},
+	{&IMAGE_ZOMBATAR_HATS_10, nullptr, true, -25, 5, 0, 0},
+	{&IMAGE_ZOMBATAR_HATS_11, &IMAGE_ZOMBATAR_HATS_11_MASK, true, 25, -32, -1, -14},
+	{&IMAGE_ZOMBATAR_HATS_12, nullptr, true, 5, -25, 0, 0},
+	{&IMAGE_ZOMBATAR_HATS_13, nullptr, true, -20, -40, 0, 0},
+	{&IMAGE_ZOMBATAR_HATS_14, nullptr, true, -15, -35, 0, 0},
 
-	{&IMAGE_ZOMBATAR_EYEWEAR_1, &IMAGE_ZOMBATAR_EYEWEAR_1_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_EYEWEAR_2, &IMAGE_ZOMBATAR_EYEWEAR_2_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_EYEWEAR_3, &IMAGE_ZOMBATAR_EYEWEAR_3_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_EYEWEAR_4, &IMAGE_ZOMBATAR_EYEWEAR_4_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_EYEWEAR_5, &IMAGE_ZOMBATAR_EYEWEAR_5_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_EYEWEAR_6, &IMAGE_ZOMBATAR_EYEWEAR_6_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_EYEWEAR_7, &IMAGE_ZOMBATAR_EYEWEAR_7_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_EYEWEAR_8, &IMAGE_ZOMBATAR_EYEWEAR_8_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_EYEWEAR_9, &IMAGE_ZOMBATAR_EYEWEAR_9_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_EYEWEAR_10, &IMAGE_ZOMBATAR_EYEWEAR_10_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_EYEWEAR_11, &IMAGE_ZOMBATAR_EYEWEAR_11_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_EYEWEAR_12, &IMAGE_ZOMBATAR_EYEWEAR_12_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_EYEWEAR_13, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_EYEWEAR_14, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_EYEWEAR_15, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_EYEWEAR_16, nullptr, false, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_1, &IMAGE_ZOMBATAR_HAIR_1_MASK, true, -15, -40, -9, -2},
+	{&IMAGE_ZOMBATAR_HAIR_2, &IMAGE_ZOMBATAR_HAIR_2_MASK, true, -15, -15, -2, -4},
+	{&IMAGE_ZOMBATAR_HAIR_3, nullptr, false, -15, -10, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_4, nullptr, true, -8, -25, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_5, nullptr, true, -2, -3, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_6, nullptr, true, 1, -27, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_7, nullptr, true, 13, -18, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_8, nullptr, true, -10, -25, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_9, nullptr, true, 90, 15, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_10, nullptr, true, -15, -8, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_11, &IMAGE_ZOMBATAR_HAIR_11_MASK, true, -13, -21, -3, -3},
+	{&IMAGE_ZOMBATAR_HAIR_12, &IMAGE_ZOMBATAR_HAIR_12_MASK, true, 13, -45, -2, -4},
+	{&IMAGE_ZOMBATAR_HAIR_13, &IMAGE_ZOMBATAR_HAIR_13_MASK, true, -5, -27, -3, -2},
+	{&IMAGE_ZOMBATAR_HAIR_14, &IMAGE_ZOMBATAR_HAIR_14_MASK, true, -29, -42, -3, -6},
+	{&IMAGE_ZOMBATAR_HAIR_15, &IMAGE_ZOMBATAR_HAIR_15_MASK, true, 7, -36, 0, 0},
+	{&IMAGE_ZOMBATAR_HAIR_16, nullptr, true, -12, -20, 0, 0},
+
+
+	{&IMAGE_ZOMBATAR_EYEWEAR_1, &IMAGE_ZOMBATAR_EYEWEAR_1_MASK, true, -9, 33, 1, 0},
+	{&IMAGE_ZOMBATAR_EYEWEAR_2, &IMAGE_ZOMBATAR_EYEWEAR_2_MASK, true, -6, 46, 1, 1},
+	{&IMAGE_ZOMBATAR_EYEWEAR_3, &IMAGE_ZOMBATAR_EYEWEAR_3_MASK, true, -9, 29, 1, 0},
+	{&IMAGE_ZOMBATAR_EYEWEAR_4, &IMAGE_ZOMBATAR_EYEWEAR_4_MASK, true, -9, 39, 1, 1},
+	{&IMAGE_ZOMBATAR_EYEWEAR_5, &IMAGE_ZOMBATAR_EYEWEAR_5_MASK, true, -7, 36, 1, 1},
+	{&IMAGE_ZOMBATAR_EYEWEAR_6, &IMAGE_ZOMBATAR_EYEWEAR_6_MASK, true, -8, 39, 0, 1},
+	{&IMAGE_ZOMBATAR_EYEWEAR_7, &IMAGE_ZOMBATAR_EYEWEAR_7_MASK, true, 13, 51, 1, 1},
+	{&IMAGE_ZOMBATAR_EYEWEAR_8, &IMAGE_ZOMBATAR_EYEWEAR_8_MASK, true, -5, 31, 1, 1},
+	{&IMAGE_ZOMBATAR_EYEWEAR_9, &IMAGE_ZOMBATAR_EYEWEAR_9_MASK, true, -1, 61, 1, 1},
+	{&IMAGE_ZOMBATAR_EYEWEAR_10, &IMAGE_ZOMBATAR_EYEWEAR_10_MASK, true, -6, 36, 1, 1},
+	{&IMAGE_ZOMBATAR_EYEWEAR_11, &IMAGE_ZOMBATAR_EYEWEAR_11_MASK, true, -6, 28, 1, 1},
+	{&IMAGE_ZOMBATAR_EYEWEAR_12, &IMAGE_ZOMBATAR_EYEWEAR_12_MASK, false, 0, 56, 1, 1},
+	{&IMAGE_ZOMBATAR_EYEWEAR_13, nullptr, false, -8, 41, 0, 0},
+	{&IMAGE_ZOMBATAR_EYEWEAR_14, nullptr, false, -3, 24, 0, 0},
+	{&IMAGE_ZOMBATAR_EYEWEAR_15, nullptr, false, 4, 25, 0, 0},
+	{&IMAGE_ZOMBATAR_EYEWEAR_16, nullptr, false, -3, 25, 0, 0},
 
     {&IMAGE_ZOMBATAR_FACIALHAIR_1, &IMAGE_ZOMBATAR_FACIALHAIR_1_MASK, true, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_2, nullptr, false, 0, 0, 0, 0},
@@ -105,36 +107,37 @@ PortraitItem gPortraitItems[ZombatarItem::NUM_ZOMBATAR_ITEMS]
 	{&IMAGE_ZOMBATAR_FACIALHAIR_23, &IMAGE_ZOMBATAR_FACIALHAIR_23_MASK, true, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_24, &IMAGE_ZOMBATAR_FACIALHAIR_24_MASK, true, 0, 0, 0, 0},
 
-    {&IMAGE_ZOMBATAR_TIDBITS_1, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_TIDBITS_2, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_TIDBITS_3, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_TIDBITS_4, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_TIDBITS_5, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_TIDBITS_6, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_TIDBITS_7, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_TIDBITS_8, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_TIDBITS_9, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_TIDBITS_10, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_TIDBITS_11, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_TIDBITS_12, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_TIDBITS_13, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_TIDBITS_14, nullptr, false, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_TIDBITS_1, nullptr, true, -9, 24, 0, 0},
+	{&IMAGE_ZOMBATAR_TIDBITS_2, nullptr, true, -9, 24, 0, 0},
+	{&IMAGE_ZOMBATAR_TIDBITS_3, nullptr, true, 9, 72, 0, 0},
+	{&IMAGE_ZOMBATAR_TIDBITS_4, nullptr, false, -6, 23, 0, 0},
+	{&IMAGE_ZOMBATAR_TIDBITS_5, nullptr, false, -6, 19, 0, 0},
+	{&IMAGE_ZOMBATAR_TIDBITS_6, nullptr, false, -9, 27, 0, 0},
+	{&IMAGE_ZOMBATAR_TIDBITS_7, nullptr, false, -9, 33, 0, 0},
+	{&IMAGE_ZOMBATAR_TIDBITS_8, nullptr, false, -4, 16, 0, 0},
+	{&IMAGE_ZOMBATAR_TIDBITS_9, nullptr, false, -16, 37, 0, 0},
+	{&IMAGE_ZOMBATAR_TIDBITS_10, nullptr, true, -1, 32, 0, 0},
+	{&IMAGE_ZOMBATAR_TIDBITS_11, nullptr, true, -1, 31, 0, 0},
+	{&IMAGE_ZOMBATAR_TIDBITS_12, nullptr, true, 49, 52, 0, 0},
+	{&IMAGE_ZOMBATAR_TIDBITS_13, nullptr, false, 51, 11, 0, 0},
+	{&IMAGE_ZOMBATAR_TIDBITS_14, nullptr, false, 76, 76, 0, 0},
 
-	{&IMAGE_ZOMBATAR_ACCESSORY_1, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_ACCESSORY_2, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_ACCESSORY_3, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_ACCESSORY_4, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_ACCESSORY_5, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_ACCESSORY_6, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_ACCESSORY_8, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_ACCESSORY_9, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_ACCESSORY_10, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_ACCESSORY_11, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_ACCESSORY_12, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_ACCESSORY_13, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_ACCESSORY_14, nullptr, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_ACCESSORY_15, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_ACCESSORY_16, nullptr, false, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_ACCESSORY_1, nullptr, false, 65, 70, 0, 0},
+	{&IMAGE_ZOMBATAR_ACCESSORY_2, nullptr, false, 70, 70, 0, 0},
+	{&IMAGE_ZOMBATAR_ACCESSORY_3, nullptr, false, 48, 73, 0, 0},
+	{&IMAGE_ZOMBATAR_ACCESSORY_4, nullptr, false, 93, 55, 0, 0},
+	{&IMAGE_ZOMBATAR_ACCESSORY_5, nullptr, false, 93, 60, 0, 0},
+	{&IMAGE_ZOMBATAR_ACCESSORY_6, nullptr, false, 93, 60, 0, 0},
+
+	{&IMAGE_ZOMBATAR_ACCESSORY_8, nullptr, false, 66, 71, 0, 0},
+	{&IMAGE_ZOMBATAR_ACCESSORY_9, nullptr, false, 80, 25, 0, 0},
+	{&IMAGE_ZOMBATAR_ACCESSORY_10, nullptr, true, 23, 78, 0, 0},
+	{&IMAGE_ZOMBATAR_ACCESSORY_11, nullptr, false, 5, 60, 0, 0}, 
+	{&IMAGE_ZOMBATAR_ACCESSORY_12, nullptr, true, 97, 52, 0, 0},
+	{&IMAGE_ZOMBATAR_ACCESSORY_13, nullptr, false, 40, 90, 0, 0},
+	{&IMAGE_ZOMBATAR_ACCESSORY_14, nullptr, true, 30, 105, 0, 0},
+	{&IMAGE_ZOMBATAR_ACCESSORY_15, nullptr, true, 95, 30, 0, 0},
+	{&IMAGE_ZOMBATAR_ACCESSORY_16, nullptr, false, -25, 0, 0, 0},
 
 	{&IMAGE_ZOMBATAR_BACKGROUND_CRAZYDAVE, nullptr, false, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_BACKGROUND_MENU, nullptr, false, 0, 0, 0, 0},
@@ -690,6 +693,7 @@ void ZombatarWidget::DrawIndexedPortrait(int theIndex, Graphics *g, int theX, in
 	g->SetColorizeImages(false);
 
 	g->DrawImage(Sexy::IMAGE_ZOMBATAR_ZOMBIE_BLANK, 38, 40);
+	g->Translate(38, 40);
 	if (aZombatar.mClothes != -1)
 		DrawPortraitItem(ZOMBATAR_CLOTHES_1 + aZombatar.mClothes, g, aZombatar);
 	if (aZombatar.mAccessoriesColor != -1)
@@ -736,9 +740,9 @@ void ZombatarWidget::DrawPortraitItem(int theItem, Graphics *g, const Zombatar &
 		g->DrawImage(*anItem.mLine, anItem.mOffsetX, anItem.mOffsetY);
 	else
 	{
-		g->DrawImage(*anItem.mColor, anItem.mOffsetX + anItem.mColorOffsetX, anItem.mOffsetY + anItem.mColorOffsetY);
+		g->DrawImage(*anItem.mColor, anItem.mOffsetX , anItem.mOffsetY);
 		g->SetColor(Color::White);
-		g->DrawImage(*anItem.mLine, anItem.mOffsetX, anItem.mOffsetY);
+		g->DrawImage(*anItem.mLine, anItem.mOffsetX + anItem.mColorOffsetX, anItem.mOffsetY + anItem.mColorOffsetY);
 	}
 	g->PopState();
 
@@ -848,10 +852,23 @@ void ZombatarWidget::Draw(Graphics *g)
 		g->DrawImage(aBGImage, mItemRects[i], Rect(0, 0, Sexy::IMAGE_ZOMBATAR_ACCESSORY_BG->mWidth, Sexy::IMAGE_ZOMBATAR_ACCESSORY_BG->mHeight));
 		if (GetItemCount(mPage) != i)
 		{
-			if (gPortraitItems[aProcessedIndex].mColor != nullptr)
-				g->DrawImage(*gPortraitItems[aProcessedIndex].mColor, mItemRects[i], Rect(0, 0, (*gPortraitItems[aProcessedIndex].mColor)->mWidth, (*gPortraitItems[aProcessedIndex].mColor)->mHeight));
+			float aScaleX = 0.27f;
+			float aScaleY = 0.27f;
+			GetPortraitItemScale(aProcessedIndex, &aScaleX, &aScaleY);
 
-			g->DrawImage(*gPortraitItems[aProcessedIndex].mLine, mItemRects[i], Rect(0, 0, (*gPortraitItems[aProcessedIndex].mLine)->mWidth, (*gPortraitItems[aProcessedIndex].mLine)->mHeight));
+			int anAdjustX = 0.0;
+			int anAdjustY = 0.0;
+
+			GetPortraitItemOffset(aProcessedIndex, &anAdjustX, &anAdjustY);
+			anAdjustX *= aScaleX;
+			anAdjustY *= aScaleY;
+			int aPosX = mItemRects[i].mX + 9 + anAdjustX;
+			int aPosY = mItemRects[i].mY + 9 + anAdjustY;
+			if (gPortraitItems[aProcessedIndex].mColor != nullptr)
+				TodDrawImageScaledF(g, *gPortraitItems[aProcessedIndex].mColor, aPosX, aPosY, aScaleX, aScaleY);
+
+			TodDrawImageScaledF(g, *gPortraitItems[aProcessedIndex].mLine, aPosX, aPosY, aScaleX, aScaleY);
+
 
 		}
 
@@ -1071,9 +1088,327 @@ void ZombatarWidget::DeleteCurrentZombatar()
 	}
 }
 
+void ZombatarWidget::GetPortraitItemOffset(int theItem, int *theOffsetX, int *theOffsetY)
+{
+	//Positions recreated by @InLiothixi for Stable Decompile
+
+	switch (theItem)
+	{
+		case ZombatarItem::ZOMBATAR_HAIR_1:
+			*theOffsetX = -9.0f;
+			*theOffsetY = -2.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_HAIR_2:
+			*theOffsetX = -2.0f;
+			*theOffsetY = -4.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_HAIR_11:
+			*theOffsetX = -3.0f;
+			*theOffsetY = -3.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_HAIR_12:
+			*theOffsetX = -2.0f;
+			*theOffsetY = -4.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_HAIR_13:
+			*theOffsetX = -3.0f;
+			*theOffsetY = -2.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_HAIR_14:
+			*theOffsetX = -3.0f;
+			*theOffsetY = -6.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_EYEWEAR_1:
+		case ZombatarItem::ZOMBATAR_EYEWEAR_3:
+			*theOffsetX = 1.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_EYEWEAR_6:
+			*theOffsetY = 1.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_EYEWEAR_2:
+		case ZombatarItem::ZOMBATAR_EYEWEAR_4:
+		case ZombatarItem::ZOMBATAR_EYEWEAR_5:
+		case ZombatarItem::ZOMBATAR_EYEWEAR_7:
+		case ZombatarItem::ZOMBATAR_EYEWEAR_8:
+		case ZombatarItem::ZOMBATAR_EYEWEAR_9:
+		case ZombatarItem::ZOMBATAR_EYEWEAR_10:
+		case ZombatarItem::ZOMBATAR_EYEWEAR_11:
+		case ZombatarItem::ZOMBATAR_EYEWEAR_12:
+			*theOffsetX = 1.0f;
+			*theOffsetY = 1.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_1:
+			*theOffsetX = -2.0f;
+			*theOffsetY = -1.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_3:
+			*theOffsetX = -15.0f;
+			*theOffsetY = 1.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_6:
+			*theOffsetX = -4.0f;
+			*theOffsetY = 2.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_7:
+			*theOffsetX = 1.0f;
+			*theOffsetY = -15.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_8:
+		case ZombatarItem::ZOMBATAR_HATS_9:
+			*theOffsetX = 2.0f;
+			*theOffsetY = 2.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_11:
+			*theOffsetX = -1.0f;
+			*theOffsetY = -14.0f;
+			break;
+	}
+}
+
+void ZombatarWidget::GetPortraitItemScale(int theItem, float *theScaleX, float *theScaleY)
+{
+	//Scale recreated by @InLiothixi for Stable Decompile
+	switch (theItem)
+	{
+		case ZombatarItem::ZOMBATAR_HAIR_14:
+			*theScaleX = 0.2875f;
+			*theScaleY = 0.2875f;
+			break;
+		case ZombatarItem::ZOMBATAR_HAIR_10:
+			*theScaleX = 0.3f;
+			*theScaleY = 0.3f;
+			break;
+		case ZombatarItem::ZOMBATAR_HAIR_2:
+		case ZombatarItem::ZOMBATAR_HAIR_4:
+			*theScaleX = 0.325f;
+			*theScaleY = 0.325f;
+			break;
+		case ZombatarItem::ZOMBATAR_HAIR_1:
+		case ZombatarItem::ZOMBATAR_HAIR_3:
+		case ZombatarItem::ZOMBATAR_HAIR_8:
+		case ZombatarItem::ZOMBATAR_HAIR_13:
+		case ZombatarItem::ZOMBATAR_HAIR_15:
+		case ZombatarItem::ZOMBATAR_HAIR_16:
+		case ZombatarItem::ZOMBATAR_HAIR_12:
+			*theScaleX = 0.35f;
+			*theScaleY = 0.35f;
+			break;
+		case ZombatarItem::ZOMBATAR_HAIR_11:
+			*theScaleX = 0.375f;
+			*theScaleY = 0.375f;
+			break;
+		case ZombatarItem::ZOMBATAR_HAIR_5:
+			*theScaleX = 0.4f;
+			*theScaleY = 0.4f;
+			break;
+		case ZombatarItem::ZOMBATAR_HAIR_6:
+			*theScaleX = 0.425f;
+			*theScaleY = 0.425f;
+			break;
+		case ZombatarItem::ZOMBATAR_HAIR_7:
+			*theScaleX = 0.5f;
+			*theScaleY = 0.5f;
+			break;
+		case ZombatarItem::ZOMBATAR_HAIR_9:
+			*theScaleX = 1.4f;
+			*theScaleY = 0.9f;
+			break;
+		case ZombatarItem::ZOMBATAR_TIDBITS_1:
+			*theScaleX = 0.475f;
+			*theScaleY = 0.475f;
+			break;
+		case ZombatarItem::ZOMBATAR_TIDBITS_2:
+			*theScaleX = 0.48f;
+			*theScaleY = 0.44f;
+			break;
+		case ZombatarItem::ZOMBATAR_TIDBITS_5:
+		case ZombatarItem::ZOMBATAR_TIDBITS_6:
+			*theScaleX = 0.48f;
+			*theScaleY = 0.48f;
+			break;
+		case ZombatarItem::ZOMBATAR_TIDBITS_7:
+			*theScaleX = 0.49f;
+			*theScaleY = 0.49f;
+			break;
+		case ZombatarItem::ZOMBATAR_TIDBITS_11:
+			*theScaleX = 0.5f;
+			*theScaleY = 0.5f;
+			break;
+		case ZombatarItem::ZOMBATAR_TIDBITS_8:
+		case ZombatarItem::ZOMBATAR_TIDBITS_10:
+			*theScaleX = 0.515f;
+			*theScaleY = 0.515f;
+			break;
+		case ZombatarItem::ZOMBATAR_TIDBITS_4:
+			*theScaleX = 0.52f;
+			*theScaleY = 0.52f;
+			break;
+		case ZombatarItem::ZOMBATAR_TIDBITS_3:
+			*theScaleX = 0.75f;
+			*theScaleY = 0.75f;
+			break;
+		case ZombatarItem::ZOMBATAR_TIDBITS_13:
+			*theScaleX = 0.875f;
+			*theScaleY = 0.625f;
+			break;
+		case ZombatarItem::ZOMBATAR_TIDBITS_9:
+		case ZombatarItem::ZOMBATAR_TIDBITS_12:
+		case ZombatarItem::ZOMBATAR_TIDBITS_14:
+			*theScaleX = 1.0f;
+			*theScaleY = 1.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_EYEWEAR_1:
+			*theScaleX = 0.39f;
+			*theScaleY = 0.39f;
+			break;
+		case ZombatarItem::ZOMBATAR_EYEWEAR_3:
+		case ZombatarItem::ZOMBATAR_EYEWEAR_4:
+		case ZombatarItem::ZOMBATAR_EYEWEAR_6:
+			*theScaleX = 0.4f;
+			*theScaleY = 0.39f;
+			break;
+		case ZombatarItem::ZOMBATAR_EYEWEAR_5:
+			*theScaleX = 0.4115f;
+			*theScaleY = 0.39f;
+			break;
+		case ZombatarItem::ZOMBATAR_EYEWEAR_2:
+			*theScaleX = 0.4125f;
+			*theScaleY = 0.39f;
+			break;
+		case ZombatarItem::ZOMBATAR_EYEWEAR_10:
+			*theScaleX = 0.4125f;
+			*theScaleY = 0.4125f;
+			break;
+		case ZombatarItem::ZOMBATAR_EYEWEAR_8:
+		case ZombatarItem::ZOMBATAR_EYEWEAR_11:
+			*theScaleX = 0.425f;
+			*theScaleY = 0.425f;
+			break;
+		case ZombatarItem::ZOMBATAR_EYEWEAR_14:
+		case ZombatarItem::ZOMBATAR_EYEWEAR_16:
+			*theScaleX = 0.45f;
+			*theScaleY = 0.45f;
+			break;
+		case ZombatarItem::ZOMBATAR_EYEWEAR_12:
+			*theScaleX = 0.475f;
+			*theScaleY = 0.475f;
+			break;
+		case ZombatarItem::ZOMBATAR_EYEWEAR_15:
+			*theScaleX = 0.5f;
+			*theScaleY = 0.5f;
+			break;
+		case ZombatarItem::ZOMBATAR_EYEWEAR_9:
+			*theScaleX = 0.51f;
+			*theScaleY = 0.51f;
+			break;
+		case ZombatarItem::ZOMBATAR_EYEWEAR_13:
+			*theScaleX = 0.85f;
+			*theScaleY = 0.5f;
+			break;
+		case ZombatarItem::ZOMBATAR_EYEWEAR_7:
+			*theScaleX = 0.9575f;
+			*theScaleY = 0.9575f;
+			break;
+		case ZombatarItem::ZOMBATAR_CLOTHES_1:
+		case ZombatarItem::ZOMBATAR_CLOTHES_2:
+		case ZombatarItem::ZOMBATAR_CLOTHES_3:
+		case ZombatarItem::ZOMBATAR_CLOTHES_4:
+		case ZombatarItem::ZOMBATAR_CLOTHES_5:
+		case ZombatarItem::ZOMBATAR_CLOTHES_6:
+		case ZombatarItem::ZOMBATAR_CLOTHES_7:
+		case ZombatarItem::ZOMBATAR_CLOTHES_8:
+		case ZombatarItem::ZOMBATAR_CLOTHES_9:
+		case ZombatarItem::ZOMBATAR_CLOTHES_10:
+		case ZombatarItem::ZOMBATAR_CLOTHES_11:
+		case ZombatarItem::ZOMBATAR_CLOTHES_12:
+			*theScaleX = 0.475f;
+			*theScaleY = 0.475f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_8:
+			*theScaleX = 0.275f;
+			*theScaleY = 0.275f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_6:
+			*theScaleX = 0.3f;
+			*theScaleY = 0.3f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_13:
+			*theScaleX = 0.3025f;
+			*theScaleY = 0.3025f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_14:
+			*theScaleX = 0.345f;
+			*theScaleY = 0.345f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_10:
+			*theScaleX = 0.35f;
+			*theScaleY = 0.35f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_1:
+		case ZombatarItem::ZOMBATAR_HATS_2:
+		case ZombatarItem::ZOMBATAR_HATS_4:
+			*theScaleX = 0.375f;
+			*theScaleY = 0.375f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_12:
+			*theScaleX = 0.39f;
+			*theScaleY = 0.39f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_9:
+			*theScaleX = 0.43f;
+			*theScaleY = 0.43f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_5:
+			*theScaleX = 0.44f;
+			*theScaleY = 0.44f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_11:
+			*theScaleX = 0.455f;
+			*theScaleY = 0.35f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_3:
+			*theScaleX = 0.465f;
+			*theScaleY = 0.465f;
+			break;
+		case ZombatarItem::ZOMBATAR_HATS_7:
+			*theScaleX = 0.565f;
+			*theScaleY = 0.565f;
+			break;
+		case ZombatarItem::ZOMBATAR_ACCESSORY_15:
+			*theScaleX = 0.31125f;
+			*theScaleY = 0.31125f;
+			break;
+		case ZombatarItem::ZOMBATAR_ACCESSORY_10:
+			*theScaleX = 0.425f;
+			*theScaleY = 0.425f;
+			break;
+		case ZombatarItem::ZOMBATAR_ACCESSORY_3:
+			*theScaleX = 0.925f;
+			*theScaleY = 0.7125f;
+			break;
+		case ZombatarItem::ZOMBATAR_ACCESSORY_7:
+			*theScaleX = 1.0f;
+			*theScaleY = 0.95f;
+			break;
+		case ZombatarItem::ZOMBATAR_ACCESSORY_1:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_2:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_4:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_5:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_6:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_8:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_9:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_11:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_12:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_13:
+		case ZombatarItem::ZOMBATAR_ACCESSORY_14:
+			*theScaleX = 1.0f;
+			*theScaleY = 1.0f;
+			break;
+	}
+}
+
 void ZombatarWidget::MouseDown(int x, int y, int theClickCount)
 {
-
 }
 
 void ZombatarWidget::MouseUp(int x, int y, int theClickCount)
