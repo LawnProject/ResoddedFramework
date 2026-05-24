@@ -171,8 +171,10 @@ class ZombatarWidget : public Widget, public ButtonListener
 		ZOMBATAR_FINISHED,
 		ZOMBATAR_BACK_AVATAR,
 		ZOMBATAR_NEW,
-		ZOMBATAR_LEFT,
-		ZOMBATAR_RIGHT,
+		ZOMBATAR_NEXT_PORTRAIT,
+		ZOMBATAR_PREV_BUTTON,
+		ZOMBATAR_NEXT_PAGE,
+		ZOMBATAR_PREV_PAGE,
 		ZOMBATAR_DELETE,
 		ZOMBATAR_SKIN,
 		ZOMBATAR_HAIR,
@@ -195,6 +197,9 @@ class ZombatarWidget : public Widget, public ButtonListener
 	GameButton *mNextButton;
 	GameButton *mPrevButton;
 
+	GameButton *mNextPageButton;
+	GameButton *mPrevPageButton;
+
 
 	GameButton *mToggledButton;
 
@@ -212,6 +217,7 @@ class ZombatarWidget : public Widget, public ButtonListener
 	Rect mColorRects[18];
 	Rect mItemRects[18];
 
+	int mMaxSubPages;
 	int mSubPage;
 	ZombatarPage mPage;
 	ZombatarState mState;

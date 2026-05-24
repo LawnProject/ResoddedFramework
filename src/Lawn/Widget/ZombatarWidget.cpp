@@ -44,7 +44,7 @@ PortraitItem gPortraitItems[ZombatarItem::NUM_ZOMBATAR_ITEMS]
 	{&IMAGE_ZOMBATAR_HATS_10, nullptr, true, -25, 5, 0, 0},
 	{&IMAGE_ZOMBATAR_HATS_11, &IMAGE_ZOMBATAR_HATS_11_MASK, true, 25, -32, -1, -14},
 	{&IMAGE_ZOMBATAR_HATS_12, nullptr, true, 5, -25, 0, 0},
-	{&IMAGE_ZOMBATAR_HATS_13, nullptr, true, -20, -40, 0, 0},
+	{&IMAGE_ZOMBATAR_HATS_13, nullptr, false, -20, -40, 0, 0},
 	{&IMAGE_ZOMBATAR_HATS_14, nullptr, true, -15, -35, 0, 0},
 
 	{&IMAGE_ZOMBATAR_HAIR_1, &IMAGE_ZOMBATAR_HAIR_1_MASK, true, -15, -40, -9, -2},
@@ -83,25 +83,25 @@ PortraitItem gPortraitItems[ZombatarItem::NUM_ZOMBATAR_ITEMS]
 	{&IMAGE_ZOMBATAR_EYEWEAR_16, nullptr, false, -3, 25, 0, 0},
 
     {&IMAGE_ZOMBATAR_FACIALHAIR_1, &IMAGE_ZOMBATAR_FACIALHAIR_1_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_FACIALHAIR_2, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_FACIALHAIR_3, nullptr, false, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_FACIALHAIR_2, nullptr, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_FACIALHAIR_3, nullptr, true, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_4, &IMAGE_ZOMBATAR_FACIALHAIR_4_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_FACIALHAIR_5, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_FACIALHAIR_6, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_FACIALHAIR_7, nullptr, false, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_FACIALHAIR_5, nullptr, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_FACIALHAIR_6, nullptr, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_FACIALHAIR_7, nullptr, true, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_8, &IMAGE_ZOMBATAR_FACIALHAIR_8_MASK, true, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_9, &IMAGE_ZOMBATAR_FACIALHAIR_9_MASK, true, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_10, &IMAGE_ZOMBATAR_FACIALHAIR_10_MASK, true, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_11, &IMAGE_ZOMBATAR_FACIALHAIR_11_MASK, true, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_12, &IMAGE_ZOMBATAR_FACIALHAIR_12_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_FACIALHAIR_13, nullptr, false, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_FACIALHAIR_13, nullptr, true, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_14, &IMAGE_ZOMBATAR_FACIALHAIR_14_MASK, true, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_15, &IMAGE_ZOMBATAR_FACIALHAIR_15_MASK, true, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_16, &IMAGE_ZOMBATAR_FACIALHAIR_16_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_FACIALHAIR_17, nullptr, false, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_FACIALHAIR_17, nullptr, true, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_18, &IMAGE_ZOMBATAR_FACIALHAIR_18_MASK, true, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_FACIALHAIR_19, nullptr, false, 0, 0, 0, 0},
-	{&IMAGE_ZOMBATAR_FACIALHAIR_20, nullptr, false, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_FACIALHAIR_19, nullptr, true, 0, 0, 0, 0},
+	{&IMAGE_ZOMBATAR_FACIALHAIR_20, nullptr, true, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_21, &IMAGE_ZOMBATAR_FACIALHAIR_21_MASK, true, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_22, &IMAGE_ZOMBATAR_FACIALHAIR_22_MASK, true, 0, 0, 0, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_23, &IMAGE_ZOMBATAR_FACIALHAIR_23_MASK, true, 0, 0, 0, 0},
@@ -170,6 +170,7 @@ ZombatarWidget::ZombatarWidget(LawnApp *theApp)
 	mHeight = BOARD_HEIGHT;
 	mTransitionTimer = 0;
 	mSubPage = 0;
+	mMaxSubPages = 0;
 	if (mApp->mPlayerInfo != nullptr && mApp->mPlayerInfo->mNumZombatars <= 0)
 		mState = STATE_AVATAR_CREATION;
 	else
@@ -208,14 +209,14 @@ ZombatarWidget::ZombatarWidget(LawnApp *theApp)
 	mNewZombatarButton->mDownImage = Sexy::IMAGE_ZOMBATAR_NEWZOMBIE_BUTTON_HIGHLIGHT;
 	mNewZombatarButton->Resize(195, 395, Sexy::IMAGE_ZOMBATAR_NEWZOMBIE_BUTTON_HIGHLIGHT->mWidth, Sexy::IMAGE_ZOMBATAR_NEWZOMBIE_BUTTON_HIGHLIGHT->mHeight);
 	
-	mNextButton = new GameButton(ZombatarWidget::ZOMBATAR_LEFT);
+	mNextButton = new GameButton(ZombatarWidget::ZOMBATAR_NEXT_PORTRAIT);
 	mNextButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_NEXT_BUTTON;
 	mNextButton->mOverImage = Sexy::IMAGE_ZOMBATAR_NEXT_BUTTON_HIGHLIGHT;
 	mNextButton->mDownImage = Sexy::IMAGE_ZOMBATAR_NEXT_BUTTON_HIGHLIGHT;
 	mNextButton->Resize(467, 398, Sexy::IMAGE_ZOMBATAR_NEXT_BUTTON_HIGHLIGHT->mWidth,
 						Sexy::IMAGE_ZOMBATAR_NEXT_BUTTON_HIGHLIGHT->mHeight);
 	
-	mPrevButton = new GameButton(ZombatarWidget::ZOMBATAR_LEFT);
+	mPrevButton = new GameButton(ZombatarWidget::ZOMBATAR_NEXT_PORTRAIT);
 	mPrevButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_PREV_BUTTON;
 	mPrevButton->mOverImage = Sexy::IMAGE_ZOMBATAR_PREV_BUTTON_HIGHLIGHT;
 	mPrevButton->mDownImage = Sexy::IMAGE_ZOMBATAR_PREV_BUTTON_HIGHLIGHT;
@@ -286,6 +287,20 @@ ZombatarWidget::ZombatarWidget(LawnApp *theApp)
 	mBackdropsButton->mDownImage = Sexy::IMAGE_ZOMBATAR_BACKDROPS_BUTTON_OVER;
 	mBackdropsButton->Resize(58, 416, Sexy::IMAGE_ZOMBATAR_BACKDROPS_BUTTON_HIGHLIGHT->mWidth, Sexy::IMAGE_ZOMBATAR_BACKDROPS_BUTTON_HIGHLIGHT->mHeight);
 
+	mNextPageButton = new GameButton(ZombatarWidget::ZOMBATAR_NEXT_PAGE);
+	mNextPageButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_NEXT_BUTTON;
+	mNextPageButton->mOverImage = Sexy::IMAGE_ZOMBATAR_NEXT_BUTTON_HIGHLIGHT;
+	mNextPageButton->mDownImage = Sexy::IMAGE_ZOMBATAR_NEXT_BUTTON_HIGHLIGHT;
+	mNextPageButton->Resize(497, 372, Sexy::IMAGE_ZOMBATAR_NEXT_BUTTON_HIGHLIGHT->mWidth,
+						Sexy::IMAGE_ZOMBATAR_NEXT_BUTTON_HIGHLIGHT->mHeight);
+
+	mPrevPageButton = new GameButton(ZombatarWidget::ZOMBATAR_PREV_PAGE);
+	mPrevPageButton->mButtonImage = Sexy::IMAGE_ZOMBATAR_PREV_BUTTON;
+	mPrevPageButton->mOverImage = Sexy::IMAGE_ZOMBATAR_PREV_BUTTON_HIGHLIGHT;
+	mPrevPageButton->mDownImage = Sexy::IMAGE_ZOMBATAR_PREV_BUTTON_HIGHLIGHT;
+	mPrevPageButton->Resize(175, 372, Sexy::IMAGE_ZOMBATAR_PREV_BUTTON_HIGHLIGHT->mWidth,
+						Sexy::IMAGE_ZOMBATAR_PREV_BUTTON_HIGHLIGHT->mHeight);
+	
 	mZombie = new Zombie();
 	mZombie->mBoard = nullptr;
 	mZombie->ZombieInitialize(0, ZombieType::ZOMBIE_FLAG, false, nullptr, Zombie::ZOMBIE_WAVE_UI);
@@ -334,6 +349,10 @@ ZombatarWidget::~ZombatarWidget()
 		delete mNextButton;
 	if (mPrevButton)
 		delete mPrevButton;
+	if (mNextPageButton)
+		delete mNextPageButton;
+	if (mPrevPageButton)
+		delete mPrevPageButton;
 	if (mDeleteZombatarButton)
 		delete mDeleteZombatarButton;
 	if (mSkinButton)
@@ -443,6 +462,7 @@ void ZombatarWidget::ChangePage(ZombatarPage thePage)
 		case PAGE_FACIAL_HAIR:
 		{
 			mToggledButton = mFacialHairButton;
+			mMaxSubPages = 1;
 			break;
 		}
 		case PAGE_TIDBITS:
@@ -531,6 +551,9 @@ void ZombatarWidget::ChangePage(ZombatarPage thePage)
 	mToggledButton->mOverImage = aNewImage;
 	mToggledButton->mDownImage = aNewImage;
 	mToggledButton->mDisabled = true;
+
+	mNextPageButton->mDisabled = mState != STATE_AVATAR_CREATION || mSubPage == mMaxSubPages || mPage != PAGE_FACIAL_HAIR;
+	mPrevPageButton->mDisabled = mState != STATE_AVATAR_CREATION || mSubPage == 0 || mPage != PAGE_FACIAL_HAIR;
 }
 
 void ZombatarWidget::ChangeState(ZombatarState theState)
@@ -560,6 +583,8 @@ void ZombatarWidget::ChangeState(ZombatarState theState)
 
 	mAvatarBackButton->mDisabled = mState != STATE_CONFIRM;
 	mFinishedButton->mDisabled = mState == STATE_AVATAR_LIST;
+	mNextPageButton->mDisabled = mState != STATE_AVATAR_CREATION || mSubPage == mMaxSubPages || mPage != PAGE_FACIAL_HAIR;
+	mPrevPageButton->mDisabled = mState != STATE_AVATAR_CREATION || mSubPage == 0 || mPage != PAGE_FACIAL_HAIR;
 	mNewZombatarButton->mDisabled = mState != STATE_AVATAR_LIST;
 	mNextButton->mDisabled = mState != STATE_AVATAR_LIST || (mApp->mPlayerInfo && mApp->mPlayerInfo->mZombatarIndex == mApp->mPlayerInfo->mNumZombatars - 1);
 	mPrevButton->mDisabled = mState != STATE_AVATAR_LIST || (mApp->mPlayerInfo && mApp->mPlayerInfo->mZombatarIndex == 0);
@@ -696,7 +721,7 @@ void ZombatarWidget::DrawIndexedPortrait(int theIndex, Graphics *g, int theX, in
 	g->Translate(38, 40);
 	if (aZombatar.mClothes != -1)
 		DrawPortraitItem(ZOMBATAR_CLOTHES_1 + aZombatar.mClothes, g, aZombatar);
-	if (aZombatar.mAccessoriesColor != -1)
+	if (aZombatar.mAccessories != -1)
 		DrawPortraitItem(ZOMBATAR_ACCESSORY_1 + aZombatar.mAccessories, g, aZombatar);
 	if (aZombatar.mTidbits != -1)
 		DrawPortraitItem(ZOMBATAR_TIDBITS_1 + aZombatar.mTidbits, g, aZombatar);
@@ -825,6 +850,7 @@ void ZombatarWidget::Draw(Graphics *g)
 	for (int i = 0; i < GetItemCount(mPage) + 1; i++)
 	{
 		int aProcessedIndex = ItemTypeOffset(mPage) + i;
+		int aPageIndex = i + (mSubPage * 17);
 
 		if (mPage == PAGE_BACKDROPS && GetItemCount(mPage) == i)
 			continue;
@@ -833,7 +859,7 @@ void ZombatarWidget::Draw(Graphics *g)
 		g->SetColorizeImages(true);
 		Image *aBGImage = Sexy::IMAGE_ZOMBATAR_ACCESSORY_BG;
 
-		if (aCurrentItemIndex != i)
+		if (aCurrentItemIndex != aPageIndex)
 		{
 			g->mColor.mAlpha = 66;
 			if (mItemRects[i].Contains(mWidgetManager->mLastMouseX, mWidgetManager->mLastMouseY) && GetItemCount(mPage) != i)
@@ -903,6 +929,7 @@ void ZombatarWidget::Draw(Graphics *g)
 	}
 	else
 	{
+		ZombatarItem aITEMMMM = (ZombatarItem)aItemIndex;
 		if (aCurrentItemIndex == -1)
 			TodDrawString(g, "[ZOMBATAR_COLOR_ITEM_NOT_CHOSEN]", 349, 394, Sexy::FONT_BRIANNETOD12, Color(255, 255, 255), DS_ALIGN_CENTER);
 		else
@@ -914,6 +941,33 @@ void ZombatarWidget::Draw(Graphics *g)
 	{
 		TodDrawStringWrapped(g, "[ZOMBATAR_START_TEXT]", Rect(145, 185, 420, 120), Sexy::FONT_DWARVENTODCRAFT15,
 							 Color(208, 190, 44), DS_ALIGN_CENTER);
+	}
+
+	if (mPage == PAGE_FACIAL_HAIR)
+	{
+		g->SetColorizeImages(true);
+		g->mColor.mAlpha = 255;
+
+		g->PushState();
+
+		if (mNextPageButton->mDisabled)
+		{
+			g->mColor.mAlpha = 44;
+		}
+		mNextPageButton->Draw(g);
+
+		g->PopState();
+		g->PushState();
+		
+		if (mPrevPageButton->mDisabled)
+		{
+			g->mColor.mAlpha = 44;
+		}
+		mPrevPageButton->Draw(g);
+
+		g->PopState();
+		g->SetColorizeImages(false);
+
 	}
 
 	mSkinButton->Draw(g);
@@ -979,6 +1033,8 @@ void ZombatarWidget::Update()
 	mNewZombatarButton->Update();
 	mNextButton->Update();
 	mPrevButton->Update();
+	mNextPageButton->Update();
+	mPrevPageButton->Update();
 	mDeleteZombatarButton->Update();
 	mSkinButton->Update();
 	mHairButton->Update();
@@ -1029,7 +1085,8 @@ void ZombatarWidget::Update()
 			mTidbitsButton->IsMouseOver() || mEyewearButton->IsMouseOver() || mClothesButton->IsMouseOver() ||
 			mAccessoriesButton->IsMouseOver() || mHatsButton->IsMouseOver() || mBackdropsButton->IsMouseOver() ||
 			mAvatarBackButton->IsMouseOver() || mNewZombatarButton->IsMouseOver() || mNextButton->IsMouseOver() || 
-			mPrevButton->IsMouseOver() || mDeleteZombatarButton->IsMouseOver() || anOverlapsColor || anOverlapsItem)
+			mPrevButton->IsMouseOver() || mDeleteZombatarButton->IsMouseOver() || mPrevPageButton->IsMouseOver() ||
+			mNextPageButton->IsMouseOver() || anOverlapsColor || anOverlapsItem)
 		{
 			mApp->SetCursor(CURSOR_HAND);
 		}
@@ -1440,6 +1497,22 @@ void ZombatarWidget::MouseUp(int x, int y, int theClickCount)
 		mPrevButton->mDisabled = mApp->mPlayerInfo->mZombatarIndex == 0;
 
 	}
+	else if (mNextPageButton->IsMouseOver())
+	{
+		if (mSubPage < mMaxSubPages)
+			mSubPage++;
+
+		mNextPageButton->mDisabled = mState != STATE_AVATAR_CREATION || mSubPage == mMaxSubPages || mPage != PAGE_FACIAL_HAIR;
+		mPrevPageButton->mDisabled = mState != STATE_AVATAR_CREATION || mSubPage == 0 || mPage != PAGE_FACIAL_HAIR;
+	}
+	else if (mPrevPageButton->IsMouseOver())
+	{
+		if (mSubPage > 0)
+			mSubPage--;
+
+		mNextPageButton->mDisabled = mState != STATE_AVATAR_CREATION || mSubPage == mMaxSubPages || mPage != PAGE_FACIAL_HAIR;
+		mPrevPageButton->mDisabled = mState != STATE_AVATAR_CREATION || mSubPage == 0 || mPage != PAGE_FACIAL_HAIR;
+	}
 	else if (mDeleteZombatarButton->IsMouseOver())
 	{
 		LawnDialog *aDialog = (LawnDialog *)mApp->DoDialog(Dialogs::DIALOG_ZOMBATAR_DELETE, true, "[ZOMBATAR_DELETE_HEADER]", "[ZOMBATAR_DELETE_BODY]", "", Dialog::BUTTONS_OK_CANCEL);
@@ -1497,6 +1570,7 @@ void ZombatarWidget::MouseUp(int x, int y, int theClickCount)
 			delete anExportImage;
 
 			ResetPortrait();
+			mZombie->ResetZombatar();
 			ChangeState(STATE_AVATAR_LIST);
 		}
 
@@ -1547,6 +1621,7 @@ void ZombatarWidget::MouseUp(int x, int y, int theClickCount)
 			if (mItemRects[i].Contains(mWidgetManager->mLastMouseX, mWidgetManager->mLastMouseY))
 			{
 				int aItemIndex = i;
+				aItemIndex += mSubPage * 17;
 				if (aItemIndex == GetItemCount(mPage)) //Is this delete item
 					aItemIndex = -1;
 				switch (mPage)

@@ -165,6 +165,7 @@ class Zombie : public GameObject
 	ReanimationID mMoweredReanimID;					  //+0x150
 	int mLastPortalX;	
 	bool mHasSetupZombatar;
+	Zombatar* mZombatar;
 
 	ReanimationID mBaseHeadReanimID;
 	ReanimationID mTidbitsReanimID;
