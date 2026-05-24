@@ -79,9 +79,6 @@ target_link_directories(${PROJECT_NAME} PUBLIC
     ${THIRDPARTY_DIR}
 )
 
-get_target_property(OUT ${PROJECT_NAME} LINK_LIBRARIES)
-message(STATUS ${OUT})
-
 target_compile_definitions(${PROJECT_NAME} PUBLIC
     $<$<CONFIG:Debug>:DEBUG>
     $<$<CONFIG:Release>:NDEBUG>
