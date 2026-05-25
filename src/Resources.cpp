@@ -974,6 +974,16 @@ bool Sexy::ExtractDelayLoad_ZombatarResources(ResourceManager *theManager)
 		IMAGE_ZOMBATAR_FINISHED_BUTTON = aMgr.GetImageThrow("IMAGE_ZOMBATAR_FINISHED_BUTTON");
 		IMAGE_ZOMBATAR_FINISHED_BUTTON_HIGHLIGHT = aMgr.GetImageThrow("IMAGE_ZOMBATAR_FINISHED_BUTTON_HIGHLIGHT");
 		IMAGE_ZOMBATAR_MAIN_BG = aMgr.GetImageThrow("IMAGE_ZOMBATAR_MAIN_BG");
+
+#if LAWN_WIDESCREEN
+        // Load widescreen zombatar background when delay-loading Zombatar resources
+		try {
+			IMAGE_ZOMBATAR_BG_WIDESCREEN = aMgr.GetImageThrow("IMAGE_ZOMBATAR_BG_WIDESCREEN");
+		} catch(ResourceManagerException&) {
+			// If widescreen bg not present in resources, leave nullptr to fallback to main bg
+			IMAGE_ZOMBATAR_BG_WIDESCREEN = IMAGE_ZOMBATAR_MAIN_BG;
+		}
+#endif
 		IMAGE_ZOMBATAR_BACK_BUTTON = aMgr.GetImageThrow("IMAGE_ZOMBATAR_BACK_BUTTON");
 		IMAGE_ZOMBATAR_BACK_BUTTON_HIGHLIGHT = aMgr.GetImageThrow("IMAGE_ZOMBATAR_BACK_BUTTON_HIGHLIGHT");
 		IMAGE_ZOMBATAR_NEWZOMBIE_BUTTON = aMgr.GetImageThrow("IMAGE_ZOMBATAR_NEWZOMBIE_BUTTON");

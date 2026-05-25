@@ -9,8 +9,10 @@
         <Image id="SEED_SELECTOR" path="seed_selector"/>
         <Image id="GAMEPAD_CURSOR_FRAME" path="board_selector"/>
         <Image id="GAMEPAD_CURSOR_ARROWS" path="board_selector_arrows"/>
-		<Image id="GAMEPAD_CURSOR_FRAME_SHADOW" path="seed_selector_shadow" />
+  <Image id="GAMEPAD_CURSOR_FRAME_SHADOW" path="seed_selector_shadow" />
         <Image id="GAMEPAD_CURSOR_ARROWS_SHADOW" path="board_selector_arrows_shadow"/>
+  <Image id="GAMEPAD_SELECTOR_SHADOW" path="seed_selector_shadow"/>
+  <Image id="GAMEPAD_ARROW" path="p1_arrow"/>
 
         <!-- Widescreen Backgrounds and Decorations -->
         <Image id="BACKGROUND1_WIDESCREEN" path="background1_widescreen"/>

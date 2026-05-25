@@ -10,7 +10,9 @@
       "cacheVariables": {
         "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/msvc/install/${presetName}",
         "CMAKE_TOOLCHAIN_FILE": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/buildsystems/vcpkg.cmake",
-        "VCPKG_TARGET_TRIPLET": "x64-windows-static"
+        "VCPKG_TARGET_TRIPLET": "x64-windows-static",
+        "CMAKE_C_FLAGS": "/FS",
+        "CMAKE_CXX_FLAGS": "/FS"
       },
       "toolset": {
         "value": "host=x64",
@@ -31,7 +33,9 @@
       "cacheVariables": {
         "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/msvc/install/${presetName}",
         "CMAKE_TOOLCHAIN_FILE": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/vcpkg/scripts/buildsystems/vcpkg.cmake",
-        "VCPKG_TARGET_TRIPLET": "x86-windows-static"
+        "VCPKG_TARGET_TRIPLET": "x86-windows-static",
+        "CMAKE_C_FLAGS": "/FS",
+        "CMAKE_CXX_FLAGS": "/FS"
       },
       "toolset": {
         "value": "host=x86",
