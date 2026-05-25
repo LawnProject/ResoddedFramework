@@ -95,7 +95,7 @@ PortraitItem gPortraitItems[ZombatarItem::NUM_ZOMBATAR_ITEMS]
 	{&IMAGE_ZOMBATAR_FACIALHAIR_11, &IMAGE_ZOMBATAR_FACIALHAIR_11_MASK, true, 6, 52, -1, -3},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_12, &IMAGE_ZOMBATAR_FACIALHAIR_12_MASK, true, -2, 66, -7, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_13, nullptr, true, 7, 70, 0, 0},
-	{&IMAGE_ZOMBATAR_FACIALHAIR_14, &IMAGE_ZOMBATAR_FACIALHAIR_14_MASK, true, -20, 63, 0, 0},
+	{&IMAGE_ZOMBATAR_FACIALHAIR_14, &IMAGE_ZOMBATAR_FACIALHAIR_14_MASK, true, -20, 63, -1, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_15, &IMAGE_ZOMBATAR_FACIALHAIR_15_MASK, true, 25, 105, 0, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_16, &IMAGE_ZOMBATAR_FACIALHAIR_16_MASK, true, 25, 100, 0, 0},
 	{&IMAGE_ZOMBATAR_FACIALHAIR_17, nullptr, true, 5, 70, 0, 0},
@@ -861,15 +861,19 @@ void ZombatarWidget::Draw(Graphics *g)
 
 		if (aCurrentItemIndex != aPageIndex)
 		{
-			g->mColor.mAlpha = 66;
-			if (mItemRects[i].Contains(mWidgetManager->mLastMouseX, mWidgetManager->mLastMouseY) && GetItemCount(mPage) != i)
+			if (GetItemCount(mPage) != i)
+				g->SetColor(Color(155, 155, 175));
+			else
+				g->SetColor(Color(155, 155, 155));
+
+			if (mItemRects[i].Contains(mWidgetManager->mLastMouseX, mWidgetManager->mLastMouseY))
 			{
-				g->mColor.mAlpha = 255;
+				g->SetColor(Color::White);
 			}
 		}
 		else
 		{
-			g->mColor.mAlpha = 255;
+			g->SetColor(Color::White);
 			aBGImage = Sexy::IMAGE_ZOMBATAR_ACCESSORY_BG_HIGHLIGHT;
 		}
 
@@ -878,6 +882,8 @@ void ZombatarWidget::Draw(Graphics *g)
 		g->DrawImage(aBGImage, mItemRects[i], Rect(0, 0, Sexy::IMAGE_ZOMBATAR_ACCESSORY_BG->mWidth, Sexy::IMAGE_ZOMBATAR_ACCESSORY_BG->mHeight));
 		if (GetItemCount(mPage) != i)
 		{
+			if (g->mColor.mRed < 255)
+				g->SetColor(Color(255, 255, 255, 100));
 			float aScaleX = 0.27f;
 			float aScaleY = 0.27f;
 			GetPortraitItemScale(aProcessedIndex, &aScaleX, &aScaleY);
@@ -890,6 +896,18 @@ void ZombatarWidget::Draw(Graphics *g)
 			anAdjustY *= aScaleY;
 			int aPosX = mItemRects[i].mX + 9 + anAdjustX;
 			int aPosY = mItemRects[i].mY + 9 + anAdjustY;
+			if (aProcessedIndex >= ZOMBATAR_CLOTHES_1 && aProcessedIndex <= ZOMBATAR_CLOTHES_12)
+			{
+				g->PushState();
+				g->SetClipRect(mItemRects[i].mX + 8, mItemRects[i].mY + 8, Sexy::IMAGE_ZOMBATAR_ACCESSORY_BG->mWidth - 20, Sexy::IMAGE_ZOMBATAR_ACCESSORY_BG->mHeight - 20);
+				g->SetColor(Color(gSkinColors[0].mRed, gSkinColors[0].mGreen, gSkinColors[0].mBlue, g->mColor.mAlpha));
+				float aAnotherScaleX = (float)Sexy::IMAGE_ZOMBATAR_ACCESSORY_BG->mWidth / Sexy::IMAGE_ZOMBATAR_ZOMBIE_BLANK_SKIN->mWidth;
+				float aAnotherScaleY = (float)Sexy::IMAGE_ZOMBATAR_ACCESSORY_BG->mHeight / Sexy::IMAGE_ZOMBATAR_ZOMBIE_BLANK_SKIN->mHeight;
+				TodDrawImageScaledF(g, Sexy::IMAGE_ZOMBATAR_ZOMBIE_BLANK_SKIN, mItemRects[i].mX - 10, mItemRects[i].mY - 10, aAnotherScaleX, aAnotherScaleY);
+				g->SetColor(Color(255, 255, 255, g->mColor.mAlpha));
+				TodDrawImageScaledF(g, Sexy::IMAGE_ZOMBATAR_ZOMBIE_BLANK, mItemRects[i].mX - 10, mItemRects[i].mY - 10, aAnotherScaleX, aAnotherScaleY);
+				g->PopState();
+			}
 			if (gPortraitItems[aProcessedIndex].mColor != nullptr)
 				TodDrawImageScaledF(g, *gPortraitItems[aProcessedIndex].mColor, aPosX, aPosY, aScaleX, aScaleY);
 
@@ -945,10 +963,11 @@ void ZombatarWidget::Draw(Graphics *g)
 							 Color(208, 190, 44), DS_ALIGN_CENTER);
 	}
 
-	if (mPage == PAGE_FACIAL_HAIR)
+	if (mMaxSubPages > 0)
 	{
+		TodDrawString(g, StrFormat(TodStringTranslate("[ZOMBATAR_PAGE]").c_str(), mSubPage + 1, mMaxSubPages + 1), 348, 441, Sexy::FONT_BRIANNETOD12, Color(0, 0, 0), DS_ALIGN_CENTER);
 		g->SetColorizeImages(true);
-		g->mColor.mAlpha = 255;
+		g->SetColor(Color::White);
 
 		g->PushState();
 
@@ -1288,6 +1307,40 @@ void ZombatarWidget::GetPortraitItemOffset(int theItem, int *theOffsetX, int *th
 		case ZombatarItem::ZOMBATAR_ACCESSORY_14:
 			*theOffsetX = 20.0f;
 			*theOffsetY = 20.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_CLOTHES_2:
+			*theOffsetX = -3.0f;
+			*theOffsetY = 20.0f;
+			break;
+
+		case ZombatarItem::ZOMBATAR_CLOTHES_4:
+			*theOffsetX = 0.0f;
+			*theOffsetY = 33.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_CLOTHES_7:
+			*theOffsetX = 0.0f;
+			*theOffsetY = 27.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_CLOTHES_9:
+			*theOffsetX = 13.0f;
+			*theOffsetY = 22.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_CLOTHES_10:
+			*theOffsetX = 12.0f;
+			*theOffsetY = 29.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_CLOTHES_12:
+			*theOffsetX = 6.0f;
+			*theOffsetY = 33.0f;
+			break;
+		case ZombatarItem::ZOMBATAR_CLOTHES_1:
+		case ZombatarItem::ZOMBATAR_CLOTHES_3:
+		case ZombatarItem::ZOMBATAR_CLOTHES_5:
+		case ZombatarItem::ZOMBATAR_CLOTHES_6:
+		case ZombatarItem::ZOMBATAR_CLOTHES_8:
+		case ZombatarItem::ZOMBATAR_CLOTHES_11:
+			*theOffsetX = 12.0f;
+			*theOffsetY = 33.0f;
 			break;
 	}
 }
