@@ -14,6 +14,7 @@
 #include "Ratio.h"
 #include <ft2build.h>
 #include <SDL3/SDL_mouse.h>
+#include <SDL3/SDL_events.h>
 #include FT_FREETYPE_H
 
 
@@ -75,6 +76,7 @@ typedef std::map<std::string, bool> StringBoolMap;
 typedef std::map<std::string, int> StringIntMap;
 typedef std::map<std::string, double> StringDoubleMap;
 typedef std::map<std::string, StringVector> StringStringVectorMap;
+typedef std::list<SDL_Event> MessageList;
 
 enum
 {
@@ -233,6 +235,8 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	MemoryImageSet mMemoryImageSet;
 	SharedImageMap mSharedImageMap;
 	bool mCleanupSharedImages;
+
+	MessageList mDeferredMessages;
 
 	int mNonDrawCount;
 	int mFrameTime;

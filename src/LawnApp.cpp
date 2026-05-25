@@ -65,7 +65,7 @@
 #endif
 
 //Do not edit this. - Electr0Gunner
-Version LawnApp::gResoddedVersion(1, 0, 0, 814);
+Version LawnApp::gResoddedVersion(1, 0, 0, 817);
 
 bool gIsPartnerBuild = false;
 bool gSlowMo = false;
@@ -2423,6 +2423,7 @@ bool LawnApp::UpdateApp()
 //0x453A70
 void LawnApp::CloseRequestAsync()
 {
+	mDeferredMessages.clear();
 	mExitToTop = true;
 	mCloseRequest = true;
 }

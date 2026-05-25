@@ -3538,16 +3538,18 @@ void SexyAppBase::CloseRequestAsync()
 
 bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 {
-	SDL_Event event;
-	while (SDL_PollEvent(&event))
+	SDL_Event anEvent;
+	while (mDeferredMessages.size() > 0)
 	{
+		anEvent = mDeferredMessages.front();
+		mDeferredMessages.pop_front();
 #if SEXY_USE_IMGUI
 #if SEXY_USE_SDL3_RENDERER
 		if (mRenderer->mCurrentBackend == RenderingBackend::BACKEND_SDL3 &&
-			(event.type == SDL_EVENT_MOUSE_BUTTON_DOWN || event.type == SDL_EVENT_MOUSE_BUTTON_UP ||
-			 event.type == SDL_EVENT_MOUSE_MOTION))
+			(anEvent.type == SDL_EVENT_MOUSE_BUTTON_DOWN || anEvent.type == SDL_EVENT_MOUSE_BUTTON_UP ||
+			 anEvent.type == SDL_EVENT_MOUSE_MOTION))
 		{
-			SDL_Event aConvertedEvent = SDL_Event(event);
+			SDL_Event aConvertedEvent = SDL_Event(anEvent);
 			int x = aConvertedEvent.motion.x;
 			int y = aConvertedEvent.motion.y;
 
@@ -3559,25 +3561,25 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 		}
 		else
 #endif
-			ImGui_ImplSDL3_ProcessEvent(&event);
+			ImGui_ImplSDL3_ProcessEvent(&anEvent);
 		if (ImGui::GetIO().WantCaptureMouse)
 			break;
 
 #endif
 		if ((mRecordingDemoBuffer) && (!mShutdown))
 		{
-			switch (event.type)
+			switch (anEvent.type)
 			{
 				case SDL_EVENT_WINDOW_FOCUS_LOST:
 				case SDL_EVENT_WINDOW_FOCUS_GAINED:
 				{
-					SDL_Window* theTargetWindow = SDL_GetWindowFromEvent(&event);
+					SDL_Window* theTargetWindow = SDL_GetWindowFromEvent(&anEvent);
 					if (theTargetWindow == mWindow->mInternalWindow)
 					{
 						WriteDemoTimingBlock();
 						mDemoBuffer.WriteNumBits(0, 1);
 						mDemoBuffer.WriteNumBits(DEMO_ACTIVATE_APP, 5);
-						mDemoBuffer.WriteNumBits((event.type != SDL_EVENT_WINDOW_FOCUS_LOST) ? 1 : 0, 1);
+						mDemoBuffer.WriteNumBits((anEvent.type != SDL_EVENT_WINDOW_FOCUS_LOST) ? 1 : 0, 1);
 					}
 					break;
 				}
@@ -3586,15 +3588,15 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 					WriteDemoTimingBlock();
 					mDemoBuffer.WriteNumBits(0, 1);
 					mDemoBuffer.WriteNumBits(DEMO_SIZE, 5);
-					mDemoBuffer.WriteBoolean(event.type == SDL_EVENT_WINDOW_MINIMIZED);
+					mDemoBuffer.WriteBoolean(anEvent.type == SDL_EVENT_WINDOW_MINIMIZED);
 					break;
 				case SDL_EVENT_MOUSE_MOTION:
 				case SDL_EVENT_MOUSE_BUTTON_DOWN:
 				case SDL_EVENT_MOUSE_BUTTON_UP:
 				{
 
-					int aCurX = event.button.x;
-					int aCurY = event.button.y;
+					int aCurX = anEvent.button.x;
+					int aCurY = anEvent.button.y;
 					int aDiffX = aCurX - mLastDemoMouseX;
 					int aDiffY = aCurY - mLastDemoMouseY;
 
@@ -3618,9 +3620,9 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 						mDemoBuffer.WriteNumBits(aCurY, 12);
 					}
 
-					bool down = event.type == SDL_EVENT_MOUSE_BUTTON_DOWN;
+					bool down = anEvent.type == SDL_EVENT_MOUSE_BUTTON_DOWN;
 					int aBtnNum = 0;
-					switch (event.button.button)
+					switch (anEvent.button.button)
 					{
 						case SDL_BUTTON_LEFT:
 							aBtnNum = 1;
@@ -3649,7 +3651,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 				break;
 				case SDL_EVENT_MOUSE_WHEEL:
 				{				
-					int aZDelta = event.wheel.y;
+					int aZDelta = anEvent.wheel.y;
 
 					WriteDemoTimingBlock();
 					mDemoBuffer.WriteNumBits(0, 1);
@@ -3660,8 +3662,8 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 				case SDL_EVENT_KEY_DOWN:
 				case SDL_EVENT_KEY_UP:
 				{
-					bool isDown = event.type == SDL_EVENT_KEY_DOWN;
-					SDL_Keycode aKeyCode = event.key.key;
+					bool isDown = anEvent.type == SDL_EVENT_KEY_DOWN;
+					SDL_Keycode aKeyCode = anEvent.key.key;
 
 					WriteDemoTimingBlock();
 					mDemoBuffer.WriteNumBits(0, 1);
@@ -3671,7 +3673,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 				break;
 				case SDL_EVENT_TEXT_INPUT:
 				{
-					SexyChar aChar = event.text.text[0]; 
+					SexyChar aChar = anEvent.text.text[0]; 
 
 					WriteDemoTimingBlock();
 					mDemoBuffer.WriteNumBits(0, 1);
@@ -3682,7 +3684,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 				break;
 				case SDL_EVENT_QUIT:
 				{
-					SDL_Window* theTargetWindow = SDL_GetWindowFromEvent(&event);
+					SDL_Window* theTargetWindow = SDL_GetWindowFromEvent(&anEvent);
 					if (theTargetWindow == mWindow->mInternalWindow)
 					{
 						WriteDemoTimingBlock();
@@ -3698,7 +3700,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 
 		if (!mPlayingDemoBuffer)
 		{
-			switch (event.type)
+			switch (anEvent.type)
 			{
 				case SDL_EVENT_WINDOW_FOCUS_GAINED:
 					if ((!gInAssert) && (!mSEHOccured) && (!mShutdown))
@@ -3732,8 +3734,8 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 				case SDL_EVENT_MOUSE_MOTION:
 					if (!gInAssert && !mSEHOccured)
 					{
-						int x = event.motion.x;
-						int y = event.motion.y;
+						int x = anEvent.motion.x;
+						int y = anEvent.motion.y;
 
 #if SEXY_USE_CONTROLLER
 						if (mUsingGamepad)
@@ -3741,8 +3743,8 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 							// If this is genuine physical mouse movement (SDL flags SDL_MOUSEMOTION_RELATIVE
 							// as relative==true for mouse warp injections), revert to mouse mode.
 							// SDL3 sets event.motion.which == SDL_TOUCH_MOUSEID for touch/synthetic events.
-							if (event.motion.which != SDL_TOUCH_MOUSEID &&
-								(std::abs(event.motion.xrel) > 2 || std::abs(event.motion.yrel) > 2))
+							if (anEvent.motion.which != SDL_TOUCH_MOUSEID &&
+								(std::abs(anEvent.motion.xrel) > 2 || std::abs(anEvent.motion.yrel) > 2))
 							{
 								mUsingGamepad = false;
 								EnforceCursor();
@@ -3774,7 +3776,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 					if (!gInAssert && !mSEHOccured)
 					{
 						int btnCode = 0;
-						bool down = event.type == SDL_EVENT_MOUSE_BUTTON_DOWN;
+						bool down = anEvent.type == SDL_EVENT_MOUSE_BUTTON_DOWN;
 
 #if SEXY_USE_CONTROLLER
 						// Do NOT revert to mouse mode on a button event alone — SDL3 on Windows
@@ -3786,7 +3788,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 						}
 #endif
 
-						switch (event.button.button)
+						switch (anEvent.button.button)
 						{
 						case SDL_BUTTON_LEFT:
 							btnCode = 1;
@@ -3799,8 +3801,8 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 							break;
 						}
 
-						int x = event.button.x;
-						int y = event.button.y;
+						int x = anEvent.button.x;
+						int y = anEvent.button.y;
 						if (!(x >= mRenderer->mPresentationRect.mX &&
 							  x < mRenderer->mPresentationRect.mX + mRenderer->mPresentationRect.mWidth &&
 							  y >= mRenderer->mPresentationRect.mY &&
@@ -3842,12 +3844,12 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 						break; // Ignore mouse wheel while gamepad is active to prevent cursor flicker
 					}
 #endif
-					mWidgetManager->MouseWheel(event.wheel.y);
+					mWidgetManager->MouseWheel(anEvent.wheel.y);
 					break;
 				case SDL_EVENT_KEY_DOWN:
 				case SDL_EVENT_KEY_UP: {
-					bool isDown = event.type == SDL_EVENT_KEY_DOWN;
-					SDL_Keycode key = event.key.key;
+					bool isDown = anEvent.type == SDL_EVENT_KEY_DOWN;
+					SDL_Keycode key = anEvent.key.key;
 
 					mLastUserInputTick = mLastTimerTime;
 
@@ -3863,8 +3865,8 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 				case SDL_EVENT_TEXT_INPUT: {
 					mLastUserInputTick = mLastTimerTime;
 
-					const char *it = event.text.text;
-					const char *end = event.text.text + strlen(event.text.text);
+					const char *it = anEvent.text.text;
+					const char *end = anEvent.text.text + strlen(anEvent.text.text);
 
 					uint32_t aChar = utf8::next(it, end);
 
@@ -3873,21 +3875,21 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 				}
 				case SDL_EVENT_WINDOW_MOVED:
 				{
-					SDL_Window* theTargetWindow = SDL_GetWindowFromEvent(&event);
+					SDL_Window* theTargetWindow = SDL_GetWindowFromEvent(&anEvent);
 					if (mWindow->mInternalWindow == theTargetWindow && mIsWindowed)
 					{
-						mPreferredSize.mX = event.window.data1;
-						mPreferredSize.mY = event.window.data2;
+						mPreferredSize.mX = anEvent.window.data1;
+						mPreferredSize.mY = anEvent.window.data2;
 					}
 					break;
 				}
 				case SDL_EVENT_WINDOW_RESIZED:
 				{
-					SDL_Window* theTargetWindow = SDL_GetWindowFromEvent(&event);
+					SDL_Window* theTargetWindow = SDL_GetWindowFromEvent(&anEvent);
 					if (mWindow->mInternalWindow == theTargetWindow && !mShutdown)
 					{
-						mPreferredSize.mWidth = event.window.data1;
-						mPreferredSize.mHeight = event.window.data2;
+						mPreferredSize.mWidth = anEvent.window.data1;
+						mPreferredSize.mHeight = anEvent.window.data2;
 						mMinimized = SDL_GetWindowFlags(mWindow->mInternalWindow) & SDL_WINDOW_MINIMIZED;
 
 						// We don't want any sounds (or music) playing while its minimized
@@ -3920,7 +3922,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 						gSexyAppBase->mUsingGamepad = true;
 					break;
 				case SDL_EVENT_GAMEPAD_AXIS_MOTION:
-					if (fabsf(event.gaxis.value / 32767.0f) > mGamepads[0]->mWeight)
+					if (fabsf(anEvent.gaxis.value / 32767.0f) > mGamepads[0]->mWeight)
 						gSexyAppBase->mUsingGamepad = true;
 					break;
 
@@ -3938,7 +3940,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 						if (anIdToUse != -1)
 						{
 							mGamepads[anIdToUse] = new Gamepad();
-							mGamepads[anIdToUse]->SetDeviceID(event.gdevice.which);
+							mGamepads[anIdToUse]->SetDeviceID(anEvent.gdevice.which);
 						}
 					}
 					break;
@@ -3947,7 +3949,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 						int anIdRemoved = -1;
 						for (int i = 0; i < MAX_GAMEPADS; i++)
 						{
-							if (mGamepads[i] != nullptr && mGamepads[i]->GetDeviceID() == event.gdevice.which)
+							if (mGamepads[i] != nullptr && mGamepads[i]->GetDeviceID() == anEvent.gdevice.which)
 							{
 								anIdRemoved = i;
 								break;
@@ -3966,7 +3968,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 		}
 
 		//Demo independent events.
-		switch (event.type)
+		switch (anEvent.type)
 		{
 			case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
 			case SDL_EVENT_QUIT:
@@ -3983,7 +3985,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 		}
 	}
 	
-	return SDL_HasEvents(SDL_EVENT_FIRST, SDL_EVENT_LAST);
+	return (mDeferredMessages.size() > 0);
 }
 
 void SexyAppBase::Done3dTesting()
@@ -4814,6 +4816,42 @@ bool SexyAppBase::UpdateAppStep(bool *updated)
 	//  condition has already been met by processing windows messages
 	if (mUpdateAppState == UPDATESTATE_MESSAGES)
 	{
+		SDL_Event anEvent;
+		while (SDL_PollEvent(&anEvent) && !mShutdown)
+		{
+			bool pushMessage = true;
+			if (mDeferredMessages.size() > 0)
+			{
+				// Don't add any more messages after WM_CLOSE
+				SDL_Event *aMsg = &mDeferredMessages.back();
+
+				if (aMsg->type == SDL_EVENT_QUIT)
+					pushMessage = false;
+
+				if (pushMessage)
+				{
+					MessageList::iterator aMsgListItr = mDeferredMessages.begin();
+					while (pushMessage && aMsgListItr != mDeferredMessages.end())
+					{
+						SDL_Event &aMsg = *aMsgListItr;
+
+						++aMsgListItr;
+					}
+				}
+			}
+
+			if (pushMessage)
+			{
+				SDL_Event anEventCopy = SDL_Event(anEvent);
+				mDeferredMessages.push_back(anEventCopy);
+			}
+			if (anEvent.type == SDL_EVENT_QUIT)
+			{
+				CloseRequestAsync();
+				break;
+			}
+		}
+
 		ProcessDemo();
 		if (!ProcessDeferredMessages(true))
 		{
