@@ -1,6 +1,6 @@
 # ResoddedFramework
-< MISSING_DESCRIPTION >
-
+ResoddedFramework is an open-source modding base for the game Plants vs. Zombies.  <br>  <br> 
+It was based on version 0.9.9.1029 however features from future versions such as GOTY (Steam) have been backported.
 ## Join the Discord
 
 https://discord.gg/cK2ewgYQUe
@@ -8,8 +8,10 @@ https://discord.gg/cK2ewgYQUe
 # How To Use
 
 ## What do you need?
-1. Copy of Plants vs. Zombies Game of the Year Edition (assets)
-2. todo: add the rest
+1. Copy of Plants vs. Zombies Game of the Year Edition. Demo works aswell.
+2. CMake (Minimum 3.28)
+2. vcpkg
+4. An IDE that supports C++
 
 ## Installation
 To use ResoddedFramework you require CMake.
@@ -19,7 +21,11 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 3. Compile
 4. Start modding
 
-## THIS GUIDE WILL BE REWORKED
+## What do i do now?
+
+Go wild, the source code is organized. That means you can easily extend or even implement new content.
+
+### THIS GUIDE WILL BE REWORKED AS PART OF 1.1 ALONG WITH IN-SOURCE CODE DOCUMENTATION
 
 # Roadmap
 
@@ -32,11 +38,11 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 
 
 - Window Resizing - 100%
-- Advanced Options - 80%
+- Advanced Options - 100%
 - UTF-8 Support - 100%
 
 - MP3/OGG/FLAC Lawn Music - 100%
-- Controller Support - 48%
+- Controller Support - 100% (Board Only)
 ### Low Priority
 - Multi-platform support - 15%
 - Separate mod resources (.pak + folders) - 100%
@@ -46,12 +52,14 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 
 ### Main
 
-- Electr0Gunner -> Creator, Lead Programmer
+- [Electr0Gunner](https://github.com/Electr0Gunner) -> Creator, Lead Programmer
 - [IsraelProyects](https://github.com/IsraelDXPP) -> Secondary Programmer, Fixes & Improvements
+- [ThePixelMoon](https://github.com/ThePixelMoon) -> Project Setup + Structure
 
 ### Special Thanks
 
 - niqkidd -> Name of the project
+- [InLiothixie](https://github.com/InLiothixi) -> Zombatar Reverse Enginnering + Bug Fixes
 - [Patoke](https://github.com/Patoke) -> Creator of [re-plants-vs-zombies](https://github.com/Patoke/re-plants-vs-zombies), a huge source of reference for reversed engineered code
 - The original team behind the 0.9.9 decompilation
 
