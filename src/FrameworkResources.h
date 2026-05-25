@@ -17,6 +17,7 @@ namespace Sexy
 	extern Image* IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW;
 	extern Image* IMAGE_GAMEPAD_SELECTOR_SHADOW;
 	extern Image* IMAGE_GAMEPAD_ARROW;
+	extern Image *IMAGE_GAMEPAD_CURSOR_ARROWS_SHADOW;
 
 	// Widescreen Resources
 #if LAWN_WIDESCREEN

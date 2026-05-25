@@ -8694,6 +8694,8 @@ void Board::DrawDebugGrid(Graphics *g)
 	if (mDebugTextMode != DebugTextMode::DEBUG_TEXT_GRID)
 		return;
 
+	int aNumRows = StageHas6Rows() ? MAX_GRID_SIZE_Y : (MAX_GRID_SIZE_Y - 1);
+
 	//TODO: complete so the last row and column are drawn
 	for (int x = 0; x < MAX_GRID_SIZE_X - 1; x++)
 	{
