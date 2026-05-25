@@ -1,0 +1,27 @@
+set(IGNORE_EXTENSIONS ".exe" ".dll" ".pdb" ".lib" ".so" ".dylib")
+
+file(GLOB_RECURSE SRC_FILES RELATIVE "${SRC}" "${SRC}/*")
+
+if(EXISTS "${MANIFEST}")
+    file(STRINGS "${MANIFEST}" OLD_FILES)
+    foreach(F ${OLD_FILES})
+        if(NOT "${F}" IN_LIST SRC_FILES)
+            get_filename_component(EXT "${F}" EXT)
+            if(NOT "${EXT}" IN_LIST IGNORE_EXTENSIONS)
+                file(REMOVE "${DST}/${F}")
+                message(STATUS "Removed stale asset: ${F}")
+            endif()
+        endif()
+    endforeach()
+endif()
+
+foreach(F ${SRC_FILES})
+    get_filename_component(DEST_DIR "${DST}/${F}" DIRECTORY)
+    file(MAKE_DIRECTORY "${DEST_DIR}")
+    file(COPY_FILE "${SRC}/${F}" "${DST}/${F}" ONLY_IF_DIFFERENT)
+endforeach()
+
+file(WRITE "${MANIFEST}" "")
+foreach(F ${SRC_FILES})
+    file(APPEND "${MANIFEST}" "${F}\n")
+endforeach()

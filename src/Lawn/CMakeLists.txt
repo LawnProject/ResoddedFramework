@@ -86,26 +86,15 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL "${EXPORT_DIR}"
 )
 
-# Base PvZ Assets
+# Assets
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${CMAKE_SOURCE_DIR}/assets/base"
-        "${EXPORT_DIR}"
+    COMMAND ${CMAKE_COMMAND}
+        -DSRC="${CMAKE_SOURCE_DIR}/assets"
+        -DDST="${EXPORT_DIR}"
+        -DMANIFEST="${CMAKE_BINARY_DIR}/asset_manifest.txt"
+        -P "${CMAKE_SOURCE_DIR}/cmake/sync_assets.cmake"
+    COMMENT "Syncing assets..."
 )
-
-# Engine Assets
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${CMAKE_SOURCE_DIR}/assets/framework"
-        "${EXPORT_DIR}"
-)
-# Mod Assets
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${CMAKE_SOURCE_DIR}/assets/mod"
-        "${EXPORT_DIR}"
-)
-
 # DLL
 
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
