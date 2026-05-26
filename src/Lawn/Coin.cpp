@@ -40,6 +40,10 @@ void Coin::CoinInitialize(int theX, int theY, CoinType theCoinType, CoinMotion t
 	mFadeCount = 0;
 	mCoinMotion = theCoinMotion;
 	mCoinAge = 0;
+#if SEXY_USE_CONTROLLER
+	mGamepadPlayerIndex = -1;
+	mGamepadCollectionSpeed = 0.0f;
+#endif
 	mAttachmentID = AttachmentID::ATTACHMENTID_NULL;
 	mRenderOrder = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_COIN_BANK, 0, 1);
 	mScale = 1.0f;
@@ -459,6 +463,45 @@ void Coin::UpdateFade()
 //0x430AC0
 void Coin::UpdateFall()
 {
+#if SEXY_USE_CONTROLLER
+	//0x179D14 - Gamepad cursor magnetic collection
+	if (mCoinMotion == CoinMotion::COIN_MOTION_GAMEPAD_CURSOR)
+	{
+		if (mGamepadPlayerIndex < 0 || !mBoard)
+			return;
+
+		// Get cursor position (adjust for coin dimensions like original)
+		float aCursorX = mBoard->mGamepadX - mWidth * 0.5f;
+		float aCursorY = mBoard->mGamepadY - mHeight * 0.5f;
+
+		float aDeltaX = aCursorX - mPosX;
+		float aDeltaY = aCursorY - mPosY;
+		float aDistSq = aDeltaX * aDeltaX + aDeltaY * aDeltaY;
+
+		// Within 35px of cursor: collect
+		if (aDistSq < 1225.0f)
+		{
+			Collect();
+			return;
+		}
+
+		float aDist = sqrtf(aDistSq);
+
+		// Accelerate toward cursor (6.4 per frame, capped at 600)
+		mGamepadCollectionSpeed += 6.4f;
+		if (mGamepadCollectionSpeed > 600.0f)
+			mGamepadCollectionSpeed = 600.0f;
+
+		// Normalize direction and move
+		float aNormX = aDeltaX / aDist;
+		float aNormY = aDeltaY / aDist;
+
+		mPosX += mGamepadCollectionSpeed * aNormX * 0.016f;
+		mPosY += mGamepadCollectionSpeed * aNormY * 0.016f;
+		return;
+	}
+#endif // SEXY_USE_CONTROLLER
+
 	if (mCoinMotion == CoinMotion::COIN_MOTION_FROM_PRESENT)
 	{
 		mPosX += mVelX;
@@ -1396,6 +1439,41 @@ void Coin::DroppedUsableSeed()
 
 	mTimesDropped++;
 }
+
+#if SEXY_USE_CONTROLLER
+//0x178C8C (original GamepadCursorOver)
+void Coin::GamepadCursorOver(int thePlayerIndex)
+{
+	if (!mBoard || mBoard->mPaused || mApp->mGameScene != GameScenes::SCENE_PLAYING || mDead)
+		return;
+
+	if (mType == CoinType::COIN_USABLE_SEED_PACKET)
+	{
+		Collect();
+		return;
+	}
+
+	if (mIsBeingCollected || mCoinMotion == CoinMotion::COIN_MOTION_GAMEPAD_CURSOR)
+		return;
+
+	if (IsSun() && mScale < GetSunScale())
+		return;
+
+	mCoinMotion = CoinMotion::COIN_MOTION_GAMEPAD_CURSOR;
+	mGamepadPlayerIndex = thePlayerIndex;
+	mGamepadCollectionSpeed = 0.0f;
+	PlayCollectSound();
+	if (IsSun())
+		mScale = GetSunScale();
+
+	if (mApp->IsFirstTimeAdventureMode() && mBoard && mBoard->mLevel == 1)
+	{
+		mBoard->DisplayAdvice("[ADVICE_CLICKED_ON_SUN]",
+			MessageStyle::MESSAGE_STYLE_TUTORIAL_LEVEL1_STAY,
+			AdviceType::ADVICE_CLICKED_ON_SUN);
+	}
+}
+#endif
 
 //0x432C00
 void Coin::MouseDown(int x, int y, int theClickCount)

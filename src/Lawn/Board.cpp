@@ -6458,21 +6458,29 @@ void Board::Update()
 			if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_NORMAL)
 				mCursorObject->mVisible = false; // Hide the in-game cursor (hand/tool)
 
-			// Auto-collect coins/suns within proximity of the gamepad cursor (raw pos)
-			Coin* aCoin = nullptr;
-			while (IterateCoins(aCoin))
+			// Auto-collect coins/suns near the gamepad cursor
+			// Original GamepadControls::Update logic (0x1C6D90)
+			if (mApp->mGameScene == GameScenes::SCENE_PLAYING && !mApp->IsWhackAZombieLevel())
 			{
-				bool aCanCollect = !(mCursorObject->mCursorType == CURSOR_TYPE_PLANT_FROM_USABLE_COIN && aCoin->mType == COIN_USABLE_SEED_PACKET);
-				// don't allow selection of packets if we have one already
-				if (!aCoin->mIsBeingCollected && !aCoin->mDead && aCanCollect)
+				Coin* aCoin = nullptr;
+				while (IterateCoins(aCoin))
 				{
-					float dx = aCoin->mPosX + aCoin->mWidth / 2 - mGamepadX;
-					float dy = aCoin->mPosY + aCoin->mHeight / 2 - mGamepadY;
-					if (dx * dx + dy * dy < 60 * 60) // 60-pixel proximity radius
-					{
-						aCoin->Collect();
-						aCoin->PlayCollectSound();
-					}
+					if (!aCoin || aCoin->mDead || aCoin->mIsBeingCollected ||
+						aCoin->mCoinMotion == CoinMotion::COIN_MOTION_GAMEPAD_CURSOR)
+						continue;
+
+					// USABLE_SEED_PACKET coins handled via MouseHitTest, skip in proximity loop
+					if (aCoin->mType == CoinType::COIN_USABLE_SEED_PACKET)
+						continue;
+
+					float dx = aCoin->mPosX - mGamepadX;
+					float dy = aCoin->mPosY - mGamepadY;
+					float aDistSq = dx * dx + dy * dy;
+
+					if (aDistSq >= 40000.0f) // 200px proximity radius
+						continue;
+
+					aCoin->GamepadCursorOver(0);
 				}
 			}
 		}

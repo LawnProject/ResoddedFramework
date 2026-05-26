@@ -37,6 +37,10 @@ class Coin : public GameObject
 	bool mHasBouncyArrow;		  //+0xC9
 	bool mHitGround;			  //+0xCA
 	int mTimesDropped;			  //+0xCC
+#if SEXY_USE_CONTROLLER
+	int mGamepadPlayerIndex;	  //+0xD0
+	float mGamepadCollectionSpeed;	  //+0xD4
+#endif
 
   public:
 	Coin();
@@ -73,6 +77,7 @@ class Coin : public GameObject
 	void PlayCollectSound();
 	void TryAutoCollectAfterLevelAward();
 	bool IsPresentWithAdvice();
+	void GamepadCursorOver(int thePlayerIndex);
 	void PlayLaunchSound();
 	void PlayGroundSound();
 
