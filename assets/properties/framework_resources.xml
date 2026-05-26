@@ -5,6 +5,6 @@
         <Image id="GAMEPAD_CURSOR_FRAME" path="board_selector"/>
         <Image id="GAMEPAD_CURSOR_FRAME_SHADOW" path="seed_selector_shadow"/>
         <Image id="GAMEPAD_SELECTOR_SHADOW" path="bejewel_selector_shadow"/>
-        <Image id="GAMEPAD_ARROW" path="p1_arrow"/>
+        <Image id="GAMEPAD_IMAGE_P1" path="p1_arrow"/>
     </Resources>
 </ResourceManifest>

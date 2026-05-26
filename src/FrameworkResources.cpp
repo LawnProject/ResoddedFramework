@@ -34,7 +34,7 @@ Image* Sexy::IMAGE_SEED_SELECTOR;
 Image* Sexy::IMAGE_GAMEPAD_CURSOR_FRAME;
 Image* Sexy::IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW;
 Image* Sexy::IMAGE_GAMEPAD_SELECTOR_SHADOW;
-Image* Sexy::IMAGE_GAMEPAD_ARROW;
+Image* Sexy::IMAGE_GAMEPAD_IMAGE_P1;
 
 bool Sexy::ResoddedFrameworkExtractLoadingImagesResources(ResourceManager *theManager)
 {
@@ -47,7 +47,7 @@ bool Sexy::ResoddedFrameworkExtractLoadingImagesResources(ResourceManager *theMa
 		IMAGE_GAMEPAD_CURSOR_FRAME = aMgr.GetImageThrow("IMAGE_GAMEPAD_CURSOR_FRAME");
 		IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW = aMgr.GetImageThrow("IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW");
 		IMAGE_GAMEPAD_SELECTOR_SHADOW = aMgr.GetImageThrow("IMAGE_GAMEPAD_SELECTOR_SHADOW");
-		IMAGE_GAMEPAD_ARROW = aMgr.GetImageThrow("IMAGE_GAMEPAD_ARROW");
+		IMAGE_GAMEPAD_IMAGE_P1 = aMgr.GetImageThrow("IMAGE_GAMEPAD_IMAGE_P1");
 	}
 	catch(ResourceManagerException&)
 	{
@@ -62,7 +62,7 @@ static void* gResources[] =
 	&IMAGE_GAMEPAD_CURSOR_FRAME,
 	&IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW,
 	&IMAGE_GAMEPAD_SELECTOR_SHADOW,
-	&IMAGE_GAMEPAD_ARROW,
+	&IMAGE_GAMEPAD_IMAGE_P1,
 	nullptr
 };
 
@@ -148,7 +148,7 @@ const char* Sexy::ResoddedFrameworkGetStringIdById(int theId)
 		case IMAGE_GAMEPAD_CURSOR_FRAME_ID: return "IMAGE_GAMEPAD_CURSOR_FRAME";
 		case IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW_ID: return "IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW";
 		case IMAGE_GAMEPAD_SELECTOR_SHADOW_ID: return "IMAGE_GAMEPAD_SELECTOR_SHADOW";
-		case IMAGE_GAMEPAD_ARROW_ID: return "IMAGE_GAMEPAD_ARROW";
+		case IMAGE_GAMEPAD_IMAGE_P1_ID: return "IMAGE_GAMEPAD_IMAGE_P1";
 		default: return "";
 	}
 }

@@ -2230,7 +2230,6 @@ void Zombie::UpdateZombieJackInTheBox()
 			}
 			else
 			{
-				mBoard->KillAllZombiesInRadius(mRow, aPosX, aPosY, JackInTheBoxZombieRadius, 1, true, 255);
 				mBoard->KillAllPlantsInRadius(aPosX, aPosY, JackInTheBoxPlantRadius);
 			}
 

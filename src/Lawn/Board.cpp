@@ -6353,8 +6353,8 @@ void Board::Update()
 
 			// Visual cursor smoothing (lerp towards target grid cell)
 			int aNewGridY = PixelToGridYKeepOnBoard((int)mGamepadX, (int)mGamepadY);
-			float aVisTargetX = (float)GridToPixelX(aNewGridX, aNewGridY);
-			float aVisTargetY = (float)GridToPixelY(aNewGridX, aNewGridY);
+			float aVisTargetX = (float)(GridToPixelX(aNewGridX, aNewGridY) + 40);
+			float aVisTargetY = (float)(GridToPixelY(aNewGridX, aNewGridY) + 50);
 			
 			if (mVisualGamepadX < 0) { 
 				mVisualGamepadX = aVisTargetX; 
@@ -6516,40 +6516,32 @@ void Board::Update()
 			{
 				// Try to pick up a seed from the bank when cursor is empty (normal or hammer) and
 				// there is a seed bank (not garden/ToW modes).
+				// Always allowed regardless of what's under the cursor — the user may be
+				// hovering over an upgradeable plant and needs to pick up the upgrade seed.
 				if (!aIsGardenMode &&
 				    (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_NORMAL || mCursorObject->mCursorType == CursorType::CURSOR_TYPE_HAMMER) &&
 				    mSeedBank->mNumPackets > 0)
 				{
-					// In IZombie / Whack-a-Zombie the board may have occupants that
-					// are not real obstacles — always prefer picking the seed first.
-					bool aSkipHoverCheck = mApp->IsWhackAZombieLevel() || mApp->IsIZombieLevel();
-
-					Plant* aHoveredPlant = aSkipHoverCheck ? nullptr : ToolHitTest(aVX, aVY);
-					if (aHoveredPlant == nullptr ||
-					    aHoveredPlant->mSeedType == SeedType::SEED_FLOWERPOT ||
-					    aHoveredPlant->mSeedType == SeedType::SEED_LILYPAD)
+					SeedPacket* aSP = &mSeedBank->mSeedPackets[mSeedBank->mIndexGamepad];
+					if (aSP->mPacketType != SeedType::SEED_NONE)
 					{
-						SeedPacket* aSP = &mSeedBank->mSeedPackets[mSeedBank->mIndexGamepad];
-						if (aSP->mPacketType != SeedType::SEED_NONE)
+						if (aSP->CanPickUp())
 						{
-							if (aSP->CanPickUp())
-							{
-								int aSeedX = aSP->mX + mSeedBank->mX + aSP->mOffsetX + SEED_PACKET_WIDTH / 2;
-								int aSeedY = aSP->mY + mSeedBank->mY + SEED_PACKET_HEIGHT / 2;
-								MouseDown(aSeedX, aSeedY, 1);
-								MouseUp(aSeedX, aSeedY, 1);
-							}
-							else
-							{
-								mApp->PlaySample(SOUND_BUZZER);
-							}
-							goto gamepad_buttons_end;
+							int aSeedX = aSP->mX + mSeedBank->mX + aSP->mOffsetX + SEED_PACKET_WIDTH / 2;
+							int aSeedY = aSP->mY + mSeedBank->mY + SEED_PACKET_HEIGHT / 2;
+							MouseDown(aSeedX, aSeedY, 1);
+							MouseUp(aSeedX, aSeedY, 1);
 						}
-						else if (HasConveyorBeltSeedBank())
+						else
 						{
 							mApp->PlaySample(SOUND_BUZZER);
-							goto gamepad_buttons_end;
 						}
+						goto gamepad_buttons_end;
+					}
+					else if (HasConveyorBeltSeedBank())
+					{
+						mApp->PlaySample(SOUND_BUZZER);
+						goto gamepad_buttons_end;
 					}
 				}
 
@@ -6564,11 +6556,29 @@ void Board::Update()
 					// Extra guard: If A is pressed while holding a shovel in a normal level, do nothing
 					if (mCursorObject->mCursorType != CursorType::CURSOR_TYPE_SHOVEL)
 					{
-						mGamepadIgnoreChallenge = true;
-						MouseDown(aVX, aVY, 1);
-						MouseUp(aVX, aVY, 1);
-						mGamepadIgnoreChallenge = false;
-						aPad->AddRumbleEffect(0.1f, 0.2f, 60);
+						// Validate placement via the game's existing CanPlantAt logic.
+						// This reuses vanilla Plant::IsUpgradableTo, SEED_INSTANT_COFFEE
+						// checks, and all other planting rules — no hardcoded plant types.
+						bool aAllowPlacement = true;
+						if (aHoldingSeed)
+						{
+							SeedType aSeedType = mCursorObject->mType;
+							PlantingReason aReason = CanPlantAt(aActGridX, aActGridY, aSeedType);
+							if (aReason != PlantingReason::PLANTING_OK)
+							{
+								aAllowPlacement = false;
+								mApp->PlaySample(SOUND_BUZZER);
+							}
+						}
+
+						if (aAllowPlacement)
+						{
+							mGamepadIgnoreChallenge = true;
+							MouseDown(aVX, aVY, 1);
+							MouseUp(aVX, aVY, 1);
+							mGamepadIgnoreChallenge = false;
+							aPad->AddRumbleEffect(0.1f, 0.2f, 60);
+						}
 					}
 				}
 			}
@@ -7348,60 +7358,92 @@ void Board::DrawGameObjects(Graphics *g)
 #if SEXY_USE_CONTROLLER
 			if (mApp->UsingGamepad())
 			{
-				float aPulse = 1.0f + 0.02f * sinf(mMainCounter * 0.05f); 
+				// mVisualGamepadX/Y = grid-locked lerp position (matches console's grid-snapped cursor).
+				// mGamepadX/Y = raw analog position (used only for roof-skew grid check).
+				float aCursorX = mVisualGamepadX;
+				float aCursorY = mVisualGamepadY;
+				float v9 = sinf(mMainCounter * 0.05f);
+
+				// Frame size with pulse (80x100 base)
+				float aPulse = 1.0f + 0.02f * v9;
 				int aW = (int)(80 * aPulse);
 				int aH = (int)(100 * aPulse);
-				int aX = (int)mVisualGamepadX - (aW - 80) / 2;
-				int aY = (int)mVisualGamepadY - (aH - 100) / 2;
+				int aX = (int)mVisualGamepadX - aW / 2;
+				int aY = (int)mVisualGamepadY - aH / 2;
 
-				g->DrawImage(IMAGE_GAMEPAD_ARROW, mGamepadX - IMAGE_GAMEPAD_ARROW->mWidth / 2,
-							 mGamepadY - IMAGE_GAMEPAD_ARROW->mHeight / 2 - 50 - (10 * sinf(mMainCounter * 0.05f)));
+				// Draw player arrow (IMAGE_GAMEPAD_IMAGE_P1) matching console logic.
+				// Console: 1.5x scale at (cursorX - 5, cursorY + sin_bob * -2.0 - 23).
+				// Uses grid-locked visual coords so the arrow stays fixed within each cell.
+				{
+					SexyTransform2D aArrowMatrix(true);
+					aArrowMatrix.Scale(1.5f, 1.5f);
+					aArrowMatrix.Translate(aCursorX - 5.0f, aCursorY + (v9 * -2.0f) - 23.0f);
+					g->DrawImageMatrix(IMAGE_GAMEPAD_IMAGE_P1, aArrowMatrix);
+				}
 
+				// Draw cursor shadow (matches console IMAGE_GAMEPAD_CURSOR_SHADOW).
+				// Console: scale = (1.0 - v9) * 0.15 + 0.85, position = (cursorX, cursorY + 15).
+				{
+					float aShadowScale = (1.0f - v9) * 0.15f + 0.85f;
+					SexyTransform2D aShadowMatrix(true);
+					aShadowMatrix.Scale(aShadowScale, aShadowScale);
+					aShadowMatrix.Translate(aCursorX, aCursorY + 15.0f);
+					g->SetColorizeImages(true);
+					g->SetColor(Color(255, 255, 255, 200 + (int)(55 * v9)));
+					g->DrawImageMatrix(IMAGE_GAMEPAD_SELECTOR_SHADOW, aShadowMatrix);
+					g->SetColorizeImages(false);
+				}
+
+				// Draw cursor frame at 80x100.
 				g->SetColorizeImages(true);
-				g->SetColor(Color(255, 255, 255, 200 + (int)(55 * sinf(mMainCounter * 0.05f))));
-				g->DrawImage(IMAGE_GAMEPAD_SELECTOR_SHADOW, mGamepadX - IMAGE_GAMEPAD_SELECTOR_SHADOW->mWidth / 2, mGamepadY - IMAGE_GAMEPAD_SELECTOR_SHADOW->mHeight / 2);
-
-				if (StageHasRoof())
 				{
-					SexyMatrix3 aMatrix;
-					TodScaleTransformMatrix(aMatrix, aX + IMAGE_GAMEPAD_CURSOR_FRAME->mWidth / 2 - 12,
-											aY + IMAGE_GAMEPAD_CURSOR_FRAME->mHeight / 2 - 12,
-											(float)aW / IMAGE_GAMEPAD_CURSOR_FRAME->mWidth,
-											(float)aH / IMAGE_GAMEPAD_CURSOR_FRAME->mHeight);
-					int aGridX = PixelToGridXKeepOnBoard(aX, aY);
-					if (aGridX <= 4)
+					if (StageHasRoof())
 					{
-						aMatrix.m10 = tan(DEG_TO_RAD(-6));
+						SexyMatrix3 aMatrix;
+						TodScaleTransformMatrix(aMatrix,
+							aX + IMAGE_GAMEPAD_CURSOR_FRAME->mWidth / 2 - 12,
+							aY + IMAGE_GAMEPAD_CURSOR_FRAME->mHeight / 2 - 12,
+							(float)aW / IMAGE_GAMEPAD_CURSOR_FRAME->mWidth,
+							(float)aH / IMAGE_GAMEPAD_CURSOR_FRAME->mHeight);
+						// Use raw mGamepadX/Y for grid check — immediate skew response (no lerp delay).
+						int aGridX = PixelToGridXKeepOnBoard((int)mGamepadX, (int)mGamepadY);
+						if (aGridX <= 4)
+						{
+							aMatrix.m10 = tan(DEG_TO_RAD(-6));
+						}
+						Color aFrameColor(255, 255, 255, 200 + (int)(55 * v9));
+						g->SetColor(aFrameColor);
+						TodBltMatrix(g, IMAGE_GAMEPAD_CURSOR_FRAME, aMatrix, g->mClipRect,
+							aFrameColor, g->mDrawMode,
+							Rect(0, 0, IMAGE_GAMEPAD_CURSOR_FRAME->mWidth, IMAGE_GAMEPAD_CURSOR_FRAME->mHeight));
+
+						// Frame shadow
+						SexyMatrix3 aShadowMatrix;
+						TodScaleTransformMatrix(aShadowMatrix,
+							aX + IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mWidth - 8,
+							aY + IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mHeight - 8,
+							(float)(aW - 8) / IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mWidth,
+							(float)(aH - 8) / IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mHeight);
+						if (aGridX <= 4)
+						{
+							aShadowMatrix.m10 = tan(DEG_TO_RAD(-6));
+						}
+						TodBltMatrix(g, IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW, aShadowMatrix, g->mClipRect,
+							Color(255, 255, 200, 80 + (int)(40 * cosf(mMainCounter * 0.05f))),
+							Graphics::DRAWMODE_ADDITIVE,
+							Rect(0, 0, IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mWidth, IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mHeight));
 					}
-					TodBltMatrix(g, IMAGE_GAMEPAD_CURSOR_FRAME, aMatrix, g->mClipRect, Color(255, 255, 255, 200 + (int)(55 * sinf(mMainCounter * 0.05f))), g->mDrawMode,
-								 Rect(0, 0, IMAGE_GAMEPAD_CURSOR_FRAME->mWidth, IMAGE_GAMEPAD_CURSOR_FRAME->mHeight));
-
-
-					TodScaleTransformMatrix(aMatrix, aX + IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mWidth - 8,
-						aY + IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mHeight - 8,
-						(float)(aW - 8) / IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mWidth,
-						(float)(aH - 8) / IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mHeight);
-
-					if (aGridX <= 4)
+					else
 					{
-						aMatrix.m10 = tan(DEG_TO_RAD(-6));
+						g->SetColor(Color(255, 255, 255, 200 + (int)(55 * v9)));
+						g->DrawImage(IMAGE_GAMEPAD_CURSOR_FRAME, aX, aY, aW, aH);
+
+						g->SetDrawMode(Graphics::DRAWMODE_ADDITIVE);
+						g->SetColor(Color(255, 255, 200, 80 + (int)(40 * cosf(mMainCounter * 0.05f))));
+						g->DrawImage(IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW, aX + 4, aY + 4, aW - 8, aH - 8);
+						g->SetDrawMode(Graphics::DRAWMODE_NORMAL);
 					}
-					TodBltMatrix(
-						g, IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW, aMatrix, g->mClipRect, Color(255, 255, 200, 80 + (int)(40 * cosf(mMainCounter * 0.05f))), Graphics::DRAWMODE_ADDITIVE,
-						Rect(0, 0, IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mWidth, IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mHeight));
-				
 				}
-				else
-				{
-					g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_FRAME, aX, aY, aW, aH);
-
-					g->SetDrawMode(Graphics::DRAWMODE_ADDITIVE);
-					g->SetColor(Color(255, 255, 200, 80 + (int)(40 * cosf(mMainCounter * 0.05f))));
-					g->DrawImage(Sexy::IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW, aX + 4, aY + 4, aW - 8, aH - 8);
-					g->SetDrawMode(Graphics::DRAWMODE_NORMAL);
-				}
-
-
 				g->SetColorizeImages(false);
 			}
 #endif
