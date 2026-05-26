@@ -1303,11 +1303,6 @@ void Zombie::PickRandomSpeed()
 	{
 		mVelX = 0.3f;
 	}
-    else if (mZombieType == ZombieType::ZOMBIE_SNORKEL && mZombiePhase == ZombiePhase::PHASE_SNORKEL_WALKING_IN_POOL)
-	{
-		// Snorkel swimming speed should be a consistent slow swim
-		mVelX = 0.2f;
-	}
 	else if (mZombiePhase == ZombiePhase::PHASE_DIGGER_WALKING)
 	{
 		if (mApp->IsIZombieLevel())
@@ -1336,9 +1331,9 @@ void Zombie::PickRandomSpeed()
 	{
 		mVelX = 0.45f;
 	}
-    else if (mZombiePhase == ZombiePhase::PHASE_DIGGER_TUNNELING ||
+	else if (mZombiePhase == ZombiePhase::PHASE_DIGGER_TUNNELING ||
 			 mZombiePhase == ZombiePhase::PHASE_POLEVAULTER_PRE_VAULT || mZombieType == ZombieType::ZOMBIE_FOOTBALL ||
-			 mZombieType == ZombieType::ZOMBIE_JACK_IN_THE_BOX)
+			 mZombieType == ZombieType::ZOMBIE_SNORKEL || mZombieType == ZombieType::ZOMBIE_JACK_IN_THE_BOX)
 	{
 		mVelX = RandRangeFloat(0.66f, 0.68f);
 	}
@@ -2132,9 +2127,7 @@ void Zombie::UpdateZombieSnorkel()
 		{
 			mZombiePhase = ZombiePhase::PHASE_SNORKEL_WALKING_IN_POOL;
 			mInPool = true;
-           PlayZombieReanim("anim_swim", ReanimLoopType::REANIM_LOOP_FULL_LAST_FRAME, 0, 12.0f);
-			// Ensure the snorkel gets an appropriate swimming speed when entering the pool
-			PickRandomSpeed();
+			PlayZombieReanim("anim_swim", ReanimLoopType::REANIM_LOOP_FULL_LAST_FRAME, 0, 12.0f);
 		}
 	}
 	else if (mZombiePhase == ZombiePhase::PHASE_SNORKEL_WALKING_IN_POOL)
