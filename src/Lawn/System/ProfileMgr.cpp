@@ -4,6 +4,9 @@
 #include <fstream>
 #include "../../SexyAppFramework/SexyAppBase.h"
 #include "../../Sexy.TodLib/TodDebug.h"
+#ifndef _WIN32
+#include <strings.h> // strcasecmp
+#endif
 
 using namespace Sexy;
 static int gProfileVersion = 14;
@@ -144,7 +147,13 @@ bool ProfileMgr::RenameProfile(const SexyString &theOldName, const SexyString &t
 	else
 	{
 		// 判断修改前后的用户名是否一致，一致则直接在原存档中进行修改，否则需要额外操作
-		if (_stricmp(theOldName.c_str(), theNewName.c_str()) == 0)
+		if (
+#ifdef _WIN32
+			_stricmp(theOldName.c_str(), theNewName.c_str())
+#else
+			strcasecmp(theOldName.c_str(), theNewName.c_str())
+#endif
+			== 0)
 			anOldItr->second.mName = theNewName;
 		else
 		{

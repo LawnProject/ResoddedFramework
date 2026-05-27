@@ -7,7 +7,7 @@
 #include "../../SexyAppFramework/BuildInfo.h"
 #include "../../SexyAppFramework/Window.h"
 #include "../../SexyAppFramework/ListWidget.h"
-#if WIN32
+#ifdef _WIN32
 #include <ShlObj_core.h>
 #include <locale>
 #include <codecvt>
@@ -308,7 +308,7 @@ void SettingsDialog::ButtonDepress(int theId)
 		case SettingsDialog::SETTINGS_OPEN_SAVE_FOLDER:
 		{
 			SexyString aSaveFileFolder = GetAppDataFolder();
-			#if WIN32
+			#ifdef _WIN32
 			ShellExecuteA(NULL, "open", aSaveFileFolder.c_str(), NULL, NULL, SW_SHOWDEFAULT);
 			#else
 			SexyString aFailString = StrFormat("Couldn't open the folder on this platform.\nThe path is: \n%s", aSaveFileFolder.c_str());

@@ -161,7 +161,7 @@ ReanimationParams gLawnReanimationArray[(int)ReanimationType::NUM_REANIMS] = {
 	{ReanimationType::REANIM_CREDITS_WEARETHEUNDEAD, "reanim/Credits_WeAreTheUndead.reanim", 1},
 	{ReanimationType::REANIM_CREDITS_DISCOLIGHTS, "reanim/Credits_DiscoLights.reanim", 1},
 	{ReanimationType::REANIM_FLAG, "reanim/Zombie_FlagPole.reanim", 0},
-	{ReanimationType::REANIM_ZOMBATAR_HEAD, "reanim/zombatar_zombie_head.reanim", GetBit(ReanimFlags::REANIM_NO_ATLAS)},
+	{ReanimationType::REANIM_ZOMBATAR_HEAD, "reanim/zombatar_zombie_head.reanim", (int)GetBit(ReanimFlags::REANIM_NO_ATLAS)},
 };
 
 //0x471540
@@ -1173,7 +1173,11 @@ void ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsP
 	if (!ReanimationLoadDefinition(aReanimParams->mReanimFileName, aReanimDef))
 	{
 		char aBuf[1024];
+#ifdef _WIN32
 		sprintf_s<1024U>(aBuf, "Failed to load reanim '%s'", aReanimParams->mReanimFileName);
+#else
+		snprintf(aBuf, 1024, "Failed to load reanim '%s'", aReanimParams->mReanimFileName);
+#endif
 		TodErrorMessageBox(aBuf, "Error");
 	}
 	int aDuration = aTimer.GetDuration();
@@ -1332,7 +1336,7 @@ void Reanimation::ParseAttacherTrack(const ReanimatorTransform &theTransform, At
 		return;
 	const char *aTags = strstr(aReanimName + 2, "[");						   // 动画名称之后，指向 TAG 前的中括号
 	const char *aTrackName = strstr(aReanimName + 2, "__");					   // 动画名称之后，指向轨道名称前的双下划线
-	if (aTags && aTrackName && (unsigned int)aTags < (unsigned int)aTrackName) // 如果“[”之后还有双下划线，则字符串非法
+	if (aTags && aTrackName && (uintptr_t)aTags < (uintptr_t)aTrackName) // 如果“[”之后还有双下划线，则字符串非法
 		return;
 
 	if (aTrackName) // 如果有定义轨道名称
@@ -1356,8 +1360,11 @@ void Reanimation::ParseAttacherTrack(const ReanimatorTransform &theTransform, At
 			break;
 
 		std::string aCode(aTags + 1, aTagEnds - aTags - 1); // 取中括号内的文本
-		if (sscanf_s(aCode.c_str(), "%f", &theAttacherInfo.mAnimRate) !=
-			1) // 尝试将文本作为浮点数扫描，如果扫描成功则将结果作为动画速率
+#ifdef _WIN32
+		if (sscanf_s(aCode.c_str(), "%f", &theAttacherInfo.mAnimRate) != 1)
+#else
+		if (sscanf(aCode.c_str(), "%f", &theAttacherInfo.mAnimRate) != 1)
+#endif
 		{
 			if (aCode.compare("hold") == 0)
 				theAttacherInfo.mLoopType = ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD;

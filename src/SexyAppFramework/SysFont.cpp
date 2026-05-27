@@ -7,6 +7,9 @@
 #include "Renderer.h"
 #include "WidgetManager.h"
 #include <stdlib.h>
+#include <algorithm>
+#include <cctype>
+#include <filesystem>
 #include FT_OUTLINE_H
 #include FT_SYNTHESIS_H
 #if SEXY_USE_OPENGL
@@ -18,6 +21,59 @@
 
 
 using namespace Sexy;
+
+static std::string ResolveFontFile(const std::string &theFace)
+{
+	namespace fs = std::filesystem;
+
+	if (fs::exists(theFace) && fs::is_regular_file(theFace))
+		return theFace;
+
+	std::string aBasePath = "fonts/" + theFace;
+	if (fs::exists(aBasePath) && fs::is_regular_file(aBasePath))
+		return aBasePath;
+
+	std::string aTtfExt = aBasePath + ".ttf";
+	if (fs::exists(aTtfExt) && fs::is_regular_file(aTtfExt))
+		return aTtfExt;
+
+	std::string aLower = theFace;
+	std::transform(aLower.begin(), aLower.end(), aLower.begin(),
+				   [](unsigned char c) { return std::tolower(c); });
+	std::string aLowerPath = "fonts/" + aLower + ".ttf";
+	if (fs::exists(aLowerPath) && fs::is_regular_file(aLowerPath))
+		return aLowerPath;
+
+	try
+	{
+		for (const auto &anEntry : fs::directory_iterator("fonts"))
+		{
+			if (!anEntry.is_regular_file())
+				continue;
+			std::string aFileName = anEntry.path().filename().string();
+			if (aFileName.size() < 4)
+				continue;
+			std::string aStem = anEntry.path().stem().string();
+			if (aStem.size() == 0)
+				continue;
+			std::string aStemLower = aStem;
+			std::transform(aStemLower.begin(), aStemLower.end(), aStemLower.begin(),
+						   [](unsigned char c) { return std::tolower(c); });
+			if (aStemLower == aLower)
+				return anEntry.path().string();
+		}
+	}
+	catch (...)
+	{
+
+	}
+
+	std::string aFallback = "fonts/arial.ttf";
+	if (fs::exists(aFallback) && fs::is_regular_file(aFallback))
+		return aFallback;
+
+	return "";
+}
 
 SysFont::SysFont(const std::string &theFace, int thePointSize, bool bold, bool italics, bool underline)
 {
@@ -48,25 +104,48 @@ void SysFont::Init(SexyAppBase *theApp,
 	mItalic = italics;
 	mUnderlined = underline;
 
-	FT_Face aFontFace;
-	FT_Error anError = FT_New_Face(mApp->mFreeTypeLib, theFace.c_str(), 0, &aFontFace);
-	if (anError)
+	std::string aResolvedPath = ResolveFontFile(theFace);
+	if (aResolvedPath.empty())
 	{
-		#if WIN32
-		anError = FT_New_Face(mApp->mFreeTypeLib, ("C:/Windows/Fonts/" + theFace + ".ttf").c_str(), 0, &aFontFace);
-		#endif
+		aResolvedPath = "fonts/arial.ttf";
 	}
+
+	FT_Face aFontFace = nullptr;
+	FT_Error anError = FT_New_Face(mApp->mFreeTypeLib, aResolvedPath.c_str(), 0, &aFontFace);
+	if (anError || !aFontFace)
+	{
+		anError = FT_New_Face(mApp->mFreeTypeLib, "fonts/arial.ttf", 0, &aFontFace);
+	}
+
+	if (anError || !aFontFace)
+	{
+		mFontData = nullptr;
+		mAscent = 0;
+		mHeight = 0;
+		mDrawShadow = false;
+		mFontName = theFace;
+		return;
+	}
+
 	FT_Select_Charmap(aFontFace, FT_ENCODING_UNICODE);
 	if (mItalic)
 	{
-		FT_Matrix matrix = {1 << 16, 0.3 * (1 << 16), 0, 1 << 16};
+		FT_Matrix matrix = {1 << 16, (FT_Fixed)(0.3 * (1 << 16)), 0, 1 << 16};
 		FT_Set_Transform(aFontFace, &matrix, nullptr);
 	}
 
 	mFontData = new TrueTypeData(this, aFontFace, thePointSize);
 
-    mAscent = aFontFace->size->metrics.ascender >> 6;
-	mHeight = (aFontFace->size->metrics.ascender - aFontFace->size->metrics.descender) >> 6;
+	if (aFontFace->size)
+	{
+		mAscent = aFontFace->size->metrics.ascender >> 6;
+		mHeight = (aFontFace->size->metrics.ascender - aFontFace->size->metrics.descender) >> 6;
+	}
+	else
+	{
+		mAscent = 0;
+		mHeight = 0;
+	}
 
 	mDrawShadow = false;
 	mFontName = theFace;
@@ -74,15 +153,24 @@ void SysFont::Init(SexyAppBase *theApp,
 
 void SysFont::Reinit()
 {
-	FT_Face aFontFace;
+	if (!mFontData || !mFontData->mFace)
+		return;
+
+	FT_Face aFontFace = nullptr;
 	bool aPrevFlags = mFontData->mFace->style_flags;
-	FT_Error anError = FT_New_Face(mApp->mFreeTypeLib, mFontName.c_str(), 0, &aFontFace);
-	if (anError)
+
+	std::string aResolvedPath = ResolveFontFile(mFontName);
+	if (aResolvedPath.empty())
+		aResolvedPath = "fonts/arial.ttf";
+
+	FT_Error anError = FT_New_Face(mApp->mFreeTypeLib, aResolvedPath.c_str(), 0, &aFontFace);
+	if (anError || !aFontFace)
 	{
-#if WIN32
-		anError = FT_New_Face(mApp->mFreeTypeLib, ("C:/Windows/Fonts/" + mFontName + ".ttf").c_str(), 0, &aFontFace);
-#endif
+		anError = FT_New_Face(mApp->mFreeTypeLib, "fonts/arial.ttf", 0, &aFontFace);
 	}
+
+	if (anError || !aFontFace)
+		return;
 
 	aFontFace->style_flags = aPrevFlags;
 
@@ -91,8 +179,11 @@ void SysFont::Reinit()
 	mFontData = nullptr;
 	mFontData = new TrueTypeData(this, aFontFace, aOldSize);
 
-	mAscent = aFontFace->size->metrics.ascender >> 6;
-	mHeight = (aFontFace->size->metrics.ascender - aFontFace->size->metrics.descender) >> 6;
+	if (aFontFace->size)
+	{
+		mAscent = aFontFace->size->metrics.ascender >> 6;
+		mHeight = (aFontFace->size->metrics.ascender - aFontFace->size->metrics.descender) >> 6;
+	}
 }
 
 SysFont::SysFont(const SysFont &theSysFont)
@@ -228,6 +319,10 @@ Font *SysFont::Duplicate()
 }
 void TrueTypeData::Init()
 {
+	if (mFace == nullptr) {
+	    // Handle error: mFace is not initialized
+	    return;
+	}
 	FT_Set_Pixel_Sizes(mFace, 0, mSize);
 	if (mAtlas.mAtlas != nullptr)
 	{

@@ -556,11 +556,11 @@ void TodParticleEmitter::UpdateParticleField(TodParticle *theParticle,
 		int aLastRandSeed = theParticle->mParticleAge - 1;
 		if (aLastRandSeed == -1)
 			aLastRandSeed = theParticle->mParticleDuration - 1;
-		srand(aLastRandSeed * (int)theParticle);
+		srand(aLastRandSeed * (int)(uintptr_t)theParticle);
 		theParticle->mPosition.x -= aLastX * ((float)rand() / RAND_MAX * 2.0f - 1.0f);
 		theParticle->mPosition.y -= aLastY * ((float)rand() / RAND_MAX * 2.0f - 1.0f);
 		// 再随机取得当前帧的震动效果
-		srand(theParticle->mParticleAge * (int)theParticle);
+		srand(theParticle->mParticleAge * (int)(uintptr_t)theParticle);
 		theParticle->mPosition.x += x * ((float)rand() / RAND_MAX * 2.0f - 1.0f);
 		theParticle->mPosition.y += y * ((float)rand() / RAND_MAX * 2.0f - 1.0f);
 		break;

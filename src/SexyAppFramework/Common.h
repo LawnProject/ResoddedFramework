@@ -13,7 +13,7 @@
 
 // Platform Headers Start
 
-#if WIN32
+#ifdef _WIN32
 #include <windows.h>
 #include <shellapi.h>
 #include <mmsystem.h>
@@ -62,9 +62,14 @@
 
 // SexyString Start
 
-#if __clang__
+#if defined(__clang__) && defined(_WIN32)
 #define stricmp _stricmp
 #define strnicmp _strnicmp
+#elif defined(__clang__) && !defined(_WIN32)
+// Android/Linux: use POSIX strcasecmp
+#include <strings.h>
+#define stricmp strcasecmp
+#define strnicmp strncasecmp
 #endif
 
 typedef std::string SexyString;
@@ -209,7 +214,7 @@ struct StringLessNoCase
 {
 	bool operator()(const std::string &s1, const std::string &s2) const
 	{
-		return _stricmp(s1.c_str(), s2.c_str()) < 0;
+		return stricmp(s1.c_str(), s2.c_str()) < 0;
 	}
 };
 

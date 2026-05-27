@@ -5,6 +5,10 @@
 
 #include "TodDebug.h"
 
+// Forward declaration needed for FindGlobalAllocator used in template methods
+struct TodAllocator;
+TodAllocator *FindGlobalAllocator(int theSize);
+
 struct TodAllocator
 {
 	void *mFreeList;

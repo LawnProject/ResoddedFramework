@@ -91,7 +91,7 @@ extern ReanimationParams *gReanimationParamArray; //[0x6A9EF0]
 /*inline*/ void ReanimationFillInMissingData(void *&thePrev, void *&theValue);
 bool ReanimationLoadDefinition(const SexyString &theFileName, ReanimatorDefinition *theDefinition);
 void ReanimationFreeDefinition(ReanimatorDefinition *theDefinition);
-void _cdecl ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsPreloading);
+void ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsPreloading);
 void ReanimatorLoadDefinitions(ReanimationParams *theReanimationParamArray, int theReanimationParamArraySize);
 void ReanimatorFreeDefinitions();
 

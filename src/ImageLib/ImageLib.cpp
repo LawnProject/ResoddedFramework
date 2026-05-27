@@ -1,6 +1,9 @@
 #include "ImageLib.h"
 #include <math.h>
-#include <tchar.h>
+#ifndef _WIN32
+#include <strings.h>
+#define stricmp strcasecmp
+#endif
 #include "..\PakLib\PakInterface.h"
 #include <vector>
 #include <cstdint>

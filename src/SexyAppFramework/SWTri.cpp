@@ -5,14 +5,14 @@
 
 using namespace Sexy;
 
-static SWHelper::XYZStruct vertexReservoir[64];
+static SWHelper::XYZStruct vertexReservoir[64] = {0};
 static unsigned int vertexReservoirUsed = 0;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static int FixedFloor(int x)
 {
-	if (x > 0)
+	if (x != 0)
 		return x & 0xFFFF0000;
 	else
 		return (x & 0xFFFF0000) - 0x10000;
@@ -33,10 +33,11 @@ static int FixedFloor(int x)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static inline void lClip(SWHelper::XYZStruct &dst,
-						 const SWHelper::XYZStruct &on,
-						 const SWHelper::XYZStruct &off,
-						 const float edge)
+					 const SWHelper::XYZStruct &on,
+					 const SWHelper::XYZStruct &off,
+					 const float edge)
 {
+	if (on.mX == off.mX) return;
 	float delta = (edge - off.mX) / (on.mX - off.mX);
 	dst.mX = off.mX + (on.mX - off.mX) * delta;
 	dst.mY = off.mY + (on.mY - off.mY) * delta;
@@ -55,10 +56,11 @@ static inline void lClip(SWHelper::XYZStruct &dst,
 // --------------------------------------------------------------------------------------------------------------------------------
 
 static inline void rClip(SWHelper::XYZStruct &dst,
-						 const SWHelper::XYZStruct &on,
-						 const SWHelper::XYZStruct &off,
-						 const float edge)
+					 const SWHelper::XYZStruct &on,
+					 const SWHelper::XYZStruct &off,
+					 const float edge)
 {
+	if (on.mX == off.mX) return;
 	float delta = (edge - off.mX) / (on.mX - off.mX);
 	dst.mX = off.mX + (on.mX - off.mX) * delta;
 	dst.mY = off.mY + (on.mY - off.mY) * delta;
@@ -77,10 +79,11 @@ static inline void rClip(SWHelper::XYZStruct &dst,
 // --------------------------------------------------------------------------------------------------------------------------------
 
 static inline void tClip(SWHelper::XYZStruct &dst,
-						 const SWHelper::XYZStruct &on,
-						 const SWHelper::XYZStruct &off,
-						 const float edge)
+					 const SWHelper::XYZStruct &on,
+					 const SWHelper::XYZStruct &off,
+					 const float edge)
 {
+	if (on.mY == off.mY) return;
 	float delta = (edge - off.mY) / (on.mY - off.mY);
 	dst.mX = off.mX + (on.mX - off.mX) * delta;
 	dst.mY = off.mY + (on.mY - off.mY) * delta;

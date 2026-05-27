@@ -1114,7 +1114,7 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
 			}
 			else if (theStoreItem == STORE_ITEM_STINKY_THE_SNAIL)
 			{
-				mApp->mPlayerInfo->mPurchases[theStoreItem] = _time32(nullptr);
+				mApp->mPlayerInfo->mPurchases[theStoreItem] = time(nullptr);
 			}
 			else if (theStoreItem == STORE_ITEM_FERTILIZER || theStoreItem == STORE_ITEM_BUG_SPRAY)
 			{

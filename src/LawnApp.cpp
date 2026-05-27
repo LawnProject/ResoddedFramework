@@ -407,10 +407,17 @@ void LawnApp::GotFocus()
 //0x44F460
 void LawnApp::LostFocus()
 {
+#if (defined(__ANDROID__) && !defined(__TERMUX__)) || defined(__IPHONEOS__)
 	if (!mTodCheatKeys && CanPauseNow())
 	{
 		DoPauseDialog();
 	}
+#else
+	if (!mTodCheatKeys && CanPauseNow())
+	{
+		DoPauseDialog();
+	}
+#endif
 }
 
 //0x44F480
@@ -2008,10 +2015,15 @@ void LawnApp::ButtonDepress(int theId)
 
 		case Dialogs::DIALOG_QUIT:
 			KillDialog(Dialogs::DIALOG_QUIT);
+#if defined(__ANDROID__) && !defined(__TERMUX__)
+			// Android should move the task to the background instead of forcing a quit.
+			SDL_MinimizeWindow(mWindow->mInternalWindow);
+#elif !defined(__IPHONEOS__) // iOS apps must not quit or programmatically return to the Home screen.
 			{
 				SDL_Event event = {SDL_EVENT_QUIT};
 				SDL_PushEvent(&event);
 			}
+#endif
 			return;
 
 		case Dialogs::DIALOG_NAG:

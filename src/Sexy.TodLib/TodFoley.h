@@ -21,7 +21,7 @@ enum FoleyFlags
 	FOLEYFLAGS_DONT_REPEAT		  // 禁止变式重复，指定该种类的音效每次实际播放的变式不得与上一次相同
 };
 
-enum FoleyType
+enum FoleyType : int
 {
 	FOLEY_SUN,
 	FOLEY_SPLAT,

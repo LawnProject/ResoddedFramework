@@ -241,7 +241,7 @@ void TodTraceWithoutSpamming(const char *theFormat, ...)
 #endif
 }
 
-#if WIN32
+#if defined(_WIN32) && !defined(ANDROID) && !defined(__ANDROID__)
 void TodReportError(LPEXCEPTION_POINTERS exceptioninfo, const char *theMessage)
 {
 	Sexy::SEHCatcher::UnhandledExceptionFilter(exceptioninfo);
@@ -289,7 +289,7 @@ void TodAssertInitForApp()
 
 	std::time_t aclock = std::time(nullptr);
 	TodLog("[TodLib] - Started %s\n", std::asctime(std::localtime(&aclock)));
-#if WIN32
+#if defined(_WIN32) && !defined(ANDROID) && !defined(__ANDROID__)
 	SetUnhandledExceptionFilter(TodUnhandledExceptionFilter);
 #endif
 }

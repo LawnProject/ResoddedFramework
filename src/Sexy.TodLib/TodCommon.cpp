@@ -1467,7 +1467,11 @@ int TodVsnprintf(char *theBuffer, int theSize, const char *theFormat, va_list th
 {
 	try
 	{
+#ifdef _WIN32
 		int aCount = _vsnprintf(theBuffer, theSize, theFormat, theArgList);
+#else
+		int aCount = vsnprintf(theBuffer, theSize, theFormat, theArgList);
+#endif
 		if (aCount == -1)
 		{
 			theBuffer[theSize - 1] = '\0';
@@ -1477,7 +1481,7 @@ int TodVsnprintf(char *theBuffer, int theSize, const char *theFormat, va_list th
 	}
 	catch (std::exception &)
 	{
-		TOD_ASSERT(, "bad format string");
+		TOD_ASSERT(false, "bad format string");
 		return 1;
 	}
 }

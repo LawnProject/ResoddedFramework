@@ -1,15 +1,19 @@
-﻿#include "Common.h"
+#include "Common.h"
 #include "MTRand.h"
 #include "Debug.h"
 #include <filesystem>
 #include <chrono>
-#if WIN32
+#ifdef _WIN32
 #include <direct.h>
 #include <io.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
 #include <aclapi.h>
+#endif
+#if defined(__ANDROID__) && !defined(__TERMUX__)
+#include <android/log.h>
+#define LAWNPROJECT_TAG "LawnProject"
 #endif
 
 #include "PerfTimer.h"
@@ -21,7 +25,13 @@ namespace Sexy
 #ifdef _WIN32
 std::string gAppDataFolder = std::filesystem::path(std::getenv("LOCALAPPDATA")).string() + "/";
 #elif __APPLE__
+#if defined(__IPHONEOS__)
+std::string gAppDataFolder = std::filesystem::path(std::getenv("HOME")).string() + "/Documents/";
+#else
 std::string gAppDataFolder = std::filesystem::path(std::getenv("HOME")).string() + "/Library/Application Support/";
+#endif
+#elif defined(__ANDROID__)
+std::string gAppDataFolder = "";
 #else
 std::string gAppDataFolder = std::filesystem::path(std::getenv("HOME")).string() + "/.config/";
 #endif
@@ -264,7 +274,11 @@ SexyString Sexy::CommaSeperate(int theValue)
 
 std::string Sexy::GetCurDir()
 {
-	return std::filesystem::current_path().string();
+	try {
+		return std::filesystem::current_path().string();
+	} catch (...) {
+		return "";
+	}
 }
 
 std::string Sexy::GetFullPath(const std::string &theRelPath)
@@ -373,7 +387,7 @@ std::string Sexy::GetPathFrom(const std::string &theRelPath, const std::string &
 
 bool Sexy::AllowAllAccess(const std::string &theFileName)
 {
-#if WIN32
+#ifdef _WIN32
 
 	HMODULE aLib = LoadLibraryA("advapi32.dll");
 	if (aLib == NULL)

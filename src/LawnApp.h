@@ -40,7 +40,7 @@ class ButtonWidget;
 class Version;
 }; // namespace Sexy
 
-enum FoleyType;
+enum FoleyType : int;
 
 using namespace Sexy;
 

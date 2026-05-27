@@ -1,5 +1,7 @@
 #include "PerfTimer.h"
 #include <map>
+#include <set>
+#include <stdint.h>
 #include <SDL3/SDL_timer.h>
 
 using namespace Sexy;
@@ -75,8 +77,8 @@ double PerfTimer::GetDuration()
 struct PerfInfo
 {
 	const char *mPerfName;
-	mutable __int64 mStartTime;
-	mutable __int64 mDuration;
+	mutable int64_t mStartTime;
+	mutable int64_t mDuration;
 	mutable double mMillisecondDuration;
 	mutable double mLongestCall;
 	mutable int mStartCount;
@@ -142,7 +144,7 @@ static inline void InsertPerfRecord(PerfRecord &theRecord)
 		{
 			if (--anItr->mStartCount == 0)
 			{
-				__int64 aDuration = theRecord.mTime - anItr->mStartTime;
+				int64_t aDuration = theRecord.mTime - anItr->mStartTime;
 				anItr->mDuration += aDuration;
 
 				if (aDuration > anItr->mLongestCall)
@@ -213,7 +215,7 @@ void SexyPerf::EndPerf()
 
 	gPerfOn = false;
 
-	__int64 aFreq = SDL_GetPerformanceFrequency();
+	int64_t aFreq = SDL_GetPerformanceFrequency();
 
 	gDuration = ((double)(anEndTime - gStartTime - gCollateTime)) * 1000 / aFreq;
 

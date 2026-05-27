@@ -3,6 +3,7 @@
 #include "../Lawn/LawnCommon.h"
 #include "../SexyAppFramework/Common.h"
 #include "../SexyAppFramework/ResourceManager.h"
+#include "TodDebug.h"
 
 struct TodAllocator;
 namespace Sexy

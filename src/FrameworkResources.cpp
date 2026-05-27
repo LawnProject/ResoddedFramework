@@ -118,7 +118,7 @@ static Sexy::ResoddedFrameworkResourceId ResoddedFrameworkGetIdByVariable(const 
 			aMap[*(int*)gResources[i]] = i;
 	}
 
-	MyMap::iterator anItr = aMap.find((int)theVariable);
+	MyMap::iterator anItr = aMap.find((int)(uintptr_t)theVariable);
 	if (anItr == aMap.end())
 		return ResoddedFrameworkRESOURCE_ID_MAX;
 	else

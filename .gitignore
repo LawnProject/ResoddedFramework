@@ -1,13 +1,19 @@
 # .gitignore
 build/
 out/
+build-ios/
 *.exe
 *.pdb
 .vscode/
 .vs/
 crash.txt
 
+# macOS
+.DS_Store
+
+thirdparty/android/
+
 Export/
-assets/base
 /assets/main.pak
 /pseudocode
+/vcpkg_installed

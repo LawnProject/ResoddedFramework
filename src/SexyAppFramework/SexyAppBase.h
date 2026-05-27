@@ -12,6 +12,7 @@
 #include "CritSect.h"
 #include "SharedImage.h"
 #include "Ratio.h"
+#include "Renderer.h"
 #include <ft2build.h>
 #include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_events.h>
@@ -36,7 +37,6 @@ enum JSONRegistryType
 	TYPE_LAST
 };
 
-enum RenderingBackend;
 
 class WidgetManager;
 class DDInterface;
@@ -185,7 +185,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	bool mSkipSignatureChecks;
 
 	bool mOnlyAllowOneCopyToRun;
-	#if WIN32
+	#ifdef _WIN32
 	HANDLE mCopyMutex;
 	#endif
 	CritSect mCritSect;
