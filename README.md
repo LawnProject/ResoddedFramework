@@ -9,7 +9,7 @@ https://discord.gg/cK2ewgYQUe
 
 ## What do you need?
 1. Copy of Plants vs. Zombies Game of the Year Edition. Demo works aswell.
-2. CMake (Minimum 3.28)
+2. CMake (Minimum 3.5)
 2. vcpkg
 4. An IDE that supports C++
 

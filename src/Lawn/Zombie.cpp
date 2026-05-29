@@ -1299,7 +1299,6 @@ void Zombie::BungeeDropZombie(Zombie *theDroppedZombie, int theGridX, int theGri
 //0x524A70
 void Zombie::PickRandomSpeed()
 {
-
 	if (mZombiePhase == ZombiePhase::PHASE_DOLPHIN_WALKING_IN_POOL)
 	{
 		mVelX = 0.3f;
