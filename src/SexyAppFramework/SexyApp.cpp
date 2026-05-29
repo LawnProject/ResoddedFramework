@@ -1,4 +1,5 @@
 #include "SexyApp.h"
+#include "BuildInfo.h"
 
 //#include "..\Crypt\RegKey.h"
 #include "SEHCatcher.h"
@@ -48,6 +49,7 @@ SexyApp::SexyApp()
 			  "Contacting PopCap.com to determine if there are any updates available for this product ...");
 
 	mBuildNum = gVersion.mBuildNumber;
+	mBuildDate = BUILD_DATE;
 }
 
 SexyApp::~SexyApp()
