@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ResoddedFramework"
+rootProject.name = "PvZ-Portable"
 include ':app'

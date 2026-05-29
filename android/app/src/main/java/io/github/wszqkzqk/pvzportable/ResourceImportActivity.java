@@ -1,25 +1,25 @@
 /*
- *
+ * Copyright (C) 2026 Zhou Qiankang <wszqkzqk@qq.com>
  *
  * SPDX-License-Identifier: LGPL-3.0-or-later
  *
- * This file is part of ResoddedFramework.
+ * This file is part of PvZ-Portable.
  *
- * ResoddedFramework is free software: you can redistribute it and/or modify
+ * PvZ-Portable is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * ResoddedFramework is distributed in the hope that it will be useful,
+ * PvZ-Portable is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with ResoddedFramework. If not, see <https://www.gnu.org/licenses/>.
+ * along with PvZ-Portable. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.electr0gunner.resoddedframework;;
+package io.github.wszqkzqk.pvzportable;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -112,7 +112,7 @@ public class ResourceImportActivity extends AppCompatActivity {
             dirPicker.launch(null)
         );
         btnExportSave.setOnClickListener(v ->
-            saveExporter.launch("ResoddedFramework-savedata.zip")
+            saveExporter.launch("pvz-portable-savedata.zip")
         );
         btnImportSaveZip.setOnClickListener(v ->
             saveZipImporter.launch(new String[]{"application/zip", "application/x-zip-compressed"})

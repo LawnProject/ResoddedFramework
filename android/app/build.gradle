@@ -12,15 +12,14 @@ configurations.all {
 // Set usePrebuiltLibs=true (e.g., -PusePrebuiltLibs=true) when native .so files
 // are already placed under app/src/main/jniLibs/<abi>/ (used in CI).
 // Otherwise, Gradle will invoke CMake via externalNativeBuild.
-def prebuilt = project.hasProperty('usePrebuiltLibs') &&
-        project.usePrebuiltLibs.toBoolean()
+def prebuilt = project.hasProperty('usePrebuiltLibs') && project.usePrebuiltLibs.toBoolean()
 
 android {
-    namespace 'io.github.electr0gunner.resoddedframework'
+    namespace 'io.github.wszqkzqk.pvzportable'
     compileSdk 36
 
     defaultConfig {
-        applicationId "io.github.electr0gunner.resoddedframework"
+        applicationId "io.github.wszqkzqk.pvzportable"
         minSdk 28
         targetSdk 36
         versionCode 1
@@ -34,31 +33,20 @@ android {
             externalNativeBuild {
                 cmake {
                     def args = ["-DCMAKE_BUILD_TYPE=Release"]
-
                     if (project.hasProperty('cmakeArgs')) {
                         args.addAll(project.cmakeArgs.split(','))
                     }
-
                     def vcpkgRoot = System.getenv("VCPKG_ROOT")
-
                     if (vcpkgRoot) {
                         vcpkgRoot = vcpkgRoot.replace('\\', '/')
-
                         args.add("-DCMAKE_TOOLCHAIN_FILE=${vcpkgRoot}/scripts/buildsystems/vcpkg.cmake")
-
                         def ndkDir = android.ndkDirectory.absolutePath.replace('\\', '/')
-
                         args.add("-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${ndkDir}/build/cmake/android.toolchain.cmake")
                         args.add("-DVCPKG_TARGET_TRIPLET=arm64-android")
                         args.add("-DVCPKG_INSTALL_OPTIONS=--allow-unsupported")
-
-                        def installedDir =
-                                "${project.rootDir}/../vcpkg_installed"
-                                        .replace('\\', '/')
-
+                        def installedDir = "${project.rootDir}/../vcpkg_installed".replace('\\', '/')
                         args.add("-DVCPKG_INSTALLED_DIR=${installedDir}")
                     }
-
                     arguments(*args)
                 }
             }
@@ -68,9 +56,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-
-            // Use debug signing so the APK is directly installable
-            // without a release keystore
+            // Use debug signing so the APK is directly installable without a release keystore
             signingConfig signingConfigs.debug
         }
     }
@@ -79,14 +65,16 @@ android {
         externalNativeBuild {
             cmake {
                 path "../../CMakeLists.txt"
-                version "3.22.1"
+                version "3.22.1+"
             }
         }
     }
 
     sourceSets {
         main {
-            java.srcDirs = ['src/main/java']
+            java.srcDirs = [
+                'src/main/java'
+            ]
         }
     }
 

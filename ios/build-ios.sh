@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build ResoddedFramework for iOS.
+# Build PvZ-Portable for iOS.
 # Usage: ./ios/build-ios.sh [Debug|Release]
 # Requires: Xcode 15+ with iOS SDK, CMake 3.21+, vcpkg
 # VCPKG_ROOT must be set to the vcpkg installation directory.
@@ -10,7 +10,7 @@ BUILD_TYPE="${1:-Release}"
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 BUILD_DIR="$PROJECT_ROOT/build-ios"
 
-echo "=== ResoddedFramework iOS Build ($BUILD_TYPE) ==="
+echo "=== PvZ-Portable iOS Build ($BUILD_TYPE) ==="
 
 if [ -z "${VCPKG_ROOT:-}" ]; then
     echo "Error: VCPKG_ROOT is not set. Install vcpkg and set VCPKG_ROOT."
@@ -26,7 +26,7 @@ fi
 mkdir -p "$BUILD_DIR"
 
 # Build game (vcpkg handles all dependencies via manifest mode)
-echo "--- Building ResoddedFramework ---"
+echo "--- Building PvZ-Portable ---"
 cmake -B "$BUILD_DIR/game" -S "$PROJECT_ROOT" \
     -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" \
     -DVCPKG_TARGET_TRIPLET=arm64-ios \

@@ -35,12 +35,12 @@ elseif(IOS)
     add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES})
     set_target_properties(${PROJECT_NAME} PROPERTIES
         MACOSX_BUNDLE TRUE
-        MACOSX_BUNDLE_GUI_IDENTIFIER "io.github.electr0gunner.resoddedframework;"
+        MACOSX_BUNDLE_GUI_IDENTIFIER "io.github.wszqkzqk.pvzportable"
         MACOSX_BUNDLE_BUNDLE_NAME "LawnProject"
         MACOSX_BUNDLE_INFO_PLIST "${CMAKE_SOURCE_DIR}/ios/Info.plist.in"
         XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2"
         XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET "15.0"
-        XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "io.github.electr0gunner.resoddedframework;"
+        XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "io.github.wszqkzqk.pvzportable"
         XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "-"
         XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon"
     )

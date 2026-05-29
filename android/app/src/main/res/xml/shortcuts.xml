@@ -8,7 +8,7 @@
         android:shortcutLongLabel="@string/shortcut_manage_data_long">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="io.github.electr0gunner.resoddedframework;"
-            android:targetClass="io.github.electr0gunner.resoddedframework;.ResourceImportActivity" />
+            android:targetPackage="io.github.wszqkzqk.pvzportable"
+            android:targetClass="io.github.wszqkzqk.pvzportable.ResourceImportActivity" />
     </shortcut>
 </shortcuts>

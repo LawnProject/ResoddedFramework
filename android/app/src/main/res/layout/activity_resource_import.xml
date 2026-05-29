@@ -2,9 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_gradient_main"
-    android:padding="20dp"
-    android:fillViewport="true">
+    android:padding="24dp"
+    android:background="#FF1B5E20">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,138 +11,104 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
-        <!-- ── Header ── -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
-            android:textSize="32sp"
+            android:textSize="28sp"
             android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:letterSpacing="0.06"
-            android:shadowColor="#40000000"
-            android:shadowDx="0"
-            android:shadowDy="2"
-            android:shadowRadius="8"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="4dp" />
+            android:textColor="#FFFFFFFF"
+            android:layout_marginBottom="8dp" />
 
-        <View
-            android:layout_width="48dp"
-            android:layout_height="3dp"
-            android:background="@drawable/btn_primary_gradient"
-            android:layout_marginBottom="20dp" />
-
-        <!-- ── Status Badge ── -->
         <TextView
             android:id="@+id/status_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/status_missing"
-            style="@style/StatusBadge" />
+            android:textSize="16sp"
+            android:textColor="#FFFFCC80"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
 
-        <!-- ── Progress ── -->
         <ProgressBar
             android:id="@+id/progress_bar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="6dp"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:visibility="gone"
-            android:indeterminate="true"
             android:layout_marginBottom="16dp" />
 
-        <!-- ════════════════════════════════ -->
-        <!--  IMPORT GAME RESOURCES CARD     -->
-        <!-- ════════════════════════════════ -->
-        <LinearLayout
+        <!-- Import game resources section -->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/bg_card_section"
-            android:layout_marginBottom="16dp">
+            android:text="@string/section_import_resources"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFFFF"
+            android:layout_marginBottom="8dp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/section_import_resources"
-                style="@style/SectionTitle" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/import_help"
-                style="@style/HelpText" />
-
-            <Button
-                android:id="@+id/btn_pick_zip"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_pick_zip"
-                style="@style/BtnPrimary" />
-
-            <Button
-                android:id="@+id/btn_pick_dir"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_pick_dir"
-                style="@style/BtnSecondary" />
-
-        </LinearLayout>
-
-        <!-- ════════════════════════════════ -->
-        <!--  SAVE DATA CARD                 -->
-        <!-- ════════════════════════════════ -->
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/bg_card_section"
-            android:layout_marginBottom="16dp">
+            android:text="@string/import_help"
+            android:textSize="13sp"
+            android:textColor="#FFCCCCCC"
+            android:layout_marginBottom="12dp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/section_save_data"
-                style="@style/SectionTitle" />
+        <Button
+            android:id="@+id/btn_pick_zip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_pick_zip"
+            android:layout_marginBottom="8dp" />
 
-            <Button
-                android:id="@+id/btn_export_save"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_export_save"
-                style="@style/BtnSecondary" />
+        <Button
+            android:id="@+id/btn_pick_dir"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_pick_dir"
+            android:layout_marginBottom="24dp" />
 
-            <Button
-                android:id="@+id/btn_import_save_zip"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_import_save_zip"
-                style="@style/BtnSecondary" />
+        <!-- Save data section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/section_save_data"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFFFF"
+            android:layout_marginBottom="8dp" />
 
-            <Button
-                android:id="@+id/btn_import_save_dir"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_import_save_dir"
-                style="@style/BtnSecondary" />
+        <Button
+            android:id="@+id/btn_export_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_export_save"
+            android:layout_marginBottom="8dp" />
 
-        </LinearLayout>
+        <Button
+            android:id="@+id/btn_import_save_zip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_import_save_zip"
+            android:layout_marginBottom="8dp" />
 
-        <!-- ════════════════════════════════ -->
-        <!--  LAUNCH GAME                    -->
-        <!-- ════════════════════════════════ -->
+        <Button
+            android:id="@+id/btn_import_save_dir"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_import_save_dir"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Launch -->
         <Button
             android:id="@+id/btn_launch_game"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btn_launch_game"
-            android:enabled="false"
-            style="@style/BtnLaunch" />
-
-        <!-- Footer spacer -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="24dp" />
+            android:textSize="18sp"
+            android:enabled="false" />
 
     </LinearLayout>
 </ScrollView>
