@@ -528,6 +528,14 @@ void LawnSyncGame(Board* theBoard, SaveContext &theContext)
 	SYNC_VAR(theBoard->mPottedPlantsCollected);
 	SYNC_VAR(theBoard->mChocolateCollected);
 
+	SYNC_VAR(theBoard->mPlantsPlaced);
+	SYNC_VAR(theBoard->mPennyPincherStreak);
+	SYNC_VAR(theBoard->mDontPeaUsedPeashooter);
+	SYNC_VAR(theBoard->mGroundedUsedCatapult);
+	SYNC_VAR(theBoard->mGoodMorningUsedNonFungus);
+	SYNC_VAR(theBoard->mNoFungusUsedFungus);
+	SYNC_VAR(theBoard->mGargantuarsKillsByCornCob);
+
 	SYNC_VAR(theBoard->mChallenge->mBeghouledMouseCapture);
 	SYNC_VAR(theBoard->mChallenge->mBeghouledMouseDownX);
 	SYNC_VAR(theBoard->mChallenge->mBeghouledMouseDownY);

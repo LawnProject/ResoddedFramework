@@ -25,6 +25,8 @@ AwardScreen::AwardScreen(LawnApp *theApp, AwardType theAwardType)
 	mAwardType = theAwardType;
 	mAchievementTime = 0;
 	mHasAchievementsToShow = mApp->mAchievements->HasUnshownAchievements();
+	if (theAwardType == AwardType::AWARD_HELP_ZOMBIENOTE || theAwardType == AwardType::AWARD_CREDITS_ZOMBIENOTE)
+		mHasAchievementsToShow = false;
 	mScrollBar = nullptr;
 	TodLoadResources("DelayLoad_AwardScreen");
 	if (mHasAchievementsToShow)

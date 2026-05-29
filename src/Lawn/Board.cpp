@@ -125,6 +125,7 @@ Board::Board(LawnApp *theApp)
 	mGameID = _time32(nullptr);
 	mMinFPS = 1000.0f;
 	mGravesCleared = 0;
+	mPlantsPlaced = 0;
 	mPlantsEaten = 0;
 	mPlantsShoveled = 0;
 	mCoinsCollected = 0;
@@ -2249,6 +2250,7 @@ Plant *Board::AddPlant(int theGridX, int theGridY, SeedType theSeedType, SeedTyp
 	Plant *aPlant = NewPlant(theGridX, theGridY, theSeedType, theImitaterType);
 	DoPlantingEffects(theGridX, theGridY, aPlant);
 	mChallenge->PlantAdded(aPlant);
+	mPlantsPlaced++;
 
 	int aSunPlantsCount = CountPlantByType(SeedType::SEED_SUNSHROOM) + CountPlantByType(SeedType::SEED_SUNFLOWER);
 	if (aSunPlantsCount > mMaxSunPlants)

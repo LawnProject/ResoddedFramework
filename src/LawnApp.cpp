@@ -65,7 +65,7 @@
 #endif
 
 //Do not edit this. - Electr0Gunner
-Version LawnApp::gResoddedVersion(1, 0, 0, 827);
+Version LawnApp::gResoddedVersion(1, 0, 0, 833);
 
 bool gIsPartnerBuild = false;
 bool gSlowMo = false;
@@ -1555,22 +1555,25 @@ void LawnApp::CheckForGameEnd()
 
 	if (IsAdventureMode())
 	{
-		if (mBoard->StageHasPool() && !mBoard->StageIsNight() && !mBoard->mDontPeaUsedPeashooter)
+		if (mBoard->mPlantsPlaced > 0 && !IsWhackAZombieLevel() && !IsScaryPotterLevel() && !IsBungeeBlitzLevel() && !IsChallengeWithoutSeedBank())
 		{
-			mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_DONT_PEA);
-		}
-		if (mBoard->StageHasRoof() && !mBoard->HasConveyorBeltSeedBank() && !mBoard->mGroundedUsedCatapult)
-		{
-			mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_GROUNDED);
-		}
-		if (!mBoard->StageIsNight() && !mBoard->StageHasPool() && !mBoard->StageHasRoof() &&
-			!mBoard->mGoodMorningUsedNonFungus)
-		{
-			mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_GOOD_MORNING);
-		}
-		if (mBoard->StageIsNight() && !mBoard->mNoFungusUsedFungus)
-		{
-			mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_NO_FUNGUS_AMONG_US);
+			if (mBoard->StageHasPool() && !mBoard->StageIsNight() && !mBoard->mDontPeaUsedPeashooter)
+			{
+				mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_DONT_PEA);
+			}
+			if (mBoard->StageHasRoof() && !mBoard->HasConveyorBeltSeedBank() && !mBoard->mGroundedUsedCatapult)
+			{
+				mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_GROUNDED);
+			}
+			if (!mBoard->StageIsNight() && !mBoard->StageHasPool() && !mBoard->StageHasRoof() &&
+				!mBoard->mGoodMorningUsedNonFungus)
+			{
+				mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_GOOD_MORNING);
+			}
+			if (mBoard->StageIsNight() && !mBoard->mNoFungusUsedFungus)
+			{
+				mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_NO_FUNGUS_AMONG_US);
+			}
 		}
 
 		int aLevel = mBoard->mLevel;

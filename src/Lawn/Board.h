@@ -222,18 +222,19 @@ class Board : public Widget, public ButtonListener
 	float mMinFPS;													  //+0x5788
 	int mPreloadTime;												  //+0x578C
 	int mGameID;													  //+0x5790
-	int mGravesCleared;												  //+0x5794
-	int mPlantsEaten;												  //+0x5798
-	int mPlantsShoveled;											  //+0x579C
-	int mCoinsCollected;											  //+0x57A0
-	int mDiamondsCollected;											  //+0x57A4
-	int mPottedPlantsCollected;										  //+0x57A8
-	int mChocolateCollected;										  //+0x57AC
-	int mPennyPincherStreak;										  //+0x57B0
-	bool mDontPeaUsedPeashooter;									  //+0x57B8
-	bool mGroundedUsedCatapult;										  //+0x57B9
-	bool mGoodMorningUsedNonFungus;									  //+0x57BA
-	bool mNoFungusUsedFungus;										  //+0x57BB
+	int mGravesCleared;
+	int mPlantsEaten;
+	int mPlantsShoveled;
+	int mPlantsPlaced;
+	int mCoinsCollected;
+	int mDiamondsCollected;
+	int mPottedPlantsCollected;
+	int mChocolateCollected;
+	int mPennyPincherStreak;
+	bool mDontPeaUsedPeashooter;
+	bool mGroundedUsedCatapult;
+	bool mGoodMorningUsedNonFungus;
+	bool mNoFungusUsedFungus;
 	int mGargantuarsKillsByCornCob;
 
 #if SEXY_USE_CONTROLLER
