@@ -3879,6 +3879,8 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 					uint32_t aChar = utf8::next(it, end);
 
 					mWidgetManager->KeyChar((SexyChar)aChar);
+					if (anEvent.type == SDL_EVENT_TEXT_INPUT && anEvent.text.text)
+						SDL_free((void*)anEvent.text.text);
 					break;
 				}
 				case SDL_EVENT_WINDOW_MOVED:
@@ -4836,28 +4838,24 @@ bool SexyAppBase::UpdateAppStep(bool *updated)
 				if (aMsg->type == SDL_EVENT_QUIT)
 					pushMessage = false;
 
-				if (pushMessage)
-				{
-					MessageList::iterator aMsgListItr = mDeferredMessages.begin();
-					while (pushMessage && aMsgListItr != mDeferredMessages.end())
-					{
-						SDL_Event &aMsg = *aMsgListItr;
-
-						++aMsgListItr;
-					}
-				}
 			}
 
 			if (pushMessage)
 			{
 				SDL_Event anEventCopy = SDL_Event(anEvent);
+				if (anEvent.type == SDL_EVENT_TEXT_INPUT && anEvent.text.text)
+				{
+					anEventCopy.text.text = SDL_strdup(anEvent.text.text);
+				}
 				mDeferredMessages.push_back(anEventCopy);
+
 			}
 			if (anEvent.type == SDL_EVENT_QUIT)
 			{
 				CloseRequestAsync();
 				break;
 			}
+
 		}
 
 		ProcessDemo();
