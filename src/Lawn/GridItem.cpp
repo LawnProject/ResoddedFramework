@@ -664,7 +664,7 @@ Zombie *GridItem::RakeFindZombie()
 	while (mBoard->IterateZombies(aZombie))
 	{
 		if (!aZombie->IsDeadOrDying() && !aZombie->IsBobsledTeamWithSled() && aZombie->mRow - mGridY == 0 &&
-			aZombie->EffectedByDamage(1U))
+			aZombie->EffectedByDamage(GetBit(DamageRangeFlags::DAMAGES_GROUND)))
 		{
 			Rect aZombieRect = aZombie->GetZombieRect();
 			if (GetRectOverlap(aRakeRect, aZombieRect) >= 0)

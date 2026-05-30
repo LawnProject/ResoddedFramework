@@ -204,7 +204,11 @@ void LawnMower::Update()
 
 		if (aZombie->mZombieType != ZombieType::ZOMBIE_BOSS && aZombie->mRow - mRow == 0 &&
 			aZombie->mZombiePhase != ZombiePhase::PHASE_ZOMBIE_MOWERED && !aZombie->IsTangleKelpTarget() &&
-			aZombie->EffectedByDamage(127U))
+			aZombie->EffectedByDamage(
+				GetBit(DamageRangeFlags::DAMAGES_GROUND) | GetBit(DamageRangeFlags::DAMAGES_SUBMERGED) |
+				GetBit(DamageRangeFlags::DAMAGES_FLYING) | GetBit(DamageRangeFlags::DAMAGES_DOG) |
+				GetBit(DamageRangeFlags::DAMAGES_OFF_GROUND) | GetBit(DamageRangeFlags::DAMAGES_DYING) |
+				GetBit(DamageRangeFlags::DAMAGES_UNDERGROUND)))
 		{
 			Rect aZombieRect = aZombie->GetZombieRect();
 			int aOverlap = GetRectOverlap(aAttackRect, aZombieRect);
