@@ -65,7 +65,7 @@
 #endif
 
 //Do not edit this. - Electr0Gunner
-Version LawnApp::gResoddedVersion(1, 0, 0, 846);
+Version LawnApp::gResoddedVersion(1, 0, 0, 848);
 
 bool gIsPartnerBuild = false;
 bool gSlowMo = false;
@@ -1781,14 +1781,13 @@ void LawnApp::LoadGroup(const char *theGroupName, int theGroupAveMsToLoad)
 
 	if (mShutdown || mCloseRequest)
 		return;
-
-	if (mResourceManager->HadError() || !ExtractResourcesByName(mResourceManager, theGroupName))
+	bool aResoddedResourceFound = ResoddedFrameworkExtractResourcesByName(mResourceManager, theGroupName);
+	if (mResourceManager->HadError() || (!ExtractResourcesByName(mResourceManager, theGroupName) && !aResoddedResourceFound))
 	{
 		ShowResourceError();
 		mLoadingFailed = true;
 	}
 
-	ResoddedFrameworkExtractResourcesByName(mResourceManager, theGroupName); //First try to load stuff that the framework needs
 
 	int aTotalGroupWeight = mResourceManager->GetNumResources(theGroupName) * theGroupAveMsToLoad;
 	int aGroupTime = std::max(aTimer.GetDuration(), 0.0);

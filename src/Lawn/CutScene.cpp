@@ -118,7 +118,7 @@ void CutScene::PlaceAZombie(ZombieType theZombieType, int theGridX, int theGridY
 		aPutOnDuckyTube = true;
 	}
 
-	Zombie *aZombie = mBoard->AddZombieInRow(theZombieType, theGridY, -2);
+	Zombie *aZombie = mBoard->AddZombieInRow(theZombieType, theGridY, Zombie::ZOMBIE_WAVE_CUTSCENE);
 	TOD_ASSERT(aZombie);
 	aZombie->mPosX = theGridX * 56 + 830;
 	aZombie->mPosY = theGridY * 90 + 70;
