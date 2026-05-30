@@ -606,12 +606,12 @@ void Reanimation::ReanimBltMatrix(Graphics *g,
 	{
 		float aScaleX = theTransform.m00;
 		float aScaleY = theTransform.m11;
-		int aPosX = FloatRoundToInt(theTransform.m02 - aScaleX * theSrcRect.mWidth * 0.5f);
-		int aPosY = FloatRoundToInt(theTransform.m12 - aScaleY * theSrcRect.mHeight * 0.5f);
+		int aPosX = FloatRoundToInt(theTransform.m02 - aScaleX * theSrcRect.mWidth * 0.5f) - g->mTransX;
+		int aPosY = FloatRoundToInt(theTransform.m12 - aScaleY * theSrcRect.mHeight * 0.5f) - g->mTransY;
 		int aOldMode = g->GetDrawMode();
 		g->SetDrawMode(theDrawMode);
 		Rect aOldClipRect = g->mClipRect;
-		g->SetClipRect(theClipRect);
+		g->mClipRect = theClipRect;
 
 		if (FloatApproxEqual(aScaleX, 1.0f) && FloatApproxEqual(aScaleY, 1.0f))
 			g->DrawImage(theImage, aPosX, aPosY, theSrcRect);
@@ -624,7 +624,7 @@ void Reanimation::ReanimBltMatrix(Graphics *g,
 		}
 
 		g->SetDrawMode(aOldMode);
-		g->SetClipRect(aOldClipRect);
+		g->mClipRect = aOldClipRect;
 	}
 	else
 		TodBltMatrix(g, theImage, theTransform, theClipRect, theColor, theDrawMode, theSrcRect);

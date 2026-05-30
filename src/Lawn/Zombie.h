@@ -3,6 +3,7 @@
 
 #include "GameObject.h"
 #include "../GameConstants.h"
+#include "System/PlayerInfo.h"
 
 #define MAX_ZOMBIE_FOLLOWERS 4
 #define NUM_BOBSLED_FOLLOWERS 3
@@ -165,7 +166,7 @@ class Zombie : public GameObject
 	ReanimationID mMoweredReanimID;					  //+0x150
 	int mLastPortalX;	
 	bool mHasSetupZombatar;
-	Zombatar* mZombatar;
+	Zombatar mZombatar;
 
 	ReanimationID mBaseHeadReanimID;
 	ReanimationID mTidbitsReanimID;

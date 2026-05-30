@@ -161,7 +161,6 @@ void Zombie::ZombieInitialize(int theRow, ZombieType theType, bool theVariant, Z
 	mHatReanimID = ReanimationID::REANIMATIONID_NULL;
 	mBaseHeadReanimID = ReanimationID::REANIMATIONID_NULL;
 	mHasSetupZombatar = false;
-	mZombatar = nullptr;
 
 	mTargetRow = -1;
 	mFireballRow = -1;
@@ -1045,7 +1044,7 @@ void Zombie::SetupZombatar()
 
 void Zombie::UpdateZombatar(Zombatar &aZombatar)
 {
-	mZombatar = &aZombatar;
+	mZombatar = aZombatar;
 	Reanimation *aTidbitsReanim = mApp->ReanimationGet(mTidbitsReanimID);
 	Reanimation *aAccessoriesReanim = mApp->ReanimationGet(mAccessoriesReanimID);
 	Reanimation *aFacialHairReanim = mApp->ReanimationGet(mFacialHairReanimID);
@@ -3620,44 +3619,39 @@ void Zombie::DropHead(unsigned int theDamageFlags)
 	{
 		mApp->ReanimationGet(mTidbitsReanimID)->ReanimationDie();
 		mTidbitsReanimID = ReanimationID::REANIMATIONID_NULL;
-		mZombatar = nullptr;
 	}
 	if (mAccessoriesReanimID != ReanimationID::REANIMATIONID_NULL)
 	{
 		mApp->ReanimationGet(mAccessoriesReanimID)->ReanimationDie();
 		mAccessoriesReanimID = ReanimationID::REANIMATIONID_NULL;
-		mZombatar = nullptr;
 	}
 	if (mFacialHairReanimID != ReanimationID::REANIMATIONID_NULL)
 	{
 		mApp->ReanimationGet(mFacialHairReanimID)->ReanimationDie();
 		mFacialHairReanimID = ReanimationID::REANIMATIONID_NULL;
-		mZombatar = nullptr;
 	}
 	if (mHairReanimID != ReanimationID::REANIMATIONID_NULL)
 	{
 		mApp->ReanimationGet(mHairReanimID)->ReanimationDie();
 		mHairReanimID = ReanimationID::REANIMATIONID_NULL;
-		mZombatar = nullptr;
 	}
 	if (mEyewearReanimID != ReanimationID::REANIMATIONID_NULL)
 	{
 		mApp->ReanimationGet(mEyewearReanimID)->ReanimationDie();
 		mEyewearReanimID = ReanimationID::REANIMATIONID_NULL;
-		mZombatar = nullptr;
 	}
 	if (mHatReanimID != ReanimationID::REANIMATIONID_NULL)
 	{
 		mApp->ReanimationGet(mHatReanimID)->ReanimationDie();
 		mHatReanimID = ReanimationID::REANIMATIONID_NULL;
-		mZombatar = nullptr;
 	}
 	if (mBaseHeadReanimID != ReanimationID::REANIMATIONID_NULL)
 	{
 		mApp->ReanimationGet(mBaseHeadReanimID)->ReanimationDie();
 		mBaseHeadReanimID = ReanimationID::REANIMATIONID_NULL;
-		mZombatar = nullptr;
 	}
+
+	mHasSetupZombatar = false;
 
 	if (Zombie::IsZombotany(mZombieType))
 	{
@@ -5961,7 +5955,7 @@ void Zombie::DrawReanim(Graphics *g, const ZombieDrawPosition &theDrawPos, int t
 	else
 	{
 		aBodyReanim->DrawRenderGroup(g, theBaseRenderGroup);
-		if (mZombatar != nullptr)
+		if (mHasSetupZombatar)
 		{
 			Reanimation *aTidbitsReanim = mApp->ReanimationGet(mTidbitsReanimID);
 			Reanimation *aAccessoriesReanim = mApp->ReanimationGet(mAccessoriesReanimID);
@@ -5970,29 +5964,29 @@ void Zombie::DrawReanim(Graphics *g, const ZombieDrawPosition &theDrawPos, int t
 			Reanimation *aEyewearReanim = mApp->ReanimationGet(mEyewearReanimID);
 			Reanimation *aHatReanim = mApp->ReanimationGet(mHatReanimID);
 
-			if (mZombatar->mHat != -1)
+			if (mZombatar.mHat != -1)
 			{
-				aHatReanim->mColorOverride = gMoreColors[mZombatar->mHatColor];
+				aHatReanim->mColorOverride = gMoreColors[mZombatar.mHatColor];
 			};
-			if (mZombatar->mHair != -1)
+			if (mZombatar.mHair != -1)
 			{
-				aHairReanim->mColorOverride = gMoreColors[mZombatar->mHairColor];
+				aHairReanim->mColorOverride = gMoreColors[mZombatar.mHairColor];
 			};
-			if (mZombatar->mTidbits != -1)
+			if (mZombatar.mTidbits != -1)
 			{
-				aTidbitsReanim->mColorOverride = gMoreColors[mZombatar->mTidbitsColor];
+				aTidbitsReanim->mColorOverride = gMoreColors[mZombatar.mTidbitsColor];
 			};
-			if (mZombatar->mEyewear != -1)
+			if (mZombatar.mEyewear != -1)
 			{
-				aEyewearReanim->mColorOverride = gMoreColors[mZombatar->mEyewearColor];
+				aEyewearReanim->mColorOverride = gMoreColors[mZombatar.mEyewearColor];
 			};
-			if (mZombatar->mAccessories != -1)
+			if (mZombatar.mAccessories != -1)
 			{
-				aAccessoriesReanim->mColorOverride = gMoreColors[mZombatar->mAccessoriesColor];
+				aAccessoriesReanim->mColorOverride = gMoreColors[mZombatar.mAccessoriesColor];
 			};
-			if (mZombatar->mFacialHair != -1)
+			if (mZombatar.mFacialHair != -1)
 			{
-				aFacialHairReanim->mColorOverride = gMoreColors[mZombatar->mFacialHairColor];
+				aFacialHairReanim->mColorOverride = gMoreColors[mZombatar.mFacialHairColor];
 			};
 		}
 
