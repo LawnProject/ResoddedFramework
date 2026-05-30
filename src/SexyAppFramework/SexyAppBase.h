@@ -174,7 +174,6 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	Rect mSavedWindowedSize;
 	int mWidth;
 	int mHeight;
-	int mFullscreenBits;
 	double mMusicVolume;
 	double mSfxVolume;
 	double mDemoMusicVolume;

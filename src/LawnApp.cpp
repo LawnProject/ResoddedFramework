@@ -124,7 +124,6 @@ LawnApp::LawnApp()
 	mCloseRequest = false;
 	mWidth = BOARD_WIDTH;
 	mHeight = BOARD_HEIGHT;
-	mFullscreenBits = 32;
 	mAppCounter = 0;
 	mAppRandSeed = std::time(nullptr);
 	mTrialType = TrialType::TRIALTYPE_NONE;
