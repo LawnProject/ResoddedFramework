@@ -9,8 +9,17 @@ string(TIMESTAMP DATE_BUILD "%Y/%m/%d %H:%M:%S")
 
 if(GIT_EXECUTABLE)
     message(STATUS "Git found, parsing Git information")
-
     get_filename_component(WORKING_DIR ${SRC} DIRECTORY)
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} rev-parse --is-inside-work-tree
+        WORKING_DIRECTORY ${WORKING_DIR}
+        OUTPUT_VARIABLE IS_GIT_REPO
+        RESULT_VARIABLE GIT_REPO_RESULT
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET
+    )
+
+if(GIT_REPO_RESULT EQUAL 0 AND IS_GIT_REPO STREQUAL "true")
     execute_process(
         COMMAND ${GIT_EXECUTABLE} rev-parse HEAD
         WORKING_DIRECTORY ${WORKING_DIR}
@@ -43,10 +52,17 @@ if(GIT_EXECUTABLE)
     message(STATUS "GIT_AVAILABLE = ${GIT_AVAILABLE}")
 
 else()
-message(STATUS "Git was not found, disabling Git information")
-set(GIT_IS_DIRTY 0)
-set(GIT_HASH none)
-set(GIT_AVAILABLE 0)
+    message(STATUS "Repository was not found, disabling Git information")
+    set(GIT_IS_DIRTY 0)
+    set(GIT_HASH none)
+    set(GIT_AVAILABLE 0)
+endif()
+
+else()
+    message(STATUS "Git was not found, disabling Git information")
+    set(GIT_IS_DIRTY 0)
+    set(GIT_HASH none)
+    set(GIT_AVAILABLE 0)
 endif()
 
 set(BUILD_CACHE_FILE "${SEXY_PROJECT_ROOT}/cmake/BuildNumberCache.txt")

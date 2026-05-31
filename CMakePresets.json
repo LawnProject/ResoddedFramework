@@ -10,7 +10,7 @@
       "cacheVariables": {
         "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/msvc/install/${presetName}",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-        "VCPKG_TARGET_TRIPLET": "x64-windows"
+        "VCPKG_TARGET_TRIPLET": "x64-windows-static"
       },
       "toolset": {
         "value": "host=x64",
@@ -21,7 +21,7 @@
         "lhs": "${hostSystemName}",
         "rhs": "Windows"
       }
-    },    
+    },
     {
       "name": "windows-msvc-x86-base",
       "hidden": true,
@@ -31,7 +31,7 @@
       "cacheVariables": {
         "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/msvc/install/${presetName}",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-        "VCPKG_TARGET_TRIPLET": "x86-windows"
+        "VCPKG_TARGET_TRIPLET": "x86-windows-static"
       },
       "toolset": {
         "value": "host=x86",

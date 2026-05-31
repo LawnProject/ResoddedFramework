@@ -1,4 +1,3 @@
-# CmakeLists.txt
 project(LawnProject)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
@@ -34,9 +33,6 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
     WIN32
     $<$<CONFIG:Debug>:DEBUG>
     $<$<CONFIG:Release>:NDEBUG>
-    _LIB
-    DO_FIX_BUGS
-    _CRT_SECURE_NO_WARNINGS
 
     LAWN_DEBUG_TOOLS
 )
@@ -44,11 +40,6 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME} PUBLIC
     SexyAppFramework
 )
-
-# Okay. Yes. We get it.
-if(WIN32)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ws2_32 winmm)
-endif()
 
 foreach(FILE_PATH IN LISTS SOURCES)
     get_filename_component(EXT "${FILE_PATH}" EXT)
