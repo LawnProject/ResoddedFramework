@@ -139,7 +139,7 @@ void Music::SetupMusicFileForTune(MusicFile theMusicFile, MusicTune theMusicTune
 			break;
 		case MusicFile::MUSIC_FILE_DRUMS:
 			aTrackCount = 29;
-			aTrackStart1 = 25;
+			aTrackStart1 = 18;
 			aTrackEnd1 = 28;
 			break;
 		}
@@ -197,7 +197,7 @@ void Music::SetupMusicFileForTune(MusicFile theMusicFile, MusicTune theMusicTune
 	HMUSIC aHMusic = GetBassMusicHandle(theMusicFile);
 	for (int aTrack = 0; aTrack <= 29; aTrack++)
 	{
-		BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_VOL_CHAN + aTrack, 1.0f);
+		BASS_ChannelSetAttribute(aHMusic, BASS_ATTRIB_MUSIC_VOL_CHAN + aTrack, 0.0f);
 	}
 
 	for (int aTrack = 0; aTrack <= aTrackCount; aTrack++)
