@@ -3380,7 +3380,7 @@ void Board::UpdateToolTip()
 
 		SexyString aZombieName = StrFormat("[%s]", GetZombieDefinition(aZombie->mZombieType).mZombieName);
 		mToolTip->SetTitle(aZombieName);
-		if (mApp->CanShowAlmanac() && aZombie->mZombieType != ZombieType::ZOMBIE_GARGANTUAR)
+		if (mApp->CanShowAlmanac() && aZombie->mZombieType != ZombieType::ZOMBIE_REDEYE_GARGANTUAR)
 		{
 			mToolTip->SetLabel("[CLICK_TO_VIEW]");
 		}

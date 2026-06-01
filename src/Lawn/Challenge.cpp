@@ -3704,7 +3704,11 @@ void Challenge::ZombiquariumMouseDown(int x, int y)
 {
 	if (x < 80 || x > 720 || y < 90 || y > 430)
 		return;
-
+	if (mApp->mWidgetManager->IsRightButtonDown())
+	{
+		mApp->PlaySample(Sexy::SOUND_TAPGLASS);
+		return;
+	}
 	int aBrainsCount = 0;
 	GridItem *aGridItem = nullptr;
 	while (mBoard->IterateGridItems(aGridItem))

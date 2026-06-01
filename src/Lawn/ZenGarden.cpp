@@ -2471,9 +2471,9 @@ void ZenGarden::SetupForZenTutorial()
 //0x5223B0
 SeedType ZenGarden::PickRandomSeedType()
 {
-	SeedType aSeedList[40];
+	SeedType aSeedList[(int)SeedType::SEED_GATLINGPEA];
 	int aSeedCount = 0;
-	for (int i = 0; i < 40; i++)
+	for (int i = 0; i < (int)SeedType::SEED_GATLINGPEA; i++)
 	{
 		SeedType aSeedType = (SeedType)i;
 		if (aSeedType != SeedType::SEED_MARIGOLD && aSeedType != SeedType::SEED_FLOWERPOT)

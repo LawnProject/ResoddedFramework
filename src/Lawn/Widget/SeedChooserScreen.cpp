@@ -1094,6 +1094,7 @@ void SeedChooserScreen::MouseDown(int x, int y, int theClickCount)
 			if (aZombie && aZombie->mFromWave == Zombie::ZOMBIE_WAVE_CUTSCENE &&
 				aZombie->mZombieType != ZOMBIE_REDEYE_GARGANTUAR)
 			{
+				mApp->PlaySample(Sexy::SOUND_TAP);
 				mApp->DoAlmanacDialog(SEED_NONE, aZombie->mZombieType)->WaitForResult(true);
 				mApp->mMusic->MakeSureMusicIsPlaying(MUSIC_TUNE_CHOOSE_YOUR_SEEDS);
 				return;
