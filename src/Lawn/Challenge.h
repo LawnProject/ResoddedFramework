@@ -152,7 +152,7 @@ class Challenge
 	void BeghouledUpdateCraters();
 	Zombie *ZombiquariumSpawnSnorkle();
 	void ZombiquariumPacketClicked(SeedPacket *theSeedPacket);
-	void ZombiquariumMouseDown(int x, int y);
+	void ZombiquariumMouseDown(int x, int y, int theClickCount);
 	void ZombiquariumDropBrain(int x, int y);
 	void ZombiquariumUpdate();
 	/*inline*/ void ShovelAddWallnuts();

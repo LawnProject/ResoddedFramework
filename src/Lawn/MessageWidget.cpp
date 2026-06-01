@@ -437,8 +437,7 @@ void MessageWidget::Draw(Graphics *g)
 	{
 		if (aMinAlpha != 255)
 		{
-			aColor.mAlpha = TodAnimateCurve(
-				75, 0, mApp->mBoard->mMainCounter % 75, aMinAlpha, 255, TodCurves::CURVE_BOUNCE_SLOW_MIDDLE);
+			aColor.mAlpha = TodAnimateCurve(75, 0, mApp->mAppCounter % 75, aMinAlpha, 255, TodCurves::CURVE_BOUNCE_SLOW_MIDDLE);
 			aOutlineColor.mAlpha = aColor.mAlpha;
 		}
 		if (aFadeOut)

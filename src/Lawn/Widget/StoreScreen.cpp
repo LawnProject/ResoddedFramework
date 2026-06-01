@@ -307,9 +307,9 @@ void StoreScreen::DrawItemIcon(Graphics *g, int theItemPosition, StoreItem theIt
 			g->SetDrawMode(Graphics::DRAWMODE_NORMAL);
 			g->SetColorizeImages(false);
 		}
-
-		SexyString aSlotText = TodReplaceNumberString(
-			"[STORE_UPGRADE_SLOTS]", "{SLOTS}", mApp->mPlayerInfo->mPurchases[STORE_ITEM_PACKET_UPGRADE] + 7);
+		int aNumSlots = mApp->mPlayerInfo->mPurchases[STORE_ITEM_PACKET_UPGRADE] + 7;
+		aNumSlots = std::clamp(aNumSlots, 7, 10);
+		SexyString aSlotText = TodReplaceNumberString("[STORE_UPGRADE_SLOTS]", "{SLOTS}", aNumSlots);
 		Rect aRect(aPosX, aPosY + 6, 55, 70);
 		TodDrawStringWrapped(
 			g, aSlotText, aRect, Sexy::FONT_HOUSEOFTERROR16, Color::White, DS_ALIGN_CENTER_VERTICAL_MIDDLE);

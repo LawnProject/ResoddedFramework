@@ -886,8 +886,8 @@ void CreditScreen::Draw(Graphics *g)
 								   aTransformBackground1.mImage->mWidth - 1,
 								   aTransformBackground1.mImage->mHeight - 1);
 			aBackground1G.DrawImageF(IMAGE_BACKGROUND1,
-									 aTransformBackground1.mTransX - BOARD_WIDTH / 2,
-									 aTransformBackground1.mTransY - BOARD_HEIGHT / 2);
+									 aTransformBackground1.mTransX - BOARD_WIDTH / 2 + 320,
+									 aTransformBackground1.mTransY - BOARD_HEIGHT / 2 - 60);
 		}
 		if (aTransformBackground3.mFrame != -1.0f)
 		{

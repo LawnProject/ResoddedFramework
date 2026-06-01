@@ -1267,7 +1267,7 @@ bool Challenge::MouseDown(int x, int y, int theClickCount, HitResult *theHitResu
 
 	if (mApp->mGameMode == GAMEMODE_CHALLENGE_ZOMBIQUARIUM && theHitResult->mObjectType == OBJECT_TYPE_NONE)
 	{
-		ZombiquariumMouseDown(x, y);
+		ZombiquariumMouseDown(x, y, theClickCount);
 		return true;
 	}
 
@@ -2351,7 +2351,7 @@ void Challenge::DrawBeghouled(Graphics *g)
 			float aPixelY = mBoard->GridToPixelY(mChallengeGridX, mChallengeGridY) + 100;
 
 			SexyTransform2D aTransform;
-			TodScaleRotateTransformMatrix(aTransform, aPixelX, aPixelY, -mBoard->mMainCounter * 2 * PI * 0.01f, 1, 1);
+			TodScaleRotateTransformMatrix(aTransform, aPixelX, aPixelY, -mBoard->mMainCounter * 2 * PI * 0.001f, 1, 1);
 
 			Image *aImageOverlay = Sexy::IMAGE_BEGHOULED_TWIST_OVERLAY;
 			Rect aSrcRect = Rect(0, 0, aImageOverlay->mWidth, aImageOverlay->mHeight);
@@ -3700,11 +3700,11 @@ void Challenge::ZombiquariumDropBrain(int x, int y)
 }
 
 //0x428010
-void Challenge::ZombiquariumMouseDown(int x, int y)
+void Challenge::ZombiquariumMouseDown(int x, int y, int theClickCount)
 {
 	if (x < 80 || x > 720 || y < 90 || y > 430)
 		return;
-	if (mApp->mWidgetManager->IsRightButtonDown())
+	if (theClickCount < 0)
 	{
 		mApp->PlaySample(Sexy::SOUND_TAPGLASS);
 		return;
@@ -4204,7 +4204,7 @@ bool Challenge::PuzzleIsAwardStage()
 	int aGoal = mApp->mGameMode == GAMEMODE_PUZZLE_I_ZOMBIE_ENDLESS ? 3
 				: mApp->mGameMode == GAMEMODE_SCARY_POTTER_ENDLESS	? 10
 																	: 1;
-	return mSurvivalStage % aGoal == 0;
+	return (mSurvivalStage + 1) % aGoal == 0;
 }
 
 //0x429980
