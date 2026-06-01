@@ -1140,14 +1140,14 @@ void Board::PickBackground()
 				AddGraveStones(7, 1, aLevelRNG);
 				AddGraveStones(8, 2, aLevelRNG);
 			}
-			else if (mLevel == 14 || mLevel == 16)
+			else if (mLevel == 14 || mLevel == 16 || mLevel == 18)
 			{
 				AddGraveStones(5, 1, aLevelRNG);
 				AddGraveStones(6, 1, aLevelRNG);
 				AddGraveStones(7, 2, aLevelRNG);
 				AddGraveStones(8, 3, aLevelRNG);
 			}
-			else if (mLevel == 17 || mLevel == 18 || mLevel == 19)
+			else if (mLevel == 17 || mLevel == 19)
 			{
 				AddGraveStones(4, 1, aLevelRNG);
 				AddGraveStones(5, 2, aLevelRNG);

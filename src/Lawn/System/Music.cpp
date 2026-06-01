@@ -245,7 +245,7 @@ void Music::MusicInit()
 
 	LoadSong(MusicFile::MUSIC_FILE_DRUMS, "sounds/mainmusic.mo3");
 	mApp->mCompletedLoadingThreadTasks += 3500;;
-	LoadSong(MusicFile::MUSIC_FILE_HIHATS, "sounds/mainmusic.mo3"); // it seems the original mainmusic_hihats.mo3 was missing instruments for Watery Graves
+	LoadSong(MusicFile::MUSIC_FILE_HIHATS, "sounds/mainmusic_hihats.mo3");
 	mApp->mCompletedLoadingThreadTasks += 3500;
 
 #ifdef _DEBUG

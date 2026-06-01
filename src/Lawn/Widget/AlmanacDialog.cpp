@@ -265,9 +265,9 @@ void AlmanacDialog::Update()
 
 	int aMouseX = mApp->mWidgetManager->mLastMouseX;
 	int aMouseY = mApp->mWidgetManager->mLastMouseY;
-	if (SeedHitTest(aMouseX, aMouseY) != SeedType::SEED_NONE ||
-		ZombieHitTest(aMouseX, aMouseY) != ZombieType::ZOMBIE_INVALID || mCloseButton->IsMouseOver() ||
-		mIndexButton->IsMouseOver() || mPlantButton->IsMouseOver() || mZombieButton->IsMouseOver())
+	ZombieType aZombieType = ZombieHitTest(aMouseX, aMouseY);
+	if (SeedHitTest(aMouseX, aMouseY) != SeedType::SEED_NONE || (aZombieType != ZombieType::ZOMBIE_INVALID && ZombieIsShown(aZombieType)) || 
+		mCloseButton->IsMouseOver() || mIndexButton->IsMouseOver() || mPlantButton->IsMouseOver() || mZombieButton->IsMouseOver())
 	{
 		mApp->SetCursor(CURSOR_HAND);
 	}
@@ -425,7 +425,7 @@ void AlmanacDialog::DrawPlants(Graphics *g)
 		TodDrawStringWrapped(
 			g, aCostStr, Rect(485, 520, 134, 50), Sexy::FONT_BRIANNETOD12, Color::White, DS_ALIGN_LEFT);
 
-		SexyString aRechargeStr = TodReplaceString("{KEYWORD}{WAIT_TIME}:{STAT}{WAIT_TIME_LENGTH}",
+		SexyString aRechargeStr = TodReplaceString("{KEYWORD}{WAIT_TIME}:{STAT} {WAIT_TIME_LENGTH}",
 												   "{WAIT_TIME_LENGTH}",
 												   aPlantDef.mRefreshTime == 750	? "[WAIT_TIME_SHORT]"
 												   : aPlantDef.mRefreshTime == 3000 ? "[WAIT_TIME_LONG]"
@@ -849,7 +849,7 @@ void AlmanacDialog::MouseDown(int x, int y, int theClickCount)
 		mApp->PlaySample(Sexy::SOUND_TAP);
 	}
 	ZombieType aZombieType = ZombieHitTest(x, y);
-	if (aZombieType != ZombieType::ZOMBIE_INVALID && aZombieType != mSelectedZombie)
+	if (aZombieType != ZombieType::ZOMBIE_INVALID && aZombieType != mSelectedZombie && ZombieIsShown(aZombieType))
 	{
 		mSelectedZombie = aZombieType;
 		SetupZombie();

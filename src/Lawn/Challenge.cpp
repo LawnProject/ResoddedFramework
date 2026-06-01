@@ -5455,7 +5455,8 @@ void Challenge::TreeOfWisdomInit()
 	aReanimTree->AssignRenderGroupToPrefix("bunch", 4);
 	aReanimTree->SetTruncateDisappearingFrames(nullptr, false);
 	mReanimChallenge = mApp->ReanimationGetID(aReanimTree);
-
+	if (TreeOfWisdomGetSize() == 0)
+		mApp->mPlayerInfo->mChallengeRecords[mApp->GetCurrentChallengeIndex()] = 1;
 	int aTreeSize = ClampInt(TreeOfWisdomGetSize(), 1, 50);
 	aReanimTree->PlayReanim(StrFormat("anim_grow%d", aTreeSize).c_str(), REANIM_PLAY_ONCE_AND_HOLD, 0, 18.0f);
 	if (aTreeSize == 1 && mApp->mPlayerInfo->mPurchases[STORE_ITEM_TREE_FOOD] < PURCHASE_COUNT_OFFSET)
