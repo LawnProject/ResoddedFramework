@@ -1078,7 +1078,7 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
 			if (theStoreItem == STORE_ITEM_PACKET_UPGRADE)
 			{
 				++mApp->mPlayerInfo->mPurchases[theStoreItem];
-				SexyString aDialogLines = StrFormat("[NOW_YOU_CAN_CHOOSE_X_SEEDS]", 6 + mApp->mPlayerInfo->mPurchases[theStoreItem]);
+				SexyString aDialogLines = StrFormat(TodStringTranslate("[NOW_YOU_CAN_CHOOSE_X_SEEDS]").c_str(), 6 + mApp->mPlayerInfo->mPurchases[theStoreItem]);
 				Dialog *aDialog = mApp->DoDialog(DIALOG_UPGRADED,
 												 true,
 												 "[MORE_SLOTS]",
