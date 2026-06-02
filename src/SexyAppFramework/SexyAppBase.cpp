@@ -274,6 +274,7 @@ SexyAppBase::SexyAppBase()
 	mRecommendedVidMemory3D = 14;
 	mRelaxUpdateBacklogCount = 0;
 	mHighResolution = false;
+	mScreenFiltering = MODE_LINEAR;
 
 	int i;
 
@@ -1589,6 +1590,7 @@ void SexyAppBase::WriteToRegistry()
 	RegistryWriteInteger("InProgress", 0);
 	RegistryWriteBoolean("WaitForVSync", mWaitForVSync);
 	RegistryWriteBoolean("HighResolution", mHighResolution);
+	RegistryWriteInteger("ScreenFiltering", (int)mScreenFiltering);
 	RegistryWriteBoolean("Is3D", mIs3D);
 	RegistryWriteInteger("DesiredBackend", mDesiredBackend);
 }
@@ -1902,6 +1904,10 @@ void SexyAppBase::ReadFromRegistry()
 		EnableCustomCursors(anInt != 0);
 
 	RegistryReadBoolean("WaitForVSync", &mWaitForVSync);
+	int aScreenFiltering = (int)MODE_LINEAR;
+
+	RegistryReadInteger("ScreenFiltering", &aScreenFiltering);
+	mScreenFiltering = (OutputFilteringMode)aScreenFiltering;
 	RegistryReadBoolean("HighResolution", &mHighResolution);
 	RegistryReadBoolean("Is3D", &mIs3D);
 	int aBackendInt = 0;

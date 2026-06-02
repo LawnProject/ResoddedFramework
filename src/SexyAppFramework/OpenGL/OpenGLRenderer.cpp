@@ -422,13 +422,13 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 						  mPresentationRect.mX + mPresentationRect.mWidth,
 						  mPresentationRect.mY + mPresentationRect.mHeight,
 						  GL_COLOR_BUFFER_BIT,
-						  GL_LINEAR);
+						  mApp->mScreenFiltering == MODE_LINEAR ? GL_LINEAR : GL_NEAREST);
 	}
 	else
 	{
 		glBlitFramebuffer(0, 0, mWidth, mHeight, mPresentationRect.mX, mPresentationRect.mY,
 						  mPresentationRect.mX + mPresentationRect.mWidth,
-						  mPresentationRect.mY + mPresentationRect.mHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+						  mPresentationRect.mY + mPresentationRect.mHeight, GL_COLOR_BUFFER_BIT, mApp->mScreenFiltering == MODE_LINEAR ? GL_LINEAR : GL_NEAREST);
 	}
 
 #if SEXY_USE_IMGUI

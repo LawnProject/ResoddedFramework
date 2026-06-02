@@ -7,6 +7,7 @@
 #include "../../SexyAppFramework/BuildInfo.h"
 #include "../../SexyAppFramework/Window.h"
 #include "../../SexyAppFramework/ListWidget.h"
+#include "../../Sexy.TodLib/TodStringFile.h"
 #ifdef _WIN32
 #include <ShlObj_core.h>
 #include <locale>
@@ -34,6 +35,8 @@ static int gDefaultWindowSizes[8][2] = {
 	{1280, 800},
 	{1680, 1050},
 };
+
+static const char *gTranslationFilterKeys[OutputFilteringMode::NUM_MODES] = {"[FILTER_NEAREST]", "[FILTER_LINEAR]"};
 
 
 SettingsDialog::SettingsDialog(LawnApp *theApp)
@@ -89,6 +92,18 @@ SettingsDialog::SettingsDialog(LawnApp *theApp)
 	}
 	mRendererList->SetSelect(mApp->mDesiredBackend - 1);
 	
+	
+	mFilterList = new ListWidget(SETTINGS_FILTER_LIST, Sexy::FONT_PICO129, this);
+	mFilterList->SetColors(gUserListWidgetColors, LENGTH(gUserListWidgetColors));
+	mFilterList->mDrawOutline = true;
+	mFilterList->mJustify = ListWidget::JUSTIFY_CENTER;
+	mFilterList->mItemHeight = 24;
+	for (int i = OutputFilteringMode::MODE_NEAREST; i < OutputFilteringMode::NUM_MODES; i++)
+	{
+		mFilterList->AddLine(StrFormat("%s", TodStringTranslate(gTranslationFilterKeys[i]).c_str()), false);
+	}
+	mFilterList->SetSelect(mApp->mScreenFiltering);
+	
 	mSizesList = new ListWidget(SETTINGS_WINDOW_SIZES, Sexy::FONT_PICO129, this);
 	mSizesList->SetColors(gUserListWidgetColors, LENGTH(gUserListWidgetColors));
 	mSizesList->mDrawOutline = true;
@@ -119,13 +134,14 @@ SettingsDialog::~SettingsDialog()
 	delete mHighResolutionCheckbox;
 	delete mRendererList;
 	delete mSizesList;
+	delete mFilterList;
 }
 
 void SettingsDialog::Draw(Graphics* g)
 {
 	LawnDialog::Draw(g);
 
-	int aMaxContentHeight = 800;
+	int aMaxContentHeight = 880;
 	float aMaxScroll = std::max(0.0f, (float)aMaxContentHeight - mOptionsSlider->mAllowedMouseZone.mHeight);
 
 	float aScrollOffset = mOptionsSlider->GetValue() * aMaxScroll;
@@ -220,7 +236,7 @@ void SettingsDialog::Draw(Graphics* g)
 	TodDrawString(g, "[SETTINGS_WINDOW_SIZE]", 20, aY, Sexy::FONT_BRIANNETOD12, Color::White,
 				  DrawStringJustification::DS_ALIGN_LEFT);
 
-	aY += 12;
+	aY += 4;
 
 	mSizesList->Resize(40, aY - aScrollOffset + GetTop(), 130, 26 * (mValidSizes.size() + 1));
 
@@ -230,12 +246,24 @@ void SettingsDialog::Draw(Graphics* g)
 
 	aY += mSizesList->mHeight + 40;
 
+	TodDrawString(g, "[SETTINGS_FILTERING_MODE]", 20, aY, Sexy::FONT_BRIANNETOD12, Color::White,
+				  DrawStringJustification::DS_ALIGN_LEFT);
+
+	aY += 4;
+	mFilterList->Resize(40, aY - aScrollOffset + GetTop(), 130, 26 * (mFilterList->mLines.size() + 1));
+
+	mFilterList->mDisabled =
+		(mFilterList->mY + mY + mFilterList->mHeight) < mOptionsSlider->mAllowedMouseZone.mY ||
+		(mFilterList->mY + mY) > (mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
+
+	aY += mFilterList->mHeight + 40;
+
 	TodDrawString(g, "[SETTINGS_MISC]", 20, aY, Sexy::FONT_BRIANNETOD12, Color::White,
 				  DrawStringJustification::DS_ALIGN_LEFT);
 
 	aY += 20;
 
-	mSaveFileButton->Resize(40, aY - aScrollOffset + GetTop(), 330, 46);
+	mSaveFileButton->Resize(40, aY - aScrollOffset + GetTop(), 270, 46);
 
 	mSaveFileButton->mDisabled =
 		(mSaveFileButton->mY + mY + mSaveFileButton->mHeight) < mOptionsSlider->mAllowedMouseZone.mY ||
@@ -276,6 +304,7 @@ void SettingsDialog::AddedToManager(WidgetManager *theWidgetManager)
 	AddWidget(mHighResolutionCheckbox);
 	AddWidget(mRendererList);
 	AddWidget(mSizesList);
+	AddWidget(mFilterList);
 }
 
 //0x45D8E0
@@ -291,6 +320,7 @@ void SettingsDialog::RemovedFromManager(WidgetManager *theWidgetManager)
 	RemoveWidget(mHighResolutionCheckbox);
 	RemoveWidget(mRendererList);
 	RemoveWidget(mSizesList);
+	RemoveWidget(mFilterList);
 }
 
 void SettingsDialog::Resize(int theX, int theY, int theWidth, int theHeight)
@@ -364,6 +394,14 @@ void SettingsDialog::ListClicked(int theId, int theIdx, int theClickCount)
 							  aBackendName.c_str());
 				mApp->DoDialog(Dialogs::DIALOG_INFO, true, "", anInfoString, "OK", Dialog::BUTTONS_FOOTER);
 			}
+		}
+	}
+	else if (theId == SETTINGS_FILTER_LIST)
+	{
+		if (theIdx != mApp->mScreenFiltering)
+		{
+			mFilterList->SetSelect(theIdx);
+			mApp->mScreenFiltering = (OutputFilteringMode)(theIdx);
 		}
 	}
 	else if (theId == SETTINGS_WINDOW_SIZES)

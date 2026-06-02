@@ -60,6 +60,13 @@ namespace Sexy
 		ERROR_VSYNC,
 	};
 
+	enum OutputFilteringMode
+	{
+		MODE_NEAREST,
+		MODE_LINEAR,
+		NUM_MODES,
+	};
+
 	enum RenderingBackend
 	{
 		BACKEND_NONE = 0,

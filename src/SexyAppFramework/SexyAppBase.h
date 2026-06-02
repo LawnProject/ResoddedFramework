@@ -37,6 +37,7 @@ enum JSONRegistryType
 };
 
 enum RenderingBackend;
+enum OutputFilteringMode;
 
 class WidgetManager;
 class DDInterface;
@@ -339,6 +340,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	uint32_t mVSyncBrokenTestUpdates;
 	bool mWaitForVSync;
 	bool mHighResolution;
+	OutputFilteringMode mScreenFiltering;
 	bool mUserChanged3DSetting;
 	bool mAutoEnable3D;
 	bool mIs3D;
