@@ -40,7 +40,8 @@
 
 bool gShownMoreSunTutorial = false;
 
-//0x407B50
+/// @brief Initiate the Board Widget
+/// @param theApp Pointer to the host application
 Board::Board(LawnApp *theApp)
 {
 	mApp = theApp;
@@ -236,7 +237,7 @@ Board::Board(LawnApp *theApp)
 #endif
 }
 
-//0x408670、0x408690
+/// @brief Dispose of the Board Widget
 Board::~Board()
 {
 #if LAWN_DEBUG_TOOLS
@@ -274,12 +275,13 @@ Board::~Board()
 	delete mChallenge;
 }
 
+/// @brief Initiate flags for the player
 void BoardInitForPlayer()
 {
 	gShownMoreSunTutorial = false;
 }
 
-//0x408A70
+/// @brief Dispose of the Board objects manually
 void Board::DisposeBoard()
 {
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN)
@@ -293,7 +295,7 @@ void Board::DisposeBoard()
 	mApp->mEffectSystem->EffectSystemFreeAll();
 }
 
-//0x408B00
+/// @brief Check if there are any zombies currently on-screen (except Dying or MindControlled)
 bool Board::AreEnemyZombiesOnScreen()
 {
 	Zombie *aZombie = nullptr;
@@ -307,7 +309,7 @@ bool Board::AreEnemyZombiesOnScreen()
 	return false;
 }
 
-//0x408B60
+/// @brief Count every non-dying, non-mind-controlled zombie on the Board
 int Board::CountZombiesOnScreen()
 {
 	int aCount = 0;
@@ -322,7 +324,7 @@ int Board::CountZombiesOnScreen()
 	return aCount;
 }
 
-//0x408BF0
+/// @brief Count every non-triggered lawnmower
 int Board::CountUntriggerLawnMowers()
 {
 	int aCount = 0;
@@ -338,7 +340,7 @@ int Board::CountUntriggerLawnMowers()
 	return aCount;
 }
 
-//0x408C30
+/// @brief Try to save the current state to the profile's save folder
 void Board::TryToSaveGame()
 {
 	std::string aFileName = GetSavedGameName(mApp->mGameMode, mApp->mPlayerInfo->mId);
@@ -359,7 +361,7 @@ void Board::TryToSaveGame()
 	}
 }
 
-//0x408DA0
+/// @brief Does the game need to be saved
 bool Board::NeedSaveGame()
 {
 	return mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_ICE && mApp->mGameMode != GameMode::GAMEMODE_UPSELL &&
@@ -367,11 +369,13 @@ bool Board::NeedSaveGame()
 		   mApp->mGameMode != GameMode::GAMEMODE_TREE_OF_WISDOM && mApp->mGameScene == GameScenes::SCENE_PLAYING;
 }
 
+/// @brief Save the game state manually to the file path
 void Board::SaveGame(const std::string &theFileName)
 {
 	LawnSaveGame(this, theFileName);
 }
 
+/// @brief Reset internal counters
 void Board::ResetFPSStats()
 {
 	uint32_t aTickCount = GetTicks();
@@ -381,7 +385,8 @@ void Board::ResetFPSStats()
 	mIntervalDrawCountStart = 1;
 }
 
-//0x408DE0
+/// @brief Load the game state from the save file
+/// @return True if it loaded successfully
 bool Board::LoadGame(const std::string &theFileName)
 {
 	if (!LawnLoadGame(this, theFileName))
@@ -394,7 +399,11 @@ bool Board::LoadGame(const std::string &theFileName)
 	return true;
 }
 
-//0x408E40
+/// @brief Try to get a GridItem at a specific grid coordinate
+/// @param theGridItemType The desired GridItem's type
+/// @param theGridX The X grid coordinate
+/// @param theGridY The Y grid coordinate
+/// @return GridItem or nullptr if it doesn't exist.
 GridItem *Board::GetGridItemAt(GridItemType theGridItemType, int theGridX, int theGridY)
 {
 	GridItem *aGridItem = nullptr;
@@ -409,7 +418,8 @@ GridItem *Board::GetGridItemAt(GridItemType theGridItemType, int theGridX, int t
 	return nullptr;
 }
 
-//0x408E90
+/// @brief Try to get the first rake on the lawn
+/// @return The Rake or nullptr if it doesn't exist
 GridItem *Board::GetRake()
 {
 	GridItem *aGridItem = nullptr;
@@ -423,37 +433,65 @@ GridItem *Board::GetRake()
 	return nullptr;
 }
 
+/// @brief Try to get a Crater GridItem at a specific grid coordinate
+/// @param theGridX The X grid coordinate
+/// @param theGridY The Y grid coordinate
+/// @return GridItem or nullptr if it doesn't exist.
 GridItem *Board::GetCraterAt(int theGridX, int theGridY)
 {
 	return GetGridItemAt(GridItemType::GRIDITEM_CRATER, theGridX, theGridY);
 }
 
+/// @brief Try to get a GraveStone GridItem at a specific grid coordinate
+/// @param theGridX The X grid coordinate
+/// @param theGridY The Y grid coordinate
+/// @return GridItem or nullptr if it doesn't exist.
 GridItem *Board::GetGraveStoneAt(int theGridX, int theGridY)
 {
 	return GetGridItemAt(GridItemType::GRIDITEM_GRAVESTONE, theGridX, theGridY);
 }
 
+/// @brief Try to get a Ladder GridItem at a specific grid coordinate
+/// @param theGridX The X grid coordinate
+/// @param theGridY The Y grid coordinate
+/// @return GridItem or nullptr if it doesn't exist.
 GridItem *Board::GetLadderAt(int theGridX, int theGridY)
 {
 	return GetGridItemAt(GridItemType::GRIDITEM_LADDER, theGridX, theGridY);
 }
 
+/// @brief Try to get a ScaryPot GridItem at a specific grid coordinate
+/// @param theGridX The X grid coordinate
+/// @param theGridY The Y grid coordinate
+/// @return GridItem or nullptr if it doesn't exist.
 GridItem *Board::GetScaryPotAt(int theGridX, int theGridY)
 {
 	return GetGridItemAt(GridItemType::GRIDITEM_SCARY_POT, theGridX, theGridY);
 }
 
+/// @brief Try to get a Squirrel GridItem at a specific grid coordinate
+/// @param theGridX The X grid coordinate
+/// @param theGridY The Y grid coordinate
+/// @return GridItem or nullptr if it doesn't exist.
 GridItem *Board::GetSquirrelAt(int theGridX, int theGridY)
 {
 	return GetGridItemAt(GridItemType::GRIDITEM_SQUIRREL, theGridX, theGridY);
 }
 
+/// @brief Try to get a ZenTool GridItem at a specific grid coordinate
+/// @param theGridX The X grid coordinate
+/// @param theGridY The Y grid coordinate
+/// @return GridItem or nullptr if it doesn't exist.
 GridItem *Board::GetZenToolAt(int theGridX, int theGridY)
 {
 	return GetGridItemAt(GridItemType::GRIDITEM_ZEN_TOOL, theGridX, theGridY);
 }
 
-//0x408ED0
+
+/// @brief Can the grid coordinate have a GraveStone
+/// @param theGridX The X grid coordinate
+/// @param theGridY The Y grid coordinate
+/// @return True if the grid can have a GraveStone
 bool Board::CanAddGraveStoneAt(int theGridX, int theGridY)
 {
 	if (mGridSquareType[theGridX][theGridY] != GridSquareType::GRIDSQUARE_GRASS &&
@@ -476,12 +514,20 @@ bool Board::CanAddGraveStoneAt(int theGridX, int theGridY)
 	return true;
 }
 
+/// @brief Calculate a render order in the layer, at a row and at an offset
+/// @param theRenderLayer The layer where the order should be calculated
+/// @param theRow Row index to offset the layer
+/// @param theLayerOffset The offset in the layer
+/// @return Calculated render order
 int Board::MakeRenderOrder(RenderLayer theRenderLayer, int theRow, int theLayerOffset)
 {
 	return theRow * (int)RenderLayer::RENDER_LAYER_ROW_OFFSET + theRenderLayer + theLayerOffset;
 }
 
-//0x408F40
+/// @brief Place a Ladder at the specific grid coordinates
+/// @param theGridX The X grid coordinate
+/// @param theGridY The Y grid coordinate
+/// @return GridItem
 GridItem *Board::AddALadder(int theGridX, int theGridY)
 {
 	GridItem *aLadder = mGridItems.DataArrayAlloc();
@@ -492,7 +538,10 @@ GridItem *Board::AddALadder(int theGridX, int theGridY)
 	return aLadder;
 }
 
-//0x408F80
+/// @brief Place a Crater at the specific grid coordinates
+/// @param theGridX The X grid coordinate
+/// @param theGridY The Y grid coordinate
+/// @return GridItem
 GridItem *Board::AddACrater(int theGridX, int theGridY)
 {
 	GridItem *aCrater = mGridItems.DataArrayAlloc();
@@ -503,6 +552,10 @@ GridItem *Board::AddACrater(int theGridX, int theGridY)
 	return aCrater;
 }
 
+/// @brief Place a GraveStone at the specific grid coordinates
+/// @param theGridX The X grid coordinate
+/// @param theGridY The Y grid coordinate
+/// @return GridItem
 GridItem *Board::AddAGraveStone(int theGridX, int theGridY)
 {
 	GridItem *aGraveStone = mGridItems.DataArrayAlloc();
@@ -514,7 +567,10 @@ GridItem *Board::AddAGraveStone(int theGridX, int theGridY)
 	return aGraveStone;
 }
 
-//0x408FC0
+/// @brief Calculate and place all the GraveStones for the level
+/// @param theGridX The X grid coordinate
+/// @param theGridY The Y grid coordinate
+/// @param theLevelRNG Random Number Generator instance reference
 void Board::AddGraveStones(int theGridX, int theCount, MTRand &theLevelRNG)
 {
 	TOD_ASSERT(theCount <= MAX_GRID_SIZE_Y);
@@ -543,13 +599,14 @@ void Board::AddGraveStones(int theGridX, int theCount, MTRand &theLevelRNG)
 	}
 }
 
-//0x409050
+/// @brief Get the number of waves per flag
+/// @return GridItem
 int Board::GetNumWavesPerFlag()
 {
 	return (mApp->IsFirstTimeAdventureMode() && mNumWaves < 10) ? mNumWaves : 10;
 }
 
-//0x409080
+/// @return True if the given wave index is a flag wave.
 bool Board::IsFlagWave(int theWaveNumber)
 {
 	if (mApp->IsFirstTimeAdventureMode() && mLevel == 1)
@@ -559,20 +616,27 @@ bool Board::IsFlagWave(int theWaveNumber)
 	return theWaveNumber % aWavesPerFlag == aWavesPerFlag - 1;
 }
 
-//0x4090F0
+/// @brief memset the ZombiePicker to 0 for the next wave
+/// @param theZombiePicker The picker we want reset
 void ZombiePickerInitForWave(ZombiePicker *theZombiePicker)
 {
 	memset(theZombiePicker, 0, sizeof(ZombiePicker));
 }
 
-//0x409170
+/// @brief Reset the ZombiePicker
+/// @param theZombiePicker we want reset
 void ZombiePickerInit(ZombiePicker *theZombiePicker)
 {
 	ZombiePickerInitForWave(theZombiePicker);
 	memset(theZombiePicker->mAllWavesZombieTypeCount, 0, sizeof(theZombiePicker->mAllWavesZombieTypeCount));
 }
 
-//0x409240
+/// @brief Put a specific ZombieType in a destination wave
+///
+/// !Warning! using a wave number larger then the MAX_ZOMBIE_WAVES or adding more zombies then MAX_ZOMBIES_IN_WAVE, causes an assert
+/// @param theZombieType A valid zombie type
+/// @param theWaveNumber A wave index
+/// @param theZombiePicker The picker we want reset
 void Board::PutZombieInWave(ZombieType theZombieType, int theWaveNumber, ZombiePicker *theZombiePicker)
 {
 	TOD_ASSERT(theWaveNumber < MAX_ZOMBIE_WAVES && theZombiePicker->mZombieCount < MAX_ZOMBIES_IN_WAVE);
@@ -586,7 +650,9 @@ void Board::PutZombieInWave(ZombieType theZombieType, int theWaveNumber, ZombieP
 	theZombiePicker->mAllWavesZombieTypeCount[theZombieType]++;
 }
 
-//0x409290
+/// @brief Fill the destination wave with missing zombies
+/// @param theWaveNumber A wave index
+/// @param theZombiePicker The picker we want to use
 void Board::PutInMissingZombies(int theWaveNumber, ZombiePicker *theZombiePicker)
 {
 	for (ZombieType aZombieType = ZombieType::ZOMBIE_NORMAL; aZombieType < ZombieType::NUM_ZOMBIE_TYPES;
@@ -600,7 +666,7 @@ void Board::PutInMissingZombies(int theWaveNumber, ZombiePicker *theZombiePicker
 	}
 }
 
-//0x4092E0
+/// @brief Initiates the level's zombie waves
 void Board::PickZombieWaves()
 {
 	if (mApp->IsAdventureMode())
@@ -804,7 +870,7 @@ void Board::PickZombieWaves()
 	}
 }
 
-//0x40A110
+/// @return The level (or Survival/LastStand stage) random number generation seed
 int Board::GetLevelRandSeed()
 {
 	int aRndSeed = mApp->mPlayerInfo->mId + mBoardRandSeed;
@@ -819,7 +885,7 @@ int Board::GetLevelRandSeed()
 	return aRndSeed;
 }
 
-//0x40A160
+// @brief Load the background images from their respective ResourceGroups
 void Board::LoadBackgroundImages()
 {
 	switch (mBackground)
@@ -876,7 +942,7 @@ void Board::LoadBackgroundImages()
 	}
 }
 
-//0x40A550
+// @brief Initiate the BackgroundType, GridType Array and GridItems
 void Board::PickBackground()
 {
 	switch (mApp->mGameMode)
@@ -1173,7 +1239,7 @@ void Board::PickBackground()
 	PickSpecialGraveStone();
 }
 
-//0x40AB10
+// @brief Initiate the Zombie Waves for the destination level
 void Board::InitZombieWavesForLevel(int theForLevel)
 {
 	if (mApp->IsWhackAZombieLevel() || (mApp->IsWallnutBowlingLevel() && !mApp->IsFirstTimeAdventureMode()))
@@ -1188,6 +1254,7 @@ void Board::InitZombieWavesForLevel(int theForLevel)
 	}
 }
 
+// @return Is the current Zombie Wave distribution
 bool Board::IsZombieWaveDistributionOk()
 {
 	if (!mApp->IsAdventureMode())
@@ -1224,7 +1291,7 @@ bool Board::IsZombieWaveDistributionOk()
 	return true;
 }
 
-//0x40ABB0
+//@brief Initiate the zombie waves
 void Board::InitZombieWaves()
 {
 	memset(mZombieAllowed, false, sizeof(mZombieAllowed));
@@ -1264,7 +1331,7 @@ void Board::InitZombieWaves()
 	mZombieHealthToNextWave = -1;
 }
 
-//0x40ACB0
+// @brief Toggle the freeze state all effects and reanimations for a cutscene
 void Board::FreezeEffectsForCutscene(bool theFreeze)
 {
 	TodParticleSystem *aParticle = nullptr;
@@ -1289,7 +1356,7 @@ void Board::FreezeEffectsForCutscene(bool theFreeze)
 	}
 }
 
-//0x40AD60
+// @brief Initiate the Survival State, Music, Seed Selection Scene
 void Board::InitSurvivalStage()
 {
 	RefreshSeedPacketFromCursor();
@@ -1319,7 +1386,7 @@ void Board::InitSurvivalStage()
 	}
 }
 
-//0x40AE70
+// @return The rectangle where the Shovel Button resides in
 Rect Board::GetShovelButtonRect()
 {
 	Rect aRect(GetSeedBankExtraWidth() + 456, 0, Sexy::IMAGE_SHOVELBANK->GetWidth(), Sexy::IMAGE_SEEDBANK->GetHeight());
@@ -1330,7 +1397,8 @@ Rect Board::GetShovelButtonRect()
 	return aRect;
 }
 
-//0x40AF00
+// @param theObjectType The button type (ex: GameObjectType::OBJECT_TYPE_WATERING_CAN)
+// @return The rectangle where the a specific ZenGarden Button resides in
 void Board::GetZenButtonRect(GameObjectType theObjectType, Rect &theRect)
 {
 	if (mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
@@ -1365,7 +1433,7 @@ void Board::GetZenButtonRect(GameObjectType theObjectType, Rect &theRect)
 	}
 }
 
-//0x40AF90
+// @brief Initiate the level (Background, Waves, Level Index, etc)
 void Board::InitLevel()
 {
 	mMainCounter = 0;
@@ -1572,6 +1640,10 @@ void Board::InitLevel()
 	mChallenge->InitLevel();
 }
 
+/// @param theRakeX The X Position
+/// @param theRakeY The Y Position
+/// @param theRenderOrder the Render Order
+/// @return Reanimation
 Reanimation *Board::CreateRakeReanim(float theRakeX, float theRakeY, int theRenderOrder)
 {
 	Reanimation *aReanim = mApp->AddReanimation(
@@ -1582,7 +1654,7 @@ Reanimation *Board::CreateRakeReanim(float theRakeX, float theRakeY, int theRend
 	return aReanim;
 }
 
-//0x40B9C0
+/// @brief Place a rake on the Board if has one purchased
 void Board::PlaceRake()
 {
 	if (!mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_RAKE])
@@ -1636,7 +1708,7 @@ void Board::PlaceRake()
 	aRake->mGridItemState = GridItemState::GRIDITEM_STATE_RAKE_ATTRACTING;
 }
 
-//0x40BC70
+/// @brief Initiate the LawnMowers for the current level
 void Board::InitLawnMowers()
 {
 	GameMode aGameMode = mApp->mGameMode;
@@ -1662,7 +1734,7 @@ void Board::InitLawnMowers()
 	}
 }
 
-//0x40BD30
+/// @return True if the player chooses the SeedPackets
 bool Board::ChooseSeedsOnCurrentLevel()
 {
 	if (mApp->IsChallengeWithoutSeedBank() || HasConveyorBeltSeedBank())
@@ -1680,7 +1752,7 @@ bool Board::ChooseSeedsOnCurrentLevel()
 	return (!mApp->IsFirstTimeAdventureMode() || mLevel > 7);
 }
 
-//0x40BE00
+/// @brief Start the level
 void Board::StartLevel()
 {
 	mCoinBankFadeCount = 0;
@@ -1704,7 +1776,7 @@ void Board::StartLevel()
 	mApp->mMusic->StartGameMusic();
 }
 
-//0x40BF10
+/// @brief Get the bottom-most LawnMower
 LawnMower *Board::GetBottomLawnMower()
 {
 	LawnMower *aLawnMower = nullptr;
@@ -1723,7 +1795,7 @@ LawnMower *Board::GetBottomLawnMower()
 	return aBottomMower;
 }
 
-//0x40BF60
+/// @brief Update the End Sequence (Timers, LawnMower Coins)
 void Board::UpdateLevelEndSequence()
 {
 	if (mNextSurvivalStageCounter > 0)
@@ -1825,7 +1897,7 @@ void Board::UpdateLevelEndSequence()
 	}
 }
 
-//0x40C2C0
+/// @brief Save to profile the values changed during gameplay
 void Board::CompleteEndLevelSequenceForSaving()
 {
 	if (CanDropLoot())
@@ -1859,7 +1931,7 @@ void Board::CompleteEndLevelSequenceForSaving()
 	mApp->UpdatePlayerProfileForFinishingLevel();
 }
 
-//0x40C3E0
+/// @brief Start the level fade-out sequence or go to the next stage in LastStand/IZombie/Vasebreaker/Survival
 void Board::FadeOutLevel()
 {
 	if (mApp->mGameScene != GameScenes::SCENE_PLAYING)
@@ -1971,6 +2043,7 @@ void Board::FadeOutLevel()
 	mApp->SetCursor(CURSOR_POINTER);
 }
 
+/// @brief Display an advice if it wasn't displayed before
 void Board::DisplayAdvice(const SexyString &theAdvice, MessageStyle theMessageStyle, AdviceType theHelpIndex)
 {
 	if (theHelpIndex != AdviceType::ADVICE_NONE)
@@ -1985,7 +2058,7 @@ void Board::DisplayAdvice(const SexyString &theAdvice, MessageStyle theMessageSt
 	mHelpIndex = theHelpIndex;
 }
 
-//0x40CA10
+/// @brief Force the display of an advice
 void Board::DisplayAdviceAgain(const SexyString &theAdvice, MessageStyle theMessageStyle, AdviceType theHelpIndex)
 {
 	if (theHelpIndex != AdviceType::ADVICE_NONE)
@@ -1995,14 +2068,14 @@ void Board::DisplayAdviceAgain(const SexyString &theAdvice, MessageStyle theMess
 	DisplayAdvice(theAdvice, theMessageStyle, theHelpIndex);
 }
 
-//0x40CA50
+/// @brief Clear the current advice
 void Board::ClearAdviceImmediately()
 {
 	ClearAdvice(AdviceType::ADVICE_NONE);
 	mAdvice->mDuration = 0;
 }
 
-//0x40CAB0
+/// @brief Clear an indexed Advice from the UI
 void Board::ClearAdvice(AdviceType theHelpIndex)
 {
 	if (theHelpIndex == AdviceType::ADVICE_NONE || theHelpIndex == mHelpIndex)
@@ -2012,7 +2085,12 @@ void Board::ClearAdvice(AdviceType theHelpIndex)
 	}
 }
 
-//0x40CB10
+/// @brief Place a Coin at the specific Board coordinates
+/// @param theX The X coordinate
+/// @param theY The Y coordinate
+/// @param theCoinType The CoinType to use
+/// @param theCoinMotion The CoinMotion to use
+/// @return Coin pointer
 Coin *Board::AddCoin(int theX, int theY, CoinType theCoinType, CoinMotion theCoinMotion)
 {
 	Coin *aCoin = mCoins.DataArrayAlloc();
@@ -2026,7 +2104,7 @@ Coin *Board::AddCoin(int theX, int theY, CoinType theCoinType, CoinMotion theCoi
 	return aCoin;
 }
 
-//0x40CCE0
+/// @return True if a Plant is in the cursor
 bool Board::IsPlantInCursor()
 {
 	return mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_BANK ||
@@ -2036,7 +2114,7 @@ bool Board::IsPlantInCursor()
 		   mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_WHEEL_BARROW;
 }
 
-//0x40CD10
+/// @return SeedType the Cursor holds currently
 SeedType Board::GetSeedTypeInCursor()
 {
 	if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_WHEEELBARROW)
@@ -2055,7 +2133,7 @@ SeedType Board::GetSeedTypeInCursor()
 	return mCursorObject->mType == SeedType::SEED_IMITATER ? mCursorObject->mImitaterType : mCursorObject->mType;
 }
 
-//0x40CD80
+/// @brief Remove the SeedPacket from the Cursor
 void Board::RefreshSeedPacketFromCursor()
 {
 	if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_USABLE_COIN)
@@ -2070,7 +2148,7 @@ void Board::RefreshSeedPacketFromCursor()
 	ClearCursor();
 }
 
-//0x40CE00
+/// @return True if the Grid at coordinates theGridX, theGridY is GridSquareType::GRIDSQUARE_POOL
 bool Board::IsPoolSquare(int theGridX, int theGridY)
 {
 	if (theGridX >= 0 && theGridY >= 0)
@@ -2081,7 +2159,12 @@ bool Board::IsPoolSquare(int theGridX, int theGridY)
 	return false;
 }
 
-//0x40CE20
+/// @brief Place a Plant at the specific grid coordinates
+/// @param theGridX The grid X coordinate
+/// @param theGridY The grid Y coordinate
+/// @param theSeedType The SeedType to use
+/// @param theImitaterType The SeedType to use if theSeedType == SeedType::SEED_IMITATER
+/// @return Plant pointer
 Plant *Board::NewPlant(int theGridX, int theGridY, SeedType theSeedType, SeedType theImitaterType)
 {
 	Plant *aPlant = mPlants.DataArrayAlloc();
@@ -2090,7 +2173,10 @@ Plant *Board::NewPlant(int theGridX, int theGridY, SeedType theSeedType, SeedTyp
 	return aPlant;
 }
 
-//0x40CE60
+/// @brief Summon Planting Effects at set coordinates, optionally for a specific plant
+/// @param theGridX The grid X coordinate
+/// @param theGridY The grid Y coordinate
+/// @param thePlant [OPTIONAL] Plant pointer for additional offsets
 void Board::DoPlantingEffects(int theGridX, int theGridY, Plant *thePlant)
 {
 	int aXPos = GridToPixelX(theGridX, theGridY) + 41;
@@ -2135,7 +2221,12 @@ void Board::DoPlantingEffects(int theGridX, int theGridY, Plant *thePlant)
 	}
 }
 
-//0x40D120
+/// @brief Place a Plant and Update Board variables
+/// @param theGridX The grid X coordinate
+/// @param theGridY The grid Y coordinate
+/// @param theSeedType The SeedType to use
+/// @param theImitaterType The SeedType to use if theSeedType == SeedType::SEED_IMITATER
+/// @return Plant pointer
 Plant *Board::AddPlant(int theGridX, int theGridY, SeedType theSeedType, SeedType theImitaterType)
 {
 	SeedType aActualType = theSeedType;
@@ -2197,7 +2288,11 @@ Plant *Board::AddPlant(int theGridX, int theGridY, SeedType theSeedType, SeedTyp
 	return aPlant;
 }
 
-//0x40D1A0
+
+/// @brief Try to get a Pumpkin Plant at a specific grid coordinate
+/// @param theGridX The X grid coordinate
+/// @param theGridY The Y grid coordinate
+/// @return Plant pointer or nullptr if it doesn't exist.
 Plant *Board::GetPumpkinAt(int theGridX, int theGridY)
 {
 	Plant *aPlant = nullptr;
@@ -2212,7 +2307,10 @@ Plant *Board::GetPumpkinAt(int theGridX, int theGridY)
 	return nullptr;
 }
 
-//0x40D220
+/// @brief Try to get a FlowerPot Plant at a specific grid coordinate
+/// @param theGridX The X grid coordinate
+/// @param theGridY The Y grid coordinate
+/// @return Plant pointer or nullptr if it doesn't exist.
 Plant *Board::GetFlowerPotAt(int theGridX, int theGridY)
 {
 	Plant *aPlant = nullptr;
@@ -2227,7 +2325,10 @@ Plant *Board::GetFlowerPotAt(int theGridX, int theGridY)
 	return nullptr;
 }
 
-//0x40D2A0
+/// @brief Get all plants on a specific grid coordinate
+/// @param theGridX The X grid coordinate
+/// @param theGridY The Y grid coordinate
+/// @return PlantsOnLawn pointer
 void Board::GetPlantsOnLawn(int theGridX, int theGridY, PlantsOnLawn *thePlantOnLawn)
 {
 	thePlantOnLawn->mUnderPlant = nullptr;
@@ -2295,6 +2396,11 @@ void Board::GetPlantsOnLawn(int theGridX, int theGridY, PlantsOnLawn *thePlantOn
 	}
 }
 
+/// @brief Get the top plant based on priority
+/// @param theGridX The X grid coordinate
+/// @param theGridY The Y grid coordinate
+/// @param thePlantPriority The choosing priority (See PlantPriority enum), WARINING, causes assert if priority isn't part of PlantPriority enum
+/// @return Plant pointer
 Plant *Board::GetTopPlantAt(int theGridX, int theGridY, PlantPriority thePriority)
 {
 	if (theGridX < 0 || theGridX >= MAX_GRID_SIZE_X || theGridY < 0 || theGridY >= MAX_GRID_SIZE_Y)
@@ -2353,7 +2459,7 @@ Plant *Board::GetTopPlantAt(int theGridX, int theGridY, PlantPriority thePriorit
 	}
 }
 
-//0x40D3A0
+/// @return Number of sun producers on the Board
 int Board::CountSunFlowers()
 {
 	int aCount = 0;
@@ -2368,7 +2474,7 @@ int Board::CountSunFlowers()
 	return aCount;
 }
 
-//0x40D3F0
+/// @return Number of plants of type theSeedType on the Board
 int Board::CountPlantByType(SeedType theSeedType)
 {
 	int aCount = 0;
@@ -2383,7 +2489,7 @@ int Board::CountPlantByType(SeedType theSeedType)
 	return aCount;
 }
 
-//0x40D430
+/// @return Number of plants that are of type theSeedType and don't have a plant above on the Board
 int Board::CountEmptyPotsOrLilies(SeedType theSeedType)
 {
 	int aCount = 0;
@@ -2399,7 +2505,7 @@ int Board::CountEmptyPotsOrLilies(SeedType theSeedType)
 	return aCount;
 }
 
-//0x40D4F0
+/// @return True if theGridX and theGridY can form a set of CobCannonCoordinates
 bool Board::IsValidCobCannonSpotHelper(int theGridX, int theGridY)
 {
 	PlantsOnLawn aPlantOnLawn;
@@ -2414,7 +2520,7 @@ bool Board::IsValidCobCannonSpotHelper(int theGridX, int theGridY)
 		   CanPlantAt(theGridX, theGridY, SeedType::SEED_KERNELPULT) == PlantingReason::PLANTING_OK;
 }
 
-//0x40D550
+/// @return True if theGridX and theGridY are valid CobCannon coordinates
 bool Board::IsValidCobCannonSpot(int theGridX, int theGridY)
 {
 	if (!IsValidCobCannonSpotHelper(theGridX, theGridY) || !IsValidCobCannonSpotHelper(theGridX + 1, theGridY))
@@ -2423,7 +2529,7 @@ bool Board::IsValidCobCannonSpot(int theGridX, int theGridY)
 	return !GetFlowerPotAt(theGridX, theGridY) == !GetFlowerPotAt(theGridX + 1, theGridY);
 }
 
-//0x40D5C0
+/// @return True if the CobCannon has the minimum requirements to be planted
 bool Board::HasValidCobCannonSpot()
 {
 	Plant *aPlant = nullptr;
@@ -2437,7 +2543,13 @@ bool Board::HasValidCobCannonSpot()
 	return false;
 }
 
-//0x40D620
+/// @brief Add a new projectile
+/// @param theGridX The X coordinate
+/// @param theGridY The Y coordinate
+/// @param theRenderOrder The render order
+/// @param theRow The row it belongs on
+/// @param theProjectileType The type of projectile
+/// @return Projectile pointer
 Projectile *Board::AddProjectile(int theX, int theY, int theRenderOrder, int theRow, ProjectileType theProjectileType)
 {
 	Projectile *aProjectile = mProjectiles.DataArrayAlloc();
@@ -2445,7 +2557,7 @@ Projectile *Board::AddProjectile(int theX, int theY, int theRenderOrder, int the
 	return aProjectile;
 }
 
-//0x40D660
+/// @return True if theZombieType can spawn in theLevel
 bool Board::CanZombieSpawnOnLevel(ZombieType theZombieType, int theLevel)
 {
 	const ZombieDefinition &aZombieDef = GetZombieDefinition(theZombieType);
@@ -2463,7 +2575,7 @@ bool Board::CanZombieSpawnOnLevel(ZombieType theZombieType, int theLevel)
 	return gZombieAllowedLevels[theZombieType].mAllowedOnLevel[ClampInt(theLevel - 1, 0, 49)];
 }
 
-//0x40D6F0
+/// @return Get the ZombieType introduced in this level or ZombieType::ZOMBIE_INVALID if none
 ZombieType Board::GetIntroducedZombieType()
 {
 	if (!mApp->IsAdventureMode() || mLevel == 1)
@@ -2483,7 +2595,7 @@ ZombieType Board::GetIntroducedZombieType()
 	return ZombieType::ZOMBIE_INVALID;
 }
 
-//0x40D770
+/// @return Get the ZombieType that will rise of the grave if we have theZombiePoints available
 ZombieType Board::PickGraveRisingZombieType(int theZombiePoints)
 {
 	TodWeightedArray aZombieWeightArray[(int)ZombieType::NUM_ZOMBIE_TYPES];
@@ -2513,7 +2625,7 @@ ZombieType Board::PickGraveRisingZombieType(int theZombiePoints)
 	return (ZombieType)TodPickFromWeightedArray(aZombieWeightArray, aCount);
 }
 
-//0x40D8A0
+/// @return Get the ZombieType based on theWaveIndex and available theZombiePoints
 ZombieType Board::PickZombieType(int theZombiePoints, int theWaveIndex, ZombiePicker *theZombiePicker)
 {
 	int aPickCount = 0;
@@ -2599,12 +2711,13 @@ ZombieType Board::PickZombieType(int theZombiePoints, int theWaveIndex, ZombiePi
 	return (ZombieType)TodPickFromWeightedArray(aZombieWeightArray, aPickCount);
 }
 
+/// @return	True if Zombie can only be spawned in pool rows
 bool Board::IsZombieTypePoolOnly(ZombieType theZombieType)
 {
 	return (theZombieType == ZombieType::ZOMBIE_SNORKEL || theZombieType == ZombieType::ZOMBIE_DOLPHIN_RIDER);
 }
 
-//0x40DB20
+/// @return	True if theRow can have a theZombieType
 bool Board::RowCanHaveZombieType(int theRow, ZombieType theZombieType)
 {
 	if (!RowCanHaveZombies(theRow))
@@ -2660,10 +2773,9 @@ bool Board::RowCanHaveZombieType(int theRow, ZombieType theZombieType)
 	return RowCanHaveZombies(theRow - 1) && RowCanHaveZombies(theRow + 1);
 }
 
-//0x40DC50
+/// @return	Row Index for theZombieType
 int Board::PickRowForNewZombie(ZombieType theZombieType)
 {
-
 	GridItem *aRake = GetRake();
 	if (aRake && aRake->mGridItemState == GridItemState::GRIDITEM_STATE_RAKE_ATTRACTING &&
 		RowCanHaveZombieType(aRake->mGridY, theZombieType))
@@ -2712,7 +2824,7 @@ int Board::PickRowForNewZombie(ZombieType theZombieType)
 	return TodPickFromSmoothArray(mRowPickingArray, MAX_GRID_SIZE_Y);
 }
 
-//0x40DD90
+/// @return	True if a Bobsled Team can spawn on the Board
 bool Board::CanAddBobSled()
 {
 	for (int aRow = 0; aRow < MAX_GRID_SIZE_Y; aRow++)
@@ -2725,7 +2837,7 @@ bool Board::CanAddBobSled()
 	return false;
 }
 
-//0x40DDC0
+/// @return	New Zombie in theRow and from wave index theFromWave or null if it can't spawn
 Zombie *Board::AddZombieInRow(ZombieType theZombieType, int theRow, int theFromWave)
 {
 	if (mZombies.mSize >= mZombies.mMaxSize - 1)
@@ -2751,12 +2863,16 @@ Zombie *Board::AddZombieInRow(ZombieType theZombieType, int theRow, int theFromW
 	return aZombie;
 }
 
+/// @brief Add a new Zombie, automatically picking a row
+/// @param theZombieType The type
+/// @param theFromWave Wave index
+/// @return	Zombie
 Zombie *Board::AddZombie(ZombieType theZombieType, int theFromWave)
 {
 	return AddZombieInRow(theZombieType, PickRowForNewZombie(theZombieType), theFromWave);
 }
 
-//0x40DEA0
+/// @brief Remove all zombies from the Board
 void Board::RemoveAllZombies()
 {
 	Zombie *aZombie = nullptr;
@@ -2769,7 +2885,7 @@ void Board::RemoveAllZombies()
 	}
 }
 
-//0x40DF00
+/// @brief Remove all zombies that can't persist a repick
 void Board::RemoveZombiesForRepick()
 {
 	Zombie *aZombie = nullptr;
@@ -2782,7 +2898,7 @@ void Board::RemoveZombiesForRepick()
 	}
 }
 
-//0x40DF70
+/// @brief Remove all zombies that are bound to cutscenes
 void Board::RemoveCutsceneZombies()
 {
 	Zombie *aZombie = nullptr;
@@ -2795,7 +2911,7 @@ void Board::RemoveCutsceneZombies()
 	}
 }
 
-//0x40DFC0
+/// @return True if the grid at coordinates theGridX and theGridY is ice
 bool Board::IsIceAt(int theGridX, int theGridY)
 {
 	TOD_ASSERT(theGridY >= 0 && theGridY < MAX_GRID_SIZE_Y);
@@ -2805,7 +2921,11 @@ bool Board::IsIceAt(int theGridX, int theGridY)
 	return theGridX >= PixelToGridXKeepOnBoard(mIceMinX[theGridY] + 12, 0);
 }
 
-//0x40E020
+/// @brief Determines if a plant can be placed.
+/// @param theGridX The grid X coordinate
+/// @param theGridY The grid Y coordinate
+/// @param theSeedType The SeedType to check
+/// @return Reason for planting here (inspect PlantingReason enum)
 PlantingReason Board::CanPlantAt(int theGridX, int theGridY, SeedType theSeedType)
 {
 	if (theGridX < 0 || theGridX >= MAX_GRID_SIZE_X || theGridY < 0 || theGridY >= MAX_GRID_SIZE_Y)
@@ -3025,7 +3145,7 @@ PlantingReason Board::CanPlantAt(int theGridX, int theGridY, SeedType theSeedTyp
 	return PlantingReason::PLANTING_OK;
 }
 
-//0x40E520
+/// @brief Update the Board's Cursor
 void Board::UpdateCursor()
 {
 #if SEXY_USE_CONTROLLER
@@ -3131,21 +3251,22 @@ void Board::UpdateCursor()
 	}
 }
 
-//0x40E760
+/// @brief On Mouse Movement
 void Board::MouseMove(int x, int y)
 {
 	Widget::MouseMove(x, y);
 	mChallenge->MouseMove(x, y);
 }
 
-//0x40E760
+/// @brief On Mouse Drag
 void Board::MouseDrag(int x, int y)
 {
 	Widget::MouseDrag(x, y);
 	mChallenge->MouseMove(x, y);
 }
 
-//0x40E780
+/// @brief Is a zombie at these coordinates in the SeedChooser State
+/// @return True if a valid zombie is found
 Zombie *Board::ZombieHitTest(int theMouseX, int theMouseY)
 {
 	Zombie *aZombie = nullptr;
@@ -3170,7 +3291,7 @@ Zombie *Board::ZombieHitTest(int theMouseX, int theMouseY)
 	return aRecord;
 }
 
-//0x40E880
+/// @return True if the Plant is in the Gold Watering Can's range
 bool Board::IsPlantInGoldWateringCanRange(int theMouseX, int theMouseY, Plant *thePlant)
 {
 	/*
@@ -3195,7 +3316,7 @@ bool Board::IsPlantInGoldWateringCanRange(int theMouseX, int theMouseY, Plant *t
 	return false;
 }
 
-//0x40E940
+/// @brief Highlight the Plants at mouse coordinates if they fit the requirements
 void Board::HighlightPlantsForMouse(int theMouseX, int theMouseY)
 {
 	if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_WATERING_CAN &&
@@ -3235,7 +3356,7 @@ void Board::HighlightPlantsForMouse(int theMouseX, int theMouseY)
 	}
 }
 
-//0x40EAB0
+/// @brief Update the mouse objects positions
 void Board::UpdateMousePosition()
 {
 	UpdateCursor();
@@ -3341,7 +3462,7 @@ void Board::UpdateMousePosition()
 	}
 }
 
-//0x40EF00
+/// @brief Update the Board Tooltip
 void Board::UpdateToolTip()
 {
 	if (!mApp->mWidgetManager->mMouseIn || !mApp->mActive || mTimeStopCounter > 0 || mApp->GetDialogCount() > 0 ||
@@ -3725,7 +3846,7 @@ void Board::UpdateToolTip()
 	mToolTip->mVisible = true;
 }
 
-//0x40FC70
+/// @brief Shoot the CobCannon if it fits the requirements
 void Board::MouseDownCobcannonFire(int x, int y, int theClickCount)
 {
 	if (theClickCount >= 0 && y >= 80)
@@ -3747,7 +3868,7 @@ void Board::MouseDownCobcannonFire(int x, int y, int theClickCount)
 	ClearCursor();
 }
 
-//0x40FD30
+/// @brief Handle a mouse down press with a Plant in Cursor
 void Board::MouseDownWithPlant(int x, int y, int theClickCount)
 {
 	if (theClickCount < 0)
@@ -4172,7 +4293,7 @@ void Board::MouseDownWithPlant(int x, int y, int theClickCount)
 	ClearCursor();
 }
 
-//0x410F70
+/// @return Plant if it can be tool-interactable, nullptr if not
 Plant *Board::ToolHitTestHelper(HitResult *theHitResult)
 {
 	theHitResult->mObjectType = GameObjectType::OBJECT_TYPE_PLANT;
@@ -4183,6 +4304,7 @@ Plant *Board::ToolHitTestHelper(HitResult *theHitResult)
 			   : nullptr;
 }
 
+/// @return Plant at coordinates theX, theY, nullptr if it doesn't exist
 Plant *Board::ToolHitTest(int theX, int theY)
 {
 	HitResult aHitResult;
@@ -4194,7 +4316,7 @@ Plant *Board::ToolHitTest(int theX, int theY)
 	return nullptr;
 }
 
-//0x410FA0
+/// @brief Displays the tutorial arrow
 void Board::TutorialArrowShow(int theX, int theY)
 {
 	TutorialArrowRemove();
@@ -4203,14 +4325,14 @@ void Board::TutorialArrowShow(int theX, int theY)
 	mTutorialParticleID = mApp->ParticleGetID(aParticle);
 }
 
-//0x411020
+/// @brief Remove the tutorial arrow
 void Board::TutorialArrowRemove()
 {
 	mApp->RemoveParticle(mTutorialParticleID);
 	mTutorialParticleID = ParticleSystemID::PARTICLESYSTEMID_NULL;
 }
 
-//0x411060
+/// @brief Handle a mouse down press with a tool
 void Board::MouseDownWithTool(int x, int y, int theClickCount, CursorType theCursorType)
 {
 	if (theClickCount < 0)
@@ -4259,7 +4381,7 @@ void Board::MouseDownWithTool(int x, int y, int theClickCount, CursorType theCur
 	ClearCursor();
 }
 
-//0x411280
+/// @return Plant if it's special and it's at coordinates, nullptr if it doesn't exist
 Plant *Board::SpecialPlantHitTest(int x, int y)
 {
 	Plant *aPlant = nullptr;
@@ -4286,7 +4408,10 @@ Plant *Board::SpecialPlantHitTest(int x, int y)
 	return nullptr;
 }
 
-//0x411470
+/// @param x The X coordinate
+/// @param y The Y coordinate
+/// @param theHitResult The HitResult to fill with data
+/// @return True if a Plant is present at coordinates
 bool Board::MouseHitTestPlant(int x, int y, HitResult *theHitResult)
 {
 	if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_COBCANNON_TARGET ||
@@ -4347,7 +4472,10 @@ bool Board::MouseHitTestPlant(int x, int y, HitResult *theHitResult)
 	return true;
 }
 
-//0x411730
+/// @param x The X coordinate
+/// @param y The Y coordinate
+/// @param theHitResult The HitResult to fill with data
+/// @return	True if the mouse hits something
 bool Board::MouseHitTest(int x, int y, HitResult *theHitResult)
 {
 	if (mBoardFadeOutCounter >= 0 || IsScaryPotterDaveTalking())
@@ -4502,7 +4630,7 @@ bool Board::MouseHitTest(int x, int y, HitResult *theHitResult)
 	return false;
 }
 
-//0x411C10
+/// @brief Pick-Up a specific GameObjectType tool
 void Board::PickUpTool(GameObjectType theObjectType)
 {
 	if (mPaused || (mApp->mGameScene != GameScenes::SCENE_PLAYING && !mCutScene->IsInShovelTutorial()))
@@ -4607,7 +4735,7 @@ void Board::PickUpTool(GameObjectType theObjectType)
 	mCursorObject->mType = SeedType::SEED_NONE;
 }
 
-//0x411F20
+/// @brief Handle a mouse down press
 void Board::MouseDown(int x, int y, int theClickCount)
 {
 	Widget::MouseDown(x, y, theClickCount);
@@ -4789,7 +4917,7 @@ void Board::MouseDown(int x, int y, int theClickCount)
 	UpdateCursor();
 }
 
-//0x412330
+/// @brief Clear the cursor of any object
 void Board::ClearCursor()
 {
 	if (mAdvice->mDuration > 0)
@@ -4872,7 +5000,7 @@ bool Board::CanInteractWithBoardButtons()
 	return mApp->mGameMode == GameMode::GAMEMODE_UPSELL || mApp->mCrazyDaveState == CrazyDaveState::CRAZY_DAVE_OFF;
 }
 
-//0x412540
+/// @brief Handle a mouse up de-press
 void Board::MouseUp(int x, int y, int theClickCount)
 {
 	Widget::MouseUp(x, y, theClickCount);
@@ -4943,12 +5071,13 @@ void Board::MouseUp(int x, int y, int theClickCount)
 	}
 }
 
+/// @brief Display the coin bank for theDuration time
 void Board::ShowCoinBank(int theDuration)
 {
 	mCoinBankFadeCount = theDuration;
 }
 
-//0x4127A0
+/// @brief Pause the Board
 void Board::Pause(bool thePause)
 {
 	if (mPaused == thePause)
@@ -4967,7 +5096,7 @@ void Board::Pause(bool thePause)
 	}
 }
 
-//0x412850
+/// @return Amount of GraveStones on Board
 int Board::GetGraveStonesCount()
 {
 	int aCount = 0;
@@ -4984,7 +5113,7 @@ int Board::GetGraveStonesCount()
 	return aCount;
 }
 
-//0x412890
+/// @brief Pick a random GraveStone to be special
 void Board::PickSpecialGraveStone()
 {
 	GridItem *aGridItem = nullptr;
@@ -5007,7 +5136,7 @@ void Board::PickSpecialGraveStone()
 	}
 }
 
-//0x4128F0
+/// @brief Spawn the end-flag Zombies from the pool
 void Board::SpawnZombiesFromPool()
 {
 	if (mIceTrapCounter > 0)
@@ -5069,7 +5198,7 @@ void Board::SpawnZombiesFromPool()
 	}
 }
 
-//0x412A90
+// TODO: DOCUMENT
 void Board::SetupBungeeDrop(BungeeDropGrid *theBungeeDropGrid)
 {
 	theBungeeDropGrid->mGridArrayCount = 0;
@@ -5087,7 +5216,7 @@ void Board::SetupBungeeDrop(BungeeDropGrid *theBungeeDropGrid)
 	}
 }
 
-//0x412B60
+// TODO: DOCUMENT
 void Board::BungeeDropZombie(BungeeDropGrid *theBungeeDropGrid, ZombieType theZombieType)
 {
 	TodWeightedGridArray *aGrid =
