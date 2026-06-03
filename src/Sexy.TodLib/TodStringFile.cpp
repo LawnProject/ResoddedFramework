@@ -264,11 +264,12 @@ int TodWriteString(Graphics *g,
 	Font *aFont = *theCurrentFormat.mNewFont;
 	if (drawString)
 	{
+		TodStringListFormat aMeasureFormat = theCurrentFormat;
 		int aSpareX = theWidth - TodWriteString(g,
 												theString,
 												theX,
 												theY,
-												theCurrentFormat,
+												aMeasureFormat,
 												theWidth,
 												DrawStringJustification::DS_ALIGN_LEFT,
 												false,
@@ -477,11 +478,9 @@ int TodDrawStringWrappedHelper(Graphics *g,
 					}
 				}
 
-				aLineFeedPos = it - theText.begin();
 			}
 			else
 			{
-				aCurPos = it - theText.begin();
 
 				aLineWidth =
 					TodWriteWordWrappedHelper(g,
@@ -502,6 +501,7 @@ int TodDrawStringWrappedHelper(Graphics *g,
 			if (aLineWidth > aMaxWidth)
 				aMaxWidth = aLineWidth;
 			aYOffset += aLineSpacing;
+			aLineFeedPos = aCurPos;
 			aSpacePos = -1;
 			aCurWidth = 0;
 			aPrevChar = '\0';
