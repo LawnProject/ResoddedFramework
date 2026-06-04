@@ -381,7 +381,6 @@ class Board : public Widget, public ButtonListener
 	/*inline*/ Zombie *ZombieGet(ZombieID theZombieID);
 	/*inline*/ Zombie *ZombieTryToGet(ZombieID theZombieID);
 	void DrawDebugObjectRects(Graphics *g);
-	void DrawDebugGrid(Graphics *g);
 	void UpdateIce();
 	/*inline*/ int GetIceZPos(int theRow);
 	/*inline*/ bool CanAddBobSled();
