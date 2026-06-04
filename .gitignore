@@ -11,3 +11,6 @@ Export/
 assets/base
 /assets/main.pak
 /pseudocode
+/vcpkg_installed
+/android
+/thirdparty/android/bass
