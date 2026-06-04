@@ -1,5 +1,8 @@
-# CMakeLists.txt
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
+
+# Force MSVC to use Static CRT (MT/MTd) to match x64-windows-static vcpkg dependencies
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 project(ResoddedFramework LANGUAGES C CXX)
 
 # Enable Hot Reload for MSVC compilers if supported.

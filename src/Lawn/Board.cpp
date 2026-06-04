@@ -175,8 +175,8 @@ Board::Board(LawnApp *theApp)
 #if SEXY_USE_CONTROLLER
 	mGamepadX = LAWN_XMIN;
 	mGamepadY = LAWN_YMIN;
-	mVisualGamepadX = 0;
-	mVisualGamepadY = 0;
+	mVisualGamepadX = -1.0f;
+	mVisualGamepadY = -1.0f;
 	mGamepadIgnoreChallenge = false;
 	mGamepadPrevSouth = false;
 	mGamepadPrevEast = false;
@@ -6165,6 +6165,12 @@ void Board::Update()
 				mApp->EnforceCursor();
 			}
 		}
+		// Left stick / D-pad: only move the cursor during actual gameplay.
+		// During cutscenes (SCENE_LEVEL_INTRO) the board scrolls and the grid
+		// coordinate system hasn't settled yet, so cursor movement is suppressed
+		// to avoid the cursor appearing in wrong positions (especially on the roof).
+		if (mApp->mGameScene == GameScenes::SCENE_PLAYING)
+		{
 		// Left stick: free cursor movement across the board
 		// -------------------------------------------------------
 		{
@@ -6183,7 +6189,6 @@ void Board::Update()
 			mGamepadY += aCurveInput(aRawY) * aSpeedScale;
 
 			int aSizeTileX = GridToPixelX(1, 1) - LAWN_XMIN;
-			mGamepadX = std::clamp(mGamepadX, (float)LAWN_XMIN, (float)aSizeTileX * MAX_GRID_SIZE_X);
 			
 			int aNewGridX = PixelToGridXKeepOnBoard((int)mGamepadX, (int)mGamepadY);
 			if (StageHasRoof() && aNewGridX != aPrevGridX)
@@ -6193,31 +6198,11 @@ void Board::Update()
 				mGamepadY += (aNewSlope - aOldSlope);
 			}
 
-			auto GetHitboxY = [&](int aGridX, int aGridY) -> float {
-				if (StageHasRoof())
-					return (float)(aGridY * 85 + LAWN_YMIN + (aGridX < 5 ? (4 - aGridX) * 20 : 0) + 42);
-				if (StageHasPool())
-					return (float)(aGridY * 85 + LAWN_YMIN + 42);
-				return (float)(aGridY * 100 + LAWN_YMIN + 50);
-			};
-
-			int aMaxRow = MAX_GRID_SIZE_Y - (StageHas6Rows() ? 1 : 2);
-			float aMinY = GetHitboxY(aNewGridX, 0) - 40.0f;
-			float aMaxY = GetHitboxY(aNewGridX, aMaxRow) + 40.0f;
-			mGamepadY = std::clamp(mGamepadY, aMinY, aMaxY);
-
-			// Visual cursor smoothing (lerp towards target grid cell)
-			int aNewGridY = PixelToGridYKeepOnBoard((int)mGamepadX, (int)mGamepadY);
-			float aVisTargetX = (float)(GridToPixelX(aNewGridX, aNewGridY) + 40);
-			float aVisTargetY = (float)(GridToPixelY(aNewGridX, aNewGridY) + 50);
-			
-			if (mVisualGamepadX < 0) { 
-				mVisualGamepadX = aVisTargetX; 
-				mVisualGamepadY = aVisTargetY; 
-			} else {
-				mVisualGamepadX += (aVisTargetX - mVisualGamepadX) * 0.25f;
-				mVisualGamepadY += (aVisTargetY - mVisualGamepadY) * 0.25f;
-			}
+			// Use fixed bounds matching the pseudocode (BaseGamepadControls::Update):
+			// X: [40, 770], Y: [80, 580]. Dynamic GetHitboxY-based clamp caused
+			// non-smooth movement when approaching the top row.
+			mGamepadX = std::clamp(mGamepadX, (float)LAWN_XMIN, 770.0f);
+			mGamepadY = std::clamp(mGamepadY, (float)LAWN_YMIN, 580.0f);
 		}
 
 		// -------------------------------------------------------
@@ -6243,7 +6228,7 @@ void Board::Update()
 
 			auto GetHitboxY = [&](int aGridX, int aGridY) -> float {
 				if (StageHasRoof())
-					return (float)(aGridY * 85 + LAWN_YMIN + (aGridX < 5 ? (4 - aGridX) * 20 : 0) + 42);
+					return (float)(aGridY * 85 + LAWN_YMIN + (aGridX < 5 ? (5 - aGridX) * 20 : 0) + 42);
 				if (StageHasPool())
 					return (float)(aGridY * 85 + LAWN_YMIN + 42);
 				return (float)(aGridY * 100 + LAWN_YMIN + 50);
@@ -6278,6 +6263,25 @@ void Board::Update()
 				aPad->AddRumbleEffect(0.0f, 0.05f, 20);
 			}
 		}
+		} // end if SCENE_PLAYING cursor movement
+
+		// Visual cursor smoothing (lerp towards target grid cell)
+		// Runs unconditionally so mVisualGamepadX/Y properly initializes
+		// during cutscenes and doesn't get stuck at -1.
+		{
+			int aNewGridX = PixelToGridXKeepOnBoard((int)mGamepadX, (int)mGamepadY);
+			int aNewGridY = PixelToGridYKeepOnBoard((int)mGamepadX, (int)mGamepadY);
+			float aVisTargetX = (float)(GridToPixelX(aNewGridX, aNewGridY) + 40);
+			float aVisTargetY = (float)(GridToPixelY(aNewGridX, aNewGridY) + 50);
+			
+			if (mVisualGamepadX < 0.0f) { 
+				mVisualGamepadX = aVisTargetX; 
+				mVisualGamepadY = aVisTargetY; 
+			} else {
+				mVisualGamepadX += (aVisTargetX - mVisualGamepadX) * 0.15f;
+				mVisualGamepadY += (aVisTargetY - mVisualGamepadY) * 0.15f;
+			}
+		}
 
 		// Detect active gamepad input to switch into gamepad mode
 		if (abs(aPad->GetLeftAxisXPosition()) > 0.1f || abs(aPad->GetLeftAxisYPosition()) > 0.1f ||
@@ -6299,17 +6303,11 @@ void Board::Update()
 
 		if (mApp->UsingGamepad())
 		{
-			// Snap the virtual mouse to the center of the hovered grid cell so
-			// tooltips, hover highlights and planting all target the same cell.
-			// Clamp explicitly so that Zen Garden sub-modes (which delegate to
-			// mZenGarden->PixelToGridX/Y and may return out-of-range values) never
-			// reach GridToPixelX/Y's internal TOD_ASSERT and crash the engine.
-			int aSnapGridX = std::clamp(PixelToGridXKeepOnBoard((int)mGamepadX, (int)mGamepadY), 0, MAX_GRID_SIZE_X - 1);
-			int aSnapGridY = std::clamp(PixelToGridYKeepOnBoard((int)mGamepadX, (int)mGamepadY), 0, MAX_GRID_SIZE_Y - 1);
-			int aSnapPX    = GridToPixelX(aSnapGridX, aSnapGridY) + 40;
-			int aSnapPY    = GridToPixelY(aSnapGridX, aSnapGridY) + 50;
-			mApp->mWidgetManager->mLastMouseX = aSnapPX;
-			mApp->mWidgetManager->mLastMouseY = aSnapPY;
+			// Sync the virtual mouse to the smooth visual cursor so that
+			// the cobcannon reticule and tooltips glide smoothly across the board
+			// instead of instantly snapping grid cell by grid cell.
+			mApp->mWidgetManager->mLastMouseX = (int)mVisualGamepadX;
+			mApp->mWidgetManager->mLastMouseY = (int)mVisualGamepadY;
 			if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_NORMAL)
 				mCursorObject->mVisible = false; // Hide the in-game cursor (hand/tool)
 
@@ -6341,7 +6339,7 @@ void Board::Update()
 		}
 
 		// Only process actions when the game scene is active and unpaused
-		if (mApp->mGameScene == GameScenes::SCENE_PLAYING && !mPaused && mApp->GetDialogCount() == 0)
+		if ((mApp->mGameScene == GameScenes::SCENE_PLAYING || mApp->mGameScene == GameScenes::SCENE_LEVEL_INTRO || mApp->mGameScene == GameScenes::SCENE_ZOMBIES_WON) && !mPaused && mApp->GetDialogCount() == 0)
 		{
 			// Use grid-snapped coordinates for all actions so the click always
 			// lands in the center of the visually-highlighted cell.
@@ -6371,8 +6369,9 @@ void Board::Update()
 			{
 				// Try to pick up a seed from the bank when cursor is empty (normal or hammer) and
 				// there is a seed bank (not garden/ToW modes).
-				// Always allowed regardless of what's under the cursor — the user may be
-				// hovering over an upgradeable plant and needs to pick up the upgrade seed.
+				// Bug fix: if the selected seed is an upgrade-type (can only go on top of
+				// a specific plant) but the plant under the cursor is incompatible,
+				// play SOUND_BUZZER and skip pick-up rather than picking it up blindly.
 				if (!aIsGardenMode &&
 				    (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_NORMAL || mCursorObject->mCursorType == CursorType::CURSOR_TYPE_HAMMER) &&
 				    mSeedBank->mNumPackets > 0)
@@ -6382,6 +6381,19 @@ void Board::Update()
 					{
 						if (aSP->CanPickUp())
 						{
+							// If there is a plant under the cursor, check if the seed
+							// can actually be placed there. This prevents picking up
+							// upgrade seeds (Gatling/CobCannon/etc) over incompatible plants.
+							Plant* aPlantBelow = GetTopPlantAt(aActGridX, aActGridY, PlantPriority::TOPPLANT_ONLY_NORMAL_POSITION);
+							if (aPlantBelow != nullptr)
+							{
+								PlantingReason aSeedReason = CanPlantAt(aActGridX, aActGridY, aSP->mPacketType);
+								if (aSeedReason != PlantingReason::PLANTING_OK)
+								{
+									mApp->PlaySample(SOUND_BUZZER);
+									goto gamepad_buttons_end;
+								}
+							}
 							int aSeedX = aSP->mX + mSeedBank->mX + aSP->mOffsetX + SEED_PACKET_WIDTH / 2;
 							int aSeedY = aSP->mY + mSeedBank->mY + SEED_PACKET_HEIGHT / 2;
 							MouseDown(aSeedX, aSeedY, 1);
@@ -6439,11 +6451,16 @@ void Board::Update()
 			}
 
 			// ---------------------------------------------------
-			// B (EAST): Shovel (pick up / use) / Cancel seed
+			// B (EAST): Cancel cobcannon / Shovel (pick up / use) / Cancel seed
 			// ---------------------------------------------------
 			if (aPressedEast)
 			{
-				if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_SHOVEL)
+				if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_COBCANNON_TARGET)
+				{
+					// Cancel cobcannon targeting
+					ClearCursor();
+				}
+				else if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_SHOVEL)
 				{
 					// Use shovel (action)
 					MouseDown(aVX, aVY, 1);
@@ -6467,10 +6484,45 @@ void Board::Update()
 			}
 
 			// ---------------------------------------------------
-			// X (WEST): Cancel (return shovel/seed) / Hammer
+			// X (WEST): CobCannon activate / Cancel seed/shovel / Hammer
 			// ---------------------------------------------------
 			if (aPressedWest)
 			{
+				// CobCannon: X activates a ready cobcannon under the cursor
+				// (cursor must be empty). If the cursor already HAS the cobcannon target,
+				// X fires it.
+				if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_NORMAL)
+				{
+					Plant* aPlantBelow = GetTopPlantAt(aActGridX, aActGridY, PlantPriority::TOPPLANT_ONLY_NORMAL_POSITION);
+					if (aPlantBelow && aPlantBelow->mSeedType == SeedType::SEED_COBCANNON && aPlantBelow->mState == PlantState::STATE_COBCANNON_READY)
+					{
+						MouseDown(aVX, aVY, 1);
+						MouseUp(aVX, aVY, 1);
+						aPad->AddRumbleEffect(0.1f, 0.2f, 40);
+						goto gamepad_buttons_end;
+					}
+				}
+				else if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_COBCANNON_TARGET)
+				{
+					// Fire the cobcannon
+					if (aVY >= 80) // must be below the seed bank area
+					{
+						bool aTooClose = (mCobCannonCursorDelayCounter > 0 &&
+							Distance2D(aVX, aVY, mCobCannonMouseX, mCobCannonMouseY) < 100.0f);
+						if (!aTooClose)
+						{
+							Plant* aCobcannon = mPlants.DataArrayTryToGet(mCursorObject->mCobCannonPlantID);
+							if (aCobcannon)
+							{
+								aCobcannon->CobCannonFire(aVX, aVY);
+								aPad->AddRumbleEffect(0.3f, 0.5f, 80);
+							}
+						}
+					}
+					ClearCursor();
+					goto gamepad_buttons_end;
+				}
+
 				if (mApp->IsWhackAZombieLevel() || mApp->IsScaryPotterLevel() || mApp->IsIZombieLevel())
 				{
 					// Whack-a-Zombie / Hammer logic: X button hits the mole/pot
@@ -7104,7 +7156,12 @@ void Board::DrawGameObjects(Graphics *g)
 		aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_CURSOR_PREVIEW, mCursorPreview);
 
 #if SEXY_USE_CONTROLLER
-	if (mApp->UsingGamepad())
+	// Draw the gamepad grid cursor. During cutscenes (SCENE_LEVEL_INTRO),
+	// we still draw it but it will stay stationary since movement is blocked.
+	// We hide it during cobcannon targeting since the cobcannon uses its own reticule.
+	if (mApp->UsingGamepad() &&
+	    mVisualGamepadX >= 0.0f &&
+	    mCursorObject->mCursorType != CursorType::CURSOR_TYPE_COBCANNON_TARGET)
 	{
 		int aGridX = PixelToGridXKeepOnBoard((int)mGamepadX, (int)mGamepadY);
 		int aGridY = PixelToGridYKeepOnBoard((int)mGamepadX, (int)mGamepadY);
@@ -7211,7 +7268,12 @@ void Board::DrawGameObjects(Graphics *g)
 
 		case RenderObjectType::RENDER_ITEM_GAMEPAD_CURSOR: {
 #if SEXY_USE_CONTROLLER
-			if (mApp->UsingGamepad())
+			// Guard: skip if visual position is not yet initialized,
+			// or if the cobcannon targeting cursor is active (it has its own reticule).
+			if (!mApp->UsingGamepad() ||
+			    mVisualGamepadX < 0.0f ||
+			    mCursorObject->mCursorType == CursorType::CURSOR_TYPE_COBCANNON_TARGET)
+				break;
 			{
 				// mVisualGamepadX/Y = grid-locked lerp position (matches console's grid-snapped cursor).
 				// mGamepadX/Y = raw analog position (used only for roof-skew grid check).
@@ -7227,12 +7289,12 @@ void Board::DrawGameObjects(Graphics *g)
 				int aY = (int)mVisualGamepadY - aH / 2;
 
 				// Draw player arrow (IMAGE_GAMEPAD_IMAGE_P1) matching console logic.
-				// Console: 1.5x scale at (cursorX - 5, cursorY + sin_bob * -2.0 - 23).
-				// Uses grid-locked visual coords so the arrow stays fixed within each cell.
+				// Console: 1.5x scale at (mGamepadX - 5, mGamepadY + sin_bob * -2.0 - 23).
+				// Arrow uses the raw analog position (mGamepadX) so it moves smoothly within cells.
 				{
 					SexyTransform2D aArrowMatrix(true);
 					aArrowMatrix.Scale(1.5f, 1.5f);
-					aArrowMatrix.Translate(aCursorX - 5.0f, aCursorY + (v9 * -2.0f) - 23.0f);
+					aArrowMatrix.Translate(mGamepadX - 5.0f, mGamepadY + (v9 * -2.0f) - 23.0f);
 					g->DrawImageMatrix(IMAGE_GAMEPAD_IMAGE_P1, aArrowMatrix);
 				}
 
@@ -7256,8 +7318,8 @@ void Board::DrawGameObjects(Graphics *g)
 					{
 						SexyMatrix3 aMatrix;
 						TodScaleTransformMatrix(aMatrix,
-							aX + IMAGE_GAMEPAD_CURSOR_FRAME->mWidth / 2 - 12,
-							aY + IMAGE_GAMEPAD_CURSOR_FRAME->mHeight / 2 - 12,
+							aX + IMAGE_GAMEPAD_CURSOR_FRAME->mWidth / 2 - 12 + g->mTransX,
+							aY + IMAGE_GAMEPAD_CURSOR_FRAME->mHeight / 2 - 12 + g->mTransY,
 							(float)aW / IMAGE_GAMEPAD_CURSOR_FRAME->mWidth,
 							(float)aH / IMAGE_GAMEPAD_CURSOR_FRAME->mHeight);
 						// Use raw mGamepadX/Y for grid check — immediate skew response (no lerp delay).
@@ -7275,8 +7337,8 @@ void Board::DrawGameObjects(Graphics *g)
 						// Frame shadow
 						SexyMatrix3 aShadowMatrix;
 						TodScaleTransformMatrix(aShadowMatrix,
-							aX + IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mWidth - 8,
-							aY + IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mHeight - 8,
+							aX + IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mWidth - 8 + g->mTransX,
+							aY + IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mHeight - 8 + g->mTransY,
 							(float)(aW - 8) / IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mWidth,
 							(float)(aH - 8) / IMAGE_GAMEPAD_CURSOR_FRAME_SHADOW->mHeight);
 						if (aGridX <= 4)
