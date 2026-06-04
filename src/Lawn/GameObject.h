@@ -22,8 +22,8 @@ class GameObject
 	int mRenderOrder;
 
   public:
-	/*inline*/ GameObject();
-	/*inline*/ bool BeginDraw(Graphics *g);
-	/*inline*/ void EndDraw(Graphics *g);
-	/*inline*/ void MakeParentGraphicsFrame(Graphics *g);
+	GameObject();
+	bool BeginDraw(Graphics *g);
+	void EndDraw(Graphics *g);
+	void MakeParentGraphicsFrame(Graphics *g);
 };
