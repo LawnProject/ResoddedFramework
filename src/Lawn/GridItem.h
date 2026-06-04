@@ -24,53 +24,83 @@ class MotionTrailFrame
 class GridItem
 {
   public:
-	LawnApp *mApp;												  //+0x0
-	Board *mBoard;												  //+0x4
-	GridItemType mGridItemType;									  //+0x8
-	GridItemState mGridItemState;								  //+0xC
-	int mGridX;													  //+0x10
-	int mGridY;													  //+0x14
-	int mGridItemCounter;										  //+0x18
-	int mRenderOrder;											  //+0x1C
-	bool mDead;													  //+0x20
-	float mPosX;												  //+0x24
-	float mPosY;												  //+0x28
-	float mGoalX;												  //+0x2C
-	float mGoalY;												  //+0x30
-	ReanimationID mGridItemReanimID;							  //+0x34
-	ParticleSystemID mGridItemParticleID;						  //+0x38
-	ZombieType mZombieType;										  //+0x3C
-	SeedType mSeedType;											  //+0x40
-	ScaryPotType mScaryPotType;									  //+0x44
-	bool mHighlighted;											  //+0x48
-	int mTransparentCounter;									  //+0x4C
-	int mSunCount;												  //+0x50
-	MotionTrailFrame mMotionTrailFrames[NUM_MOTION_TRAIL_FRAMES]; //+0x54
-	int mMotionTrailCount;										  //+0xE4
+	LawnApp *mApp;
+	Board *mBoard;
+	GridItemType mGridItemType;
+	GridItemState mGridItemState;
+	int mGridX;
+	int mGridY;
+	int mGridItemCounter;
+	int mRenderOrder;
+	bool mDead;
+	float mPosX;
+	float mPosY;
+	float mGoalX;
+	float mGoalY;
+	ReanimationID mGridItemReanimID;
+	ParticleSystemID mGridItemParticleID;
+	ZombieType mZombieType;
+	SeedType mSeedType;
+	ScaryPotType mScaryPotType;
+	bool mHighlighted;
+	int mTransparentCounter;
+	int mSunCount;
+	MotionTrailFrame mMotionTrailFrames[NUM_MOTION_TRAIL_FRAMES];
+	int mMotionTrailCount;
 
   public:
 	GridItem();
 
+	/// @brief Draw the Ladder GridType
+	/// @param g Graphics object
 	void DrawLadder(Sexy::Graphics *g);
+	/// @brief Draw the Crater GridType
+	/// @param g Graphics object
 	void DrawCrater(Sexy::Graphics *g);
+	/// @brief Draw the GraveStone GridType
+	/// @param g Graphics object
 	void DrawGraveStone(Sexy::Graphics *g);
+	/// @brief Destroy the GridItem (can't be used after this)
 	void GridItemDie();
+	/// @brief Add the GraveStone particles
 	void AddGraveStoneParticles();
+	/// @brief Draw a GridItem
+	/// @param g Graphics object
 	void DrawGridItem(Sexy::Graphics *g);
+	/// @brief Draw the GridItemOverlay
+	/// @param g Graphics object
 	void DrawGridItemOverlay(Sexy::Graphics *g);
+	/// @brief Open the Portal GridType
 	void OpenPortal();
+	/// @brief Update the GridItem
 	void Update();
+	/// @brief Close the Portal GridType
 	void ClosePortal();
+	/// @brief Draw the ScaryPot GridType
+	/// @param g Graphics object
 	void DrawScaryPot(Sexy::Graphics *g);
+	/// @brief Update the ScaryPot GridType
 	void UpdateScaryPot();
+	/// @brief Update the Portal GridType
 	void UpdatePortal();
+	/// @brief Draw the Squirrel GridType
+	/// @param g Graphics object
 	void DrawSquirrel(Sexy::Graphics *g);
+	/// @brief Update the Rake GridType
 	void UpdateRake();
+	/// @brief Find a Zombie for the Rake GridType
+	/// @return Zombie or nullptr if it doesn't exist
 	Zombie *RakeFindZombie();
+	/// @brief Draw the IZombieBrain GridType
+	/// @param g Graphics object
 	void DrawIZombieBrain(Sexy::Graphics *g);
 	void UpdateBrain();
+	/// @brief Draw the Stinky GridType
+	/// @param g Graphics object
 	void DrawStinky(Sexy::Graphics *g);
-	/*inline*/ bool IsOpenPortal();
+	/// @brief Is the Portal GridType opened
+	/// @return True if the GridType is a portal and it's in the opened state
+	bool IsOpenPortal();
 };
 
 #endif
