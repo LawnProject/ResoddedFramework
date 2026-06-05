@@ -34,14 +34,12 @@ void TodTraceMemory();
 void TodTraceAndLog(const char *theFormat, ...);
 void TodTraceWithoutSpamming(const char *theFormat, ...);
 void TodHesitationTrace(...);
-#ifdef _WIN32
+#if defined(_WIN32) && defined(SEXY_CRASH_HANDLER)
 void TodReportError(LPEXCEPTION_POINTERS exceptioninfo, const char *theMessage);
+long __stdcall TodUnhandledExceptionFilter(LPEXCEPTION_POINTERS exceptioninfo);
 #endif
 void TodAssertFailed(const char *theCondition, const char *theFile, int theLine, const char *theMsg = "", ...);
 /*inline*/ void TodErrorMessageBox(const char *theMessage, const char *theTitle);
-#ifdef _WIN32
-long __stdcall TodUnhandledExceptionFilter(LPEXCEPTION_POINTERS exceptioninfo);
-#endif
 
 /*inline*/ void *TodMalloc(int theSize);
 /*inline*/ void TodFree(void *theBlock);

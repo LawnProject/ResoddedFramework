@@ -40,7 +40,6 @@ void TodFree(void *theBlock)
 
 void TodAssertFailed(const char *theCondition, const char *theFile, int theLine, const char *theMsg, ...)
 {
-#ifdef _DEBUG
 	char aFormattedMsg[1024];
 	va_list argList;
 	va_start(argList, theMsg);
@@ -86,7 +85,7 @@ void TodAssertFailed(const char *theCondition, const char *theFile, int theLine,
 		}
 
 		gInAssert = true;
-#ifdef _WIN32
+#if defined(_WIN32) && defined(SEXY_CRASH_HANDLER)
 		LPEXCEPTION_POINTERS exp;
 
 		__try
@@ -97,16 +96,16 @@ void TodAssertFailed(const char *theCondition, const char *theFile, int theLine,
 		{
 			TodReportError(exp, aFormattedMsg);
 		}
+#else
+		TodErrorMessageBox(aBuffer, "TodLib - Assert");
 #endif
 		gInAssert = false;
 		exit(0);
 	}
-#endif
 }
 
 void TodLog(const char *theFormat, ...)
 {
-#ifdef _DEBUG
 	char aButter[1024];
 	va_list argList;
 	va_start(argList, theFormat);
@@ -127,31 +126,27 @@ void TodLog(const char *theFormat, ...)
 	}
 
 	TodLogString(aButter);
-#endif
 }
 
 void TodLogString(const char *theMsg)
 {
-#ifdef _DEBUG
 	FILE *f = fopen(gLogFileName, "a");
 	if (f == nullptr)
 	{
-		printf("[TodLib] - Failed to open log file\n");
+		printf("[TodLib] - Failed to open log file: %s\n", gLogFileName);
 	}
 
 	if (f && fwrite(theMsg, strlen(theMsg), 1, f) != 1)
 	{
-		printf("[TodLib] - Failed to write to log file\n");
+		printf("[TodLib] - Failed to write to log file: %s\n", gLogFileName);
 	}
 
 	if (f)
 		fclose(f);
-#endif
 }
 
 void TodTrace(const char *theFormat, ...)
 {
-#ifdef _DEBUG
 	char aButter[1024];
 	va_list argList;
 	va_start(argList, theFormat);
@@ -173,7 +168,6 @@ void TodTrace(const char *theFormat, ...)
 
 	printf("%s", aButter);
 
-#endif
 }
 
 void TodHesitationTrace(...)
@@ -182,7 +176,6 @@ void TodHesitationTrace(...)
 
 void TodTraceAndLog(const char *theFormat, ...)
 {
-#ifdef _DEBUG
 	char aButter[1024];
 	va_list argList;
 	va_start(argList, theFormat);
@@ -204,12 +197,10 @@ void TodTraceAndLog(const char *theFormat, ...)
 
 	printf(aButter);
 	TodLogString(aButter);
-#endif
 }
 
 void TodTraceWithoutSpamming(const char *theFormat, ...)
 {
-#ifdef _DEBUG
 	static uint64_t gLastTraceTime = 00;
 	uint64_t aTime = std::time(nullptr);
 	if (aTime < gLastTraceTime)
@@ -238,10 +229,9 @@ void TodTraceWithoutSpamming(const char *theFormat, ...)
 	}
 
 	printf(aButter);
-#endif
 }
 
-#ifdef _WIN32
+#if defined (_WIN32) && defined(SEXY_CRASH_HANDLER) 
 void TodReportError(LPEXCEPTION_POINTERS exceptioninfo, const char *theMessage)
 {
 	Sexy::SEHCatcher::UnhandledExceptionFilter(exceptioninfo);
@@ -288,8 +278,8 @@ void TodAssertInitForApp()
 	TOD_ASSERT(strlen(gLogFileName) < 1024);
 
 	std::time_t aclock = std::time(nullptr);
-	TodLog("[TodLib] - Started %s\n", std::asctime(std::localtime(&aclock)));
-#ifdef _WIN32
+	TodTraceAndLog("[TodLib] - Started %s\n", std::asctime(std::localtime(&aclock)));
+#if defined(_WIN32) && defined(SEXY_CRASH_HANDLER)
 	SetUnhandledExceptionFilter(TodUnhandledExceptionFilter);
 #endif
 }

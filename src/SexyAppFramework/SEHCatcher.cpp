@@ -196,8 +196,10 @@ void SEHCatcher::DoHandleDebugEvent(LPEXCEPTION_POINTERS lpEP)
 
 
 	aDebugDump += "\n";
+#ifdef DEBUG
 	aDebugDump += GetCallStack();
 	aDebugDump += "\n";
+#endif
 	aDebugDump += GetSysInfo();
 
 	if (mApp != NULL)
@@ -334,11 +336,8 @@ void SEHCatcher::ShowErrorDialog(const std::string &theErrorTitle, const std::st
 		float buttonWidth = 120.0f;
 		float spacing = ImGui::GetStyle().ItemSpacing.x;
 
-		int numButtons = 1;
-#ifdef _DEBUG
-		numButtons += 1;
-#endif
-		numButtons += 1;
+		int numButtons = 2;
+
 
 		float totalWidth = numButtons * buttonWidth + (numButtons - 1) * spacing;
 		float availWidth = ImGui::GetContentRegionAvail().x;
@@ -354,14 +353,6 @@ void SEHCatcher::ShowErrorDialog(const std::string &theErrorTitle, const std::st
 
 			mExiting = true;
 		}
-#ifdef _DEBUG
-		ImGui::SameLine();
-		if (ImGui::Button("Debug", ImVec2(buttonWidth, 0)))
-		{
-			mDebugError = true;
-			mExiting = true;
-		}
-#endif
 		ImGui::SameLine();
 		if (ImGui::Button("Close Now", ImVec2(buttonWidth, 0)))
 		{

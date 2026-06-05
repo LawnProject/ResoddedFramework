@@ -32,9 +32,13 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_compile_definitions(${PROJECT_NAME} PUBLIC
     $<$<CONFIG:Debug>:DEBUG>
     $<$<CONFIG:Release>:NDEBUG>
-
-    LAWN_DEBUG_TOOLS
 )
+
+if(SEXY_USE_IMGUI)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC
+        $<$<CONFIG:Debug>:LAWN_DEBUG_TOOLS>
+    )
+endif()
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
     SexyAppFramework

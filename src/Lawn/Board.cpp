@@ -7150,9 +7150,9 @@ void Board::DrawGameObjects(Graphics *g)
 			}
 			break;
 		}
+#if SEXY_USE_CONTROLLER
 
 		case RenderObjectType::RENDER_ITEM_GAMEPAD_CURSOR: {
-#if SEXY_USE_CONTROLLER
 			// Guard: skip if visual position is not yet initialized,
 			// or if the cobcannon targeting cursor is active (it has its own reticule).
 			if (!mApp->UsingGamepad() ||
@@ -7248,9 +7248,9 @@ void Board::DrawGameObjects(Graphics *g)
 				}
 				g->SetColorizeImages(false);
 			}
-#endif
 			break;
 		}
+#endif
 
 		case RenderObjectType::RENDER_ITEM_PROJECTILE: {
 			Projectile *aProjectile = aRenderItem.mProjectile;

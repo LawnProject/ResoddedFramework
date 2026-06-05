@@ -126,11 +126,20 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
     USE_OGG_LIB
     SEXY_USE_OPENGL
     SEXY_USE_SDL3_RENDERER
-    $<$<BOOL:${SEXY_USE_IMGUI}>:SEXY_USE_IMGUI>
-    $<$<BOOL:${SEXY_USE_CONTROLLER}>:SEXY_USE_CONTROLLER>
-    $<$<BOOL:${SEXY_CRASH_HANDLER}>:SEXY_CRASH_HANDLER>
-
 )
+
+if(SEXY_USE_CONTROLLER)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC SEXY_USE_CONTROLLER)
+endif()
+
+if(SEXY_USE_IMGUI)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC SEXY_USE_IMGUI)
+endif()
+
+if(SEXY_CRASH_HANDLER AND SEXY_USE_IMGUI)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC SEXY_CRASH_HANDLER)
+endif()
+
 
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
 target_compile_definitions(${PROJECT_NAME} PUBLIC

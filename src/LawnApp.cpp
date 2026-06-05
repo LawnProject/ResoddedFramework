@@ -65,7 +65,7 @@
 #endif
 
 //Do not edit this. - Electr0Gunner
-Version LawnApp::gResoddedVersion(1, 0, 0, 878);
+Version LawnApp::gResoddedVersion(1, 0, 0, 978);
 
 bool gIsPartnerBuild = false;
 bool gSlowMo = false;
@@ -1275,11 +1275,9 @@ void LawnApp::Init()
 	mSawYeti = false;
 
 	SexyApp::Init();
-#ifdef _DEBUG
 	TodAssertInitForApp();
 	gBetaSubmitFunc = BetaSubmitFunc;
 	TodTraceAndLog("[LawnProject] - session id: %u", mSessionID);
-#endif
 	
 	// [SETUP] - Here you (can) add a link that contains the LATEST version of your mod. I recommend Github as it's free and easy to setup. (And you are probably using it now)
 
