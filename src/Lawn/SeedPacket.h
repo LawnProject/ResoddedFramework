@@ -84,7 +84,7 @@ class SeedBank : public GameObject
 	/// @brief Draw the SeedBank
 	/// @param g Graphics object
 	void Draw(Graphics *g);
-	/// @brief Test to see if the Packet got hit
+	/// @brief Test to see if the SeedBank got hit
 	/// @param theX The mouse click X coordinate
 	/// @param theY The mouse click Y coordinate
 	/// @param theHitResult Object containing HitResult data like Object type and pointer
