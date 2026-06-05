@@ -6,22 +6,25 @@
 class CursorObject : public GameObject
 {
   public:
-	int mSeedBankIndex;			   //+0x24
-	SeedType mType;				   //+0x28
-	SeedType mImitaterType;		   //+0x2C
-	CursorType mCursorType;		   //+0x30
-	CoinID mCoinID;				   //+0x34
-	PlantID mGlovePlantID;		   //+0x38
-	PlantID mDuplicatorPlantID;	   //+0x3C
-	PlantID mCobCannonPlantID;	   //+0x40
-	int mHammerDownCounter;		   //+0x44
-	ReanimationID mReanimCursorID; //+0x48
+	int mSeedBankIndex;
+	SeedType mType;
+	SeedType mImitaterType;
+	CursorType mCursorType;
+	CoinID mCoinID;
+	PlantID mGlovePlantID;
+	PlantID mDuplicatorPlantID;
+	PlantID mCobCannonPlantID;
+	int mHammerDownCounter;
+	ReanimationID mReanimCursorID;
 
   public:
 	CursorObject();
 
+	/// @brief Update the object
 	void Update();
+	/// @brief Draw the object
 	void Draw(Graphics *g);
+	/// @brief Destroy the object, it can't be used after this
 	void Die();
 };
 
@@ -34,7 +37,9 @@ class CursorPreview : public GameObject
   public:
 	CursorPreview();
 
+	/// @brief Update the preview
 	void Update();
+	/// @brief Draw the preview
 	void Draw(Graphics *g);
 };
 

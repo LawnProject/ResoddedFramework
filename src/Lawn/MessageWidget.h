@@ -35,17 +35,36 @@ class MessageWidget
 		ClearReanim();
 	}
 
-	/*inline*/ void SetLabel(const SexyString &theNewLabel, MessageStyle theMessageStyle);
+	/// @brief Set the text label of the MessageWidget
+	/// @param theNewLabel The next text of the label (UTF-8 Friendly)
+	/// @param theMessageStyle The style to use to display the message
+	void SetLabel(const SexyString &theNewLabel, MessageStyle theMessageStyle);
+	/// @brief Update the MessageWidget
 	void Update();
+	/// @brief Draw the MessageWidget
+	/// @param g Graphics object
 	void Draw(Sexy::Graphics *g);
+	/// @brief Clear the Reanimation Instance of the MessageWidget
 	void ClearReanim();
-	/*inline*/ void ClearLabel();
+	/// @brief Clear the text Label of the Message
+	void ClearLabel();
+
+	/// @brief Is the Message being displayed at the moment
+	/// @return True if the duration != 0, aka it's being displayed at the moment
 	inline bool IsBeingDisplayed()
 	{
 		return mDuration != 0;
 	}
-	/*inline*/ Font *GetFont();
+	/// @brief Get the font used to render this MessageWidget
+	/// @return The font of the MessageStyle
+	Font *GetFont();
+	/// @brief Draw the Reanimation Message
+	/// @param g Graphics object
+	/// @param theFont The font to use to draw the text
+	/// @param theColor The color to use
+	/// @param thePosY The Y coordinate of the message
 	void DrawReanimatedText(Sexy::Graphics *g, Sexy::Font *theFont, const Sexy::Color &theColor, float thePosY);
+	/// @brief Setup the Reanimation Message
 	void LayoutReanimText();
 };
 

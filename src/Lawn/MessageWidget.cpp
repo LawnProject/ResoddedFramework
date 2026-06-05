@@ -8,7 +8,6 @@
 #include "../Sexy.TodLib/Reanimator.h"
 #include "../Sexy.TodLib/TodStringFile.h"
 
-//(0x4081F1)
 MessageWidget::MessageWidget(LawnApp *theApp)
 {
 	mApp = theApp;
@@ -21,7 +20,6 @@ MessageWidget::MessageWidget(LawnApp *theApp)
 	memset(mTextReanimID, (int)ReanimationID::REANIMATIONID_NULL, MAX_MESSAGE_LENGTH);
 }
 
-//0x458FC0
 void MessageWidget::ClearReanim()
 {
 	for (int i = 0; i < MAX_MESSAGE_LENGTH; i++)
@@ -49,7 +47,6 @@ void MessageWidget::ClearLabel()
 	}
 }
 
-//0x459010
 void MessageWidget::SetLabel(const SexyString &theNewLabel, MessageStyle theMessageStyle)
 {
 	SexyString aLabel = TodStringTranslate(theNewLabel);
@@ -151,7 +148,6 @@ void MessageWidget::SetLabel(const SexyString &theNewLabel, MessageStyle theMess
 	}
 }
 
-//0x4591E0
 void MessageWidget::LayoutReanimText()
 {
 	float aMaxWidth = 0;
@@ -205,7 +201,6 @@ void MessageWidget::LayoutReanimText()
 	}
 }
 
-//0x4594B0
 void MessageWidget::Update()
 {
 	if (!mApp->mBoard || mApp->mBoard->mPaused)
@@ -261,7 +256,6 @@ void MessageWidget::Update()
 	}
 }
 
-//0x459710
 void MessageWidget::DrawReanimatedText(Graphics *g, Font *theFont, const Color &theColor, float thePosY)
 {
 	int aLabelLen = strlen(mLabel);
@@ -300,7 +294,6 @@ void MessageWidget::DrawReanimatedText(Graphics *g, Font *theFont, const Color &
 	}
 }
 
-//0x459990
 Font *MessageWidget::GetFont()
 {
 	switch (mMessageStyle)
@@ -331,7 +324,6 @@ Font *MessageWidget::GetFont()
 	TOD_ASSERT();
 }
 
-//0x4599E0
 void MessageWidget::Draw(Graphics *g)
 {
 	if (mDuration <= 0)

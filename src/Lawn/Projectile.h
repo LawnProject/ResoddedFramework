@@ -24,61 +24,107 @@ extern ProjectileDefinition gProjectileDefinition[NUM_PROJECTILES]; //0x69F1C0
 class Projectile : public GameObject
 {
   public:
-	int mFrame;						//+0x24
-	int mNumFrames;					//+0x28
-	int mAnimCounter;				//+0x2C
-	float mPosX;					//+0x30
-	float mPosY;					//+0x34
-	float mPosZ;					//+0x38
-	float mVelX;					//+0x3C
-	float mVelY;					//+0x40
-	float mVelZ;					//+0x44
-	float mAccZ;					//+0x48
-	float mShadowY;					//+0x4C
-	bool mDead;						//+0x50
-	int mAnimTicksPerFrame;			//+0x54
-	ProjectileMotion mMotionType;	//+0x58
-	ProjectileType mProjectileType; //+0x5C
-	int mProjectileAge;				//+0x60
-	int mClickBackoffCounter;		//+0x64
-	float mRotation;				//+0x68
-	float mRotationSpeed;			//+0x6C
-	bool mOnHighGround;				//+0x70
-	int mDamageRangeFlags;			//+0x74
-	int mHitTorchwoodGridX;			//+0x78
-	AttachmentID mAttachmentID;		//+0x7C
-	float mCobTargetX;				//+0x80
-	int mCobTargetRow;				//+0x84
-	ZombieID mTargetZombieID;		//+0x88
-	int mLastPortalX;				//+0x8C
+	int mFrame;
+	int mNumFrames;
+	int mAnimCounter;
+	float mPosX;
+	float mPosY;
+	float mPosZ;
+	float mVelX;
+	float mVelY;
+	float mVelZ;
+	float mAccZ;
+	float mShadowY;
+	bool mDead;
+	int mAnimTicksPerFrame;
+	ProjectileMotion mMotionType;
+	ProjectileType mProjectileType;
+	int mProjectileAge;
+	int mClickBackoffCounter;
+	float mRotation;
+	float mRotationSpeed;
+	bool mOnHighGround;
+	int mDamageRangeFlags;
+	int mHitTorchwoodGridX;
+	AttachmentID mAttachmentID;
+	float mCobTargetX;
+	int mCobTargetRow;
+	ZombieID mTargetZombieID;
+	int mLastPortalX;
 
   public:
 	Projectile();
 	~Projectile();
 
+	/// @brief Initialize the Projectile
+	/// @param theX The X coordinate
+	/// @param theY The Y coordinate
+	/// @param theRenderOrder The render order to draw the Projectile on
+	/// @param theRow The row to spawn the Projectile on
+	/// @param theProjectileType The type of Projectile to setup
 	void ProjectileInitialize(int theX, int theY, int theRenderOrder, int theRow, ProjectileType theProjectileType);
+	/// @brief Update the Projectile
 	void Update();
+	/// @brief Draw the Projectile
+	/// @param g Graphic object
 	void Draw(Graphics *g);
+	/// @brief Draw the Projectile's shadow
+	/// @param g Graphic object
 	void DrawShadow(Graphics *g);
+	/// @brief Destroy the Projectile, can't be used after this
 	void Die();
+	/// @brief Hit the Zombie, plays sounds, create particles
+	/// @return theZombie The Zombie to hit
 	void DoImpact(Zombie *theZombie);
+	/// @brief Update the Motion of the Projectile
 	void UpdateMotion();
+	/// @brief Check for a possible collision
 	void CheckForCollision();
+	/// @brief Try to find a collision target
+	/// @return Zombie or nullptr if not found
 	Zombie *FindCollisionTarget();
+	/// @brief Update the lobbing motion
 	void UpdateLobMotion();
+	/// @brief Check for HighGround collision
 	void CheckForHighGround();
+	/// @brief Will the Projectile ignore the HighGround
+	/// @return True if it ignores the HighGround, false if it can collide with it
 	bool CantHitHighGround();
+	/// @brief Deal splash damage to the Zombue
+	/// @param theZombie The Zombie to hit
 	void DoSplashDamage(Zombie *theZombie);
+	/// @brief Get the Projectile's Definition
+	/// @return Projectile Definition, asserts if it doesn't exist
 	ProjectileDefinition &GetProjectileDef();
-	unsigned int GetDamageFlags(Zombie *theZombie /* = nullptr*/);
+	/// @brief Get the damage flags that affect the Zombie
+	/// @param theZombie The Zombie that it needs to hit
+	/// @return Flags that determine that damage types are dealt (see DamageFlags enum)
+	unsigned int GetDamageFlags(Zombie *theZombie);
+	/// @brief Get the World-Space collision rect
+	/// @return World-Space rect
 	Rect GetProjectileRect();
+	/// @brief Update the normal motion
 	void UpdateNormalMotion();
 	Plant *FindCollisionTargetPlant();
+	/// @brief Convert the Projectile to a FireBall
+	/// @param theGridX The Torchwood's grid X coordinate to avoid changing the Projectile again on the same grid
 	void ConvertToFireball(int theGridX);
+	/// @brief Convert the Projectile to a Pea
+	/// @param theGridX The Torchwood's grid X coordinate to avoid changing the Projectile again on the same grid
 	void ConvertToPea(int theGridX);
-	bool IsSplashDamage(Zombie *theZombie /* = nullptr*/);
+	/// @brief Does the Projectile deal Splash-Damage
+	/// @param theZombie The Zombie to check
+	/// @return True if the Projectile can deal Splash-Damage to the Zombie
+	bool IsSplashDamage(Zombie *theZombie);
+	/// @brief Play the impact sound of hitting the Zombie
+	/// @param theZombie The Zombie to determine the correct sound
 	void PlayImpactSound(Zombie *theZombie);
+	/// @brief Is the Zombie able to be hit by the Splash-Damage
+	/// @param theZombie The Zombie to check
+	/// @return True if the Zombie is in range
 	bool IsZombieHitBySplash(Zombie *theZombie);
+	/// @brief Is the Pea Projectile about to hit a Torchwood
+	/// @return True if the Projectile is in the Torchwood's range
 	bool PeaAboutToHitTorchwood();
 };
 
