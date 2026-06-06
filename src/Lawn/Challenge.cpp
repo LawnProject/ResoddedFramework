@@ -204,6 +204,7 @@ SeedType gArtChallengeStarFruit[MAX_GRID_SIZE_Y][MAX_GRID_SIZE_X] = { //0x6A3410
 	{SEED_NONE, SEED_NONE, SEED_NONE, SEED_NONE, SEED_NONE, SEED_NONE, SEED_NONE, SEED_NONE, SEED_NONE}};
 
 //0x41F1B0
+/// @brief Construct the Challenge instance and set initial state values
 Challenge::Challenge()
 {
 	mApp = (LawnApp *)gSexyAppBase;
@@ -245,6 +246,8 @@ Challenge::Challenge()
 }
 
 //0x41F320
+/// @brief Copy the current board plant layout into a Beghouled board state buffer
+/// @param theBoardState Pointer to the Beghouled board state to populate
 void Challenge::LoadBeghouledBoardState(BeghouledBoardState *theBoardState)
 {
 	for (int i = 0; i < MAX_GRID_SIZE_X; i++)
@@ -257,6 +260,7 @@ void Challenge::LoadBeghouledBoardState(BeghouledBoardState *theBoardState)
 }
 
 //0x41F380
+/// @brief Initialize challenge-specific state based on the current game mode
 void Challenge::InitLevel()
 {
 	if (mApp->mGameMode == GAMEMODE_CHALLENGE_RAINING_SEEDS)
@@ -325,6 +329,7 @@ void Challenge::InitLevel()
 }
 
 //0x41F6E0
+/// @brief Start the challenge level and apply challenge-specific startup behavior
 void Challenge::StartLevel()
 {
 	if (mApp->IsWhackAZombieLevel())
@@ -468,6 +473,11 @@ void Challenge::StartLevel()
 }
 
 //0x420150
+/// @brief Check if a 2x2 grid twist move at the given position is valid
+/// @param theGridX The X grid coordinate of the top-left cell
+/// @param theGridY The Y grid coordinate of the top-left cell
+/// @param theBoardState The current Beghouled board state
+/// @return True if the move is within bounds and all four cells contain plants
 bool Challenge::BeghouledTwistValidMove(int theGridX, int theGridY, BeghouledBoardState *theBoardState)
 {
 	if (theGridY == -1 || theGridX > 6 || theGridY > 3)
@@ -480,6 +490,11 @@ bool Challenge::BeghouledTwistValidMove(int theGridX, int theGridY, BeghouledBoa
 }
 
 //0x420190
+/// @brief Check if twisting the 2x2 grid at the given position produces a match
+/// @param theGridX The X grid coordinate of the top-left cell
+/// @param theGridY The Y grid coordinate of the top-left cell
+/// @param theBoardState The current Beghouled board state
+/// @return True if the twist would result in a valid match
 bool Challenge::BeghouledTwistMoveCausesMatch(int theGridX, int theGridY, BeghouledBoardState *theBoardState)
 {
 	if (!BeghouledTwistValidMove(theGridX, theGridY, theBoardState))
@@ -506,6 +521,12 @@ bool Challenge::BeghouledTwistMoveCausesMatch(int theGridX, int theGridY, Beghou
 }
 
 //0x420220
+/// @brief Convert screen coordinates to a Beghouled twist grid square
+/// @param theX The screen X coordinate
+/// @param theY The screen Y coordinate
+/// @param theGridX Output grid X coordinate
+/// @param theGridY Output grid Y coordinate
+/// @return True if the coordinates map to a valid grid square
 bool Challenge::BeghouledTwistSquareFromMouse(int theX, int theY, int &theGridX, int &theGridY)
 {
 	theGridX = mBoard->PixelToGridX(theX - 40, theY - 40);
@@ -520,6 +541,9 @@ bool Challenge::BeghouledTwistSquareFromMouse(int theX, int theY, int &theGridX,
 }
 
 //0x420280
+/// @brief Handle mouse down for Beghouled Twist mode
+/// @param x The screen X coordinate of the mouse
+/// @param y The screen Y coordinate of the mouse
 void Challenge::BeghouledTwistMouseDown(int x, int y)
 {
 	if (mBoard->HasLevelAwardDropped())
@@ -559,6 +583,8 @@ void Challenge::BeghouledTwistMouseDown(int x, int y)
 }
 
 //0x420670
+/// @brief Start the Beghouled plants falling animation
+/// @param theState The challenge state to set (falling or moving)
 void Challenge::BeghouledStartFalling(ChallengeState theState)
 {
 	mChallengeState = theState;
@@ -567,6 +593,13 @@ void Challenge::BeghouledStartFalling(ChallengeState theState)
 }
 
 //0x4206E0
+/// @brief Validate a Beghouled drag move between two grid cells
+/// @param theFromX The source grid X coordinate
+/// @param theFromY The source grid Y coordinate
+/// @param theToX The destination grid X coordinate
+/// @param theToY The destination grid Y coordinate
+/// @param theBoardState The current Beghouled board state
+/// @return True if the move is valid and produces a match
 bool Challenge::BeghouledIsValidMove(
 	int theFromX, int theFromY, int theToX, int theToY, BeghouledBoardState *theBoardState)
 {
@@ -592,6 +625,9 @@ bool Challenge::BeghouledIsValidMove(
 }
 
 //0x420760
+/// @brief Process Beghouled drag input and update plant positions
+/// @param x The current screen X coordinate
+/// @param y The current screen Y coordinate
 void Challenge::BeghouledDragUpdate(int x, int y)
 {
 	int aDeltaX = x - mBeghouledMouseDownX;
@@ -657,6 +693,11 @@ void Challenge::BeghouledDragUpdate(int x, int y)
 	}
 }
 
+/// @brief Get the seed type at a given Beghouled grid position
+/// @param theGridX The grid X coordinate
+/// @param theGridY The grid Y coordinate
+/// @param theBoardState The current Beghouled board state
+/// @return The seed type at the position, or SEED_NONE if out of bounds
 SeedType Challenge::BeghouledGetPlantAt(int theGridX, int theGridY, BeghouledBoardState *theBoardState)
 {
 	if (theGridX < 0 || theGridX > BEGHOULED_MAX_GRIDSIZEX || theGridY < 0 || theGridY > BEGHOULED_MAX_GRIDSIZEY)
@@ -666,6 +707,10 @@ SeedType Challenge::BeghouledGetPlantAt(int theGridX, int theGridY, BeghouledBoa
 }
 
 //0x420A50
+/// @brief Remove a horizontal match starting from the given grid position
+/// @param theGridX The starting grid X coordinate
+/// @param theGridY The starting grid Y coordinate
+/// @param theBoardState The current Beghouled board state
 void Challenge::BeghouledRemoveHorizontalMatch(int theGridX, int theGridY, BeghouledBoardState *theBoardState)
 {
 	SeedType aSeedType = BeghouledGetPlantAt(theGridX, theGridY, theBoardState);
@@ -681,6 +726,10 @@ void Challenge::BeghouledRemoveHorizontalMatch(int theGridX, int theGridY, Begho
 }
 
 //0x420B60
+/// @brief Remove a vertical match starting from the given grid position
+/// @param theGridX The starting grid X coordinate
+/// @param theGridY The starting grid Y coordinate
+/// @param theBoardState The current Beghouled board state
 void Challenge::BeghouledRemoveVerticalMatch(int theGridX, int theGridY, BeghouledBoardState *theBoardState)
 {
 	SeedType aSeedType = BeghouledGetPlantAt(theGridX, theGridY, theBoardState);
@@ -696,6 +745,10 @@ void Challenge::BeghouledRemoveVerticalMatch(int theGridX, int theGridY, Beghoul
 }
 
 //0x420C60
+/// @brief Make plants fall into empty squares in the Beghouled grid
+/// @param theGridX The target grid X coordinate
+/// @param theGridY The target grid Y coordinate
+/// @param theBoardState The current Beghouled board state
 void Challenge::BeghouledFallIntoSquare(int theGridX, int theGridY, BeghouledBoardState *theBoardState)
 {
 	if (mBeghouledEated[theGridX][theGridY])
@@ -717,6 +770,8 @@ void Challenge::BeghouledFallIntoSquare(int theGridX, int theGridY, BeghouledBoa
 }
 
 //0x420D50
+/// @brief Make all empty Beghouled squares fill by falling plants
+/// @param theBoardState The current Beghouled board state
 void Challenge::BeghouledMakePlantsFall(BeghouledBoardState *theBoardState)
 {
 	for (int aGridY = BEGHOULED_MAX_GRIDSIZEY - 1; aGridY >= 0; aGridY--)
@@ -732,6 +787,7 @@ void Challenge::BeghouledMakePlantsFall(BeghouledBoardState *theBoardState)
 }
 
 //0x420DB0
+/// @brief Update the crater button activation state based on available craters
 void Challenge::BeghouledUpdateCraters()
 {
 	if (mBoard->mSeedBank->mNumPackets != 5)
@@ -743,6 +799,8 @@ void Challenge::BeghouledUpdateCraters()
 }
 
 //0x420E10
+/// @brief Clear a set number of craters from the Beghouled board
+/// @param theCount The number of craters to clear
 void Challenge::BeghouledClearCrater(int theCount)
 {
 	mBoard->ClearAdvice(ADVICE_BEGHOULED_USE_CRATER_1);
@@ -766,6 +824,11 @@ void Challenge::BeghouledClearCrater(int theCount)
 }
 
 //0x420EF0
+/// @brief Score a Beghouled match and award sun/upgrades
+/// @param theGridX The grid X coordinate of the match
+/// @param theGridY The grid Y coordinate of the match
+/// @param theNumPlants The number of plants in the match
+/// @param theIsHorizontal True if the match is horizontal, false if vertical
 void Challenge::BeghouledScore(int theGridX, int theGridY, int theNumPlants, bool theIsHorizontal)
 {
 	mApp->PlayFoley(FOLEY_ART_CHALLENGE);
@@ -837,6 +900,8 @@ void Challenge::BeghouledScore(int theGridX, int theGridY, int theNumPlants, boo
 }
 
 //0x421430
+/// @brief Scan the board and remove all Beghouled matches
+/// @param theBoardState The current Beghouled board state
 void Challenge::BeghouledRemoveMatches(BeghouledBoardState *theBoardState)
 {
 	for (int aGridY = 0; aGridY < BEGHOULED_MAX_GRIDSIZEY; aGridY++)
@@ -861,6 +926,11 @@ void Challenge::BeghouledRemoveMatches(BeghouledBoardState *theBoardState)
 }
 
 //0x4214C0
+/// @brief Get the length of a horizontal match at the given position
+/// @param theGridX The starting grid X coordinate
+/// @param theGridY The starting grid Y coordinate
+/// @param theBoardState The current Beghouled board state
+/// @return The length of the horizontal match (0 if no match)
 int Challenge::BeghouledHorizontalMatchLength(int theGridX, int theGridY, BeghouledBoardState *theBoardState)
 {
 	SeedType aSeedType = BeghouledGetPlantAt(theGridX, theGridY, theBoardState);
@@ -874,6 +944,11 @@ int Challenge::BeghouledHorizontalMatchLength(int theGridX, int theGridY, Beghou
 }
 
 //0x421520
+/// @brief Get the length of a vertical match at the given position
+/// @param theGridX The starting grid X coordinate
+/// @param theGridY The starting grid Y coordinate
+/// @param theBoardState The current Beghouled board state
+/// @return The length of the vertical match (0 if no match)
 int Challenge::BeghouledVerticalMatchLength(int theGridX, int theGridY, BeghouledBoardState *theBoardState)
 {
 	SeedType aSeedType = BeghouledGetPlantAt(theGridX, theGridY, theBoardState);
@@ -887,6 +962,9 @@ int Challenge::BeghouledVerticalMatchLength(int theGridX, int theGridY, Beghoule
 }
 
 //0x421590
+/// @brief Check if any valid match exists on the Beghouled board
+/// @param theBoardState The current Beghouled board state
+/// @return True if at least one valid match exists on the board
 bool Challenge::BeghouledBoardHasMatch(BeghouledBoardState *theBoardState)
 {
 	for (int aCol = 0; aCol < 8; aCol++)
@@ -902,6 +980,12 @@ bool Challenge::BeghouledBoardHasMatch(BeghouledBoardState *theBoardState)
 }
 
 //0x4215E0
+/// @brief Pick a random seed type for an empty Beghouled grid cell
+/// @param theGridX The grid X coordinate
+/// @param theGridY The grid Y coordinate
+/// @param theBoardState The current Beghouled board state
+/// @param theAllowMatches If true, allow picks that create immediate matches
+/// @return A seed type that does not create an invalid board state
 SeedType Challenge::BeghouledPickSeed(int theGridX,
 									  int theGridY,
 									  BeghouledBoardState *theBoardState,
@@ -970,6 +1054,9 @@ SeedType Challenge::BeghouledPickSeed(int theGridX,
 }
 
 //0x4216E0
+/// @brief Fill all empty holes in the Beghouled board with random seeds
+/// @param theBoardState The current Beghouled board state
+/// @param theAllowMatches If true, allow placements that create immediate matches
 void Challenge::BeghouledFillHoles(BeghouledBoardState *theBoardState, bool theAllowMatches)
 {
 	for (int aCol = 0; aCol < BEGHOULED_MAX_GRIDSIZEX; aCol++)
@@ -985,6 +1072,9 @@ void Challenge::BeghouledFillHoles(BeghouledBoardState *theBoardState, bool theA
 }
 
 //0x421750
+/// @brief Create plant entities from a new Beghouled board state
+/// @param theOldBoardState The previous board state
+/// @param theNewBoardState The new board state to create plants from
 void Challenge::BeghouledCreatePlants(BeghouledBoardState *theOldBoardState, BeghouledBoardState *theNewBoardState)
 {
 	for (int aCol = 0; aCol < BEGHOULED_MAX_GRIDSIZEX; aCol++)
@@ -1003,6 +1093,7 @@ void Challenge::BeghouledCreatePlants(BeghouledBoardState *theOldBoardState, Beg
 	}
 }
 
+/// @brief Initialize the starting Beghouled board with no initial matches
 void Challenge::BeghouledMakeStartBoard()
 {
 	BeghouledBoardState aEmptyBoardState;
@@ -1020,6 +1111,7 @@ void Challenge::BeghouledMakeStartBoard()
 }
 
 //0x421810
+/// @brief Populate the Beghouled board ensuring at least one valid move exists
 void Challenge::BeghouledPopulateBoard()
 {
 	BeghouledBoardState aEmptyBoardState, aBoardState;
@@ -1038,6 +1130,9 @@ void Challenge::BeghouledPopulateBoard()
 }
 
 //0x421890
+/// @brief Check if there is at least one valid move available on the Beghouled board
+/// @param theBoardState The current Beghouled board state
+/// @return True if at least one valid move exists
 bool Challenge::BeghouledCheckForPossibleMoves(BeghouledBoardState *theBoardState)
 {
 	GameMode aGameMode = mApp->mGameMode;
@@ -1066,6 +1161,9 @@ bool Challenge::BeghouledCheckForPossibleMoves(BeghouledBoardState *theBoardStat
 	return false;
 }
 
+/// @brief Start a Beghouled drag operation
+/// @param x The screen X coordinate where the drag started
+/// @param y The screen Y coordinate where the drag started
 void Challenge::BeghouledDragStart(int x, int y)
 {
 	if (!mBoard->HasLevelAwardDropped())
@@ -1077,6 +1175,10 @@ void Challenge::BeghouledDragStart(int x, int y)
 }
 
 //0x421920
+/// @brief Handle mouse movement for challenge-specific interactions
+/// @param x The screen X coordinate
+/// @param y The screen Y coordinate
+/// @return True if the mouse movement was handled by the challenge
 bool Challenge::MouseMove(int x, int y)
 {
 	if (mApp->mGameMode == GAMEMODE_CHALLENGE_BEGHOULED && !mBoard->HasLevelAwardDropped())
@@ -1103,6 +1205,10 @@ bool Challenge::MouseMove(int x, int y)
 }
 
 //0x4219B0
+/// @brief Update tooltip display for challenge-specific UI elements
+/// @param theX The screen X coordinate
+/// @param theY The screen Y coordinate
+/// @return True if a tooltip was shown
 bool Challenge::UpdateToolTip(int theX, int theY)
 {
 	if (!mApp->IsSlotMachineLevel())
@@ -1129,6 +1235,9 @@ bool Challenge::UpdateToolTip(int theX, int theY)
 }
 
 //0x421B10
+/// @brief Handle mouse down for Whack-a-Zombie challenge
+/// @param theX The screen X coordinate
+/// @param theY The screen Y coordinate
 void Challenge::MouseDownWhackAZombie(int theX, int theY)
 {
 	mApp->ReanimationTryToGet(mBoard->mCursorObject->mReanimCursorID)->mAnimTime = 0.2f;
@@ -1177,6 +1286,7 @@ void Challenge::MouseDownWhackAZombie(int theX, int theY)
 }
 
 //0x421E10
+/// @brief Advance Crazy Dave dialog text during Scary Potter levels
 void Challenge::AdvanceCrazyDaveDialog()
 {
 	if (!mBoard->IsScaryPotterDaveTalking() || mApp->mCrazyDaveMessageIndex == -1)
@@ -1197,6 +1307,12 @@ void Challenge::AdvanceCrazyDaveDialog()
 }
 
 //0x421F10
+/// @brief Handle mouse down events for challenge-specific interactions
+/// @param x The screen X coordinate
+/// @param y The screen Y coordinate
+/// @param theClickCount The number of clicks
+/// @param theHitResult The hit test result
+/// @return True if the mouse down was handled by the challenge
 bool Challenge::MouseDown(int x, int y, int theClickCount, HitResult *theHitResult)
 {
 	if (mApp->mGameMode == GAMEMODE_CHALLENGE_ZEN_GARDEN)
@@ -1285,12 +1401,18 @@ bool Challenge::MouseDown(int x, int y, int theClickCount, HitResult *theHitResu
 }
 
 //0x4221B0
+/// @brief Get the screen rectangle for the slot machine handle
+/// @return The rectangle covering the slot machine handle
 Rect Challenge::SlotMachineGetHandleRect()
 {
 	return Rect(mBoard->mSeedBank->mX + 473, mBoard->mSeedBank->mY, 55, 80);
 }
 
 //0x4221E0
+/// @brief Handle mouse up events for Beghouled drag cancellation
+/// @param x The screen X coordinate
+/// @param y The screen Y coordinate
+/// @return False (mouse up not fully handled)
 bool Challenge::MouseUp(int x, int y)
 {
 	if (mApp->mGameMode == GAMEMODE_CHALLENGE_BEGHOULED)
@@ -1308,6 +1430,7 @@ bool Challenge::MouseUp(int x, int y)
 }
 
 //0x422290
+/// @brief Clear challenge-specific cursor state
 void Challenge::ClearCursor()
 {
 	if (mApp->mGameMode == GAMEMODE_CHALLENGE_BEGHOULED)
@@ -1322,6 +1445,9 @@ void Challenge::ClearCursor()
 }
 
 //0x4222F0
+/// @brief Update a Beghouled plant position with animation
+/// @param thePlant The plant to update
+/// @return True if the plant is still moving
 bool Challenge::UpdateBeghouledPlant(Plant *thePlant)
 {
 	bool aMoving = false;
@@ -1367,6 +1493,13 @@ bool Challenge::UpdateBeghouledPlant(Plant *thePlant)
 }
 
 //0x422480
+/// @brief Flash a Beghouled plant for visual feedback
+/// @param theFlashX The grid X to flash
+/// @param theFlashY The grid Y to flash
+/// @param theFromX The from grid X of the move
+/// @param theFromY The from grid Y of the move
+/// @param theToX The to grid X of the move
+/// @param theToY The to grid Y of the move
 void Challenge::BeghouledFlashPlant(int theFlashX, int theFlashY, int theFromX, int theFromY, int theToX, int theToY)
 {
 	if (theFlashX == theFromX && theFlashY == theFromY)
@@ -1386,6 +1519,11 @@ void Challenge::BeghouledFlashPlant(int theFlashX, int theFlashY, int theFromX, 
 }
 
 //0x422510
+/// @brief Flash plants when a twist move would create a match
+/// @param theBoardState The current Beghouled board state
+/// @param theGridX The grid X coordinate
+/// @param theGridY The grid Y coordinate
+/// @return True if a match would be created
 bool Challenge::BeghouledTwistFlashMatch(BeghouledBoardState *theBoardState, int theGridX, int theGridY)
 {
 	if (!BeghouledTwistMoveCausesMatch(theGridX, theGridY, theBoardState))
@@ -1403,6 +1541,13 @@ bool Challenge::BeghouledTwistFlashMatch(BeghouledBoardState *theBoardState, int
 }
 
 //0x422770
+/// @brief Flash plants based on a hypothetical board state to hint at matches
+/// @param theBoardState The board state to evaluate
+/// @param theFromX The from grid X coordinate
+/// @param theFromY The from grid Y coordinate
+/// @param theToX The to grid X coordinate
+/// @param theToY The to grid Y coordinate
+/// @return True if a match exists in the hypothetical state
 bool Challenge::BeghouledFlashFromBoardState(
 	BeghouledBoardState *theBoardState, int theFromX, int theFromY, int theToX, int theToY)
 {
@@ -1452,6 +1597,7 @@ bool Challenge::BeghouledFlashFromBoardState(
 }
 
 //0x4228E0
+/// @brief Cancel all active match flashing on Beghouled plants
 void Challenge::BeghouledCancelMatchFlashing()
 {
 	Plant *aPlant = nullptr;
@@ -1463,6 +1609,7 @@ void Challenge::BeghouledCancelMatchFlashing()
 }
 
 //0x422930
+/// @brief Flash a valid match on the Beghouled board for hint purposes
 void Challenge::BeghouledFlashAMatch()
 {
 	BeghouledBoardState aBoardState;
@@ -1497,6 +1644,7 @@ void Challenge::BeghouledFlashAMatch()
 }
 
 //0x4229F0
+/// @brief Main update loop for the Beghouled challenge
 void Challenge::UpdateBeghouled()
 {
 	mBoard->mProgressMeterWidth =
@@ -1584,6 +1732,7 @@ void Challenge::UpdateBeghouled()
 }
 
 //0x422CD0
+/// @brief Update the conveyor belt seed dispenser
 void Challenge::UpdateConveyorBelt()
 {
 	if (mBoard->HasLevelAwardDropped())
@@ -1897,6 +2046,7 @@ void Challenge::UpdateConveyorBelt()
 }
 
 //0x4234A0
+/// @brief Update the raining seeds challenge
 void Challenge::UpdateRainingSeeds()
 {
 	if (mBoard->HasLevelAwardDropped() || --mChallengeStateCounter != 0)
@@ -1920,6 +2070,7 @@ void Challenge::UpdateRainingSeeds()
 }
 
 //0x423670
+/// @brief Update the stormy night challenge (lightning flashes and rain)
 void Challenge::UpdateStormyNight()
 {
 	if (mBoard->mPaused)
@@ -1976,6 +2127,7 @@ void Challenge::UpdateStormyNight()
 }
 
 //0x423800
+/// @brief Update the slot machine challenge
 void Challenge::UpdateSlotMachine()
 {
 	int aSunMoney = ClampInt(mBoard->mSunMoney, 0, 2000);
@@ -2076,6 +2228,7 @@ void Challenge::UpdateSlotMachine()
 }
 
 //0x4244C0
+/// @brief Check if the Beghouled board has no possible moves and needs reshuffling
 void Challenge::BeghouledCheckStuckState()
 {
 	if (mChallengeState != STATECHALLENGE_NORMAL || mBoard->HasLevelAwardDropped())
@@ -2092,6 +2245,9 @@ void Challenge::BeghouledCheckStuckState()
 }
 
 //0x424590
+/// @brief Handle zombie eating a plant in Beghouled mode
+/// @param theZombie The zombie that ate the plant
+/// @param thePlant The plant that was eaten
 void Challenge::ZombieAtePlant(Zombie *theZombie, Plant *thePlant)
 {
 	if (mApp->mGameMode != GAMEMODE_CHALLENGE_BEGHOULED && mApp->mGameMode != GAMEMODE_CHALLENGE_BEGHOULED_TWIST)
@@ -2112,6 +2268,7 @@ void Challenge::ZombieAtePlant(Zombie *theZombie, Plant *thePlant)
 }
 
 //0x4246B0
+/// @brief Main update function for the challenge system
 void Challenge::Update()
 {
 	if (mApp->IsStormyNightLevel())
@@ -2214,6 +2371,10 @@ void Challenge::Update()
 }
 
 //0x4249F0
+/// @brief Get the seed type required for an art challenge at a grid position
+/// @param theGridX The grid X coordinate
+/// @param theGridY The grid Y coordinate
+/// @return The required seed type, or SEED_NONE if no requirement
 SeedType Challenge::GetArtChallengeSeed(int theGridX, int theGridY)
 {
 	if (theGridY < 6)
@@ -2232,6 +2393,9 @@ SeedType Challenge::GetArtChallengeSeed(int theGridX, int theGridY)
 }
 
 //0x424A40
+/// @brief Spawn the level award (trophy/money bag) at a grid position
+/// @param theGridX The grid X coordinate
+/// @param theGridY The grid Y coordinate
 void Challenge::SpawnLevelAward(int theGridX, int theGridY)
 {
 	if (mBoard->HasLevelAwardDropped())
@@ -2267,6 +2431,9 @@ void Challenge::SpawnLevelAward(int theGridX, int theGridY)
 }
 
 //0x424C90
+/// @brief Check if the art challenge placement criteria have been met
+/// @param theGridX The grid X coordinate of the last placed plant
+/// @param theGridY The grid Y coordinate of the last placed plant
 void Challenge::CheckForCompleteArtChallenge(int theGridX, int theGridY)
 {
 	if (mBoard->HasLevelAwardDropped())
@@ -2291,6 +2458,8 @@ void Challenge::CheckForCompleteArtChallenge(int theGridX, int theGridY)
 }
 
 //0x424DE0
+/// @brief Draw the art challenge backdrop with ghost plant previews
+/// @param g The graphics context to draw with
 void Challenge::DrawArtChallenge(Graphics *g)
 {
 	g->SetColorizeImages(true);
@@ -2324,6 +2493,8 @@ void Challenge::DrawArtChallenge(Graphics *g)
 }
 
 //0x424FB0
+/// @brief Draw Beghouled-specific overlays (craters and twist indicator)
+/// @param g The graphics context to draw with
 void Challenge::DrawBeghouled(Graphics *g)
 {
 	for (int aGridY = 0; aGridY < MAX_GRID_SIZE_Y; aGridY++)
@@ -2361,6 +2532,8 @@ void Challenge::DrawBeghouled(Graphics *g)
 }
 
 //0x4251E0
+/// @brief Draw the slot machine challenge UI and animation
+/// @param g The graphics context to draw with
 void Challenge::DrawSlotMachine(Graphics *g)
 {
 	if (mApp->mGameScene == SCENE_ZOMBIES_WON)
@@ -2379,6 +2552,8 @@ void Challenge::DrawSlotMachine(Graphics *g)
 }
 
 //0x425300
+/// @brief Draw challenge-specific backdrop elements
+/// @param g The graphics context to draw with
 void Challenge::DrawBackdrop(Graphics *g)
 {
 	GameMode aGameMode = mApp->mGameMode;
@@ -2426,6 +2601,8 @@ void Challenge::DrawBackdrop(Graphics *g)
 }
 
 //0x425460
+/// @brief Called when a plant is added to the board during an art challenge
+/// @param thePlant The plant that was added
 void Challenge::PlantAdded(Plant *thePlant)
 {
 	if (mApp->IsArtChallenge())
@@ -2441,6 +2618,11 @@ void Challenge::PlantAdded(Plant *thePlant)
 }
 
 //0x425550
+/// @brief Check if a plant can be placed at the given grid position
+/// @param theGridX The grid X coordinate
+/// @param theGridY The grid Y coordinate
+/// @param theSeedType The type of seed being planted
+/// @return A PlantingReason indicating if planting is allowed
 PlantingReason Challenge::CanPlantAt(int theGridX, int theGridY, SeedType theSeedType)
 {
 	if (mApp->IsWallnutBowlingLevel())
@@ -2496,6 +2678,7 @@ PlantingReason Challenge::CanPlantAt(int theGridX, int theGridY, SeedType theSee
 }
 
 //0x425690
+/// @brief Initialize zombie waves for survival mode based on current stage
 void Challenge::InitZombieWavesSurvival()
 {
 	mBoard->mZombieAllowed[ZOMBIE_NORMAL] = true;
@@ -2537,6 +2720,9 @@ void Challenge::InitZombieWavesSurvival()
 	}
 }
 
+/// @brief Initialize zombie waves from a predefined zombie type list
+/// @param theZombieList Array of zombie types to enable
+/// @param theListLength Number of entries in theZombieList
 void Challenge::InitZombieWavesFromList(ZombieType *theZombieList, int theListLength)
 {
 	for (int i = 0; i < theListLength; i++)
@@ -2546,6 +2732,7 @@ void Challenge::InitZombieWavesFromList(ZombieType *theZombieList, int theListLe
 }
 
 //0x425840
+/// @brief Initialize zombie waves for the current game mode
 void Challenge::InitZombieWaves()
 {
 	GameMode aGameMode = mApp->mGameMode;
@@ -2750,6 +2937,8 @@ void Challenge::InitZombieWaves()
 }
 
 //0x425DA0
+/// @brief Place graves for the Whack-a-Zombie challenge mode
+/// @param theGraveCount Number of graves to place
 void Challenge::WhackAZombiePlaceGraves(int theGraveCount)
 {
 	int aPickCount = 0;
@@ -2794,6 +2983,7 @@ void Challenge::WhackAZombiePlaceGraves(int theGraveCount)
 }
 
 //0x425FF0
+/// @brief Handle zombie spawning logic for the Whack-a-Zombie challenge
 void Challenge::WhackAZombieSpawning()
 {
 	if (mBoard->mCurrentWave == mBoard->mNumWaves && mBoard->mZombieCountDown == 0)
@@ -2914,6 +3104,8 @@ void Challenge::WhackAZombieSpawning()
 }
 
 //0x426580
+/// @brief Determine if zombie spawning should be updated this frame
+/// @return True if zombie spawning should be updated
 bool Challenge::UpdateZombieSpawning()
 {
 	if (mApp->IsWhackAZombieLevel())
@@ -2930,6 +3122,9 @@ bool Challenge::UpdateZombieSpawning()
 }
 
 //0x426620
+/// @brief Spawn a grave at the specified grid position
+/// @param theGridX The grid X coordinate
+/// @param theGridY The grid Y coordinate
 void Challenge::GraveDangerSpawnGraveAt(int theGridX, int theGridY)
 {
 	Plant *aPlant = nullptr;
@@ -2950,6 +3145,7 @@ void Challenge::GraveDangerSpawnGraveAt(int theGridX, int theGridY)
 }
 
 //0x4266C0
+/// @brief Spawn a random grave on the board for Grave Danger challenge
 void Challenge::GraveDangerSpawnRandomGrave()
 {
 	int aPickCount = 0;
@@ -2977,6 +3173,7 @@ void Challenge::GraveDangerSpawnRandomGrave()
 }
 
 //0x426850
+/// @brief Spawn the next zombie wave with challenge-specific modifications
 void Challenge::SpawnZombieWave()
 {
 	if (mApp->IsContinuousChallenge() && mBoard->mCurrentWave == mBoard->mNumWaves)
@@ -3024,6 +3221,10 @@ void Challenge::SpawnZombieWave()
 }
 
 //0x426A20
+/// @brief Draw a storm flash effect overlay
+/// @param g The graphics context to draw with
+/// @param theTime The current flash timer value
+/// @param theMaxAmount The maximum flash intensity
 void Challenge::DrawStormFlash(Graphics *g, int theTime, int theMaxAmount)
 {
 	MTRand aDrawRand = MTRand(mBoard->mMainCounter / 6);
@@ -3037,6 +3238,8 @@ void Challenge::DrawStormFlash(Graphics *g, int theTime, int theMaxAmount)
 }
 
 //0x426B20
+/// @brief Draw weather effects (rain and storm)
+/// @param g The graphics context to draw with
 void Challenge::DrawWeather(Graphics *g)
 {
 	if (mApp->IsStormyNightLevel() || mApp->mGameMode == GAMEMODE_CHALLENGE_RAINING_SEEDS)
@@ -3047,6 +3250,8 @@ void Challenge::DrawWeather(Graphics *g)
 }
 
 //0x426B90
+/// @brief Draw the rain effect overlay
+/// @param g The graphics context to draw with
 void Challenge::DrawRain(Graphics *g)
 {
 	if (mBoard->mCutScene->IsBeforePreloading() || !mApp->Is3DAccelerated())
@@ -3090,6 +3295,8 @@ void Challenge::DrawRain(Graphics *g)
 }
 
 //0x426E90
+/// @brief Draw the stormy night overlay effect
+/// @param g The graphics context to draw with
 void Challenge::DrawStormNight(Graphics *g)
 {
 	if (mChallengeState == STATECHALLENGE_STORM_FLASH_1 && mChallengeStateCounter < 300)
@@ -3122,12 +3329,14 @@ void Challenge::DrawStormNight(Graphics *g)
 }
 
 //0x426F60
+/// @brief Trigger the boss zombie entrance
 void Challenge::PlayBossEnter()
 {
 	mBoard->AddZombie(ZOMBIE_BOSS, 0);
 }
 
 //0x426FC0
+/// @brief Initialize the Portal Combat challenge mode (setup portals)
 void Challenge::PortalStart()
 {
 	mChallengeStateCounter = 9000;
@@ -3167,6 +3376,8 @@ void Challenge::PortalStart()
 }
 
 //0x4270A0
+/// @brief Update a portal's entity teleportation logic
+/// @param thePortal The portal grid item to update
 void Challenge::UpdatePortal(GridItem *thePortal)
 {
 	GridItem *anOtherPortal = GetOtherPortal(thePortal);
@@ -3246,6 +3457,9 @@ void Challenge::UpdatePortal(GridItem *thePortal)
 }
 
 //0x4273C0
+/// @brief Find the portal paired with this portal (same type, different instance)
+/// @param thePortal The portal to find the pair for
+/// @return The other matching portal, or nullptr if not found
 GridItem *Challenge::GetOtherPortal(GridItem *thePortal)
 {
 	GridItem *aGridItem = nullptr;
@@ -3260,6 +3474,10 @@ GridItem *Challenge::GetOtherPortal(GridItem *thePortal)
 }
 
 //0x427410
+/// @brief Get the portal at the specified grid position
+/// @param theGridX The grid X coordinate
+/// @param theGridY The grid Y coordinate
+/// @return The portal at the position, or nullptr if none exists
 GridItem *Challenge::GetPortalAt(int theGridX, int theGridY)
 {
 	GridItem *aGridItem = nullptr;
@@ -3274,6 +3492,7 @@ GridItem *Challenge::GetPortalAt(int theGridX, int theGridY)
 }
 
 //0x427470
+/// @brief Relocate a random portal to a new valid position
 void Challenge::MoveAPortal()
 {
 	TodWeightedArray aPickArray[MAX_PORTALS];
@@ -3325,6 +3544,7 @@ void Challenge::MoveAPortal()
 }
 
 //0x4275E0
+/// @brief Update the Portal Combat challenge mode (move portals and teleport entities)
 void Challenge::UpdatePortalCombat()
 {
 	GridItem *aGridItem = nullptr;
@@ -3357,6 +3577,9 @@ void Challenge::UpdatePortalCombat()
 }
 
 //0x427800
+/// @brief Calculate zombie spawn weight for a row in Portal Combat
+/// @param theGridY The row to calculate weight for
+/// @return The spawn weight multiplier for this row
 float Challenge::PortalCombatRowSpawnWeight(int theGridY)
 {
 	if (GetPortalDistanceToMower(theGridY) < 5)
@@ -3371,6 +3594,10 @@ float Challenge::PortalCombatRowSpawnWeight(int theGridY)
 }
 
 //0x427870
+/// @brief Find the nearest open portal to the left of a position
+/// @param theGridX The grid X coordinate
+/// @param theGridY The grid Y coordinate
+/// @return The nearest portal to the left, or nullptr if none found
 GridItem *Challenge::GetPortalToLeft(int theGridX, int theGridY)
 {
 	GridItem *aGridItemRecord = nullptr;
@@ -3391,6 +3618,9 @@ GridItem *Challenge::GetPortalToLeft(int theGridX, int theGridY)
 }
 
 //0x4278E0
+/// @brief Calculate the distance from a row to the nearest lawn mower through portals
+/// @param theGridY The row to measure from
+/// @return The portal traversal distance to the mower
 int Challenge::GetPortalDistanceToMower(int theGridY)
 {
 	int aGridX = 10;
@@ -3418,6 +3648,10 @@ int Challenge::GetPortalDistanceToMower(int theGridY)
 }
 
 //0x427970
+/// @brief Find the nearest open portal to the right of a position
+/// @param theGridX The grid X coordinate
+/// @param theGridY The grid Y coordinate
+/// @return The nearest portal to the right, or nullptr if none found
 GridItem *Challenge::GetPortalToRight(int theGridX, int theGridY)
 {
 	GridItem *aGridItemRecord = nullptr;
@@ -3466,6 +3700,10 @@ GridItem *Challenge::GetPortalLeftRight(int theGridX, int theGridY, bool theToLe
 }
 // BONUS_END
 
+/// @brief Check if a plant can target a zombie through the portal system
+/// @param thePlant The plant attempting to target
+/// @param theZombie The zombie being targeted
+/// @return True if the zombie is within the plant's portal-augmented range
 bool Challenge::CanTargetZombieWithPortals(Plant *thePlant, Zombie *theZombie)
 {
 	int aGridX = thePlant->mPlantCol;
@@ -3498,6 +3736,8 @@ bool Challenge::CanTargetZombieWithPortals(Plant *thePlant, Zombie *theZombie)
 }
 
 //0x427A60
+/// @brief Handle clicks on Beghouled seed packets (shuffle, crater, upgrades)
+/// @param theSeedPacket The seed packet that was clicked
 void Challenge::BeghouledPacketClicked(SeedPacket *theSeedPacket)
 {
 	/*
@@ -3612,6 +3852,7 @@ void Challenge::BeghouledPacketClicked(SeedPacket *theSeedPacket)
 }
 
 //0x427C70
+/// @brief Shuffle all plants on the Beghouled board into new random positions
 void Challenge::BeghouledShuffle()
 {
 	mBoard->ClearAdvice(ADVICE_NONE);
@@ -3626,6 +3867,8 @@ void Challenge::BeghouledShuffle()
 }
 
 //0x427D00
+/// @brief Check if any craters remain on the Beghouled board
+/// @return True if at least one crater can be cleared
 bool Challenge::BeghouledCanClearCrater()
 {
 	for (int aRow = 0; aRow < 5; aRow++)
@@ -3643,6 +3886,8 @@ bool Challenge::BeghouledCanClearCrater()
 }
 
 //0x427D30
+/// @brief Spawn a snorkel zombie for the Zombiquarium challenge
+/// @return The newly spawned snorkel zombie
 Zombie *Challenge::ZombiquariumSpawnSnorkle()
 {
 	Zombie *aZombie = mBoard->AddZombieInRow(ZOMBIE_SNORKEL, 0, 0);
@@ -3652,6 +3897,8 @@ Zombie *Challenge::ZombiquariumSpawnSnorkle()
 }
 
 //0x427DD0
+/// @brief Handle seed packet clicks in Zombiquarium mode (buy snorkel or trophy)
+/// @param theSeedPacket The seed packet that was clicked
 void Challenge::ZombiquariumPacketClicked(SeedPacket *theSeedPacket)
 {
 	int aCost = mBoard->GetCurrentPlantCost(theSeedPacket->mPacketType, SEED_NONE);
@@ -3685,6 +3932,9 @@ void Challenge::ZombiquariumPacketClicked(SeedPacket *theSeedPacket)
 }
 
 //0x427F60
+/// @brief Drop a brain item at the given screen position for Zombiquarium
+/// @param x The screen X coordinate
+/// @param y The screen Y coordinate
 void Challenge::ZombiquariumDropBrain(int x, int y)
 {
 	mBoard->ClearAdvice(ADVICE_ZOMBIQUARIUM_CLICK_TO_FEED);
@@ -3700,6 +3950,10 @@ void Challenge::ZombiquariumDropBrain(int x, int y)
 }
 
 //0x428010
+/// @brief Handle mouse down in Zombiquarium mode (drop brain or feed zombie)
+/// @param x The screen X coordinate
+/// @param y The screen Y coordinate
+/// @param theClickCount The number of clicks
 void Challenge::ZombiquariumMouseDown(int x, int y, int theClickCount)
 {
 	if (x < 80 || x > 720 || y < 90 || y > 430)
@@ -3725,6 +3979,7 @@ void Challenge::ZombiquariumMouseDown(int x, int y, int theClickCount)
 }
 
 //0x4280A0
+/// @brief Main update loop for the Zombiquarium challenge
 void Challenge::ZombiquariumUpdate()
 {
 	if (mBoard->mZombies.mSize == 0 && !mBoard->HasLevelAwardDropped())
@@ -3793,6 +4048,7 @@ void Challenge::ZombiquariumUpdate()
 }
 
 //0x428510
+/// @brief Add wallnut plants across the board for Shovel/Wallnut Bowling modes
 void Challenge::ShovelAddWallnuts()
 {
 	for (int aCol = 0; aCol < MAX_GRID_SIZE_X; aCol++)
@@ -3804,6 +4060,10 @@ void Challenge::ShovelAddWallnuts()
 	}
 }
 
+/// @brief Exclude a column from scary pot placement grid
+/// @param theCol The column index to exclude
+/// @param theGridArray The weighted grid array to modify
+/// @param theGridArrayCount The number of entries in theGridArray
 void Challenge::ScaryPotterDontPlaceInCol(int theCol, TodWeightedGridArray *theGridArray, int theGridArrayCount)
 {
 	for (int i = 0; i < theGridArrayCount; i++)
@@ -3815,6 +4075,11 @@ void Challenge::ScaryPotterDontPlaceInCol(int theCol, TodWeightedGridArray *theG
 	}
 }
 
+/// @brief Fill an entire column with a specific plant type for Scary Potter
+/// @param theCol The column to fill
+/// @param theSeedType The type of plant to place
+/// @param theGridArray The weighted grid array
+/// @param theGridArrayCount The number of entries in theGridArray
 void Challenge::ScaryPotterFillColumnWithPlant(int theCol,
 											   SeedType theSeedType,
 											   TodWeightedGridArray *theGridArray,
@@ -3833,6 +4098,13 @@ void Challenge::ScaryPotterFillColumnWithPlant(int theCol,
 }
 
 //0x428540
+/// @brief Place scary pots on the board with specified contents
+/// @param theScaryPotType The type of pot (seed, zombie, sun)
+/// @param theZombieType The zombie type inside zombie pots
+/// @param theSeedType The seed type inside seed pots
+/// @param theCount Number of pots to place
+/// @param theGridArray Weighted grid positions for placement
+/// @param theGridArrayCount Number of entries in theGridArray
 void Challenge::ScaryPotterPlacePot(ScaryPotType theScaryPotType,
 									ZombieType theZombieType,
 									SeedType theSeedType,
@@ -3866,6 +4138,9 @@ void Challenge::ScaryPotterPlacePot(ScaryPotType theScaryPotType,
 }
 
 //0x428620
+/// @brief Change the type of existing scary pots (e.g., reveal leaf/zombie pots)
+/// @param thePotType The new pot state to apply
+/// @param theCount The number of pots to change
 void Challenge::ScaryPotterChangePotType(GridItemState thePotType, int theCount)
 {
 	TodWeightedArray aPotArray[MAX_SCARY_POTS];
@@ -3899,6 +4174,7 @@ void Challenge::ScaryPotterChangePotType(GridItemState thePotType, int theCount)
 }
 
 //0x4286F0
+/// @brief Populate the board with scary pots for the current stage
 void Challenge::ScaryPotterPopulate()
 {
 	int aGridArrayCount = 0;
@@ -4120,6 +4396,7 @@ void Challenge::ScaryPotterPopulate()
 }
 
 //0x429500
+/// @brief Initialize Scary Potter challenge (show shovel tutorial if needed)
 void Challenge::ScaryPotterStart()
 {
 	if (mApp->IsAdventureMode())
@@ -4129,6 +4406,8 @@ void Challenge::ScaryPotterStart()
 }
 
 //0x4296A0
+/// @brief Check if all scary pots have been cleared and no zombies remain
+/// @return True if the Scary Potter challenge is complete
 bool Challenge::ScaryPotterIsCompleted()
 {
 	GridItem *aGridItem = nullptr;
@@ -4144,6 +4423,7 @@ bool Challenge::ScaryPotterIsCompleted()
 }
 
 //0x4296F0
+/// @brief Update the Scary Potter mallet animation and pot opening
 void Challenge::ScaryPotterUpdate()
 {
 	if (mChallengeState == STATECHALLENGE_SCARY_POTTER_MALLETING)
@@ -4167,6 +4447,8 @@ void Challenge::ScaryPotterUpdate()
 }
 
 //0x429760
+/// @brief Trigger the mallet animation to open a scary pot
+/// @param theScaryPot The pot grid item to open
 void Challenge::ScaryPotterMalletPot(GridItem *theScaryPot)
 {
 	mChallengeGridX = theScaryPot->mGridX;
@@ -4181,6 +4463,8 @@ void Challenge::ScaryPotterMalletPot(GridItem *theScaryPot)
 }
 
 //0x4298E0
+/// @brief Count the number of remaining scary pots on the board
+/// @return The number of scary pots currently on the board
 int Challenge::ScaryPotterCountPots()
 {
 	int aCount = 0;
@@ -4196,6 +4480,8 @@ int Challenge::ScaryPotterCountPots()
 }
 
 //0x429930
+/// @brief Check if the current puzzle stage awards a prize (every N stages)
+/// @return True if this stage should award a prize instead of clearing
 bool Challenge::PuzzleIsAwardStage()
 {
 	if (mApp->IsAdventureMode())
@@ -4208,6 +4494,9 @@ bool Challenge::PuzzleIsAwardStage()
 }
 
 //0x429980
+/// @brief Execute stage completion (award prize or fade to next stage)
+/// @param theGridX The grid X coordinate of the completion trigger
+/// @param theGridY The grid Y coordinate of the completion trigger
 void Challenge::PuzzlePhaseComplete(int theGridX, int theGridY)
 {
 	if (PuzzleIsAwardStage())
@@ -4237,12 +4526,17 @@ void Challenge::PuzzlePhaseComplete(int theGridX, int theGridY)
 	}
 }
 
+/// @brief Get the sun count stored inside a scary pot
+/// @param theScaryPot The scary pot grid item
+/// @return The number of suns inside the pot
 int Challenge::ScaryPotterCountSunInPot(GridItem *theScaryPot)
 {
 	return theScaryPot->mSunCount;
 }
 
 //0x429AC0
+/// @brief Open a scary pot and spawn its contents (seed, zombie, or sun)
+/// @param theScaryPot The scary pot grid item to open
 void Challenge::ScaryPotterOpenPot(GridItem *theScaryPot)
 {
 	int aXPos = mBoard->GridToPixelX(theScaryPot->mGridX, theScaryPot->mGridY);
@@ -4298,6 +4592,9 @@ void Challenge::ScaryPotterOpenPot(GridItem *theScaryPot)
 }
 
 //0x429DB0
+/// @brief Explode all scary pots in a 1-tile radius (Jack-in-the-Box effect)
+/// @param thePosX The screen X coordinate of the explosion
+/// @param thePosY The screen Y coordinate of the explosion
 void Challenge::ScaryPotterJackExplode(int thePosX, int thePosY)
 {
 	int aGridX = mBoard->PixelToGridX(thePosX, thePosY);
@@ -4315,6 +4612,7 @@ void Challenge::ScaryPotterJackExplode(int thePosX, int thePosY)
 }
 
 //0x429E50
+/// @brief Clear the board and advance to the next puzzle/I-Zombie stage
 void Challenge::PuzzleNextStageClear()
 {
 	mApp->PlaySample(Sexy::SOUND_HUGE_WAVE);
@@ -4422,6 +4720,10 @@ ZombieType Challenge::IZombieSeedTypeToZombieType(SeedType theSeedType)
 }
 
 //0x42A0F0
+/// @brief Place a zombie on the board in I-Zombie mode
+/// @param theZombieType The type of zombie to place
+/// @param theGridX The grid X coordinate
+/// @param theGridY The grid Y coordinate
 void Challenge::IZombiePlaceZombie(ZombieType theZombieType, int theGridX, int theGridY)
 {
 	Zombie *aZombie = mBoard->AddZombieInRow(theZombieType, theGridY, 0);
@@ -4440,6 +4742,10 @@ void Challenge::IZombiePlaceZombie(ZombieType theZombieType, int theGridX, int t
 }
 
 //0x42A210
+/// @brief Handle mouse down in I-Zombie mode (place zombie on click)
+/// @param theX The screen X coordinate
+/// @param theY The screen Y coordinate
+/// @param theClickCount The number of clicks
 void Challenge::IZombieMouseDownWithZombie(int theX, int theY, int theClickCount)
 {
 	if (theClickCount >= 0)
@@ -4488,6 +4794,8 @@ void Challenge::IZombieMouseDownWithZombie(int theX, int theY, int theClickCount
 }
 
 //0x42A530
+/// @brief Setup a plant for I-Zombie mode (freeze reanim, arm potato mine)
+/// @param thePlant The plant to setup
 void Challenge::IZombieSetupPlant(Plant *thePlant)
 {
 	Reanimation *aBodyReanim = mApp->ReanimationTryToGet(thePlant->mBodyReanimID);
@@ -4514,6 +4822,10 @@ void Challenge::IZombieSetupPlant(Plant *thePlant)
 }
 
 //0x42A660
+/// @brief Place a single plant in I-Zombie mode at a specific grid square
+/// @param theSeedType The type of plant to place
+/// @param theGridX The grid X coordinate
+/// @param theGridY The grid Y coordinate
 void Challenge::IZombiePlacePlantInSquare(SeedType theSeedType, int theGridX, int theGridY)
 {
 	if (mBoard->CanPlantAt(theGridX, theGridY, theSeedType) == PLANTING_OK)
@@ -4523,6 +4835,10 @@ void Challenge::IZombiePlacePlantInSquare(SeedType theSeedType, int theGridX, in
 }
 
 //0x42A6C0
+/// @brief Place multiple plants randomly in I-Zombie mode
+/// @param theSeedType The type of plant to place
+/// @param theCount The number of plants to place
+/// @param theGridY Optional row restriction (-1 for any row)
 void Challenge::IZombiePlacePlants(SeedType theSeedType, int theCount, int theGridY)
 {
 	int aColumns = 6;
@@ -4579,6 +4895,7 @@ void Challenge::IZombiePlacePlants(SeedType theSeedType, int theCount, int theGr
 }
 
 //0x42A890
+/// @brief Initialize the I-Zombie level (place brains and starting plants)
 void Challenge::IZombieInitLevel()
 {
 	mChallengeScore = 0;
@@ -4806,12 +5123,14 @@ void Challenge::IZombieInitLevel()
 }
 
 //0x42B290
+/// @brief Start the I-Zombie challenge (display eat-all-brains message)
 void Challenge::IZombieStart()
 {
 	mBoard->DisplayAdvice("[ADVICE_I_ZOMBIE_EAT_ALL_BRAINS]", MESSAGE_STYLE_HINT_FAST, ADVICE_I_ZOMBIE_EAT_ALL_BRAINS);
 }
 
 //0x42B340
+/// @brief Main update loop for the I-Zombie challenge
 void Challenge::IZombieUpdate()
 {
 	int aSunMoney = mBoard->mSunMoney + mBoard->CountSunBeingCollected();
@@ -4862,6 +5181,9 @@ void Challenge::IZombieUpdate()
 }
 
 //0x42B530
+/// @brief Check if a seed type is a zombie seed usable in I-Zombie/Zombiquarium
+/// @param theSeedType The seed type to check
+/// @return True if the seed represents a zombie type
 bool Challenge::IsZombieSeedType(SeedType theSeedType)
 {
 	return theSeedType == SEED_ZOMBIQUARIUM_SNORKLE || theSeedType == SEED_ZOMBIQUARIUM_TROPHY ||
@@ -4875,6 +5197,9 @@ bool Challenge::IsZombieSeedType(SeedType theSeedType)
 }
 
 //0x42B590
+/// @brief Apply a filter effect to all reanimations of a plant in I-Zombie
+/// @param thePlant The plant to apply the filter to
+/// @param theFilterEffect The filter effect to apply
 void Challenge::IZombieSetPlantFilterEffect(Plant *thePlant, FilterEffect theFilterEffect)
 {
 	Reanimation *aBodyReanim = mApp->ReanimationTryToGet(thePlant->mBodyReanimID);
@@ -4892,6 +5217,9 @@ void Challenge::IZombieSetPlantFilterEffect(Plant *thePlant, FilterEffect theFil
 }
 
 //0x42B690
+/// @brief Draw a plant in I-Zombie mode with a zombie-like palette
+/// @param g The graphics context to draw with
+/// @param thePlant The plant to draw
 void Challenge::IZombieDrawPlant(Graphics *g, Plant *thePlant)
 {
 	Reanimation *aReanim = mApp->ReanimationTryToGet(thePlant->mBodyReanimID);
@@ -4952,6 +5280,8 @@ GridItem *Challenge::IZombieGetBrainTarget(Zombie *theZombie)
 }
 
 //0x42B8B0
+/// @brief Score a brain collection and check for win condition
+/// @param theBrain The brain grid item that was scored
 void Challenge::IZombieScoreBrain(GridItem *theBrain)
 {
 	mBoard->mChallenge->mChallengeScore++;
@@ -4977,6 +5307,9 @@ void Challenge::IZombieScoreBrain(GridItem *theBrain)
 }
 
 //0x42B970
+/// @brief Handle a zombie eating a brain in I-Zombie mode
+/// @param theZombie The zombie eating the brain
+/// @return True if the zombie ate a brain
 bool Challenge::IZombieEatBrain(Zombie *theZombie)
 {
 	GridItem *aBrain = IZombieGetBrainTarget(theZombie);
@@ -4995,6 +5328,8 @@ bool Challenge::IZombieEatBrain(Zombie *theZombie)
 }
 
 //0x42B9D0
+/// @brief Drop sun from a sunflower when it is eaten in I-Zombie mode
+/// @param thePlant The plant that was eaten
 void Challenge::IZombiePlantDropRemainingSun(Plant *thePlant)
 {
 	if (thePlant->mSeedType == SEED_SUNFLOWER)
@@ -5008,6 +5343,8 @@ void Challenge::IZombiePlantDropRemainingSun(Plant *thePlant)
 }
 
 //0x42BA30
+/// @brief Squish an I-Zombie brain with the cursor
+/// @param theBrain The brain grid item to squish
 void Challenge::IZombieSquishBrain(GridItem *theBrain)
 {
 	theBrain->mRenderOrder = Board::MakeRenderOrder(RENDER_LAYER_GRAVE_STONE, theBrain->mGridY, 0);
@@ -5018,6 +5355,8 @@ void Challenge::IZombieSquishBrain(GridItem *theBrain)
 }
 
 //0x42BAC0
+/// @brief Count the number of uncought squirrels remaining
+/// @return The number of squirrels still not caught or turned zombie
 int Challenge::SquirrelCountUncaught()
 {
 	int aCount = 0;
@@ -5037,6 +5376,7 @@ int Challenge::SquirrelCountUncaught()
 }
 
 //0x42BB10
+/// @brief Initialize the Squirrel challenge (place squirrels on the board)
 void Challenge::SquirrelStart()
 {
 	int aPicksCount = 0;
@@ -5084,6 +5424,8 @@ void Challenge::SquirrelStart()
 }
 
 //0x42BCB0
+/// @brief Handle squirrel chewing animation and plant damage
+/// @param theSquirrel The squirrel grid item
 void Challenge::SquirrelChew(GridItem *theSquirrel)
 {
 	theSquirrel->mGridItemCounter = RandRangeInt(100, 400);
@@ -5100,6 +5442,8 @@ void Challenge::SquirrelChew(GridItem *theSquirrel)
 	}
 }
 
+/// @brief Make a squirrel peek out from its hiding position
+/// @param theSquirrel The squirrel grid item
 void Challenge::SquirrelPeek(GridItem *theSquirrel)
 {
 	theSquirrel->mGridItemCounter = 50;
@@ -5107,6 +5451,8 @@ void Challenge::SquirrelPeek(GridItem *theSquirrel)
 }
 
 //0x42BE10
+/// @brief Handle squirrel found event (turn zombie or run away)
+/// @param theSquirrel The squirrel grid item that was found
 void Challenge::SquirrelFound(GridItem *theSquirrel)
 {
 	if (theSquirrel->mGridItemState == GRIDITEM_STATE_SQUIRREL_ZOMBIE)
@@ -5185,6 +5531,8 @@ void Challenge::SquirrelFound(GridItem *theSquirrel)
 }
 
 //0x42C1B0
+/// @brief Update a single squirrel (timers, state transitions)
+/// @param theSquirrel The squirrel grid item to update
 void Challenge::SquirrelUpdateOne(GridItem *theSquirrel)
 {
 	int &aCounter = theSquirrel->mGridItemCounter;
@@ -5223,6 +5571,7 @@ void Challenge::SquirrelUpdateOne(GridItem *theSquirrel)
 }
 
 //0x42C2C0
+/// @brief Main update loop for the Squirrel challenge (AI + score)
 void Challenge::SquirrelUpdate()
 {
 	GridItem *aGridItem = 0x0;
@@ -5240,6 +5589,7 @@ void Challenge::SquirrelUpdate()
 }
 
 //0x42C340
+/// @brief Update rain splash effects for Raining Seeds/Stormy Night
 void Challenge::UpdateRain()
 {
 	mRainCounter--;
@@ -5271,6 +5621,7 @@ void Challenge::UpdateRain()
 }
 
 //0x42C5C0
+/// @brief Update the Last Stand challenge (onslaught button and counter)
 void Challenge::LastStandUpdate()
 {
 	if (mBoard->mNextSurvivalStageCounter == 0 && mChallengeState == STATECHALLENGE_NORMAL &&
@@ -5297,6 +5648,7 @@ void Challenge::LastStandUpdate()
 }
 
 //0x42C6F0
+/// @brief Handle Last Stand stage completion (reset plants, show message)
 void Challenge::LastStandCompletedStage()
 {
 	mApp->PlaySample(Sexy::SOUND_HUGE_WAVE);
@@ -5323,6 +5675,7 @@ void Challenge::LastStandCompletedStage()
 }
 
 //0x42C9B0
+/// @brief Update tutorial state for Whack-a-Zombie challenge
 void Challenge::WhackAZombieUpdate()
 {
 	if (mBoard->mSunMoney > 0 && mBoard->mTutorialState == TUTORIAL_OFF)
@@ -5341,6 +5694,10 @@ void Challenge::WhackAZombieUpdate()
 	}
 }
 
+/// @brief Check if the mouse cursor is hovering over the Tree of Wisdom
+/// @param theX The screen X coordinate
+/// @param theY The screen Y coordinate
+/// @return True if the cursor is over the tree
 bool Challenge::TreeOfWisdomMouseOn(int theX, int theY)
 {
 	HitResult aHitResult;
@@ -5349,12 +5706,16 @@ bool Challenge::TreeOfWisdomMouseOn(int theX, int theY)
 			mBoard->mCursorObject->mCursorType == CURSOR_TYPE_TREE_FOOD);
 }
 
+/// @brief Get the current size of the Tree of Wisdom from player records
+/// @return The tree height/record value
 int Challenge::TreeOfWisdomGetSize()
 {
 	return mApp->mPlayerInfo->mChallengeRecords[mApp->GetCurrentChallengeIndex()];
 }
 
 //0x42CA30
+/// @brief Draw the Tree of Wisdom (reanimations, speech bubble, height text)
+/// @param g The graphics context to draw with
 void Challenge::TreeOfWisdomDraw(Graphics *g)
 {
 	bool aMouseOn = TreeOfWisdomMouseOn(mApp->mWidgetManager->mLastMouseX - mBoard->mX,
@@ -5446,6 +5807,7 @@ void Challenge::TreeOfWisdomDraw(Graphics *g)
 }
 
 //0x42CEE0
+/// @brief Initialize the Tree of Wisdom (load reanimations, set initial size)
 void Challenge::TreeOfWisdomInit()
 {
 	ReanimatorEnsureDefinitionLoaded(REANIM_TREEOFWISDOM, true);
@@ -5498,6 +5860,7 @@ void Challenge::TreeOfWisdomInit()
 }
 
 //0x42D1F0
+/// @brief Grow the Tree of Wisdom by one level and play grow animation
 void Challenge::TreeOfWisdomGrow()
 {
 	mApp->mPlayerInfo->mChallengeRecords[mApp->GetCurrentChallengeIndex()]++;
@@ -5520,6 +5883,7 @@ void Challenge::TreeOfWisdomGrow()
 }
 
 //0x42D360
+/// @brief Apply tree food fertilizer to the Tree of Wisdom
 void Challenge::TreeOfWisdomFertilize()
 {
 	GridItem *aTreeFood = mBoard->mGridItems.DataArrayAlloc();
@@ -5541,6 +5905,7 @@ void Challenge::TreeOfWisdomFertilize()
 }
 
 //0x42D480
+/// @brief Trigger tree babbling state with random dialogue
 void Challenge::TreeOfWisdomBabble()
 {
 	mChallengeState = STATECHALLENGE_TREE_BABBLING;
@@ -5567,6 +5932,7 @@ void Challenge::TreeOfWisdomBabble()
 }
 
 //0x42D530
+/// @brief Set the tree wisdom dialogue index based on tree size milestones
 void Challenge::TreeOfWisdomGiveWisdom()
 {
 	mChallengeState = STATECHALLENGE_TREE_GIVE_WISDOM;
@@ -5596,6 +5962,7 @@ void Challenge::TreeOfWisdomGiveWisdom()
 }
 
 //0x42D5C0
+/// @brief Set a random repeat dialogue for the Tree of Wisdom
 void Challenge::TreeOfWisdomSayRepeat()
 {
 	int aTreeSize = TreeOfWisdomGetSize();
@@ -5619,6 +5986,8 @@ void Challenge::TreeOfWisdomSayRepeat()
 	mChallengeStateCounter = 600;
 }
 
+/// @brief Update tree food item animation and trigger grow when complete
+/// @param theZenTool The tree food grid item
 void Challenge::TreeOfWisdomToolUpdate(GridItem *theZenTool)
 {
 	Reanimation *aReanim = mApp->ReanimationTryToGet(theZenTool->mGridItemReanimID);
@@ -5630,6 +5999,7 @@ void Challenge::TreeOfWisdomToolUpdate(GridItem *theZenTool)
 }
 
 //0x42D680
+/// @brief Main update loop for Tree of Wisdom (clouds, babble timers, tool checks)
 void Challenge::TreeOfWisdomUpdate()
 {
 	GridItem *aGridItem = nullptr;
@@ -5689,6 +6059,7 @@ void Challenge::TreeOfWisdomUpdate()
 }
 
 //0x42D7E0
+/// @brief Process tree food items left on the board (grow and remove)
 void Challenge::TreeOfWisdomLeave()
 {
 	GridItem *aGridItem = nullptr;
@@ -5703,6 +6074,7 @@ void Challenge::TreeOfWisdomLeave()
 }
 
 //0x42D830
+/// @brief Leave Tree of Wisdom and transition to Zen Garden
 void Challenge::TreeOfWisdomNextGarden()
 {
 	TreeOfWisdomLeave();
@@ -5711,6 +6083,7 @@ void Challenge::TreeOfWisdomNextGarden()
 }
 
 //0x42D8C0
+/// @brief Open the store screen from the Tree of Wisdom (buy tree food)
 void Challenge::TreeOfWisdomOpenStore()
 {
 	TreeOfWisdomLeave();
@@ -5722,6 +6095,9 @@ void Challenge::TreeOfWisdomOpenStore()
 }
 
 //0x42D9A0
+/// @brief Handle mouse click on the Tree of Wisdom (apply fertilizer)
+/// @param theMouseX The screen X coordinate
+/// @param theMouseY The screen Y coordinate
 void Challenge::TreeOfWisdomTool(int theMouseX, int theMouseY)
 {
 	if (TreeOfWisdomMouseOn(theMouseX, theMouseY))
@@ -5733,6 +6109,11 @@ void Challenge::TreeOfWisdomTool(int theMouseX, int theMouseY)
 }
 
 //0x42D9E0
+/// @brief Hit-test the Tree of Wisdom for mouse interaction
+/// @param theX The screen X coordinate
+/// @param theY The screen Y coordinate
+/// @param theHitResult Output hit result structure
+/// @return True if the tree was hit
 bool Challenge::TreeOfWisdomHitTest(int theX, int theY, HitResult *theHitResult)
 {
 	Rect aTreeRect;
@@ -5761,6 +6142,8 @@ bool Challenge::TreeOfWisdomHitTest(int theX, int theY, HitResult *theHitResult)
 }
 
 //0x42DA90
+/// @brief Check if the Tree of Wisdom can be fed fertilizer
+/// @return True if the tree can currently be fed
 bool Challenge::TreeOfWisdomCanFeed()
 {
 	if (mChallengeState == STATECHALLENGE_TREE_JUST_GREW)
