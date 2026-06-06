@@ -132,96 +132,96 @@ class Board : public Widget, public ButtonListener
 	Plant  *mDebugSelectedPlant;
 #endif
 
-	bool mPaused;													  //+0x164
-	GridSquareType mGridSquareType[MAX_GRID_SIZE_X][MAX_GRID_SIZE_Y]; //+0x168
-	int mGridCelLook[MAX_GRID_SIZE_X][MAX_GRID_SIZE_Y];				  //+0x240
-	int mGridCelOffset[MAX_GRID_SIZE_X][MAX_GRID_SIZE_Y][2];		  //+0x318
-	int mGridCelFog[MAX_GRID_SIZE_X][MAX_GRID_SIZE_Y + 1];			  //+0x4C8
-	bool mEnableGraveStones;										  //+0x5C4
-	int mSpecialGraveStoneX;										  //+0x5C8
-	int mSpecialGraveStoneY;										  //+0x5CC
-	float mFogOffset;												  //+0x5D0
-	int mFogBlownCountDown;											  //+0x5D4
-	PlantRowType mPlantRow[MAX_GRID_SIZE_Y];						  //+0x5D8
-	int mWaveRowGotLawnMowered[MAX_GRID_SIZE_Y];					  //+0x5F0
-	int mBonusLawnMowersRemaining;									  //+0x608
-	int mIceMinX[MAX_GRID_SIZE_Y];									  //+0x60C
-	int mIceTimer[MAX_GRID_SIZE_Y];									  //+0x624
-	ParticleSystemID mIceParticleID[MAX_GRID_SIZE_Y];				  //+0x63C
-	TodSmoothArray mRowPickingArray[MAX_GRID_SIZE_Y];				  //+0x654
-	ZombieType mZombiesInWave[MAX_ZOMBIE_WAVES][MAX_ZOMBIES_IN_WAVE]; //+0x6B4
-	bool mZombieAllowed[100];										  //+0x54D4
-	int mSunCountDown;												  //+0x5538
-	int mNumSunsFallen;												  //+0x553C
-	int mShakeCounter;												  //+0x5540
-	int mShakeAmountX;												  //+0x5544
-	int mShakeAmountY;												  //+0x5548
-	BackgroundType mBackground;										  //+0x554C
-	int mLevel;														  //+0x5550
-	int mSodPosition;												  //+0x5554
-	int mPrevMouseX;												  //+0x5558
-	int mPrevMouseY;												  //+0x555C
-	int mSunMoney;													  //+0x5560
-	int mNumWaves;													  //+0x5564
-	int mMainCounter;												  //+0x5568
-	int mEffectCounter;												  //+0x556C
-	int mDrawCount;													  //+0x5570
-	int mRiseFromGraveCounter;										  //+0x5574
-	int mOutOfMoneyCounter;											  //+0x5578
-	int mCurrentWave;												  //+0x557C
-	int mTotalSpawnedWaves;											  //+0x5580
-	TutorialState mTutorialState;									  //+0x5584
-	ParticleSystemID mTutorialParticleID;							  //+0x5588
-	int mTutorialTimer;												  //+0x558C
-	int mLastBungeeWave;											  //+0x5590
-	int mZombieHealthToNextWave;									  //+0x5594
-	int mZombieHealthWaveStart;										  //+0x5598
-	int mZombieCountDown;											  //+0x559C
-	int mZombieCountDownStart;										  //+0x55A0
-	int mHugeWaveCountDown;											  //+0x55A4
-	bool mHelpDisplayed[NUM_ADVICE_TYPES];							  //+0x55A8
-	AdviceType mHelpIndex;											  //+0x55EC
-	bool mFinalBossKilled;											  //+0x55F0
-	bool mShowShovel;												  //+0x55F1
-	int mCoinBankFadeCount;											  //+0x55F4
-	DebugTextMode mDebugTextMode;									  //+0x55F8
-	bool mLevelComplete;											  //+0x55FC
-	int mBoardFadeOutCounter;										  //+0x5600
-	int mNextSurvivalStageCounter;									  //+0x5604
-	int mScoreNextMowerCounter;										  //+0x5608
-	bool mLevelAwardSpawned;										  //+0x560C
-	int mProgressMeterWidth;										  //+0x5610
-	int mFlagRaiseCounter;											  //+0x5614
-	int mIceTrapCounter;											  //+0x5618
-	int mBoardRandSeed;												  //+0x561C
-	ParticleSystemID mPoolSparklyParticleID;						  //+0x5620
-	ReanimationID mFwooshID[MAX_GRID_SIZE_Y][12];					  //+0x5624
-	int mFwooshCountDown;											  //+0x5744
-	int mTimeStopCounter;											  //+0x5748
-	bool mDroppedFirstCoin;											  //+0x574C
-	int mFinalWaveSoundCounter;										  //+0x5750
-	int mCobCannonCursorDelayCounter;								  //+0x5754
-	int mCobCannonMouseX;											  //+0x5758
-	int mCobCannonMouseY;											  //+0x575C
-	bool mKilledYeti;												  //+0x5760
-	bool mMustacheMode;												  //+0x5761
-	bool mSuperMowerMode;											  //+0x5762
-	bool mFutureMode;												  //+0x5763
-	bool mPinataMode;												  //+0x5764
-	bool mDanceMode;												  //+0x5765
-	bool mDaisyMode;												  //+0x5766
-	bool mSukhbirMode;												  //+0x5767
-	BoardResult mPrevBoardResult;									  //+0x5768
-	int mTriggeredLawnMowers;										  //+0x576C
-	int mPlayTimeActiveLevel;										  //+0x5770
-	int mPlayTimeInactiveLevel;										  //+0x5774
-	int mMaxSunPlants;												  //+0x5778
-	uint32_t mStartDrawTime;										  //+0x577C
-	uint32_t mIntervalDrawTime;										  //+0x5780
-	int mIntervalDrawCountStart;									  //+0x5784
-	float mMinFPS;													  //+0x5788
-	int mPreloadTime;												  //+0x578C
-	int mGameID;													  //+0x5790
+	bool mPaused;
+	GridSquareType mGridSquareType[MAX_GRID_SIZE_X][MAX_GRID_SIZE_Y];
+	int mGridCelLook[MAX_GRID_SIZE_X][MAX_GRID_SIZE_Y];
+	int mGridCelOffset[MAX_GRID_SIZE_X][MAX_GRID_SIZE_Y][2];
+	int mGridCelFog[MAX_GRID_SIZE_X][MAX_GRID_SIZE_Y + 1];
+	bool mEnableGraveStones;
+	int mSpecialGraveStoneX;
+	int mSpecialGraveStoneY;
+	float mFogOffset;
+	int mFogBlownCountDown;
+	PlantRowType mPlantRow[MAX_GRID_SIZE_Y];
+	int mWaveRowGotLawnMowered[MAX_GRID_SIZE_Y];
+	int mBonusLawnMowersRemaining;
+	int mIceMinX[MAX_GRID_SIZE_Y];
+	int mIceTimer[MAX_GRID_SIZE_Y];
+	ParticleSystemID mIceParticleID[MAX_GRID_SIZE_Y];
+	TodSmoothArray mRowPickingArray[MAX_GRID_SIZE_Y];
+	ZombieType mZombiesInWave[MAX_ZOMBIE_WAVES][MAX_ZOMBIES_IN_WAVE];
+	bool mZombieAllowed[100];
+	int mSunCountDown;
+	int mNumSunsFallen;	
+	int mShakeCounter;
+	int mShakeAmountX;
+	int mShakeAmountY;
+	BackgroundType mBackground;
+	int mLevel;
+	int mSodPosition;
+	int mPrevMouseX;
+	int mPrevMouseY;
+	int mSunMoney;
+	int mNumWaves;
+	int mMainCounter;
+	int mEffectCounter;
+	int mDrawCount;
+	int mRiseFromGraveCounter;
+	int mOutOfMoneyCounter;
+	int mCurrentWave;
+	int mTotalSpawnedWaves;
+	TutorialState mTutorialState;
+	ParticleSystemID mTutorialParticleID;
+	int mTutorialTimer;
+	int mLastBungeeWave;
+	int mZombieHealthToNextWave;
+	int mZombieHealthWaveStart;
+	int mZombieCountDown;
+	int mZombieCountDownStart;
+	int mHugeWaveCountDown;
+	bool mHelpDisplayed[NUM_ADVICE_TYPES];
+	AdviceType mHelpIndex;
+	bool mFinalBossKilled;
+	bool mShowShovel;
+	int mCoinBankFadeCount;
+	DebugTextMode mDebugTextMode;
+	bool mLevelComplete;
+	int mBoardFadeOutCounter;
+	int mNextSurvivalStageCounter;
+	int mScoreNextMowerCounter;
+	bool mLevelAwardSpawned;
+	int mProgressMeterWidth;
+	int mFlagRaiseCounter;
+	int mIceTrapCounter;
+	int mBoardRandSeed;
+	ParticleSystemID mPoolSparklyParticleID;
+	ReanimationID mFwooshID[MAX_GRID_SIZE_Y][12];
+	int mFwooshCountDown;
+	int mTimeStopCounter;
+	bool mDroppedFirstCoin;
+	int mFinalWaveSoundCounter;
+	int mCobCannonCursorDelayCounter;
+	int mCobCannonMouseX;
+	int mCobCannonMouseY;
+	bool mKilledYeti;
+	bool mMustacheMode;
+	bool mSuperMowerMode;
+	bool mFutureMode;
+	bool mPinataMode;
+	bool mDanceMode;
+	bool mDaisyMode;
+	bool mSukhbirMode;
+	BoardResult mPrevBoardResult;
+	int mTriggeredLawnMowers;
+	int mPlayTimeActiveLevel;
+	int mPlayTimeInactiveLevel;
+	int mMaxSunPlants;
+	uint32_t mStartDrawTime;
+	uint32_t mIntervalDrawTime;
+	int mIntervalDrawCountStart;
+	float mMinFPS;
+	int mPreloadTime;
+	int mGameID;
 	int mGravesCleared;
 	int mPlantsEaten;
 	int mPlantsShoveled;
@@ -571,6 +571,8 @@ class Board : public Widget, public ButtonListener
 	/// @param g Graphics object
 	void DrawUICoinBank(Graphics *g);
 
+	/// @brief Show the CoinBank for a time duration
+	/// @param theDuration The amount of time to keep the CoinBank on screen
 	void ShowCoinBank(int theDuration = 1000);
 
 	/// @brief Start the level fade-out sequence or go to the next stage in LastStand/IZombie/Vasebreaker/Survival
@@ -611,10 +613,18 @@ class Board : public Widget, public ButtonListener
 	/// @brief Update the iced rows on the Board
 	void UpdateIce();
 
+	/// @brief Get the ice's render order in a row
+	/// @param theRow The reference row
+	/// @return The render order
 	int GetIceZPos(int theRow);
 
+	/// @brief Can we spawn a BobsledZombie
+	/// @return True if the requirments are met
 	bool CanAddBobSled();
 
+	/// @brief Shake the board on the X and Y axis
+	/// @param theShakeAmountX The X Factor
+	/// @param theShakeAmountY The Y Factor
 	void ShakeBoard(int theShakeAmountX, int theShakeAmountY);
 
 	/// @brief Count every non-triggered lawnmower
@@ -694,26 +704,49 @@ class Board : public Widget, public ButtonListener
 	/// @param theRadius The Circle's Radius
 	void KillAllPlantsInRadius(int theX, int theY, int theRadius);
 
+	/// @brief Get Pumpkin at the grid coordinate
+	/// @param theGridX The grid X Coordinate
+	/// @param theGridY	The grid Y Coordinate
+	/// @return Pumpkin or nullptr if it doesn't exist
 	Plant *GetPumpkinAt(int theGridX, int theGridY);
 
+	/// @brief Get FlowerPot at the grid coordinate
+	/// @param theGridX The grid X Coordinate
+	/// @param theGridY	The grid Y Coordinate
+	/// @return FlowerPot or nullptr if it doesn't exist
 	Plant *GetFlowerPotAt(int theGridX, int theGridY);
+
+	/// @brief Get UmbrellaLeaf at the grid coordinate
+	/// @param theGridX The grid X Coordinate
+	/// @param theGridY	The grid Y Coordinate
+	/// @return UmbrellaLeaf or nullptr if it doesn't exist
+	Plant *FindUmbrellaPlant(int theGridX, int theGridY);
 
 	/// @return True if theZombieType can spawn in theLevel
 	static bool CanZombieSpawnOnLevel(ZombieType theZombieType, int theLevel);
 
 	bool IsZombieWaveDistributionOk();
 
+	/// @brief Setup the Background image and rows
 	void PickBackground();
 
+	/// @brief Setup the Zombie waves
 	void InitZombieWaves();
 
+	/// @brief Setup the Survival stage
 	void InitSurvivalStage();
 
+	/// @brief Get UmbrellaLeaf at the grid coordinate
+	/// @param theRenderLayer The layer to calculate from (see RenderLayer enum)
+	/// @param theRow The row for reference
+	/// @param theLayerOffset Additional offset for the layer
+	/// @return UmbrellaLeaf or nullptr if it doesn't exist
 	static int MakeRenderOrder(RenderLayer theRenderLayer, int theRow, int theLayerOffset);
 
 	/// @brief Update the gameplay (Objects, events, etc)
 	void UpdateGame();
 
+	/// @brief Setup the Zombie waves for a specific level
 	void InitZombieWavesForLevel(int theForLevel);
 
 	/// @return Flags that determine the recommendation of the seed (see NotRecommend)
@@ -731,8 +764,13 @@ class Board : public Widget, public ButtonListener
 	/// @brief Update the level Fog
 	void UpdateFog();
 
+	/// @brief Get the left-most column where fog can appear
+	/// @return The column X grid coordinate
 	int LeftFogColumn();
 
+	/// @brief Is the specified ZombieType Pool-Only
+	/// @param theZombieType The ZombieType to check
+	/// @return True if the ZombieType can only appear in the Pool
 	static bool IsZombieTypePoolOnly(ZombieType theZombieType);
 
 	/// @brief Try to drop a loot piece
@@ -744,6 +782,8 @@ class Board : public Widget, public ButtonListener
 	/// @brief Update the End Sequence (Timers, LawnMower Coins)
 	void UpdateLevelEndSequence();
 
+	/// @brief Get the bottom-most LawnMower
+	/// @return The LawnMower or nullptr if it doesn't exist
 	LawnMower *GetBottomLawnMower();
 
 	/// @return True if we can drop loot
@@ -768,11 +808,19 @@ class Board : public Widget, public ButtonListener
 	/// @param theGridY The Grid Y Coordinate
 	bool BungeeIsTargetingCell(int theGridX, int theGridY);
 
+	/// @brief Convert World-Space Coordinates to Grid X Coordinates for Planting
+	/// @param theX The X Coordinate
+	/// @param theX The Y Coordinate
+	/// @param theSeedType The SeedType for specific offsets
+	/// @return The translated Grid X
 	int PlantingPixelToGridX(int theX, int theY, SeedType theSeedType);
 
+	/// @brief Convert World-Space Coordinates to Grid Y Coordinates for Planting
+	/// @param theX The X Coordinate
+	/// @param theX The Y Coordinate
+	/// @param theSeedType The SeedType for specific offsets
+	/// @return The translated Grid Y
 	int PlantingPixelToGridY(int theX, int theY, SeedType theSeedType);
-
-	Plant *FindUmbrellaPlant(int theGridX, int theGridY);
 
 	/// @brief Set the tutorial state
 	/// @return theTutorialState The current state (see TutorialState enum)
@@ -790,8 +838,15 @@ class Board : public Widget, public ButtonListener
 	/// @brief Update the mouse objects positions
 	void UpdateMousePosition();
 
+	/// @brief Setup the Plant mouse hover
+	/// @param theHitResult Object containing mouse hit information
+	/// @return Plant or nullptr if none was found
 	Plant *ToolHitTestHelper(HitResult *theHitResult);
 
+	/// @brief Test if a Plant it's hovered
+	/// @param theX The X coordinate
+	/// @param theY The Y coordinate
+	/// @return Plant or nullptr if none was found
 	Plant *ToolHitTest(int theX, int theY);
 
 	/// @brief Can the grid coordinate have a GraveStone
@@ -803,6 +858,10 @@ class Board : public Widget, public ButtonListener
 	/// @brief Update all GridItems
 	void UpdateGridItems();
 
+	/// @brief Add a GraveStone GridItem
+	/// @param theGridX The X grid coordinate
+	/// @param theGridY The Y grid coordinate
+	/// @return Created GraveStone
 	GridItem *AddAGraveStone(int theGridX, int theGridY);
 
 	/// @return Number of Survival Flags completed
@@ -873,12 +932,16 @@ class Board : public Widget, public ButtonListener
 	/// @return BossZombie or nullptr if it doesn't exist
 	Zombie *GetBossZombie();
 
+	/// @brief Get the amount of Gargantuars on the Board
 	/// @return Amount of alive Gargantuars
 	int GetLiveGargantuarCount();
 
+	/// @brief Is the SeedBank a ConveyorBelt
 	/// @return True if the level has a ConveyorBelt
 	bool HasConveyorBeltSeedBank();
 
+	/// @brief Does the stage have a roof
+	/// @return True if the stage has a roof
 	bool StageHasRoof();
 
 	/// @brief Spawn the end-flag Zombies from the pool
@@ -950,6 +1013,8 @@ class Board : public Widget, public ButtonListener
 	/// @brief Count every non-dying, non-mind-controlled zombie on the Board
 	int CountZombiesOnScreen();
 
+	/// @brief Get the number of spawn waves per Survival Stage
+	/// @return Number of waves per Survival Stage
 	int GetNumWavesPerSurvivalStage();
 
 	/// @return The level (or Survival/LastStand stage) random number generation seed
@@ -1019,8 +1084,14 @@ class Board : public Widget, public ButtonListener
 
 	void ClearAdviceImmediately();
 
+	/// @return Is the current Vasebreaker Stage the final one
+	/// @return True if it's the final Vasebreaker Stage
 	bool IsFinalScaryPotterStage();
 
+	/// @brief Force the display of an advice
+	/// @param theAdvice The advice string
+	/// @param theMessageStyle The Style of the Message (see MessageStyle enum)
+	/// @param theHelpIndex The index of the advice (see AdviceType enum)
 	void DisplayAdviceAgain(const SexyString &theAdvice,
 									   MessageStyle theMessageStyle,
 									   AdviceType theHelpIndex);
@@ -1050,25 +1121,38 @@ class Board : public Widget, public ButtonListener
 	/// @return 
 	GridItem *GetRake();
 
+	/// @brief Did Crazy Dave finish talking in Vasebreaker
+	/// @return True if CrazyDave is talking during a Vasebreaker level
 	bool IsScaryPotterDaveTalking();
 
+	/// @brief Get the Zombie that had entered the house
+	/// @return The Zombie or nullptr if there is none
 	Zombie *GetWinningZombie();
 
 	void ResetFPSStats();
 
-	/// @return Number of plants that are of type theSeedType and don't have a plant above on the Board
+	/// @brief Get the number of plants that don't have a plant on top on  the Board
+	/// @param theSeedType The SeedType to count
+	/// @return Number of plants that are of type theSeedType and don't have a Plant on top on the Board
 	int CountEmptyPotsOrLilies(SeedType theSeedType);
 
+	/// @brief Try to get a GridItem
+	/// @param theGridItemType The type to look fore
+	/// @param theGridX The X grid coordinate
+	/// @param theGridY The Y grid coordinate
+	/// @return GridItem or nullptr if it doesn't exist
 	GridItem *GetGridItemAt(GridItemType theGridItemType, int theGridX, int theGridY);
 
 	/// @brief Does the progress meter can have flags
 	/// @return True if the progress meter can have flags
 	bool ProgressMeterHasFlags();
 
-	/// @return Is the current stage the final LastStand stage
+	/// @brief Is the current stage the final LastStand stage
 	/// @return True if the stage is the final LastStand stage
 	bool IsLastStandFinalStage();
 
+	/// @brief Get the number of spawn waves per flag
+	/// @return Number of waves
 	int GetNumWavesPerFlag();
 
 	/// @return The SeedType's Cost
@@ -1076,10 +1160,16 @@ class Board : public Widget, public ButtonListener
 	/// @param theSeedType The theImitaterType to check incase theSeedType == SeedType::SEED_IMITATER
 	int GetCurrentPlantCost(SeedType theSeedType, SeedType theImitaterType);
 
+	/// @brief Does the Plant's price increase dynamically
+	/// @param theSeedType The SeedType to check
+	/// @return True if the Plant's price increase
 	bool PlantUsesAcceleratedPricing(SeedType theSeedType);
 
+	/// @brief Freeze the effects and animation on the Board for animations
+	/// @param theFreeze The freeze state
 	void FreezeEffectsForCutscene(bool theFreeze);
 
+	/// @brief Load the background images from their respective groups
 	void LoadBackgroundImages();
 
 	/// @brief Can we use this GameObject (see GameObjectType enum)
@@ -1142,11 +1232,16 @@ class Board : public Widget, public ButtonListener
 	/// @brief Remove all zombies that can't persist a repick
 	void RemoveZombiesForRepick();
 
-	/// @return Amount of GraveStones on Board
+	/// @brief Get the amount of GraveStones on the Board
+	/// @return Number of GraveStones
 	int GetGraveStonesCount();
 
+	/// @brief Can we repick after the Survival Stage
+	/// @return True if we can repick our seeds
 	bool IsSurvivalStageWithRepick();
 
+	/// @brief Can we repick/replant after the LastStand Stage
+	/// @return True if we can repick/replant our seeds
 	bool IsLastStandStageWithRepick();
 
 	/// @brief Process a KeyCode for typing checks
@@ -1157,14 +1252,28 @@ class Board : public Widget, public ButtonListener
 	/// @param theZombieType The type to count
 	int CountZombieByType(ZombieType theZombieType);
 
+	/// @brief Is the specified ZombieType spawned only
+	/// @param theZombieType The ZombieType to check
+	/// @return True if the ZombieType can only be spawned by other Zombies
 	static bool IsZombieTypeSpawnedOnly(ZombieType theZombieType);
 };
 extern bool gShownMoreSunTutorial;
 
+/// @brief Get how much do 2 Rectangles overlap
+/// @param rect1 The first Rectangle
+/// @param rect2 The second Rectangle
+/// @return The maximum overlap between the 2 Rectangles
 int GetRectOverlap(const Rect &rect1, const Rect &rect2);
 
+/// @brief Does the Circle overlap the Rectangle
+/// @param theCircleX The circle's X coordinate
+/// @param theCircleY The circle's Y coordinate
+/// @param theRadius The circle's radius
+/// @param theRect The Rectangle
+/// @return The maximum overlap between the 2 Rectangles
 bool GetCircleRectOverlap(int theCircleX, int theCircleY, int theRadius, const Rect &theRect);
 
+/// @brief Setup the Board's flags for the Player
 void BoardInitForPlayer();
 
 #endif // __BOARD_H__
