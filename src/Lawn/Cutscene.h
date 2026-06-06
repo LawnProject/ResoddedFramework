@@ -25,11 +25,11 @@ class CutScene
 	bool mPreloaded;						 //+0x34
 	bool mPlacedZombies;					 //+0x35
 	bool mPlacedLawnItems;					 //+0x36
-	int mCrazyDaveCountDown;				 //+0x38 ���������򵹼�ʱ��
-	int mCrazyDaveLastTalkIndex;			 //+0x3C �����������Ļ��ı�š�
-	bool mUpsellHideBoard;					 //+0x40 ���������عؿ����桿
-	ChallengeScreen *mUpsellChallengeScreen; //+0x44 �����������С��Ϸ���桿
-	bool mPreUpdatingBoard;					 //+0x48 ���������ý׶εĹؿ�Ԥ���¡�
+	int mCrazyDaveCountDown;				 //+0x38 【推销戴夫倒计时】
+	int mCrazyDaveLastTalkIndex;			 //+0x3C 【戴夫推销的话的编号】
+	bool mUpsellHideBoard;					 //+0x40 【推销隐藏关卡界面】
+	ChallengeScreen *mUpsellChallengeScreen; //+0x44 【推销插入的小游戏界面】
+	bool mPreUpdatingBoard;					 //+0x48 【场景布置阶段的关卡预更新】
 
   public:
 	CutScene();
