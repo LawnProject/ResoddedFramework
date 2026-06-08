@@ -83,8 +83,10 @@ class PakInterfaceBase
 class PakInterface : public PakInterfaceBase
 {
   public:
-	PakCollectionList mPakCollectionList; //+0x4：通过 AddPakFile() 添加的各个资源包的内存映射文件数据的链表
-	PakRecordMap mPakRecordMap;			  //+0x10：所有已添加的资源包中的所有资源文件的、从文件名到文件数据的映射容器
+	PakCollectionList mPakCollectionList;
+	PakRecordMap mPakRecordMap;
+
+	std::string mDecryptPassword;
 
   public:
 	PakInterface();
@@ -179,14 +181,7 @@ static char *p_fgets(char *thePtr, int theSize, PFILE *theFile)
 		return gPakInterface->FGetS(thePtr, theSize, theFile);
 	return fgets(thePtr, theSize, theFile->mFP);
 }
-/*
-static wchar_t *p_fgets(wchar_t *thePtr, int theSize, PFILE *theFile)
-{
-	if (gPakInterface != NULL)
-		return gPakInterface->FGetS(thePtr, theSize, theFile);
-	return fgetws(thePtr, theSize, theFile->mFP);
-}
-*/
+
 static int p_feof(PFILE *theFile)
 {
 	if (gPakInterface != NULL)

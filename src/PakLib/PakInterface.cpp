@@ -32,6 +32,8 @@ PakInterface::PakInterface()
 {
 	if (gPakInterface == NULL)
 		gPakInterface = this;
+
+	mDecryptPassword = "\xF7";
 }
 
 PakInterface::~PakInterface()
@@ -131,7 +133,18 @@ bool PakInterface::AddPakFile(const std::string &theFileName)
 
 	if (aMagic != 0xBAC04AC0)
 	{
-		aMagic ^= 0xF7F7F7F7;
+		int aPos = 0;
+		int aPWLength = mDecryptPassword.length();
+		aPos = aPos % aPWLength;
+
+		for (size_t i = 0; i < aPakRecord->mCollection->mData.size(); i++)
+		{
+			aPakRecord->mCollection->mData[i] ^= mDecryptPassword[(aPos++)%aPWLength];
+		}
+		aFileOffset -= sizeof(uint32_t);
+		memcpy(&aMagic, aPakCollection->mData.data() + aFileOffset, sizeof(uint32_t)); // re-read the magic number
+		aFileOffset += sizeof(uint32_t);
+
 		if (aMagic != 0xBAC04AC0) //if the magic is 0xF7 encrypted, it means the whole file is
 		{
 #if DEBUG
@@ -142,8 +155,7 @@ bool PakInterface::AddPakFile(const std::string &theFileName)
 #if DEBUG
 		printf("[PakLib] - Pak File: %s is encrypted, decrypting now...\n", theFileName.c_str());
 #endif
-		for (uint8_t &byte : aPakRecord->mCollection->mData)
-			byte ^= 0xF7;
+
 	}
 
 	uint32_t aVersion = 0;

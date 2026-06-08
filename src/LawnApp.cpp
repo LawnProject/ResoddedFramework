@@ -65,7 +65,7 @@
 #endif
 
 //Do not edit this. - Electr0Gunner
-Version LawnApp::gResoddedVersion(1, 0, 0, 980);
+Version LawnApp::gResoddedVersion(1, 0, 0, 982);
 
 bool gIsPartnerBuild = false;
 bool gSlowMo = false;
@@ -1220,6 +1220,8 @@ void LawnApp::Init()
 	mBoardResult = BoardResult::BOARDRESULT_NONE;
 	mSawYeti = false;
 
+	//gPakInterface->mDecryptPassword = [INSERT YOUR PASSWORD HERE];
+
 	SexyApp::Init();
 	TodAssertInitForApp();
 	gBetaSubmitFunc = BetaSubmitFunc;
@@ -1228,7 +1230,7 @@ void LawnApp::Init()
 	// [SETUP] - Here you (can) add a link that contains the LATEST version of your mod. I recommend Github as it's free and easy to setup. (And you are probably using it now)
 
 	UpdateChecker::gUpdateHost =
-		"https://raw.githubusercontent.com/LawnProject/ResoddedFramework/refs/heads/work-in-progress/LawnVersion.txt";
+		"https://raw.githubusercontent.com/LawnProject/ResoddedFramework/refs/heads/main/LawnVersion.txt";
 
 	UpdateChecker::Check();
 
