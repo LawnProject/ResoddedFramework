@@ -1,5 +1,7 @@
 project(LawnProject)
 
+option(LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT "Enable the unfinished gamepad support" OFF)
+
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
@@ -37,6 +39,12 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
 if(SEXY_USE_IMGUI)
     target_compile_definitions(${PROJECT_NAME} PUBLIC
         $<$<CONFIG:Debug>:LAWN_DEBUG_TOOLS>
+    )
+endif()
+
+if(SEXY_USE_CONTROLLER)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC
+        $<$<BOOL:${LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT}>:LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT>
     )
 endif()
 

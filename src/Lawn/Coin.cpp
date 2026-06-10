@@ -39,7 +39,7 @@ void Coin::CoinInitialize(int theX, int theY, CoinType theCoinType, CoinMotion t
 	mFadeCount = 0;
 	mCoinMotion = theCoinMotion;
 	mCoinAge = 0;
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	mGamepadCollectionSpeed = 0.0f;
 #endif
 	mAttachmentID = AttachmentID::ATTACHMENTID_NULL;
@@ -455,7 +455,7 @@ void Coin::UpdateFade()
 
 void Coin::UpdateFall()
 {
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	//0x179D14 - Gamepad cursor magnetic collection
 	if (mCoinMotion == CoinMotion::COIN_MOTION_GAMEPAD_CURSOR)
 	{
@@ -492,7 +492,7 @@ void Coin::UpdateFall()
 		mPosY += mGamepadCollectionSpeed * aNormY * 0.016f;
 		return;
 	}
-#endif // SEXY_USE_CONTROLLER
+#endif // LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 
 	if (mCoinMotion == CoinMotion::COIN_MOTION_FROM_PRESENT)
 	{
@@ -1420,7 +1420,7 @@ void Coin::DroppedUsableSeed()
 	mTimesDropped++;
 }
 
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 void Coin::GamepadCursorOver()
 {
 	if (!mBoard || mBoard->mPaused || mApp->mGameScene != GameScenes::SCENE_PLAYING || mDead)

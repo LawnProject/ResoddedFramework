@@ -16,7 +16,14 @@ template <typename T> void SaveContext::SyncVar(T &aValue, const std::string &aN
 			TodTraceAndLog("Couldn't find schema entry: %s", aName.c_str());
 			return;
 		}
+
+		TOD_ASSERT(std::is_trivially_copyable_v<T>);
 		SaveSchemeEntry anEntry = mSchemeEntries[aName];
+		if (anEntry.mSize != sizeof(T))
+		{
+			TodTraceAndLog("Size mismatch for %s", aName.c_str());
+			return;
+		}
 		mBinaryReader->seekg(anEntry.mOffset);
 		mBinaryReader->read(reinterpret_cast<char *>(&aValue), anEntry.mSize);
 	}
@@ -384,7 +391,6 @@ void SaveContext::LoadScheme(std::string thePath)
 #define SYNC_CLASS(obj) theContext.SyncBytes(obj, sizeof(*obj), #obj)
 #define SYNC_DATA_ARRAY(type, arr)                                                                                     \
 	theContext.SyncVar(arr.mMaxUsedCount, #arr ".mMaxUsedCount");                                                      \
-	theContext.SyncVar(arr.mNextKey, #arr ".mNextKey");                                                                \
 	theContext.SyncVar(arr.mFreeListHead, #arr ".mFreeListHead");                                                      \
 	theContext.SyncVar(arr.mSize, #arr ".mSize");                                                                      \
 	theContext.SyncBytes(arr.mBlock, sizeof(DataArray<type>::DataArrayItem) * arr.mMaxUsedCount, #arr ".mBlock");
@@ -587,7 +593,7 @@ void LawnSyncGame(Board* theBoard, SaveContext &theContext)
 	SYNC_ARRAY(theBoard->mSeedBank->mSeedPackets);
 	SYNC_VAR(theBoard->mSeedBank->mCutSceneDarken);
 	SYNC_VAR(theBoard->mSeedBank->mConveyorBeltCounter);
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	SYNC_VAR(theBoard->mSeedBank->mIndexGamepad);
 	SYNC_VAR(theBoard->mSeedBank->mAxisProgress);
 #endif
@@ -619,7 +625,16 @@ void LawnSyncGame(Board* theBoard, SaveContext &theContext)
 	SYNC_DATA_ARRAY(Zombie, theBoard->mZombies)
 	SYNC_DATA_ARRAY(Plant, theBoard->mPlants)
 	SYNC_DATA_ARRAY(Projectile, theBoard->mProjectiles)
-	SYNC_DATA_ARRAY(Coin, theBoard->mCoins)
+	theContext.SyncVar(theBoard->mCoins.mMaxUsedCount, "theBoard->mCoins"
+													   ".mMaxUsedCount");
+	theContext.SyncVar(theBoard->mCoins.mFreeListHead, "theBoard->mCoins"
+													   ".mFreeListHead");
+	theContext.SyncVar(theBoard->mCoins.mSize, "theBoard->mCoins"
+											   ".mSize");
+	theContext.SyncBytes(theBoard->mCoins.mBlock,
+						 sizeof(DataArray<Coin>::DataArrayItem) * theBoard->mCoins.mMaxUsedCount,
+						 "theBoard->mCoins"
+						 ".mBlock");
 	SYNC_DATA_ARRAY(LawnMower, theBoard->mLawnMowers)
 	SYNC_DATA_ARRAY(GridItem, theBoard->mGridItems)
 	SYNC_DATA_ARRAY(TodParticleSystem, theBoard->mApp->mEffectSystem->mParticleHolder->mParticleSystems)

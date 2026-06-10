@@ -73,7 +73,7 @@ class SeedBank : public GameObject
 	SeedPacket mSeedPackets[SEEDBANK_MAX];
 	int mCutSceneDarken;
 	int mConveyorBeltCounter;
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	int mIndexGamepad;
 	float mAxisProgress;
 #endif

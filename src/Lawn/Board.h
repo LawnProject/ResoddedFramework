@@ -237,7 +237,7 @@ class Board : public Widget, public ButtonListener
 	bool mNoFungusUsedFungus;
 	int mGargantuarsKillsByCornCob;
 
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	float mGamepadX;
 	float mGamepadY;
 	float mVisualGamepadX;

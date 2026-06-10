@@ -171,7 +171,7 @@ Board::Board(LawnApp *theApp)
 	mStoreButton = nullptr;
 	mIgnoreMouseUp = false;
 
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	mGamepadX = LAWN_XMIN;
 	mGamepadY = LAWN_YMIN;
 	mVisualGamepadX = -1.0f;
@@ -2971,7 +2971,7 @@ PlantingReason Board::CanPlantAt(int theGridX, int theGridY, SeedType theSeedTyp
 
 void Board::UpdateCursor()
 {
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	// Do not update the OS cursor while a gamepad is active
 	if (mApp->UsingGamepad())
 		return;
@@ -3711,7 +3711,7 @@ void Board::MouseDownWithPlant(int x, int y, int theClickCount)
 	PlantingReason aReason = CanPlantAt(aGridX, aGridY, aPlantingSeedType);
 	if (aReason != PlantingReason::PLANTING_OK)
 	{
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 		if (mApp->UsingGamepad())
 		{
 			mApp->PlaySample(SOUND_BUZZER);
@@ -4570,7 +4570,7 @@ void Board::MouseDown(int x, int y, int theClickCount)
 	}
 #endif
 
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	if (mApp->UsingGamepad() && mApp->mGamepads[0] != nullptr && mApp->mGamepads[0]->IsButtonDown(GamepadButtons::BUTTON_WEST))
 	{
 		// For combat minigames, we use the grid-centered coordinates.
@@ -6032,7 +6032,7 @@ void Board::Update()
 	mPrevMouseX = mApp->mWidgetManager->mLastMouseX;
 	mPrevMouseY = mApp->mWidgetManager->mLastMouseY;
 	
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	if (mApp->mGamepads[0] == nullptr || 
 	    mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN || 
 	    mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
@@ -6242,13 +6242,18 @@ void Board::Update()
 			int aVY = GridToPixelY(aActGridX, aActGridY) + 50;
 
 			// Detect rising edges using Gamepad helper methods
-			bool aPressedSouth     = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_SOUTH);
-			bool aPressedEast      = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_EAST);
-			bool aPressedWest      = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_WEST);
-			bool aPressedNorth     = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_NORTH);
-			bool aPressedStart     = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_START);
-			bool aPressedLShoulder = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_LEFT_SHOULDER);
-			bool aPressedRShoulder = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_RIGHT_SHOULDER);
+			bool aJustPressedSouth     = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_SOUTH);
+			bool aJustPressedEast      = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_EAST);
+			bool aJustPressedWest      = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_WEST);
+			bool aJustPressedNorth     = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_NORTH);
+			bool aPressedWest		   = aPad->IsButtonDown(GamepadButtons::BUTTON_WEST);
+			bool aPressedNorth		   = aPad->IsButtonDown(GamepadButtons::BUTTON_NORTH);
+			bool aJustReleasedNorth	   = aPad->IsButtonJustReleased(GamepadButtons::BUTTON_NORTH);
+			bool aJustReleasedWest	   = aPad->IsButtonJustReleased(GamepadButtons::BUTTON_WEST);
+
+			bool aJustPressedStart     = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_START);
+			bool aJustPressedLShoulder = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_LEFT_SHOULDER);
+			bool aJustPressedRShoulder = aPad->IsButtonJustPressed(GamepadButtons::BUTTON_RIGHT_SHOULDER);
 
 			// True for modes without a standard seed bank (no pick-up logic)
 			bool aIsGardenMode = (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
@@ -6257,7 +6262,7 @@ void Board::Update()
 			// ---------------------------------------------------
 			// A (SOUTH): Confirm
 			// ---------------------------------------------------
-			if (aPressedSouth)
+			if (aJustPressedSouth)
 			{
 				// Try to pick up a seed from the bank when cursor is empty (normal or hammer) and
 				// there is a seed bank (not garden/ToW modes).
@@ -6345,7 +6350,7 @@ void Board::Update()
 			// ---------------------------------------------------
 			// B (EAST): Cancel cobcannon / Shovel (pick up / use) / Cancel seed
 			// ---------------------------------------------------
-			if (aPressedEast)
+			if (aJustPressedEast)
 			{
 				if (mCursorObject->mCursorType == CursorType::CURSOR_TYPE_COBCANNON_TARGET)
 				{
@@ -6378,7 +6383,7 @@ void Board::Update()
 			// ---------------------------------------------------
 			// X (WEST): CobCannon activate / Cancel seed/shovel / Hammer
 			// ---------------------------------------------------
-			if (aPressedWest)
+			if (aJustPressedWest)
 			{
 				// CobCannon: X activates a ready cobcannon under the cursor
 				// (cursor must be empty). If the cursor already HAS the cobcannon target,
@@ -6443,6 +6448,13 @@ void Board::Update()
 				if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_LAST_STAND)
 				{
 					mStoreButton->mIsOver = true;
+				}
+			}
+			if (aJustReleasedNorth)
+			{
+				if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_LAST_STAND)
+				{
+					mStoreButton->mIsOver = true;
 					MouseDown(mStoreButton->mX, mStoreButton->mY, 1);
 					MouseUp(mStoreButton->mX, mStoreButton->mY, 1);
 
@@ -6453,12 +6465,12 @@ void Board::Update()
 			// LB (LEFT_SHOULDER):  Previous seed in bank
 			// RB (RIGHT_SHOULDER): Next seed in bank
 			// ---------------------------------------------------
-			if (aPressedLShoulder && mSeedBank->mNumPackets > 0)
+			if (aJustPressedLShoulder && mSeedBank->mNumPackets > 0)
 			{
 				mSeedBank->mIndexGamepad = std::clamp(mSeedBank->mIndexGamepad - 1, 0, mSeedBank->mNumPackets - 1);
 				mApp->PlaySample(Sexy::SOUND_TAP);
 			}
-			if (aPressedRShoulder && mSeedBank->mNumPackets > 0)
+			if (aJustPressedRShoulder && mSeedBank->mNumPackets > 0)
 			{
 				mSeedBank->mIndexGamepad = std::clamp(mSeedBank->mIndexGamepad + 1, 0, mSeedBank->mNumPackets - 1);
 				mApp->PlaySample(Sexy::SOUND_TAP);
@@ -6467,7 +6479,7 @@ void Board::Update()
 			// ---------------------------------------------------
 			// Start: Pause
 			// ---------------------------------------------------
-			if (aPressedStart && mApp->CanPauseNow())
+			if (aJustPressedStart && mApp->CanPauseNow())
 			{
 				mApp->PlaySample(Sexy::SOUND_PAUSE);
 				mApp->DoNewOptions(false);
@@ -7054,7 +7066,7 @@ void Board::DrawGameObjects(Graphics *g)
 	AddGameObjectRenderItemCursorPreview(
 		aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_CURSOR_PREVIEW, mCursorPreview);
 
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	// Draw the gamepad grid cursor. During cutscenes (SCENE_LEVEL_INTRO),
 	// we still draw it but it will stay stationary since movement is blocked.
 	// We hide it during cobcannon targeting since the cobcannon uses its own reticule.
@@ -7164,7 +7176,7 @@ void Board::DrawGameObjects(Graphics *g)
 			}
 			break;
 		}
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 
 		case RenderObjectType::RENDER_ITEM_GAMEPAD_CURSOR: {
 			// Guard: skip if visual position is not yet initialized,
@@ -8011,7 +8023,7 @@ void Board::DrawDebugText(Graphics *g)
 		aText += StrFormat("GRID DEBUG\n");
 		break;
 
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	case DebugTextMode::DEBUG_TEXT_CONTROLLER:
 		aText += StrFormat("CONTROLLER DEBUG\n");
 		for (int i = 0; i < MAX_GAMEPADS; i++)
@@ -8448,9 +8460,6 @@ void Board::DrawUITop(Graphics *g)
 		g->SetColor(Color(200, 200, 200, 210));
 		g->FillRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
 	}
-
-#if SEXY_USE_CONTROLLER
-#endif
 
 	if (mApp->mGameScene == GameScenes::SCENE_PLAYING || mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 	{

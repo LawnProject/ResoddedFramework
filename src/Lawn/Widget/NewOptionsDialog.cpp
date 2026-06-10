@@ -20,7 +20,7 @@ using namespace Sexy;
 NewOptionsDialog::NewOptionsDialog(LawnApp *theApp, bool theFromGameSelector)
 	: Dialog(nullptr, nullptr, Dialogs::DIALOG_NEWOPTIONS, true, "Options", "", "", Dialog::BUTTONS_NONE)
 {
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	mAwaitRelease = true;
 #endif
 	mApp = theApp;
@@ -191,7 +191,7 @@ void NewOptionsDialog::Draw(Sexy::Graphics *g)
 
 void NewOptionsDialog::Update()
 {
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	Gamepad *aPad = mApp->mGamepads[0];
 	if (aPad != nullptr)
 	{

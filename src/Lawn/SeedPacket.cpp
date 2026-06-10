@@ -723,7 +723,7 @@ bool SeedPacket::CanPickUp()
 			return false;
 		}
 
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 		if (mApp->UsingGamepad() && mBoard->HasConveyorBeltSeedBank() && mX + mOffsetX >= 570)
 		{
 			return false;
@@ -847,7 +847,7 @@ void SeedPacket::MouseDown(int x, int y, int theClickCount)
 			return;
 		}
 
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 		if (mApp->UsingGamepad() && mBoard->HasConveyorBeltSeedBank() && mX + mOffsetX >= 570)
 		{
 			mApp->PlaySample(SOUND_BUZZER);
@@ -975,7 +975,7 @@ SeedBank::SeedBank()
 	mNumPackets = 0;
 	mConveyorBeltCounter = 0;
 	mCutSceneDarken = 255;
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	mIndexGamepad  = 0;
 	mAxisProgress  = 0.0f;
 #endif
@@ -1012,7 +1012,7 @@ void SeedBank::Draw(Graphics *g)
 		g->DrawImage(IMAGE_SEEDBANK, IMAGE_SEEDBANK->mWidth - 12, 0, theSrcRect);
 	}
 
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	g->PushState();
 	//g->SetScale(1.1f, 1.1f, 0.0f, 0.0f);
 	if (mApp->mGameScene == GameScenes::SCENE_PLAYING && mApp->mGamepads[0] != nullptr)
@@ -1046,7 +1046,7 @@ void SeedBank::Draw(Graphics *g)
 	mIgnorePacketSpriteScale = true;
 	for (int i = 0; i < mNumPackets; i++)
 	{
-#if SEXY_USE_CONTROLLER 
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT 
 		g->PushState();
 		if (i == mIndexGamepad && mApp->mGameScene == GameScenes::SCENE_PLAYING)
 		{
@@ -1059,7 +1059,7 @@ void SeedBank::Draw(Graphics *g)
 			aSeedPacket->Draw(g);
 			aSeedPacket->EndDraw(g);
 		}
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 		g->PopState();
 #endif
 	}

@@ -101,7 +101,7 @@ const char* DebuggerWindow::DebugTextModeName(DebugTextMode m)
     case DEBUG_TEXT_MEMORY:     return "Memory";
     case DEBUG_TEXT_COLLISION:  return "Collision";
     case DEBUG_TEXT_GRID:       return "Grid";
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
     case DEBUG_TEXT_CONTROLLER: return "Controller";
 #endif
 

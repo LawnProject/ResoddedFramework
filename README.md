@@ -42,7 +42,7 @@ Go wild, the source code is organized. That means you can easily extend or even 
 - UTF-8 Support - 100%
 
 - MP3/OGG/FLAC Lawn Music - 100%
-- Controller Support - 100% (Board Only)
+- Controller Support - 80% (Board Only)
 ### Low Priority
 - Multi-platform support - 15%
 - Separate mod resources (.pak + folders) - 100%

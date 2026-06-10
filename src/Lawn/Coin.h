@@ -37,7 +37,7 @@ class Coin : public GameObject
 	bool mHasBouncyArrow;
 	bool mHitGround;
 	int mTimesDropped;
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	float mGamepadCollectionSpeed;
 #endif
 
@@ -124,7 +124,7 @@ class Coin : public GameObject
 	/// @brief Is the Coin actually a present with advice
 	/// @return True if the Coin is of a Present Type, false otherwise
 	bool IsPresentWithAdvice();
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	/// @brief Handle the Gamepad Cursor overlapping the coin
 	void GamepadCursorOver();
 #endif

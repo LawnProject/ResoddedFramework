@@ -44,7 +44,7 @@ void CursorObject::Update()
 	}
 
 	if (!mApp->mWidgetManager->mMouseIn 
-#if SEXY_USE_CONTROLLER 
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT 
 		&& !mApp->UsingGamepad()
 #endif
 		)
@@ -179,7 +179,7 @@ void CursorObject::Draw(Graphics *g)
 	case CursorType::CURSOR_TYPE_PLANT_FROM_BANK:
 	case CursorType::CURSOR_TYPE_PLANT_FROM_USABLE_COIN:
 	case CursorType::CURSOR_TYPE_PLANT_FROM_DUPLICATOR: {
-#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 		if (mApp->UsingGamepad())
 		{
 			break; // CursorPreview draws the ghost plant in gamepad mode; skip this to avoid a double draw

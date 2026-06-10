@@ -39,7 +39,7 @@ class NewOptionsDialog : public Sexy::Dialog, public Sexy::SliderListener, publi
 	NewLawnButton *mBackToGameButton;
 	NewLawnButton *mSettingsButton;
 	bool mFromGameSelector;
-	#if SEXY_USE_CONTROLLER
+#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 	bool mAwaitRelease;
 	#endif
 
