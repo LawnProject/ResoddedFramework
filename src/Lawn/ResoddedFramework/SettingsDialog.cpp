@@ -270,7 +270,7 @@ void SettingsDialog::Draw(Graphics* g)
 		(mSaveFileButton->mY + mY) > (mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
 
 
-	SexyString aVersionString = "ResoddedFramework " + LawnApp::gResoddedVersion.toString();
+	SexyString aVersionString = "ResoddedFramework Release " + LawnApp::gResoddedVersion.toString();
 
 	TodDrawString(g, aVersionString,
 				  mOptionsSlider->mAllowedMouseZone.mWidth - Sexy::FONT_BRIANNETOD12->StringWidth(aVersionString) - 27,
