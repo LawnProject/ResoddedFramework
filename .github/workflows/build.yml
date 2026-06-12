@@ -56,6 +56,16 @@ jobs:
         with:
           vcpkgGitCommitId: d59510da59a2ee8b943509998b63da7b472d93cf
 
+      - name: Cache vcpkg binary packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ github.workspace }}/vcpkg/downloads
+            ${{ github.workspace }}/vcpkg/packages
+          key: vcpkg-${{ matrix.triplet }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
+          restore-keys: |
+            vcpkg-${{ matrix.triplet }}-
+
       - name: Configure
         run: cmake --preset ${{ matrix.preset }} -DGITHUB_ACTIONS=ON
         env:
