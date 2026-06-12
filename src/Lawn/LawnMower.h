@@ -36,7 +36,7 @@ class LawnMower
 	int mLastPortalX;
 
   public:
-	/// @brief Set the SuperMower mode
+	/// @brief Initialize the LawnMower
 	/// @param theRow The row to spawn the LawnMower on
 	void LawnMowerInitialize(int theRow);
 
