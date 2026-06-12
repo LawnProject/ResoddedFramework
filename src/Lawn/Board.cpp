@@ -5437,10 +5437,11 @@ void Board::NextWaveComing()
 {
 	if (mCurrentWave + 1 == mNumWaves)
 	{
-		if (!IsSurvivalStageWithRepick() && (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_LAST_STAND && IsLastStandFinalStage()) && !mApp->IsContinuousChallenge())
+		bool anIsLastStandFinal = mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_LAST_STAND && IsLastStandFinalStage();
+
+		if ((!IsSurvivalStageWithRepick() || anIsLastStandFinal) && !mApp->IsContinuousChallenge())
 		{
-			mApp->AddReanimation(
-				0, 30, MakeRenderOrder(RenderLayer::RENDER_LAYER_ABOVE_UI, 0, 0), ReanimationType::REANIM_FINAL_WAVE);
+			mApp->AddReanimation(0, 30, MakeRenderOrder(RenderLayer::RENDER_LAYER_ABOVE_UI, 0, 0), ReanimationType::REANIM_FINAL_WAVE);
 			mFinalWaveSoundCounter = 60;
 		}
 	}
