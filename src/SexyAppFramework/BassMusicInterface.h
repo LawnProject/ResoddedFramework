@@ -4,6 +4,7 @@
 #include "MusicInterface.h"
 #include "Window.h"
 #include <bass.h>
+#include <map>
 
 namespace Sexy
 {

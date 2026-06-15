@@ -1,7 +1,7 @@
 #ifndef __QUANTIZE_H__
 #define __QUANTIZE_H__
 
-#include "Common.h"
+#include <cstdint>
 
 namespace Sexy
 {

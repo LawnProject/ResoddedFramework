@@ -1,8 +1,8 @@
 #if SEXY_CRASH_HANDLER
 #pragma once
 
-#include "Common.h"
-#include "HTTPTransfer.h"
+#include "Platform.h" // for Windows, do not remove
+#include <string>
 
 namespace Sexy
 {

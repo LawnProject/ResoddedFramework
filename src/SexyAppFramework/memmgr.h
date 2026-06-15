@@ -13,13 +13,13 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include <list>
-#include <stdio.h>
-#include <stdlib.h>
 
 extern void SexyDumpUnfreed();
 
 #if defined(SEXY_MEMTRACE) && !defined(RELEASEFINAL)
+
+#include <stdio.h>
+#include <stdlib.h>
 
 /************************************************************************/
 /* DO NOT CALL THESE TWO METHODS DIRECTLY								*/

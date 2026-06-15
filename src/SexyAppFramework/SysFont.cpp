@@ -6,7 +6,6 @@
 #include "MemoryImage.h"
 #include "Renderer.h"
 #include "WidgetManager.h"
-#include <stdlib.h>
 #include <algorithm>
 #include <cctype>
 #include <filesystem>

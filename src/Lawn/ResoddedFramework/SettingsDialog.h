@@ -6,6 +6,7 @@
 #include "../../SexyAppFramework/ListListener.h"
 
 class LawnApp;
+class LawnScrollbar;
 namespace Sexy
 {
 class ListWidget;

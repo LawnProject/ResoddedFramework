@@ -22,6 +22,7 @@ class Zombie;
 class LawnApp;
 class GameButton;
 class Reanimation;
+class LawnScrollbar;
 class AlmanacDialog : public LawnDialog
 {
   private:

@@ -1,9 +1,9 @@
 #ifndef __WIDGETCONTAINER_H__
 #define __WIDGETCONTAINER_H__
 
-#include "Common.h"
 #include "Rect.h"
 #include "Flags.h"
+#include <list>
 
 namespace Sexy
 {

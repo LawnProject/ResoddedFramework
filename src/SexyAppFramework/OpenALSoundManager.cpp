@@ -1,7 +1,8 @@
 #include "OpenALSoundManager.h"
+#include "Common.h"
 #include "OpenALSoundInstance.h"
 #include <SDL3/SDL.h>
-#include "..\PakLib\PakInterface.h"
+#include "../PakLib/PakInterface.h"
 
 #ifdef USE_OGG_LIB
 #include "vorbis/codec.h"

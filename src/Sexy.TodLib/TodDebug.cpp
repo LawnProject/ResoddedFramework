@@ -2,7 +2,6 @@
 #include "TodCommon.h"
 #include "../SexyAppFramework/Debug.h"
 #include "../SexyAppFramework/SEHCatcher.h"
-#include "../SexyAppFramework/SexyAppBase.h"
 #include <sstream>
 #include <chrono>
 #include <iomanip>

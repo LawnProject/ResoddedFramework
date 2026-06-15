@@ -2,6 +2,7 @@
 #include "Cutscene.h"
 #include "LawnMower.h"
 #include "../LawnApp.h"
+#include "../Resources.h"
 #include "System/ReanimationLawn.h"
 #include "../Sexy.TodLib/TodFoley.h"
 #include "../Sexy.TodLib/Reanimator.h"

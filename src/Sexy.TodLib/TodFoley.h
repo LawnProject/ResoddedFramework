@@ -1,7 +1,6 @@
 #ifndef __TODFOLEY_H__
 #define __TODFOLEY_H__
 
-#include "../Resources.h"
 #include "../SexyAppFramework/OpenALSoundInstance.h"
 using namespace Sexy;
 

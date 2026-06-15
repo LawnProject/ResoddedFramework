@@ -1,3 +1,4 @@
+#include "../LawnCommon.h"
 #include "NewUserDialog.h"
 #include "../../LawnApp.h"
 #include "../../Resources.h"

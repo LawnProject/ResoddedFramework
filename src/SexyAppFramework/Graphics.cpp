@@ -2,7 +2,6 @@
 #include "Image.h"
 #include "Font.h"
 #include "GPUImage.h"
-#include "MemoryImage.h"
 #include "Rect.h"
 #include "Debug.h"
 #include "SexyMatrix.h"

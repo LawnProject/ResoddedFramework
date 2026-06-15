@@ -1,3 +1,4 @@
+#include "../LawnCommon.h"
 #include "../Coin.h"
 #include "../Board.h"
 #include "../Plant.h"
@@ -16,7 +17,6 @@
 #include "../../Sexy.TodLib/TodFoley.h"
 #include "../../Sexy.TodLib/TodCommon.h"
 #include "../../Sexy.TodLib/Reanimator.h"
-#include "../../SexyAppFramework/Debug.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
 #include "../../SexyAppFramework/ImageFont.h"
 #include "../../SexyAppFramework/WidgetManager.h"

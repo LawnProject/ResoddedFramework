@@ -1,4 +1,4 @@
-﻿#if SEXY_IS_X86
+#if SEXY_IS_X86
 
 #include "OriginalCompiledDefinition.h"
 #include "../PakLib/PakInterface.h"
@@ -10,22 +10,22 @@
 bool LegacyDefinition::DefReadFromCacheArray(void *&theReadPtr, DefinitionArrayDef *theArray, DefMap *theDefMap)
 {
 	int aDefSize;
-	SMemR(theReadPtr, &aDefSize, sizeof(int)); // 先读取一个整数表示 theDefMap 描述的定义结构类的大小
-	if (aDefSize != theDefMap->mDefSize)	   // 比较其与当前给出的定义结构图声明的大小是否一致
+	SMemR(theReadPtr, &aDefSize, sizeof(int)); // First read an integer representing the size of the definition struct class described by theDefMap
+	if (aDefSize != theDefMap->mDefSize)	   // Compare it with the size declared by the currently given definition struct map to check whether they match
 	{
 		TodTrace("[TodLib] - cache has old def: array size");
 		return false;
 	}
-	if (theArray->mArrayCount == 0) // 如果类中没有实例，则无需读取
+	if (theArray->mArrayCount == 0) // If there are no instances in the class, there is no need to read
 		return true;
 
 	int aArraySize = aDefSize * theArray->mArrayCount;
-	void *pData = DefinitionAlloc(aArraySize); // 申请内存并初始化填充为 0
+	void *pData = DefinitionAlloc(aArraySize); // Allocate memory and initialize it to 0
 	theArray->mArrayData = pData;
-	SMemR(theReadPtr, pData, aArraySize); // 仍然是粗略读取全部数据，然后再根据 theDefMap 的结构字段数组修复指针
+	SMemR(theReadPtr, pData, aArraySize); // Still a rough read of all the data, then fix the pointers according to theDefMap's struct field array
 	for (int i = 0; i < theArray->mArrayCount; i++)
 		if (!LegacyDefinition::DefMapReadFromCache(
-				theReadPtr, theDefMap, (void *)((int)pData + theDefMap->mDefSize * i))) // 最后一个参数表示 pData[i]
+				theReadPtr, theDefMap, (void *)((int)pData + theDefMap->mDefSize * i))) // The last argument represents pData[i]
 			return false;
 	return true;
 }
@@ -64,9 +64,9 @@ bool LegacyDefinition::DefReadFromCacheString(void *&theReadPtr, char **theStrin
 bool LegacyDefinition::DefReadFromCacheImage(void *&theReadPtr, Image **theImage)
 {
 	int aLen;
-	SMemR(theReadPtr, &aLen, sizeof(int));		  // 读取贴图标签字符数组的长度
-	char *aImageName = (char *)_alloca(aLen + 1); // 在栈上分配贴图标签字符数组的内存空间
-	SMemR(theReadPtr, aImageName, aLen);		  // 读取贴图标签字符数组
+	SMemR(theReadPtr, &aLen, sizeof(int));		  // Read the length of the image label character array
+	char *aImageName = (char *)_alloca(aLen + 1); // Allocate memory space for the image label character array on the stack
+	SMemR(theReadPtr, aImageName, aLen);		  // Read the image label character array
 	aImageName[aLen] = '\0';
 
 	*theImage = nullptr;
@@ -76,9 +76,9 @@ bool LegacyDefinition::DefReadFromCacheImage(void *&theReadPtr, Image **theImage
 bool LegacyDefinition::DefReadFromCacheFont(void *&theReadPtr, Font **theFont)
 {
 	int aLen;
-	SMemR(theReadPtr, &aLen, sizeof(int));		 // 读取字体标签字符数组的长度
-	char *aFontName = (char *)_alloca(aLen + 1); // 在栈上分配字体标签字符数组的内存空间
-	SMemR(theReadPtr, aFontName, aLen);			 // 读取字体标签字符数组
+	SMemR(theReadPtr, &aLen, sizeof(int));		 // Read the length of the font label character array
+	char *aFontName = (char *)_alloca(aLen + 1); // Allocate memory space for the font label character array on the stack
+	SMemR(theReadPtr, aFontName, aLen);			 // Read the font label character array
 	aFontName[aLen] = '\0';
 
 	*theFont = nullptr;
@@ -87,11 +87,11 @@ bool LegacyDefinition::DefReadFromCacheFont(void *&theReadPtr, Font **theFont)
 
 bool LegacyDefinition::DefMapReadFromCache(void *&theReadPtr, DefMap *theDefMap, void *theDefinition)
 {
-	// 分别确认每一个成员变量，并修复其中的指针类型和标志类型的变量
+	// Confirm each member variable one by one, and fix the pointer-type and flag-type variables among them
 	for (DefField *aField = theDefMap->mMapFields; *aField->mFieldName != '\0'; aField++)
 	{
 		bool aSucceed = true;
-		void *aDest = (void *)((int)theDefinition + aField->mFieldOffset); // 指向该成员变量的指针
+		void *aDest = (void *)((int)theDefinition + aField->mFieldOffset); // Pointer to this member variable
 		switch (aField->mFieldType)
 		{
 		case DefFieldType::DT_STRING:
@@ -243,7 +243,7 @@ void *LegacyDefinition::DefinitionUncompressCompiledBuffer(void *theCompressedBu
 		TodTrace("[TodLib] - Compile def too small", theCompiledFilePath.c_str());
 		return nullptr;
 	}
-	// 将 theCompressedBuffer 的前两个四字节视为一个 CompressedDefinitionHeader
+	// Treat the first two four-byte words of theCompressedBuffer as a CompressedDefinitionHeader
 	LegacyDefinition::CompressedDefinitionHeader *aHeader = (CompressedDefinitionHeader *)theCompressedBuffer;
 	if (aHeader->mCookie != COMPILED_LEGACY_DEFINITION_MAGIC)
 	{
@@ -253,7 +253,7 @@ void *LegacyDefinition::DefinitionUncompressCompiledBuffer(void *theCompressedBu
 	Bytef *aUncompressedBuffer = (Bytef *)DefinitionAlloc(aHeader->mUncompressedSize);
 	theCompressedBufferSize = aHeader->mUncompressedSize; //my addition
 	Bytef *aSrc = (Bytef *)theCompressedBuffer +
-				  sizeof(LegacyDefinition::CompressedDefinitionHeader); // 实际解压数据从第 3 个四字节开始
+				  sizeof(LegacyDefinition::CompressedDefinitionHeader); // The actual data to decompress starts at the 3rd four-byte word
 	int aResult = uncompress(aUncompressedBuffer,
 							 (uLongf *)&theCompressedBufferSize,
 							 aSrc,

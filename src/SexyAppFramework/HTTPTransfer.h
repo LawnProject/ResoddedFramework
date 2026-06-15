@@ -1,8 +1,7 @@
 #pragma once
 
-#include "curl/curl.h"
-
-#include "Common.h"
+#include <string>
+#include <thread>
 
 namespace Sexy
 {

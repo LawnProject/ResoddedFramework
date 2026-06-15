@@ -1,10 +1,8 @@
 #ifndef __TRectANGLE_H__
 #define __TRectANGLE_H__
 
-#include "Common.h"
+#include <algorithm>
 #include "Point.h"
-
-#include <list>
 
 namespace Sexy
 {

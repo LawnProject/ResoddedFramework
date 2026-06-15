@@ -2,7 +2,7 @@
 #define __BUFFER_H__
 
 #include <string>
-#include "Common.h"
+#include <vector>
 
 namespace Sexy
 {

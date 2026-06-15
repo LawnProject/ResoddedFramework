@@ -4,6 +4,7 @@
 #include "Common.h"
 #include "KeyCodes.h"
 #include "WidgetContainer.h"
+#include <vector>
 
 namespace Sexy
 {

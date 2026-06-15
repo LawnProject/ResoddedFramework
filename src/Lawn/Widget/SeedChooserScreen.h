@@ -9,6 +9,7 @@ class Board;
 class LawnApp;
 class GameButton;
 class ToolTipWidget;
+struct TodWeightedArray;
 namespace Sexy
 {
 class MTRand;

@@ -1,7 +1,10 @@
 #include "Music.h"
 #include "../CursorObject.h"
+#include "../SeedPacket.h"
+#include "../MessageWidget.h"
 #include "../../LawnApp.h"
 #include "../../Resources.h"
+#include "../../Sexy.TodLib/Attachment.h"
 #include "../../Sexy.TodLib/EffectSystem.h"
 #include "SaveGame.h"
 

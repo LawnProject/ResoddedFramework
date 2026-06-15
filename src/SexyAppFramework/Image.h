@@ -1,10 +1,11 @@
 #ifndef __IMAGE_H__
 #define __IMAGE_H__
 
-#include "Common.h"
 #include "Color.h"
 #include "Rect.h"
 #include "Point.h"
+#include <string>
+#include <vector>
 
 namespace Sexy
 {

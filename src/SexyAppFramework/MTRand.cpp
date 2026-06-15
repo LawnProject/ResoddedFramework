@@ -37,7 +37,6 @@ email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
 
 #include "MTRand.h"
 #include "Debug.h"
-#include <stdio.h>
 
 bool Sexy::MTRand::gIgnoreAssert = false;
 

@@ -4,6 +4,8 @@
 #include "Common.h"
 
 #include "PerfTimer.h"
+#include <list>
+#include <vector>
 
 struct PFILE;
 

@@ -1,16 +1,8 @@
 ﻿#include "Common.h"
 #include "MTRand.h"
-#include "Debug.h"
 #include <filesystem>
 #include <chrono>
-#ifdef _WIN32
-#include <direct.h>
-#include <io.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <errno.h>
-#include <aclapi.h>
-#endif
+#include "Platform.h" // for Windows API - do not remove
 
 #include "PerfTimer.h"
 

@@ -1,8 +1,8 @@
 #include "PerfTimer.h"
-#include <map>
 #include <SDL3/SDL_timer.h>
 #include <set>
-#include <stdint.h>
+#include <cstdint>
+#include <vector>
 
 using namespace Sexy;
 

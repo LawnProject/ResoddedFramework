@@ -1,3 +1,4 @@
+#include "../Resources.h"
 #include "Coin.h"
 #include "Plant.h"
 #include "Board.h"
@@ -7,7 +8,6 @@
 #include "ZenGarden.h"
 #include "Challenge.h"
 #include "Projectile.h"
-#include "SeedPacket.h"
 #include "../LawnApp.h"
 #include "CursorObject.h"
 #include "../GameConstants.h"

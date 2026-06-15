@@ -1,7 +1,6 @@
 #ifndef __AUTOCRIT_INCLUDED__
 #define __AUTOCRIT_INCLUDED__
 
-#include "Common.h"
 #include "CritSect.h"
 
 namespace Sexy

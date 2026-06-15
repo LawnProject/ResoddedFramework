@@ -1,6 +1,7 @@
 #ifndef __SEXYAPPBASE_H__
 #define __SEXYAPPBASE_H__
 
+#include "Platform.h" // for Windows API - do not remove
 #include "Common.h"
 #include "Version.h"
 #include "Rect.h"
@@ -11,10 +12,11 @@
 #include "Buffer.h"
 #include "CritSect.h"
 #include "SharedImage.h"
-#include "Ratio.h"
 #include <ft2build.h>
 #include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_events.h>
+#include <list>
+#include <set>
 #include FT_FREETYPE_H
 
 

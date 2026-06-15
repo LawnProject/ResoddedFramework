@@ -1,7 +1,7 @@
 #ifndef __MUSICINTERFACE_H__
 #define __MUSICINTERFACE_H__
 
-#include "Common.h"
+#include <string>
 
 namespace Sexy
 {
