@@ -1,4 +1,5 @@
 #include "SettingsDialog.h"
+#include "../LawnCommon.h"
 #include "../../Resources.h"
 #include "../../SexyAppFramework/Font.h"
 #include "../../SexyAppFramework/Renderer.h"
@@ -8,11 +9,6 @@
 #include "../../SexyAppFramework/Window.h"
 #include "../../SexyAppFramework/ListWidget.h"
 #include "../../Sexy.TodLib/TodStringFile.h"
-#ifdef _WIN32
-#include <ShlObj_core.h>
-#include <locale>
-#include <codecvt>
-#endif
 
 static int gUserListWidgetColors[][3] = {
 	{23, 24, 35},

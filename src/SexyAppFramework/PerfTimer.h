@@ -1,7 +1,8 @@
 #ifndef __SEXY_PERFTIMER_H__
 #define __SEXY_PERFTIMER_H__
 
-#include "Common.h"
+#include <cstdint>
+#include <string>
 
 namespace Sexy
 {

@@ -1,7 +1,6 @@
 #ifndef _H_CritSect
 #define _H_CritSect
 
-#include "Common.h"
 #include <mutex>
 
 class CritSync;

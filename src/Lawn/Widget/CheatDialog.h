@@ -1,6 +1,7 @@
 #ifndef __CHEATDIALOG_H__
 #define __CHEATDIALOG_H__
 
+#include "EditWidget.h"
 #include "LawnDialog.h"
 #include "../../SexyAppFramework/EditListener.h"
 

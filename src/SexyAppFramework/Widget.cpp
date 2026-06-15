@@ -4,7 +4,6 @@
 #include "Font.h"
 #include "Image.h"
 #include "SexyAppBase.h"
-#include "debug.h"
 
 using namespace Sexy;
 

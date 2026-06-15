@@ -3,7 +3,6 @@
 #include "Color.h"
 #include "MemoryImage.h"
 #include "Rect.h"
-#include "SexyMatrix.h"
 
 namespace Sexy
 {

@@ -1,8 +1,6 @@
-#include "DataSync.h"
 #include "ProfileMgr.h"
 #include "PlayerInfo.h"
 #include <fstream>
-#include "../../SexyAppFramework/SexyAppBase.h"
 #include "../../Sexy.TodLib/TodDebug.h"
 #ifndef _WIN32
 #include <strings.h> // strcasecmp

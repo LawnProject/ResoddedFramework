@@ -1,6 +1,7 @@
 #ifndef __TRIVERTEX_H__
 #define __TRIVERTEX_H__
 
+#include <cstdint>
 namespace Sexy
 {
 

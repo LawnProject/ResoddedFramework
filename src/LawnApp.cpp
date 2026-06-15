@@ -43,7 +43,8 @@
 #include "Lawn/Widget/SeedChooserScreen.h"
 
 #include "Lawn/ResoddedFramework/SettingsDialog.h"
-#include "Lawn/ResourceInclude.h"
+#include "Resources.h"
+#include "FrameworkResources.h"
 
 #include "SexyAppFramework/WidgetManager.h"
 #include "SexyAppFramework/ResourceManager.h"
@@ -51,13 +52,11 @@
 #include "SexyAppFramework/Checkbox.h"
 #include "SexyAppFramework/BassMusicInterface.h"
 #include "SexyAppFramework/Dialog.h"
-#include "SexyAppFramework/resource.h"
 #include "SexyAppFramework/SEHCatcher.h"
 #include "Lawn/ResoddedFramework/UpdateChecker.h"
 
 #include <PakInterface.h>
 
-#include <filesystem>
 #include <ctime>
 
 #if LAWN_DEBUG_TOOLS

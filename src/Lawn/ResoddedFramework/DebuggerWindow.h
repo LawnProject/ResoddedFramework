@@ -3,9 +3,7 @@
 #pragma once
 
 #include <ImGui/ImGuiWindow.h>
-#include "../BoardInclude.h"
-#include <deque>
-#include <string>
+#include "../Plant.h"
 
 using namespace Sexy;
 

@@ -1,5 +1,6 @@
 #include "DescParser.h"
-#include "..\PakLib\PakInterface.h"
+#include "../PakLib/PakInterface.h"
+#include "Common.h"
 
 using namespace Sexy;
 

@@ -1,7 +1,6 @@
 #ifndef __POOLEFFECT_H__
 #define __POOLEFFECT_H__
 
-#include "../../ConstEnums.h"
 
 constexpr const int CAUSTIC_IMAGE_WIDTH = 128;
 constexpr const int CAUSTIC_IMAGE_HEIGHT = 64;

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Common.h"
 #include <SDL3/SDL_keycode.h>
+#include <string>
 
 namespace Sexy
 {

@@ -1,13 +1,10 @@
 #include "SexyApp.h"
 #include "BuildInfo.h"
 
-//#include "..\Crypt\RegKey.h"
 #include "SEHCatcher.h"
-//#include "InternetManager.h"
 
 #include <fstream>
 #include <direct.h>
-//#include "BetaSupport.h"
 
 using namespace Sexy;
 

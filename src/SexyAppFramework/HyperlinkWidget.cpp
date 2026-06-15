@@ -1,6 +1,5 @@
 #include "HyperlinkWidget.h"
 #include "Graphics.h"
-#include "ImageFont.h"
 #include "SysFont.h"
 #include "WidgetManager.h"
 

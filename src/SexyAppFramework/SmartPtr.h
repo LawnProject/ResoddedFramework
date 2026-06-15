@@ -1,6 +1,6 @@
 #ifndef __SEXY_SMARTPTR_H__
 #define __SEXY_SMARTPTR_H__
-#include "Common.h"
+#include "Platform.h" // for Windows API - do not remove
 
 #pragma pack(push, 8) // need 8 byte alignment for InterlockedIncrement
 

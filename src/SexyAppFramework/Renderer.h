@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Common.h"
 #include "GPUImage.h"
 #include "SexyMatrix.h"
 #include "CritSect.h"
+#include <set>
 #include <unordered_map>
 
 #define MAX_VERTICES 16384

@@ -2,6 +2,7 @@
 #define __TOOLTIPWIDGET_H__
 
 #include "../SexyAppFramework/Common.h"
+#include <vector>
 namespace Sexy
 {
 class Graphics;

@@ -4,6 +4,7 @@
 #include "ReanimAtlas.h"
 #include "../SexyAppFramework/PerfTimer.h"
 #include "../SexyAppFramework/MemoryImage.h"
+#include "../SexyAppFramework/Graphics.h"
 
 ReanimAtlas::ReanimAtlas()
 {

@@ -1,7 +1,9 @@
 #ifndef __DESCPARSER_H__
 #define __DESCPARSER_H__
 
-#include "Common.h"
+#include <map>
+#include <string>
+#include <vector>
 
 namespace Sexy
 {

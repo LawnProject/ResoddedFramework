@@ -1,7 +1,8 @@
 #ifndef __SHARED_IMAGE_H__
 #define __SHARED_IMAGE_H__
 
-#include "Common.h"
+#include <string>
+#include <map>
 
 namespace Sexy
 {

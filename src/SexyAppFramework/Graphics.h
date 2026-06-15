@@ -6,6 +6,7 @@
 #include "Color.h"
 #include "Image.h"
 #include "TriVertex.h"
+#include <list>
 
 namespace Sexy
 {

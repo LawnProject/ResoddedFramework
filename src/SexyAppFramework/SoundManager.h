@@ -1,7 +1,7 @@
 #ifndef __SOUNDMANAGER_H__
 #define __SOUNDMANAGER_H__
 
-#include "Common.h"
+#include <string>
 
 namespace Sexy
 {

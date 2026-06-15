@@ -1,11 +1,7 @@
 #pragma once
 
 #include <SDL3/SDL.h>
-#include "Common.h"
-
-#ifdef _WIN32
-#include <windef.h>
-#endif
+#include "Platform.h" // for Windows, do not remove
 
 namespace Sexy
 {

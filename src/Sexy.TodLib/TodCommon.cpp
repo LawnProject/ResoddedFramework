@@ -7,7 +7,6 @@
 #include "TodStringFile.h"
 #include "../GameConstants.h"
 #include "../SexyAppFramework/Font.h"
-#include "../SexyAppFramework/Debug.h"
 #include "../SexyAppFramework/GPUImage.h"
 #include "../SexyAppFramework/Graphics.h"
 #include "../SexyAppFramework/ImageFont.h"

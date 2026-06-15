@@ -3,6 +3,7 @@
 #include "Challenge.h"
 #include "ZenGarden.h"
 #include "../LawnApp.h"
+#include "../Resources.h"
 #include "CursorObject.h"
 #include "System/Music.h"
 #include "Widget/GameButton.h"

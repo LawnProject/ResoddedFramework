@@ -1,6 +1,5 @@
 #pragma once
-#include <stdlib.h>
-#include "../Lawn/LawnCommon.h"
+#include "../ConstEnums.h"
 #include "../SexyAppFramework/Common.h"
 #include "../SexyAppFramework/ResourceManager.h"
 #include "TodDebug.h"

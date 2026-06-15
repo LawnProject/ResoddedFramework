@@ -14,7 +14,6 @@
 #include "../../Sexy.TodLib/Reanimator.h"
 #include "../../Sexy.TodLib/TodParticle.h"
 #include "../../SexyAppFramework/MTRand.h"
-#include "../../SexyAppFramework/WidgetManager.h"
 #include "../Challenge.h"
 #include "../../LawnApp.h"
 #include "../../Sexy.TodLib/TodStringFile.h"

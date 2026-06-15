@@ -1,5 +1,6 @@
 #include "Quantize.h"
 #include <assert.h>
+#include <cstring>
 #include <math.h>
 
 using namespace Sexy;

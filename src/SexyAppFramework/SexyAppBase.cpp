@@ -3,9 +3,9 @@
 //#define SEXY_MEMTRACE
 
 #include <sstream>
+#include <curl/curl.h>
 
 #include "SexyAppBase.h"
-#include "resource.h"
 #include "SEHCatcher.h"
 #include "WidgetManager.h"
 #include "Widget.h"
@@ -24,9 +24,8 @@
 #include "GPUImage.h"
 #include "Window.h"
 #include "MemoryImage.h"
-#include "HTTPTransfer.h"
 #include "Dialog.h"
-#include "..\ImageLib\ImageLib.h"
+#include "../ImageLib/ImageLib.h"
 #include "OpenALSoundManager.h"
 #include "OpenALSoundInstance.h"
 #include "Rect.h"

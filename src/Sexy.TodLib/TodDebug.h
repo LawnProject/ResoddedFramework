@@ -1,9 +1,7 @@
 #ifndef __TODDEBUG_H__
 #define __TODDEBUG_H__
 
-#ifdef _WIN32
-#include <Windows.h>
-#endif
+#include "../SexyAppFramework/Platform.h" // for Windows - do not remove
 
 class TodHesitationBracket
 {

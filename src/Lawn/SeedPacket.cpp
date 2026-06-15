@@ -2,7 +2,6 @@
 #include "Cutscene.h"
 #include "Challenge.h"
 #include "SeedPacket.h"
-#include "ResourceInclude.h"
 #include "../LawnApp.h"
 #include "CursorObject.h"
 #include "../Resources.h"

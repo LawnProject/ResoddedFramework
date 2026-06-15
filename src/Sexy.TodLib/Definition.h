@@ -1,7 +1,6 @@
 ﻿#ifndef __TODDEFINITION_H__
 #define __TODDEFINITION_H__
 
-#include <string>
 #include "CompiledDefinition.h"
 #include "TodList.h"
 #include "Reanimator.h"
