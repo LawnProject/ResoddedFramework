@@ -1,4 +1,4 @@
-﻿#include "Common.h"
+#include "Common.h"
 #include "MTRand.h"
 #include <filesystem>
 #include <chrono>
@@ -17,7 +17,7 @@ std::string gAppDataFolder = std::filesystem::path(std::getenv("HOME")).string()
 #else
 std::string gAppDataFolder = std::filesystem::path(std::getenv("HOME")).string() + "/.config/";
 #endif
-}
+} // namespace Sexy
 
 int Sexy::Rand()
 {
@@ -51,7 +51,7 @@ void Sexy::SetAppDataFolder(const std::string &thePath)
 
 std::string Sexy::URLEncode(const std::string &theString)
 {
-	char *aHexChars = "0123456789ABCDEF";
+	const char *aHexChars = "0123456789ABCDEF";
 
 	std::string aString;
 
@@ -85,8 +85,16 @@ std::string Sexy::StringToUpper(const std::string &theString)
 {
 	std::string aString;
 
-	for (unsigned i = 0; i < theString.length(); i++)
-		aString += toupper(theString[i]);
+	auto it = theString.begin();
+	auto end = theString.end();
+	while (it != end)
+	{
+		uint32_t aCodepoint = utf8::next(it, end);
+		// only touch ascii
+		if (aCodepoint < 0x80)
+			aCodepoint = toupper(aCodepoint);
+		utf8::append(aCodepoint, aString);
+	}
 
 	return aString;
 }
@@ -95,8 +103,16 @@ std::string Sexy::StringToLower(const std::string &theString)
 {
 	std::string aString;
 
-	for (unsigned i = 0; i < theString.length(); i++)
-		aString += tolower(theString[i]);
+	auto it = theString.begin();
+	auto end = theString.end();
+	while (it != end)
+	{
+		uint32_t aCodepoint = utf8::next(it, end);
+		// only touch ascii
+		if (aCodepoint < 0x80)
+			aCodepoint = tolower(aCodepoint);
+		utf8::append(aCodepoint, aString);
+	}
 
 	return aString;
 }
@@ -113,15 +129,30 @@ std::string Sexy::SexyStringToString(const SexyString &theString)
 
 std::string Sexy::Trim(const std::string &theString)
 {
-	int aStartPos = 0;
-	while (aStartPos < (int)theString.length() && isspace(theString[aStartPos]))
-		aStartPos++;
+	auto aStart = theString.begin();
+	auto anEnd = theString.end();
 
-	int anEndPos = theString.length() - 1;
-	while (anEndPos >= 0 && isspace(theString[anEndPos]))
-		anEndPos--;
+	while (aStart != anEnd)
+	{
+		auto it = aStart;
+		uint32_t aCodepoint = utf8::next(it, anEnd);
+		// treat non-ascii as not whitespace
+		if (aCodepoint >= 0x80 || !isspace(aCodepoint))
+			break;
+		aStart = it;
+	}
 
-	return theString.substr(aStartPos, anEndPos - aStartPos + 1);
+	while (anEnd != aStart)
+	{
+		auto it = anEnd;
+		uint32_t aCodepoint = utf8::prior(it, aStart);
+		// treat non-ascii as not whitespace
+		if (aCodepoint >= 0x80 || !isspace(aCodepoint))
+			break;
+		anEnd = it;
+	}
+
+	return std::string(aStart, anEnd);
 }
 
 bool Sexy::StringToInt(const std::string theString, int *theIntVal)
@@ -378,24 +409,17 @@ bool Sexy::AllowAllAccess(const std::string &theFileName)
 	if (aLib == NULL)
 		return false;
 
-	BOOL(WINAPI * fnSetFileSecurity)(
-		LPCTSTR lpFileName, SECURITY_INFORMATION SecurityInformation, PSECURITY_DESCRIPTOR pSecurityDescriptor);
-	BOOL(WINAPI * fnSetSecurityDescriptorDacl)(
-		PSECURITY_DESCRIPTOR pSecurityDescriptor, BOOL bDaclPresent, PACL pDacl, BOOL bDaclDefaulted);
+	BOOL(WINAPI * fnSetFileSecurity)(LPCTSTR lpFileName, SECURITY_INFORMATION SecurityInformation,
+									 PSECURITY_DESCRIPTOR pSecurityDescriptor);
+	BOOL(WINAPI * fnSetSecurityDescriptorDacl)(PSECURITY_DESCRIPTOR pSecurityDescriptor, BOOL bDaclPresent, PACL pDacl,
+											   BOOL bDaclDefaulted);
 	BOOL(WINAPI * fnInitializeSecurityDescriptor)(PSECURITY_DESCRIPTOR pSecurityDescriptor, DWORD dwRevision);
-	BOOL(WINAPI * fnAllocateAndInitializeSid)(PSID_IDENTIFIER_AUTHORITY pIdentifierAuthority,
-											  BYTE nSubAuthorityCount,
-											  DWORD dwSubAuthority0,
-											  DWORD dwSubAuthority1,
-											  DWORD dwSubAuthority2,
-											  DWORD dwSubAuthority3,
-											  DWORD dwSubAuthority4,
-											  DWORD dwSubAuthority5,
-											  DWORD dwSubAuthority6,
-											  DWORD dwSubAuthority7,
-											  PSID * pSid);
-	DWORD(WINAPI * fnSetEntriesInAcl)(
-		ULONG cCountOfExplicitEntries, PEXPLICIT_ACCESS pListOfExplicitEntries, PACL OldAcl, PACL * NewAcl);
+	BOOL(WINAPI * fnAllocateAndInitializeSid)(PSID_IDENTIFIER_AUTHORITY pIdentifierAuthority, BYTE nSubAuthorityCount,
+											  DWORD dwSubAuthority0, DWORD dwSubAuthority1, DWORD dwSubAuthority2,
+											  DWORD dwSubAuthority3, DWORD dwSubAuthority4, DWORD dwSubAuthority5,
+											  DWORD dwSubAuthority6, DWORD dwSubAuthority7, PSID * pSid);
+	DWORD(WINAPI * fnSetEntriesInAcl)(ULONG cCountOfExplicitEntries, PEXPLICIT_ACCESS pListOfExplicitEntries,
+									  PACL OldAcl, PACL * NewAcl);
 	PVOID(WINAPI * fnFreeSid)(PSID pSid);
 
 	*(void **)&fnSetFileSecurity = (void *)GetProcAddress(aLib, "SetFileSecurityA");
@@ -458,7 +482,6 @@ bool Sexy::AllowAllAccess(const std::string &theFileName)
 #else
 	return false;
 #endif // WIN32
-	
 }
 
 SexyString Sexy::SexyStringFromChar(SexyChar theChar)
@@ -668,7 +691,8 @@ std::string Sexy::AddTrailingSlash(const std::string &theDirectory, bool backSla
 uint64_t Sexy::GetLastWriteFileDate(const std::string &theFileName)
 {
 	auto ftime = std::filesystem::last_write_time(theFileName);
-	auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(ftime - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now());
+	auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(
+		ftime - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now());
 	return std::chrono::system_clock::to_time_t(sctp);
 }
 
@@ -763,8 +787,8 @@ std::string Sexy::Evaluate(const std::string &theString, const DefinesMap &theDe
 
 		anEvaluatedString.erase(anEvaluatedString.begin() + aPercentPos,
 								anEvaluatedString.begin() + aSecondPercentPos + 1);
-		anEvaluatedString.insert(
-			anEvaluatedString.begin() + aPercentPos, aValue.begin(), aValue.begin() + aValue.length());
+		anEvaluatedString.insert(anEvaluatedString.begin() + aPercentPos, aValue.begin(),
+								 aValue.begin() + aValue.length());
 	}
 
 	return anEvaluatedString;

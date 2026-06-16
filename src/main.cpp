@@ -1,5 +1,4 @@
 #include "LawnApp.h"
-#include "Resources.h"
 #include "Sexy.TodLib/TodStringFile.h"
 
 using namespace Sexy;
