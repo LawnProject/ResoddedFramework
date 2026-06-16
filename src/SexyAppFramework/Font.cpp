@@ -58,7 +58,9 @@ int Font::StringWidth(const SexyString &theString)
 
 int Font::CharWidth(SexyChar theChar)
 {
-	SexyString aString(1, theChar);
+    // theChar is really a Codepoint (see derived class StringWidth implementations)
+    std::string aString;
+    utf8::append(theChar, std::back_inserter(aString));
 	return StringWidth(aString);
 }
 

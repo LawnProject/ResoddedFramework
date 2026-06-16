@@ -969,6 +969,10 @@ bool FontData::HandleCommand(const ListDataElement &theParams)
 		else
 			invalidNumParams = true;
 	}
+    else if (stricmp(aCmd.c_str(), "LayerSetExInfo") == 0)
+    {
+        // used in chinese versions, not implemented for now
+    }
 	else
 	{
 		Error("Unknown Command");
