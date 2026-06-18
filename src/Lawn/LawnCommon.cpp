@@ -230,6 +230,20 @@ void LawnScrollbar::MouseWheel(int theDelta)
 	}
 }
 
+void LawnScrollbar::SetValue(float theValue)
+{
+	mValue = theValue;
+	float aNormalized = (mMaxValue > 0.0f) ? mValue / mMaxValue : 0.0f;
+	if (mIsHorizontal)
+	{
+		mThumbRect = Rect(aNormalized * (mWidth - mThumbRect.mWidth), 0, mSliderHeightPercent * mWidth, mHeight);
+	}
+	else
+	{
+		mThumbRect = Rect(0, aNormalized * (mHeight - mThumbRect.mHeight), mWidth, mSliderHeightPercent * mHeight);
+	}
+}
+
 float LawnScrollbar::GetValue()
 {
 	return mValue;
