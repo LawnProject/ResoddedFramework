@@ -1397,8 +1397,8 @@ void Challenge::BeghouledCancelMatchFlashing()
 	Plant *aPlant = nullptr;
 	while (mBoard->IteratePlants(aPlant))
 	{
-		if (aPlant->mEatenFlashCountdown >= 25)
-			aPlant->mEatenFlashCountdown = 25;
+		if (aPlant->mBeghouledFlashCountdown >= 25)
+			aPlant->mBeghouledFlashCountdown = 25;
 	}
 }
 
