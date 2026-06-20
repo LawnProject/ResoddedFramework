@@ -4,7 +4,6 @@
 #include "TriVertex.h"
 #include "SexyMatrix.h"
 #include "Window.h"
-#include "AutoCrit.h"
 #include "SysFont.h"
 #include <SDL3/SDL.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -243,7 +242,7 @@ void OpenGLRenderer::Remove3DData(MemoryImage *theImage)
 		delete (OpenGLTextureData *)theImage->mGPUData;
 		theImage->mGPUData = nullptr;
 
-		AutoCrit aCrit(mCritSect); // Make images thread safe
+		auto aLock = std::scoped_lock(mCritSect); // Make images thread safe
 		mImageSet.erase(theImage);
 	}
 }
@@ -570,7 +569,7 @@ bool OpenGLRenderer::CreateImageTexture(MemoryImage *theImage)
 		// The actual purging was deferred
 		wantPurge = theImage->mPurgeBits;
 
-		AutoCrit aCrit(mCritSect); // Make images thread safe
+		auto aLock = std::scoped_lock(mCritSect); // Make images thread safe
 		mImageSet.insert(theImage);
 	}
 

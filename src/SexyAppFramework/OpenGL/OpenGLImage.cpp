@@ -5,8 +5,6 @@
 #include "Rect.h"
 #include "Graphics.h"
 #include "SexyAppBase.h"
-#include "AutoCrit.h"
-#include "Debug.h"
 #include "PerfTimer.h"
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -111,8 +109,8 @@ bool OpenGLImage::GenerateSurface()
 	if (mColorTable != NULL)
 		GetBits();
 
-	AutoCrit aCrit(mRenderer->mCritSect); // prevent mSurface from being released while we're in this code
-
+    // prevent mSurface from being released while we're in this code
+    auto aLock = std::scoped_lock(mRenderer->mCritSect);
 
 	if (!LockSurface())
 		return false;
