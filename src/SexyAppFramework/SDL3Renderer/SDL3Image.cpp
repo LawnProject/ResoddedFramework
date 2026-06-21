@@ -5,8 +5,6 @@
 #include "Rect.h"
 #include "Graphics.h"
 #include "SexyAppBase.h"
-#include "AutoCrit.h"
-#include "Debug.h"
 #include "PerfTimer.h"
 
 using namespace Sexy;
@@ -103,7 +101,7 @@ bool SDL3Image::GenerateSurface()
 	if (mColorTable != NULL)
 		GetBits();
 
-	AutoCrit aCrit(mRenderer->mCritSect); // prevent mSurface from being released while we're in this code
+	auto aLock = std::scoped_lock(mRenderer->mCritSect); // prevent mSurface from being released while we're in this code
 
 	if (!LockSurface())
 		return false;
