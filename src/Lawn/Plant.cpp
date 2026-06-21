@@ -4536,7 +4536,8 @@ void Plant::DoSpecial()
 
 		mApp->PlaySample(SOUND_POTATO_MINE);
 		mBoard->KillAllZombiesInRadius(mRow, aPosX, aPosY, 60, 0, false, aDamageRangeFlags);
-		mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_SPUDOW);
+		if (!mApp->IsIZombieLevel())
+			mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_SPUDOW);
 
 		int aRenderPosition = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_PARTICLE, mRow, 0);
 		mApp->AddTodParticle(aPosX + 20.0f, aPosY, aRenderPosition, ParticleEffect::PARTICLE_POTATO_MINE);
