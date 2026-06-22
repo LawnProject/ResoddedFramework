@@ -1,3 +1,9 @@
+// Include windows ourselves to prevent bass.h and curl.h from including windows and leak macros
+// IWYU pragma: begin_exports <- this suppresses clangd warning
+#include "Platform.h"
+// IWYU pragma: end_exports
+// this comment exists to prevent formatter from reordering this include
+
 //#define SEXY_TRACING_ENABLED
 //#define SEXY_PERF_ENABLED
 //#define SEXY_MEMTRACE
@@ -106,7 +112,8 @@ unsigned char gFingerCursorData[] = {
 	0xfc, 0x00, 0x00, 0xdf, 0xfc, 0x00, 0x00, 0x5f, 0xfc, 0x00, 0x00, 0x7f, 0xfc, 0x00, 0x00, 0x3f, 0xfc, 0x00, 0x00,
 	0x3f, 0xf8, 0x00, 0x00, 0x1f, 0xf8, 0x00, 0x00, 0x1f, 0xf8, 0x00, 0x00, 0x0f, 0xf0, 0x00, 0x00, 0x0f, 0xf0, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
 
 //HotSpot: 15 10
 //Size: 32 32
@@ -124,7 +131,8 @@ unsigned char gDraggingCursorData[] = {
 	0xfe, 0x00, 0x00, 0xff, 0xfe, 0x00, 0x00, 0x7f, 0xfe, 0x00, 0x00, 0x3f, 0xfe, 0x00, 0x00, 0x3f, 0xfc, 0x00, 0x00,
 	0x1f, 0xfc, 0x00, 0x00, 0x0f, 0xfc, 0x00, 0x00, 0x07, 0xf8, 0x00, 0x00, 0x03, 0xf8, 0x00, 0x00, 0x03, 0xf8, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
 static GPUImage *gFPSImage = NULL;
 
 static SysFont *gDebugFont = nullptr;
@@ -296,7 +304,7 @@ SexyAppBase::SexyAppBase()
 	SetString("UP_TO_DATE_BODY", "There are no updates available for this product at this time.");
 	SetString("NEW_VERSION_TITLE", "New Version");
 	SetString("NEW_VERSION_BODY",
-			  "There is an update available for this product.  Would you like to visit the web site to download it?");
+	          "There is an update available for this product.  Would you like to visit the web site to download it?");
 
 	mDemoPrefix = "sexyapp";
 	mDemoFileName = mDemoPrefix + ".dmo";
@@ -353,18 +361,20 @@ SexyAppBase::~SexyAppBase()
 				{
 					showedMsgBox = true;
 
-					SDL_MessageBoxButtonData buttons[] = {{SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes"},
-														  {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "No"}};
+					SDL_MessageBoxButtonData buttons[] = {
+						{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes" },
+						{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "No"  }
+					};
 					SDL_MessageBoxData msgBoxData;
 					msgBoxData.flags = SDL_MESSAGEBOX_WARNING;
 					msgBoxData.title = GetString("HARDWARE_ACCEL_SWITCHED_ON",
-												 "Hardware Acceleration was switched on during this session.\nIf this "
-												 "resulted in slower performance,it should be switched off.\nWould "
-												 "you like to keep Hardware Acceleration switched on?")
-										   .c_str();
+					                             "Hardware Acceleration was switched on during this session.\nIf this "
+					                             "resulted in slower performance,it should be switched off.\nWould "
+					                             "you like to keep Hardware Acceleration switched on?")
+					                       .c_str();
 					std::string aMessage =
-						(mCompanyName + " " +
-						 GetString("HARDWARE_ACCEL_CONFIRMATION", "Hardware Acceleration Confirmation"));
+					    (mCompanyName + " " +
+					     GetString("HARDWARE_ACCEL_CONFIRMATION", "Hardware Acceleration Confirmation"));
 					msgBoxData.message = aMessage.c_str();
 					msgBoxData.buttons = buttons;
 					msgBoxData.numbuttons = 2;
@@ -387,18 +397,20 @@ SexyAppBase::~SexyAppBase()
 	if (!showedMsgBox && Renderer::gRenderingPreDrawError && !IsScreenSaver())
 	{
 
-		SDL_MessageBoxButtonData buttons[] = {{SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes"},
-											  {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "No"}};
+		SDL_MessageBoxButtonData buttons[] = {
+			{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes" },
+			{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "No"  }
+		};
 		SDL_MessageBoxData msgBoxData;
 		msgBoxData.flags = SDL_MESSAGEBOX_WARNING;
 		std::string anAntiDangle1 =
-			GetString("HARDWARE_ACCEL_NOT_WORKING",
-					  "Hardware Acceleration may not have been working correctly during this session.\n"
-					  "If you noticed graphics problems, you may want to turn off Hardware Acceleration.\n"
-					  "Would you like to keep Hardware Acceleration switched on?");
+		    GetString("HARDWARE_ACCEL_NOT_WORKING",
+		              "Hardware Acceleration may not have been working correctly during this session.\n"
+		              "If you noticed graphics problems, you may want to turn off Hardware Acceleration.\n"
+		              "Would you like to keep Hardware Acceleration switched on?");
 		msgBoxData.title = anAntiDangle1.c_str();
 		std::string anAntiDangle2 =
-			mCompanyName + " " + GetString("HARDWARE_ACCEL_CONFIRMATION", "Hardware Acceleration Confirmation");
+		    mCompanyName + " " + GetString("HARDWARE_ACCEL_CONFIRMATION", "Hardware Acceleration Confirmation");
 		msgBoxData.message = anAntiDangle2.c_str();
 
 		msgBoxData.buttons = buttons;
@@ -681,7 +693,7 @@ void SexyAppBase::WriteDemoBuffer()
 			Buffer aMarkerBuffer;
 			aMarkerBuffer.WriteLong(mDemoMarkerList.size());
 			for (DemoMarkerList::iterator aMarkerItr = mDemoMarkerList.begin(); aMarkerItr != mDemoMarkerList.end();
-				 ++aMarkerItr)
+			     ++aMarkerItr)
 			{
 				aMarkerBuffer.WriteString(aMarkerItr->first);
 				aMarkerBuffer.WriteLong(aMarkerItr->second);
@@ -912,15 +924,15 @@ void SexyAppBase::DemoAssertIntEqual(int theInt)
 }
 
 Dialog *SexyAppBase::NewDialog(int theDialogId, bool isModal, const SexyString &theDialogHeader,
-							   const SexyString &theDialogLines, const SexyString &theDialogFooter, int theButtonMode)
+                               const SexyString &theDialogLines, const SexyString &theDialogFooter, int theButtonMode)
 {
 	Dialog *aDialog =
-		new Dialog(NULL, NULL, theDialogId, isModal, theDialogHeader, theDialogLines, theDialogFooter, theButtonMode);
+	    new Dialog(NULL, NULL, theDialogId, isModal, theDialogHeader, theDialogLines, theDialogFooter, theButtonMode);
 	return aDialog;
 }
 
 Dialog *SexyAppBase::DoDialog(int theDialogId, bool isModal, const SexyString &theDialogHeader,
-							  const SexyString &theDialogLines, const SexyString &theDialogFooter, int theButtonMode)
+                              const SexyString &theDialogLines, const SexyString &theDialogFooter, int theButtonMode)
 {
 	KillDialog(theDialogId);
 
@@ -1094,7 +1106,7 @@ std::string SexyAppBase::GetProductVersionDLL(const std::string &thePath)
 	// Dynamically Load Version.dll
 	typedef DWORD(APIENTRY * GetFileVersionInfoSizeFunc)(LPSTR lptstrFilename, LPDWORD lpdwHandle);
 	typedef BOOL(APIENTRY * GetFileVersionInfoFunc)(LPSTR lptstrFilename, DWORD dwHandle, DWORD dwLen, LPVOID lpData);
-	typedef BOOL(APIENTRY * VerQueryValueFunc)(const LPVOID pBlock, LPSTR lpSubBlock, LPVOID *lplpBuffer, PUINT puLen);
+	typedef BOOL(APIENTRY * VerQueryValueFunc)(const LPVOID pBlock, LPCSTR lpSubBlock, LPVOID *lplpBuffer, PUINT puLen);
 
 	static GetFileVersionInfoSizeFunc aGetFileVersionInfoSizeFunc = NULL;
 	static GetFileVersionInfoFunc aGetFileVersionInfoFunc = NULL;
@@ -1103,7 +1115,7 @@ std::string SexyAppBase::GetProductVersionDLL(const std::string &thePath)
 	if (aGetFileVersionInfoSizeFunc == NULL)
 	{
 		aGetFileVersionInfoSizeFunc =
-			(GetFileVersionInfoSizeFunc)GetProcAddress(gVersionDLL, "GetFileVersionInfoSizeA");
+		    (GetFileVersionInfoSizeFunc)GetProcAddress(gVersionDLL, "GetFileVersionInfoSizeA");
 		aGetFileVersionInfoFunc = (GetFileVersionInfoFunc)GetProcAddress(gVersionDLL, "GetFileVersionInfoA");
 		aVerQueryValueFunc = (VerQueryValueFunc)GetProcAddress(gVersionDLL, "VerQueryValueA");
 	}
@@ -1122,12 +1134,12 @@ std::string SexyAppBase::GetProductVersionDLL(const std::string &thePath)
 			aProductVersion = aBuffer;
 		}
 		else if (aVerQueryValueFunc(aVersionBuffer, "\\StringFileInfo\\040904E4\\ProductVersion", (void **)&aBuffer,
-									&aSize))
+		                            &aSize))
 		{
 			aProductVersion = aBuffer;
-		}
 
-		delete aVersionBuffer;
+			delete aVersionBuffer;
+		}
 	}
 
 	return aProductVersion;
@@ -1207,7 +1219,7 @@ void SexyAppBase::DumpProgramInfo()
 	tm *aTM = localtime(&aTime);
 
 	aDumpStream << "<HTML><BODY BGCOLOR=EEEEFF><CENTER><FONT SIZE=+2><B>" << asctime(aTM) << "</B></FONT><BR>"
-				<< std::endl;
+	            << std::endl;
 
 	int anImgNum = 0;
 
@@ -1263,7 +1275,7 @@ void SexyAppBase::DumpProgramInfo()
 			aTextureMemory += ((TextureData *)aMemoryImage->mGPUData)->mTexMemSize;
 
 		aMemorySize = aBitsMemory + aSurfaceMemory + aPalletizedMemory + aNativeAlphaMemory + aRLAlphaMemory +
-					  aRLAdditiveMemory + aTextureMemory;
+		              aRLAdditiveMemory + aTextureMemory;
 		aTotalMemory += aMemorySize;
 
 		aSortedImageMap.insert(SortedImageMap::value_type(aMemorySize, aMemoryImage));
@@ -1297,7 +1309,7 @@ void SexyAppBase::DumpProgramInfo()
 		aDumpStream << "<TR>" << std::endl;
 
 		aDumpStream << "<TD><A HREF=" << anImageName << "><IMG SRC=" << aThumbName << " WIDTH=" << aThumbWidth
-					<< " HEIGHT=" << aThumbHeight << "></A></TD>" << std::endl;
+		            << " HEIGHT=" << aThumbHeight << "></A></TD>" << std::endl;
 
 		int aNumPixels = aMemoryImage->mWidth * aMemoryImage->mHeight;
 
@@ -1363,50 +1375,50 @@ void SexyAppBase::DumpProgramInfo()
 
 		char aStr[256];
 		sprintf(aStr, "%d x %d<BR>%s bytes", aMemoryImage->mWidth, aMemoryImage->mHeight,
-				CommaSeperate(aMemorySize).c_str());
+		        CommaSeperate(aMemorySize).c_str());
 		aDumpStream << "<TD ALIGN=RIGHT>" << aStr << "</TD>" << std::endl;
 
 		aDumpStream << "<TD>"
-					<< SexyStringToString(((aBitsMemory != 0) ? "mBits<BR>" + CommaSeperate(aBitsMemory) : "&nbsp;"))
-					<< "</TD>" << std::endl;
+		            << SexyStringToString(((aBitsMemory != 0) ? "mBits<BR>" + CommaSeperate(aBitsMemory) : "&nbsp;"))
+		            << "</TD>" << std::endl;
 		aDumpStream << "<TD>"
-					<< SexyStringToString(
-						   ((aPalletizedMemory != 0) ? "Palletized<BR>" + CommaSeperate(aPalletizedMemory) : "&nbsp;"))
-					<< "</TD>" << std::endl;
+		            << SexyStringToString(
+		                   ((aPalletizedMemory != 0) ? "Palletized<BR>" + CommaSeperate(aPalletizedMemory) : "&nbsp;"))
+		            << "</TD>" << std::endl;
 		aDumpStream << "<TD>"
-					<< SexyStringToString(
-						   ((aSurfaceMemory != 0) ? "DDSurface<BR>" + CommaSeperate(aSurfaceMemory) : "&nbsp;"))
-					<< "</TD>" << std::endl;
+		            << SexyStringToString(
+		                   ((aSurfaceMemory != 0) ? "DDSurface<BR>" + CommaSeperate(aSurfaceMemory) : "&nbsp;"))
+		            << "</TD>" << std::endl;
 		aDumpStream << "<TD>"
-					<< SexyStringToString(((aMemoryImage->mGPUData != NULL)
-											   ? "Texture<BR>" + StringToSexyString(aTextureFormatName) + "<BR>" +
-													 CommaSeperate(aTextureMemory)
-											   : "&nbsp;"))
-					<< "</TD>" << std::endl;
+		            << SexyStringToString(((aMemoryImage->mGPUData != NULL)
+		                                       ? "Texture<BR>" + StringToSexyString(aTextureFormatName) + "<BR>" +
+		                                             CommaSeperate(aTextureMemory)
+		                                       : "&nbsp;"))
+		            << "</TD>" << std::endl;
 
 		aDumpStream << "<TD>" << SexyStringToString(((aMemoryImage->mIsVolatile) ? "Volatile" : "&nbsp;")) << "</TD>"
-					<< std::endl;
+		            << std::endl;
 		aDumpStream << "<TD>" << SexyStringToString(((aMemoryImage->mForcedMode) ? "Forced" : "&nbsp;")) << "</TD>"
-					<< std::endl;
+		            << std::endl;
 		aDumpStream << "<TD>" << SexyStringToString(((aMemoryImage->mHasAlpha) ? "HasAlpha" : "&nbsp;")) << "</TD>"
-					<< std::endl;
+		            << std::endl;
 		aDumpStream << "<TD>" << SexyStringToString(((aMemoryImage->mHasTrans) ? "HasTrans" : "&nbsp;")) << "</TD>"
-					<< std::endl;
+		            << std::endl;
 		aDumpStream << "<TD>"
-					<< SexyStringToString(((aNativeAlphaMemory != 0)
-											   ? "NativeAlpha<BR>" + CommaSeperate(aNativeAlphaMemory)
-											   : "&nbsp;"))
-					<< "</TD>" << std::endl;
+		            << SexyStringToString(((aNativeAlphaMemory != 0)
+		                                       ? "NativeAlpha<BR>" + CommaSeperate(aNativeAlphaMemory)
+		                                       : "&nbsp;"))
+		            << "</TD>" << std::endl;
 		aDumpStream << "<TD>"
-					<< SexyStringToString(
-						   ((aRLAlphaMemory != 0) ? "RLAlpha<BR>" + CommaSeperate(aRLAlphaMemory) : "&nbsp;"))
-					<< "</TD>" << std::endl;
+		            << SexyStringToString(
+		                   ((aRLAlphaMemory != 0) ? "RLAlpha<BR>" + CommaSeperate(aRLAlphaMemory) : "&nbsp;"))
+		            << "</TD>" << std::endl;
 		aDumpStream << "<TD>"
-					<< SexyStringToString(
-						   ((aRLAdditiveMemory != 0) ? "RLAdditive<BR>" + CommaSeperate(aRLAdditiveMemory) : "&nbsp;"))
-					<< "</TD>" << std::endl;
+		            << SexyStringToString(
+		                   ((aRLAdditiveMemory != 0) ? "RLAdditive<BR>" + CommaSeperate(aRLAdditiveMemory) : "&nbsp;"))
+		            << "</TD>" << std::endl;
 		aDumpStream << "<TD>" << (aMemoryImage->mFilePath.empty() ? "&nbsp;" : aMemoryImage->mFilePath) << "</TD>"
-					<< std::endl;
+		            << std::endl;
 
 		aDumpStream << "</TR>" << std::endl;
 
@@ -1428,7 +1440,7 @@ void SexyAppBase::DumpProgramInfo()
 			}
 
 		ImageLib::WriteImage((GetAppDataFolder() + std::string("_dump\\") + aThumbName).c_str(), &anImageLibImage,
-							 ".jpeg");
+		                     ".jpeg");
 
 		// Write high resolution image
 
@@ -1476,7 +1488,7 @@ double SexyAppBase::GetLoadingThreadProgress()
 }
 
 bool SexyAppBase::RegistryWrite(const std::string &theValueName, JSONRegistryType theType, const uint8_t *theValue,
-								uint32_t theLength)
+                                uint32_t theLength)
 {
 	if (mPlayingDemoBuffer)
 	{
@@ -1665,13 +1677,13 @@ bool SexyAppBase::RegistryGetSubKeys(const std::string &theKeyName, StringVector
 }
 
 bool SexyAppBase::RegistryRead(const std::string &theValueName, JSONRegistryType *theType, uint8_t *theValue,
-							   uint32_t *theLength)
+                               uint32_t *theLength)
 {
 	return RegistryReadKey(theValueName, theType, theValue, theLength, 0);
 }
 
 bool SexyAppBase::RegistryReadKey(const std::string &theValueName, JSONRegistryType *theType, uint8_t *theValue,
-								  uint32_t *theLength, int theKey)
+                                  uint32_t *theLength, int theKey)
 {
 	std::filesystem::path configPath = GetAppDataFolder() + "/registry.json";
 	if (!std::filesystem::exists(configPath) || !theType || !theValue || !theLength)
@@ -2087,10 +2099,10 @@ std::string SexyAppBase::GetGameSEHInfo()
 	// c++20: replace with std::format
 	std::ostringstream aInfoStream;
 	aInfoStream << "Product: " << mProdName << "\r\n"
-				<< "Version: " << mProductVersion << "\r\n"
-				<< "Time Loaded" << aTimeStr << "\r\n"
-				<< "Fullscreen: " << (mIsWindowed ? "No" : "Yes") << "\r\n"
-				<< "Primary ThreadId:" << mPrimaryThreadId << "\r\n";
+	            << "Version: " << mProductVersion << "\r\n"
+	            << "Time Loaded" << aTimeStr << "\r\n"
+	            << "Fullscreen: " << (mIsWindowed ? "No" : "Yes") << "\r\n"
+	            << "Primary ThreadId:" << mPrimaryThreadId << "\r\n";
 
 	return aInfoStream.str();
 }
@@ -2590,7 +2602,7 @@ bool SexyAppBase::DrawDirtyStuff()
 
 			if (mPlayingDemoBuffer)
 				g.DrawImage(gDemoTimeLeftImage, mWidth - gDemoTimeLeftImage->GetWidth() - 10,
-							mHeight - gFPSImage->GetHeight() - gDemoTimeLeftImage->GetHeight() - 15);
+				            mHeight - gFPSImage->GetHeight() - gDemoTimeLeftImage->GetHeight() - 15);
 		}
 
 		uint32_t aPreScreenBltTime = timeGetTime();
@@ -2717,13 +2729,13 @@ int SexyAppBase::MsgBox(const std::string &theText, const std::string &theTitle,
 		aConvertedFlags |= SDL_MESSAGEBOX_BUTTONS_LEFT_TO_RIGHT;
 
 	if (theFlags & SexyMessageBoxFlags::MESSAGEBOX_BTN_OK)
-		aButtonVec.push_back({SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Ok"});
+		aButtonVec.push_back({ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Ok" });
 	if (theFlags & SexyMessageBoxFlags::MESSAGEBOX_BTN_CANCEL)
-		aButtonVec.push_back({SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel"});
+		aButtonVec.push_back({ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel" });
 	if (theFlags & SexyMessageBoxFlags::MESSAGEBOX_BTN_YES)
-		aButtonVec.push_back({SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes"});
+		aButtonVec.push_back({ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes" });
 	if (theFlags & SexyMessageBoxFlags::MESSAGEBOX_BTN_NO)
-		aButtonVec.push_back({SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "No"});
+		aButtonVec.push_back({ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "No" });
 
 	SDL_MessageBoxData msgBoxData;
 	msgBoxData.window = nullptr;
@@ -2755,7 +2767,7 @@ void SexyAppBase::Popup(const std::string &theString)
 	BeginPopup();
 	if (!mShutdown)
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, GetString("FATAL_ERROR", "FATAL ERROR").c_str(),
-								 theString.c_str(), aInternalWindow);
+		                         theString.c_str(), aInternalWindow);
 
 	EndPopup();
 }
@@ -2790,7 +2802,7 @@ static intptr_t CALLBACK MarkerListDialogProc(HWND hwnd, UINT msg, WPARAM wParam
 		GetClientRect(hwnd, &aRect);
 		MoveWindow(aListBox, 10, 10, aRect.right - aRect.left - 20, aRect.bottom - aRect.top - 20, FALSE);
 		for (SexyAppBase::DemoMarkerList::iterator anItr = gSexyAppBase->mDemoMarkerList.begin();
-			 anItr != gSexyAppBase->mDemoMarkerList.end(); ++anItr)
+		     anItr != gSexyAppBase->mDemoMarkerList.end(); ++anItr)
 		{
 			if (anItr->second <= gSexyAppBase->mUpdateCount)
 				continue;
@@ -3388,7 +3400,7 @@ void SexyAppBase::ShowMemoryUsage()
 		aDesc = "Unsupported";
 
 	aStr +=
-		StrFormat("Current Rendering Backend: %s\n", gRenderBackends.find(mRenderer->mCurrentBackend)->second.c_str());
+	    StrFormat("Current Rendering Backend: %s\n", gRenderBackends.find(mRenderer->mCurrentBackend)->second.c_str());
 	aStr += StrFormat("3D-Mode is %s (3D is %s on this system)\n\n", Is3DAccelerated() ? "On" : "Off", aDesc);
 
 	aStr += StrFormat("Num Images: %d\n", (int)mMemoryImageSet.size());
@@ -3404,16 +3416,16 @@ void SexyAppBase::ShowMemoryUsage()
 
 	FormatUsage aUsage = aFormatMap[PixelFormat_A8R8G8B8];
 	aStr += StrFormat("A8R8G8B8: %d - %s KB\n", aUsage.first,
-					  SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
+	                  SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
 	aUsage = aFormatMap[PixelFormat_A4R4G4B4];
 	aStr += StrFormat("A4R4G4B4: %d - %s KB\n", aUsage.first,
-					  SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
+	                  SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
 	aUsage = aFormatMap[PixelFormat_R5G6B5];
 	aStr += StrFormat("R5G6B5: %d - %s KB\n", aUsage.first,
-					  SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
+	                  SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
 	aUsage = aFormatMap[PixelFormat_Palette8];
 	aStr += StrFormat("Palette8: %d - %s KB\n", aUsage.first,
-					  SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
+	                  SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
 
 	MsgBox(aStr, "Video Stats", MESSAGEBOX_BTN_OK);
 	mLastTime = timeGetTime();
@@ -3535,8 +3547,8 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 #if SEXY_USE_IMGUI
 #if SEXY_USE_SDL3_RENDERER
 		if (mRenderer->mCurrentBackend == RenderingBackend::BACKEND_SDL3 &&
-			(anEvent.type == SDL_EVENT_MOUSE_BUTTON_DOWN || anEvent.type == SDL_EVENT_MOUSE_BUTTON_UP ||
-			 anEvent.type == SDL_EVENT_MOUSE_MOTION))
+		    (anEvent.type == SDL_EVENT_MOUSE_BUTTON_DOWN || anEvent.type == SDL_EVENT_MOUSE_BUTTON_UP ||
+		     anEvent.type == SDL_EVENT_MOUSE_MOTION))
 		{
 			SDL_Event aConvertedEvent = SDL_Event(anEvent);
 			int x = aConvertedEvent.motion.x;
@@ -3724,7 +3736,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 						// as relative==true for mouse warp injections), revert to mouse mode.
 						// SDL3 sets event.motion.which == SDL_TOUCH_MOUSEID for touch/synthetic events.
 						if (anEvent.motion.which != SDL_TOUCH_MOUSEID &&
-							(std::abs(anEvent.motion.xrel) > 2 || std::abs(anEvent.motion.yrel) > 2))
+						    (std::abs(anEvent.motion.xrel) > 2 || std::abs(anEvent.motion.yrel) > 2))
 						{
 							mUsingGamepad = false;
 							EnforceCursor();
@@ -3737,9 +3749,9 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 #endif
 
 					if (!(x >= mRenderer->mPresentationRect.mX &&
-						  x < mRenderer->mPresentationRect.mX + mRenderer->mPresentationRect.mWidth &&
-						  y >= mRenderer->mPresentationRect.mY &&
-						  y < mRenderer->mPresentationRect.mY + mRenderer->mPresentationRect.mHeight && x > 0 && y > 0))
+					      x < mRenderer->mPresentationRect.mX + mRenderer->mPresentationRect.mWidth &&
+					      y >= mRenderer->mPresentationRect.mY &&
+					      y < mRenderer->mPresentationRect.mY + mRenderer->mPresentationRect.mHeight && x > 0 && y > 0))
 					{
 						break;
 					}
@@ -3786,9 +3798,9 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 					int x = anEvent.button.x;
 					int y = anEvent.button.y;
 					if (!(x >= mRenderer->mPresentationRect.mX &&
-						  x < mRenderer->mPresentationRect.mX + mRenderer->mPresentationRect.mWidth &&
-						  y >= mRenderer->mPresentationRect.mY &&
-						  y < mRenderer->mPresentationRect.mY + mRenderer->mPresentationRect.mHeight && x > 0 && y > 0))
+					      x < mRenderer->mPresentationRect.mX + mRenderer->mPresentationRect.mWidth &&
+					      y >= mRenderer->mPresentationRect.mY &&
+					      y < mRenderer->mPresentationRect.mY + mRenderer->mPresentationRect.mHeight && x > 0 && y > 0))
 					{
 						break;
 					}
@@ -4125,7 +4137,7 @@ void SexyAppBase::MakeWindow()
 
 #if SEXY_USE_OPENGL
 			anError +=
-				StrFormat("OpenGL: %s\n", OpenGLRenderer::TestOpenGL(mWindow->mInternalWindow) ? "OK" : "FAILED");
+			    StrFormat("OpenGL: %s\n", OpenGLRenderer::TestOpenGL(mWindow->mInternalWindow) ? "OK" : "FAILED");
 #endif
 
 #if SEXY_USE_SDL3_RENDERER
@@ -4192,7 +4204,7 @@ void SexyAppBase::DeleteNativeImageData()
 
 void SexyAppBase::DeleteExtraImageData()
 {
-    auto aLock = std::scoped_lock(mRenderer->mCritSect);
+	auto aLock = std::scoped_lock(mRenderer->mCritSect);
 	MemoryImageSet::iterator anItr = mMemoryImageSet.begin();
 	while (anItr != mMemoryImageSet.end())
 	{
@@ -4380,7 +4392,7 @@ void SexyAppBase::EnforceCursor()
 	else
 	{
 		if (mCursorNum >= NUM_CURSORS || (mCursorImages[mCursorNum] == nullptr) ||
-			((!mPlayingDemoBuffer) && (!mCustomCursorsEnabled)))
+		    ((!mPlayingDemoBuffer) && (!mCustomCursorsEnabled)))
 		{
 			SDL_SetCursor(mSystemCursors[aNativeCursor]);
 			SDL_ShowCursor();
@@ -4390,9 +4402,9 @@ void SexyAppBase::EnforceCursor()
 			if (!mCachedCursors[mCursorNum])
 			{
 				SDL_Surface *aSurface =
-					SDL_CreateSurfaceFrom(mCursorImages[mCursorNum]->mWidth, mCursorImages[mCursorNum]->mHeight,
-										  SDL_PIXELFORMAT_ARGB8888, ((GPUImage *)mCursorImages[mCursorNum])->GetBits(),
-										  mCursorImages[mCursorNum]->mWidth * sizeof(uint32_t));
+				    SDL_CreateSurfaceFrom(mCursorImages[mCursorNum]->mWidth, mCursorImages[mCursorNum]->mHeight,
+				                          SDL_PIXELFORMAT_ARGB8888, ((GPUImage *)mCursorImages[mCursorNum])->GetBits(),
+				                          mCursorImages[mCursorNum]->mWidth * sizeof(uint32_t));
 
 				SDL_Cursor *aCursor = SDL_CreateColorCursor(aSurface, 0, 0);
 				mCachedCursors[mCursorNum] = aCursor;
@@ -4963,7 +4975,7 @@ bool SexyAppBase::LoadProperties(const std::string &theFileName, bool required, 
 		else
 		{
 			Popup(GetString("UNABLE_OPEN_PROPERTIES", "Unable to open properties file ") +
-				  StringToSexyString(theFileName));
+			      StringToSexyString(theFileName));
 			return false;
 		}
 	}
@@ -4972,7 +4984,7 @@ bool SexyAppBase::LoadProperties(const std::string &theFileName, bool required, 
 		if (!CheckSignature(aBuffer, theFileName))
 		{
 			Popup(GetString("PROPERTIES_SIG_FAILED", "Signature check failed on ") +
-				  StringToSexyString(theFileName + "'"));
+			      StringToSexyString(theFileName + "'"));
 			return false;
 		}
 	}
@@ -5288,7 +5300,7 @@ void SexyAppBase::HandleCmdLineParam(const std::string &theParamName, const std:
 	else
 	{
 		Popup(GetString("INVALID_COMMANDLINE_PARAM", "Invalid command line parameter: ") +
-			  StringToSexyString(theParamName));
+		      StringToSexyString(theParamName));
 		DoExit(0);
 	}
 }
@@ -5543,7 +5555,7 @@ Sexy::GPUImage *SexyAppBase::GetImage(const std::string &theFileName, bool commi
 }
 
 Sexy::GPUImage *SexyAppBase::CreateCrossfadeImage(Sexy::Image *theImage1, const Rect &theRect1, Sexy::Image *theImage2,
-												  const Rect &theRect2, double theFadeFactor)
+                                                  const Rect &theRect2, double theFadeFactor)
 {
 	MemoryImage *aMemoryImage1 = dynamic_cast<MemoryImage *>(theImage1);
 	MemoryImage *aMemoryImage2 = dynamic_cast<MemoryImage *>(theImage2);
@@ -5552,14 +5564,14 @@ Sexy::GPUImage *SexyAppBase::CreateCrossfadeImage(Sexy::Image *theImage1, const 
 		return NULL;
 
 	if ((theRect1.mX < 0) || (theRect1.mY < 0) || (theRect1.mX + theRect1.mWidth > theImage1->GetWidth()) ||
-		(theRect1.mY + theRect1.mHeight > theImage1->GetHeight()))
+	    (theRect1.mY + theRect1.mHeight > theImage1->GetHeight()))
 	{
 		DBG_ASSERTE("Crossfade Rect1 out of bounds");
 		return NULL;
 	}
 
 	if ((theRect2.mX < 0) || (theRect2.mY < 0) || (theRect2.mX + theRect2.mWidth > theImage2->GetWidth()) ||
-		(theRect2.mY + theRect2.mHeight > theImage2->GetHeight()))
+	    (theRect2.mY + theRect2.mHeight > theImage2->GetHeight()))
 	{
 		DBG_ASSERTE("Crossfade Rect2 out of bounds");
 		return NULL;
@@ -5595,9 +5607,9 @@ Sexy::GPUImage *SexyAppBase::CreateCrossfadeImage(Sexy::Image *theImage1, const 
 			//p2 = 0xFFFFFFFF;
 
 			*d++ = ((((p1 & 0x000000FF) * aOMM + (p2 & 0x000000FF) * aMult) >> 8) & 0x000000FF) |
-				   ((((p1 & 0x0000FF00) * aOMM + (p2 & 0x0000FF00) * aMult) >> 8) & 0x0000FF00) |
-				   ((((p1 & 0x00FF0000) * aOMM + (p2 & 0x00FF0000) * aMult) >> 8) & 0x00FF0000) |
-				   ((((p1 >> 24) * aOMM + (p2 >> 24) * aMult) << 16) & 0xFF000000);
+			       ((((p1 & 0x0000FF00) * aOMM + (p2 & 0x0000FF00) * aMult) >> 8) & 0x0000FF00) |
+			       ((((p1 & 0x00FF0000) * aOMM + (p2 & 0x00FF0000) * aMult) >> 8) & 0x00FF0000) |
+			       ((((p1 >> 24) * aOMM + (p2 >> 24) * aMult) << 16) & 0xFF000000);
 		}
 	}
 
@@ -5634,9 +5646,9 @@ void SexyAppBase::ColorizeImage(Image *theImage, const Color &theColor)
 			uint32_t aColor = aBits[i];
 
 			aBits[i] = ((((aColor & 0xFF000000) >> 8) * theColor.mAlpha) & 0xFF000000) |
-					   ((((aColor & 0x00FF0000) * theColor.mRed) >> 8) & 0x00FF0000) |
-					   ((((aColor & 0x0000FF00) * theColor.mGreen) >> 8) & 0x0000FF00) |
-					   ((((aColor & 0x000000FF) * theColor.mBlue) >> 8) & 0x000000FF);
+			           ((((aColor & 0x00FF0000) * theColor.mRed) >> 8) & 0x00FF0000) |
+			           ((((aColor & 0x0000FF00) * theColor.mGreen) >> 8) & 0x0000FF00) |
+			           ((((aColor & 0x000000FF) * theColor.mBlue) >> 8) & 0x000000FF);
 		}
 	}
 	else
@@ -5704,9 +5716,9 @@ GPUImage *SexyAppBase::CreateColorizedImage(Image *theImage, const Color &theCol
 			uint32_t aColor = aSrcBits[i];
 
 			aDestBits[i] = ((((aColor & 0xFF000000) >> 8) * theColor.mAlpha) & 0xFF000000) |
-						   ((((aColor & 0x00FF0000) * theColor.mRed) >> 8) & 0x00FF0000) |
-						   ((((aColor & 0x0000FF00) * theColor.mGreen) >> 8) & 0x0000FF00) |
-						   ((((aColor & 0x000000FF) * theColor.mBlue) >> 8) & 0x000000FF);
+			               ((((aColor & 0x00FF0000) * theColor.mRed) >> 8) & 0x00FF0000) |
+			               ((((aColor & 0x0000FF00) * theColor.mGreen) >> 8) & 0x0000FF00) |
+			               ((((aColor & 0x000000FF) * theColor.mBlue) >> 8) & 0x000000FF);
 		}
 	}
 	else
@@ -6008,7 +6020,7 @@ void SexyAppBase::RGBToHSL(const uint32_t *theSource, uint32_t *theDest, int the
 	{
 		uint32_t src = theSource[i];
 		theDest[i] =
-			(src & 0xFF000000) | (RGBToHSL(((src >> 16) & 0xFF), (src >> 8) & 0xFF, (src & 0xFF)) & 0x00FFFFFF);
+		    (src & 0xFF000000) | (RGBToHSL(((src >> 16) & 0xFF), (src >> 8) & 0xFF, (src & 0xFF)) & 0x00FFFFFF);
 	}
 }
 
@@ -6119,13 +6131,13 @@ void SexyAppBase::SetMasterVolume(double theMasterVolume)
 
 void SexyAppBase::AddMemoryImage(MemoryImage *theMemoryImage)
 {
-    auto aLock = std::scoped_lock(mRenderer->mCritSect);
+	auto aLock = std::scoped_lock(mRenderer->mCritSect);
 	mMemoryImageSet.insert(theMemoryImage);
 }
 
 void SexyAppBase::RemoveMemoryImage(MemoryImage *theMemoryImage)
 {
-    auto aLock = std::scoped_lock(mRenderer->mCritSect);
+	auto aLock = std::scoped_lock(mRenderer->mCritSect);
 	MemoryImageSet::iterator anItr = mMemoryImageSet.find(theMemoryImage);
 	if (anItr != mMemoryImageSet.end())
 		mMemoryImageSet.erase(anItr);
@@ -6209,9 +6221,9 @@ SharedImageRef SexyAppBase::GetSharedImage(const std::string &theFileName, const
 	SharedImageRef aSharedImageRef;
 
 	{
-        auto aLock = std::scoped_lock(mRenderer->mCritSect);
+		auto aLock = std::scoped_lock(mRenderer->mCritSect);
 		aResultPair = mSharedImageMap.insert(
-			SharedImageMap::value_type(SharedImageMap::key_type(anUpperFileName, anUpperVariant), SharedImage()));
+		    SharedImageMap::value_type(SharedImageMap::key_type(anUpperFileName, anUpperVariant), SharedImage()));
 		aSharedImageRef = &aResultPair.first->second;
 	}
 
@@ -6232,7 +6244,7 @@ SharedImageRef SexyAppBase::GetSharedImage(const std::string &theFileName, const
 
 void SexyAppBase::CleanSharedImages()
 {
-    auto aLock = std::scoped_lock(mRenderer->mCritSect);
+	auto aLock = std::scoped_lock(mRenderer->mCritSect);
 
 	if (mCleanupSharedImages)
 	{

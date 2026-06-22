@@ -42,7 +42,6 @@
 #include "../Sexy.TodLib/EffectSystem.h"
 #include "../Sexy.TodLib/TodStringFile.h"
 #include "../SexyAppFramework/ImageFont.h"
-#include <bass.h>
 #include "../SexyAppFramework/SoundManager.h"
 #include "../SexyAppFramework/ButtonWidget.h"
 #include "../SexyAppFramework/WidgetManager.h"

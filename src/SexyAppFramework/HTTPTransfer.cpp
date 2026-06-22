@@ -1,7 +1,12 @@
+// Include windows ourselves to prevent curl.h from including windows and leak macros
+// IWYU pragma: begin_exports <- this suppresses clangd warning
+#include "Platform.h"
+// IWYU pragma: end_exports
+// this comment exists to prevent formatter from reordering this include
+
 #include "HTTPTransfer.h"
 #include "SexyAppBase.h"
 #include <curl/curl.h>
-
 
 using namespace Sexy;
 
