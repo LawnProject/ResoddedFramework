@@ -4,6 +4,7 @@
 #include "Font.h"
 #include <unordered_map>
 #include <freetype/freetype.h>
+#include <memory>
 
 namespace Sexy
 {
@@ -30,62 +31,17 @@ struct GlyphAtlas
 	std::unordered_map<uint32_t, GlpyhAtlasEntry> mGlyphs;
 };
 
-
-class TrueTypeData;
-
-class SysFont : public Font
+class TrueTypeData
 {
   public:
-	TrueTypeData* mFontData;
-	SexyAppBase *mApp;
-	std::string mFontName;
-	bool mDrawShadow;
-	bool mBold;
-	bool mItalic;
-	bool mUnderlined;
-
-
-	void Init(SexyAppBase *theApp,
-			  const std::string &theFace,
-			  int thePointSize,
-			  bool bold,
-			  bool italics,
-			  bool underline,
-			  bool useDevCaps);
-
-	void Reinit();
-
-  public:
-	SysFont(
-		const std::string &theFace, int thePointSize, bool bold = false, bool italics = false, bool underline = false);
-	SysFont(SexyAppBase *theApp,
-			const std::string &theFace,
-			int thePointSize,
-			bool bold = false,
-			bool italics = false,
-			bool underline = false);
-	SysFont(const SysFont &theSysFont);
-
-	virtual ~SysFont();
-
-	ImageFont *CreateImageFont();
-	virtual int StringWidth(const SexyString &theString);
-	virtual void DrawString(
-		Graphics *g, int theX, int theY, const SexyString &theString, const Color &theColor, const Rect &theClipRect);
-
-	virtual Font *Duplicate();
-
-};
-
-struct TrueTypeData
-{
 	GlyphAtlas mAtlas;
-	SysFont *mFont;
+	SexyAppBase *mApp;
 	FT_Face mFace;
 	int mSize;
+	bool mBold;
 	bool mIsDirty;
 
-	TrueTypeData(SysFont *theFontPtr, FT_Face &theFace, int theSize) : mFont(theFontPtr), mFace(theFace), mSize(theSize)
+	TrueTypeData(SexyAppBase *theApp, FT_Face theFace, int theSize, bool theBold) : mApp(theApp), mFace(theFace), mSize(theSize), mBold(theBold)
 	{
 		Init();
 	}
@@ -93,6 +49,48 @@ struct TrueTypeData
 	~TrueTypeData();
 
 	void Init();
+};
+
+class SysFont : public Font
+{
+  public:
+	std::shared_ptr<TrueTypeData> mFontData;
+	SexyAppBase *mApp;
+	std::string mFontName;
+	bool mDrawShadow;
+	bool mBold;
+	bool mItalic;
+	bool mUnderlined;
+
+	void Init(SexyAppBase *theApp,
+	          const std::string &theFace,
+	          int thePointSize,
+	          bool bold,
+	          bool italics,
+	          bool underline,
+	          bool useDevCaps);
+
+	void Reinit();
+
+  public:
+	SysFont(
+	    const std::string &theFace, int thePointSize, bool bold = false, bool italics = false, bool underline = false);
+	SysFont(SexyAppBase *theApp,
+	        const std::string &theFace,
+	        int thePointSize,
+	        bool bold = false,
+	        bool italics = false,
+	        bool underline = false);
+	SysFont(const SysFont &theSysFont);
+
+	virtual ~SysFont();
+
+	ImageFont *CreateImageFont();
+	virtual int StringWidth(const SexyString &theString);
+	virtual void DrawString(
+	    Graphics *g, int theX, int theY, const SexyString &theString, const Color &theColor, const Rect &theClipRect);
+
+	virtual Font *Duplicate();
 };
 
 } // namespace Sexy
