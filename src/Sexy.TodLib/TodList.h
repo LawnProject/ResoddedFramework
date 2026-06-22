@@ -4,6 +4,7 @@
 #define MAX_GLOBAL_ALLOCATORS 128
 
 #include "TodDebug.h"
+#include "TodCommon.h"
 
 struct TodAllocator
 {
@@ -26,7 +27,8 @@ struct TodAllocator
 extern int gNumGlobalAllocators;
 extern TodAllocator gGlobalAllocators[MAX_GLOBAL_ALLOCATORS];
 
-template <typename T> class TodListNode
+template <typename T>
+class TodListNode
 {
   public:
 	T mValue;
@@ -34,7 +36,8 @@ template <typename T> class TodListNode
 	TodListNode<T> *mPrev;
 };
 
-template <typename T> class TodList
+template <typename T>
+class TodList
 {
   public:
 	TodListNode<T> *mHead;

@@ -40,7 +40,7 @@ enum class DefFieldType : int
 class DefSymbol
 {
   public:
-	int mSymbolValue;		 // The value of the flag bit or the numerical value corresponding to the enumeration item; if it is -1, it means that the item does not exist.
+	int mSymbolValue;        // The value of the flag bit or the numerical value corresponding to the enumeration item; if it is -1, it means that the item does not exist.
 	const char *mSymbolName; // The flag or the name of the enumeration item, when a null pointer indicates that the item does not exist, is used as a marker to indicate the end of the read.
 };
 extern DefSymbol gParticleFlagSymbols[];
@@ -55,15 +55,15 @@ extern DefSymbol gParticleTypeSymbols[];
 class DefField
 {
   public:
-	const char *mFieldName;	 // The name of _MemVar. Pointing to an empty character array indicates that this variable does not exist, and is therefore used as a marker to indicate the end of reading.
-	int mFieldOffset;		 // Offset within the class (understand in conjunction with assembly language)
+	const char *mFieldName;  // The name of _MemVar. Pointing to an empty character array indicates that this variable does not exist, and is therefore used as a marker to indicate the end of reading.
+	int mFieldOffset;        // Offset within the class (understand in conjunction with assembly language)
 	DefFieldType mFieldType; // *_MemVar The data storage type varies, and the reading method also differs for different types of data.
-	void *mExtraData;		 // Additional data. Used for deep copying pointer variables contained in *_MemVar.
-	// If _MemVar is a pointer variable pointing to other defined data, then mExtraData is a pointer to the definition structure diagram of the class defined by _MemVar;
-	// If _MemVar is data of a flag or enumeration type, then mExtraData is a pointer to an array of DefSymbol arrays for each of its flag data; otherwise, mExtraData is a null pointer.
-	// Although by using the definition structure diagram of a _DefClass class, it is possible to read all the data of the _DefClass through relevant functions (i.e., perform a shallow copy).
-	// However, the data pointed to by some pointer variables in _DefClass still needs to be recursively read (i.e., deep copied) based on the definition structure diagram of the corresponding type.
-	// In other words, by using a nested definition structure diagram, the pointers of various types of variables that originally had hierarchical relationships are "expanded" until there are no pointers in the current variable's data that can be "expanded", at which point the recursive reading ends.
+	void *mExtraData;        // Additional data. Used for deep copying pointer variables contained in *_MemVar.
+	                         // If _MemVar is a pointer variable pointing to other defined data, then mExtraData is a pointer to the definition structure diagram of the class defined by _MemVar;
+	                         // If _MemVar is data of a flag or enumeration type, then mExtraData is a pointer to an array of DefSymbol arrays for each of its flag data; otherwise, mExtraData is a null pointer.
+	                         // Although by using the definition structure diagram of a _DefClass class, it is possible to read all the data of the _DefClass through relevant functions (i.e., perform a shallow copy).
+	                         // However, the data pointed to by some pointer variables in _DefClass still needs to be recursively read (i.e., deep copied) based on the definition structure diagram of the corresponding type.
+	                         // In other words, by using a nested definition structure diagram, the pointers of various types of variables that originally had hierarchical relationships are "expanded" until there are no pointers in the current variable's data that can be "expanded", at which point the recursive reading ends.
 };
 
 // ====================================================================================================
@@ -75,8 +75,8 @@ class DefMap
 {
   public:
 	DefField
-		*mMapFields; // An array of structure fields, recording the structure of each member variable in the _DefClass class within _DefClass (each record represents one structure).
-	int mDefSize;	 // The memory size occupied by a _DefClass instance, which is also the length of the initial read, is typically sizeof(_DefClass).
+	    *mMapFields;                   // An array of structure fields, recording the structure of each member variable in the _DefClass class within _DefClass (each record represents one structure).
+	int mDefSize;                      // The memory size occupied by a _DefClass instance, which is also the length of the initial read, is typically sizeof(_DefClass).
 	void *(*mConstructorFunc)(void *); // A pointer to the constructor of an instance of type _DefClass.
 };
 
@@ -118,9 +118,9 @@ class DefinitionArrayDef
   public:
 	void *mArrayData; // An array consisting of instances of a specific defined data type, such as the "track" definition in an animation definition.
 	int mArrayCount;  // The size of the array, such as the number of "tracks" in an animation definition or the number of "emitters" in a particle system definition.
-	// Define a combination of "array (pointer) + quantity" in the data class, which will be treated as a DefinitionArrayDef structure by DefField when read.
-	// For example, *mEmitterDefs and mEmitterDefCount under TodParticleDefinition, and *mParticleFields and mParticleFieldCount under TodEmitterDefinition.
-	// During reading, data items in mArrayCount are always correctly read on the first read (because they are integers), and therefore will also serve as a verification reference during the subsequent repair process of mArrayData.
+	                  // Define a combination of "array (pointer) + quantity" in the data class, which will be treated as a DefinitionArrayDef structure by DefField when read.
+	                  // For example, *mEmitterDefs and mEmitterDefCount under TodParticleDefinition, and *mParticleFields and mParticleFieldCount under TodEmitterDefinition.
+	                  // During reading, data items in mArrayCount are always correctly read on the first read (because they are integers), and therefore will also serve as a verification reference during the subsequent repair process of mArrayData.
 };
 
 // ====================================================================================================
@@ -131,7 +131,7 @@ class DefinitionArrayDef
 class DefLoadResPath
 {
   public:
-	const char *mPrefix;	// Image prefixes, such as "IMAGE_"
+	const char *mPrefix;    // Image prefixes, such as "IMAGE_"
 	const char *mDirectory; // The folder containing the textures corresponding to the prefix, such as "images\".
 };
 
@@ -151,30 +151,30 @@ bool DefinitionReadVector2Field(XMLParser *theXmlParser, SexyVector2 *theValue);
 bool DefinitionReadArrayField(XMLParser *theXmlParser, DefinitionArrayDef *theArray, DefField *theField);
 bool DefinitionReadFloatTrackField(XMLParser *theXmlParser, FloatParameterTrack *theTrack);
 bool DefinitionReadFlagField(XMLParser *theXmlParser,
-							 const SexyString &theElementName,
-							 uintptr_t *theResultValue,
-							 DefSymbol *theSymbolMap);
+                             const SexyString &theElementName,
+                             uintptr_t *theResultValue,
+                             DefSymbol *theSymbolMap);
 bool DefinitionReadImageField(XMLParser *theXmlParser, Image **theImage);
 bool DefinitionReadFontField(XMLParser *theXmlParser, Font **theFont);
 bool DefinitionReadField(XMLParser *theXmlParser, DefMap *theDefMap, void *theDefinition, bool *theDone);
 bool DefinitionWriteCompiledFile(const SexyString &theCompiledFilePath, DefMap *theDefMap, void *theDefinition);
 bool DefinitionCompileFile(const SexyString theXMLFilePath,
-						   const SexyString &theCompiledFilePath,
-						   DefMap *theDefMap,
-						   void *theDefinition);
+                           const SexyString &theCompiledFilePath,
+                           DefMap *theDefMap,
+                           void *theDefinition);
 void *DefinitionAlloc(int theSize);
 void DefinitionFree(void *&theMemory);
 void *DefinitionUncompressCompiledBuffer(const CompiledDefinitionHeader *aHeader,
-										 void *theCompressedBuffer,
-										 size_t theCompressedBufferSize,
-										 const SexyString &theCompiledFilePath);
+                                         void *theCompressedBuffer,
+                                         size_t theCompressedBufferSize,
+                                         const SexyString &theCompiledFilePath);
 uint32_t /*__cdecl*/ DefinitionCalcHashSymbolMap(int aSchemaHash, DefSymbol *theSymbolMap);
 uint32_t /*__cdecl*/ DefinitionCalcHashDefMap(int aSchemaHash, DefMap *theDefMap, TodList<DefMap *> &theProgressMaps);
 uint32_t /*__cdecl*/ DefinitionCalcHash(DefMap *theDefMap);
 bool DefReadFromCacheInt(void *&theReadPtr, int *theInt);
 bool DefReadFromCacheFloat(void *&theReadPtr, float *theFloat);
 bool DefReadFromCacheFlag(void *&theReadPtr, uint32_t *theFlag);
-bool DefReadFromCacheString(void *&theReadPtr, char **theString);
+bool DefReadFromCacheString(void *&theReadPtr, const char **theString);
 bool DefReadFromCacheVector2(void *&theReadPtr, SexyVector2 *theVector);
 bool DefReadFromCacheArray(void *&theReadPtr, DefinitionArrayDef *theArray, DefMap *theDefMap);
 bool DefReadFromCacheImage(void *&theReadPtr, Image **theImage);

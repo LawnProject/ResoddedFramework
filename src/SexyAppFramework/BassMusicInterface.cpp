@@ -1,5 +1,4 @@
 #include "BassMusicInterface.h"
-#include <bass.h>
 #include "../PakLib/PakInterface.h"
 #include "Common.h"
 
@@ -18,13 +17,13 @@ BassMusicInfo::BassMusicInfo()
 BassMusicInterface::BassMusicInterface(Window *theWindow)
 {
 	BOOL success;
-	#ifdef _WIN32
+#ifdef _WIN32
 	SDL_PropertiesID props = SDL_GetWindowProperties(theWindow->mInternalWindow);
 	HWND aHWND = theWindow->GetHWND();
 	success = BASS_Init(1, 44100, 0, aHWND, NULL);
-	#else
+#else
 	success = BASS_Init(1, 44100, 0, NULL, NULL);
-	#endif
+#endif
 	BASS_SetConfig(BASS_CONFIG_BUFFER, 2000);
 	BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
 
@@ -70,7 +69,6 @@ bool BassMusicInterface::LoadMusic(int theSongId, const std::string &theFileName
 		aHMusic = BASS_MusicLoad(TRUE, aData, 0, aSize, BASS_MUSIC_LOOP | BASS_MUSIC_RAMP, 0);
 		delete[] aData;
 	}
-
 
 	if (aHMusic == NULL && aStream == NULL)
 		return false;
