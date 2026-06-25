@@ -4,7 +4,6 @@
 #include "SEHCatcher.h"
 
 #include <fstream>
-#include <direct.h>
 
 using namespace Sexy;
 
