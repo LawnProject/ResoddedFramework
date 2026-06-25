@@ -9,10 +9,13 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC
-    $<$<WIN32>:WIN32>
     $<$<CONFIG:Debug>:DEBUG>
     $<$<CONFIG:Release>:NDEBUG>
 )
+
+if(WIN32)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC WIN32)
+endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"
