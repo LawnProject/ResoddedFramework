@@ -1,6 +1,5 @@
 #include "ImageLib.h"
 #include <math.h>
-#include <tchar.h>
 #include "..\PakLib\PakInterface.h"
 #include <vector>
 #include <cstdint>
