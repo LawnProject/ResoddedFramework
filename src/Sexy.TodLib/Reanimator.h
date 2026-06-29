@@ -78,10 +78,11 @@ extern ReanimationParams *gReanimationParamArray;
 
 void ReanimationFillInMissingData(float &thePrev, float &theValue);
 void ReanimationFillInMissingData(void *&thePrev, void *&theValue);
-bool ReanimationLoadDefinition(const SexyString &theFileName, ReanimatorDefinition *theDefinition);
+bool ReanimationLoadDefinition(const SexyString &theFileName, ReanimatorDefinition *theDefinition, bool recompile);
 void ReanimationFreeDefinition(ReanimatorDefinition *theDefinition);
 void _cdecl ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsPreloading);
-void ReanimatorLoadDefinitions(ReanimationParams *theReanimationParamArray, int theReanimationParamArraySize);
+void ReanimatorEnsureDefinitionRecompiled(ReanimationType theReanimType, bool theIsPreloading, bool recompile);
+void ReanimatorLoadDefinitions(ReanimationParams *theReanimationParamArray, int theReanimationParamArraySize, bool recompile);
 void ReanimatorFreeDefinitions();
 
 extern ReanimationParams gLawnReanimationArray[(int)ReanimationType::NUM_REANIMS];
@@ -228,7 +229,7 @@ class Reanimation
 	}
 	Image *GetCurrentTrackImage(const char *theTrackName);
 	AttachEffect *AttachParticleToTrack(const char *theTrackName, TodParticleSystem *theParticleSystem, float thePosX,
-										float thePosY);
+	                                    float thePosY);
 	void GetTrackBasePoseMatrix(int theTrackIndex, SexyTransform2D &theBasePosMatrix);
 	bool IsTrackShowing(const char *theTrackName);
 	void SetTruncateDisappearingFrames(const char *theTrackName = nullptr, bool theTruncateDisappearingFrames = false);
@@ -242,13 +243,13 @@ class Reanimation
 	bool IsAnimPlaying(const char *theTrackName);
 	void SetBasePoseFromAnim(const char *theTrackName);
 	void ReanimBltMatrix(Graphics *g, Image *theImage, SexyMatrix3 &theTransform, const Rect &theClipRect,
-						 const Color &theColor, int theDrawMode, const Rect &theSrcRect);
+	                     const Color &theColor, int theDrawMode, const Rect &theSrcRect);
 	Reanimation *FindSubReanim(ReanimationType theReanimType);
 };
 
 void ReanimationCreateAtlas(ReanimatorDefinition *theDefinition, ReanimationType theReanimationType);
 void ReanimationPreload(ReanimationType theReanimationType);
 void BlendTransform(ReanimatorTransform *theResult, const ReanimatorTransform &theTransform1,
-					const ReanimatorTransform &theTransform2, float theBlendFactor);
+                    const ReanimatorTransform &theTransform2, float theBlendFactor);
 
 #endif

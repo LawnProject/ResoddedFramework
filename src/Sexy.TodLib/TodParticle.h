@@ -49,7 +49,7 @@ enum ParticleFieldType
 	FIELD_CIRCLE,
 	FIELD_AWAY,
 	PARTICLE_FIELD_COUNT
-}; 
+};
 
 // ################################################################################
 
@@ -74,8 +74,8 @@ class FloatParameterTrackNode
 class FloatParameterTrack
 {
   public:
-	FloatParameterTrackNode *mNodes;
-	int mCountNodes;
+	FloatParameterTrackNode *mNodes{};
+	int mCountNodes{};
 };
 
 class ParticleField
@@ -83,7 +83,7 @@ class ParticleField
   public:
 	ParticleFieldType mFieldType;
 	FloatParameterTrack mX;
-	FloatParameterTrack mY;	
+	FloatParameterTrack mY;
 };
 
 class TodEmitterDefinition
@@ -149,7 +149,7 @@ class TodParticleDefinition
 	int mEmitterDefCount;
 };
 
-extern int gParticleDefCount;					 // [0x6A9F08]
+extern int gParticleDefCount;                    // [0x6A9F08]
 extern TodParticleDefinition *gParticleDefArray; // [0x6A9F0C]
 
 class ParticleParams
@@ -158,11 +158,11 @@ class ParticleParams
 	ParticleEffect mParticleEffect;
 	const char *mParticleFileName;
 };
-extern int gParticleParamArraySize;			// [0x6A9F10]
+extern int gParticleParamArraySize;         // [0x6A9F10]
 extern ParticleParams *gParticleParamArray; // [0x6A9F14]
 
-bool TodParticleLoadADef(TodParticleDefinition *theParticleDef, const char *theParticleFileName);
-void TodParticleLoadDefinitions(ParticleParams *theParticleParamArray, int theParticleParamArraySize);
+bool TodParticleLoadADef(TodParticleDefinition *theParticleDef, const char *theParticleFileName, bool recompile);
+void TodParticleLoadDefinitions(ParticleParams *theParticleParamArray, int theParticleParamArraySize, bool recompile);
 void TodParticleFreeDefinitions();
 
 extern ParticleParams gLawnParticleArray[(int)ParticleEffect::NUM_PARTICLES];
@@ -221,14 +221,14 @@ class TodParticleHolder
 	void InitializeHolder();
 	void DisposeHolder();
 	TodParticleSystem *AllocParticleSystemFromDef(float theX,
-												  float theY,
-												  int theRenderOrder,
-												  TodParticleDefinition *theDefinition,
-												  ParticleEffect theParticleEffect);
+	                                              float theY,
+	                                              int theRenderOrder,
+	                                              TodParticleDefinition *theDefinition,
+	                                              ParticleEffect theParticleEffect);
 	TodParticleSystem *AllocParticleSystem(float theX,
-										   float theY,
-										   int theRenderOrder,
-										   ParticleEffect theParticleEffect);
+	                                       float theY,
+	                                       int theRenderOrder,
+	                                       ParticleEffect theParticleEffect);
 	bool IsOverLoaded();
 };
 
@@ -301,9 +301,9 @@ class TodParticleEmitter
 
   public:
 	void TodEmitterInitialize(float theX,
-							  float theY,
-							  TodParticleSystem *theSystem,
-							  TodEmitterDefinition *theEmitterDef);
+	                          float theY,
+	                          TodParticleSystem *theSystem,
+	                          TodEmitterDefinition *theEmitterDef);
 	void Update();
 	void Draw(Graphics *g);
 	void SystemMove(float theX, float theY);
@@ -317,23 +317,23 @@ class TodParticleEmitter
 	bool CrossFadeParticleToName(TodParticle *theParticle, const char *theEmitterName);
 	void DeleteAll();
 	void UpdateParticleField(TodParticle *theParticle,
-							 ParticleField *theParticleField,
-							 float theParticleTimeValue,
-							 int theFieldIndex);
+	                         ParticleField *theParticleField,
+	                         float theParticleTimeValue,
+	                         int theFieldIndex);
 	void UpdateSystemField(ParticleField *theParticleField, float theParticleTimeValue, int theFieldIndex);
 	float SystemTrackEvaluate(FloatParameterTrack &theTrack, ParticleSystemTracks theSystemTrack);
 	static float ParticleTrackEvaluate(FloatParameterTrack &theTrack,
-												  TodParticle *theParticle,
-												  ParticleTracks theParticleTrack);
+	                                   TodParticle *theParticle,
+	                                   ParticleTracks theParticleTrack);
 	void DeleteParticle(TodParticle *theParticle);
 	void DeleteNonCrossFading();
 };
 float CrossFadeLerp(float theFrom, float theTo, bool theFromIsSet, bool theToIsSet, float theFraction);
 void RenderParticle(Graphics *g,
-					TodParticle *theParticle,
-					const Color &theColor,
-					ParticleRenderParams *theParams,
-					TodTriangleGroup *theTriangleGroup);
+                    TodParticle *theParticle,
+                    const Color &theColor,
+                    ParticleRenderParams *theParams,
+                    TodTriangleGroup *theTriangleGroup);
 
 class TodParticleSystem
 {
@@ -352,7 +352,7 @@ class TodParticleSystem
 	~TodParticleSystem();
 
 	void TodParticleInitializeFromDef(
-		float theX, float theY, int theRenderOrder, TodParticleDefinition *theDefinition, ParticleEffect theEffectType);
+	    float theX, float theY, int theRenderOrder, TodParticleDefinition *theDefinition, ParticleEffect theEffectType);
 	void ParticleSystemDie();
 	void Update();
 	void Draw(Graphics *g);
