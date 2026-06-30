@@ -174,14 +174,14 @@ void NewOptionsDialog::Draw(Sexy::Graphics *g)
 	Sexy::Color aTextColor(107, 109, 145);
 
 	TodDrawString(g,
-	              "Music",
+	              "[OPTIONS_MUSIC_LABEL]", // "Music"
 	              186,
 	              140 + aMusicOffset,
 	              FONT_DWARVENTODCRAFT18,
 	              aTextColor,
 	              DrawStringJustification::DS_ALIGN_RIGHT);
 	TodDrawString(g,
-	              "Sound FX",
+	              "[OPTIONS_SOUNDFX]", // "Sound FX"
 	              186,
 	              167 + aSfxOffset,
 	              FONT_DWARVENTODCRAFT18,
