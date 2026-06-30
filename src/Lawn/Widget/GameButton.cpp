@@ -31,23 +31,23 @@ void DrawStoneButton(
 		aImageX++;
 	}
 
-	int aRepeat = (theWidth - aLeftImage->mWidth - aRightImage->mWidth) / aMiddleImage->mWidth;
 	g->DrawImage(aLeftImage, aImageX, y);
 	aImageX += aLeftImage->mWidth;
-	while (aRepeat > 0)
+	int aRightImageDstX = x + theWidth - aRightImage->mWidth;
+	while (aImageX < aRightImageDstX)
 	{
-		g->DrawImage(aMiddleImage, aImageX, y);
-		aImageX += aMiddleImage->mWidth;
-		--aRepeat;
+		int aMiddleWidth = std::min(aRightImageDstX - aImageX, aMiddleImage->mWidth);
+		g->DrawImage(aMiddleImage, aImageX, y, { 0, 0, aMiddleWidth, aMiddleImage->mHeight });
+		aImageX += aMiddleWidth;
 	}
-	g->DrawImage(aRightImage, aImageX, y);
+	g->DrawImage(aRightImage, aRightImageDstX, y);
 
-	g->SetFont(isHighLighted ? Sexy::FONT_DWARVENTODCRAFT18BRIGHTGREENINSET : Sexy::FONT_DWARVENTODCRAFT18GREENINSET);
-	aFontX += (theWidth - Sexy::FONT_DWARVENTODCRAFT18GREENINSET->StringWidth(theLabel)) / 2 + 1;
-	aFontY += (theHeight - Sexy::FONT_DWARVENTODCRAFT18GREENINSET->GetAscent() / 6 - 1 +
-	           Sexy::FONT_DWARVENTODCRAFT18GREENINSET->GetAscent()) /
-	              2 -
-	          4;
+	auto *aFont = isHighLighted ? Sexy::FONT_DWARVENTODCRAFT18BRIGHTGREENINSET : Sexy::FONT_DWARVENTODCRAFT18GREENINSET;
+
+	g->SetFont(aFont);
+	aFontX += (theWidth - aFont->StringWidth(theLabel)) / 2 + 1;
+	int aAscent = aFont->GetAscent();
+	aFontY += (theHeight - aAscent / 6 - 1 + aAscent) / 2 - 4;
 	g->SetColor(Color::White);
 	g->DrawString(theLabel, aFontX, aFontY);
 }
