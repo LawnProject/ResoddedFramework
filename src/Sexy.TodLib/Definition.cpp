@@ -647,6 +647,7 @@ bool DefinitionIsCompiled(const SexyString &theXMLFilePath)
 		p_fclose(pFile);
 		return true;
 	}
+	//TODO: potentially re-implement the date-based comparison. Outdated compilations get recompiled
 	return false;
 }
 

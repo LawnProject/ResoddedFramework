@@ -24,6 +24,8 @@ int LawnMain()
 	gLawnApp->Init();
 	if (gLawnApp->mRunInCompileMode)
 	{
+		gLawnApp->Shutdown();
+		delete gLawnApp;
 		return 0;
 	}
 	gLawnApp->Start();

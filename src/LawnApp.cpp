@@ -64,7 +64,7 @@
 #endif
 
 //Do not edit this. - Electr0Gunner
-Version LawnApp::gResoddedVersion(1, 1, 0, 1041);
+Version LawnApp::gResoddedVersion(1, 1, 0, 1046);
 
 bool gIsPartnerBuild = false;
 bool gSlowMo = false;
@@ -3046,7 +3046,7 @@ void LawnApp::PreloadForUser()
 
 		for (ZombieType i = ZombieType::ZOMBIE_NORMAL; i < ZombieType::NUM_ZOMBIE_TYPES; i = (ZombieType)((int)i + 1))
 		{
-			if (HasFinishedAdventure() || mPlayerInfo->mLevel >= GetZombieDefinition(i).mStartingLevel)
+			if (!HasFinishedAdventure() && mPlayerInfo->mLevel < GetZombieDefinition(i).mStartingLevel)
 			{
 				continue;
 			}

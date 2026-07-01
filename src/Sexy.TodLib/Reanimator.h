@@ -80,8 +80,7 @@ void ReanimationFillInMissingData(float &thePrev, float &theValue);
 void ReanimationFillInMissingData(void *&thePrev, void *&theValue);
 bool ReanimationLoadDefinition(const SexyString &theFileName, ReanimatorDefinition *theDefinition, bool recompile);
 void ReanimationFreeDefinition(ReanimatorDefinition *theDefinition);
-void _cdecl ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsPreloading);
-void ReanimatorEnsureDefinitionRecompiled(ReanimationType theReanimType, bool theIsPreloading, bool recompile);
+void _cdecl ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsPreloading, bool recompile = false);
 void ReanimatorLoadDefinitions(ReanimationParams *theReanimationParamArray, int theReanimationParamArraySize, bool recompile);
 void ReanimatorFreeDefinitions();
 

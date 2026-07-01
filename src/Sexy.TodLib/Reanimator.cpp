@@ -1100,12 +1100,8 @@ Reanimation *ReanimationHolder::AllocReanimation(float theX,
 	aReanim->ReanimationInitializeType(theX, theY, theReanimationType);
 	return aReanim;
 }
-void ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsPreloading)
-{
-	ReanimatorEnsureDefinitionRecompiled(theReanimType, theIsPreloading, false);
-}
 
-void ReanimatorEnsureDefinitionRecompiled(ReanimationType theReanimType, bool theIsPreloading, bool recompile)
+void ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsPreloading, bool recompile)
 {
 	TOD_ASSERT(theReanimType >= 0 && theReanimType < gReanimatorDefCount);
 	ReanimatorDefinition *aReanimDef = &gReanimatorDefArray[(int)theReanimType];
@@ -1130,15 +1126,17 @@ void ReanimatorEnsureDefinitionRecompiled(ReanimationType theReanimType, bool th
 	TodHesitationBracket aHesitation("Load Reanim '%s'", aReanimParams->mReanimFileName);
 	if (!ReanimationLoadDefinition(aReanimParams->mReanimFileName, aReanimDef, recompile))
 	{
-		auto aMessage = std::format("Failed to load reanim '{}'", aReanimParams->mReanimFileName);
-		TodErrorMessageBox(aMessage.c_str(), "Error");
+		char aBuf[1024];
+#ifdef _WIN32
+		sprintf_s<1024U>(aBuf, "Failed to load reanim '%s'", aReanimParams->mReanimFileName);
+#else
+		snprintf(aBuf, 1024, "Failed to load reanim '%s'", aReanimParams->mReanimFileName);
+#endif
+		TodErrorMessageBox(aBuf, "Error");
 	}
 	int aDuration = aTimer.GetDuration();
-	if (aDuration > 100) // (beta only) - report if took too long
-		TodTraceAndLog("[TodLib] - LOADING:Long reanim '%s' %d ms on %s",
-		               aReanimParams->mReanimFileName,
-		               aDuration,
-		               gGetCurrentLevelName().c_str());
+	if (aDuration > 100) // Report of Excessive Creation Time
+		TodTraceAndLog("[TodLib] - LOADING:Long reanim '%s' %d ms on %s", aReanimParams->mReanimFileName, aDuration, gGetCurrentLevelName().c_str());
 }
 
 void ReanimatorLoadDefinitions(ReanimationParams *theReanimationParamArray, int theReanimationParamArraySize, bool recompile)
@@ -1154,10 +1152,8 @@ void ReanimatorLoadDefinitions(ReanimationParams *theReanimationParamArray, int 
 	{
 		ReanimationParams *aReanimationParams = &theReanimationParamArray[i];
 		TOD_ASSERT(aReanimationParams->mReanimationType == i);
-		if (recompile || DefinitionIsCompiled(StringToSexyString(aReanimationParams->mReanimFileName)))
-		{
-			ReanimatorEnsureDefinitionRecompiled(aReanimationParams->mReanimationType, true, recompile);
-		}
+		if (recompile || !DefinitionIsCompiled(StringToSexyString(aReanimationParams->mReanimFileName)))
+			ReanimatorEnsureDefinitionLoaded(aReanimationParams->mReanimationType, true, recompile);
 	}
 }
 

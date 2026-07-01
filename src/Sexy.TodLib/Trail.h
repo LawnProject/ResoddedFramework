@@ -51,6 +51,10 @@ class TrailDefinition
 	FloatParameterTrack mWidthOverTime;
 	FloatParameterTrack mAlphaOverLength;
 	FloatParameterTrack mAlphaOverTime;
+
+  public:
+	TrailDefinition();
+	~TrailDefinition();
 };
 bool TrailLoadADef(TrailDefinition *theTrailDef, const char *theTrailFileName, bool recompile);
 void TrailLoadDefinitions(TrailParams *theTrailParamArray, int theTrailParamArraySize, bool recompile);
