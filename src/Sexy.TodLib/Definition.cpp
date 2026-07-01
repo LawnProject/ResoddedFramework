@@ -11,7 +11,7 @@
 
 DefSymbol gTrailFlagDefSymbols[] = {
 	{ 0,  "Loops" },
-    { -1, nullptr }
+	{ -1, nullptr }
 };
 DefField gTrailDefFields[] = {
 	{ "Image", offsetof(TrailDefinition, mImage), DefFieldType::DT_IMAGE, nullptr },
@@ -44,25 +44,25 @@ DefSymbol gParticleFlagSymbols[] = {
 };
 DefSymbol gEmitterTypeSymbols[] = {
 	{ 0,  "Circle"            },
-    { 1,  "Box"               },
-    { 2,  "BoxPath"           },
-    { 3,  "CirclePath"        },
-    { 4,  "CircleEvenSpacing" },
-    { -1, nullptr             }
+	{ 1,  "Box"	           },
+	{ 2,  "BoxPath"           },
+	{ 3,  "CirclePath"        },
+	{ 4,  "CircleEvenSpacing" },
+	{ -1, nullptr             }
 };
 DefSymbol gParticleTypeSymbols[] = {
 	{ 1,  "Friction"         },
-    { 2,  "Acceleration"     },
-    { 3,  "Attractor"        },
-    { 4,  "MaxVelocity"      },
-    { 5,  "Velocity"         },
-    { 6,  "Position"         },
-    { 7,  "SystemPosition"   },
-    { 8,  "GroundConstraint" },
-    { 9,  "Shake"            },
-    { 10, "Circle"           },
-    { 11, "Away"             },
-    { -1, nullptr            }
+	{ 2,  "Acceleration"     },
+	{ 3,  "Attractor"        },
+	{ 4,  "MaxVelocity"      },
+	{ 5,  "Velocity"         },
+	{ 6,  "Position"         },
+	{ 7,  "SystemPosition"   },
+	{ 8,  "GroundConstraint" },
+	{ 9,  "Shake"            },
+	{ 10, "Circle"           },
+	{ 11, "Away"             },
+	{ -1, nullptr            }
 };
 
 DefField gParticleFieldDefFields[] = {
@@ -166,9 +166,9 @@ DefMap gReanimatorDefMap = { gReanimatorDefFields, sizeof(ReanimatorDefinition),
 
 static DefLoadResPath gDefLoadResPaths[4] = {
 	{ "IMAGE_",        ""           },
-    { "IMAGE_",        "particles/" },
-    { "IMAGE_REANIM_", "reanim/"    },
-    { "IMAGE_REANIM_", "images/"    }
+	{ "IMAGE_",        "particles/" },
+	{ "IMAGE_REANIM_", "reanim/"    },
+	{ "IMAGE_REANIM_", "images/"    }
 };
 
 void *ParticleFieldConstructor(void *thePointer)
@@ -325,9 +325,9 @@ bool DefinitionLoadFont(Font **theFont, const SexyString &theName)
 	return aFont != nullptr;
 }
 
-bool DefinitionLoadXML(const SexyString &theFileName, DefMap *theDefMap, void *theDefinition)
+bool DefinitionLoadXML(const SexyString &theFileName, DefMap *theDefMap, void *theDefinition, bool recompile)
 {
-	return DefinitionCompileAndLoad(theFileName, theDefMap, theDefinition);
+	return DefinitionCompileAndLoad(theFileName, theDefMap, theDefinition, recompile);
 }
 
 bool DefReadFromCacheArray(void *&theReadPtr, DefinitionArrayDef *theArray, DefMap *theDefMap)
@@ -555,15 +555,15 @@ bool DefinitionReadCompiledFile(const SexyString &theCompiledFilePath, DefMap *t
 
 	PerfTimer aTimer;
 	aTimer.Start();
-	FILE *pFile = fopen(theCompiledFilePath.c_str(), "rb");
+	PFILE *pFile = p_fopen(theCompiledFilePath.c_str(), "rb");
 	if (pFile)
 	{
-		fseek(pFile, 0, 2);
-		size_t aFileSize = ftell(pFile);
-		fseek(pFile, 0, 0);
+		p_fseek(pFile, 0, 2);
+		size_t aFileSize = p_ftell(pFile);
+		p_fseek(pFile, 0, 0);
 		aCompiledFile.mData.resize(aFileSize);
-		bool aReadCompressedFailed = fread(aCompiledFile.mData.data(), sizeof(uint8_t), aFileSize, pFile) != aFileSize;
-		fclose(pFile);
+		bool aReadCompressedFailed = p_fread(aCompiledFile.mData.data(), sizeof(uint8_t), aFileSize, pFile) != aFileSize;
+		p_fclose(pFile);
 		if (aReadCompressedFailed)
 		{
 			TodTraceAndLog("[TodLib] - Failed to read compiled file: %s\n", theCompiledFilePath.c_str());
@@ -591,6 +591,10 @@ bool DefinitionReadCompiledFile(const SexyString &theCompiledFilePath, DefMap *t
 			}
 
 			bool aResult = DefMapReadFromCache(anUncompressedData, theDefMap, theDefinition);
+			if (!aResult)
+			{
+				TodTraceAndLog("[TodLib] - Failed to read from cache: %s\n", theCompiledFilePath.c_str());
+			}
 
 			return aResult;
 		}
@@ -606,6 +610,7 @@ bool DefinitionReadCompiledFile(const SexyString &theCompiledFilePath, DefMap *t
 			}
 			return aResult;
 #else
+			TodTraceAndLog("[TodLib] - Cache is not valid: %s\n", theCompiledFilePath.c_str());
 			return false;
 #endif
 		}
@@ -1349,28 +1354,36 @@ bool DefinitionCompileFile(const SexyString theXMLFilePath, const SexyString &th
 	return true;
 }
 
-bool DefinitionCompileAndLoad(const SexyString &theXMLFilePath, DefMap *theDefMap, void *theDefinition)
+bool DefinitionCompileAndLoad(const SexyString &theXMLFilePath, DefMap *theDefMap, void *theDefinition, bool recompile)
 {
 	SexyString aCompiledFilePath = DefinitionGetCompiledFilePathFromXMLFilePath(theXMLFilePath);
 	TodHesitationTrace("predef");
 
-	try
+	if (!recompile)
 	{
-		if (DefinitionReadCompiledFile(aCompiledFilePath, theDefMap, theDefinition))
+		try
 		{
-			TodHesitationTrace("loaded %s", aCompiledFilePath.c_str());
-			return true;
+			if (DefinitionReadCompiledFile(aCompiledFilePath, theDefMap, theDefinition))
+			{
+				TodHesitationTrace("loaded %s", aCompiledFilePath.c_str());
+				return true;
+			}
 		}
-	}
-	catch (int anErrorCode)
-	{
+		catch (int anErrorCode)
+		{
+		}
 	}
 
 	PerfTimer aTimer;
 	aTimer.Start();
+	if (!recompile)
+	{
+		//write to fresh_compiled to not overwrite on game re-compile by accident
+		aCompiledFilePath = "fresh_" + aCompiledFilePath;
+	}
 	bool aResult =
-	    DefinitionCompileFile(theXMLFilePath, "fresh_" + aCompiledFilePath, theDefMap,
-	                          theDefinition); //write to fresh_compiled to not overwrite on game re-compile by accident
+	    DefinitionCompileFile(theXMLFilePath, aCompiledFilePath, theDefMap,
+	                          theDefinition);
 	TodTraceAndLog("[TodLib] - compile %d ms:'%s'", (int)aTimer.GetDuration(), aCompiledFilePath.c_str());
 	TodHesitationTrace("compiled %s", aCompiledFilePath.c_str());
 	if (aResult)
