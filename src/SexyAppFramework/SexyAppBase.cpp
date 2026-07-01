@@ -3713,12 +3713,14 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 				break;
 			case SDL_EVENT_WINDOW_MINIMIZED:
 				mMinimized = true;
+				RehupFocus();
 				if (mMuteOnLostFocus)
 					Mute(true);
 				break;
 			case SDL_EVENT_WINDOW_MAXIMIZED:
 			case SDL_EVENT_WINDOW_RESTORED:
 				mMinimized = false;
+				RehupFocus();
 				if (mMuteOnLostFocus)
 					Unmute(true);
 				mWidgetManager->MarkAllDirty();
