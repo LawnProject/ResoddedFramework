@@ -2452,10 +2452,6 @@ void Plant::UpdateBowling()
 	Zombie *aZombie = FindTargetZombie(mRow, PlantWeapon::WEAPON_PRIMARY);
 	if (aZombie)
 	{
-		mBowlingHits++;
-		if (mBowlingHits >= 5)
-			mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_ROLL_SOME_HEADS);
-
 		int aPosX = mX + mWidth / 2;
 		int aPosY = mY + mHeight / 2;
 
@@ -2481,30 +2477,37 @@ void Plant::UpdateBowling()
 		{
 			aZombie->TakeDamage(1800, 0U);
 		}
-		else if (aZombie->mShieldType == ShieldType::SHIELDTYPE_DOOR && mState != PlantState::STATE_NOTREADY)
-		{
-			aZombie->TakeDamage(1800, 0U);
-		}
-		else if (aZombie->mShieldType != ShieldType::SHIELDTYPE_NONE)
-		{
-			aZombie->TakeShieldDamage(400, 0U);
-		}
-		else if (aZombie->mHelmType != HelmType::HELMTYPE_NONE)
-		{
-			if (aZombie->mHelmType == HelmType::HELMTYPE_PAIL)
-			{
-				mApp->PlayFoley(FoleyType::FOLEY_SHIELD_HIT);
-			}
-			else if (aZombie->mHelmType == HelmType::HELMTYPE_TRAFFIC_CONE)
-			{
-				mApp->PlayFoley(FoleyType::FOLEY_PLASTIC_HIT);
-			}
-
-			aZombie->TakeHelmDamage(900, 0U);
-		}
 		else
 		{
-			aZombie->TakeDamage(1800, 0U);
+			mBowlingHits++;
+			if (mBowlingHits >= 5)
+				mApp->mAchievements->GiveAchievement(AchievementID::ACHIEVEMENT_ROLL_SOME_HEADS);
+
+			if (aZombie->mShieldType == ShieldType::SHIELDTYPE_DOOR && mState != PlantState::STATE_NOTREADY)
+			{
+				aZombie->TakeDamage(1800, 0U);
+			}
+			else if (aZombie->mShieldType != ShieldType::SHIELDTYPE_NONE)
+			{
+				aZombie->TakeShieldDamage(400, 0U);
+			}
+			else if (aZombie->mHelmType != HelmType::HELMTYPE_NONE)
+			{
+				if (aZombie->mHelmType == HelmType::HELMTYPE_PAIL)
+				{
+					mApp->PlayFoley(FoleyType::FOLEY_SHIELD_HIT);
+				}
+				else if (aZombie->mHelmType == HelmType::HELMTYPE_TRAFFIC_CONE)
+				{
+					mApp->PlayFoley(FoleyType::FOLEY_PLASTIC_HIT);
+				}
+
+				aZombie->TakeHelmDamage(900, 0U);
+			}
+			else
+			{
+				aZombie->TakeDamage(1800, 0U);
+			}
 		}
 
 		if ((!mApp->IsFirstTimeAdventureMode() || mApp->mPlayerInfo->GetLevel() > 10) &&
