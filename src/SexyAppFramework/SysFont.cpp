@@ -220,8 +220,8 @@ void SysFont::DrawString(
 {
 	if (mFontData == nullptr || !mFontData->mFace)
 		return;
-	int posX = theX;
-	int posY = theY;
+	int posX = theX + g->mTransX;
+	int posY = theY + g->mTransY;
 	int underlineY = posY - ((mFontData->mFace->underline_position * mFontData->mFace->size->metrics.y_scale) >> 16 >> 6);
 
 	auto it = theString.begin();
@@ -240,9 +240,9 @@ void SysFont::DrawString(
 				Color aShadowColor = Color(0, 0, 0, 0);
 				g->mDestImage->BltRawTexture(
 				    mFontData->mAtlas.mAtlas,
-				    aGlyph.mWidth,
-				    aGlyph.mHeight,
-				    Rect(aDrawX + g->mTransX + 1, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
+				    mFontData->mAtlas.mWidth,
+				    mFontData->mAtlas.mHeight,
+				    Rect(aDrawX + 1, aDrawY + 1, aGlyph.mWidth, aGlyph.mHeight),
 				    Rect(aGlyph.mX, aGlyph.mY, aGlyph.mWidth, aGlyph.mHeight),
 				    theClipRect,
 				    aShadowColor,
@@ -253,7 +253,7 @@ void SysFont::DrawString(
 			    mFontData->mAtlas.mAtlas,
 			    mFontData->mAtlas.mWidth,
 			    mFontData->mAtlas.mHeight,
-			    Rect(aDrawX + g->mTransX, aDrawY - mAscent + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
+			    Rect(aDrawX, aDrawY, aGlyph.mWidth, aGlyph.mHeight),
 			    Rect(aGlyph.mX, aGlyph.mY, aGlyph.mWidth, aGlyph.mHeight),
 			    theClipRect,
 			    theColor,
@@ -268,7 +268,7 @@ void SysFont::DrawString(
 				    mFontData->mAtlas.mAtlas,
 				    mFontData->mAtlas.mWidth,
 				    mFontData->mAtlas.mHeight,
-				    Rect(aDrawX + g->mTransX + 1, aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
+				    Rect(aDrawX + 1, aDrawY + 1, aGlyph.mWidth, aGlyph.mHeight),
 				    Rect(aGlyph.mX, aGlyph.mY, aGlyph.mWidth, aGlyph.mHeight),
 				    theClipRect,
 				    aShadowColor,
@@ -279,8 +279,7 @@ void SysFont::DrawString(
 			    mFontData->mAtlas.mAtlas,
 			    mFontData->mAtlas.mWidth,
 			    mFontData->mAtlas.mHeight,
-			    Rect(aDrawX + g->mTransX + 1,
-			         aDrawY - mAscent + 1 + g->mTransY, aGlyph.mWidth, aGlyph.mHeight),
+			    Rect(aDrawX + 1, aDrawY + 1, aGlyph.mWidth, aGlyph.mHeight),
 			    Rect(aGlyph.mX, aGlyph.mY, aGlyph.mWidth, aGlyph.mHeight),
 			    theClipRect,
 			    theColor,
@@ -292,13 +291,12 @@ void SysFont::DrawString(
 	if (g->mDestImage != &Graphics::mStaticImage)
 	{
 		if (mUnderlined)
-			g->mDestImage->DrawLine(theX, underlineY, StringWidth(theString), underlineY, theColor, 0);
+			g->mDestImage->DrawLine(theX + g->mTransX, underlineY, StringWidth(theString), underlineY, theColor, 0);
 	}
 	else
 	{
 		if (mUnderlined)
-			mApp->mRenderer->DrawLine(
-			    theX + g->mTransX + 1, underlineY, StringWidth(theString), underlineY, theColor, 0);
+			mApp->mRenderer->DrawLine(theX + g->mTransX, underlineY, StringWidth(theString), underlineY, theColor, 0);
 	}
 }
 

@@ -204,6 +204,7 @@ void OpenGLImage::PreTextureDraw()
 	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 	glViewport(0, 0, mWidth, mHeight);
 	glDisable(GL_SCISSOR_TEST);
+	glBindSampler(0, mGLRenderer->mCurrentUVWrapMode == UV_WRAP ? mGLRenderer->mSamplers[GL_LINEAR].mWrap : mGLRenderer->mSamplers[GL_LINEAR].mClamp);
 }
 
 void OpenGLImage::Init()
@@ -897,21 +898,21 @@ void OpenGLImage::ImplStretchBltMirror(Image *theImage,
 }
 
 void OpenGLImage::ImplBltRawTexture(void *theTexture,
-								int theTexWidth,
-								int theTexHeight,
-								const Rect &theDestRect,
-								const Rect &theSrcRect,
-								const Rect &theClipRect,
-								const Color &theColor,
-								int theDrawMode,
-								bool fastStretch)
+                                    int theTexWidth,
+                                    int theTexHeight,
+                                    const Rect &theDestRect,
+                                    const Rect &theSrcRect,
+                                    const Rect &theClipRect,
+                                    const Color &theColor,
+                                    int theDrawMode,
+                                    bool fastStretch)
 {
 	PreTextureDraw();
 
 	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
 	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
-
+	GLuint aFilter = !fastStretch ? GL_LINEAR : GL_NEAREST;
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
 	{
 		glEnable(GL_SCISSOR_TEST);
@@ -920,37 +921,37 @@ void OpenGLImage::ImplBltRawTexture(void *theTexture,
 	}
 	else
 		glDisable(GL_SCISSOR_TEST);
-
+	glBindSampler(0, mGLRenderer->mCurrentUVWrapMode == UV_WRAP ? mGLRenderer->mSamplers[aFilter].mWrap : mGLRenderer->mSamplers[aFilter].mClamp);
 	int aTexID = *(GLuint *)theTexture;
 
-	glm::vec2 p0 = {theDestRect.mX, theDestRect.mY};
-	glm::vec2 p1 = {theDestRect.mX + theDestRect.mWidth, theDestRect.mY};
-	glm::vec2 p2 = {theDestRect.mX + theDestRect.mWidth, theDestRect.mY + theDestRect.mHeight};
-	glm::vec2 p3 = {theDestRect.mX, theDestRect.mY + theDestRect.mHeight};
+	glm::vec2 p0 = { theDestRect.mX, theDestRect.mY };
+	glm::vec2 p1 = { theDestRect.mX + theDestRect.mWidth, theDestRect.mY };
+	glm::vec2 p2 = { theDestRect.mX + theDestRect.mWidth, theDestRect.mY + theDestRect.mHeight };
+	glm::vec2 p3 = { theDestRect.mX, theDestRect.mY + theDestRect.mHeight };
 
 	float u0 = (float)theSrcRect.mX / (float)theTexWidth;
 	float v0 = (float)theSrcRect.mY / (float)theTexHeight;
 	float u1 = (float)(theSrcRect.mX + theSrcRect.mWidth) / (float)theTexWidth;
 	float v1 = (float)(theSrcRect.mY + theSrcRect.mHeight) / (float)theTexHeight;
 
-	glm::vec2 uv0 = {u0, v0};
-	glm::vec2 uv1 = {u1, v0};
-	glm::vec2 uv2 = {u1, v1};
-	glm::vec2 uv3 = {u0, v1};
+	glm::vec2 uv0 = { u0, v0 };
+	glm::vec2 uv1 = { u1, v0 };
+	glm::vec2 uv2 = { u1, v1 };
+	glm::vec2 uv3 = { u0, v1 };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
 	std::vector<Vertex> aVertices;
 
-	aVertices.push_back({p0, uv0, aColor});
-	aVertices.push_back({p1, uv1, aColor});
-	aVertices.push_back({p2, uv2, aColor});
-	aVertices.push_back({p2, uv2, aColor});
-	aVertices.push_back({p3, uv3, aColor});
-	aVertices.push_back({p0, uv0, aColor});
+	aVertices.push_back({ p0, uv0, aColor });
+	aVertices.push_back({ p1, uv1, aColor });
+	aVertices.push_back({ p2, uv2, aColor });
+	aVertices.push_back({ p2, uv2, aColor });
+	aVertices.push_back({ p3, uv3, aColor });
+	aVertices.push_back({ p0, uv0, aColor });
 
 	aShaderToUse->Use();
 	aShaderToUse->SetUniform("uProjection", mProjection);

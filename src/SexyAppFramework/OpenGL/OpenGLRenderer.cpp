@@ -626,10 +626,17 @@ void *OpenGLRenderer::CreateTexture(void *thePixels, int theWidth, int theHeight
 	glBindTexture(GL_TEXTURE_2D, aTexID);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, theAlignment);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, theWidth, theHeight, 0, thePixelFormat == RAW_FORMAT_R ? GL_RED : GL_BGRA, GL_UNSIGNED_BYTE, thePixels);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
 	gGLTextureCount++;
 	GLuint *aTexPtr = new GLuint(aTexID);
 	return aTexPtr;
 }
+
 
 // OpenGLTextureData
 
