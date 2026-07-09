@@ -64,7 +64,7 @@
 #endif
 
 //Do not edit this. - Electr0Gunner
-Version LawnApp::gResoddedVersion(1, 1, 0, 58);
+Version LawnApp::gResoddedVersion(1, 1, 0, 59);
 
 bool gIsPartnerBuild = false;
 bool gSlowMo = false;

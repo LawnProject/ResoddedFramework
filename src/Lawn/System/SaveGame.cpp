@@ -172,12 +172,13 @@ void SaveContext::SyncImage(Image *&theImage, const std::string &theOwner)
 	{
 		ResourceId aResID;
 		SyncVar((int &)aResID, StrFormat("IMAGE_%s", theOwner.c_str()));
-		if (aResID == Sexy::ResourceId::RESOURCE_ID_MAX)
+		if (aResID >= Sexy::ResourceId::RESOURCE_ID_MAX)
 		{
 			theImage = nullptr;
 		}
 		else
 		{
+			LoadImageById(gLawnApp->mResourceManager, aResID); // Load the image just incase the id was moved, and as a result it maybe isn't loaded by the game
 			theImage = GetImageById(aResID);
 		}
 	}
