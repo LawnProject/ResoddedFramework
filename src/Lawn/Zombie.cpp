@@ -5860,27 +5860,45 @@ void Zombie::DrawReanim(Graphics *g, const ZombieDrawPosition &theDrawPos, int t
 
 			if (mZombatar.mHat != -1)
 			{
-				aHatReanim->mColorOverride = gMoreColors[mZombatar.mHatColor];
+				if (gPortraitItems[mZombatar.mHat + ZombatarItem::ZOMBATAR_HATS_1].mAllowColor)
+					aHatReanim->mColorOverride = gMoreColors[mZombatar.mHatColor];
+				else
+					aHatReanim->mColorOverride = Color::White;
 			};
 			if (mZombatar.mHair != -1)
 			{
-				aHairReanim->mColorOverride = gMoreColors[mZombatar.mHairColor];
+				if (gPortraitItems[mZombatar.mHair + ZombatarItem::ZOMBATAR_HAIR_1].mAllowColor)
+					aHairReanim->mColorOverride = gMoreColors[mZombatar.mHairColor];
+				else
+					aHairReanim->mColorOverride = Color::White;
 			};
 			if (mZombatar.mTidbits != -1)
 			{
-				aTidbitsReanim->mColorOverride = gMoreColors[mZombatar.mTidbitsColor];
+				if (gPortraitItems[mZombatar.mTidbits + ZombatarItem::ZOMBATAR_TIDBITS_1].mAllowColor)
+					aTidbitsReanim->mColorOverride = gMoreColors[mZombatar.mTidbitsColor];
+				else
+					aTidbitsReanim->mColorOverride = Color::White;
 			};
 			if (mZombatar.mEyewear != -1)
 			{
-				aEyewearReanim->mColorOverride = gMoreColors[mZombatar.mEyewearColor];
+				if (gPortraitItems[mZombatar.mEyewear + ZombatarItem::ZOMBATAR_EYEWEAR_1].mAllowColor)
+					aEyewearReanim->mColorOverride = gMoreColors[mZombatar.mEyewearColor];
+				else 
+					aEyewearReanim->mColorOverride = Color::White;
 			};
 			if (mZombatar.mAccessories != -1)
 			{
-				aAccessoriesReanim->mColorOverride = gMoreColors[mZombatar.mAccessoriesColor];
+				if (gPortraitItems[mZombatar.mAccessories + ZombatarItem::ZOMBATAR_ACCESSORY_1].mAllowColor)
+					aAccessoriesReanim->mColorOverride = gMoreColors[mZombatar.mAccessoriesColor];
+				else 
+					aAccessoriesReanim->mColorOverride = Color::White;
 			};
 			if (mZombatar.mFacialHair != -1)
 			{
-				aFacialHairReanim->mColorOverride = gMoreColors[mZombatar.mFacialHairColor];
+				if (gPortraitItems[mZombatar.mFacialHair + ZombatarItem::ZOMBATAR_FACIALHAIR_1].mAllowColor)
+					aFacialHairReanim->mColorOverride = gMoreColors[mZombatar.mFacialHairColor];
+				else 
+					aFacialHairReanim->mColorOverride = Color::White;
 			};
 		}
 
