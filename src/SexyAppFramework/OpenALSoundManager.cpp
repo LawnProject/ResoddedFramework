@@ -117,7 +117,7 @@ int Sexy::OpenALSoundManager::VolumeToDB(double theVolume)
 
 SoundInstance *OpenALSoundManager::GetSoundInstance(unsigned int theSfxID)
 {
-	if (theSfxID > MAX_SOURCE_SOUNDS || mAudioDevice == nullptr)
+	if (theSfxID >= MAX_SOURCE_SOUNDS || mAudioDevice == nullptr)
 		return nullptr;
 
 	int aFreeChannel = FindFreeChannel();
