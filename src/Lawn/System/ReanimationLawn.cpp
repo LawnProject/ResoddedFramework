@@ -107,7 +107,7 @@ GPUImage *ReanimatorCache::MakeBlankGPUImage(int theWidth, int theHeight)
 	aImage->mHasTrans = true;
 	aImage->mHasAlpha = true;
 	memset(aImage->mBits, 0, aBitsCount * 4);
-	aImage->mBits[aBitsCount] = Sexy::MEMORYCHECK_ID;
+	aImage->SetBits(aImage->mBits, theWidth,  theHeight);
 	return aImage;
 }
 

@@ -30,11 +30,16 @@ OpenGLImage::OpenGLImage() : GPUImage(gSexyAppBase->mRenderer)
 
 OpenGLImage::~OpenGLImage()
 {
+
+	if (mSurface != nullptr)
+		delete (GLuint *)mSurface;
+
 	if (mTexID != 0)
 	{
 		glDeleteTextures(1, &mTexID);
 		OpenGLRenderer::gGLTextureCount--;
 	}
+
 		
 	if (mFBO != 0)
 		glDeleteFramebuffers(1, &mFBO);
@@ -89,7 +94,8 @@ void OpenGLImage::BitsChanged()
 {
 	MemoryImage::BitsChanged();
 
-	delete (GLuint *)mSurface;
+	if (mSurface != nullptr)
+		delete (GLuint *)mSurface;
 	mSurface = nullptr;
 }
 
