@@ -49,7 +49,7 @@ void main() {
 	if (uBlendMode == 2) // Multiply
 	{
 		vec4 src = uUseTexture ? texture(uTexture, vTexCoord) * vColor : vColor;
-		FragColor = vec4(src.rgb * src.a, src.a); // premultiply just for blending
+		FragColor = src; // blending handles the multiply (src * dst), no premultiply
 	}
 	else
 	{
@@ -63,7 +63,8 @@ void main() {
 )glsl";
 
 
-static const int gGLVersions[][2] = {{4, 6}, {4, 5}, {4, 4}, {4, 3}, {4, 2}, {4, 1}, {4, 0}, {3, 3}, {3, 2}, {3, 1}, {3, 0}};
+// 3.3 is the minimum: shaders use #version 330 core and glGenSamplers/glBindSampler require GL 3.3
+static const int gGLVersions[][2] = {{4, 6}, {4, 5}, {4, 4}, {4, 3}, {4, 2}, {4, 1}, {4, 0}, {3, 3}};
 
 int OpenGLRenderer::gGLTextureCount = 0;
 uint64_t OpenGLRenderer::gGLUsedMemoryCount = 0;
@@ -313,7 +314,13 @@ bool OpenGLRenderer::InitGLContext()
 	mSamplers[GL_LINEAR].mClamp = 0;
 
 	mDefaultShader = new GLShader();
-	mDefaultShader->LoadFromSource(gVertexShaderSrc, gFragmentShaderSrc);
+	if (!mDefaultShader->LoadFromSource(gVertexShaderSrc, gFragmentShaderSrc))
+	{
+		printf("[SexyAppFramework] - Failed to compile the OpenGL shaders, OpenGL backend is unavailable\n");
+		delete mDefaultShader;
+		mDefaultShader = nullptr;
+		return false;
+	}
 
 	SetVideoOnlyDraw(false);
 	return true;
@@ -449,6 +456,7 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 	glDisable(GL_SCISSOR_TEST);
+	glDisable(GL_BLEND);
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, mFBO);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 

@@ -264,6 +264,7 @@ void OpenGLImage::ImplFillRect(const Rect &theRect, const Color &theColor, int t
 	aVertices.push_back({p0, {0, 0}, aColor});
 
 	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
+	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	aShaderToUse->Use();
 	aShaderToUse->SetUniform("uProjection", mProjection);
@@ -298,6 +299,7 @@ void OpenGLImage::ImplDrawLine(
 	aVertices.push_back({p1, {}, aColor});
 
 	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
+	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	aShaderToUse->Use();
 	aShaderToUse->SetUniform("uProjection", mProjection);
