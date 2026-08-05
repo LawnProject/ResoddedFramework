@@ -117,7 +117,7 @@ int Sexy::OpenALSoundManager::VolumeToDB(double theVolume)
 
 SoundInstance *OpenALSoundManager::GetSoundInstance(unsigned int theSfxID)
 {
-	if (theSfxID > MAX_SOURCE_SOUNDS || mAudioDevice == nullptr)
+	if (theSfxID >= MAX_SOURCE_SOUNDS || mAudioDevice == nullptr)
 		return nullptr;
 
 	int aFreeChannel = FindFreeChannel();
@@ -281,17 +281,17 @@ bool OpenALSoundManager::LoadMP3Sound(unsigned int theSfxID, const std::string &
 		return false;
 	}
 
-	aSize = aMP3.totalPCMFrameCount * aMP3.channels * sizeof(drmp3_int32);
+	aSize = (int)(aMP3.totalPCMFrameCount * aMP3.channels * sizeof(int16_t));
 	int16_t *pDecodedInterleavedPCMFrames = (int16_t *)malloc(aSize);
-	uint64_t numberOfSamplesActuallyDecoded = drmp3_read_pcm_frames_s16(&aMP3, aMP3.totalPCMFrameCount, pDecodedInterleavedPCMFrames);
+	uint64_t numberOfFramesActuallyDecoded = drmp3_read_pcm_frames_s16(&aMP3, aMP3.totalPCMFrameCount, pDecodedInterleavedPCMFrames);
 
 	ALuint buffer;
 	alGenBuffers(1, &buffer);
 	alBufferData(buffer,
 				 aMP3.channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16,
 				 pDecodedInterleavedPCMFrames,
-				 aSize,
-				 numberOfSamplesActuallyDecoded);
+				 (ALsizei)(numberOfFramesActuallyDecoded * aMP3.channels * sizeof(int16_t)),
+				 (ALsizei)aMP3.sampleRate);
 
 	mSourceDataSizes[theSfxID] = aSize;
 	mSourceSounds[theSfxID] = buffer;
@@ -324,20 +324,22 @@ bool OpenALSoundManager::LoadWAVSound(unsigned int theSfxID, const std::string &
 	drwav aWAV;
 	if (!drwav_init_memory(&aWAV, aData, aSize, nullptr))
 	{
+		delete[] aData;
 		return false;
 	}
 
-	aSize = aWAV.totalPCMFrameCount * aWAV.channels * sizeof(drwav_int32);
-	drwav_int32 *pDecodedInterleavedPCMFrames = (drwav_int32*)malloc(aSize);
-	size_t numberOfSamplesActuallyDecoded = drwav_read_pcm_frames_s32(&aWAV, aWAV.totalPCMFrameCount, pDecodedInterleavedPCMFrames);
+	aSize = (int)(aWAV.totalPCMFrameCount * aWAV.channels * sizeof(int16_t));
+	int16_t *pDecodedInterleavedPCMFrames = (int16_t *)malloc(aSize);
+	uint64_t numberOfFramesActuallyDecoded =
+		drwav_read_pcm_frames_s16(&aWAV, aWAV.totalPCMFrameCount, pDecodedInterleavedPCMFrames);
 
 	ALuint buffer;
 	alGenBuffers(1, &buffer);
 	alBufferData(buffer,
 				 aWAV.channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16,
 				 pDecodedInterleavedPCMFrames,
-				 aSize,
-				 numberOfSamplesActuallyDecoded);
+				 (ALsizei)(numberOfFramesActuallyDecoded * aWAV.channels * sizeof(int16_t)),
+				 (ALsizei)aWAV.sampleRate);
 
 	mSourceDataSizes[theSfxID] = aSize;
 	mSourceSounds[theSfxID] = buffer;
@@ -367,24 +369,30 @@ bool OpenALSoundManager::LoadFLACSound(unsigned int theSfxID, const std::string 
 	p_fclose(aPakFile);
 
 	drflac *aFLAC = drflac_open_memory(aData, aSize, nullptr);
+	if (aFLAC == nullptr)
+	{
+		delete[] aData;
+		return false;
+	}
 
-	aSize = aFLAC->totalPCMFrameCount * aFLAC->channels * sizeof(drwav_int32);
-	drwav_int32 *pDecodedInterleavedPCMFrames = (drflac_int32 *)malloc(aSize);
-	size_t numberOfSamplesActuallyDecoded =
-		drflac_read_pcm_frames_s32(aFLAC, aFLAC->totalPCMFrameCount, pDecodedInterleavedPCMFrames);
+	aSize = (int)(aFLAC->totalPCMFrameCount * aFLAC->channels * sizeof(int16_t));
+	int16_t *pDecodedInterleavedPCMFrames = (int16_t *)malloc(aSize);
+	uint64_t numberOfFramesActuallyDecoded =
+		drflac_read_pcm_frames_s16(aFLAC, aFLAC->totalPCMFrameCount, pDecodedInterleavedPCMFrames);
 
 	ALuint buffer;
 	alGenBuffers(1, &buffer);
 	alBufferData(buffer,
 				 aFLAC->channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16,
 				 pDecodedInterleavedPCMFrames,
-				 aSize,
-				 numberOfSamplesActuallyDecoded);
+				 (ALsizei)(numberOfFramesActuallyDecoded * aFLAC->channels * sizeof(int16_t)),
+				 (ALsizei)aFLAC->sampleRate);
 
 	mSourceDataSizes[theSfxID] = aSize;
 	mSourceSounds[theSfxID] = buffer;
 
 	drflac_free(pDecodedInterleavedPCMFrames, nullptr);
+	drflac_close(aFLAC);
 
 	return true;
 }
