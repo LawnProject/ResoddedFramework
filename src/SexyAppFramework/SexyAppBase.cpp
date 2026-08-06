@@ -18,6 +18,10 @@
 #if SEXY_USE_SDL3_RENDERER
 #include "SDL3Renderer/SDL3Renderer.h"
 #endif
+#if SEXY_USE_CONTROLLER
+#include <SDL3/SDL_iostream.h>
+#include "gamecontrollerdb_generated.h"
+#endif
 #if SEXY_USE_IMGUI
 #include "ImGui/ImGuiManager.h"
 #endif
@@ -5338,6 +5342,13 @@ void SexyAppBase::Init()
 	{
 		DoExit(0);
 	}
+
+#if SEXY_USE_CONTROLLER
+	// Load the embedded SDL_GameControllerDB so generic controllers
+	// (e.g. USB joysticks) are recognized as gamepads.
+	SDL_AddGamepadMappingsFromIO(
+		SDL_IOFromConstMem(GamepadDB::kData, sizeof(GamepadDB::kData) - 1), true);
+#endif
 
 #if SEXY_USE_IMGUI
 	mImGuiManager = new ImGuiManager(this);

@@ -130,6 +130,7 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
 
 if(SEXY_USE_CONTROLLER)
     target_compile_definitions(${PROJECT_NAME} PUBLIC SEXY_USE_CONTROLLER)
+    target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
 endif()
 
 if(SEXY_USE_IMGUI)
@@ -166,6 +167,26 @@ add_custom_target(build_info ALL
 set_source_files_properties(${BUILD_INFO_DST} PROPERTIES GENERATED TRUE)
 target_sources(${PROJECT_NAME} PRIVATE ${BUILD_INFO_DST})
 add_dependencies(${PROJECT_NAME} build_info)
+
+if(SEXY_USE_CONTROLLER)
+    set(GAMECONTROLLERDB_TXT "${CMAKE_SOURCE_DIR}/thirdparty/SDL_GameControllerDB/gamecontrollerdb.txt")
+    set(GAMECONTROLLERDB_HDR "${CMAKE_CURRENT_BINARY_DIR}/gamecontrollerdb_generated.h")
+
+    add_custom_command(
+        OUTPUT "${GAMECONTROLLERDB_HDR}"
+        COMMAND ${CMAKE_COMMAND}
+            -DIN_FILE=${GAMECONTROLLERDB_TXT}
+            -DOUT_FILE=${GAMECONTROLLERDB_HDR}
+            -P ${CMAKE_SOURCE_DIR}/cmake/gen_gamecontrollerdb.cmake
+        DEPENDS
+            "${GAMECONTROLLERDB_TXT}"
+            "${CMAKE_SOURCE_DIR}/cmake/gen_gamecontrollerdb.cmake"
+        COMMENT "Embedding SDL game controller database..."
+    )
+
+    set_source_files_properties(${GAMECONTROLLERDB_HDR} PROPERTIES GENERATED TRUE)
+    target_sources(${PROJECT_NAME} PRIVATE ${GAMECONTROLLERDB_HDR})
+endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"
