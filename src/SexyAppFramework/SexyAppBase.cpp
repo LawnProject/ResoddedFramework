@@ -15,9 +15,6 @@
 #if SEXY_USE_OPENGL
 #include "OpenGL/OpenGLRenderer.h"
 #endif
-#if SEXY_USE_SDL3_RENDERER
-#include "SDL3Renderer/SDL3Renderer.h"
-#endif
 #if SEXY_USE_CONTROLLER
 #include <SDL3/SDL_iostream.h>
 #include "gamecontrollerdb_generated.h"
@@ -3538,22 +3535,6 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 		anEvent = mDeferredMessages.front();
 		mDeferredMessages.pop_front();
 #if SEXY_USE_IMGUI
-#if SEXY_USE_SDL3_RENDERER
-		if (mRenderer->mCurrentBackend == RenderingBackend::BACKEND_SDL3 &&
-			(anEvent.type == SDL_EVENT_MOUSE_BUTTON_DOWN || anEvent.type == SDL_EVENT_MOUSE_BUTTON_UP ||
-			 anEvent.type == SDL_EVENT_MOUSE_MOTION))
-		{
-			SDL_Event aConvertedEvent = SDL_Event(anEvent);
-			int x = aConvertedEvent.motion.x;
-			int y = aConvertedEvent.motion.y;
-
-			mWidgetManager->RemapMouse(x, y);
-			aConvertedEvent.motion.x = x;
-			aConvertedEvent.motion.y = y;
-			ImGui_ImplSDL3_ProcessEvent(&aConvertedEvent);
-		}
-		else
-#endif
 			ImGui_ImplSDL3_ProcessEvent(&anEvent);
 		if (ImGui::GetIO().WantCaptureMouse)
 			break;
@@ -3989,10 +3970,6 @@ bool SexyAppBase::TryCreateRenderer(RenderingBackend theBackend)
 	anOpenGLWorks = OpenGLRenderer::TestOpenGL(mWindow->mInternalWindow);
 #endif
 
-#if SEXY_USE_SDL3_RENDERER
-	aSDL3Works = SDL3Renderer::TestSDL3();
-#endif
-
 	switch (theBackend)
 	{
 #if SEXY_USE_OPENGL
@@ -4000,16 +3977,6 @@ bool SexyAppBase::TryCreateRenderer(RenderingBackend theBackend)
 		if (anOpenGLWorks)
 		{
 			mRenderer = new OpenGLRenderer(this);
-			return true;
-		}
-		break;
-#endif
-
-#if SEXY_USE_SDL3_RENDERER
-	case RenderingBackend::BACKEND_SDL3:
-		if (aSDL3Works)
-		{
-			mRenderer = new SDL3Renderer(this);
 			return true;
 		}
 		break;
@@ -4105,8 +4072,6 @@ void SexyAppBase::MakeWindow()
 		{
 #if SEXY_USE_OPENGL
 			mDesiredBackend = RenderingBackend::BACKEND_OPENGL;
-#elif SEXY_USE_SDL3_RENDERER
-			mDesiredBackend = RenderingBackend::BACKEND_SDL3;
 #endif
 		}
 
@@ -4117,13 +4082,6 @@ void SexyAppBase::MakeWindow()
 			TryCreateRenderer(RenderingBackend::BACKEND_OPENGL);
 #endif
 
-#if SEXY_USE_SDL3_RENDERER
-		if (mRenderer == nullptr && mDesiredBackend != RenderingBackend::BACKEND_SDL3)
-		{
-			TryCreateRenderer(RenderingBackend::BACKEND_SDL3);
-		}
-#endif
-
 		if (mRenderer == nullptr)
 		{
 			SexyString anError = "Couldn't create a renderer.\n\nAvailable backends:\n";
@@ -4131,10 +4089,6 @@ void SexyAppBase::MakeWindow()
 #if SEXY_USE_OPENGL
 			anError +=
 				StrFormat("OpenGL: %s\n", OpenGLRenderer::TestOpenGL(mWindow->mInternalWindow) ? "OK" : "FAILED");
-#endif
-
-#if SEXY_USE_SDL3_RENDERER
-			anError += StrFormat("SDL3 Renderer: %s\n", SDL3Renderer::TestSDL3() ? "OK" : "FAILED");
 #endif
 
 			MsgBox(anError, "Engine Error");

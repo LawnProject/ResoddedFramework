@@ -9,9 +9,6 @@
 #if SEXY_USE_OPENGL
 #include <imgui/imgui_impl_opengl3.h>
 #endif
-#if SEXY_USE_SDL3_RENDERER
-#include <imgui/imgui_impl_sdlrenderer3.h>
-#endif
 
 namespace Sexy
 {

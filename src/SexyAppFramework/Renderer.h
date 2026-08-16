@@ -73,9 +73,6 @@ namespace Sexy
 #if SEXY_USE_OPENGL
 		BACKEND_OPENGL,
 #endif
-#if SEXY_USE_SDL3_RENDERER
-		BACKEND_SDL3,
-#endif
 		NUM_BACKENDS,
 	};
 
@@ -85,10 +82,6 @@ namespace Sexy
 		#if SEXY_USE_OPENGL
 		,
 		{RenderingBackend::BACKEND_OPENGL, "OPENGL"}
-		#endif
-		#if SEXY_USE_SDL3_RENDERER
-		,
-		{RenderingBackend::BACKEND_SDL3, "SDL3_RENDERER"}
 		#endif
 	};
 

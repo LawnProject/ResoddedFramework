@@ -7,9 +7,6 @@
 #if SEXY_USE_OPENGL
 #include "OpenGL/OpenGLRenderer.h"
 #endif
-#if SEXY_USE_SDL3_RENDERER
-#include "SDL3Renderer/SDL3Renderer.h"
-#endif
 
 using namespace Sexy;
 
@@ -32,13 +29,6 @@ void ImGuiManager::Frame()
 		case RenderingBackend::BACKEND_OPENGL: 
 		{
 			ImGui_ImplOpenGL3_NewFrame();
-			break;
-		}
-#endif
-#if SEXY_USE_SDL3_RENDERER
-		case RenderingBackend::BACKEND_SDL3: //FIXME ! figure out the SDL_Renderer backend so the window can't go past the letterbox
-		{
-			ImGui_ImplSDLRenderer3_NewFrame();
 			break;
 		}
 #endif
@@ -83,13 +73,6 @@ void ImGuiManager::Flush()
 
 		}
 #endif
-#if SEXY_USE_SDL3_RENDERER
-		case RenderingBackend::BACKEND_SDL3: {
-			ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), ((SDL3Renderer*)mApp->mRenderer)->mBackendRenderer);
-
-			break;
-		}
-#endif
 	}
 }
 
@@ -103,14 +86,6 @@ void ImGuiManager::Reset()
 		case RenderingBackend::BACKEND_OPENGL: 
 		{
 			ImGui_ImplOpenGL3_Shutdown();
-			break;
-
-		}
-#endif
-#if SEXY_USE_SDL3_RENDERER
-		case RenderingBackend::BACKEND_SDL3: 
-		{
-			ImGui_ImplSDLRenderer3_Shutdown();
 			break;
 
 		}
@@ -145,17 +120,6 @@ void ImGuiManager::Init()
 				OpenGLRenderer *aRenderer = static_cast<OpenGLRenderer *>(mApp->mRenderer);
 				ImGui_ImplSDL3_InitForOpenGL(mApp->mWindow->mInternalWindow, aRenderer->mContext);
 				ImGui_ImplOpenGL3_Init();
-				break;
-			}
-		}
-#endif
-#if SEXY_USE_SDL3_RENDERER
-		case RenderingBackend::BACKEND_SDL3:
-		{
-			{
-				SDL3Renderer *aRenderer = static_cast<SDL3Renderer *>(mApp->mRenderer);
-				ImGui_ImplSDL3_InitForSDLRenderer(mApp->mWindow->mInternalWindow, aRenderer->mBackendRenderer);
-				ImGui_ImplSDLRenderer3_Init(aRenderer->mBackendRenderer);
 				break;
 			}
 		}

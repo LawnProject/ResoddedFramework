@@ -14,9 +14,6 @@
 #if SEXY_USE_OPENGL
 #include "OpenGL/OpenGLRenderer.h"
 #endif
-#if SEXY_USE_SDL3_RENDERER
-#include "SDL3Renderer/SDL3Renderer.h"
-#endif
 
 
 using namespace Sexy;

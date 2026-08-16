@@ -2,10 +2,6 @@
 #include "SexyAppBase.h"
 #include "Renderer.h"
 #include <filesystem>
-#if SEXY_USE_SDL3_RENDERER
-#include <SDL3/SDL_render.h>
-#include "SDL3Renderer/SDL3Renderer.h"
-#endif
 #if SEXY_USE_OPENGL
 #include <glad/glad.h>
 #endif
@@ -71,12 +67,6 @@ VideoWidget::~VideoWidget()
 	{
 		switch (mApp->mRenderer->mCurrentBackend)
 		{
-#if SEXY_USE_SDL3_RENDERER
-			case RenderingBackend::BACKEND_SDL3: {
-				SDL_DestroyTexture((SDL_Texture *)mVideoTexture);
-				break;
-			}
-#endif
 #if SEXY_USE_OPENGL
 			case RenderingBackend::BACKEND_OPENGL: {
 				glDeleteTextures(1, (GLuint *)mVideoTexture); 
@@ -147,14 +137,6 @@ void VideoWidget::LoadVideo(const SexyString &aPath)
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			mVideoTexture = new GLuint(aTexID);
-			break;
-		}
-#endif
-#if SEXY_USE_SDL3_RENDERER
-
-		case RenderingBackend::BACKEND_SDL3: {
-			mVideoTexture = SDL_CreateTexture(((SDL3Renderer *)mApp->mRenderer)->mBackendRenderer, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING, mVidWidth, mVidHeight);
-
 			break;
 		}
 #endif
@@ -276,17 +258,6 @@ void VideoWidget::Update()
 			{
 				switch (mApp->mRenderer->mCurrentBackend)
 				{
-	#if SEXY_USE_SDL3_RENDERER
-					case RenderingBackend::BACKEND_SDL3: {
-						if (mVideoFrame->data[0] && mVideoFrame->data[1] && mVideoFrame->data[2])
-						{
-							SDL_UpdateYUVTexture((SDL_Texture *)mVideoTexture, nullptr, mVideoFrame->data[0],
-												 mVideoFrame->linesize[0], mVideoFrame->data[1], mVideoFrame->linesize[1],
-												 mVideoFrame->data[2], mVideoFrame->linesize[2]);
-						}
-						break;
-					}
-	#endif
 	#if SEXY_USE_OPENGL
 					case RenderingBackend::BACKEND_OPENGL: {
 						uint8_t *aData = new uint8_t[mVideoFrame->width * mVideoFrame->height * 4];
