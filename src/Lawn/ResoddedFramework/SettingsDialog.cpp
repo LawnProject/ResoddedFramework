@@ -65,8 +65,6 @@ SettingsDialog::SettingsDialog(LawnApp *theApp)
 
 	mHighQualityCheckbox = MakeNewCheckbox(SettingsDialog::SETTINGS_HIGHQUALITY, this, theApp->mIs3D);
 
-	mHighResolutionCheckbox = MakeNewCheckbox(SettingsDialog::SETTINGS_HIGHRESOLUTION, this, theApp->mHighResolution);
-
 	mSaveFileButton = MakeButton(SETTINGS_OPEN_SAVE_FOLDER, this, "[SETTINGS_OPEN_SAVE_FOLDER]");
 
 	mApplyButton = MakeButton(SETTINGS_BACK, this, "[SETTINGS_BACK]");
@@ -126,7 +124,6 @@ SettingsDialog::~SettingsDialog()
 	delete mVSyncCheckbox;
 	delete mFullscreenCheckbox;
 	delete mHighQualityCheckbox;
-	delete mHighResolutionCheckbox;
 	delete mRendererList;
 	delete mSizesList;
 	delete mFilterList;
@@ -189,18 +186,6 @@ void SettingsDialog::Draw(Graphics* g)
 			(mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
 
 	TodDrawString(g, "[SETTINGS_HIGHQUALITY]", mHighQualityCheckbox->mX + 20, aY + 30, Sexy::FONT_BRIANNETOD12,
-				  Color::White, DrawStringJustification::DS_ALIGN_LEFT);
-
-	aY += 50;
-
-	mHighResolutionCheckbox->Resize(40, aY - aScrollOffset + GetTop(), 46, 45);
-
-	mHighResolutionCheckbox->mDisabled =
-		(mHighResolutionCheckbox->mY + mY + mHighResolutionCheckbox->mHeight) < mOptionsSlider->mAllowedMouseZone.mY ||
-		(mHighResolutionCheckbox->mY + mY) >
-			(mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
-
-	TodDrawString(g, "[SETTINGS_RESOLUTION]", mHighResolutionCheckbox->mX + 20, aY + 30, Sexy::FONT_BRIANNETOD12,
 				  Color::White, DrawStringJustification::DS_ALIGN_LEFT);
 
 	aY += 85;
@@ -296,7 +281,6 @@ void SettingsDialog::AddedToManager(WidgetManager *theWidgetManager)
 	AddWidget(mFullscreenCheckbox);
 	AddWidget(mSaveFileButton);
 	AddWidget(mHighQualityCheckbox);
-	AddWidget(mHighResolutionCheckbox);
 	AddWidget(mRendererList);
 	AddWidget(mSizesList);
 	AddWidget(mFilterList);
@@ -311,7 +295,6 @@ void SettingsDialog::RemovedFromManager(WidgetManager *theWidgetManager)
 	RemoveWidget(mFullscreenCheckbox);
 	RemoveWidget(mSaveFileButton);
 	RemoveWidget(mHighQualityCheckbox);
-	RemoveWidget(mHighResolutionCheckbox);
 	RemoveWidget(mRendererList);
 	RemoveWidget(mSizesList);
 	RemoveWidget(mFilterList);
@@ -487,24 +470,6 @@ void SettingsDialog::CheckboxChecked(int theId, bool checked)
 	
 	case SettingsDialog::SETTINGS_HIGHQUALITY:
 		mApp->mIs3D = mHighQualityCheckbox->IsChecked();
-		break;
-	case SettingsDialog::SETTINGS_HIGHRESOLUTION:
-		int aResult = Dialog::ID_YES; 
-		if (mHighResolutionCheckbox->IsChecked())
-		{
-
-			aResult = mApp->LawnMessageBox(Dialogs::DIALOG_MESSAGE, "[HIGH_RESOLUTION_WARNING_HEADER]", "[HIGH_RESOLUTION_WARNING]", "[BUTTON_YES]", "[BUTTON_NO]", Dialog::BUTTONS_YES_NO);
-
-		}
-		if (aResult == Dialog::ID_YES)
-		{
-			mApp->mHighResolution = mHighResolutionCheckbox->IsChecked();
-			mApp->mRenderer->UpdateViewport();
-		}
-		else
-			mHighResolutionCheckbox->SetChecked(false, false);
-
-
 		break;
 	}
 

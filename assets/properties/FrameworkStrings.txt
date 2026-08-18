@@ -19,9 +19,6 @@ Fullscreen
 [SETTINGS_HIGHQUALITY]
 High Quality
 
-[SETTINGS_RESOLUTION]
-High Resolution
-
 [SETTINGS_RENDERER_BACKEND]
 Renderer Backend
 
