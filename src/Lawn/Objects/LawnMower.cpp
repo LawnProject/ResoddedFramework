@@ -4,8 +4,8 @@
 #include <LawnApp.h>
 #include <Common/Resources.h>
 #include <System/ReanimationLawn.h>
-#include <TodFoley.h>
-#include <Reanimator.h>
+#include <TodLib/TodFoley.h>
+#include <TodLib/Reanimator.h>
 
 void LawnMower::LawnMowerInitialize(int theRow)
 {

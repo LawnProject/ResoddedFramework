@@ -6,15 +6,15 @@
 #include <Widget/ChallengeScreen.h>
 #include <System/Achievements.h>
 #include <Widget/GameSelector.h>
-#include <EffectSystem.h>
-#include <Attachment.h>
-#include <Trail.h>
-#include <Reanimator.h>
-#include <TodParticle.h>
-#include <MTRand.h>
+#include <TodLib/EffectSystem.h>
+#include <TodLib/Attachment.h>
+#include <TodLib/Trail.h>
+#include <TodLib/Reanimator.h>
+#include <TodLib/TodParticle.h>
+#include <SexyAppFramework/MTRand.h>
 #include <Gameplay/Challenge.h>
 #include <LawnApp.h>
-#include <TodStringFile.h>
+#include <TodLib/TodStringFile.h>
 
 using namespace Sexy;
 

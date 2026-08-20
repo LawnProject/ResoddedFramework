@@ -3,7 +3,7 @@
 #pragma once
 
 #include <vector>
-#include "Renderer.h" 
+#include "../Renderer.h"
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_sdl3.h>
 #if SEXY_USE_OPENGL

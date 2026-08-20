@@ -1,14 +1,14 @@
 #include <Widget/TitleScreen.h>
-#include <HyperlinkWidget.h>
-#include <WidgetManager.h>
+#include <SexyAppFramework/HyperlinkWidget.h>
+#include <SexyAppFramework/WidgetManager.h>
 #include <LawnApp.h>
 #include <Common/Resources.h>
-#include <TodCommon.h>
-#include <SexyMatrix.h>
-#include <TodStringFile.h>
-#include <EffectSystem.h>
-#include <TodDebug.h>
-#include <Reanimator.h>
+#include <TodLib/TodCommon.h>
+#include <SexyAppFramework/SexyMatrix.h>
+#include <TodLib/TodStringFile.h>
+#include <TodLib/EffectSystem.h>
+#include <TodLib/TodDebug.h>
+#include <TodLib/Reanimator.h>
 #include <Common/GameConstants.h>
 #include <System/Music.h>
 

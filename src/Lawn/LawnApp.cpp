@@ -11,15 +11,15 @@
 #include <Common/GameConstants.h>
 #include <Common/Resources.h>
 
-#include <TodDebug.h>
-#include <TodFoley.h>
-#include <Attachment.h>
-#include <Reanimator.h>
-#include <TodParticle.h>
-#include <EffectSystem.h>
-#include <FilterEffect.h>
-#include <TodStringFile.h>
-#include <Trail.h>
+#include <TodLib/TodDebug.h>
+#include <TodLib/TodFoley.h>
+#include <TodLib/Attachment.h>
+#include <TodLib/Reanimator.h>
+#include <TodLib/TodParticle.h>
+#include <TodLib/EffectSystem.h>
+#include <TodLib/FilterEffect.h>
+#include <TodLib/TodStringFile.h>
+#include <TodLib/Trail.h>
 
 #include <System/ReanimationLawn.h>
 #include <System/Achievements.h>
@@ -48,14 +48,14 @@
 #include <Widget/UserDialog.h>
 #include <Widget/GameButton.h>
 
-#include <WidgetManager.h>
-#include <ResourceManager.h>
-#include <Checkbox.h>
-#include <BassMusicInterface.h>
-#include <Dialog.h>
-#include <SEHCatcher.h>
-#include <Graphics.h>
-#include <PakInterface.h>
+#include <SexyAppFramework/WidgetManager.h>
+#include <SexyAppFramework/ResourceManager.h>
+#include <SexyAppFramework/Checkbox.h>
+#include <SexyAppFramework/BassMusicInterface.h>
+#include <SexyAppFramework/Dialog.h>
+#include <SexyAppFramework/SEHCatcher.h>
+#include <SexyAppFramework/Graphics.h>
+#include <PakLib/PakInterface.h>
 
 #if LAWN_DEBUG_TOOLS
 #include <ResoddedFramework/DebuggerWindow.h>

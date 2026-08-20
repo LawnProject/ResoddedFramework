@@ -5,14 +5,14 @@
 #include <Widget/LawnDialog.h>
 #include <Common/GameConstants.h>
 #include <Common/Resources.h>
-#include <TodCommon.h>
-#include <TodStringFile.h>
-#include <TodDebug.h>
-#include <Dialog.h>
-#include <WidgetManager.h>
-#include <Renderer.h>
-#include <GPUImage.h>
-#include <Font.h>
+#include <TodLib/TodCommon.h>
+#include <TodLib/TodStringFile.h>
+#include <TodLib/TodDebug.h>
+#include <SexyAppFramework/Dialog.h>
+#include <SexyAppFramework/WidgetManager.h>
+#include <SexyAppFramework/Renderer.h>
+#include <SexyAppFramework/GPUImage.h>
+#include <SexyAppFramework/Font.h>
 #include <ImageLib.h>
 
 PortraitItem gPortraitItems[ZombatarItem::NUM_ZOMBATAR_ITEMS]

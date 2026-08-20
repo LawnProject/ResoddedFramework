@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Common.h>
-#include <Version.h>
+#include <SexyAppFramework/Common.h>
+#include <SexyAppFramework/Version.h>
 
 enum UpdateCheckResult
 {

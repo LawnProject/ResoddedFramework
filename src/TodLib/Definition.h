@@ -2,9 +2,9 @@
 #define __TODDEFINITION_H__
 
 #include "CompiledDefinition.h"
-#include <TodList.h>
+#include <TodLib/TodList.h>
 #include "Reanimator.h"
-#include <TodParticle.h>
+#include <TodLib/TodParticle.h>
 
 enum class DefFieldType : int
 {

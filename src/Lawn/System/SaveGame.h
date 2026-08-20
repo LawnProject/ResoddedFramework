@@ -2,9 +2,9 @@
 
 #include <string>
 #include <map>
-#include <TodParticle.h>
-#include <Reanimator.h>
-#include <Trail.h>
+#include <TodLib/TodParticle.h>
+#include <TodLib/Reanimator.h>
+#include <TodLib/Trail.h>
 #include <Objects/LawnMower.h>
 #include <Gameplay/Board.h>
 #include <Objects/GridItem.h>

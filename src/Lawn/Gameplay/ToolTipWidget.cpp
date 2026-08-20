@@ -1,9 +1,9 @@
 #include <Common/Resources.h>
 #include <Gameplay/ToolTipWidget.h>
 #include <Common/GameConstants.h>
-#include <TodCommon.h>
-#include <Font.h>
-#include <TodStringFile.h>
+#include <TodLib/TodCommon.h>
+#include <SexyAppFramework/Font.h>
+#include <TodLib/TodStringFile.h>
 
 using namespace Sexy;
 

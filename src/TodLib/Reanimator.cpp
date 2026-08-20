@@ -1,14 +1,14 @@
-#include "TodDebug.h"
-#include "TodCommon.h"
+#include <TodLib/TodDebug.h>
+#include <TodLib/TodCommon.h>
 #include "Definition.h"
 #include "Reanimator.h"
 #include <LawnApp.h>
 #include "Attachment.h"
 #include "ReanimAtlas.h"
-#include "EffectSystem.h"
+#include <TodLib/EffectSystem.h>
 #include <Common/GameConstants.h>
-#include <Font.h>
-#include <PerfTimer.h>
+#include <SexyAppFramework/Font.h>
+#include <SexyAppFramework/PerfTimer.h>
 #include "../SexyAppFramework/MemoryImage.h"
 
 int gReanimatorDefCount;

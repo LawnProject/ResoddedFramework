@@ -1,14 +1,14 @@
 #pragma warning(disable : 4244 4305 4309)
 
 #include "Trail.h"
-#include "TodDebug.h"
+#include <TodLib/TodDebug.h>
 #include "Attachment.h"
 #include "Reanimator.h"
 #include "TodParticle.h"
-#include "EffectSystem.h"
+#include <TodLib/EffectSystem.h>
 #include <Common/GameConstants.h>
-#include "../SexyAppFramework/GPUImage.h"
-#include "../SexyAppFramework/Renderer.h"
+#include <SexyAppFramework/GPUImage.h>
+#include <SexyAppFramework/Renderer.h>
 
 EffectSystem *gEffectSystem = nullptr;
 

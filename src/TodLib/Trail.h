@@ -1,7 +1,7 @@
 #ifndef __TRAIL_H__
 #define __TRAIL_H__
 
-#include <TodParticle.h>
+#include <TodLib/TodParticle.h>
 
 #define MAX_TRAIL_SIZE 1024U
 #define MAX_TRAIL_TRIANGLES 38

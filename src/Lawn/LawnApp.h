@@ -2,7 +2,7 @@
 #define __LAWNAPP_H__
 
 #include <Common/ConstEnums.h>
-#include <SexyApp.h>
+#include <SexyAppFramework/SexyApp.h>
 
 class Achievements;
 class Board;

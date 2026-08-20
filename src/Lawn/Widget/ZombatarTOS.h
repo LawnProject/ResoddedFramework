@@ -2,8 +2,8 @@
 
 #include <Widget/LawnDialog.h>
 #include <Widget/GameButton.h>
-#include <SliderListener.h>
-#include <CheckboxListener.h>
+#include <SexyAppFramework/SliderListener.h>
+#include <SexyAppFramework/CheckboxListener.h>
 
 class LawnApp;
 namespace Sexy

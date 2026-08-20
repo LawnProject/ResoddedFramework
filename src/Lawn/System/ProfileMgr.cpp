@@ -1,7 +1,7 @@
 #include <System/ProfileMgr.h>
 #include <System/PlayerInfo.h>
 #include <fstream>
-#include <TodDebug.h>
+#include <TodLib/TodDebug.h>
 #ifndef _WIN32
 #include <strings.h> // strcasecmp
 #endif

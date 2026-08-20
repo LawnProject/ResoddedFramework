@@ -16,15 +16,15 @@
 #include <System/PlayerInfo.h>
 #include <Widget/StoreScreen.h>
 #include <Widget/ChallengeScreen.h>
-#include <TodFoley.h>
+#include <TodLib/TodFoley.h>
 #include <Widget/SeedChooserScreen.h>
-#include <TodCommon.h>
-#include <Attachment.h>
-#include <Reanimator.h>
-#include <TodParticle.h>
-#include <TodStringFile.h>
-#include <PerfTimer.h>
-#include <WidgetManager.h>
+#include <TodLib/TodCommon.h>
+#include <TodLib/Attachment.h>
+#include <TodLib/Reanimator.h>
+#include <TodLib/TodParticle.h>
+#include <TodLib/TodStringFile.h>
+#include <SexyAppFramework/PerfTimer.h>
+#include <SexyAppFramework/WidgetManager.h>
 
 static const int TimePanRightStart = 1500;
 static const int TimePanRightEnd = 3500;

@@ -2,7 +2,7 @@
 #include <Widget/NewUserDialog.h>
 #include <LawnApp.h>
 #include <Common/Resources.h>
-#include <WidgetManager.h>
+#include <SexyAppFramework/WidgetManager.h>
 
 NewUserDialog::NewUserDialog(LawnApp *theApp, bool isRename)
 	: LawnDialog(theApp,

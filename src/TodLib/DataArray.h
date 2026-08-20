@@ -3,8 +3,8 @@
 
 #include <new>
 #include <string.h>
-#include "TodDebug.h"
-#include "TodCommon.h"
+#include <TodLib/TodDebug.h>
+#include <TodLib/TodCommon.h>
 
 enum
 {

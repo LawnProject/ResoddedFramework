@@ -4,11 +4,11 @@
 #include <Widget/GameSelector.h>
 #include <System/PlayerInfo.h>
 #include <LawnApp.h>
-#include <TodStringFile.h>
+#include <TodLib/TodStringFile.h>
 #include <Common/Resources.h>
-#include <Slider.h>
-#include <Checkbox.h>
-#include <WidgetManager.h>
+#include <SexyAppFramework/Slider.h>
+#include <SexyAppFramework/Checkbox.h>
+#include <SexyAppFramework/WidgetManager.h>
 
 using namespace Sexy;
 

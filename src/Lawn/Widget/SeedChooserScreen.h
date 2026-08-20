@@ -2,7 +2,7 @@
 #define __SEEDCHOOSERSCREEN_H__
 
 #include <Common/ConstEnums.h>
-#include <Widget.h>
+#include <SexyAppFramework/Widget.h>
 using namespace Sexy;
 
 class Board;

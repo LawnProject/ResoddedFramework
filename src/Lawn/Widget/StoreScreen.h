@@ -3,8 +3,8 @@
 
 #include <Common/ConstEnums.h>
 #include <System/PlayerInfo.h>
-#include <DataArray.h>
-#include <Dialog.h>
+#include <TodLib/DataArray.h>
+#include <SexyAppFramework/Dialog.h>
 
 using namespace Sexy;
 

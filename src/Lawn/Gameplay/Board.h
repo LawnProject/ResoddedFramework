@@ -2,9 +2,9 @@
 #define __BOARD_H__
 
 #include <Common/ConstEnums.h>
-#include <DataArray.h>
-#include <Widget.h>
-#include <ButtonListener.h>
+#include <TodLib/DataArray.h>
+#include <SexyAppFramework/Widget.h>
+#include <SexyAppFramework/ButtonListener.h>
 
 #include <Objects/Plant.h>
 #include <Objects/Zombie.h>

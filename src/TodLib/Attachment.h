@@ -1,9 +1,9 @@
 #ifndef __ATTACHMENT_H__
 #define __ATTACHMENT_H__
 
-#include <DataArray.h>
+#include <TodLib/DataArray.h>
 #include <Common/ConstEnums.h>
-#include <SexyMatrix.h>
+#include <SexyAppFramework/SexyMatrix.h>
 
 namespace Sexy
 {

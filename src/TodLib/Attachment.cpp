@@ -1,10 +1,10 @@
 #include "Trail.h"
-#include "TodDebug.h"
+#include <TodLib/TodDebug.h>
 #include "Attachment.h"
 #include "Reanimator.h"
-#include <TodParticle.h>
-#include "EffectSystem.h"
-#include <Graphics.h>
+#include <TodLib/TodParticle.h>
+#include <TodLib/EffectSystem.h>
+#include <SexyAppFramework/Graphics.h>
 
 Attachment::Attachment()
 {

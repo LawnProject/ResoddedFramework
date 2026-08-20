@@ -14,13 +14,13 @@
 #include <System/PlayerInfo.h>
 #include <System/ReanimationLawn.h>
 #include <System/Achievements.h>
-#include <TodFoley.h>
-#include <TodDebug.h>
-#include <Attachment.h>
-#include <Reanimator.h>
-#include <TodParticle.h>
-#include <EffectSystem.h>
-#include <TodStringFile.h>
+#include <TodLib/TodFoley.h>
+#include <TodLib/TodDebug.h>
+#include <TodLib/Attachment.h>
+#include <TodLib/Reanimator.h>
+#include <TodLib/TodParticle.h>
+#include <TodLib/EffectSystem.h>
+#include <TodLib/TodStringFile.h>
 
 PlantDefinition gPlantDefs[SeedType::NUM_SEED_TYPES] = {
 	{SeedType::SEED_PEASHOOTER, nullptr, ReanimationType::REANIM_PEASHOOTER, 0, 100, 750,

@@ -1,18 +1,18 @@
-#include <TodList.h>
-#include "TodDebug.h"
-#include "TodCommon.h"
+#include <TodLib/TodList.h>
+#include <TodLib/TodDebug.h>
+#include <TodLib/TodCommon.h>
 #include <LawnApp.h>
-#include "EffectSystem.h"
+#include <TodLib/EffectSystem.h>
 #include <Common/Resources.h>
-#include "TodStringFile.h"
+#include <TodLib/TodStringFile.h>
 #include <Common/GameConstants.h>
-#include <Font.h>
-#include "../SexyAppFramework/GPUImage.h"
-#include <Graphics.h>
-#include <ImageFont.h>
-#include <PerfTimer.h>
-#include <SexyMatrix.h>
-#include "../SexyAppFramework/Renderer.h"
+#include <SexyAppFramework/Font.h>
+#include <SexyAppFramework/GPUImage.h>
+#include <SexyAppFramework/Graphics.h>
+#include <SexyAppFramework/ImageFont.h>
+#include <SexyAppFramework/PerfTimer.h>
+#include <SexyAppFramework/SexyMatrix.h>
+#include <SexyAppFramework/Renderer.h>
 
 void Tod_SWTri_AddAllDrawTriFuncs()
 {

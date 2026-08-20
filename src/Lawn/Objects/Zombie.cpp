@@ -13,12 +13,12 @@
 #include <System/Achievements.h>
 #include <Widget/AlmanacDialog.h>
 #include <Widget/ZombatarWidget.h>
-#include <TodFoley.h>
-#include <TodDebug.h>
-#include <TodCommon.h>
-#include <Reanimator.h>
-#include <Attachment.h>
-#include <TodParticle.h>
+#include <TodLib/TodFoley.h>
+#include <TodLib/TodDebug.h>
+#include <TodLib/TodCommon.h>
+#include <TodLib/Reanimator.h>
+#include <TodLib/Attachment.h>
+#include <TodLib/TodParticle.h>
 
 ZombieDefinition gZombieDefs[NUM_ZOMBIE_TYPES] = {
 	{ZOMBIE_NORMAL, REANIM_ZOMBIE, 1, 1, 1, 4000, "ZOMBIE"},

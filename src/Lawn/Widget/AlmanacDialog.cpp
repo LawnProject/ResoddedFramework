@@ -12,9 +12,9 @@
 #include <System/PlayerInfo.h>
 #include <System/PoolEffect.h>
 #include <System/ReanimationLawn.h>
-#include <TodStringFile.h>
-#include <WidgetManager.h>
-#include <Font.h>
+#include <TodLib/TodStringFile.h>
+#include <SexyAppFramework/WidgetManager.h>
+#include <SexyAppFramework/Font.h>
 
 bool gZombieDefeated[NUM_ZOMBIE_TYPES] = {false};
 

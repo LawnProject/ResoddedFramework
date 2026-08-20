@@ -9,11 +9,11 @@
 #include <Widget/NewOptionsDialog.h>
 #include <ResoddedFramework/SettingsDialog.h>
 #include <Common/ConstEnums.h>
-#include <TodFoley.h>
-#include <Slider.h>
-#include <Checkbox.h>
-#include <WidgetManager.h>
-#include <TodStringFile.h>
+#include <TodLib/TodFoley.h>
+#include <SexyAppFramework/Slider.h>
+#include <SexyAppFramework/Checkbox.h>
+#include <SexyAppFramework/WidgetManager.h>
+#include <TodLib/TodStringFile.h>
 
 using namespace Sexy;
 

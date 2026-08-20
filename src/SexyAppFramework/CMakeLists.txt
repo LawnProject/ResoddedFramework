@@ -187,7 +187,7 @@ if(SEXY_USE_CONTROLLER)
     target_sources(${PROJECT_NAME} PRIVATE ${GAMECONTROLLERDB_HDR})
 endif()
 
-target_include_directories(${PROJECT_NAME} PUBLIC
+target_include_directories(${PROJECT_NAME} PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_SOURCE_DIR}/thirdparty/src"
 )

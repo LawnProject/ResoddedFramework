@@ -2,10 +2,10 @@
 #include <LawnApp.h>
 #include <Common/Resources.h>
 #include <Common/GameConstants.h>
-#include <TodDebug.h>
-#include <GPUImage.h>
-#include <Graphics.h>
-#include <Renderer.h>
+#include <TodLib/TodDebug.h>
+#include <SexyAppFramework/GPUImage.h>
+#include <SexyAppFramework/Graphics.h>
+#include <SexyAppFramework/Renderer.h>
 
 void PoolEffect::PoolEffectInitialize()
 {

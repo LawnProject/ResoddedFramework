@@ -1,7 +1,7 @@
 #include <ResoddedFramework/UpdateChecker.h>
 #include <LawnApp.h>
-#include <HTTPTransfer.h>
-#include <TodDebug.h>
+#include <SexyAppFramework/HTTPTransfer.h>
+#include <TodLib/TodDebug.h>
 
 using namespace Sexy;
 

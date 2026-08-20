@@ -1,10 +1,10 @@
 #include "Trail.h"
 #include <assert.h>
-#include "TodDebug.h"
+#include <TodLib/TodDebug.h>
 #include "Definition.h"
 #include <zlib.h>
 #include "../PakLib/PakInterface.h"
-#include <PerfTimer.h>
+#include <SexyAppFramework/PerfTimer.h>
 #include "../SexyAppFramework/XMLParser.h"
 #include <fstream>
 #include "OriginalCompiledDefinition.h"

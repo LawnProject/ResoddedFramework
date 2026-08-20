@@ -3,8 +3,8 @@
 
 #include <Common/ConstEnums.h>
 #include <Common/GameConstants.h>
-#include <FilterEffect.h>
-#include <Graphics.h>
+#include <TodLib/FilterEffect.h>
+#include <SexyAppFramework/Graphics.h>
 
 #define BEGHOULED_MAX_GRIDSIZEX 8
 #define BEGHOULED_MAX_GRIDSIZEY 5

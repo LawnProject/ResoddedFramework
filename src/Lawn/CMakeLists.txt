@@ -8,25 +8,24 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
 
-    "${CMAKE_SOURCE_DIR}/src/Sexy.TodLib/*.cpp"
-    "${CMAKE_SOURCE_DIR}/src/Sexy.TodLib/*.h"
+    "${CMAKE_SOURCE_DIR}/src/TodLib/*.cpp"
+    "${CMAKE_SOURCE_DIR}/src/TodLib/*.h"
 )
 
 set(EXCLUDE_FILES
-    "${CMAKE_SOURCE_DIR}/src/Sexy.TodLib/TodDrawTriangle.cpp"
-    "${CMAKE_SOURCE_DIR}/src/Sexy.TodLib/TodDrawTriangleInc.cpp"
+    "${CMAKE_SOURCE_DIR}/src/TodLib/TodDrawTriangle.cpp"
+    "${CMAKE_SOURCE_DIR}/src/TodLib/TodDrawTriangleInc.cpp"
 )
 
 foreach(EXCLUDED_FILE IN LISTS EXCLUDE_FILES)
     list(REMOVE_ITEM SOURCES "${EXCLUDED_FILE}")
 endforeach()
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES} LawnProject.rc)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${CMAKE_SOURCE_DIR}/src/Sexy.TodLib"
-    "${CMAKE_SOURCE_DIR}/thirdparty/src"
+    "${CMAKE_SOURCE_DIR}/src" # for <SexyAppFramework/Header.h>
 )
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC

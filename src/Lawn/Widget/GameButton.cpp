@@ -1,12 +1,12 @@
 #include <Widget/GameButton.h>
 #include <LawnApp.h>
 #include <Common/Resources.h>
-#include <TodCommon.h>
-#include <Font.h>
-#include <SysFont.h>
-#include <Graphics.h>
-#include <TodStringFile.h>
-#include <WidgetManager.h>
+#include <TodLib/TodCommon.h>
+#include <SexyAppFramework/Font.h>
+#include <SexyAppFramework/SysFont.h>
+#include <SexyAppFramework/Graphics.h>
+#include <TodLib/TodStringFile.h>
+#include <SexyAppFramework/WidgetManager.h>
 
 static Color gGameButtonColors[6] = {
 	Color(0, 0, 0), Color(0, 0, 0), Color(0, 0, 0), Color(255, 255, 255), Color(132, 132, 132), Color(212, 212, 212)};

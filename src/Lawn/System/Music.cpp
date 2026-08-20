@@ -2,10 +2,10 @@
 #include <Gameplay/Board.h>
 #include <System/PlayerInfo.h>
 #include <LawnApp.h>
-#include <PakInterface.h>
-#include <TodDebug.h>
-#include <TodCommon.h>
-#include <BassMusicInterface.h>
+#include <PakLib/PakInterface.h>
+#include <TodLib/TodDebug.h>
+#include <TodLib/TodCommon.h>
+#include <SexyAppFramework/BassMusicInterface.h>
 
 using namespace Sexy;
 

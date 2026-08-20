@@ -1,10 +1,10 @@
-#include "TodDebug.h"
-#include "TodCommon.h"
+#include <TodLib/TodDebug.h>
+#include <TodLib/TodCommon.h>
 #include "Reanimator.h"
 #include "ReanimAtlas.h"
-#include <PerfTimer.h>
+#include <SexyAppFramework/PerfTimer.h>
 #include "../SexyAppFramework/MemoryImage.h"
-#include <Graphics.h>
+#include <SexyAppFramework/Graphics.h>
 
 ReanimAtlas::ReanimAtlas()
 {

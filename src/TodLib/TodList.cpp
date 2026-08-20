@@ -1,6 +1,6 @@
-#include <TodList.h>
-#include "TodDebug.h"
-#include "TodCommon.h"
+#include <TodLib/TodList.h>
+#include <TodLib/TodDebug.h>
+#include <TodLib/TodCommon.h>
 
 void TodAllocator::Initialize(int theGrowCount, int theItemSize)
 {

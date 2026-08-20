@@ -1,8 +1,8 @@
 #pragma once
 #include <Common/ConstEnums.h>
-#include <Common.h>
+#include <SexyAppFramework/Common.h>
 #include "../SexyAppFramework/ResourceManager.h"
-#include "TodDebug.h"
+#include <TodLib/TodDebug.h>
 
 struct TodAllocator;
 namespace Sexy

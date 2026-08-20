@@ -5,8 +5,8 @@
 #include <LawnApp.h>
 #include <Widget/ContinueDialog.h>
 #include <Common/Resources.h>
-#include <TodFoley.h>
-#include <TodStringFile.h>
+#include <TodLib/TodFoley.h>
+#include <TodLib/TodStringFile.h>
 
 ContinueDialog::ContinueDialog(LawnApp *theApp)
 	: LawnDialog(theApp,

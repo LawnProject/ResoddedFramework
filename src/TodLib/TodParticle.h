@@ -1,9 +1,9 @@
 #ifndef __TODPARTICLE_H__
 #define __TODPARTICLE_H__
 
-#include <TodList.h>
-#include <DataArray.h>
-#include <SexyVector.h>
+#include <TodLib/TodList.h>
+#include <TodLib/DataArray.h>
+#include <SexyAppFramework/SexyVector.h>
 namespace Sexy
 {
 class Image;

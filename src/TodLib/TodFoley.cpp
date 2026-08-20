@@ -1,8 +1,8 @@
 #include <Common/Resources.h>
 #include "TodFoley.h"
-#include "TodDebug.h"
-#include "TodCommon.h"
-#include <SoundManager.h>
+#include <TodLib/TodDebug.h>
+#include <TodLib/TodCommon.h>
+#include <SexyAppFramework/SoundManager.h>
 
 int gFoleyParamArraySize;
 FoleyParams *gFoleyParamArray;

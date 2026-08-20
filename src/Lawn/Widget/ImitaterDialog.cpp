@@ -6,7 +6,7 @@
 #include <Widget/SeedChooserScreen.h>
 #include <Gameplay/ToolTipWidget.h>
 #include <Common/GameConstants.h>
-#include <WidgetManager.h>
+#include <SexyAppFramework/WidgetManager.h>
 
 ImitaterDialog::ImitaterDialog()
 	: LawnDialog(gLawnApp,

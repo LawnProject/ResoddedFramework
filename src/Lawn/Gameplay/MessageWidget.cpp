@@ -3,10 +3,10 @@
 #include <LawnApp.h>
 #include <Common/Resources.h>
 #include <Gameplay/MessageWidget.h>
-#include <Font.h>
-#include <TodCommon.h>
-#include <Reanimator.h>
-#include <TodStringFile.h>
+#include <SexyAppFramework/Font.h>
+#include <TodLib/TodCommon.h>
+#include <TodLib/Reanimator.h>
+#include <TodLib/TodStringFile.h>
 
 MessageWidget::MessageWidget(LawnApp *theApp)
 {

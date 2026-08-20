@@ -4,8 +4,8 @@
 #include <LawnApp.h>
 #include <Gameplay/CursorObject.h>
 #include <Common/Resources.h>
-#include <Reanimator.h>
-#include <WidgetManager.h>
+#include <TodLib/Reanimator.h>
+#include <SexyAppFramework/WidgetManager.h>
 
 CursorObject::CursorObject()
 {

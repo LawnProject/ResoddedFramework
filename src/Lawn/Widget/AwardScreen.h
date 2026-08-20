@@ -2,7 +2,7 @@
 #define __AWARDSCREEN_H__
 
 #include <Common/ConstEnums.h>
-#include <Widget.h>
+#include <SexyAppFramework/Widget.h>
 #include <Common/LawnCommon.h>
 using namespace Sexy;
 

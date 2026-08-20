@@ -1,7 +1,7 @@
 #include <clocale>
 
 #include <LawnApp.h>
-#include <TodStringFile.h>
+#include <TodLib/TodStringFile.h>
 
 bool (*gAppCloseRequest)();
 bool (*gAppHasUsedCheatKeys)();

@@ -5,11 +5,11 @@
 #include <Common/LawnCommon.h>
 #include <Common/Resources.h>
 #include <Widget/ChallengeScreen.h>
-#include <TodDebug.h>
-#include <Reanimator.h>
-#include <EffectSystem.h>
-#include <TodStringFile.h>
-#include <ImageFont.h>
+#include <TodLib/TodDebug.h>
+#include <TodLib/Reanimator.h>
+#include <TodLib/EffectSystem.h>
+#include <TodLib/TodStringFile.h>
+#include <SexyAppFramework/ImageFont.h>
 
 LawnDialog::LawnDialog(LawnApp *theApp,
 					   int theId,

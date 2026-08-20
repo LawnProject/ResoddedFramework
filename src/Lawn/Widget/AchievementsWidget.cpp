@@ -3,8 +3,8 @@
 #include <LawnApp.h>
 #include <System/Achievements.h>
 #include <System/PlayerInfo.h>
-#include <WidgetManager.h>
-#include <TodStringFile.h>
+#include <SexyAppFramework/WidgetManager.h>
+#include <TodLib/TodStringFile.h>
 #include <Common/GameConstants.h>
 #include <Common/Resources.h>
 

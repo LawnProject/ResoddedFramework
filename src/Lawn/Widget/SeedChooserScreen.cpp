@@ -15,11 +15,11 @@
 #include <Common/GameConstants.h>
 #include <System/PlayerInfo.h>
 #include <System/PopDRMComm.h>
-#include <Debug.h>
-#include <Dialog.h>
-#include <MTRand.h>
-#include <TodStringFile.h>
-#include <WidgetManager.h>
+#include <SexyAppFramework/Debug.h>
+#include <SexyAppFramework/Dialog.h>
+#include <SexyAppFramework/MTRand.h>
+#include <TodLib/TodStringFile.h>
+#include <SexyAppFramework/WidgetManager.h>
 
 SeedChooserScreen::SeedChooserScreen()
 {

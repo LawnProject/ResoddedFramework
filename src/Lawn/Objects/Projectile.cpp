@@ -6,11 +6,11 @@
 #include <LawnApp.h>
 #include <Common/Resources.h>
 #include <Common/GameConstants.h>
-#include <TodFoley.h>
-#include <TodDebug.h>
-#include <Reanimator.h>
+#include <TodLib/TodFoley.h>
+#include <TodLib/TodDebug.h>
+#include <TodLib/Reanimator.h>
 #include <System/Achievements.h>
-#include <Attachment.h>
+#include <TodLib/Attachment.h>
 
 ProjectileDefinition gProjectileDefinition[] = {
 	{ProjectileType::PROJECTILE_PEA, 0, 20},	  {ProjectileType::PROJECTILE_SNOWPEA, 0, 20},

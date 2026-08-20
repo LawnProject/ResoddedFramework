@@ -2,9 +2,9 @@
 #define __CREDITSCREEN_H__
 
 #include <Common/ConstEnums.h>
-#include <Widget.h>
-#include <PerfTimer.h>
-#include <ButtonListener.h>
+#include <SexyAppFramework/Widget.h>
+#include <SexyAppFramework/PerfTimer.h>
+#include <SexyAppFramework/ButtonListener.h>
 
 using namespace Sexy;
 

@@ -3,10 +3,10 @@
 #include <System/PlayerInfo.h>
 #include <Common/LawnCommon.h>
 #include <Widget/ChallengeScreen.h>
-#include <TodDebug.h>
-#include <TodCommon.h>
-#include <Buffer.h>
-#include <SexyAppBase.h>
+#include <TodLib/TodDebug.h>
+#include <TodLib/TodCommon.h>
+#include <SexyAppFramework/Buffer.h>
+#include <SexyAppFramework/SexyAppBase.h>
 
 static int gUserVersion = 12;
 

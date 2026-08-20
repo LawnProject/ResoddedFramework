@@ -1,8 +1,8 @@
 #ifndef __GAMEBUTTON_H__
 #define __GAMEBUTTON_H__
 
-#include <SexyVector.h>
-#include <DialogButton.h>
+#include <SexyAppFramework/SexyVector.h>
+#include <SexyAppFramework/DialogButton.h>
 
 using namespace Sexy;
 

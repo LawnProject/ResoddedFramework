@@ -35,30 +35,30 @@
 #include <Widget/GameButton.h>
 #include <Widget/AwardScreen.h>
 
-#include <Trail.h>
-#include <TodDebug.h>
-#include <TodFoley.h>
-#include <Attachment.h>
-#include <Reanimator.h>
-#include <Dialog.h>
-#include <TodParticle.h>
-#include <EffectSystem.h>
-#include <TodStringFile.h>
+#include <TodLib/Trail.h>
+#include <TodLib/TodDebug.h>
+#include <TodLib/TodFoley.h>
+#include <TodLib/Attachment.h>
+#include <TodLib/Reanimator.h>
+#include <SexyAppFramework/Dialog.h>
+#include <TodLib/TodParticle.h>
+#include <TodLib/EffectSystem.h>
+#include <TodLib/TodStringFile.h>
 
-#include <SysFont.h>
-#include <ImageFont.h>
-#include <SoundManager.h>
-#include <ButtonWidget.h>
-#include <MTRand.h>
-#include <WidgetManager.h>
-#include <SoundInstance.h>
-#include <Graphics.h>
+#include <SexyAppFramework/SysFont.h>
+#include <SexyAppFramework/ImageFont.h>
+#include <SexyAppFramework/SoundManager.h>
+#include <SexyAppFramework/ButtonWidget.h>
+#include <SexyAppFramework/MTRand.h>
+#include <SexyAppFramework/WidgetManager.h>
+#include <SexyAppFramework/SoundInstance.h>
+#include <SexyAppFramework/Graphics.h>
 
 #include <bass.h>
 #include <cmath>
 
 #define SEXY_PERF_ENABLED
-#include <PerfTimer.h>
+#include <SexyAppFramework/PerfTimer.h>
 
 //#define SEXY_MEMTRACE
 //#include "../SexyAppFramework/memmgr.h"

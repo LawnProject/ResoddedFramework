@@ -4,12 +4,12 @@
 #include <Common/LawnCommon.h>
 #include <Common/Resources.h>
 #include <Common/GameConstants.h>
-#include <TodCommon.h>
-#include <Font.h>
-#include <Dialog.h>
-#include <SexyMatrix.h>
-#include <WidgetManager.h>
-#include <Checkbox.h>
+#include <TodLib/TodCommon.h>
+#include <SexyAppFramework/Font.h>
+#include <SexyAppFramework/Dialog.h>
+#include <SexyAppFramework/SexyMatrix.h>
+#include <SexyAppFramework/WidgetManager.h>
+#include <SexyAppFramework/Checkbox.h>
 
 int gLawnEditWidgetColors[][4] = {
 	{0, 0, 0, 0}, {0, 0, 0, 0}, {240, 240, 255, 255}, {255, 255, 255, 255}, {0, 0, 0, 255},

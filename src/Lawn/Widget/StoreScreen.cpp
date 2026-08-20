@@ -14,12 +14,12 @@
 #include <Common/GameConstants.h>
 #include <System/Achievements.h>
 #include <System/PopDRMComm.h>
-#include <TodFoley.h>
-#include <TodCommon.h>
-#include <Reanimator.h>
-#include <TodStringFile.h>
-#include <ImageFont.h>
-#include <WidgetManager.h>
+#include <TodLib/TodFoley.h>
+#include <TodLib/TodCommon.h>
+#include <TodLib/Reanimator.h>
+#include <TodLib/TodStringFile.h>
+#include <SexyAppFramework/ImageFont.h>
+#include <SexyAppFramework/WidgetManager.h>
 
 static StoreItem gStoreItemSpots[NUM_STORE_PAGES][MAX_PAGE_SPOTS] = {
 	{STORE_ITEM_PACKET_UPGRADE, STORE_ITEM_POOL_CLEANER, STORE_ITEM_RAKE, STORE_ITEM_ROOF_CLEANER,

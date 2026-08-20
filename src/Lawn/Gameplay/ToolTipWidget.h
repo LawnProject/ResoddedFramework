@@ -1,7 +1,7 @@
 #ifndef __TOOLTIPWIDGET_H__
 #define __TOOLTIPWIDGET_H__
 
-#include <Common.h>
+#include <SexyAppFramework/Common.h>
 #include <vector>
 namespace Sexy
 {

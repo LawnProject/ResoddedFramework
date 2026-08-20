@@ -16,14 +16,14 @@
 #include <System/TypingCheck.h>
 #include <System/Achievements.h>
 #include <ResoddedFramework/UpdateChecker.h>
-#include <TodFoley.h>
-#include <TodDebug.h>
-#include <Font.h>
-#include <Reanimator.h>
-#include <TodParticle.h>
-#include <Dialog.h>
-#include <WidgetManager.h>
-#include <TodStringFile.h>
+#include <TodLib/TodFoley.h>
+#include <TodLib/TodDebug.h>
+#include <SexyAppFramework/Font.h>
+#include <TodLib/Reanimator.h>
+#include <TodLib/TodParticle.h>
+#include <SexyAppFramework/Dialog.h>
+#include <SexyAppFramework/WidgetManager.h>
+#include <TodLib/TodStringFile.h>
 #include <Widget/AchievementsWidget.h>
 #include <Widget/ZombatarWidget.h>
 

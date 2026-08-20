@@ -1,9 +1,9 @@
 #ifndef __CHEATDIALOG_H__
 #define __CHEATDIALOG_H__
 
-#include <EditWidget.h>
+#include <SexyAppFramework/EditWidget.h>
 #include <Widget/LawnDialog.h>
-#include <EditListener.h>
+#include <SexyAppFramework/EditListener.h>
 
 class CheatDialog : public LawnDialog, public EditListener
 {

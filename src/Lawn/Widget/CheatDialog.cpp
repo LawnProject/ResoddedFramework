@@ -5,7 +5,7 @@
 #include <Common/Resources.h>
 #include <Common/GameConstants.h>
 #include <System/PlayerInfo.h>
-#include <WidgetManager.h>
+#include <SexyAppFramework/WidgetManager.h>
 
 CheatDialog::CheatDialog(LawnApp *theApp)
 	: LawnDialog(

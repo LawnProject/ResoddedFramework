@@ -2,11 +2,11 @@
 #include <Objects/Zombie.h>
 #include <LawnApp.h>
 #include <System/ReanimationLawn.h>
-#include <TodDebug.h>
-#include <Color.h>
-#include <Reanimator.h>
-#include <GPUImage.h>
-#include <Renderer.h>
+#include <TodLib/TodDebug.h>
+#include <SexyAppFramework/Color.h>
+#include <TodLib/Reanimator.h>
+#include <SexyAppFramework/GPUImage.h>
+#include <SexyAppFramework/Renderer.h>
 
 void ReanimatorCache::UpdateReanimationForVariation(Reanimation *theReanim, DrawVariation theDrawVariation)
 {

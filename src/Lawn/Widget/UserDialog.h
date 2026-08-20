@@ -2,9 +2,9 @@
 #define __USERDIALOG_H__
 
 #include <Widget/LawnDialog.h>
-#include <ListListener.h>
-#include <EditListener.h>
-#include <SliderListener.h>
+#include <SexyAppFramework/ListListener.h>
+#include <SexyAppFramework/EditListener.h>
+#include <SexyAppFramework/SliderListener.h>
 
 namespace Sexy
 {

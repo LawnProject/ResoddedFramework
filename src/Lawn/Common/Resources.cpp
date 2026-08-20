@@ -1,5 +1,5 @@
 #include <Common/Resources.h>
-#include <ResourceManager.h>
+#include <SexyAppFramework/ResourceManager.h>
 using namespace Sexy;
 
 #pragma warning(disable : 4311 4312)

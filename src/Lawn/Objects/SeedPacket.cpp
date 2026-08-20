@@ -6,9 +6,9 @@
 #include <Gameplay/CursorObject.h>
 #include <Common/Resources.h>
 #include <Gameplay/MessageWidget.h>
-#include <Font.h>
-#include <FilterEffect.h>
-#include <SexyMatrix.h>
+#include <SexyAppFramework/Font.h>
+#include <TodLib/FilterEffect.h>
+#include <SexyAppFramework/SexyMatrix.h>
 
 bool mIgnorePacketSpriteScale = false;
 

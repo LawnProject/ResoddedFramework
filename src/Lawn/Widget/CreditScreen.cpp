@@ -5,13 +5,13 @@
 #include <System/Music.h>
 #include <Common/GameConstants.h>
 #include <System/PoolEffect.h>
-#include <TodFoley.h>
-#include <Attachment.h>
-#include <Reanimator.h>
-#include <TodParticle.h>
-#include <Dialog.h>
-#include <EffectSystem.h>
-#include <TodStringFile.h>
+#include <TodLib/TodFoley.h>
+#include <TodLib/Attachment.h>
+#include <TodLib/Reanimator.h>
+#include <TodLib/TodParticle.h>
+#include <SexyAppFramework/Dialog.h>
+#include <TodLib/EffectSystem.h>
+#include <TodLib/TodStringFile.h>
 #include <SDL3/SDL_timer.h>
 
 static CreditsTiming gCreditsTiming[] = {{128.5f, CreditWordType::WORD_AW, 0, CreditBrainType::BRAIN_OFF},

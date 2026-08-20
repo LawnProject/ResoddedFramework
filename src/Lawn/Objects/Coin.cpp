@@ -11,10 +11,10 @@
 #include <Common/GameConstants.h>
 #include <System/PlayerInfo.h>
 #include <System/Achievements.h>
-#include <TodFoley.h>
-#include <TodDebug.h>
-#include <Reanimator.h>
-#include <Attachment.h>
+#include <TodLib/TodFoley.h>
+#include <TodLib/TodDebug.h>
+#include <TodLib/Reanimator.h>
+#include <TodLib/Attachment.h>
 
 Coin::Coin()
 {

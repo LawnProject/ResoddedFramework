@@ -1,8 +1,8 @@
 #ifndef __EFFECTSYSTEM_H__
 #define __EFFECTSYSTEM_H__
 
-#include <SWTri.h>
-#include <Graphics.h>
+#include <SexyAppFramework/SWTri.h>
+#include <SexyAppFramework/Graphics.h>
 using namespace Sexy;
 
 #define MAX_TRIANGLES 256

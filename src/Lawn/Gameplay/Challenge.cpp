@@ -21,15 +21,15 @@
 #include <System/Achievements.h>
 #include <Widget/GameButton.h>
 #include <Widget/StoreScreen.h>
-#include <TodDebug.h>
-#include <TodFoley.h>
-#include <TodCommon.h>
-#include <Font.h>
-#include <Reanimator.h>
-#include <MTRand.h>
-#include <TodParticle.h>
-#include <TodStringFile.h>
-#include <WidgetManager.h>
+#include <TodLib/TodDebug.h>
+#include <TodLib/TodFoley.h>
+#include <TodLib/TodCommon.h>
+#include <SexyAppFramework/Font.h>
+#include <TodLib/Reanimator.h>
+#include <SexyAppFramework/MTRand.h>
+#include <TodLib/TodParticle.h>
+#include <TodLib/TodStringFile.h>
+#include <SexyAppFramework/WidgetManager.h>
 
 int gZombieWaves[NUM_LEVELS] = {
 	4,	6,	8,	10, 8,	10, 20, 10, 20, 20, 10, 20, 10, 20, 10, 10, 20, 10, 20, 20, 10, 20, 20, 30, 20,

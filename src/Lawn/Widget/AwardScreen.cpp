@@ -12,9 +12,9 @@
 #include <Common/GameConstants.h>
 #include <System/PlayerInfo.h>
 #include <System/Achievements.h>
-#include <TodFoley.h>
-#include <TodCommon.h>
-#include <TodStringFile.h>
+#include <TodLib/TodFoley.h>
+#include <TodLib/TodCommon.h>
+#include <TodLib/TodStringFile.h>
 
 AwardScreen::AwardScreen(LawnApp *theApp, AwardType theAwardType)
 {

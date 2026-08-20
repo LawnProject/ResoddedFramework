@@ -8,10 +8,10 @@
 #include <Common/Resources.h>
 #include <Gameplay/MessageWidget.h>
 #include <System/ReanimationLawn.h>
-#include <TodFoley.h>
-#include <Reanimator.h>
-#include <TodParticle.h>
-#include <WidgetManager.h>
+#include <TodLib/TodFoley.h>
+#include <TodLib/Reanimator.h>
+#include <TodLib/TodParticle.h>
+#include <SexyAppFramework/WidgetManager.h>
 
 using namespace Sexy;
 

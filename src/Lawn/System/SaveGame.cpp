@@ -4,8 +4,8 @@
 #include <Gameplay/MessageWidget.h>
 #include <LawnApp.h>
 #include <Common/Resources.h>
-#include <Attachment.h>
-#include <EffectSystem.h>
+#include <TodLib/Attachment.h>
+#include <TodLib/EffectSystem.h>
 #include <System/SaveGame.h>
 
 static constexpr uint32_t SAVE_VERSION = 1;
