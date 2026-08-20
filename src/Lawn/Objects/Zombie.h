@@ -459,11 +459,9 @@ class Zombie : public GameObject
 	/// @brief theFront Should it draw top version
 	void DrawIceTrap(Graphics *g, const ZombieDrawPosition &theDrawPos, bool theFront);
 
-	/// @brief Draw the Zombie's Ice Trap
-	/// @param g Graphics object
-	/// @param theDrawPos Offsets for the limbs
-	/// @brief theFront Should it draw top version
+	/// @brief Damage the Zombie and apply an IceTrap
 	void HitIceTrap();
+
 	/// @brief Returns the damage index for the Zombie's helmet
 	/// @return Integer index representing the current helmet damage state
 	int GetHelmDamageIndex();
