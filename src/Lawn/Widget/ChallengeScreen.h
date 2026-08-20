@@ -1,8 +1,8 @@
 #ifndef __CHALLENGESCREEN_H__
 #define __CHALLENGESCREEN_H__
 
-#include "../../ConstEnums.h"
-#include "../../SexyAppFramework/Dialog.h"
+#include <Common/ConstEnums.h>
+#include <Dialog.h>
 using namespace Sexy;
 
 #define NUM_CHALLENGE_MODES ((int)GameMode::NUM_GAME_MODES - 1)

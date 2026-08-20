@@ -1,4 +1,4 @@
-#include "EditWidget.h"
+#include <EditWidget.h>
 #include "SysFont.h"
 #include "WidgetManager.h"
 #include "SexyAppBase.h"

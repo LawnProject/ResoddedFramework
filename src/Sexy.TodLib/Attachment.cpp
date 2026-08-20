@@ -2,9 +2,9 @@
 #include "TodDebug.h"
 #include "Attachment.h"
 #include "Reanimator.h"
-#include "TodParticle.h"
+#include <TodParticle.h>
 #include "EffectSystem.h"
-#include "../SexyAppFramework/Graphics.h"
+#include <Graphics.h>
 
 Attachment::Attachment()
 {

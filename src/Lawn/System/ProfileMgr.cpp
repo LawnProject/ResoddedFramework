@@ -1,7 +1,7 @@
-#include "ProfileMgr.h"
-#include "PlayerInfo.h"
+#include <System/ProfileMgr.h>
+#include <System/PlayerInfo.h>
 #include <fstream>
-#include "../../Sexy.TodLib/TodDebug.h"
+#include <TodDebug.h>
 #ifndef _WIN32
 #include <strings.h> // strcasecmp
 #endif

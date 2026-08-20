@@ -1,7 +1,7 @@
 #include "TodDebug.h"
 #include "../PakLib/PakInterface.h"
 #include "../SexyAppFramework/Encoding.h"
-#include "../SexyAppFramework/Font.h"
+#include <Font.h>
 #include "TodCommon.h"
 #include "TodStringFile.h"
 

@@ -1,16 +1,16 @@
-#include "TitleScreen.h"
-#include "../../SexyAppFramework/HyperlinkWidget.h"
-#include "../../SexyAppFramework/WidgetManager.h"
-#include "../../LawnApp.h"
-#include "../../Resources.h"
-#include "../../Sexy.TodLib/TodCommon.h"
-#include "../../SexyAppFramework/SexyMatrix.h"
-#include "../../Sexy.TodLib/TodStringFile.h"
-#include "../../Sexy.TodLib/EffectSystem.h"
-#include "../../Sexy.TodLib/TodDebug.h"
-#include "../../Sexy.TodLib/Reanimator.h"
-#include "../../GameConstants.h"
-#include "../System/Music.h"
+#include <Widget/TitleScreen.h>
+#include <HyperlinkWidget.h>
+#include <WidgetManager.h>
+#include <LawnApp.h>
+#include <Common/Resources.h>
+#include <TodCommon.h>
+#include <SexyMatrix.h>
+#include <TodStringFile.h>
+#include <EffectSystem.h>
+#include <TodDebug.h>
+#include <Reanimator.h>
+#include <Common/GameConstants.h>
+#include <System/Music.h>
 
 TitleScreen::TitleScreen(LawnApp *theApp)
 {

@@ -1,15 +1,15 @@
-#include "../Board.h"
-#include "LawnDialog.h"
-#include "GameButton.h"
-#include "../../LawnApp.h"
-#include "../LawnCommon.h"
-#include "../../Resources.h"
-#include "ChallengeScreen.h"
-#include "../../Sexy.TodLib/TodDebug.h"
-#include "../../Sexy.TodLib/Reanimator.h"
-#include "../../Sexy.TodLib/EffectSystem.h"
-#include "../../Sexy.TodLib/TodStringFile.h"
-#include "../../SexyAppFramework/ImageFont.h"
+#include <Gameplay/Board.h>
+#include <Widget/LawnDialog.h>
+#include <Widget/GameButton.h>
+#include <LawnApp.h>
+#include <Common/LawnCommon.h>
+#include <Common/Resources.h>
+#include <Widget/ChallengeScreen.h>
+#include <TodDebug.h>
+#include <Reanimator.h>
+#include <EffectSystem.h>
+#include <TodStringFile.h>
+#include <ImageFont.h>
 
 LawnDialog::LawnDialog(LawnApp *theApp,
 					   int theId,

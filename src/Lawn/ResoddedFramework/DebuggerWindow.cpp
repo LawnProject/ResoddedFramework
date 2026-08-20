@@ -1,22 +1,20 @@
 #if LAWN_DEBUG_TOOLS
-#include "DebuggerWindow.h"
-#include "../Board.h"
-#include "../Plant.h"
-#include "../Zombie.h"
-#include "../ZenGarden.h"
-#include "../System/PlayerInfo.h"
-#include "../Widget/ChallengeScreen.h"
-#include "../System/Achievements.h"
-#include "../Widget/GameSelector.h"
-#include "../../Sexy.TodLib/EffectSystem.h"
-#include "../../Sexy.TodLib/Attachment.h"
-#include "../../Sexy.TodLib/Trail.h"
-#include "../../Sexy.TodLib/Reanimator.h"
-#include "../../Sexy.TodLib/TodParticle.h"
-#include "../../SexyAppFramework/MTRand.h"
-#include "../Challenge.h"
-#include "../../LawnApp.h"
-#include "../../Sexy.TodLib/TodStringFile.h"
+#include <ResoddedFramework/DebuggerWindow.h>
+#include <Gameplay/Board.h>
+#include <Gameplay/ZenGarden.h>
+#include <System/PlayerInfo.h>
+#include <Widget/ChallengeScreen.h>
+#include <System/Achievements.h>
+#include <Widget/GameSelector.h>
+#include <EffectSystem.h>
+#include <Attachment.h>
+#include <Trail.h>
+#include <Reanimator.h>
+#include <TodParticle.h>
+#include <MTRand.h>
+#include <Gameplay/Challenge.h>
+#include <LawnApp.h>
+#include <TodStringFile.h>
 
 using namespace Sexy;
 

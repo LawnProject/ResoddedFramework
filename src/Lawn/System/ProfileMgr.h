@@ -2,7 +2,7 @@
 #define __PROFILEMGR_H__
 
 #include <map>
-#include "../../SexyAppFramework/Common.h"
+#include <Common.h>
 
 class ProfileSyncer;
 class PlayerInfo;

@@ -1,17 +1,17 @@
-#include "GameButton.h"
-#include "CreditScreen.h"
-#include "../../LawnApp.h"
-#include "../../Resources.h"
-#include "../System/Music.h"
-#include "../../GameConstants.h"
-#include "../System/PoolEffect.h"
-#include "../../Sexy.TodLib/TodFoley.h"
-#include "../../Sexy.TodLib/Attachment.h"
-#include "../../Sexy.TodLib/Reanimator.h"
-#include "../../Sexy.TodLib/TodParticle.h"
-#include "../../SexyAppFramework/Dialog.h"
-#include "../../Sexy.TodLib/EffectSystem.h"
-#include "../../Sexy.TodLib/TodStringFile.h"
+#include <Widget/GameButton.h>
+#include <Widget/CreditScreen.h>
+#include <LawnApp.h>
+#include <Common/Resources.h>
+#include <System/Music.h>
+#include <Common/GameConstants.h>
+#include <System/PoolEffect.h>
+#include <TodFoley.h>
+#include <Attachment.h>
+#include <Reanimator.h>
+#include <TodParticle.h>
+#include <Dialog.h>
+#include <EffectSystem.h>
+#include <TodStringFile.h>
 #include <SDL3/SDL_timer.h>
 
 static CreditsTiming gCreditsTiming[] = {{128.5f, CreditWordType::WORD_AW, 0, CreditBrainType::BRAIN_OFF},

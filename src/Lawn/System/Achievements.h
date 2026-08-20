@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../ConstEnums.h"
-#include "../../SexyAppFramework/Common.h"
+#include <Common/ConstEnums.h>
+#include <Common.h>
 
 class LawnApp;
 

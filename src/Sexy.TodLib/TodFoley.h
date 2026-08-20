@@ -1,7 +1,7 @@
 #ifndef __TODFOLEY_H__
 #define __TODFOLEY_H__
 
-#include "../SexyAppFramework/OpenALSoundInstance.h"
+#include <OpenALSoundInstance.h>
 using namespace Sexy;
 
 #define MAX_FOLEY_TYPES 110

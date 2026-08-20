@@ -1,11 +1,11 @@
-#include "CheatDialog.h"
-#include "../../LawnApp.h"
-#include "../LawnCommon.h"
-#include "ChallengeScreen.h"
-#include "../../Resources.h"
-#include "../../GameConstants.h"
-#include "../System/PlayerInfo.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include <Widget/CheatDialog.h>
+#include <LawnApp.h>
+#include <Common/LawnCommon.h>
+#include <Widget/ChallengeScreen.h>
+#include <Common/Resources.h>
+#include <Common/GameConstants.h>
+#include <System/PlayerInfo.h>
+#include <WidgetManager.h>
 
 CheatDialog::CheatDialog(LawnApp *theApp)
 	: LawnDialog(

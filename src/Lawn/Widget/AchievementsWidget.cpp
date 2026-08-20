@@ -1,12 +1,12 @@
-#include "AchievementsWidget.h"
-#include "GameSelector.h"
-#include "../../LawnApp.h"
-#include "../System/Achievements.h"
-#include "../System/PlayerInfo.h"
-#include "../../SexyAppFramework/WidgetManager.h"
-#include "../../Sexy.TodLib/TodStringFile.h"
-#include "../../GameConstants.h"
-#include "../../Resources.h"
+#include <Widget/AchievementsWidget.h>
+#include <Widget/GameSelector.h>
+#include <LawnApp.h>
+#include <System/Achievements.h>
+#include <System/PlayerInfo.h>
+#include <WidgetManager.h>
+#include <TodStringFile.h>
+#include <Common/GameConstants.h>
+#include <Common/Resources.h>
 
 int gDefaultScrollValue = 30;
 

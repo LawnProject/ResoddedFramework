@@ -1,7 +1,7 @@
 #ifndef __TODSTRINGFILE_H__
 #define __TODSTRINGFILE_H__
 
-#include "../SexyAppFramework/Graphics.h"
+#include <Graphics.h>
 using namespace Sexy;
 
 enum DrawStringJustification;

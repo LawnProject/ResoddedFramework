@@ -1,12 +1,12 @@
 #ifndef __PLAYERINFO_H__
 #define __PLAYERINFO_H__
 
-#include "../SexyAppFramework/Common.h"
+#include <Common.h>
 #define MAX_POTTED_PLANTS 200
 #define MAX_NUM_ZOMBATARS 100
 #define PURCHASE_COUNT_OFFSET 1000
 
-#include "../../ConstEnums.h"
+#include <Common/ConstEnums.h>
 #include <json.hpp>
 
 class PottedPlant

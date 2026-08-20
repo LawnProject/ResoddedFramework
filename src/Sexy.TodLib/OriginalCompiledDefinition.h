@@ -4,9 +4,9 @@
 
 #define COMPILED_LEGACY_DEFINITION_MAGIC 0xDEADFED4L
 
-#include "TodList.h"
+#include <TodList.h>
 #include "Reanimator.h"
-#include "TodParticle.h"
+#include <TodParticle.h>
 #include <stdint.h>
 
 class DefMap;

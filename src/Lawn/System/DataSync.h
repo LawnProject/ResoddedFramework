@@ -1,7 +1,7 @@
 #ifndef __DATASYNC_H__
 #define __DATASYNC_H__
 
-#include "../../SexyAppFramework/Common.h"
+#include <Common.h>
 #include <vector>
 
 class DataReader

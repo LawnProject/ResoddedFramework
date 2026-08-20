@@ -1,9 +1,9 @@
 #pragma once
 
-#include "LawnDialog.h"
-#include "GameButton.h"
-#include "../../SexyAppFramework/SliderListener.h"
-#include "../../SexyAppFramework/CheckboxListener.h"
+#include <Widget/LawnDialog.h>
+#include <Widget/GameButton.h>
+#include <SliderListener.h>
+#include <CheckboxListener.h>
 
 class LawnApp;
 namespace Sexy

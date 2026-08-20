@@ -2,13 +2,13 @@
 
 #include <string>
 #include <map>
-#include "../../Sexy.TodLib/TodParticle.h"
-#include "../../Sexy.TodLib/Reanimator.h"
-#include "../../Sexy.TodLib/Trail.h"
-#include "../LawnMower.h"
-#include "../Board.h"
-#include "../GridItem.h"
-#include "../Challenge.h"
+#include <TodParticle.h>
+#include <Reanimator.h>
+#include <Trail.h>
+#include <Objects/LawnMower.h>
+#include <Gameplay/Board.h>
+#include <Objects/GridItem.h>
+#include <Gameplay/Challenge.h>
 #include <fstream>
 
 namespace Sexy

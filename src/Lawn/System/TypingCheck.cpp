@@ -1,4 +1,4 @@
-#include "TypingCheck.h"
+#include <System/TypingCheck.h>
 using namespace Sexy;
 
 TypingCheck::TypingCheck(const std::string &thePhrase)

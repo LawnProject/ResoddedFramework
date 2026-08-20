@@ -1,20 +1,20 @@
-#include "../LawnCommon.h"
-#include "../Board.h"
-#include "../Plant.h"
-#include "../Zombie.h"
-#include "GameButton.h"
-#include "../SeedPacket.h"
-#include "../../LawnApp.h"
-#include "AlmanacDialog.h"
-#include "../../Resources.h"
-#include "../System/Music.h"
-#include "../../GameConstants.h"
-#include "../System/PlayerInfo.h"
-#include "../System/PoolEffect.h"
-#include "../System/ReanimationLawn.h"
-#include "../../Sexy.TodLib/TodStringFile.h"
-#include "../../SexyAppFramework/WidgetManager.h"
-#include "../../SexyAppFramework/Font.h"
+#include <Common/LawnCommon.h>
+#include <Gameplay/Board.h>
+#include <Objects/Plant.h>
+#include <Objects/Zombie.h>
+#include <Widget/GameButton.h>
+#include <Objects/SeedPacket.h>
+#include <LawnApp.h>
+#include <Widget/AlmanacDialog.h>
+#include <Common/Resources.h>
+#include <System/Music.h>
+#include <Common/GameConstants.h>
+#include <System/PlayerInfo.h>
+#include <System/PoolEffect.h>
+#include <System/ReanimationLawn.h>
+#include <TodStringFile.h>
+#include <WidgetManager.h>
+#include <Font.h>
 
 bool gZombieDefeated[NUM_ZOMBIE_TYPES] = {false};
 

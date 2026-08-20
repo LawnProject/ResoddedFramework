@@ -1,14 +1,14 @@
-#include "../LawnCommon.h"
-#include "ZombatarTOS.h"
-#include "ZombatarWidget.h"
-#include "GameSelector.h"
-#include "../System/PlayerInfo.h"
-#include "../../LawnApp.h"
-#include "../../Sexy.TodLib/TodStringFile.h"
-#include "../../Resources.h"
-#include "../../SexyAppFramework/Slider.h"
-#include "../../SexyAppFramework/Checkbox.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include <Common/LawnCommon.h>
+#include <Widget/ZombatarTOS.h>
+#include <Widget/ZombatarWidget.h>
+#include <Widget/GameSelector.h>
+#include <System/PlayerInfo.h>
+#include <LawnApp.h>
+#include <TodStringFile.h>
+#include <Common/Resources.h>
+#include <Slider.h>
+#include <Checkbox.h>
+#include <WidgetManager.h>
 
 using namespace Sexy;
 

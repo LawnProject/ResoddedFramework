@@ -3,7 +3,7 @@
 #ifndef __POPDRMCOMM_H__
 #define __POPDRMCOMM_H__
 
-#include "../../SexyAppFramework/CritSect.h"
+<CritSect.h>
 using namespace Sexy;
 
 class PopDRMComm

@@ -1,10 +1,10 @@
-#include "Achievements.h"
-#include "PlayerInfo.h"
-#include "../../LawnApp.h"
-#include "../../Resources.h"
-#include "../../Sexy.TodLib/TodStringFile.h"
-#include "../Board.h"
-#include "../Widget/GameSelector.h"
+#include <System/Achievements.h>
+#include <System/PlayerInfo.h>
+#include <LawnApp.h>
+#include <Common/Resources.h>
+#include <TodStringFile.h>
+#include <Gameplay/Board.h>
+#include <Widget/GameSelector.h>
 
 AchievementDefinition gAchievementDefs[NUM_ACHIEVEMENT_TYPES] = {
 	{"[ACHIEVEMENT_HOME_SECURITY_TITLE]", "[ACHIEVEMENT_HOME_SECURITY_DESCRIPTION]"},

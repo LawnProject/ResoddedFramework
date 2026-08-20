@@ -1,12 +1,12 @@
 #include <fstream>
 #include <filesystem>
-#include "PlayerInfo.h"
-#include "../LawnCommon.h"
-#include "../Widget/ChallengeScreen.h"
-#include "../../Sexy.TodLib/TodDebug.h"
-#include "../../Sexy.TodLib/TodCommon.h"
-#include "../../SexyAppFramework/Buffer.h"
-#include "../../SexyAppFramework/SexyAppBase.h"
+#include <System/PlayerInfo.h>
+#include <Common/LawnCommon.h>
+#include <Widget/ChallengeScreen.h>
+#include <TodDebug.h>
+#include <TodCommon.h>
+#include <Buffer.h>
+#include <SexyAppBase.h>
 
 static int gUserVersion = 12;
 

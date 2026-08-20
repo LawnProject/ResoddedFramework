@@ -1,10 +1,10 @@
 #ifndef __GAMESELECTOR_H__
 #define __GAMESELECTOR_H__
 
-#include "../../ConstEnums.h"
-#include "../../SexyAppFramework/Widget.h"
-#include "../../SexyAppFramework/ButtonListener.h"
-#include "GameButton.h"
+#include <Common/ConstEnums.h>
+#include <Widget.h>
+#include <ButtonListener.h>
+#include <Widget/GameButton.h>
 
 class LawnApp;
 class AchievementsWidget;

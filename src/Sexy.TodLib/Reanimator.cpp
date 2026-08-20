@@ -2,13 +2,13 @@
 #include "TodCommon.h"
 #include "Definition.h"
 #include "Reanimator.h"
-#include "../LawnApp.h"
+#include <LawnApp.h>
 #include "Attachment.h"
 #include "ReanimAtlas.h"
 #include "EffectSystem.h"
-#include "../GameConstants.h"
-#include "../SexyAppFramework/Font.h"
-#include "../SexyAppFramework/PerfTimer.h"
+#include <Common/GameConstants.h>
+#include <Font.h>
+#include <PerfTimer.h>
 #include "../SexyAppFramework/MemoryImage.h"
 
 int gReanimatorDefCount;

@@ -1,25 +1,25 @@
-#include "../LawnCommon.h"
-#include "../Coin.h"
-#include "../Board.h"
-#include "../Plant.h"
-#include "LawnDialog.h"
-#include "GameButton.h"
-#include "StoreScreen.h"
-#include "../ZenGarden.h"
-#include "../SeedPacket.h"
-#include "../../LawnApp.h"
-#include "../../Resources.h"
-#include "../System/Music.h"
-#include "SeedChooserScreen.h"
-#include "../../GameConstants.h"
-#include "../System/Achievements.h"
-#include "../System/PopDRMComm.h"
-#include "../../Sexy.TodLib/TodFoley.h"
-#include "../../Sexy.TodLib/TodCommon.h"
-#include "../../Sexy.TodLib/Reanimator.h"
-#include "../../Sexy.TodLib/TodStringFile.h"
-#include "../../SexyAppFramework/ImageFont.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include <Common/LawnCommon.h>
+#include <Objects/Coin.h>
+#include <Gameplay/Board.h>
+#include <Objects/Plant.h>
+#include <Widget/LawnDialog.h>
+#include <Widget/GameButton.h>
+#include <Widget/StoreScreen.h>
+#include <Gameplay/ZenGarden.h>
+#include <Objects/SeedPacket.h>
+#include <LawnApp.h>
+#include <Common/Resources.h>
+#include <System/Music.h>
+#include <Widget/SeedChooserScreen.h>
+#include <Common/GameConstants.h>
+#include <System/Achievements.h>
+#include <System/PopDRMComm.h>
+#include <TodFoley.h>
+#include <TodCommon.h>
+#include <Reanimator.h>
+#include <TodStringFile.h>
+#include <ImageFont.h>
+#include <WidgetManager.h>
 
 static StoreItem gStoreItemSpots[NUM_STORE_PAGES][MAX_PAGE_SPOTS] = {
 	{STORE_ITEM_PACKET_UPGRADE, STORE_ITEM_POOL_CLEANER, STORE_ITEM_RAKE, STORE_ITEM_ROOF_CLEANER,

@@ -1,7 +1,7 @@
-#include "UpdateChecker.h"
-#include "../../LawnApp.h"
+#include <ResoddedFramework/UpdateChecker.h>
+#include <LawnApp.h>
 #include <HTTPTransfer.h>
-#include "../../Sexy.TodLib/TodDebug.h"
+#include <TodDebug.h>
 
 using namespace Sexy;
 

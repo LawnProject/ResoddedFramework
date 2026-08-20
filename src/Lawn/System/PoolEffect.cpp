@@ -1,11 +1,11 @@
-#include "PoolEffect.h"
-#include "../../LawnApp.h"
-#include "../../Resources.h"
-#include "../../GameConstants.h"
-#include "../../Sexy.TodLib/TodDebug.h"
-#include "../../SexyAppFramework/GPUImage.h"
-#include "../../SexyAppFramework/Graphics.h"
-#include "../../SexyAppFramework/Renderer.h"
+#include <System/PoolEffect.h>
+#include <LawnApp.h>
+#include <Common/Resources.h>
+#include <Common/GameConstants.h>
+#include <TodDebug.h>
+#include <GPUImage.h>
+#include <Graphics.h>
+#include <Renderer.h>
 
 void PoolEffect::PoolEffectInitialize()
 {

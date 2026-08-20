@@ -1,12 +1,12 @@
-#include "Music.h"
-#include "../CursorObject.h"
-#include "../SeedPacket.h"
-#include "../MessageWidget.h"
-#include "../../LawnApp.h"
-#include "../../Resources.h"
-#include "../../Sexy.TodLib/Attachment.h"
-#include "../../Sexy.TodLib/EffectSystem.h"
-#include "SaveGame.h"
+#include <System/Music.h>
+#include <Gameplay/CursorObject.h>
+#include <Objects/SeedPacket.h>
+#include <Gameplay/MessageWidget.h>
+#include <LawnApp.h>
+#include <Common/Resources.h>
+#include <Attachment.h>
+#include <EffectSystem.h>
+#include <System/SaveGame.h>
 
 static constexpr uint32_t SAVE_VERSION = 1;
 

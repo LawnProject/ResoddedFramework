@@ -6,7 +6,7 @@
 #include "Reanimator.h"
 #include "TodParticle.h"
 #include "EffectSystem.h"
-#include "../GameConstants.h"
+#include <Common/GameConstants.h>
 #include "../SexyAppFramework/GPUImage.h"
 #include "../SexyAppFramework/Renderer.h"
 

@@ -1,20 +1,20 @@
-#include "../Plant.h"
-#include "../Board.h"
-#include "GameButton.h"
-#include "StoreScreen.h"
-#include "AwardScreen.h"
-#include "../ZenGarden.h"
-#include "../SeedPacket.h"
-#include "../../LawnApp.h"
-#include "AlmanacDialog.h"
-#include "../System/Music.h"
-#include "../../Resources.h"
-#include "../../GameConstants.h"
-#include "../System/PlayerInfo.h"
-#include "../System/Achievements.h"
-#include "../../Sexy.TodLib/TodFoley.h"
-#include "../../Sexy.TodLib/TodCommon.h"
-#include "../../Sexy.TodLib/TodStringFile.h"
+#include <Objects/Plant.h>
+#include <Gameplay/Board.h>
+#include <Widget/GameButton.h>
+#include <Widget/StoreScreen.h>
+#include <Widget/AwardScreen.h>
+#include <Gameplay/ZenGarden.h>
+#include <Objects/SeedPacket.h>
+#include <LawnApp.h>
+#include <Widget/AlmanacDialog.h>
+#include <System/Music.h>
+#include <Common/Resources.h>
+#include <Common/GameConstants.h>
+#include <System/PlayerInfo.h>
+#include <System/Achievements.h>
+#include <TodFoley.h>
+#include <TodCommon.h>
+#include <TodStringFile.h>
 
 AwardScreen::AwardScreen(LawnApp *theApp, AwardType theAwardType)
 {

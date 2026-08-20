@@ -1,16 +1,16 @@
-#include "GameButton.h"
-#include "../../LawnApp.h"
-#include "../System/Music.h"
-#include "ChallengeScreen.h"
-#include "../../Resources.h"
-#include "../ToolTipWidget.h"
-#include "../System/PlayerInfo.h"
-#include "../../Sexy.TodLib/TodDebug.h"
-#include "../../Sexy.TodLib/TodFoley.h"
-#include "../../Sexy.TodLib/TodCommon.h"
-#include "../../SexyAppFramework/Debug.h"
-#include "../../Sexy.TodLib/TodStringFile.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include <Widget/GameButton.h>
+#include <LawnApp.h>
+#include <System/Music.h>
+#include <Widget/ChallengeScreen.h>
+#include <Common/Resources.h>
+#include <Gameplay/ToolTipWidget.h>
+#include <System/PlayerInfo.h>
+#include <TodDebug.h>
+#include <TodFoley.h>
+#include <TodCommon.h>
+#include <Debug.h>
+#include <TodStringFile.h>
+#include <WidgetManager.h>
 
 ChallengeDefinition gChallengeDefs[NUM_CHALLENGE_MODES] = {
 	{GameMode::GAMEMODE_SURVIVAL_NORMAL_STAGE_1, 0, ChallengePage::CHALLENGE_PAGE_SURVIVAL, 0, 0,

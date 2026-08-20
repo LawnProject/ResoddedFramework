@@ -1,7 +1,7 @@
 #ifndef __CONTINUEDIALOG_H__
 #define __CONTINUEDIALOG_H__
 
-#include "LawnDialog.h"
+#include <Widget/LawnDialog.h>
 
 class ContinueDialog : public LawnDialog
 {

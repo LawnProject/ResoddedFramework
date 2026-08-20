@@ -1,19 +1,19 @@
-#include "../Board.h"
-#include "GameButton.h"
-#include "../Cutscene.h"
-#include "AlmanacDialog.h"
-#include "../LawnCommon.h"
-#include "../../LawnApp.h"
-#include "../System/Music.h"
-#include "../../Resources.h"
-#include "NewOptionsDialog.h"
-#include "../ResoddedFramework/SettingsDialog.h"
-#include "../../ConstEnums.h"
-#include "../../Sexy.TodLib/TodFoley.h"
-#include "../../SexyAppFramework/Slider.h"
-#include "../../SexyAppFramework/Checkbox.h"
-#include "../../SexyAppFramework/WidgetManager.h"
-#include "../../Sexy.TodLib/TodStringFile.h"
+#include <Gameplay/Board.h>
+#include <Widget/GameButton.h>
+#include <Gameplay/Cutscene.h>
+#include <Widget/AlmanacDialog.h>
+#include <Common/LawnCommon.h>
+#include <LawnApp.h>
+#include <System/Music.h>
+#include <Common/Resources.h>
+#include <Widget/NewOptionsDialog.h>
+#include <ResoddedFramework/SettingsDialog.h>
+#include <Common/ConstEnums.h>
+#include <TodFoley.h>
+#include <Slider.h>
+#include <Checkbox.h>
+#include <WidgetManager.h>
+#include <TodStringFile.h>
 
 using namespace Sexy;
 

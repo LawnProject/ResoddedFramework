@@ -1,11 +1,11 @@
-#include "Music.h"
-#include "../Board.h"
-#include "PlayerInfo.h"
-#include "../../LawnApp.h"
-#include "../../PakLib/PakInterface.h"
-#include "../../Sexy.TodLib/TodDebug.h"
-#include "../../Sexy.TodLib/TodCommon.h"
-#include "../../SexyAppFramework/BassMusicInterface.h"
+#include <System/Music.h>
+#include <Gameplay/Board.h>
+#include <System/PlayerInfo.h>
+#include <LawnApp.h>
+#include <PakInterface.h>
+#include <TodDebug.h>
+#include <TodCommon.h>
+#include <BassMusicInterface.h>
 
 using namespace Sexy;
 

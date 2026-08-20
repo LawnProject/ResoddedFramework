@@ -1,9 +1,9 @@
 #ifndef __REANIMATION_H__
 #define __REANIMATION_H__
 
-#include "DataArray.h"
-#include "FilterEffect.h"
-#include "../SexyAppFramework/SexyMatrix.h"
+#include <DataArray.h>
+#include <FilterEffect.h>
+#include <SexyMatrix.h>
 
 #define MAX_REANIMATIONS_SIZE 1024U
 

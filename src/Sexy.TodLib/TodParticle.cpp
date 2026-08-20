@@ -1,9 +1,9 @@
 #include "TodDebug.h"
 #include "Definition.h"
-#include "TodParticle.h"
+#include <TodParticle.h>
 #include "EffectSystem.h"
-#include "../GameConstants.h"
-#include "../SexyAppFramework/Graphics.h"
+#include <Common/GameConstants.h>
+#include <Graphics.h>
 #include "../SexyAppFramework/Renderer.h"
 
 int gParticleDefCount;					  // [0x6A9F08]

@@ -1,19 +1,19 @@
-#include "ZombatarWidget.h"
-#include "GameSelector.h"
-#include "../../LawnApp.h"
-#include "../Zombie.h"
-#include "LawnDialog.h"
-#include "../../GameConstants.h"
-#include "../../Resources.h"
-#include "../../Sexy.TodLib/TodCommon.h"
-#include "../../Sexy.TodLib/TodStringFile.h"
-#include "../../Sexy.TodLib/TodDebug.h"
-#include "../../SexyAppFramework/Dialog.h"
-#include "../../SexyAppFramework/WidgetManager.h"
-#include "../../SexyAppFramework/Renderer.h"
-#include "../../SexyAppFramework/GPUImage.h"
-#include "../../SexyAppFramework/Font.h"
-#include "../../ImageLib/ImageLib.h"
+#include <Widget/ZombatarWidget.h>
+#include <Widget/GameSelector.h>
+#include <LawnApp.h>
+#include <Objects/Zombie.h>
+#include <Widget/LawnDialog.h>
+#include <Common/GameConstants.h>
+#include <Common/Resources.h>
+#include <TodCommon.h>
+#include <TodStringFile.h>
+#include <TodDebug.h>
+#include <Dialog.h>
+#include <WidgetManager.h>
+#include <Renderer.h>
+#include <GPUImage.h>
+#include <Font.h>
+#include <ImageLib.h>
 
 PortraitItem gPortraitItems[ZombatarItem::NUM_ZOMBATAR_ITEMS]
 {

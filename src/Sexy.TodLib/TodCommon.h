@@ -1,6 +1,6 @@
 #pragma once
-#include "../ConstEnums.h"
-#include "../SexyAppFramework/Common.h"
+#include <Common/ConstEnums.h>
+#include <Common.h>
 #include "../SexyAppFramework/ResourceManager.h"
 #include "TodDebug.h"
 

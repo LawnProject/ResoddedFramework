@@ -1,9 +1,9 @@
 #ifndef __AWARDSCREEN_H__
 #define __AWARDSCREEN_H__
 
-#include "../../ConstEnums.h"
-#include "../../SexyAppFramework/Widget.h"
-#include "../LawnCommon.h"
+#include <Common/ConstEnums.h>
+#include <Widget.h>
+#include <Common/LawnCommon.h>
 using namespace Sexy;
 
 class LawnApp;

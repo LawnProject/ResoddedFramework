@@ -1,7 +1,7 @@
 #include "Trail.h"
 #include "Definition.h"
 #include "../SexyAppFramework/TriVertex.h"
-#include "../SexyAppFramework/Graphics.h"
+#include <Graphics.h>
 
 int gTrailDefCount;
 TrailDefinition *gTrailDefArray;

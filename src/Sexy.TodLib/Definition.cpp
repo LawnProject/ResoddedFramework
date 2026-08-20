@@ -4,7 +4,7 @@
 #include "Definition.h"
 #include <zlib.h>
 #include "../PakLib/PakInterface.h"
-#include "../SexyAppFramework/PerfTimer.h"
+#include <PerfTimer.h>
 #include "../SexyAppFramework/XMLParser.h"
 #include <fstream>
 #include "OriginalCompiledDefinition.h"

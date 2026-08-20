@@ -1,10 +1,10 @@
 #pragma once
-#include "../../ConstEnums.h"
-#include "../../SexyAppFramework/Widget.h"
-#include "../../SexyAppFramework/ButtonListener.h"
-#include "GameButton.h"
-#include "../System/PlayerInfo.h"
 
+#include <Common/ConstEnums.h>
+#include <Widget.h>
+#include <ButtonListener.h>
+#include <Widget/GameButton.h>
+#include <System/PlayerInfo.h>
 
 using namespace Sexy;
 

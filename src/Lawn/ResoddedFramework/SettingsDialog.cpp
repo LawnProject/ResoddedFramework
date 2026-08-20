@@ -1,14 +1,14 @@
-#include "SettingsDialog.h"
-#include "../LawnCommon.h"
-#include "../../Resources.h"
-#include "../../SexyAppFramework/Font.h"
-#include "../../SexyAppFramework/Renderer.h"
-#include "../../SexyAppFramework/Checkbox.h"
-#include "../../LawnApp.h"
-#include "../../SexyAppFramework/BuildInfo.h"
-#include "../../SexyAppFramework/Window.h"
-#include "../../SexyAppFramework/ListWidget.h"
-#include "../../Sexy.TodLib/TodStringFile.h"
+#include <ResoddedFramework/SettingsDialog.h>
+#include <Common/LawnCommon.h>
+#include <Common/Resources.h>
+#include <Font.h>
+#include <Renderer.h>
+#include <Checkbox.h>
+#include <LawnApp.h>
+#include <BuildInfo.h>
+#include <Window.h>
+#include <ListWidget.h>
+#include <TodStringFile.h>
 
 static int gUserListWidgetColors[][3] = {
 	{23, 24, 35},

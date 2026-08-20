@@ -1,25 +1,25 @@
-#include "../Board.h"
-#include "../Zombie.h"
-#include "GameButton.h"
-#include "StoreScreen.h"
-#include "../Cutscene.h"
-#include "../SeedPacket.h"
-#include "../../LawnApp.h"
-#include "AlmanacDialog.h"
-#include "ImitaterDialog.h"
-#include "../System/Music.h"
-#include "../../Resources.h"
-#include "../../Lawn/Plant.h"
-#include "../ToolTipWidget.h"
-#include "SeedChooserScreen.h"
-#include "../../GameConstants.h"
-#include "../System/PlayerInfo.h"
-#include "../System/PopDRMComm.h"
-#include "../../SexyAppFramework/Debug.h"
-#include "../../SexyAppFramework/Dialog.h"
-#include "../../SexyAppFramework/MTRand.h"
-#include "../../Sexy.TodLib/TodStringFile.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include <Gameplay/Board.h>
+#include <Objects/Zombie.h>
+#include <Widget/GameButton.h>
+#include <Widget/StoreScreen.h>
+#include <Gameplay/Cutscene.h>
+#include <Objects/SeedPacket.h>
+#include <LawnApp.h>
+#include <Widget/AlmanacDialog.h>
+#include <Widget/ImitaterDialog.h>
+#include <System/Music.h>
+#include <Common/Resources.h>
+#include <Objects/Plant.h>
+#include <Gameplay/ToolTipWidget.h>
+#include <Widget/SeedChooserScreen.h>
+#include <Common/GameConstants.h>
+#include <System/PlayerInfo.h>
+#include <System/PopDRMComm.h>
+#include <Debug.h>
+#include <Dialog.h>
+#include <MTRand.h>
+#include <TodStringFile.h>
+#include <WidgetManager.h>
 
 SeedChooserScreen::SeedChooserScreen()
 {

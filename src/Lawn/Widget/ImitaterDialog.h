@@ -1,7 +1,7 @@
 #ifndef __IMITATERDIALOG_H__
 #define __IMITATERDIALOG_H__
 
-#include "LawnDialog.h"
+#include <Widget/LawnDialog.h>
 
 class ToolTipWidget;
 class ImitaterDialog : public LawnDialog

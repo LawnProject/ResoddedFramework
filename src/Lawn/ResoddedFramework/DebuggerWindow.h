@@ -3,13 +3,13 @@
 #pragma once
 
 #include <ImGui/ImGuiWindow.h>
-#include "../Plant.h"
+#include <Common/ConstEnums.h>
+#include <Objects/Plant.h>
+#include <Objects/Zombie.h>
 
 using namespace Sexy;
 
 class LawnApp;
-class Plant;
-class Zombie;
 
 class DebuggerWindow : public ImGuiWindow
 {

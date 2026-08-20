@@ -2,9 +2,9 @@
 #include "TodCommon.h"
 #include "Reanimator.h"
 #include "ReanimAtlas.h"
-#include "../SexyAppFramework/PerfTimer.h"
+#include <PerfTimer.h>
 #include "../SexyAppFramework/MemoryImage.h"
-#include "../SexyAppFramework/Graphics.h"
+#include <Graphics.h>
 
 ReanimAtlas::ReanimAtlas()
 {

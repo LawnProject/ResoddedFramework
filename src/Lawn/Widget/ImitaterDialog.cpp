@@ -1,12 +1,12 @@
-#include "../Plant.h"
-#include "GameButton.h"
-#include "../SeedPacket.h"
-#include "../../LawnApp.h"
-#include "ImitaterDialog.h"
-#include "SeedChooserScreen.h"
-#include "../ToolTipWidget.h"
-#include "../../GameConstants.h"
-#include "../../SexyAppFramework/WidgetManager.h"
+#include <Objects/Plant.h>
+#include <Widget/GameButton.h>
+#include <Objects/SeedPacket.h>
+#include <LawnApp.h>
+#include <Widget/ImitaterDialog.h>
+#include <Widget/SeedChooserScreen.h>
+#include <Gameplay/ToolTipWidget.h>
+#include <Common/GameConstants.h>
+#include <WidgetManager.h>
 
 ImitaterDialog::ImitaterDialog()
 	: LawnDialog(gLawnApp,
