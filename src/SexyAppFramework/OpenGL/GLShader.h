@@ -3,10 +3,11 @@
 #include <string>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include "../Shader.h"
 
 namespace Sexy
 {
-class GLShader
+class GLShader : public Shader
 {
   private:
 	GLuint mProgramID = 0;
@@ -15,10 +16,10 @@ class GLShader
 	GLuint GetUniformLocation(const std::string &name) const;
 
   public:
-	GLShader() = default;
+	GLShader();
 	~GLShader();
 
-	bool LoadFromSource(const std::string &vertexSrc, const std::string &fragmentSrc);
+	virtual bool LoadFromSource(const std::string &theVertShader, const std::string &theFragShader);
 
 	void Use() const;
 	GLuint GetID() const

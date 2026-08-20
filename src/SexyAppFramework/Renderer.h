@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GPUImage.h"
+#include "Shader.h"
 #include "SexyMatrix.h"
 #include "CritSect.h"
 #include <set>
@@ -159,6 +160,9 @@ namespace Sexy
 
 		TextureUVWrapMode mCurrentUVWrapMode;
 
+		Shader* mDefaultShader;
+		Shader* mCurrentShader;
+
 		static bool gRenderingPreDrawError;
 
 	  public:
@@ -185,6 +189,11 @@ namespace Sexy
 		
 		virtual bool Redraw(Rect *theClipRect) = 0;
 		virtual void SetVideoOnlyDraw(bool videoOnly) = 0;
+
+		Shader *GetCurrentShader();
+
+		virtual Shader *CreateShader(const std::string &theVertShader, const std::string &theFragShader) = 0;
+		virtual void DeleteShader(Shader *theShader);
 
 		virtual GPUImage* NewGPUImage()
 		{

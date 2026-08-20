@@ -197,6 +197,28 @@ void OpenGLImage::CreateImageBuffers()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void OpenGLImage::SetupGenerics(GLuint theTexID, const std::vector<Vertex> &theVertices, GLShader *theShader, int theDrawMode, int blend)
+{
+	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
+
+	theShader->Use();
+	theShader->SetUniform("uProjection", mProjection);
+	theShader->SetUniform("uUseTexture", (theTexID != 0));
+	theShader->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
+	glBindSampler(0, mGLRenderer->mCurrentUVWrapMode == TextureUVWrapMode::UV_CLAMP
+						 ? mGLRenderer->mSamplers[blend ? GL_LINEAR : GL_NEAREST].mClamp
+						 : mGLRenderer->mSamplers[blend ? GL_LINEAR : GL_NEAREST].mWrap);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, theTexID);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, theVertices.size() * sizeof(Vertex), theVertices.data());
+	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)theVertices.size());
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void OpenGLImage::PreTextureDraw()
 {
 	CreateImageBuffers();
@@ -263,20 +285,9 @@ void OpenGLImage::ImplFillRect(const Rect &theRect, const Color &theColor, int t
 	aVertices.push_back({p3, {0, 0}, aColor});
 	aVertices.push_back({p0, {0, 0}, aColor});
 
-	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
-	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
-	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
-	aShaderToUse->Use();
-	aShaderToUse->SetUniform("uProjection", mProjection);
-	aShaderToUse->SetUniform("uUseTexture",0);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
-	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)aVertices.size());
+	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
 
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	SetupGenerics(0, aVertices, aShaderToUse, theDrawMode, false);
 
 }
 
@@ -298,12 +309,15 @@ void OpenGLImage::ImplDrawLine(
 	aVertices.push_back({p0, {}, aColor});
 	aVertices.push_back({p1, {}, aColor});
 
-	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
+	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
 	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	aShaderToUse->Use();
 	aShaderToUse->SetUniform("uProjection", mProjection);
 	aShaderToUse->SetUniform("uUseTexture", 0);
+	glBindSampler(0, mGLRenderer->mCurrentUVWrapMode == TextureUVWrapMode::UV_CLAMP
+						 ? mGLRenderer->mSamplers[GL_NEAREST].mClamp
+						 : mGLRenderer->mSamplers[GL_NEAREST].mWrap);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
@@ -317,9 +331,36 @@ void OpenGLImage::ImplDrawLine(
 void OpenGLImage::ImplDrawLineAA(
 	double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
 {
-	glEnable(GL_MULTISAMPLE);
-	ImplDrawLine(theStartX, theStartY, theEndX, theEndY, theColor, theDrawMode);
-	glDisable(GL_MULTISAMPLE);
+	PreTextureDraw();
+
+	glm::vec2 p0 = {theStartX, theStartY};
+	glm::vec2 p1 = {theEndX, theEndY};
+
+	glm::vec4 aColor = {(float)theColor.mRed / 255.0f, (float)theColor.mGreen / 255.0f, (float)theColor.mBlue / 255.0f,
+						(float)theColor.mAlpha / 255.0f};
+
+	std::vector<Vertex> aVertices;
+
+	aVertices.push_back({p0, {}, aColor});
+	aVertices.push_back({p1, {}, aColor});
+
+	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
+	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
+	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
+	aShaderToUse->Use();
+	aShaderToUse->SetUniform("uProjection", mProjection);
+	aShaderToUse->SetUniform("uUseTexture", 0);
+	glBindSampler(0, mGLRenderer->mCurrentUVWrapMode == TextureUVWrapMode::UV_CLAMP
+						 ? mGLRenderer->mSamplers[GL_LINEAR].mClamp
+						 : mGLRenderer->mSamplers[GL_LINEAR].mWrap);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
+	glDrawArrays(GL_LINES, 0, (GLsizei)aVertices.size());
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void OpenGLImage::ImplBlt(
@@ -332,9 +373,7 @@ void OpenGLImage::ImplBlt(
 
 	PreTextureDraw();
 
-	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
-	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
-	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
+	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
 	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
 	glm::vec2 p0 = {theX, theY};
@@ -366,17 +405,7 @@ void OpenGLImage::ImplBlt(
 	aVertices.push_back({p3, uv3, aColor});
 	aVertices.push_back({p0, uv0, aColor});
 
-	aShaderToUse->Use();
-	aShaderToUse->SetUniform("uProjection", mProjection);
-	aShaderToUse->SetUniform("uUseTexture", (aTexID != 0));
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, aTexID);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
-	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)aVertices.size());
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	SetupGenerics(aTexID, aVertices, aShaderToUse, theDrawMode, true);
 }
 
 void doScissorFromTLCauseOpenGL(int x, int y, int w, int h, int screenHeight)
@@ -398,9 +427,8 @@ void OpenGLImage::ImplBltF(Image *theImage,
 
 	PreTextureDraw();
 
-	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
-	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
-	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
+	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
+
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
 	{
 		glEnable(GL_SCISSOR_TEST);
@@ -441,17 +469,7 @@ void OpenGLImage::ImplBltF(Image *theImage,
 	aVertices.push_back({p3, uv3, aColor});
 	aVertices.push_back({p0, uv0, aColor});
 
-	aShaderToUse->Use();
-	aShaderToUse->SetUniform("uProjection", mProjection);
-	aShaderToUse->SetUniform("uUseTexture", (aTexID != 0));
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, aTexID);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
-	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)aVertices.size());
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	SetupGenerics(aTexID, aVertices, aShaderToUse, theDrawMode, true);
 }
 
 
@@ -473,9 +491,8 @@ void OpenGLImage::ImplBltRotated(Image *theImage,
 
 	PreTextureDraw();
 
-	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
-	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
-	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
+	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
+
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
 	{
 		glEnable(GL_SCISSOR_TEST);
@@ -524,17 +541,7 @@ void OpenGLImage::ImplBltRotated(Image *theImage,
 	aVertices.push_back({p3, uv3, aColor});
 	aVertices.push_back({p0, uv0, aColor});
 
-	aShaderToUse->Use();
-	aShaderToUse->SetUniform("uProjection", mProjection);
-	aShaderToUse->SetUniform("uUseTexture", (aTexID != 0));
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, aTexID);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
-	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)aVertices.size());
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	SetupGenerics(aTexID, aVertices, aShaderToUse, theDrawMode, true);
 
 }
 
@@ -553,8 +560,7 @@ void OpenGLImage::ImplStretchBlt(Image *theImage,
 
 	PreTextureDraw();
 
-	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
-	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
+	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
 	{
@@ -596,17 +602,7 @@ void OpenGLImage::ImplStretchBlt(Image *theImage,
 	aVertices.push_back({p3, uv3, aColor});
 	aVertices.push_back({p0, uv0, aColor});
 
-	aShaderToUse->Use();
-	aShaderToUse->SetUniform("uProjection", mProjection);
-	aShaderToUse->SetUniform("uUseTexture", (aTexID != 0));
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, aTexID);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
-	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)aVertices.size());
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	SetupGenerics(aTexID, aVertices, aShaderToUse, theDrawMode, !fastStretch);
 }
 
 
@@ -627,8 +623,7 @@ void OpenGLImage::ImplBltMatrix(Image *theImage,
 
 	PreTextureDraw();
 
-	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
-	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
+	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
 	{
@@ -679,21 +674,7 @@ void OpenGLImage::ImplBltMatrix(Image *theImage,
 	aVertices.push_back({p2, uv2, aColor});
 	aVertices.push_back({p3, uv3, aColor});
 	aVertices.push_back({p0, uv0, aColor});
-
-	aShaderToUse->Use();
-	aShaderToUse->SetUniform("uProjection", mProjection);
-	aShaderToUse->SetUniform("uUseTexture", (aTexID != 0));
-	glBindSampler(0, mGLRenderer->mCurrentUVWrapMode == TextureUVWrapMode::UV_CLAMP
-						 ? mGLRenderer->mSamplers[blend ? GL_LINEAR : GL_NEAREST].mClamp
-						 : mGLRenderer->mSamplers[blend ? GL_LINEAR : GL_NEAREST].mWrap);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, aTexID);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
-	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)aVertices.size());
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	SetupGenerics(aTexID, aVertices, aShaderToUse, theDrawMode, blend);
 }
 
 void OpenGLImage::ImplBltTrianglesTex(Image *theTexture,
@@ -713,8 +694,7 @@ void OpenGLImage::ImplBltTrianglesTex(Image *theTexture,
 
 	PreTextureDraw();
 
-	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
-	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
+	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	std::vector<Vertex> aVertices;
 	aVertices.reserve(theNumTriangles * 3);
@@ -755,20 +735,7 @@ void OpenGLImage::ImplBltTrianglesTex(Image *theTexture,
 	}
 	else
 		glDisable(GL_SCISSOR_TEST);
-	aShaderToUse->Use();
-	aShaderToUse->SetUniform("uProjection", mProjection);
-	aShaderToUse->SetUniform("uUseTexture", (aTexID != 0));
-	glBindSampler(0, mGLRenderer->mCurrentUVWrapMode == TextureUVWrapMode::UV_CLAMP
-						 ? mGLRenderer->mSamplers[blend ? GL_LINEAR : GL_NEAREST].mClamp
-						 : mGLRenderer->mSamplers[blend ? GL_LINEAR : GL_NEAREST].mWrap);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, aTexID);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
-	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)aVertices.size());
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	SetupGenerics(aTexID, aVertices, aShaderToUse, theDrawMode, blend);
 }
 
 void OpenGLImage::ImplBltMirror(
@@ -781,8 +748,7 @@ void OpenGLImage::ImplBltMirror(
 
 	PreTextureDraw();
 
-	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
-	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
+	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
@@ -815,17 +781,7 @@ void OpenGLImage::ImplBltMirror(
 	aVertices.push_back({p3, uv3, aColor});
 	aVertices.push_back({p0, uv0, aColor});
 
-	aShaderToUse->Use();
-	aShaderToUse->SetUniform("uProjection", mProjection);
-	aShaderToUse->SetUniform("uUseTexture", (aTexID != 0));
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, aTexID);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
-	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)aVertices.size());
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	SetupGenerics(aTexID, aVertices, aShaderToUse, theDrawMode, true);
 }
 
 
@@ -844,8 +800,7 @@ void OpenGLImage::ImplStretchBltMirror(Image *theImage,
 
 	PreTextureDraw();
 
-	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
-	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
+	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
 	{
@@ -887,17 +842,7 @@ void OpenGLImage::ImplStretchBltMirror(Image *theImage,
 	aVertices.push_back({p3, uv3, aColor});
 	aVertices.push_back({p0, uv0, aColor});
 
-	aShaderToUse->Use();
-	aShaderToUse->SetUniform("uProjection", mProjection);
-	aShaderToUse->SetUniform("uUseTexture", (aTexID != 0));
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, aTexID);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
-	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)aVertices.size());
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	SetupGenerics(aTexID, aVertices, aShaderToUse, theDrawMode, !fastStretch);
 }
 
 void OpenGLImage::ImplBltRawTexture(void *theTexture,
@@ -912,8 +857,7 @@ void OpenGLImage::ImplBltRawTexture(void *theTexture,
 {
 	PreTextureDraw();
 
-	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
-	GLShader *aShaderToUse = mGLRenderer->mDefaultShader;
+	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
@@ -956,17 +900,7 @@ void OpenGLImage::ImplBltRawTexture(void *theTexture,
 	aVertices.push_back({p3, uv3, aColor});
 	aVertices.push_back({p0, uv0, aColor});
 
-	aShaderToUse->Use();
-	aShaderToUse->SetUniform("uProjection", mProjection);
-	aShaderToUse->SetUniform("uUseTexture", (aTexID != 0));
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, aTexID);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
-	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)aVertices.size());
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	SetupGenerics(aTexID, aVertices, aShaderToUse, theDrawMode, !fastStretch);
 }
 
 #endif

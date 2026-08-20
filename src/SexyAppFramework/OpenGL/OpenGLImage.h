@@ -11,7 +11,9 @@ namespace Sexy
 
 class Renderer;
 class OpenGLRenderer;
+class GLShader;
 class SysFont;
+class Vertex;
 
 class OpenGLImage : public GPUImage
 {
@@ -35,6 +37,7 @@ class OpenGLImage : public GPUImage
   public:
 	bool GenerateSurface();
 	void DeleteSurface();
+	void SetupGenerics(GLuint theTexID, const std::vector<Vertex> &theVertices, GLShader *theShader, int theDrawMode, int blend);
 
 	void *GetSurface();
 	virtual void BitsChanged();

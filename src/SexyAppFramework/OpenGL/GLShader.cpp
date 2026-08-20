@@ -7,19 +7,30 @@
 
 using namespace Sexy;
 
+GLShader::GLShader() : Shader()
+{
+}
+
 GLShader::~GLShader()
 {
 	if (mProgramID)
 		glDeleteProgram(mProgramID);
 }
 
-bool GLShader::LoadFromSource(const std::string &vertexSrc, const std::string &fragmentSrc)
+bool GLShader::LoadFromSource(const std::string &theVertShader, const std::string &theFragShader)
 {
-	GLuint vertex_shader = CompileShader(GL_VERTEX_SHADER, vertexSrc);
-	GLuint fragment_shader = CompileShader(GL_FRAGMENT_SHADER, fragmentSrc);
+	GLuint vertex_shader = CompileShader(GL_VERTEX_SHADER, theVertShader);
+	GLuint fragment_shader = CompileShader(GL_FRAGMENT_SHADER, theFragShader);
 
 	if (!vertex_shader || !fragment_shader)
+	{
+		if (!vertex_shader)
+			printf("[SexyAppFramework] - Failed to load Vertex Shader: \n%s\n", theVertShader.c_str());
+		if (!vertex_shader)
+			printf("[SexyAppFramework] - Failed to load Fragment Shader: \n%s\n", theFragShader.c_str());
+
 		return false;
+	}
 
 	mProgramID = glCreateProgram();
 	glAttachShader(mProgramID, vertex_shader);
@@ -30,6 +41,7 @@ bool GLShader::LoadFromSource(const std::string &vertexSrc, const std::string &f
 	glGetProgramiv(mProgramID, GL_LINK_STATUS, &success);
 	if (success != GL_TRUE)
 	{
+		printf("[SexyAppFramework] - Failed to load OpenGL Shader: - %d\n");
 		return false;
 	}
 

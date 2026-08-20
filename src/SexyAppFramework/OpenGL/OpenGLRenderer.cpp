@@ -104,6 +104,7 @@ bool OpenGLRenderer::Init()
 	SDL_GL_GetSwapInterval(&aVSync);
 	mApp->mWaitForVSync = aVSync != 0;
 	mApp->mVSyncBroken = aVSync == 0;
+	mCurrentShader = nullptr;
 
 	mSceneBegun = true;
 	mTriedToSetVSync = true;
@@ -142,8 +143,7 @@ void OpenGLRenderer::Cleanup()
 
 	Renderer::Cleanup();
 
-	if (mDefaultShader)
-		delete mDefaultShader;
+	DeleteShader(mDefaultShader);
 	
 	if (mScreenImage)
 		delete (OpenGLImage*)mScreenImage;
@@ -234,6 +234,12 @@ bool OpenGLRenderer::PreDraw()
 	return true;
 }
 
+void OpenGLRenderer::DeleteShader(Shader *theShader)
+{
+	if (theShader)
+		delete (GLShader*)theShader;
+}
+
 bool TryVersion(SDL_Window *window, int major, int minor)
 {
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -297,8 +303,7 @@ bool OpenGLRenderer::InitGLContext()
 	if (!mDefaultShader->LoadFromSource(gVertexShaderSrc, gFragmentShaderSrc))
 	{
 		printf("[SexyAppFramework] - Failed to compile the OpenGL shaders, OpenGL backend is unavailable\n");
-		delete mDefaultShader;
-		mDefaultShader = nullptr;
+		DeleteShader(mDefaultShader);
 		return false;
 	}
 
@@ -395,8 +400,9 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 	glBindVertexArray(mVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
 
-	mDefaultShader->Use();
-	mDefaultShader->SetUniform("uProjection", mProjection);
+	GLShader *theShader = (GLShader *)mDefaultShader;
+	theShader->Use();
+	theShader->SetUniform("uProjection", mProjection);
 	glActiveTexture(GL_TEXTURE0);
 	for (const auto cmd : mCommandBuffer)
 	{
@@ -413,9 +419,15 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 		}
 		else
 			glDisable(GL_SCISSOR_TEST);
+		if (cmd.mShader && theShader != cmd.mShader)
+		{
+			theShader = cmd.mShader;
+			theShader->Use();
+			theShader->SetUniform("uProjection", mProjection);
+		}
 
-		mDefaultShader->SetUniform("uUseTexture", (cmd.mTextureID != 0));
-		mDefaultShader->SetUniform("uBlendMode", cmd.mBlendMode - 1);
+		theShader->SetUniform("uUseTexture", (cmd.mTextureID != 0));
+		theShader->SetUniform("uBlendMode", cmd.mBlendMode - 1);
 		
 		glBindTexture(GL_TEXTURE_2D, cmd.mTextureID);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, cmd.mVertices.size() * sizeof(Vertex), cmd.mVertices.data());
@@ -440,6 +452,19 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 	SDL_GL_SwapWindow(mApp->mWindow->mInternalWindow);
 
 	return !gRenderingPreDrawError;
+}
+
+Shader* OpenGLRenderer::CreateShader(const std::string& theVertShader, const std::string& theFragShader)
+{
+	GLShader *aShader = new GLShader();
+	bool aSuccess = aShader->LoadFromSource(theVertShader, theFragShader);
+	if (aSuccess)
+		return aShader;
+	else
+	{
+		DeleteShader(aShader);
+		return nullptr;
+	}
 }
 
 void OpenGLRenderer::ApplyBlendMode(BlendMode mode)
@@ -741,6 +766,7 @@ void OpenGLRenderer::Blt(Image *theImage,
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
+	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mFilterMode = linearFilter ? GL_LINEAR : GL_NEAREST;
 
 	glm::vec2 p0 = {theX, theY};
@@ -796,6 +822,7 @@ void OpenGLRenderer::BltClipF(Image *theImage,
 	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
+	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
 
 	glm::vec2 p0 = {theX, theY};
@@ -846,6 +873,7 @@ void OpenGLRenderer::BltMirror(Image *theImage,
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
+	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mFilterMode = linearFilter ? GL_LINEAR : GL_NEAREST;
 
 	glm::vec2 p0 = {theX, theY};
@@ -903,6 +931,7 @@ void OpenGLRenderer::StretchBlt(Image *theImage,
 	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
+	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
 
 	glm::vec2 p0 = {theDestRect.mX, theDestRect.mY};
@@ -966,6 +995,7 @@ void OpenGLRenderer::BltRotated(Image *theImage,
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
+	aCmd.mShader = (GLShader*)GetCurrentShader();
 
 	glm::vec2 p0 = {theX, theY};
 	glm::vec2 p1 = {theX + theSrcRect.mWidth, theY};
@@ -1030,6 +1060,7 @@ void OpenGLRenderer::BltTransformed(Image *theImage,
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
+	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mFilterMode = linearFilter ? GL_LINEAR : GL_NEAREST;
 
 	float aWidth = static_cast<float>(theSrcRect.mWidth);
@@ -1081,6 +1112,7 @@ void OpenGLRenderer::DrawLine(
 	aCmd.mPrimitiveType = GL_LINES;
 	aCmd.mTextureID = 0;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
+	aCmd.mShader = (GLShader *)GetCurrentShader();
 	glm::vec4 color =
 		glm::vec4(theColor.mRed / 255.0f, theColor.mGreen / 255.0f, theColor.mBlue / 255.0f, theColor.mAlpha / 255.0f);
 	aCmd.mVertices.push_back({{theStartX, theStartY}, {}, color});
@@ -1095,6 +1127,7 @@ void OpenGLRenderer::FillRect(const Rect &theRect, const Color &theColor, int th
 	aCmd.mTextureID = 0;
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
+	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
 
 	glm::vec2 p0 = {theRect.mX, theRect.mY};
@@ -1124,6 +1157,7 @@ void OpenGLRenderer::DrawTriangle(
 	aCmd.mTextureID = 0;
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
+	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
 
 	glm::vec2 vert0 = {p1.x, p1.y};
@@ -1159,6 +1193,7 @@ void OpenGLRenderer::DrawTriangleTex(const TriVertex &p1,
 	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
+	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
 
 	glm::vec2 vert0 = {p1.x, p1.y};
@@ -1195,6 +1230,7 @@ void OpenGLRenderer::DrawTrianglesTex(const TriVertex theVertices[][3],
 	aCmd.mTextureID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
+	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
 
 	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
@@ -1297,6 +1333,7 @@ void OpenGLRenderer::BltRawTexture(void *theTexture,
 	aCmd.mTextureID = aTextureID;
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
+	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
 
 	glm::vec2 p0 = {theDestRect.mX, theDestRect.mY};

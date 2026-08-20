@@ -137,6 +137,8 @@ void ReanimatorCache::GetPlantImageSize(
 
 GPUImage *ReanimatorCache::MakeCachedMowerFrame(LawnMowerType theMowerType)
 {
+	Shader *aOldShader = mApp->mRenderer->mCurrentShader;
+	mApp->mRenderer->mCurrentShader = nullptr;
 	GPUImage *aImage;
 
 	switch (theMowerType)
@@ -201,12 +203,16 @@ GPUImage *ReanimatorCache::MakeCachedMowerFrame(LawnMowerType theMowerType)
 		TOD_ASSERT(false);
 		break;
 	}
+	mApp->mRenderer->mCurrentShader = aOldShader;
 
 	return aImage;
 }
 
 GPUImage *ReanimatorCache::MakeCachedPlantFrame(SeedType theSeedType, DrawVariation theDrawVariation)
 {
+	Shader *aOldShader = mApp->mRenderer->mCurrentShader;
+	mApp->mRenderer->mCurrentShader = nullptr;
+
 	int aOffsetX, aOffsetY, aWidth, aHeight;
 	GetPlantImageSize(theSeedType, aOffsetX, aOffsetY, aWidth, aHeight);
 	GPUImage *aGPUImage = MakeBlankGPUImage(aWidth, aHeight);
@@ -290,12 +296,16 @@ GPUImage *ReanimatorCache::MakeCachedPlantFrame(SeedType theSeedType, DrawVariat
 								theDrawVariation);
 		}
 	}
+	mApp->mRenderer->mCurrentShader = aOldShader;
 
 	return aGPUImage;
 }
 
 GPUImage *ReanimatorCache::MakeCachedZombieFrame(ZombieType theZombieType)
 {
+	Shader *aOldShader = mApp->mRenderer->mCurrentShader;
+	mApp->mRenderer->mCurrentShader = nullptr;
+
 	GPUImage *aGPUImage = MakeBlankGPUImage(200, 210);
 	Graphics aMemoryGraphics(aGPUImage);
 	aMemoryGraphics.SetLinearBlend(true);
@@ -402,6 +412,8 @@ GPUImage *ReanimatorCache::MakeCachedZombieFrame(ZombieType theZombieType)
 		DrawReanimatorFrame(
 			&aMemoryGraphics, aPosX, aPosY, aZombieDef.mReanimationType, aTrackName, DrawVariation::VARIATION_NORMAL);
 	}
+	mApp->mRenderer->mCurrentShader = aOldShader;
+
 	return aGPUImage;
 }
 

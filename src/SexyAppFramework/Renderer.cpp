@@ -33,6 +33,9 @@ Renderer::Renderer(SexyAppBase* theApp) : mApp(theApp)
 	mBlueMask = (0xFFU << mBlueShift);
 	mCurrentUVWrapMode = UV_CLAMP;
 	mCurrentBackend = RenderingBackend::BACKEND_NONE;
+
+	mDefaultShader = nullptr;
+	mCurrentShader = nullptr;
 }
 
 Renderer::~Renderer()
@@ -43,6 +46,22 @@ Renderer::~Renderer()
 void Renderer::Cleanup()
 {
 
+}
+
+void Renderer::DeleteShader(Shader *theShader)
+{
+	if (theShader)
+	{
+		if (theShader == mCurrentShader)
+			mCurrentShader = nullptr;
+		delete theShader;
+	}
+		
+}
+
+Shader* Renderer::GetCurrentShader()
+{
+	return mCurrentShader ? mCurrentShader : mDefaultShader;
 }
 
 void Renderer::PushTransform(const SexyMatrix3& theTransform, bool concatenate)

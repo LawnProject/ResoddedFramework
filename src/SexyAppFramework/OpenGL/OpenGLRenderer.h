@@ -55,6 +55,7 @@ namespace Sexy
 		bool mHasClipRect = false;
 		Rect mClipRect;
 		TextureUVWrapMode mUVWrapMode = UV_CLAMP;
+		GLShader *mShader;
 	};
 
 	struct WrappingSamplers
@@ -92,7 +93,7 @@ namespace Sexy
 		GLuint mFBOTexture;
 		SDL_GLContext mContext;
 		std::vector<GLDrawCommand> mCommandBuffer;
-		GLShader *mDefaultShader;
+
 		glm::mat4 mProjection;
 		std::unordered_map<GLenum, WrappingSamplers> mSamplers;
 
@@ -107,6 +108,9 @@ namespace Sexy
 		bool InitBuffers();
 		void AddCommand(const GLDrawCommand& theCommand);
 		void ApplyBlendMode(BlendMode mode);
+
+		virtual Shader *CreateShader(const std::string &theVertShader, const std::string &theFragShader);
+		virtual void DeleteShader(Shader *theShader);
 
 		virtual GPUImage *NewGPUImage()
 		{
