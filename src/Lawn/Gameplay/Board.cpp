@@ -20,13 +20,12 @@
 #include <Gameplay/ToolTipWidget.h>
 #include <Gameplay/MessageWidget.h>
 
-#include <System/PlayerInfo.h>
-#include <System/PoolEffect.h>
-#include <System/PopDRMComm.h>
+#include <Save/PlayerInfo.h>
+#include <Graphics/PoolEffect.h>
 #include <System/TypingCheck.h>
 #include <System/Achievements.h>
 #include <System/Music.h>
-#include <System/SaveGame.h>
+#include <Save/SaveGame.h>
 
 #include <Widget/SeedChooserScreen.h>
 #include <Widget/StoreScreen.h>
@@ -4846,12 +4845,6 @@ void Board::MouseUp(int x, int y, int theClickCount)
 			}
 			else if (mApp->mGameMode == GameMode::GAMEMODE_UPSELL)
 			{
-#if SEXY_USE_DRM
-				if (mApp->mDRM)
-				{
-					mApp->mDRM->BuyGame();
-				}
-#endif
 				mApp->DoBackToMain();
 			}
 		}

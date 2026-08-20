@@ -21,15 +21,14 @@
 #include <TodLib/TodStringFile.h>
 #include <TodLib/Trail.h>
 
-#include <System/ReanimationLawn.h>
+#include <Graphics/ReanimationLawn.h>
 #include <System/Achievements.h>
 #include <System/TypingCheck.h>
-#include <System/PlayerInfo.h>
-#include <System/PoolEffect.h>
-#include <System/ProfileMgr.h>
-#include <System/PopDRMComm.h>
+#include <Save/PlayerInfo.h>
+#include <Graphics/PoolEffect.h>
+#include <Save/ProfileMgr.h>
 #include <System/Music.h>
-#include <System/SaveGame.h>
+#include <Save/SaveGame.h>
 
 #include <Widget/ChallengeScreen.h>
 #include <Widget/NewOptionsDialog.h>
@@ -169,9 +168,6 @@ LawnApp::LawnApp()
 	mCrazyDaveBlinkCounter = 0;
 	mCrazyDaveBlinkReanimID = ReanimationID::REANIMATIONID_NULL;
 	mCrazyDaveMessageIndex = -1;
-#if SEXY_USE_DRM
-	mDRM = nullptr;
-#endif
 
 #if LAWN_DEBUG_TOOLS
 	mDebugWindow = nullptr;
@@ -345,13 +341,6 @@ void LawnApp::Shutdown()
 		FreeGlobalAllocators();
 		UpdateRegisterInfo();
 		SexyAppBase::Shutdown();
-#if SEXY_USE_DRM
-		if (mDRM)
-		{
-			delete mDRM;
-		}
-		mDRM = nullptr;
-#endif
 	}
 }
 
@@ -3118,33 +3107,13 @@ bool LawnApp::IsTrialStageLocked()
 {
 	if (mDebugTrialLocked)
 		return true;
-#if SEXY_USE_DRM
-	if (mDRM && mDRM->QueryData())
-		return false;
-#endif
 
 	return mTrialType == TrialType::TRIALTYPE_STAGELOCKED;
 }
 
 void LawnApp::InitHook()
 {
-#if SEXY_USE_DRM
-#ifdef _DEBUG
-	mDRM = nullptr;
-#else
-	mDRM = new PopDRMComm();
-	mDRM->DoIPC();
-	if (sexystricmp(GetString("MarketingMode", "").c_str(), "StageLocked") == 0)
-	{
-		mTrialType = TrialType::TRIALTYPE_STAGELOCKED;
-		mDRM->EnableLocking();
-	}
-	else
-	{
-		mTrialType = TrialType::TRIALTYPE_NONE;
-	}
-#endif
-#endif
+
 }
 
 SexyString LawnApp::GetMoneyString(int theAmount)

@@ -1,7 +1,7 @@
 #include <Objects/Plant.h>
 #include <Objects/Zombie.h>
 #include <LawnApp.h>
-#include <System/ReanimationLawn.h>
+#include <Graphics/ReanimationLawn.h>
 #include <TodLib/TodDebug.h>
 #include <SexyAppFramework/Color.h>
 #include <TodLib/Reanimator.h>

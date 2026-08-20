@@ -9,9 +9,9 @@
 #include <Common/Resources.h>
 #include <System/Music.h>
 #include <Common/GameConstants.h>
-#include <System/PlayerInfo.h>
-#include <System/PoolEffect.h>
-#include <System/ReanimationLawn.h>
+#include <Save/PlayerInfo.h>
+#include <Graphics/PoolEffect.h>
+#include <Graphics/ReanimationLawn.h>
 #include <TodLib/TodStringFile.h>
 #include <SexyAppFramework/WidgetManager.h>
 #include <SexyAppFramework/Font.h>

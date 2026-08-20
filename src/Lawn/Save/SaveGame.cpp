@@ -6,7 +6,7 @@
 #include <Common/Resources.h>
 #include <TodLib/Attachment.h>
 #include <TodLib/EffectSystem.h>
-#include <System/SaveGame.h>
+#include <Save/SaveGame.h>
 
 static constexpr uint32_t SAVE_VERSION = 1;
 

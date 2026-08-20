@@ -4,7 +4,7 @@
 #include <Common/Resources.h>
 #include <System/Music.h>
 #include <Common/GameConstants.h>
-#include <System/PoolEffect.h>
+#include <Graphics/PoolEffect.h>
 #include <TodLib/TodFoley.h>
 #include <TodLib/Attachment.h>
 #include <TodLib/Reanimator.h>

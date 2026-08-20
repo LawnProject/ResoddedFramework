@@ -2,7 +2,7 @@
 #define __STORESCREEN_H__
 
 #include <Common/ConstEnums.h>
-#include <System/PlayerInfo.h>
+#include <Save/PlayerInfo.h>
 #include <TodLib/DataArray.h>
 #include <SexyAppFramework/Dialog.h>
 

@@ -23,7 +23,6 @@ class ProfileMgr;
 class PlayerInfo;
 class Music;
 class TitleScreen;
-class PopDRMComm;
 class ChallengeScreen;
 class StoreScreen;
 class AlmanacDialog;
@@ -108,9 +107,7 @@ class LawnApp : public SexyApp
 	int mCrazyDaveMessageIndex;
 	SexyString mCrazyDaveMessageText;
 	int mAppRandSeed;
-#if SEXY_USE_DRM
-	PopDRMComm *mDRM;
-#endif
+
 #if LAWN_DEBUG_TOOLS
 	bool mDebuggerEnabled;
 	DebuggerWindow *mDebugWindow;

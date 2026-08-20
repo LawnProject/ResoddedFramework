@@ -13,7 +13,6 @@
 #include <Widget/SeedChooserScreen.h>
 #include <Common/GameConstants.h>
 #include <System/Achievements.h>
-#include <System/PopDRMComm.h>
 #include <TodLib/TodFoley.h>
 #include <TodLib/TodCommon.h>
 #include <TodLib/Reanimator.h>
@@ -1225,10 +1224,7 @@ void StoreScreen::MouseDown(int x, int y, int theClickCount)
 				mWaitForDialog = false;
 				if (aResult == ID_OK)
 				{
-#if SEXY_USE_DRM
-					if (mApp->mDRM)
-						mApp->mDRM->BuyGame();
-#endif
+					// Can't really buy it. You know?
 				}
 			}
 			else if (!IsItemSoldOut(aItemType) && !IsItemUnavailable(aItemType) && !IsComingSoon(aItemType))

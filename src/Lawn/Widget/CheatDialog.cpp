@@ -4,7 +4,7 @@
 #include <Widget/ChallengeScreen.h>
 #include <Common/Resources.h>
 #include <Common/GameConstants.h>
-#include <System/PlayerInfo.h>
+#include <Save/PlayerInfo.h>
 #include <SexyAppFramework/WidgetManager.h>
 
 CheatDialog::CheatDialog(LawnApp *theApp)

@@ -9,7 +9,7 @@
 #include <Common/Resources.h>
 #include <Gameplay/MessageWidget.h>
 #include <Common/GameConstants.h>
-#include <System/PlayerInfo.h>
+#include <Save/PlayerInfo.h>
 #include <System/Achievements.h>
 #include <TodLib/TodFoley.h>
 #include <TodLib/TodDebug.h>

@@ -10,7 +10,7 @@
 #include <System/Music.h>
 #include <Common/Resources.h>
 #include <Common/GameConstants.h>
-#include <System/PlayerInfo.h>
+#include <Save/PlayerInfo.h>
 #include <System/Achievements.h>
 #include <TodLib/TodFoley.h>
 #include <TodLib/TodCommon.h>

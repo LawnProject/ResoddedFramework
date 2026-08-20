@@ -11,8 +11,8 @@
 #include <LawnApp.h>
 #include <Gameplay/CursorObject.h>
 #include <Common/GameConstants.h>
-#include <System/PlayerInfo.h>
-#include <System/ReanimationLawn.h>
+#include <Save/PlayerInfo.h>
+#include <Graphics/ReanimationLawn.h>
 #include <System/Achievements.h>
 #include <TodLib/TodFoley.h>
 #include <TodLib/TodDebug.h>

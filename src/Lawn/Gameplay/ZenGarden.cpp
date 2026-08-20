@@ -7,10 +7,10 @@
 #include <Gameplay/CursorObject.h>
 #include <System/Music.h>
 #include <Widget/GameButton.h>
-#include <System/PlayerInfo.h>
+#include <Save/PlayerInfo.h>
 #include <Widget/LawnDialog.h>
 #include <Widget/StoreScreen.h>
-#include <System/ReanimationLawn.h>
+#include <Graphics/ReanimationLawn.h>
 #include <TodLib/TodFoley.h>
 #include <TodLib/Reanimator.h>
 #include <TodLib/Attachment.h>

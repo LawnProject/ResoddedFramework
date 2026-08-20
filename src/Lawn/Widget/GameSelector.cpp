@@ -9,10 +9,10 @@
 #include <Common/Resources.h>
 #include <System/Music.h>
 #include <Gameplay/ToolTipWidget.h>
-#include <System/SaveGame.h>
+#include <Save/SaveGame.h>
 #include <Common/GameConstants.h>
-#include <System/PlayerInfo.h>
-#include <System/ProfileMgr.h>
+#include <Save/PlayerInfo.h>
+#include <Save/ProfileMgr.h>
 #include <System/TypingCheck.h>
 #include <System/Achievements.h>
 #include <ResoddedFramework/UpdateChecker.h>

@@ -2,8 +2,8 @@
 #include <Widget/GameButton.h>
 #include <LawnApp.h>
 #include <Common/Resources.h>
-#include <System/ProfileMgr.h>
-#include <System/PlayerInfo.h>
+#include <Save/ProfileMgr.h>
+#include <Save/PlayerInfo.h>
 #include <TodLib/TodStringFile.h>
 #include <SexyAppFramework/ListWidget.h>
 #include <SexyAppFramework/Slider.h>

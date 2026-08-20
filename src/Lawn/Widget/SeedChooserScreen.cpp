@@ -13,8 +13,7 @@
 #include <Gameplay/ToolTipWidget.h>
 #include <Widget/SeedChooserScreen.h>
 #include <Common/GameConstants.h>
-#include <System/PlayerInfo.h>
-#include <System/PopDRMComm.h>
+#include <Save/PlayerInfo.h>
 #include <SexyAppFramework/Debug.h>
 #include <SexyAppFramework/Dialog.h>
 #include <SexyAppFramework/MTRand.h>
@@ -1070,12 +1069,6 @@ void SeedChooserScreen::MouseDown(int x, int y, int theClickCount)
 										 "[GET_FULL_VERSION_YES_BUTTON]", "[GET_FULL_VERSION_NO_BUTTON]",
 										 Dialog::BUTTONS_YES_NO) == Dialog::ID_YES)
 				{
-#if SEXY_USE_DRM
-					if (mApp->mDRM)
-					{
-						mApp->mDRM->BuyGame();
-					}
-#endif
 					mApp->DoBackToMain();
 				}
 			}

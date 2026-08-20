@@ -40,7 +40,6 @@ class ToolTipWidget;
 class CutScene;
 class Challenge;
 class Reanimation;
-class DataSync;
 class TodParticleSystem;
 namespace Sexy
 {

@@ -7,7 +7,7 @@
 #include <Gameplay/CursorObject.h>
 #include <Common/Resources.h>
 #include <Gameplay/MessageWidget.h>
-#include <System/ReanimationLawn.h>
+#include <Graphics/ReanimationLawn.h>
 #include <TodLib/TodFoley.h>
 #include <TodLib/Reanimator.h>
 #include <TodLib/TodParticle.h>

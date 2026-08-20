@@ -3,7 +3,7 @@
 #include <Objects/LawnMower.h>
 #include <LawnApp.h>
 #include <Common/Resources.h>
-#include <System/ReanimationLawn.h>
+#include <Graphics/ReanimationLawn.h>
 #include <TodLib/TodFoley.h>
 #include <TodLib/Reanimator.h>
 

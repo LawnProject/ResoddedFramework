@@ -8,7 +8,7 @@
 #include <Objects/Projectile.h>
 #include <LawnApp.h>
 #include <Common/Resources.h>
-#include <System/PlayerInfo.h>
+#include <Save/PlayerInfo.h>
 #include <System/Music.h>
 #include <System/Achievements.h>
 #include <Widget/AlmanacDialog.h>

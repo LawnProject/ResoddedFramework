@@ -3,7 +3,7 @@
 
 #include <Objects/GameObject.h>
 #include <Common/GameConstants.h>
-#include <System/PlayerInfo.h>
+#include <Save/PlayerInfo.h>
 
 #define MAX_ZOMBIE_FOLLOWERS 4
 #define NUM_BOBSLED_FOLLOWERS 3

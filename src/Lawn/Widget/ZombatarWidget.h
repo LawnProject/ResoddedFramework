@@ -4,7 +4,7 @@
 #include <SexyAppFramework/Widget.h>
 #include <SexyAppFramework/ButtonListener.h>
 #include <Widget/GameButton.h>
-#include <System/PlayerInfo.h>
+#include <Save/PlayerInfo.h>
 
 using namespace Sexy;
 
