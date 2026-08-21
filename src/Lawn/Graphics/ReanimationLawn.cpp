@@ -111,24 +111,6 @@ GPUImage *ReanimatorCache::MakeBlankGPUImage(int theWidth, int theHeight)
 	return aImage;
 }
 
-MemoryImage *ReanimatorCache::ConvertGPUImageToMemoryImage(GPUImage* theImage)
-{
-	MemoryImage *aImage = new MemoryImage();
-
-	int aBitsCount = theImage->mWidth * theImage->mHeight;
-	aImage->mBits = new uint32_t[aBitsCount + 1];
-	aImage->mWidth = theImage->mWidth;
-	aImage->mHeight = theImage->mHeight;
-	aImage->mHasTrans = true;
-	aImage->mHasAlpha = true;
-	memset(aImage->mBits, 0, aBitsCount * 4);
-	aImage->mBits[aBitsCount] = Sexy::MEMORYCHECK_ID;
-
-	memcpy(aImage->mBits, theImage->GetBits(), aBitsCount * 4);
-
-	return aImage;
-}
-
 void ReanimatorCache::GetPlantImageSize(
     SeedType theSeedType, int &theOffsetX, int &theOffsetY, int &theWidth, int &theHeight)
 {
@@ -153,7 +135,7 @@ void ReanimatorCache::GetPlantImageSize(
 	}
 }
 
-MemoryImage *ReanimatorCache::MakeCachedMowerFrame(LawnMowerType theMowerType)
+GPUImage *ReanimatorCache::MakeCachedMowerFrame(LawnMowerType theMowerType)
 {
 	Shader *aOldShader = mApp->mRenderer->mCurrentShader;
 	mApp->mRenderer->mCurrentShader = nullptr;
@@ -223,12 +205,10 @@ MemoryImage *ReanimatorCache::MakeCachedMowerFrame(LawnMowerType theMowerType)
 	}
 	mApp->mRenderer->mCurrentShader = aOldShader;
 
-	MemoryImage *aFinalImage = ConvertGPUImageToMemoryImage(aImage);
-	delete aImage;
-	return aFinalImage;
+	return aImage;
 }
 
-MemoryImage *ReanimatorCache::MakeCachedPlantFrame(SeedType theSeedType, DrawVariation theDrawVariation)
+GPUImage *ReanimatorCache::MakeCachedPlantFrame(SeedType theSeedType, DrawVariation theDrawVariation)
 {
 	Shader *aOldShader = mApp->mRenderer->mCurrentShader;
 	mApp->mRenderer->mCurrentShader = nullptr;
@@ -318,12 +298,10 @@ MemoryImage *ReanimatorCache::MakeCachedPlantFrame(SeedType theSeedType, DrawVar
 	}
 	mApp->mRenderer->mCurrentShader = aOldShader;
 
-	MemoryImage *aFinalImage = ConvertGPUImageToMemoryImage(aGPUImage);
-	delete aGPUImage;
-	return aFinalImage;
+	return aGPUImage;
 }
 
-MemoryImage *ReanimatorCache::MakeCachedZombieFrame(ZombieType theZombieType)
+GPUImage *ReanimatorCache::MakeCachedZombieFrame(ZombieType theZombieType)
 {
 	Shader *aOldShader = mApp->mRenderer->mCurrentShader;
 	mApp->mRenderer->mCurrentShader = nullptr;
@@ -434,9 +412,7 @@ MemoryImage *ReanimatorCache::MakeCachedZombieFrame(ZombieType theZombieType)
 	}
 	mApp->mRenderer->mCurrentShader = aOldShader;
 
-	MemoryImage *aFinalImage = ConvertGPUImageToMemoryImage(aGPUImage);
-	delete aGPUImage;
-	return aFinalImage;
+	return aGPUImage;
 }
 
 void ReanimatorCache::ReanimatorCacheInitialize()
@@ -471,7 +447,7 @@ void ReanimatorCache::DrawCachedPlant(
 {
 	TOD_ASSERT(theSeedType >= 0 && theSeedType < SeedType::NUM_SEED_TYPES);
 
-	MemoryImage *aImage = nullptr;
+	GPUImage *aImage = nullptr;
 	if (theDrawVariation != DrawVariation::VARIATION_NORMAL)
 	{
 		for (TodListNode<ReanimCacheImageVariation> *aNode = mImageVariationList.mHead; aNode != nullptr;

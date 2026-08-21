@@ -1,7 +1,7 @@
 #pragma once
 #include <Common/ConstEnums.h>
 #include <SexyAppFramework/Common.h>
-#include "../SexyAppFramework/ResourceManager.h"
+#include <SexyAppFramework/ResourceManager.h>
 #include <TodLib/TodDebug.h>
 
 struct TodAllocator;
