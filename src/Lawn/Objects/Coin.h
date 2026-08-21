@@ -37,9 +37,6 @@ class Coin : public GameObject
 	bool mHasBouncyArrow;
 	bool mHitGround;
 	int mTimesDropped;
-#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
-	float mGamepadCollectionSpeed;
-#endif
 
   public:
 	Coin();
@@ -124,10 +121,6 @@ class Coin : public GameObject
 	/// @brief Is the Coin actually a present with advice
 	/// @return True if the Coin is of a Present Type, false otherwise
 	bool IsPresentWithAdvice();
-#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
-	/// @brief Handle the Gamepad Cursor overlapping the coin
-	void GamepadCursorOver();
-#endif
 	/// @brief Play the sound of the Coin being created
 	void PlayLaunchSound();
 	/// @brief Play the sound of the Coin hitting the ground

@@ -596,10 +596,6 @@ void LawnSyncGame(Board* theBoard, SaveContext &theContext)
 	SYNC_ARRAY(theBoard->mSeedBank->mSeedPackets);
 	SYNC_VAR(theBoard->mSeedBank->mCutSceneDarken);
 	SYNC_VAR(theBoard->mSeedBank->mConveyorBeltCounter);
-#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
-	SYNC_VAR(theBoard->mSeedBank->mIndexGamepad);
-	SYNC_VAR(theBoard->mSeedBank->mAxisProgress);
-#endif
 
 	SYNC_ARRAY(theBoard->mAdvice->mLabel);
 	SYNC_VAR(theBoard->mAdvice->mDisplayTime);

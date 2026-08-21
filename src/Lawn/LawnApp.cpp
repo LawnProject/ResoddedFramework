@@ -67,7 +67,7 @@
 #include <ctime>
 
 //Do not edit this. - Electr0Gunner
-Version LawnApp::gResoddedVersion(1, 0, 0, RESODDED_BUILD);
+Version LawnApp::gResoddedVersion(1, 1, 0, RESODDED_BUILD);
 
 bool gIsPartnerBuild = false;
 bool gSlowMo = false;

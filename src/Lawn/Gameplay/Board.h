@@ -236,27 +236,6 @@ class Board : public Widget, public ButtonListener
 	bool mNoFungusUsedFungus;
 	int mGargantuarsKillsByCornCob;
 
-#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
-	float mGamepadX;
-	float mGamepadY;
-	float mVisualGamepadX;
-	float mVisualGamepadY;
-	bool mGamepadIgnoreChallenge;
-	// Previous button states, used to detect press-once vs hold
-	bool mGamepadPrevSouth;     // A
-	bool mGamepadPrevEast;      // B
-	bool mGamepadPrevWest;      // X
-	bool mGamepadPrevNorth;     // Y
-	bool mGamepadPrevStart;     // Start
-	bool mGamepadPrevLShoulder; // LB
-	bool mGamepadPrevRShoulder; // RB
-	bool mGamepadPrevLTrigger;  // LT
-	bool mGamepadPrevRTrigger;  // RT
-	// D-Pad accumulators for cell-to-cell stepping (one step per press)
-	float mGamepadDpadXAccum;
-	float mGamepadDpadYAccum;
-#endif
-
   public:
 	Board(LawnApp *theApp);
 	virtual ~Board();

@@ -1219,11 +1219,7 @@ bool Challenge::MouseDown(int x, int y, int theClickCount, HitResult *theHitResu
 		return true;
 	}
 
-#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
-	if (mApp->IsScaryPotterLevel() && theHitResult->mObjectType == OBJECT_TYPE_SCARY_POT && !mApp->UsingGamepad())
-#else
 	if (mApp->IsScaryPotterLevel() && theHitResult->mObjectType == OBJECT_TYPE_SCARY_POT)
-#endif
 	{
 		ScaryPotterMalletPot((GridItem *)theHitResult->mObject);
 		return true;

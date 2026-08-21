@@ -39,9 +39,6 @@ void Coin::CoinInitialize(int theX, int theY, CoinType theCoinType, CoinMotion t
 	mFadeCount = 0;
 	mCoinMotion = theCoinMotion;
 	mCoinAge = 0;
-#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
-	mGamepadCollectionSpeed = 0.0f;
-#endif
 	mAttachmentID = AttachmentID::ATTACHMENTID_NULL;
 	mRenderOrder = Board::MakeRenderOrder(RenderLayer::RENDER_LAYER_COIN_BANK, 0, 1);
 	mScale = 1.0f;
@@ -433,44 +430,6 @@ void Coin::UpdateFade()
 
 void Coin::UpdateFall()
 {
-#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
-	//0x179D14 - Gamepad cursor magnetic collection
-	if (mCoinMotion == CoinMotion::COIN_MOTION_GAMEPAD_CURSOR)
-	{
-		if (!mBoard)
-			return;
-
-		// Get cursor position (adjust for coin dimensions like original)
-		float aCursorX = mBoard->mGamepadX - mWidth * 0.5f;
-		float aCursorY = mBoard->mGamepadY - mHeight * 0.5f;
-
-		float aDeltaX = aCursorX - mPosX;
-		float aDeltaY = aCursorY - mPosY;
-		float aDistSq = aDeltaX * aDeltaX + aDeltaY * aDeltaY;
-
-		// Within 35px of cursor: collect
-		if (aDistSq < 1225.0f)
-		{
-			Collect();
-			return;
-		}
-
-		float aDist = sqrtf(aDistSq);
-
-		// Accelerate toward cursor (6.4 per frame, capped at 600)
-		mGamepadCollectionSpeed += 6.4f;
-		if (mGamepadCollectionSpeed > 600.0f)
-			mGamepadCollectionSpeed = 600.0f;
-
-		// Normalize direction and move
-		float aNormX = aDeltaX / aDist;
-		float aNormY = aDeltaY / aDist;
-
-		mPosX += mGamepadCollectionSpeed * aNormX * 0.016f;
-		mPosY += mGamepadCollectionSpeed * aNormY * 0.016f;
-		return;
-	}
-#endif // LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
 
 	if (mCoinMotion == CoinMotion::COIN_MOTION_FROM_PRESENT)
 	{
@@ -1388,38 +1347,6 @@ void Coin::DroppedUsableSeed()
 
 	mTimesDropped++;
 }
-
-#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
-void Coin::GamepadCursorOver()
-{
-	if (!mBoard || mBoard->mPaused || mApp->mGameScene != GameScenes::SCENE_PLAYING || mDead)
-		return;
-
-	if (mType == CoinType::COIN_USABLE_SEED_PACKET)
-	{
-		Collect();
-		return;
-	}
-
-	if (mIsBeingCollected || mCoinMotion == CoinMotion::COIN_MOTION_GAMEPAD_CURSOR)
-		return;
-
-	if (IsSun() && mScale < GetSunScale())
-		return;
-
-	mCoinMotion = CoinMotion::COIN_MOTION_GAMEPAD_CURSOR;
-	mGamepadCollectionSpeed = 0.0f;
-	PlayCollectSound();
-	if (IsSun())
-		mScale = GetSunScale();
-
-	if (mApp->IsFirstTimeAdventureMode() && mBoard && mBoard->mLevel == 1)
-	{
-		mBoard->DisplayAdvice("[ADVICE_CLICKED_ON_SUN]", MessageStyle::MESSAGE_STYLE_TUTORIAL_LEVEL1_STAY,
-							  AdviceType::ADVICE_CLICKED_ON_SUN);
-	}
-}
-#endif
 
 void Coin::MouseDown(int x, int y, int theClickCount)
 {

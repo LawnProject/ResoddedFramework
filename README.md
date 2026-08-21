@@ -33,8 +33,8 @@ Go wild, the source code is organized. That means you can easily extend or even 
 - Reworked Rendering - 100%
 
 - JSON Settings, replacing the registry - 100%
-- ResourceGen V2 ([In Development](https://github.com/LawnProject/ResourceGen))
-- Documentation - 1%
+- ResourceGen V2 ([Available now](https://github.com/LawnProject/ResourceGen))
+- Documentation - 100%
 
 
 - Window Resizing - 100%
@@ -42,7 +42,6 @@ Go wild, the source code is organized. That means you can easily extend or even 
 - UTF-8 Support - 100%
 
 - MP3/OGG/FLAC Lawn Music - 100%
-- Controller Support - 80% (Board Only)
 ### Low Priority
 - Multi-platform support - 15%
 - Separate mod resources (.pak + folders) - 100%
@@ -54,7 +53,7 @@ Go wild, the source code is organized. That means you can easily extend or even 
 
 - [Electr0Gunner](https://github.com/Electr0Gunner) -> Creator, Lead Programmer
 - [IsraelProyects](https://github.com/IsraelDXPP) -> Secondary Programmer, Fixes & Improvements
-- [ThePixelMoon](https://github.com/ThePixelMoon) -> Project Setup + Structure
+- [ThePixelMoon](https://github.com/ThePixelMoon) -> Project Setup
 
 ### Special Thanks
 

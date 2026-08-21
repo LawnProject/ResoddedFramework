@@ -43,11 +43,7 @@ void CursorObject::Update()
 		return;
 	}
 
-	if (!mApp->mWidgetManager->mMouseIn 
-#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT 
-		&& !mApp->UsingGamepad()
-#endif
-		)
+	if (!mApp->mWidgetManager->mMouseIn)
 	{
 		mVisible = false;
 		return;
@@ -179,12 +175,6 @@ void CursorObject::Draw(Graphics *g)
 	case CursorType::CURSOR_TYPE_PLANT_FROM_BANK:
 	case CursorType::CURSOR_TYPE_PLANT_FROM_USABLE_COIN:
 	case CursorType::CURSOR_TYPE_PLANT_FROM_DUPLICATOR: {
-#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
-		if (mApp->UsingGamepad())
-		{
-			break; // CursorPreview draws the ghost plant in gamepad mode; skip this to avoid a double draw
-		}
-#endif
 		float aOffsetX = -10.0f;
 		float aOffsetY = PlantDrawHeightOffset(mBoard, nullptr, mType, -1, -1) - 10.0f;
 		if (Plant::IsFlying(mType) || mType == SeedType::SEED_GRAVEBUSTER)

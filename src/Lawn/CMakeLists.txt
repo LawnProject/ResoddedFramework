@@ -1,6 +1,5 @@
 project(LawnProject)
 
-option(LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT "Enable the unfinished gamepad support" OFF)
 option(LAWN_SHOW_TERMINAL_DEBUG "Show terminal output in debug mode when double-clicking to start the game" ON)
 option(LAWN_SHOW_TERMINAL_RELEASE "Show terminal output in release mode when double-clicking to start the game" OFF)
 
@@ -54,12 +53,6 @@ endif()
 if(SEXY_USE_IMGUI)
     target_compile_definitions(${PROJECT_NAME} PUBLIC
         $<$<CONFIG:Debug>:LAWN_DEBUG_TOOLS>
-    )
-endif()
-
-if(SEXY_USE_CONTROLLER)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC
-        $<$<BOOL:${LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT}>:LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT>
     )
 endif()
 

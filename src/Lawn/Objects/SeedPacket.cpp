@@ -704,12 +704,6 @@ bool SeedPacket::CanPickUp()
 			return false;
 		}
 
-#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
-		if (mApp->UsingGamepad() && mBoard->HasConveyorBeltSeedBank() && mX + mOffsetX >= 570)
-		{
-			return false;
-		}
-#endif
 	}
 
 	return true;
@@ -818,13 +812,6 @@ void SeedPacket::MouseDown(int x, int y, int theClickCount)
 			return;
 		}
 
-#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
-		if (mApp->UsingGamepad() && mBoard->HasConveyorBeltSeedBank() && mX + mOffsetX >= 570)
-		{
-			mApp->PlaySample(SOUND_BUZZER);
-			return;
-		}
-#endif
 	}
 
 	mBoard->ClearAdvice(AdviceType::ADVICE_CANT_AFFORD_PLANT);
@@ -946,10 +933,6 @@ SeedBank::SeedBank()
 	mNumPackets = 0;
 	mConveyorBeltCounter = 0;
 	mCutSceneDarken = 255;
-#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
-	mIndexGamepad = 0;
-	mAxisProgress = 0.0f;
-#endif
 }
 
 void SeedBank::Draw(Graphics *g)
@@ -983,56 +966,15 @@ void SeedBank::Draw(Graphics *g)
 		g->DrawImage(IMAGE_SEEDBANK, IMAGE_SEEDBANK->mWidth - 12, 0, theSrcRect);
 	}
 
-#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
-	g->PushState();
-	//g->SetScale(1.1f, 1.1f, 0.0f, 0.0f);
-	if (mApp->mGameScene == GameScenes::SCENE_PLAYING && mApp->mGamepads[0] != nullptr)
-	{
-
-		mAxisProgress += mApp->mGamepads[0]->GetRightAxisXPosition() * 0.5;
-		if (mAxisProgress < -0.95f)
-		{
-			mIndexGamepad--;
-			mAxisProgress = 0.0f;
-		}
-		else if (mAxisProgress > 0.95f)
-		{
-			mIndexGamepad++;
-			mAxisProgress = 0.0f;
-		}
-		if (mNumPackets > 0)
-			mIndexGamepad = std::clamp(mIndexGamepad, 0, mNumPackets - 1);
-
-		if (mApp->UsingGamepad())
-		{
-			SeedPacket *aSeedPacket = &mSeedPackets[mIndexGamepad];
-			if (aSeedPacket->mPacketType != SeedType::SEED_NONE)
-			{
-				g->DrawImage(Sexy::IMAGE_SEED_SELECTOR, aSeedPacket->mX + aSeedPacket->mOffsetX - 5, 3);
-			}
-		}
-	}
-	g->PopState();
-#endif
 	mIgnorePacketSpriteScale = true;
 	for (int i = 0; i < mNumPackets; i++)
 	{
-#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
-		g->PushState();
-		if (i == mIndexGamepad && mApp->mGameScene == GameScenes::SCENE_PLAYING)
-		{
-			//g->SetScale(1.1f, 1.1f, 0.0f, 0.0f);
-		}
-#endif
 		SeedPacket *aSeedPacket = &mSeedPackets[i];
 		if (aSeedPacket->mPacketType != SeedType::SEED_NONE && aSeedPacket->BeginDraw(g))
 		{
 			aSeedPacket->Draw(g);
 			aSeedPacket->EndDraw(g);
 		}
-#if LAWN_USE_UNFINISHED_GAMEPAD_SUPPORT
-		g->PopState();
-#endif
 	}
 	mIgnorePacketSpriteScale = false;
 
