@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include "Point.h"
+#include "Platform.h" //including cause min max??? What the fuck
 
 namespace Sexy
 {
@@ -98,7 +99,6 @@ template <class _T> class TRect
 	{
 		return (mX != theRect.mX) || (mY != theRect.mY) || (mWidth != theRect.mWidth) || (mHeight != theRect.mHeight);
 	}
-
 };
 
 typedef TRect<int> Rect;

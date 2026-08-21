@@ -1,5 +1,5 @@
 #include "DescParser.h"
-#include "../PakLib/PakInterface.h"
+#include <PakInterface.h>
 #include "Common.h"
 #include "Encoding.h"
 

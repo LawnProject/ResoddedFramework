@@ -21,13 +21,15 @@
 #include <TodLib/TodStringFile.h>
 #include <TodLib/Trail.h>
 
-#include <Graphics/ReanimationLawn.h>
-#include <System/Achievements.h>
-#include <System/TypingCheck.h>
-#include <Save/PlayerInfo.h>
 #include <Graphics/PoolEffect.h>
-#include <Save/ProfileMgr.h>
+#include <Graphics/ReanimationLawn.h>
+
+#include <System/Achievements.h>
 #include <System/Music.h>
+#include <System/TypingCheck.h>
+
+#include <Save/PlayerInfo.h>
+#include <Save/ProfileMgr.h>
 #include <Save/SaveGame.h>
 
 #include <Widget/ChallengeScreen.h>

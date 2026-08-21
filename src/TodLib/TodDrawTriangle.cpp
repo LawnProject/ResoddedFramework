@@ -4,19 +4,19 @@
 
 #if (TRI0 == 0)
 #define PTYPE unsigned long
-#define PIXEL_INCLUDE "../SexyAppFramework/SWTri_Pixel8888.cpp"
+#define PIXEL_INCLUDE <SexyAppFramework/SWTri_Pixel888.cpp>
 #define NAME0 8888
 #elif (TRI0 == 1)
 #define PTYPE unsigned long
-#define PIXEL_INCLUDE "../SexyAppFramework/SWTri_Pixel888.cpp"
+#define PIXEL_INCLUDE <SexyAppFramework/SWTri_Pixel888.cpp>
 #define NAME0 0888
 #elif (TRI0 == 2)
 #define PTYPE unsigned short
-#define PIXEL_INCLUDE "../SexyAppFramework/SWTri_Pixel565.cpp"
+#define PIXEL_INCLUDE <SexyAppFramework/SWTri_Pixel565.cpp>
 #define NAME0 0565
 #elif (TRI0 == 3)
 #define PTYPE unsigned short
-#define PIXEL_INCLUDE "../SexyAppFramework/SWTri_Pixel555.cpp"
+#define PIXEL_INCLUDE <SexyAppFramework/SWTri_Pixel555.cpp>
 #define NAME0 0555
 #endif
 
@@ -61,11 +61,8 @@
 #else
 #define funcname funcname1(NAME0, NAME1, NAME2, NAME3, NAME4, NAME5)
 #endif
-void funcname(SWHelper::SWVertex *pVerts,
-			  void *pFrameBuffer,
-			  const unsigned int bytepitch,
-			  const SWHelper::SWTextureInfo *textureInfo,
-			  SWHelper::SWDiffuse &globalDiffuse)
+void funcname(SWHelper::SWVertex *pVerts, void *pFrameBuffer, const unsigned int bytepitch,
+			  const SWHelper::SWTextureInfo *textureInfo, SWHelper::SWDiffuse &globalDiffuse)
 {
 #if !defined(NAME_ADDITIVE)
 	if (gTodTriangleDrawAdditive)
@@ -231,7 +228,7 @@ void funcname(SWHelper::SWVertex *pVerts,
 
 				int x0 = (lx + 0xffff) & 0xffff0000;
 				int x1 = (sx + 0xffff) & 0xffff0000;
-#include "../SexyAppFramework/SWTri_Loop.cpp"
+#include <SexyAppFramework/SWTri_Loop.cpp>
 			}
 		}
 		else if (mid > v1->x)
@@ -242,7 +239,7 @@ void funcname(SWHelper::SWVertex *pVerts,
 
 				int x0 = (sx + 0xffff) & 0xffff0000;
 				int x1 = (lx + 0xffff) & 0xffff0000;
-#include "../SexyAppFramework/SWTri_Loop.cpp"
+#include <SexyAppFramework/SWTri_Loop.cpp>
 			}
 		}
 	}
@@ -271,7 +268,7 @@ void funcname(SWHelper::SWVertex *pVerts,
 
 			int x0 = (lx + 0xffff) & 0xffff0000;
 			int x1 = (sx + 0xffff) & 0xffff0000;
-#include "../SexyAppFramework/SWTri_Loop.cpp"
+#include <SexyAppFramework/SWTri_Loop.cpp>
 		}
 	}
 	else if (mid > v1->x)
@@ -282,7 +279,7 @@ void funcname(SWHelper::SWVertex *pVerts,
 
 			int x0 = (sx + 0xffff) & 0xffff0000;
 			int x1 = (lx + 0xffff) & 0xffff0000;
-#include "../SexyAppFramework/SWTri_Loop.cpp"
+#include <SexyAppFramework/SWTri_Loop.cpp>
 		}
 	}
 }

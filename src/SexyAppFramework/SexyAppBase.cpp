@@ -41,7 +41,7 @@
 #include "ResourceManager.h"
 #include "BassMusicInterface.h"
 #include "AutoCrit.h"
-#include "../PakLib/PakInterface.h"
+#include <PakInterface.h>
 #include <string>
 
 #ifdef _WIN32
@@ -1118,11 +1118,11 @@ std::string SexyAppBase::GetProductVersionDLL(const std::string &thePath)
 		uint8_t *aVersionBuffer = new uint8_t[aSize];
 		aGetFileVersionInfoFunc((char *)thePath.c_str(), 0, aSize, aVersionBuffer);
 		char *aBuffer;
-		if (aVerQueryValueFunc(aVersionBuffer, "\\StringFileInfo\\040904B0\\ProductVersion", (void **)&aBuffer, &aSize))
+		if (aVerQueryValueFunc(aVersionBuffer, const_cast<LPSTR>("\\StringFileInfo\\040904B0\\ProductVersion"), (void **)&aBuffer, &aSize))
 		{
 			aProductVersion = aBuffer;
 		}
-		else if (aVerQueryValueFunc(aVersionBuffer, "\\StringFileInfo\\040904E4\\ProductVersion", (void **)&aBuffer,
+		else if (aVerQueryValueFunc(aVersionBuffer, const_cast<LPSTR>("\\StringFileInfo\\040904E4\\ProductVersion"), (void **)&aBuffer,
 									&aSize))
 		{
 			aProductVersion = aBuffer;

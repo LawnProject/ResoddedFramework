@@ -1,7 +1,7 @@
 #include <TodLib/TodDebug.h>
 #include <TodLib/TodCommon.h>
-#include "../SexyAppFramework/Debug.h"
-#include "../SexyAppFramework/SEHCatcher.h"
+#include <SexyAppFramework/Debug.h>
+#include <SexyAppFramework/SEHCatcher.h>
 #include <sstream>
 #include <chrono>
 #include <iomanip>

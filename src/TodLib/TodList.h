@@ -3,6 +3,7 @@
 
 #define MAX_GLOBAL_ALLOCATORS 128
 
+#include <TodLib/TodCommon.h>
 #include <TodLib/TodDebug.h>
 
 struct TodAllocator

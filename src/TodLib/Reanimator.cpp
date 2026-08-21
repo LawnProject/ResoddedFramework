@@ -9,7 +9,7 @@
 #include <Common/GameConstants.h>
 #include <SexyAppFramework/Font.h>
 #include <SexyAppFramework/PerfTimer.h>
-#include "../SexyAppFramework/MemoryImage.h"
+#include <SexyAppFramework/MemoryImage.h>
 
 int gReanimatorDefCount;
 ReanimatorDefinition *gReanimatorDefArray;

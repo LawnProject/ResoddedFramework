@@ -1,7 +1,7 @@
 #if SEXY_IS_X86
 
 #include "OriginalCompiledDefinition.h"
-#include "../PakLib/PakInterface.h"
+#include <PakInterface.h>
 #include "Definition.h"
 #include <SexyAppFramework/PerfTimer.h>
 #include <zlib.h>

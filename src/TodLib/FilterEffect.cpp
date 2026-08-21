@@ -1,7 +1,7 @@
 #include <TodLib/TodDebug.h>
 #include <TodLib/TodCommon.h>
 #include <TodLib/FilterEffect.h>
-#include "../SexyAppFramework/MemoryImage.h"
+#include <SexyAppFramework/MemoryImage.h>
 #include <SexyAppFramework/Graphics.h>
 
 void RGB_to_HSL(float r, float g, float b, float &h, float &s, float &l)

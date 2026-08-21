@@ -174,7 +174,7 @@ uint32_t /*__cdecl*/ DefinitionCalcHash(DefMap *theDefMap);
 bool DefReadFromCacheInt(void *&theReadPtr, int *theInt);
 bool DefReadFromCacheFloat(void *&theReadPtr, float *theFloat);
 bool DefReadFromCacheFlag(void *&theReadPtr, uint32_t *theFlag);
-bool DefReadFromCacheString(void *&theReadPtr, char **theString);
+bool DefReadFromCacheString(void *&theReadPtr, const char **theString);
 bool DefReadFromCacheVector2(void *&theReadPtr, SexyVector2 *theVector);
 bool DefReadFromCacheArray(void *&theReadPtr, DefinitionArrayDef *theArray, DefMap *theDefMap);
 bool DefReadFromCacheImage(void *&theReadPtr, Image **theImage);

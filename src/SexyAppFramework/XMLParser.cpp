@@ -1,6 +1,6 @@
 #include "XMLParser.h"
 #include "Debug.h"
-#include "../PakLib/PakInterface.h"
+#include <PakInterface.h>
 
 using namespace Sexy;
 

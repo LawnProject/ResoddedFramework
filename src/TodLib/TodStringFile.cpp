@@ -1,6 +1,6 @@
 #include <TodLib/TodDebug.h>
-#include "../PakLib/PakInterface.h"
-#include "../SexyAppFramework/Encoding.h"
+#include <PakInterface.h>
+#include <SexyAppFramework/Encoding.h>
 #include <SexyAppFramework/Font.h>
 #include <TodLib/TodCommon.h>
 #include <TodLib/TodStringFile.h>
