@@ -42,13 +42,6 @@ It is recommended you update the mod.
 [UPDATE_OUTDATED_HEADER]
 Outdated Version
 
-[HIGH_RESOLUTION_WARNING_HEADER]
-Warning
-
-[HIGH_RESOLUTION_WARNING]
-Using higher resolutions then what the game was created with might create visual artifacts.
-Do you wish to enable high resolutions?
-
 [FILTER_NEAREST]
 Nearest Filtering
 
