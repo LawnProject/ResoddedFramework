@@ -3,8 +3,8 @@
 #include "GPUImage.h"
 #include "Shader.h"
 #include "SexyMatrix.h"
-#include "CritSect.h"
 #include <set>
+#include <mutex>
 #include <unordered_map>
 
 #define MAX_VERTICES 16384
@@ -144,7 +144,7 @@ namespace Sexy
 		TransformStack mTransformStack;
 
 		static std::string mErrorString;
-		CritSect mCritSect;
+        std::recursive_mutex mCritSect;
 
 		GPUImage *mScreenImage;
 

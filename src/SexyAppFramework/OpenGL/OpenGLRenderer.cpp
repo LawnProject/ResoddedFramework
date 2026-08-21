@@ -4,7 +4,6 @@
 #include "TriVertex.h"
 #include "SexyMatrix.h"
 #include "Window.h"
-#include "AutoCrit.h"
 #include "SysFont.h"
 #include <SDL3/SDL.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -175,7 +174,7 @@ void OpenGLRenderer::Remove3DData(MemoryImage *theImage)
 		delete (OpenGLTextureData *)theImage->mGPUData;
 		theImage->mGPUData = nullptr;
 
-		AutoCrit aCrit(mCritSect); // Make images thread safe
+		auto aLock = std::scoped_lock(mCritSect); // Make images thread safe
 		mImageSet.erase(theImage);
 	}
 }
@@ -510,7 +509,7 @@ bool OpenGLRenderer::CreateImageTexture(MemoryImage *theImage)
 		// The actual purging was deferred
 		wantPurge = theImage->mPurgeBits;
 
-		AutoCrit aCrit(mCritSect); // Make images thread safe
+		auto aLock = std::scoped_lock(mCritSect); // Make images thread safe
 		mImageSet.insert(theImage);
 	}
 
@@ -567,10 +566,17 @@ void *OpenGLRenderer::CreateTexture(void *thePixels, int theWidth, int theHeight
 	glBindTexture(GL_TEXTURE_2D, aTexID);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, theAlignment);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, theWidth, theHeight, 0, thePixelFormat == RAW_FORMAT_R ? GL_RED : GL_BGRA, GL_UNSIGNED_BYTE, thePixels);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
 	gGLTextureCount++;
 	GLuint *aTexPtr = new GLuint(aTexID);
 	return aTexPtr;
 }
+
 
 // OpenGLTextureData
 

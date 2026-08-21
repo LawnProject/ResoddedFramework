@@ -145,7 +145,7 @@ void CursorObject::Draw(Graphics *g)
 		Plant *aPlant = mBoard->mPlants.DataArrayGet((unsigned int)mGlovePlantID);
 		PottedPlant *aPottedPlant = &mApp->mPlayerInfo->mPottedPlant[aPlant->mPottedPlantIndex];
 		if (mBoard->mBackground == BackgroundType::BACKGROUND_MUSHROOM_GARDEN ||
-			mBoard->mBackground == BackgroundType::BACKGROUND_ZOMBIQUARIUM)
+		    mBoard->mBackground == BackgroundType::BACKGROUND_ZOMBIQUARIUM)
 		{
 			mApp->mZenGarden->DrawPottedPlant(g, -10.0f, -10.0f, aPottedPlant, 1.0f, false);
 		}
@@ -160,7 +160,7 @@ void CursorObject::Draw(Graphics *g)
 	case CursorType::CURSOR_TYPE_PLANT_FROM_WHEEL_BARROW: {
 		PottedPlant *aPottedPlant = mApp->mZenGarden->GetPottedPlantInWheelbarrow();
 		if (mBoard->mBackground == BackgroundType::BACKGROUND_MUSHROOM_GARDEN ||
-			mBoard->mBackground == BackgroundType::BACKGROUND_ZOMBIQUARIUM)
+		    mBoard->mBackground == BackgroundType::BACKGROUND_ZOMBIQUARIUM)
 		{
 			mApp->mZenGarden->DrawPottedPlant(g, -10.0f, -10.0f, aPottedPlant, 1.0f, false);
 		}
@@ -243,7 +243,7 @@ void CursorPreview::Update()
 		else if (mBoard->mCursorObject->mCursorType == CursorType::CURSOR_TYPE_WHEEELBARROW)
 		{
 			if (mApp->mZenGarden->GetPottedPlantInWheelbarrow() &&
-				mBoard->CanPlantAt(mGridX, mGridY, aSeedType) == PlantingReason::PLANTING_OK)
+			    mBoard->CanPlantAt(mGridX, mGridY, aSeedType) == PlantingReason::PLANTING_OK)
 			{
 				aShow = true;
 			}
@@ -272,22 +272,22 @@ void CursorPreview::Draw(Graphics *g)
 
 	PottedPlant *aPottedPlant = nullptr;
 	if (mBoard->mCursorObject->mCursorType == CursorType::CURSOR_TYPE_WHEEELBARROW ||
-		mBoard->mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_WHEEL_BARROW)
+	    mBoard->mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_WHEEL_BARROW)
 	{
 		aPottedPlant = mApp->mZenGarden->GetPottedPlantInWheelbarrow();
 	}
 	else if (mBoard->mCursorObject->mCursorType == CursorType::CURSOR_TYPE_PLANT_FROM_GLOVE)
 	{
 		aPottedPlant =
-			&mApp->mPlayerInfo->mPottedPlant
-				 [mBoard->mPlants.DataArrayGet((unsigned int)mBoard->mCursorObject->mGlovePlantID)->mPottedPlantIndex];
+		    &mApp->mPlayerInfo->mPottedPlant
+		         [mBoard->mPlants.DataArrayGet((unsigned int)mBoard->mCursorObject->mGlovePlantID)->mPottedPlantIndex];
 	}
 
 	if (aPottedPlant)
 	{
 		bool aDrawPot = true;
 		if (mBoard->mBackground == BackgroundType::BACKGROUND_MUSHROOM_GARDEN ||
-			mBoard->mBackground == BackgroundType::BACKGROUND_ZOMBIQUARIUM)
+		    mBoard->mBackground == BackgroundType::BACKGROUND_ZOMBIQUARIUM)
 		{
 			aDrawPot = false;
 		}
@@ -314,11 +314,11 @@ void CursorPreview::Draw(Graphics *g)
 		}
 
 		Plant::DrawSeedType(g,
-							mBoard->mCursorObject->mType,
-							mBoard->mCursorObject->mImitaterType,
-							DrawVariation::VARIATION_NORMAL,
-							aOffsetX,
-							aOffsetY);
+		                    mBoard->mCursorObject->mType,
+		                    mBoard->mCursorObject->mImitaterType,
+		                    DrawVariation::VARIATION_NORMAL,
+		                    aOffsetX,
+		                    aOffsetY);
 	}
 
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_COLUMN)
@@ -329,11 +329,11 @@ void CursorPreview::Draw(Graphics *g)
 			{
 				float aOffsetY = 85.0f * (y - mGridY) + PlantDrawHeightOffset(mBoard, nullptr, aSeedType, mGridX, y);
 				Plant::DrawSeedType(g,
-									mBoard->mCursorObject->mType,
-									mBoard->mCursorObject->mImitaterType,
-									DrawVariation::VARIATION_NORMAL,
-									0.0f,
-									aOffsetY);
+				                    mBoard->mCursorObject->mType,
+				                    mBoard->mCursorObject->mImitaterType,
+				                    DrawVariation::VARIATION_NORMAL,
+				                    0.0f,
+				                    aOffsetY);
 			}
 		}
 	}

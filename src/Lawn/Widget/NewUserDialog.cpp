@@ -5,13 +5,13 @@
 #include <SexyAppFramework/WidgetManager.h>
 
 NewUserDialog::NewUserDialog(LawnApp *theApp, bool isRename)
-	: LawnDialog(theApp,
-				 isRename ? Dialogs::DIALOG_RENAMEUSER : Dialogs::DIALOG_CREATEUSER,
-				 true,
-				 isRename ? "[RENAME_USER]" : "[NEW_USER]",
-				 "[PLEASE_ENTER_NAME]",
-				 "[DIALOG_BUTTON_OK]",
-				 Dialog::BUTTONS_OK_CANCEL)
+    : LawnDialog(theApp,
+                 isRename ? Dialogs::DIALOG_RENAMEUSER : Dialogs::DIALOG_CREATEUSER,
+                 true,
+                 isRename ? "[RENAME_USER]" : "[NEW_USER]",
+                 "[PLEASE_ENTER_NAME]",
+                 "[DIALOG_BUTTON_OK]",
+                 Dialog::BUTTONS_OK_CANCEL)
 {
 	mApp = theApp;
 	mVerticalCenterText = false;
@@ -48,7 +48,7 @@ void NewUserDialog::Resize(int theX, int theY, int theWidth, int theHeight)
 {
 	LawnDialog::Resize(theX, theY, theWidth, theHeight);
 	mNameEditWidget->Resize(
-		mContentInsets.mLeft + 12, mHeight - 155, mWidth - mContentInsets.mLeft - mContentInsets.mRight - 24, 28);
+	    mContentInsets.mLeft + 12, mHeight - 155, mWidth - mContentInsets.mLeft - mContentInsets.mRight - 24, 28);
 }
 
 void NewUserDialog::Draw(Graphics *g)

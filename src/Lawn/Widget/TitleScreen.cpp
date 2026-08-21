@@ -90,12 +90,12 @@ void TitleScreen::Draw(Graphics *g)
 		else
 		{
 			anAlpha = TodAnimateCurve(
-				mTitleStateDuration, mTitleStateDuration - 50, mTitleStateCounter, 0, 255, TodCurves::CURVE_LINEAR);
+			    mTitleStateDuration, mTitleStateDuration - 50, mTitleStateCounter, 0, 255, TodCurves::CURVE_LINEAR);
 		}
 		g->SetColorizeImages(true);
 		g->SetColor(Color(255, 255, 255, anAlpha));
 		g->DrawImage(
-			IMAGE_POPCAP_LOGO, (mWidth - IMAGE_POPCAP_LOGO->mWidth) / 2, (mHeight - IMAGE_POPCAP_LOGO->mHeight) / 2);
+		    IMAGE_POPCAP_LOGO, (mWidth - IMAGE_POPCAP_LOGO->mWidth) / 2, (mHeight - IMAGE_POPCAP_LOGO->mHeight) / 2);
 		g->SetColorizeImages(false);
 
 		return;
@@ -111,11 +111,11 @@ void TitleScreen::Draw(Graphics *g)
 		if (mTitleStateCounter >= mTitleStateDuration - 35)
 		{
 			anAlpha = TodAnimateCurve(
-				mTitleStateDuration, mTitleStateDuration - 35, mTitleStateCounter, 0, 255, TodCurves::CURVE_LINEAR);
+			    mTitleStateDuration, mTitleStateDuration - 35, mTitleStateCounter, 0, 255, TodCurves::CURVE_LINEAR);
 			g->SetColor(Color(255, 255, 255, 255 - anAlpha));
 			g->DrawImage(IMAGE_POPCAP_LOGO,
-						 (mWidth - IMAGE_POPCAP_LOGO->mWidth) / 2,
-						 (mHeight - IMAGE_POPCAP_LOGO->mHeight) / 2);
+			             (mWidth - IMAGE_POPCAP_LOGO->mWidth) / 2,
+			             (mHeight - IMAGE_POPCAP_LOGO->mHeight) / 2);
 		}
 		else
 		{
@@ -123,7 +123,7 @@ void TitleScreen::Draw(Graphics *g)
 		}
 		g->SetColor(Color(255, 255, 255, anAlpha));
 		g->DrawImage(
-			IMAGE_PARTNER_LOGO, (mWidth - IMAGE_PARTNER_LOGO->mWidth) / 2, (mHeight - IMAGE_PARTNER_LOGO->mHeight) / 2);
+		    IMAGE_PARTNER_LOGO, (mWidth - IMAGE_PARTNER_LOGO->mWidth) / 2, (mHeight - IMAGE_PARTNER_LOGO->mHeight) / 2);
 		g->SetColorizeImages(false);
 
 		return;
@@ -177,7 +177,7 @@ void TitleScreen::Draw(Graphics *g)
 		float aScale = TodAnimateCurveFloatTime(0, mTotalBarWidth, mCurBarWidth, 1, 0.5f, TodCurves::CURVE_LINEAR);
 		SexyTransform2D aTransform;
 		TodScaleRotateTransformMatrix(
-			aTransform, aGrassX + 11.0f + aRollLen, aGrassY - 3.0f - 35.0f * aScale + 35.0f, aRotation, aScale, aScale);
+		    aTransform, aGrassX + 11.0f + aRollLen, aGrassY - 3.0f - 35.0f * aScale + 35.0f, aRotation, aScale, aScale);
 		Rect aSrcRect(0, 0, IMAGE_REANIM_SODROLLCAP->mWidth, IMAGE_REANIM_SODROLLCAP->mHeight);
 		TodBltMatrix(g, IMAGE_REANIM_SODROLLCAP, aTransform, g->mClipRect, Color::White, g->mDrawMode, aSrcRect);
 	}
@@ -338,7 +338,7 @@ void TitleScreen::Update()
 		float aBarWidth = TodAnimateCurveFloatTime(0, 1, aLoadingPercent, 0, mTotalBarWidth, TodCurves::CURVE_EASE_IN);
 		float aDiff = aBarWidth - mCurBarWidth;
 		float aAcceleration =
-			TodAnimateCurveFloatTime(0, 1, aLoadingPercent, 0.0001f, 0.00001f, TodCurves::CURVE_LINEAR);
+		    TodAnimateCurveFloatTime(0, 1, aLoadingPercent, 0.0001f, 0.00001f, TodCurves::CURVE_LINEAR);
 		if (mLoadingThreadComplete)
 		{
 			aAcceleration = 0.0001f;
@@ -424,11 +424,11 @@ void TitleScreen::Update()
 		}
 	}
 
-	float aTriggerPoint[] = {mTotalBarWidth * 0.11f,
-							 mTotalBarWidth * 0.32f,
-							 mTotalBarWidth * 0.54f,
-							 mTotalBarWidth * 0.72f,
-							 mTotalBarWidth * 0.91f};
+	float aTriggerPoint[] = { mTotalBarWidth * 0.11f,
+		                      mTotalBarWidth * 0.32f,
+		                      mTotalBarWidth * 0.54f,
+		                      mTotalBarWidth * 0.72f,
+		                      mTotalBarWidth * 0.91f };
 
 	for (int i = 0; i < LENGTH(aTriggerPoint); i++)
 	{

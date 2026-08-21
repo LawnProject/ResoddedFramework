@@ -63,7 +63,7 @@ void GridItem::DrawGridItemOverlay(Graphics *g)
 	if (mGridItemType == GridItemType::GRIDITEM_STINKY)
 	{
 		if (mBoard->mCursorObject->mCursorType == CursorType::CURSOR_TYPE_CHOCOLATE &&
-			!mApp->mZenGarden->IsStinkyHighOnChocolate())
+		    !mApp->mZenGarden->IsStinkyHighOnChocolate())
 		{
 			g->DrawImage(IMAGE_PLANTSPEECHBUBBLE, mPosX + 50.0f, mPosY - 36.0f);
 			TodDrawImageScaledF(g, IMAGE_CHOCOLATE, mPosX + 63.0f, mPosY - 28.0f, 0.44f, 0.44f);
@@ -191,7 +191,7 @@ void GridItem::DrawGraveStone(Graphics *g)
 	}
 
 	Rect aSrcRect(aCelWidth * aGraveCol, aCelHeight * aGraveRow + aExtraTopClip, aCelWidth,
-				  aVisibleHeight - aExtraBottomClip - aExtraTopClip);
+	              aVisibleHeight - aExtraBottomClip - aExtraTopClip);
 	Rect aSrcRectDirt(aCelWidth * aGraveCol, aCelHeight * aGraveRow, aCelWidth, aVisibleHeightDirt);
 	int x = mBoard->GridToPixelX(mGridX, mGridY) + aGridCelOffsetX - 4;
 	int y = mBoard->GridToPixelY(mGridX, mGridY) + aCelHeight + aGridCelOffsetY - 9;
@@ -327,7 +327,7 @@ void GridItem::DrawScaryPot(Graphics *g)
 			aInsideGraphics.mScaleX = 0.7f;
 			aInsideGraphics.mScaleY = 0.7f;
 			DrawSeedPacket(&aInsideGraphics, aXPos + 23.0f, aYPos + 33.0f, mSeedType, SeedType::SEED_NONE, 0.0f, 255,
-						   false, false);
+			               false, false);
 		}
 		else if (mScaryPotType == ScaryPotType::SCARYPOT_ZOMBIE)
 		{
@@ -513,8 +513,8 @@ void GridItem::ClosePortal()
 bool GridItem::IsOpenPortal()
 {
 	return mGridItemState != GridItemState::GRIDITEM_STATE_PORTAL_CLOSED &&
-		   (mGridItemType == GridItemType::GRIDITEM_PORTAL_CIRCLE ||
-			mGridItemType == GridItemType::GRIDITEM_PORTAL_SQUARE);
+	       (mGridItemType == GridItemType::GRIDITEM_PORTAL_CIRCLE ||
+	        mGridItemType == GridItemType::GRIDITEM_PORTAL_SQUARE);
 }
 
 void GridItem::UpdatePortal()
@@ -638,7 +638,7 @@ Zombie *GridItem::RakeFindZombie()
 	while (mBoard->IterateZombies(aZombie))
 	{
 		if (!aZombie->IsDeadOrDying() && !aZombie->IsBobsledTeamWithSled() && aZombie->mRow - mGridY == 0 &&
-			aZombie->EffectedByDamage(GetBit(DamageRangeFlags::DAMAGES_GROUND)))
+		    aZombie->EffectedByDamage(GetBit(DamageRangeFlags::DAMAGES_GROUND)))
 		{
 			Rect aZombieRect = aZombie->GetZombieRect();
 			if (GetRectOverlap(aRakeRect, aZombieRect) >= 0)
@@ -654,7 +654,7 @@ Zombie *GridItem::RakeFindZombie()
 void GridItem::UpdateRake()
 {
 	if (mGridItemState == GridItemState::GRIDITEM_STATE_RAKE_ATTRACTING ||
-		mGridItemState == GridItemState::GRIDITEM_STATE_RAKE_WAITING)
+	    mGridItemState == GridItemState::GRIDITEM_STATE_RAKE_WAITING)
 	{
 		if (RakeFindZombie())
 		{

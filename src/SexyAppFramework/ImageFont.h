@@ -1,11 +1,11 @@
 #ifndef __IMAGEFONT_H__
 #define __IMAGEFONT_H__
 
+#include <unordered_map>
+
 #include "Font.h"
 #include "DescParser.h"
 #include "SharedImage.h"
-
-#include <unordered_map>
 
 namespace Sexy
 {
@@ -48,9 +48,9 @@ class FontLayer
 	int mMaxPointSize;
 	int mPointSize;
 	int mAscent;
-	int mAscentPadding;		// How much space is above the avg uppercase char
-	int mHeight;			//
-	int mDefaultHeight;		// Max height of font character image rects
+	int mAscentPadding;     // How much space is above the avg uppercase char
+	int mHeight;            //
+	int mDefaultHeight;     // Max height of font character image rects
 	int mLineSpacingOffset; // This plus height should get added between lines
 	int mBaseOrder;
 
@@ -114,19 +114,6 @@ class ActiveFontLayer
 
 typedef std::list<ActiveFontLayer> ActiveFontLayerList;
 
-class RenderCommand
-{
-  public:
-	Image *mImage;
-	int mDest[2];
-	int mSrc[4];
-	int mMode;
-	Color mColor;
-	RenderCommand *mNext;
-};
-
-typedef std::multimap<int, RenderCommand> RenderCommandMap;
-
 class ImageFont : public Font
 {
   public:
@@ -142,13 +129,13 @@ class ImageFont : public Font
   public:
 	virtual void GenerateActiveFontLayers();
 	virtual void DrawStringEx(Graphics *g,
-							  int theX,
-							  int theY,
-							  const SexyString &theString,
-							  const Color &theColor,
-							  const Rect *theClipRect,
-							  RectList *theDrawnAreas,
-							  int *theWidth);
+	                          int theX,
+	                          int theY,
+	                          const SexyString &theString,
+	                          const Color &theColor,
+	                          const Rect *theClipRect,
+	                          RectList *theDrawnAreas,
+	                          int *theWidth);
 	SexyChar GetMappedChar(uint32_t value);
 
   public:
@@ -165,7 +152,7 @@ class ImageFont : public Font
 	virtual int CharWidthKern(uint32_t theChar, uint32_t thePrevChar);
 	virtual int StringWidth(const SexyString &theString);
 	virtual void DrawString(
-		Graphics *g, int theX, int theY, const SexyString &theString, const Color &theColor, const Rect &theClipRect);
+	    Graphics *g, int theX, int theY, const SexyString &theString, const Color &theColor, const Rect &theClipRect);
 
 	virtual Font *Duplicate();
 

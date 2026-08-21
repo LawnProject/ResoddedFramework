@@ -17,12 +17,11 @@ MessageWidget::MessageWidget(LawnApp *theApp)
 	mLabelNext[0] = '\0';
 	mMessageStyleNext = MessageStyle::MESSAGE_STYLE_OFF;
 	mSlideOffTime = 100;
-	memset(mTextReanimID, (int)ReanimationID::REANIMATIONID_NULL, MAX_MESSAGE_LENGTH);
 }
 
 void MessageWidget::ClearReanim()
 {
-	for (int i = 0; i < MAX_MESSAGE_LENGTH; i++)
+	for (int i = 0; i < mTextReanimID.size(); i++)
 	{
 		if (mTextReanimID[i] == ReanimationID::REANIMATIONID_NULL)
 			continue;
@@ -30,8 +29,8 @@ void MessageWidget::ClearReanim()
 		if (aReanim)
 		{
 			aReanim->ReanimationDie();
-			mTextReanimID[i] = ReanimationID::REANIMATIONID_NULL;
 		}
+		mTextReanimID[i] = ReanimationID::REANIMATIONID_NULL;
 	}
 }
 
@@ -47,46 +46,48 @@ void MessageWidget::ClearLabel()
 	}
 }
 
+namespace
+{
+
+// copy theInput to theTarget (both UTF-8 encoded), truncating at the final codepoint boundary that fits
+void CopyTruncatedToLabel(std::array<char, MAX_MESSAGE_BYTES> &theTarget, const SexyString &theInput)
+{
+	auto it = theInput.begin();
+	const auto end = theInput.end();
+	size_t aByteLen = 0;
+	while (it != end)
+	{
+		auto itStart = it;
+		utf8::next(it, end);
+		auto aCodepointByteSize = it - itStart;
+		if (aByteLen + aCodepointByteSize >= theTarget.size())
+		{
+			it = itStart; // backtrack the last codepoint we saw which doesn't fit
+			break;
+		}
+		aByteLen += aCodepointByteSize;
+	}
+	std::copy(theInput.begin(), it, theTarget.begin());
+	theTarget[aByteLen] = '\0';
+}
+
+} // namespace
+
 void MessageWidget::SetLabel(const SexyString &theNewLabel, MessageStyle theMessageStyle)
 {
 	SexyString aLabel = TodStringTranslate(theNewLabel);
 	TOD_ASSERT(utf8::is_valid(aLabel));
-	TOD_ASSERT(utf8::distance(aLabel.begin(), aLabel.end()) < MAX_MESSAGE_LENGTH - 1);
 
 	if (mReanimType != ReanimationType::REANIM_NONE && mDuration > 0)
 	{
 		mMessageStyleNext = theMessageStyle;
-		size_t count = 0;
-
-		auto it = aLabel.begin();
-		auto end = aLabel.end();
-
-		while (it != end && count < MAX_MESSAGE_LENGTH - 1)
-		{
-			mLabelNext[count++] = utf8::next(it, end);
-		}
-
-		mLabelNext[count] = '\0';
+		CopyTruncatedToLabel(mLabelNext, aLabel);
 		ClearLabel();
 	}
 	else
 	{
 		ClearReanim();
-		size_t aByteCount = 0;
-		auto it = aLabel.begin();
-		auto end = aLabel.end();
-		size_t count = 0;
-
-		while (it != end && count < MAX_MESSAGE_LENGTH - 1) //get the amount of bytes so we can use strncpy properly
-		{
-			auto charStart = it;
-			utf8::next(it, end);
-			aByteCount += it - charStart;
-			count++;
-		}
-
-		strncpy(mLabel, aLabel.c_str(), aByteCount);
-		mLabel[aByteCount] = '\0';
+		CopyTruncatedToLabel(mLabel, aLabel);
 		mMessageStyle = theMessageStyle;
 		mReanimType = ReanimationType::REANIM_NONE;
 
@@ -151,52 +152,64 @@ void MessageWidget::SetLabel(const SexyString &theNewLabel, MessageStyle theMess
 void MessageWidget::LayoutReanimText()
 {
 	float aMaxWidth = 0;
-	int aCurLine = 0, aCurPos = 0;
 	Font *aFont = GetFont();
-	int aLabelLen = strlen(mLabel);
+	size_t aLabelByteLen = strlen(mLabel.data());
 
-	mSlideOffTime = aLabelLen + 100;
-
-	float aLineWidth[MAX_REANIM_LINES];
-	for (int aPos = 0; aPos <= aLabelLen; aPos++)
+	// calculate line widths and codepoint count
+	size_t aCodepointCount = 0;
+	float aLineWidth[MAX_REANIM_LINES] = { 0. };
 	{
-		if (aPos == aLabelLen || mLabel[aPos] == '\n')
+		int aCurLine = 0;
+		SexyString aLine;
+
+		auto it = mLabel.begin();
+		const auto end = mLabel.begin() + aLabelByteLen;
+		while (it != end)
+		{
+			uint32_t aCodepoint = utf8::next(it, end);
+			aCodepointCount++;
+			if (aCodepoint == '\n')
+			{
+				TOD_ASSERT(aCurLine < MAX_REANIM_LINES);
+				aLineWidth[aCurLine++] = aFont->StringWidth(aLine);
+				aLine.clear();
+				continue;
+			}
+			utf8::append(aCodepoint, aLine);
+		}
+		if (!aLine.empty())
 		{
 			TOD_ASSERT(aCurLine < MAX_REANIM_LINES);
-
-			int aLen = aPos - aCurPos;
-			int aOff = aCurPos;
-			aCurPos = aPos + 1;
-			SexyString aLine;
-
-			for (int i = 0; i < aLen; i++)
-			{
-				utf8::append(mLabel[aOff + i], aLine);
-			}
-
 			aLineWidth[aCurLine] = aFont->StringWidth(aLine);
-			aMaxWidth = std::max(aMaxWidth, aLineWidth[aCurLine]);
-			aCurLine++;
 		}
 	}
 
-	aCurLine = 0;
+	mSlideOffTime = aCodepointCount + 100;
+
+	int aCurLine = 0;
 	float aCurPosY = 0.0f;
 	float aCurPosX = -aLineWidth[0] * 0.5f;
-	for (int aPos = 0; aPos < aLabelLen; aPos++)
+	auto it = mLabel.begin();
+	const auto end = mLabel.begin() + aLabelByteLen;
+	size_t aReanimIdx = 0;
+	while (it != end && aReanimIdx < mTextReanimID.size())
 	{
 		Reanimation *aReanimText = mApp->AddReanimation(aCurPosX, aCurPosY, 0, mReanimType);
 		aReanimText->mIsAttachment = true;
 		aReanimText->PlayReanim("anim_enter", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0.0f, 0.0f);
-		mTextReanimID[aPos] = mApp->ReanimationGetID(aReanimText);
+		mTextReanimID[aReanimIdx++] = mApp->ReanimationGetID(aReanimText);
 
-		aCurPosX += aFont->CharWidth(mLabel[aPos]);
-		if (mLabel[aPos] == '\n')
+		uint32_t aCodepoint = utf8::next(it, end);
+		if (aCodepoint == '\n')
 		{
 			aCurLine++;
 			TOD_ASSERT(aCurLine < MAX_REANIM_LINES);
 			aCurPosX = -aLineWidth[aCurLine] * 0.5f;
 			aCurPosY += aFont->GetLineSpacing();
+		}
+		else
+		{
+			aCurPosX += aFont->CharWidth(aCodepoint);
 		}
 	}
 }
@@ -214,15 +227,18 @@ void MessageWidget::Update()
 			mMessageStyle = MessageStyle::MESSAGE_STYLE_OFF;
 			if (mMessageStyleNext != MessageStyle::MESSAGE_STYLE_OFF)
 			{
-				SetLabel(mLabelNext, mMessageStyleNext);
+				SetLabel(mLabelNext.data(), mMessageStyleNext);
 				mMessageStyleNext = MessageStyle::MESSAGE_STYLE_OFF;
 			}
 		}
 	}
 
-	int aLabelLen = strlen(mLabel);
-	for (int aPos = 0; aPos < aLabelLen; aPos++)
+	for (int aPos = 0; aPos < mTextReanimID.size(); aPos++)
 	{
+		if (mTextReanimID[aPos] == ReanimationID::REANIMATIONID_NULL)
+		{
+			break;
+		}
 		Reanimation *aTextReanim = mApp->ReanimationTryToGet(mTextReanimID[aPos]);
 		if (aTextReanim == nullptr)
 		{
@@ -239,7 +255,7 @@ void MessageWidget::Update()
 			else
 			{
 				aTextReanim->mAnimRate = TodAnimateCurveFloat(0, 50, (mDisplayTime - mDuration) * aTextSpeed - aPos,
-															  0.0f, 40.0f, TodCurves::CURVE_LINEAR);
+				                                              0.0f, 40.0f, TodCurves::CURVE_LINEAR);
 			}
 		}
 		else
@@ -249,7 +265,7 @@ void MessageWidget::Update()
 				aTextReanim->PlayReanim("anim_leave", ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD, 0, 0.0f);
 			}
 			aTextReanim->mAnimRate = TodAnimateCurveFloat(0, 50, (mSlideOffTime - mDuration) * aTextSpeed - aPos, 0.0f,
-														  40.0f, TodCurves::CURVE_LINEAR);
+			                                              40.0f, TodCurves::CURVE_LINEAR);
 		}
 
 		aTextReanim->Update();
@@ -258,9 +274,14 @@ void MessageWidget::Update()
 
 void MessageWidget::DrawReanimatedText(Graphics *g, Font *theFont, const Color &theColor, float thePosY)
 {
-	int aLabelLen = strlen(mLabel);
-	for (int aPos = 0; aPos < aLabelLen; aPos++)
+	auto it = mLabel.begin();
+	const auto end = mLabel.begin() + strlen(mLabel.data());
+	for (int aPos = 0; it != end && aPos < mTextReanimID.size(); aPos++)
 	{
+		if (mTextReanimID[aPos] == ReanimationID::REANIMATIONID_NULL)
+		{
+			break;
+		}
 		Reanimation *aTextReanim = mApp->ReanimationTryToGet(mTextReanimID[aPos]);
 		if (aTextReanim == nullptr)
 		{
@@ -279,7 +300,7 @@ void MessageWidget::DrawReanimatedText(Graphics *g, Font *theFont, const Color &
 		aFinalColor.mAlpha = anAlpha;
 
 		aTransform.mTransX += aTextReanim->mOverlayMatrix.m02;
-		aTransform.mTransY += aTextReanim->mOverlayMatrix.m12 + thePosY - BOARD_HEIGHT / 2;
+		aTransform.mTransY += aTextReanim->mOverlayMatrix.m12 + thePosY - BOARD_HEIGHT / 2.0;
 		if (mReanimType == ReanimationType::REANIM_TEXT_FADE_ON && mDisplayTime - mDuration < mSlideOffTime)
 		{
 			float aStretch = 1.0f - aTextReanim->mAnimTime;
@@ -288,9 +309,9 @@ void MessageWidget::DrawReanimatedText(Graphics *g, Font *theFont, const Color &
 
 		SexyMatrix3 aMatrix;
 		Reanimation::MatrixFromTransform(aTransform, aMatrix);
-		SexyString aLetter;
-		aLetter.append(1, mLabel[aPos]);
-		TodDrawStringMatrix(g, theFont, aMatrix, aLetter, aFinalColor);
+		SexyString aSingleCodepoint;
+		utf8::append(utf8::next(it, end), aSingleCodepoint);
+		TodDrawStringMatrix(g, theFont, aMatrix, aSingleCodepoint, aFinalColor);
 	}
 }
 
@@ -431,7 +452,7 @@ void MessageWidget::Draw(Graphics *g)
 		if (aMinAlpha != 255)
 		{
 			aColor.mAlpha =
-				TodAnimateCurve(75, 0, mApp->mAppCounter % 75, aMinAlpha, 255, TodCurves::CURVE_BOUNCE_SLOW_MIDDLE);
+			    TodAnimateCurve(75, 0, mApp->mAppCounter % 75, aMinAlpha, 255, TodCurves::CURVE_BOUNCE_SLOW_MIDDLE);
 			aOutlineColor.mAlpha = aColor.mAlpha;
 		}
 		if (aFadeOut)
@@ -448,18 +469,19 @@ void MessageWidget::Draw(Graphics *g)
 			g->FillRect(aRect);
 
 			aRect.mY += aTextOffsetY;
-			TodDrawStringWrapped(g, mLabel, aRect, aFont, aColor,
-								 DrawStringJustification::DS_ALIGN_CENTER_VERTICAL_MIDDLE);
+			TodDrawStringWrapped(g, mLabel.data(), aRect, aFont, aColor,
+			                     DrawStringJustification::DS_ALIGN_CENTER_VERTICAL_MIDDLE);
 		}
 		else
 		{
+			SexyString aLabelStr = mLabel.data();
 			Rect aRect(aPosX - mApp->mBoard->mX - BOARD_WIDTH / 2, aPosY - aFont->mAscent, BOARD_WIDTH, BOARD_HEIGHT);
 			if (aOutlineFont)
 			{
-				TodDrawStringWrapped(g, mLabel, aRect, aOutlineFont, aOutlineColor,
-									 DrawStringJustification::DS_ALIGN_CENTER);
+				TodDrawStringWrapped(g, aLabelStr, aRect, aOutlineFont, aOutlineColor,
+				                     DrawStringJustification::DS_ALIGN_CENTER);
 			}
-			TodDrawStringWrapped(g, mLabel, aRect, aFont, aColor, DrawStringJustification::DS_ALIGN_CENTER);
+			TodDrawStringWrapped(g, aLabelStr, aRect, aFont, aColor, DrawStringJustification::DS_ALIGN_CENTER);
 		}
 
 		if (mMessageStyle == MessageStyle::MESSAGE_STYLE_HOUSE_NAME)
@@ -468,7 +490,7 @@ void MessageWidget::Draw(Graphics *g)
 			if (mApp->IsSurvivalMode() && mApp->mBoard->mChallenge->mSurvivalStage > 0)
 			{
 				int aFlags = mApp->mBoard->GetNumWavesPerSurvivalStage() * mApp->mBoard->mChallenge->mSurvivalStage /
-							 mApp->mBoard->GetNumWavesPerFlag();
+				             mApp->mBoard->GetNumWavesPerFlag();
 				SexyString aFlagStr = mApp->Pluralize(aFlags, "[ONE_FLAG]", "[COUNT_FLAGS]");
 				SexyString aSubStr = TodReplaceString("[FLAGS_COMPLETED]", "{FLAGS}", aFlagStr);
 			}
@@ -476,7 +498,7 @@ void MessageWidget::Draw(Graphics *g)
 			if (aSubStr.size() > 0)
 			{
 				TodDrawString(g, aSubStr, BOARD_WIDTH / 2 - mApp->mBoard->mX, aPosY + 26, Sexy::FONT_HOUSEOFTERROR16,
-							  Color(224, 187, 62, aColor.mAlpha), DrawStringJustification::DS_ALIGN_CENTER);
+				              Color(224, 187, 62, aColor.mAlpha), DrawStringJustification::DS_ALIGN_CENTER);
 			}
 		}
 	}

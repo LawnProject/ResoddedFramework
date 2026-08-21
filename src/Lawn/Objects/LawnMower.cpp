@@ -30,7 +30,7 @@ void LawnMower::LawnMowerInitialize(int theRow)
 		aReanimType = ReanimationType::REANIM_ROOF_CLEANER;
 	}
 	else if (mBoard->mPlantRow[mRow] == PlantRowType::PLANTROW_POOL &&
-			 mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_POOL_CLEANER])
+	         mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_POOL_CLEANER])
 	{
 		mMowerType = LawnMowerType::LAWNMOWER_POOL;
 		aReanimType = ReanimationType::REANIM_POOL_CLEANER;
@@ -77,10 +77,10 @@ void LawnMower::UpdatePool()
 	if (isPoolRange && mMowerHeight == MowerHeight::MOWER_HEIGHT_LAND)
 	{
 		Reanimation *aSplashReanim =
-			mApp->AddReanimation(mPosX + 0.0f, mPosY + 25.0f, mRenderOrder + 1, ReanimationType::REANIM_SPLASH);
+		    mApp->AddReanimation(mPosX + 0.0f, mPosY + 25.0f, mRenderOrder + 1, ReanimationType::REANIM_SPLASH);
 		aSplashReanim->OverrideScale(1.2f, 0.8f);
 		mApp->AddTodParticle(
-			mPosX + 0.0f + 50.0f, mPosY + 0.0f + 42.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_PLANTING_POOL);
+		    mPosX + 0.0f + 50.0f, mPosY + 0.0f + 42.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_PLANTING_POOL);
 		mApp->PlayFoley(FoleyType::FOLEY_ZOMBIESPLASH);
 		mMowerHeight = MowerHeight::MOWER_HEIGHT_DOWN_TO_POOL;
 	}
@@ -101,10 +101,10 @@ void LawnMower::UpdatePool()
 			mAltitude = -28.0f;
 			mMowerHeight = MowerHeight::MOWER_HEIGHT_UP_TO_LAND;
 			Reanimation *aSplashReanim =
-				mApp->AddReanimation(mPosX + 0.0f, mPosY + 25.0f, mRenderOrder + 1, ReanimationType::REANIM_SPLASH);
+			    mApp->AddReanimation(mPosX + 0.0f, mPosY + 25.0f, mRenderOrder + 1, ReanimationType::REANIM_SPLASH);
 			aSplashReanim->OverrideScale(1.2f, 0.8f);
 			mApp->AddTodParticle(
-				mPosX + 0.0f + 50.0f, mPosY + 0.0f + 42.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_PLANTING_POOL);
+			    mPosX + 0.0f + 50.0f, mPosY + 0.0f + 42.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_PLANTING_POOL);
 			mApp->PlayFoley(FoleyType::FOLEY_PLANT_WATER);
 			aMowerReanim->PlayReanim("anim_land", ReanimLoopType::REANIM_LOOP, 0, 0.0f);
 		}
@@ -120,7 +120,7 @@ void LawnMower::UpdatePool()
 	}
 
 	if (mMowerHeight == MowerHeight::MOWER_HEIGHT_IN_POOL &&
-		aMowerReanim->mLoopType == ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD && aMowerReanim->mLoopCount > 0)
+	    aMowerReanim->mLoopType == ReanimLoopType::REANIM_PLAY_ONCE_AND_HOLD && aMowerReanim->mLoopCount > 0)
 	{
 		aMowerReanim->PlayReanim("anim_water", ReanimLoopType::REANIM_LOOP, 10, 35.0f);
 	}
@@ -200,19 +200,19 @@ void LawnMower::Update()
 			continue;
 
 		if (aZombie->mZombieType != ZombieType::ZOMBIE_BOSS && aZombie->mRow - mRow == 0 &&
-			aZombie->mZombiePhase != ZombiePhase::PHASE_ZOMBIE_MOWERED && !aZombie->IsTangleKelpTarget() &&
-			aZombie->EffectedByDamage(
-				GetBit(DamageRangeFlags::DAMAGES_GROUND) | GetBit(DamageRangeFlags::DAMAGES_SUBMERGED) |
-				GetBit(DamageRangeFlags::DAMAGES_FLYING) | GetBit(DamageRangeFlags::DAMAGES_DOG) |
-				GetBit(DamageRangeFlags::DAMAGES_OFF_GROUND) | GetBit(DamageRangeFlags::DAMAGES_DYING) |
-				GetBit(DamageRangeFlags::DAMAGES_UNDERGROUND)))
+		    aZombie->mZombiePhase != ZombiePhase::PHASE_ZOMBIE_MOWERED && !aZombie->IsTangleKelpTarget() &&
+		    aZombie->EffectedByDamage(
+		        GetBit(DamageRangeFlags::DAMAGES_GROUND) | GetBit(DamageRangeFlags::DAMAGES_SUBMERGED) |
+		        GetBit(DamageRangeFlags::DAMAGES_FLYING) | GetBit(DamageRangeFlags::DAMAGES_DOG) |
+		        GetBit(DamageRangeFlags::DAMAGES_OFF_GROUND) | GetBit(DamageRangeFlags::DAMAGES_DYING) |
+		        GetBit(DamageRangeFlags::DAMAGES_UNDERGROUND)))
 		{
 			Rect aZombieRect = aZombie->GetZombieRect();
 			int aOverlap = GetRectOverlap(aAttackRect, aZombieRect);
 			if (aOverlap > (aZombie->mZombieType == ZombieType::ZOMBIE_BALLOON ? 20 : 0))
 			{
 				if (mMowerState != LawnMowerState::MOWER_READY ||
-					(aZombie->mZombieType != ZombieType::ZOMBIE_BUNGEE && aZombie->mHasHead))
+				    (aZombie->mZombieType != ZombieType::ZOMBIE_BUNGEE && aZombie->mHasHead))
 				{
 					MowZombie(aZombie);
 				}
@@ -243,10 +243,10 @@ void LawnMower::Update()
 		UpdatePool();
 	}
 	if (mMowerType == LawnMowerType::LAWNMOWER_LAWN && mBoard->mPlantRow[mRow] == PlantRowType::PLANTROW_POOL &&
-		mPosX > 50.0f)
+	    mPosX > 50.0f)
 	{
 		Reanimation *aSplashReanim =
-			mApp->AddReanimation(mPosX, mPosY + 25.0f, mRenderOrder + 1, ReanimationType::REANIM_SPLASH);
+		    mApp->AddReanimation(mPosX, mPosY + 25.0f, mRenderOrder + 1, ReanimationType::REANIM_SPLASH);
 		aSplashReanim->OverrideScale(1.2f, 0.8f);
 		mApp->AddTodParticle(mPosX + 50.0f, mPosY + 67.0f, mRenderOrder + 1, ParticleEffect::PARTICLE_PLANTING_POOL);
 		mApp->PlaySample(SOUND_ZOMBIE_ENTERING_WATER);
@@ -267,8 +267,8 @@ void LawnMower::Draw(Graphics *g)
 		return;
 
 	if (mMowerHeight != MowerHeight::MOWER_HEIGHT_UP_TO_LAND &&
-		mMowerHeight != MowerHeight::MOWER_HEIGHT_DOWN_TO_POOL && mMowerHeight != MowerHeight::MOWER_HEIGHT_IN_POOL &&
-		mMowerState != LawnMowerState::MOWER_SQUISHED)
+	    mMowerHeight != MowerHeight::MOWER_HEIGHT_DOWN_TO_POOL && mMowerHeight != MowerHeight::MOWER_HEIGHT_IN_POOL &&
+	    mMowerState != LawnMowerState::MOWER_SQUISHED)
 	{
 		int aShadowType = 0;
 		float aScaleX = 1.0f;
@@ -322,7 +322,7 @@ void LawnMower::Draw(Graphics *g)
 		}
 
 		if (mMowerHeight == MowerHeight::MOWER_HEIGHT_UP_TO_LAND ||
-			mMowerHeight == MowerHeight::MOWER_HEIGHT_DOWN_TO_POOL)
+		    mMowerHeight == MowerHeight::MOWER_HEIGHT_DOWN_TO_POOL)
 		{
 			aMowerGraphics.SetClipRect(-50, -50, 150, 132 + mAltitude);
 		}

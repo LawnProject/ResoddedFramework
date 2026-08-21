@@ -10,13 +10,13 @@
 #include "ButtonListener.h"
 #include "DialogListener.h"
 #include "Buffer.h"
-#include "CritSect.h"
 #include "SharedImage.h"
 #include <ft2build.h>
 #include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_events.h>
 #include <list>
 #include <set>
+#include <mutex>
 #include FT_FREETYPE_H
 
 
@@ -190,7 +190,6 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	#ifdef _WIN32
 	HANDLE mCopyMutex;
 	#endif
-	CritSect mCritSect;
 	bool mBetaValidate;
 	uint8_t mAdd8BitMaxTable[512];
 	WidgetManager *mWidgetManager;

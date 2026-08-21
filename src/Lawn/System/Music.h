@@ -2,6 +2,13 @@
 #define __MUSIC_H__
 
 #include <string>
+
+// Include windows ourselves to prevent bass.h from including windows and leak macros
+// IWYU pragma: begin_exports <- this suppresses clangd warning
+#include "../../SexyAppFramework/Platform.h"
+// IWYU pragma: end_exports
+// this comment exists to prevent formatter from reordering this include
+
 #include <bass.h>
 
 class LawnApp;
@@ -103,7 +110,6 @@ class Music
 	void MusicInit();
 	void MusicDispose()
 	{
-		;
 	}
 	void MusicUpdate();
 	void StopAllMusic();

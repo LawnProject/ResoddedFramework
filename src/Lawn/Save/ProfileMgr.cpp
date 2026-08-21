@@ -98,7 +98,6 @@ void ProfileMgr::Load()
 	{
 		TodTraceAndLog("[LawnProject] - Failed to profiles\n");
 		Clear();
-
 	}
 }
 
@@ -139,11 +138,11 @@ bool ProfileMgr::RenameProfile(const SexyString &theOldName, const SexyString &t
 	{
 		if (
 #ifdef _WIN32
-			_stricmp(theOldName.c_str(), theNewName.c_str())
+		    _stricmp(theOldName.c_str(), theNewName.c_str())
 #else
-			strcasecmp(theOldName.c_str(), theNewName.c_str())
+		    strcasecmp(theOldName.c_str(), theNewName.c_str())
 #endif
-			== 0)
+		    == 0)
 			anOldItr->second.mName = theNewName;
 		else
 		{

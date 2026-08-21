@@ -1,7 +1,8 @@
 ---
 Language: Cpp
 BasedOnStyle: Microsoft
-UseTab: Always
+UseTab: ForIndentation
+TabWidth: 4
 SortIncludes: false
 ReflowComments: false
 AllowShortFunctionsOnASingleLine: false
@@ -9,5 +10,6 @@ BinPackParameters: true
 BinPackArguments: true
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
-AlignArrayOfStructures: None
-BreakArrays: false
+AlignArrayOfStructures: Left
+Cpp11BracedListStyle: false
+ColumnLimit: 0

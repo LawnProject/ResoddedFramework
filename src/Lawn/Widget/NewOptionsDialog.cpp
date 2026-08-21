@@ -18,7 +18,7 @@
 using namespace Sexy;
 
 NewOptionsDialog::NewOptionsDialog(LawnApp *theApp, bool theFromGameSelector)
-	: Dialog(nullptr, nullptr, Dialogs::DIALOG_NEWOPTIONS, true, "Options", "", "", Dialog::BUTTONS_NONE)
+    : Dialog(nullptr, nullptr, Dialogs::DIALOG_NEWOPTIONS, true, "Options", "", "", Dialog::BUTTONS_NONE)
 {
 	mApp = theApp;
 	mFromGameSelector = theFromGameSelector;
@@ -32,12 +32,12 @@ NewOptionsDialog::NewOptionsDialog(LawnApp *theApp, bool theFromGameSelector)
 	mSettingsButton->mHeight = 33;
 
 	mBackToGameButton = MakeNewButton(Dialog::ID_OK,
-									  this,
-									  "[BACK_TO_GAME]",
-									  nullptr,
-									  IMAGE_OPTIONS_BACKTOGAMEBUTTON0,
-									  IMAGE_OPTIONS_BACKTOGAMEBUTTON0,
-									  IMAGE_OPTIONS_BACKTOGAMEBUTTON2);
+	                                  this,
+	                                  "[BACK_TO_GAME]",
+	                                  nullptr,
+	                                  IMAGE_OPTIONS_BACKTOGAMEBUTTON0,
+	                                  IMAGE_OPTIONS_BACKTOGAMEBUTTON0,
+	                                  IMAGE_OPTIONS_BACKTOGAMEBUTTON2);
 	mBackToGameButton->mTranslateX = 0;
 	mBackToGameButton->mTranslateY = 0;
 	mBackToGameButton->mTextOffsetX = -2;
@@ -50,13 +50,13 @@ NewOptionsDialog::NewOptionsDialog(LawnApp *theApp, bool theFromGameSelector)
 	mBackToGameButton->mHiliteFont = FONT_DWARVENTODCRAFT36BRIGHTGREENINSET;
 
 	mMusicVolumeSlider = new Slider(
-		IMAGE_OPTIONS_SLIDERSLOT, IMAGE_OPTIONS_SLIDERKNOB2, NewOptionsDialog::NewOptionsDialog_MusicVolume, this);
+	    IMAGE_OPTIONS_SLIDERSLOT, IMAGE_OPTIONS_SLIDERKNOB2, NewOptionsDialog::NewOptionsDialog_MusicVolume, this);
 	double aMusicVolume = theApp->GetMusicVolume();
 	aMusicVolume = std::max(0.0, std::min(1.0, aMusicVolume));
 	mMusicVolumeSlider->SetValue(aMusicVolume);
 
 	mSfxVolumeSlider = new Slider(
-		IMAGE_OPTIONS_SLIDERSLOT, IMAGE_OPTIONS_SLIDERKNOB2, NewOptionsDialog::NewOptionsDialog_SoundVolume, this);
+	    IMAGE_OPTIONS_SLIDERSLOT, IMAGE_OPTIONS_SLIDERKNOB2, NewOptionsDialog::NewOptionsDialog_SoundVolume, this);
 	mSfxVolumeSlider->SetValue(theApp->GetSfxVolume() / 0.65);
 
 	if (mFromGameSelector)
@@ -74,8 +74,8 @@ NewOptionsDialog::NewOptionsDialog(LawnApp *theApp, bool theFromGameSelector)
 	}
 
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ICE ||
-		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
-		mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
+	    mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
+	    mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 	{
 		mRestartButton->SetVisible(false);
 	}
@@ -84,8 +84,8 @@ NewOptionsDialog::NewOptionsDialog(LawnApp *theApp, bool theFromGameSelector)
 		mRestartButton->SetVisible(false);
 	}
 	if (!mApp->CanShowAlmanac() || mApp->mGameScene == GameScenes::SCENE_LEVEL_INTRO ||
-		mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
-		mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM || mFromGameSelector)
+	    mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
+	    mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM || mFromGameSelector)
 	{
 		mAlmanacButton->SetVisible(false);
 	}
@@ -149,7 +149,7 @@ void NewOptionsDialog::Resize(int theX, int theY, int theWidth, int theHeight)
 	}
 
 	if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
-		mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
+	    mApp->mGameMode == GameMode::GAMEMODE_TREE_OF_WISDOM)
 	{
 		mAlmanacButton->mY += 43;
 	}
@@ -171,19 +171,19 @@ void NewOptionsDialog::Draw(Sexy::Graphics *g)
 	Sexy::Color aTextColor(107, 109, 145);
 
 	TodDrawString(g,
-				  "Music",
-				  186,
-				  140 + aMusicOffset,
-				  FONT_DWARVENTODCRAFT18,
-				  aTextColor,
-				  DrawStringJustification::DS_ALIGN_RIGHT);
+	              "[OPTIONS_MUSIC_LABEL]", // "Music"
+	              186,
+	              140 + aMusicOffset,
+	              FONT_DWARVENTODCRAFT18,
+	              aTextColor,
+	              DrawStringJustification::DS_ALIGN_RIGHT);
 	TodDrawString(g,
-				  "Sound FX",
-				  186,
-				  167 + aSfxOffset,
-				  FONT_DWARVENTODCRAFT18,
-				  aTextColor,
-				  DrawStringJustification::DS_ALIGN_RIGHT);
+	              "[OPTIONS_SOUNDFX]", // "Sound FX"
+	              186,
+	              167 + aSfxOffset,
+	              FONT_DWARVENTODCRAFT18,
+	              aTextColor,
+	              DrawStringJustification::DS_ALIGN_RIGHT);
 }
 
 void NewOptionsDialog::SliderVal(int theId, double theVal)
@@ -208,7 +208,6 @@ void NewOptionsDialog::SliderVal(int theId, double theVal)
 
 void NewOptionsDialog::CheckboxChecked(int theId, bool checked)
 {
-
 }
 
 void NewOptionsDialog::KeyDown(Sexy::KeyCode theKey)
@@ -295,7 +294,7 @@ void NewOptionsDialog::ButtonDepress(int theId)
 			}
 
 			LawnDialog *aDialog = (LawnDialog *)mApp->DoDialog(
-				Dialogs::DIALOG_CONFIRM_RESTART, true, aDialogTitle, aDialogMessage, "", Dialog::BUTTONS_YES_NO);
+			    Dialogs::DIALOG_CONFIRM_RESTART, true, aDialogTitle, aDialogMessage, "", Dialog::BUTTONS_YES_NO);
 			aDialog->mLawnYesButton->mLabel = TodStringTranslate("[RESTART_LABEL]");
 			aDialog->mLawnNoButton->mLabel = TodStringTranslate("[DIALOG_BUTTON_CANCEL]");
 

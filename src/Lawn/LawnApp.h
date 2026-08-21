@@ -137,9 +137,9 @@ class LawnApp : public SexyApp
 	TrialType mTrialType;
 	bool mDebugTrialLocked;
 	bool mMuteSoundsForCutscene;
+	bool mRunInCompileMode{};
 
 	static Version gResoddedVersion;
-
 
   public:
 	LawnApp();
@@ -352,11 +352,11 @@ class LawnApp : public SexyApp
 	/// @param theButtonMode Button creation flags
 	/// @return The created dialog
 	virtual Dialog *DoDialog(int theDialogId,
-							 bool isModal,
-							 const SexyString &theDialogHeader,
-							 const SexyString &theDialogLines,
-							 const SexyString &theDialogFooter,
-							 int theButtonMode);
+	                         bool isModal,
+	                         const SexyString &theDialogHeader,
+	                         const SexyString &theDialogLines,
+	                         const SexyString &theDialogFooter,
+	                         int theButtonMode);
 
 	/// @brief After 30 ticks create a new dialog and focus on it
 	/// @param theDialogId The ID of the dialog (determines the behavior on closing and opening)
@@ -367,11 +367,11 @@ class LawnApp : public SexyApp
 	/// @param theButtonMode Button creation flags
 	/// @return The created dialog
 	virtual Dialog *DoDialogDelay(int theDialogId,
-								  bool isModal,
-								  const SexyString &theDialogHeader,
-								  const SexyString &theDialogLines,
-								  const SexyString &theDialogFooter,
-								  int theButtonMode);
+	                              bool isModal,
+	                              const SexyString &theDialogHeader,
+	                              const SexyString &theDialogLines,
+	                              const SexyString &theDialogFooter,
+	                              int theButtonMode);
 
 	/// @brief Shutdown the game
 	virtual void Shutdown();
@@ -391,11 +391,11 @@ class LawnApp : public SexyApp
 	/// @param theButtonMode Button creation flags
 	/// @return The created dialog
 	virtual Dialog *NewDialog(int theDialogId,
-							  bool isModal,
-							  const SexyString &theDialogHeader,
-							  const SexyString &theDialogLines,
-							  const SexyString &theDialogFooter,
-							  int theButtonMode);
+	                          bool isModal,
+	                          const SexyString &theDialogHeader,
+	                          const SexyString &theDialogLines,
+	                          const SexyString &theDialogFooter,
+	                          int theButtonMode);
 
 	/// @brief Destroy the dialog
 	/// @param theDialogId The ID of the dialog (determines the behavior on closing and opening)
@@ -633,7 +633,7 @@ class LawnApp : public SexyApp
 	/// @brief Is the current level a BungeeBlitz level
 	/// @return True if the GameMode is a BungeeBlitz level, false otherwise
 	bool IsBungeeBlitzLevel();
-	
+
 	/// @brief Get the SeedType awarded in a level
 	/// @param theLevel The level to check
 	/// @return Awarded SeedType
@@ -724,15 +724,15 @@ class LawnApp : public SexyApp
 	void PreloadForUser();
 
 	/// @brief
-	/// @return 
+	/// @return
 	int GetNumPreloadingTasks();
 
 	int LawnMessageBox(int theDialogId,
-					   const SexyString &theHeaderName,
-					   const SexyString &theLinesName,
-					   const SexyString &theButton1Name,
-					   const SexyString &theButton2Name,
-					   int theButtonMode);
+	                   const SexyString &theHeaderName,
+	                   const SexyString &theLinesName,
+	                   const SexyString &theButton1Name,
+	                   const SexyString &theButton2Name,
+	                   int theButtonMode);
 
 	/// @brief Open Credits screen
 	void ShowCreditScreen();
@@ -906,7 +906,6 @@ class LawnApp : public SexyApp
 	/// @param theWidth The width to center it in
 	/// @param theHeight The height to center it in
 	static void CenterDialog(Dialog *theDialog, int theWidth, int theHeight);
-
 };
 
 /// @brief Get the current level name, used for logging

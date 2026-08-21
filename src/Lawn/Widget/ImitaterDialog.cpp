@@ -9,13 +9,13 @@
 #include <SexyAppFramework/WidgetManager.h>
 
 ImitaterDialog::ImitaterDialog()
-	: LawnDialog(gLawnApp,
-				 Dialogs::DIALOG_IMITATER,
-				 true,
-				 "[CHOOSE_SEED_TO_COPY]",
-				 "",
-				 "[DIALOG_BUTTON_OK]",
-				 Dialog::BUTTONS_YES_NO)
+    : LawnDialog(gLawnApp,
+                 Dialogs::DIALOG_IMITATER,
+                 true,
+                 "[CHOOSE_SEED_TO_COPY]",
+                 "",
+                 "[DIALOG_BUTTON_OK]",
+                 Dialog::BUTTONS_YES_NO)
 {
 	CalcSize(IMITATER_DIALOG_WIDTH - mWidth, IMITATER_DIALOG_HEIGHT - mHeight);
 	mToolTip = new ToolTipWidget();
@@ -86,7 +86,7 @@ void ImitaterDialog::Draw(Graphics *g)
 			int aSeedX, aSeedY;
 			GetSeedPosition(aSeedType, aSeedX, aSeedY);
 			bool aGrayed = mApp->mSeedChooserScreen->SeedNotAllowedToPick(aSeedType) ||
-						   mApp->mSeedChooserScreen->SeedNotRecommendedToPick(aSeedType);
+			               mApp->mSeedChooserScreen->SeedNotRecommendedToPick(aSeedType);
 			DrawSeedPacket(g, aSeedX, aSeedY, SeedType::SEED_IMITATER, aSeedType, 0, aGrayed ? 115 : 255, true, false);
 		}
 	}

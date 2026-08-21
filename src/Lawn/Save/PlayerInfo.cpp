@@ -36,7 +36,6 @@ void PlayerInfo::SyncDetails(ProfileSyncer &theSync)
 	theSync.SyncArrayFromSize("challenge_records", mChallengeRecords, NUM_GAME_MODES);
 	theSync.SyncArrayFromSize("purchases", mPurchases, NUM_STORE_ITEM_MAX);
 
-
 	theSync.SyncInt("playtime_active", mPlayTimeActivePlayer);
 	theSync.SyncInt("playtime_inactive", mPlayTimeInactivePlayer);
 	theSync.SyncBool("used_cheat_keys", mHasUsedCheatKeys);
@@ -88,7 +87,6 @@ void PlayerInfo::LoadDetails()
 				Reset();
 			}
 		}
-
 	}
 	catch (nlohmann::json::parse_error &anError)
 	{
@@ -364,27 +362,27 @@ void ProfileSyncer::SyncString(const SexyString &theName, SexyString &theStr)
 void to_json(nlohmann::json &j, const PottedPlant &p)
 {
 	j = {
-		{"seed_type", (int)p.mSeedType},
-		 {"garden", (int)p.mWhichZenGarden},
+		{ "seed_type",                (int)p.mSeedType         },
+		{ "garden",                   (int)p.mWhichZenGarden   },
 
-		 {"x", p.mX},
-		 {"y", p.mY},
+		{ "x",		                p.mX		             },
+		{ "y",		                p.mY		             },
 
-		 {"facing", (int)p.mFacing},
+		{ "facing",                   (int)p.mFacing           },
 
-		 {"last_watered", p.mLastWateredTime},
+		{ "last_watered",             p.mLastWateredTime       },
 
-		 {"draw_variation", (int)p.mDrawVariation},
-		 {"age", (int)p.mPlantAge},
+		{ "draw_variation",           (int)p.mDrawVariation    },
+		{ "age",		              (int)p.mPlantAge         },
 
-		 {"times_fed", p.mTimesFed},
-		 {"feedings_per_grow", p.mFeedingsPerGrow},
+		{ "times_fed",                p.mTimesFed              },
+		{ "feedings_per_grow",        p.mFeedingsPerGrow       },
 
-		 {"plant_need", (int)p.mPlantNeed},
+		{ "plant_need",               (int)p.mPlantNeed        },
 
-		 {"last_need_fulfilled_time", p.mLastNeedFulfilledTime},
-		 {"last_fertilized_time", p.mLastFertilizedTime},
-		 {"last_chocolate_time", p.mLastChocolateTime}
+		{ "last_need_fulfilled_time", p.mLastNeedFulfilledTime },
+		{ "last_fertilized_time",     p.mLastFertilizedTime    },
+		{ "last_chocolate_time",      p.mLastChocolateTime     }
 	};
 }
 
@@ -416,31 +414,31 @@ void from_json(const nlohmann::json &j, PottedPlant &p)
 void to_json(nlohmann::json &j, const Zombatar &z)
 {
 	j = {
-		{"skin_color", (int)z.mSkinColor},
+		{ "skin_color",        (int)z.mSkinColor       },
 
-		{"clothes", z.mClothes},
-		{"clothes_color", z.mClothesColor},
+		{ "clothes",           z.mClothes              },
+		{ "clothes_color",     z.mClothesColor         },
 
-		{"tidbits", (int)z.mTidbits},
-		{"tidbits_color", (int)z.mTidbitsColor},
+		{ "tidbits",           (int)z.mTidbits         },
+		{ "tidbits_color",     (int)z.mTidbitsColor    },
 
-		{"accessories", z.mAccessories},
-		{"accessories_color", z.mAccessoriesColor},
+		{ "accessories",       z.mAccessories          },
+		{ "accessories_color", z.mAccessoriesColor     },
 
-		{"facial_hair", (int)z.mFacialHair},
-		{"facial_hair_color", (int)z.mFacialHairColor},
+		{ "facial_hair",       (int)z.mFacialHair      },
+		{ "facial_hair_color", (int)z.mFacialHairColor },
 
-		{"hair", (int)z.mHair},
-		{"hair_color", (int)z.mHairColor},
+		{ "hair",              (int)z.mHair            },
+		{ "hair_color",        (int)z.mHairColor       },
 
-		{"eyewear", (int)z.mEyewear},
-		{"eyewear_color", (int)z.mEyewearColor},
+		{ "eyewear",           (int)z.mEyewear         },
+		{ "eyewear_color",     (int)z.mEyewearColor    },
 
-		{"hat", (int)z.mHat},
-		{"hat_color", (int)z.mHatColor},
+		{ "hat",               (int)z.mHat             },
+		{ "hat_color",         (int)z.mHatColor        },
 
-		{"backdrop", (int)z.mBackdrop},
-		{"backdrop_color", (int)z.mBackdropColor},
+		{ "backdrop",          (int)z.mBackdrop        },
+		{ "backdrop_color",    (int)z.mBackdropColor   },
 	};
 }
 
@@ -471,10 +469,10 @@ void from_json(const nlohmann::json &j, Zombatar &z)
 
 	z.mBackdrop = (int)j.value("backdrop", 0);
 	z.mBackdropColor = (int)j.value("backdrop_color", 17);
-
 }
 
-template <typename T, size_t N> void ProfileSyncer::SyncArray(const SexyString &theName, T (&theArray)[N], int &theRealSize)
+template <typename T, size_t N>
+void ProfileSyncer::SyncArray(const SexyString &theName, T (&theArray)[N], int &theRealSize)
 {
 	if (mReading)
 	{
@@ -509,7 +507,8 @@ template <typename T, size_t N> void ProfileSyncer::SyncArray(const SexyString &
 	}
 }
 
-template <typename T, size_t N> void ProfileSyncer::SyncArrayFromSize(const SexyString &theName, T (&theArray)[N], int theRealSize)
+template <typename T, size_t N>
+void ProfileSyncer::SyncArrayFromSize(const SexyString &theName, T (&theArray)[N], int theRealSize)
 {
 	if (mReading)
 	{

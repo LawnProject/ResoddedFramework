@@ -9,22 +9,22 @@
 #include <TodLib/TodStringFile.h>
 
 ContinueDialog::ContinueDialog(LawnApp *theApp)
-	: LawnDialog(theApp,
-				 Dialogs::DIALOG_CONTINUE,
-				 true, 
-				 "[CONTINUE_GAME_HEADER]",
-				 "",
-				 "[DIALOG_BUTTON_CANCEL]",
-				 Dialog::BUTTONS_FOOTER)
+    : LawnDialog(theApp,
+                 Dialogs::DIALOG_CONTINUE,
+                 true,
+                 "[CONTINUE_GAME_HEADER]",
+                 "",
+                 "[DIALOG_BUTTON_CANCEL]",
+                 Dialog::BUTTONS_FOOTER)
 {
 
 	if (theApp->IsAdventureMode())
 	{
 		mDialogLines = TodStringTranslate("[CONTINUE_GAME_OR_RESTART]");
 		mContinueButton =
-			MakeButton(ContinueDialog::ContinueDialog_Continue, this, "[CONTINUE_BUTTON]");
+		    MakeButton(ContinueDialog::ContinueDialog_Continue, this, "[CONTINUE_BUTTON]");
 		mNewGameButton =
-			MakeButton(ContinueDialog::ContinueDialog_NewGame, this, "[RESTART_BUTTON]");
+		    MakeButton(ContinueDialog::ContinueDialog_NewGame, this, "[RESTART_BUTTON]");
 	}
 	else
 	{
@@ -71,7 +71,7 @@ void ContinueDialog::Resize(int theX, int theY, int theWidth, int theHeight)
 
 	mContinueButton->Resize(mLawnYesButton->mX - 20, mLawnYesButton->mY - aBtnHeight, aBtnWidth, aBtnHeight);
 	mNewGameButton->Resize(
-		mLawnYesButton->mX + mLawnYesButton->mWidth - aBtnWidth + 20, mContinueButton->mY, aBtnWidth, aBtnHeight);
+	    mLawnYesButton->mX + mLawnYesButton->mWidth - aBtnWidth + 20, mContinueButton->mY, aBtnWidth, aBtnHeight);
 }
 
 void ContinueDialog::AddedToManager(WidgetManager *theWidgetManager)
@@ -124,24 +124,24 @@ void ContinueDialog::ButtonDepress(int theId)
 		if (mApp->IsAdventureMode())
 		{
 			LawnDialog *aDialog =
-				(LawnDialog *)mApp->DoDialog(Dialogs::DIALOG_RESTARTCONFIRM,
-											 true, 
-											 TodStringTranslate("[RESTART_LEVEL_HEADER]"),
-											 TodStringTranslate("[RESTART_LEVEL]"),
-											 "",
-											 Dialog::BUTTONS_OK_CANCEL);
+			    (LawnDialog *)mApp->DoDialog(Dialogs::DIALOG_RESTARTCONFIRM,
+			                                 true,
+			                                 TodStringTranslate("[RESTART_LEVEL_HEADER]"),
+			                                 TodStringTranslate("[RESTART_LEVEL]"),
+			                                 "",
+			                                 Dialog::BUTTONS_OK_CANCEL);
 			aDialog->mLawnYesButton->mLabel = TodStringTranslate("[RESTART_BUTTON]");
 			//aDialog->CalcSize(0, 0);
 		}
 		else
 		{
 			LawnDialog *aDialog =
-				(LawnDialog *)mApp->DoDialog(Dialogs::DIALOG_RESTARTCONFIRM,
-											 true, 
-											 "[NEW_GAME_HEADER]",
-											 "[NEW_GAME]",
-											 "",
-											 Dialog::BUTTONS_OK_CANCEL);
+			    (LawnDialog *)mApp->DoDialog(Dialogs::DIALOG_RESTARTCONFIRM,
+			                                 true,
+			                                 "[NEW_GAME_HEADER]",
+			                                 "[NEW_GAME]",
+			                                 "",
+			                                 Dialog::BUTTONS_OK_CANCEL);
 			aDialog->mLawnYesButton->mLabel = TodStringTranslate("[NEW_GAME_BUTTON]");
 			//aDialog->CalcSize(0, 0);
 		}

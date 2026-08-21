@@ -21,14 +21,14 @@ AchievementsWidget::AchievementsWidget(LawnApp *theApp)
 	mPressedMoreButton = false;
 
 	mBackButton =
-		MakeNewButton(AchievementsWidget::ACHIEVEMENTS_BACK, this, "", nullptr, Sexy::IMAGE_BLANK,
-								Sexy::IMAGE_ACHEESEMENTS_BACK_HIGHLIGHT, Sexy::IMAGE_ACHEESEMENTS_BACK_HIGHLIGHT);
+	    MakeNewButton(AchievementsWidget::ACHIEVEMENTS_BACK, this, "", nullptr, Sexy::IMAGE_BLANK,
+	                  Sexy::IMAGE_ACHEESEMENTS_BACK_HIGHLIGHT, Sexy::IMAGE_ACHEESEMENTS_BACK_HIGHLIGHT);
 	mBackButton->Resize(128, 55, Sexy::IMAGE_ACHEESEMENTS_MORE_ROCK->mWidth, Sexy::IMAGE_ACHEESEMENTS_MORE_ROCK->mHeight);
 	mBackButton->mClip = false;
 
 	mMoreButton =
-		MakeNewButton(AchievementsWidget::ACHIEVEMENTS_MORE, this, "", nullptr, Sexy::IMAGE_ACHEESEMENTS_MORE_BUTTON,
-								Sexy::IMAGE_ACHEESEMENTS_MORE_BUTTON_HIGHLIGHT, Sexy::IMAGE_ACHEESEMENTS_MORE_BUTTON_HIGHLIGHT);
+	    MakeNewButton(AchievementsWidget::ACHIEVEMENTS_MORE, this, "", nullptr, Sexy::IMAGE_ACHEESEMENTS_MORE_BUTTON,
+	                  Sexy::IMAGE_ACHEESEMENTS_MORE_BUTTON_HIGHLIGHT, Sexy::IMAGE_ACHEESEMENTS_MORE_BUTTON_HIGHLIGHT);
 	mMoreButton->Resize(700, 450, Sexy::IMAGE_ACHEESEMENTS_MORE_BUTTON->mWidth - 25, Sexy::IMAGE_ACHEESEMENTS_MORE_BUTTON->mHeight - 50);
 	mMoreButton->mClip = false;
 }
@@ -143,7 +143,7 @@ void AchievementsWidget::Update()
 
 	if (mScrollValue == 0)
 		return;
-	
+
 	mScrollValue -= mScrollDecay;
 
 	int aNewY = mY + mScrollValue * mScrollDirection;

@@ -21,17 +21,17 @@ UpdateCheckResult UpdateChecker::Check()
 		bool canLeave = false;
 		switch (aResult)
 		{
-			case HTTPTransfer::RESULT_DONE:
-				canLeave = true;
-				break;
-			case HTTPTransfer::RESULT_NOT_FOUND:
-			case HTTPTransfer::RESULT_DISCONNECTED:
-			case HTTPTransfer::RESULT_CONNECT_FAIL:
-			case HTTPTransfer::RESULT_SOCKET_ERROR:
-			case HTTPTransfer::RESULT_INVALID_ADDR:
-			case HTTPTransfer::RESULT_ABORTED:
-			case HTTPTransfer::RESULT_HTTP_ERROR:
-				return RESULT_FAIL;
+		case HTTPTransfer::RESULT_DONE:
+			canLeave = true;
+			break;
+		case HTTPTransfer::RESULT_NOT_FOUND:
+		case HTTPTransfer::RESULT_DISCONNECTED:
+		case HTTPTransfer::RESULT_CONNECT_FAIL:
+		case HTTPTransfer::RESULT_SOCKET_ERROR:
+		case HTTPTransfer::RESULT_INVALID_ADDR:
+		case HTTPTransfer::RESULT_ABORTED:
+		case HTTPTransfer::RESULT_HTTP_ERROR:
+			return RESULT_FAIL;
 		}
 		if (canLeave)
 			break;

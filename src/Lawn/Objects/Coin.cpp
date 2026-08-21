@@ -180,53 +180,53 @@ void Coin::CoinInitialize(int theX, int theY, CoinType theCoinType, CoinMotion t
 		mWidth = IMAGE_PRESENT->GetCelWidth();
 		mHeight = IMAGE_PRESENT->GetCelHeight();
 		if (mApp->IsSurvivalEndless(mApp->mGameMode) || mApp->IsEndlessIZombie(mApp->mGameMode) ||
-			mApp->IsEndlessScaryPotter(mApp->mGameMode))
+		    mApp->IsEndlessScaryPotter(mApp->mGameMode))
 		{
 			SeedType aSeedType = mApp->mZenGarden->PickRandomSeedType();
 			mPottedPlantSpec.InitializePottedPlant(aSeedType);
 		}
 		else if (mBoard->mBackground == BackgroundType::BACKGROUND_1_DAY)
 		{
-			SeedType aSeedList[] = {SeedType::SEED_PEASHOOTER, SeedType::SEED_SUNFLOWER, SeedType::SEED_CHERRYBOMB,
-									SeedType::SEED_WALLNUT,	   SeedType::SEED_REPEATER,	 SeedType::SEED_POTATOMINE,
-									SeedType::SEED_SNOWPEA,	   SeedType::SEED_CHOMPER};
+			SeedType aSeedList[] = { SeedType::SEED_PEASHOOTER, SeedType::SEED_SUNFLOWER, SeedType::SEED_CHERRYBOMB,
+				                     SeedType::SEED_WALLNUT, SeedType::SEED_REPEATER, SeedType::SEED_POTATOMINE,
+				                     SeedType::SEED_SNOWPEA, SeedType::SEED_CHOMPER };
 
 			SeedType aSeedType = (SeedType)TodPickFromArray(aSeedList, LENGTH(aSeedList));
 			mPottedPlantSpec.InitializePottedPlant(aSeedType);
 		}
 		else if (mBoard->mBackground == BackgroundType::BACKGROUND_2_NIGHT)
 		{
-			SeedType aSeedList[] = {SeedType::SEED_PUFFSHROOM,	SeedType::SEED_SUNSHROOM,
-									SeedType::SEED_FUMESHROOM,	SeedType::SEED_GRAVEBUSTER,
-									SeedType::SEED_HYPNOSHROOM, SeedType::SEED_SCAREDYSHROOM,
-									SeedType::SEED_ICESHROOM,	SeedType::SEED_DOOMSHROOM};
+			SeedType aSeedList[] = { SeedType::SEED_PUFFSHROOM, SeedType::SEED_SUNSHROOM,
+				                     SeedType::SEED_FUMESHROOM, SeedType::SEED_GRAVEBUSTER,
+				                     SeedType::SEED_HYPNOSHROOM, SeedType::SEED_SCAREDYSHROOM,
+				                     SeedType::SEED_ICESHROOM, SeedType::SEED_DOOMSHROOM };
 
 			SeedType aSeedType = (SeedType)TodPickFromArray(aSeedList, LENGTH(aSeedList));
 			mPottedPlantSpec.InitializePottedPlant(aSeedType);
 		}
 		else if (mBoard->mBackground == BackgroundType::BACKGROUND_3_POOL)
 		{
-			SeedType aSeedList[] = {SeedType::SEED_LILYPAD,	   SeedType::SEED_SQUASH,	SeedType::SEED_THREEPEATER,
-									SeedType::SEED_TANGLEKELP, SeedType::SEED_JALAPENO, SeedType::SEED_SPIKEWEED,
-									SeedType::SEED_TORCHWOOD,  SeedType::SEED_TALLNUT};
+			SeedType aSeedList[] = { SeedType::SEED_LILYPAD, SeedType::SEED_SQUASH, SeedType::SEED_THREEPEATER,
+				                     SeedType::SEED_TANGLEKELP, SeedType::SEED_JALAPENO, SeedType::SEED_SPIKEWEED,
+				                     SeedType::SEED_TORCHWOOD, SeedType::SEED_TALLNUT };
 
 			SeedType aSeedType = (SeedType)TodPickFromArray(aSeedList, LENGTH(aSeedList));
 			mPottedPlantSpec.InitializePottedPlant(aSeedType);
 		}
 		else if (mBoard->mBackground == BackgroundType::BACKGROUND_4_FOG)
 		{
-			SeedType aSeedList[] = {SeedType::SEED_SEASHROOM,	 SeedType::SEED_PLANTERN,	 SeedType::SEED_CACTUS,
-									SeedType::SEED_BLOVER,		 SeedType::SEED_SPLITPEA,	 SeedType::SEED_STARFRUIT,
-									SeedType::SEED_PUMPKINSHELL, SeedType::SEED_MAGNETSHROOM};
+			SeedType aSeedList[] = { SeedType::SEED_SEASHROOM, SeedType::SEED_PLANTERN, SeedType::SEED_CACTUS,
+				                     SeedType::SEED_BLOVER, SeedType::SEED_SPLITPEA, SeedType::SEED_STARFRUIT,
+				                     SeedType::SEED_PUMPKINSHELL, SeedType::SEED_MAGNETSHROOM };
 
 			SeedType aSeedType = (SeedType)TodPickFromArray(aSeedList, LENGTH(aSeedList));
 			mPottedPlantSpec.InitializePottedPlant(aSeedType);
 		}
 		else if (mBoard->mBackground == BackgroundType::BACKGROUND_5_ROOF)
 		{
-			SeedType aSeedList[] = {SeedType::SEED_CABBAGEPULT,	   SeedType::SEED_KERNELPULT,
-									SeedType::SEED_INSTANT_COFFEE, SeedType::SEED_GARLIC,
-									SeedType::SEED_UMBRELLA,	   SeedType::SEED_MELONPULT};
+			SeedType aSeedList[] = { SeedType::SEED_CABBAGEPULT, SeedType::SEED_KERNELPULT,
+				                     SeedType::SEED_INSTANT_COFFEE, SeedType::SEED_GARLIC,
+				                     SeedType::SEED_UMBRELLA, SeedType::SEED_MELONPULT };
 
 			SeedType aSeedType = (SeedType)TodPickFromArray(aSeedList, LENGTH(aSeedList));
 			mPottedPlantSpec.InitializePottedPlant(aSeedType);
@@ -299,9 +299,9 @@ void Coin::CoinInitialize(int theX, int theY, CoinType theCoinType, CoinMotion t
 			}
 		}
 		if (mType == CoinType::COIN_FINAL_SEED_PACKET || mType == CoinType::COIN_USABLE_SEED_PACKET ||
-			mType == CoinType::COIN_TROPHY || mType == CoinType::COIN_SHOVEL || mType == CoinType::COIN_CARKEYS ||
-			mType == CoinType::COIN_ALMANAC || mType == CoinType::COIN_VASE || mType == CoinType::COIN_WATERING_CAN ||
-			mType == CoinType::COIN_TACO || mType == CoinType::COIN_NOTE)
+		    mType == CoinType::COIN_TROPHY || mType == CoinType::COIN_SHOVEL || mType == CoinType::COIN_CARKEYS ||
+		    mType == CoinType::COIN_ALMANAC || mType == CoinType::COIN_VASE || mType == CoinType::COIN_WATERING_CAN ||
+		    mType == CoinType::COIN_TACO || mType == CoinType::COIN_NOTE)
 		{
 			mGroundY -= 30;
 		}
@@ -378,7 +378,7 @@ bool Coin::IsSun()
 bool Coin::IsPresentWithAdvice()
 {
 	return mType == CoinType::COIN_PRESENT_MINIGAMES || mType == CoinType::COIN_PRESENT_PUZZLE_MODE ||
-		   mType == CoinType::COIN_PRESENT_SURVIVAL_MODE;
+	       mType == CoinType::COIN_PRESENT_SURVIVAL_MODE;
 }
 
 void Coin::ScoreCoin()
@@ -414,7 +414,7 @@ void Coin::StartFade()
 void Coin::UpdateFade()
 {
 	if (mApp->IsEndlessIZombie(mApp->mGameMode) || mApp->IsEndlessScaryPotter(mApp->mGameMode) ||
-		mType == CoinType::COIN_NOTE || !IsLevelAward())
+	    mType == CoinType::COIN_NOTE || !IsLevelAward())
 	{
 		mFadeCount--;
 		if (mFadeCount == 0)
@@ -511,7 +511,7 @@ void Coin::UpdateFall()
 			}
 
 			TodParticleSystem *aParticle =
-				mApp->AddTodParticle(mPosX + aParticleOffsetX, mPosY + aParticleOffsetY, 0, aEffect);
+			    mApp->AddTodParticle(mPosX + aParticleOffsetX, mPosY + aParticleOffsetY, 0, aEffect);
 			AttachParticle(mAttachmentID, aParticle, aParticleOffsetX, aParticleOffsetY);
 			mHasBouncyArrow = true;
 		}
@@ -526,7 +526,7 @@ void Coin::UpdateFall()
 		mPosX = FloatRoundToInt(mPosX);
 
 		if (mApp->mGameMode != GameMode::GAMEMODE_CHALLENGE_LAST_STAND || mBoard == nullptr ||
-			mBoard->mChallenge->mChallengeState == ChallengeState::STATECHALLENGE_LAST_STAND_ONSLAUGHT)
+		    mBoard->mChallenge->mChallengeState == ChallengeState::STATECHALLENGE_LAST_STAND_ONSLAUGHT)
 		{
 			if (!IsLevelAward() && !IsPresentWithAdvice())
 			{
@@ -572,7 +572,7 @@ void Coin::UpdateCollected()
 			aDestY = 546;
 		}
 		else if (mApp->mGameMode == GameMode::GAMEMODE_CHALLENGE_ZEN_GARDEN ||
-				 mApp->mCrazyDaveState != CrazyDaveState::CRAZY_DAVE_OFF)
+		         mApp->mCrazyDaveState != CrazyDaveState::CRAZY_DAVE_OFF)
 		{
 			aDestX = 442;
 		}
@@ -647,12 +647,12 @@ void Coin::UpdateCollected()
 				{
 
 					mBoard->DisplayAdvice("[UNLOCKED_MINIGAMES]", MessageStyle::MESSAGE_STYLE_HINT_TALL_UNLOCKMESSAGE,
-										  AdviceType::ADVICE_UNLOCKED_MODE);
+					                      AdviceType::ADVICE_UNLOCKED_MODE);
 				}
 				else if (mType == CoinType::COIN_PRESENT_PUZZLE_MODE)
 				{
 					mBoard->DisplayAdvice("[UNLOCKED_PUZZLE_MODE]", MessageStyle::MESSAGE_STYLE_HINT_TALL_UNLOCKMESSAGE,
-										  AdviceType::ADVICE_UNLOCKED_MODE);
+					                      AdviceType::ADVICE_UNLOCKED_MODE);
 				}
 			}
 			else if (mBoard->mHelpIndex != AdviceType::ADVICE_UNLOCKED_MODE || !mBoard->mAdvice->IsBeingDisplayed())
@@ -683,7 +683,7 @@ void Coin::Update()
 {
 	mCoinAge++;
 	if (mApp->mGameScene != GameScenes::SCENE_PLAYING && mApp->mGameScene != GameScenes::SCENE_AWARD && mBoard &&
-		!mBoard->mCutScene->ShouldRunUpsellBoard())
+	    !mBoard->mCutScene->ShouldRunUpsellBoard())
 	{
 		return;
 	}
@@ -833,7 +833,7 @@ void Coin::Draw(Graphics *g)
 		SeedType aSeedType = GetFinalSeedPacketType();
 		g->SetScale(mScale, mScale, 0.0f, 0.0f);
 		DrawSeedPacket(g, 0.5f * (mWidth - mScale * mWidth) + mPosX, 0.5f * (mHeight - mScale * mHeight) + mPosY,
-					   aSeedType, SeedType::SEED_NONE, 0.0f, 255, true, false);
+		               aSeedType, SeedType::SEED_NONE, 0.0f, 255, true, false);
 		g->SetScale(1.0f, 1.0f, 0.0f, 0.0f);
 		return;
 	}
@@ -954,7 +954,7 @@ void Coin::Draw(Graphics *g)
 
 	g->SetColorizeImages(true);
 	TodDrawImageCelCenterScaledF(g, aImage, mPosX + aOffsetX, mPosY + aOffsetY, aImageCelCol, 0, aDrawScale,
-								 aDrawScale);
+	                             aDrawScale);
 	g->SetColorizeImages(false);
 }
 
@@ -1027,15 +1027,15 @@ void Coin::Collect()
 		if (mApp->mZenGarden->IsZenGardenFull(false))
 		{
 			mBoard->DisplayAdvice("[DIALOG_ZEN_GARDEN_FULL]", MessageStyle::MESSAGE_STYLE_HINT_FAST,
-								  AdviceType::ADVICE_NONE);
+			                      AdviceType::ADVICE_NONE);
 		}
 		else
 		{
 			mBoard->mPottedPlantsCollected++;
 			mBoard->DisplayAdvice("[ADVICE_FOUND_PLANT]", MessageStyle::MESSAGE_STYLE_HINT_FAST,
-								  AdviceType::ADVICE_NONE);
+			                      AdviceType::ADVICE_NONE);
 			mApp->AddTodParticle(mPosX + 30.0f, mPosY + 30.0f, mRenderOrder + 1,
-								 ParticleEffect::PARTICLE_PRESENT_PICKUP);
+			                     ParticleEffect::PARTICLE_PRESENT_PICKUP);
 			mApp->mZenGarden->AddPottedPlant(&mPottedPlantSpec);
 		}
 
@@ -1103,7 +1103,7 @@ void Coin::Collect()
 		if (mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_CHOCOLATE] < PURCHASE_COUNT_OFFSET)
 		{
 			mBoard->DisplayAdvice("[ADVICE_FOUND_CHOCOLATE]", MessageStyle::MESSAGE_STYLE_HINT_TALL_FAST,
-								  AdviceType::ADVICE_NONE);
+			                      AdviceType::ADVICE_NONE);
 			mApp->mPlayerInfo->mPurchases[(int)StoreItem::STORE_ITEM_CHOCOLATE] = PURCHASE_COUNT_OFFSET + 1;
 		}
 		else
@@ -1161,7 +1161,7 @@ void Coin::Collect()
 			mApp->PlaySample(SOUND_SHOVEL);
 		}
 		else if (mApp->IsFirstTimeAdventureMode() &&
-				 (mBoard->mLevel == 24 || mBoard->mLevel == 34 || mBoard->mLevel == 44))
+		         (mBoard->mLevel == 24 || mBoard->mLevel == 34 || mBoard->mLevel == 44))
 		{
 			mApp->PlaySample(SOUND_TAP2);
 		}
@@ -1193,7 +1193,7 @@ void Coin::Collect()
 		if (mType == CoinType::COIN_NOTE)
 		{
 			mApp->AddTodParticle(mPosX + 30.0f, mPosY + 30.0f, mRenderOrder + 1,
-								 ParticleEffect::PARTICLE_PRESENT_PICKUP);
+			                     ParticleEffect::PARTICLE_PRESENT_PICKUP);
 			StartFade();
 		}
 		else if (!aIsEndlessAward && mApp->Is3DAccelerated())
@@ -1201,7 +1201,7 @@ void Coin::Collect()
 			float aParticleOffsetX = mWidth / 2;
 			float aParticleOffsetY = mHeight / 2;
 			TodParticleSystem *aParticle = mApp->AddTodParticle(mPosX + aParticleOffsetX, mPosY + aParticleOffsetY,
-																mRenderOrder - 1, PARTICLE_SEED_PACKET_PICKUP);
+			                                                    mRenderOrder - 1, PARTICLE_SEED_PACKET_PICKUP);
 			AttachParticle(mAttachmentID, aParticle, aParticleOffsetX, aParticleOffsetY);
 		}
 
@@ -1250,39 +1250,40 @@ void Coin::Collect()
 
 	AttachmentDetachCrossFadeParticleType(mAttachmentID, ParticleEffect::PARTICLE_COIN_PICKUP_ARROW, nullptr);
 	if (mApp->IsFirstTimeAdventureMode() && mBoard && mBoard->mLevel == 11 &&
-		(mType == CoinType::COIN_GOLD || mType == CoinType::COIN_SILVER))
+	    (mType == CoinType::COIN_GOLD || mType == CoinType::COIN_SILVER))
 	{
 		mBoard->DisplayAdvice("[ADVICE_CLICKED_ON_COIN]", MessageStyle::MESSAGE_STYLE_HINT_FAST,
-							  AdviceType::ADVICE_CLICKED_ON_COIN);
+		                      AdviceType::ADVICE_CLICKED_ON_COIN);
 	}
 }
 
 float Coin::GetSunScale()
 {
-	return mType == CoinType::COIN_SMALLSUN ? 0.5f : mType == CoinType::COIN_LARGESUN ? 2.0f : 1.0f;
+	return mType == CoinType::COIN_SMALLSUN ? 0.5f : mType == CoinType::COIN_LARGESUN ? 2.0f
+	                                                                                  : 1.0f;
 }
 
 int Coin::GetSunValue()
 {
-	return mType == CoinType::COIN_SUN		  ? 25
-		   : mType == CoinType::COIN_SMALLSUN ? 15
-		   : mType == CoinType::COIN_LARGESUN ? 50
-											  : 0;
+	return mType == CoinType::COIN_SUN        ? 25
+	       : mType == CoinType::COIN_SMALLSUN ? 15
+	       : mType == CoinType::COIN_LARGESUN ? 50
+	                                          : 0;
 }
 
 int Coin::GetCoinValue(CoinType theCoinType)
 {
-	return theCoinType == CoinType::COIN_SILVER	   ? 1
-		   : theCoinType == CoinType::COIN_GOLD	   ? 5
-		   : theCoinType == CoinType::COIN_DIAMOND ? 100
-												   : 0;
+	return theCoinType == CoinType::COIN_SILVER    ? 1
+	       : theCoinType == CoinType::COIN_GOLD    ? 5
+	       : theCoinType == CoinType::COIN_DIAMOND ? 100
+	                                               : 0;
 }
 
 void Coin::PlayLaunchSound()
 {
 	if (mType == CoinType::COIN_DIAMOND || mType == CoinType::COIN_CHOCOLATE ||
-		mType == CoinType::COIN_AWARD_CHOCOLATE || mType == CoinType::COIN_PRESENT_PLANT ||
-		mType == CoinType::COIN_AWARD_PRESENT || IsPresentWithAdvice())
+	    mType == CoinType::COIN_AWARD_CHOCOLATE || mType == CoinType::COIN_PRESENT_PLANT ||
+	    mType == CoinType::COIN_AWARD_PRESENT || IsPresentWithAdvice())
 	{
 		mApp->PlayFoley(FoleyType::FOLEY_CHIME);
 	}
@@ -1324,7 +1325,7 @@ void Coin::PlayCollectSound()
 	}
 
 	if (mType == CoinType::COIN_CHOCOLATE || mType == CoinType::COIN_PRESENT_PLANT || IsPresentWithAdvice() ||
-		mType == CoinType::COIN_AWARD_PRESENT || mType == CoinType::COIN_AWARD_CHOCOLATE)
+	    mType == CoinType::COIN_AWARD_PRESENT || mType == CoinType::COIN_AWARD_CHOCOLATE)
 	{
 		mApp->PlayFoley(FoleyType::FOLEY_PRIZE);
 		return;
@@ -1363,7 +1364,7 @@ void Coin::MouseDown(int x, int y, int theClickCount)
 		if (mApp->IsFirstTimeAdventureMode() && mBoard->mLevel == 1)
 		{
 			mBoard->DisplayAdvice("[ADVICE_CLICKED_ON_SUN]", MessageStyle::MESSAGE_STYLE_TUTORIAL_LEVEL1_STAY,
-								  AdviceType::ADVICE_CLICKED_ON_SUN);
+			                      AdviceType::ADVICE_CLICKED_ON_SUN);
 		}
 	}
 }
@@ -1410,8 +1411,8 @@ bool Coin::MouseHitTest(int theX, int theY, HitResult *theHitResult)
 	}
 
 	if (aCanHitCoin && theX >= mPosX - aExtraClickSize && theX < mPosX + mWidth + aExtraClickSize &&
-		theY >= mPosY + aOffsetY - aExtraClickSize &&
-		theY < mPosY + mHeight + aOffsetY + aExtraClickSize + aExtraClickHeight)
+	    theY >= mPosY + aOffsetY - aExtraClickSize &&
+	    theY < mPosY + mHeight + aOffsetY + aExtraClickSize + aExtraClickHeight)
 	{
 		theHitResult->mObject = this;
 		theHitResult->mObjectType = GameObjectType::OBJECT_TYPE_COIN;
@@ -1426,12 +1427,12 @@ bool Coin::MouseHitTest(int theX, int theY, HitResult *theHitResult)
 bool Coin::IsLevelAward()
 {
 	return mType == CoinType::COIN_FINAL_SEED_PACKET || mType == CoinType::COIN_TROPHY ||
-		   mType == CoinType::COIN_AWARD_SILVER_SUNFLOWER || mType == CoinType::COIN_AWARD_GOLD_SUNFLOWER ||
-		   mType == CoinType::COIN_SHOVEL || mType == CoinType::COIN_CARKEYS || mType == CoinType::COIN_ALMANAC ||
-		   mType == CoinType::COIN_VASE || mType == CoinType::COIN_WATERING_CAN || mType == CoinType::COIN_TACO ||
-		   mType == CoinType::COIN_NOTE || mType == CoinType::COIN_AWARD_MONEY_BAG ||
-		   mType == CoinType::COIN_AWARD_BAG_DIAMOND || mType == CoinType::COIN_AWARD_PRESENT ||
-		   mType == CoinType::COIN_AWARD_CHOCOLATE;
+	       mType == CoinType::COIN_AWARD_SILVER_SUNFLOWER || mType == CoinType::COIN_AWARD_GOLD_SUNFLOWER ||
+	       mType == CoinType::COIN_SHOVEL || mType == CoinType::COIN_CARKEYS || mType == CoinType::COIN_ALMANAC ||
+	       mType == CoinType::COIN_VASE || mType == CoinType::COIN_WATERING_CAN || mType == CoinType::COIN_TACO ||
+	       mType == CoinType::COIN_NOTE || mType == CoinType::COIN_AWARD_MONEY_BAG ||
+	       mType == CoinType::COIN_AWARD_BAG_DIAMOND || mType == CoinType::COIN_AWARD_PRESENT ||
+	       mType == CoinType::COIN_AWARD_CHOCOLATE;
 }
 
 bool Coin::CoinGetsBouncyArrow()
@@ -1455,7 +1456,7 @@ int Coin::GetDisappearTime()
 	int aTime = 750;
 
 	if (mType == CoinType::COIN_DIAMOND || mType == CoinType::COIN_PRESENT_PLANT || mType == CoinType::COIN_CHOCOLATE ||
-		mHasBouncyArrow)
+	    mHasBouncyArrow)
 	{
 		aTime = 1500;
 	}

@@ -55,9 +55,9 @@ unsigned int PoolEffect::BilinearLookupFixedPoint(unsigned int u, unsigned int v
 	unsigned int indexV1 = ((timeV >> 16) + 1) % 256;
 
 	return ((((factorU0 * factorV1) / 65536) * mCausticGrayscaleImage[indexV1 * 256 + indexU0]) / 65536) +
-		   ((((factorU1 * factorV1) / 65536) * mCausticGrayscaleImage[indexV1 * 256 + indexU1]) / 65536) +
-		   ((((factorU0 * factorV0) / 65536) * mCausticGrayscaleImage[indexV0 * 256 + indexU0]) / 65536) +
-		   ((((factorU1 * factorV0) / 65536) * mCausticGrayscaleImage[indexV0 * 256 + indexU1]) / 65536);
+	       ((((factorU1 * factorV1) / 65536) * mCausticGrayscaleImage[indexV1 * 256 + indexU1]) / 65536) +
+	       ((((factorU0 * factorV0) / 65536) * mCausticGrayscaleImage[indexV0 * 256 + indexU0]) / 65536) +
+	       ((((factorU1 * factorV0) / 65536) * mCausticGrayscaleImage[indexV0 * 256 + indexU1]) / 65536);
 }
 
 void PoolEffect::UpdateWaterEffect(Sexy::Graphics *g)
@@ -118,7 +118,7 @@ void PoolEffect::PoolEffectDraw(Sexy::Graphics *g, bool theIsNight)
 
 	float aGridSquareX = IMAGE_POOL->GetWidth() / 15.0f;
 	float aGridSquareY = IMAGE_POOL->GetHeight() / 5.0f;
-	float aOffsetArray[3][16][6][2] = {0};
+	float aOffsetArray[3][16][6][2] = { 0 };
 	for (int x = 0; x <= 15; x++)
 	{
 		for (int y = 0; y <= 5; y++)
@@ -138,17 +138,17 @@ void PoolEffect::PoolEffectDraw(Sexy::Graphics *g, bool theIsNight)
 
 				aOffsetArray[0][x][y][0] = sin(yPhase + aWaveTime2) * 0.002f + sin(yPhase + aWaveTime1) * 0.005f;
 				aOffsetArray[0][x][y][1] = sin(xPhase + aWaveTime5) * 0.01f + sin(xPhase + aWaveTime3) * 0.015f +
-										   sin(xPhase + aWaveTime4) * 0.005f;
+				                           sin(xPhase + aWaveTime4) * 0.005f;
 				aOffsetArray[1][x][y][0] =
-					sin(yPhase * 0.2f + aWaveTime2) * 0.015f + sin(yPhase * 0.2f + aWaveTime1) * 0.012f;
+				    sin(yPhase * 0.2f + aWaveTime2) * 0.015f + sin(yPhase * 0.2f + aWaveTime1) * 0.012f;
 				aOffsetArray[1][x][y][1] = sin(xPhase * 0.2f + aWaveTime5) * 0.005f +
-										   sin(xPhase * 0.2f + aWaveTime3) * 0.015f +
-										   sin(xPhase * 0.2f + aWaveTime4) * 0.02f;
+				                           sin(xPhase * 0.2f + aWaveTime3) * 0.015f +
+				                           sin(xPhase * 0.2f + aWaveTime4) * 0.02f;
 				aOffsetArray[2][x][y][0] +=
-					sin(yPhase + aWaveTime1 * 1.5f) * 0.004f + sin(yPhase + aWaveTime2 * 1.5f) * 0.005f;
+				    sin(yPhase + aWaveTime1 * 1.5f) * 0.004f + sin(yPhase + aWaveTime2 * 1.5f) * 0.005f;
 				aOffsetArray[2][x][y][1] += sin(xPhase * 4.0f + aWaveTime5 * 2.5f) * 0.005f +
-											sin(xPhase * 2.0f + aWaveTime3 * 2.5f) * 0.04f +
-											sin(xPhase * 3.0f + aWaveTime4 * 2.5f) * 0.02f;
+				                            sin(xPhase * 2.0f + aWaveTime3 * 2.5f) * 0.04f +
+				                            sin(xPhase * 3.0f + aWaveTime4 * 2.5f) * 0.02f;
 			}
 			else
 			{
@@ -160,8 +160,8 @@ void PoolEffect::PoolEffectDraw(Sexy::Graphics *g, bool theIsNight)
 		}
 	}
 
-	int aIndexOffsetX[6] = {0, 0, 1, 0, 1, 1};
-	int aIndexOffsetY[6] = {0, 1, 1, 0, 1, 0};
+	int aIndexOffsetX[6] = { 0, 0, 1, 0, 1, 1 };
+	int aIndexOffsetY[6] = { 0, 1, 1, 0, 1, 0 };
 	TriVertex aVertArray[3][150][3];
 
 	for (int x = 0; x < 15; x++)

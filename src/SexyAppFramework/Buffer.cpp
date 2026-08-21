@@ -205,17 +205,15 @@ bool Buffer::ToUTF8String(std::string *theString) const
 	{
 		// UTF-8 BOM: strip it
 		*theString = std::string(aData + 3, aLen - 3);
-		return true;
 	}
 	else
 	{
 		// no BOM: just copy as-is
 		*theString = std::string(aData, aLen);
 	}
-	
-	return false;
-}
 
+	return true;
+}
 
 void Buffer::FromWebString(const std::string &theString)
 {

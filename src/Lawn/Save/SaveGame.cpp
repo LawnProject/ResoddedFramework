@@ -10,7 +10,8 @@
 
 static constexpr uint32_t SAVE_VERSION = 1;
 
-template <typename T> void SaveContext::SyncVar(T &aValue, const std::string &aName)
+template <typename T>
+void SaveContext::SyncVar(T &aValue, const std::string &aName)
 {
 	if (mReading)
 	{
@@ -58,8 +59,6 @@ void SaveContext::SyncBytes(void *aValue, size_t aSize, const std::string &aName
 		mCurrentOffset += aSize;
 	}
 }
-
-
 
 void SaveContext::SyncReanimationDef(ReanimatorDefinition *&theDefinition, const std::string &theOwner)
 {
@@ -173,12 +172,13 @@ void SaveContext::SyncImage(Image *&theImage, const std::string &theOwner)
 	{
 		ResourceId aResID;
 		SyncVar((int &)aResID, StrFormat("IMAGE_%s", theOwner.c_str()));
-		if (aResID == Sexy::ResourceId::RESOURCE_ID_MAX)
+		if (aResID >= Sexy::ResourceId::RESOURCE_ID_MAX)
 		{
 			theImage = nullptr;
 		}
 		else
 		{
+			LoadImageById(gLawnApp->mResourceManager, aResID); // Load the image just incase the id was moved, and as a result it maybe isn't loaded by the game
 			theImage = GetImageById(aResID);
 		}
 	}
@@ -197,7 +197,8 @@ void SaveContext::SyncImage(Image *&theImage, const std::string &theOwner)
 	}
 }
 
-void SyncDataIDList(TodList<unsigned int> *theDataIDList, SaveContext &theContext, TodAllocator *theAllocator, const std::string &aListOwner)
+void SyncDataIDList(TodList<unsigned int> *theDataIDList, SaveContext &theContext, TodAllocator *theAllocator,
+                    const std::string &aListOwner)
 {
 	try
 	{
@@ -239,9 +240,11 @@ void SyncDataIDList(TodList<unsigned int> *theDataIDList, SaveContext &theContex
 	}
 }
 
-void SyncParticleEmitter(TodParticleSystem *theParticleSystem, TodParticleEmitter *theParticleEmitter, SaveContext &theContext)
+void SyncParticleEmitter(TodParticleSystem *theParticleSystem, TodParticleEmitter *theParticleEmitter,
+                         SaveContext &theContext)
 {
-	std::string aIDStr = StrFormat("%u", theParticleSystem->mParticleHolder->mEmitters.DataArrayGetID(theParticleEmitter));
+	std::string aIDStr =
+	    StrFormat("%u", theParticleSystem->mParticleHolder->mEmitters.DataArrayGetID(theParticleEmitter));
 	int aEmitterDefIndex = 0;
 	if (theContext.mReading)
 	{
@@ -257,12 +260,13 @@ void SyncParticleEmitter(TodParticleSystem *theParticleSystem, TodParticleEmitte
 
 	theContext.SyncImage(theParticleEmitter->mImageOverride, StrFormat("ParticleEmitter_%s", aIDStr.c_str()));
 	SyncDataIDList((TodList<unsigned int> *)&theParticleEmitter->mParticleList, theContext,
-				   &theParticleSystem->mParticleHolder->mParticleListNodeAllocator, StrFormat("ParticleEmitter_%s", aIDStr.c_str()));
+	               &theParticleSystem->mParticleHolder->mParticleListNodeAllocator,
+	               StrFormat("ParticleEmitter_%s", aIDStr.c_str()));
 	for (TodListNode<ParticleID> *aNode = theParticleEmitter->mParticleList.mHead; aNode != nullptr;
-		 aNode = aNode->mNext)
+	     aNode = aNode->mNext)
 	{
 		TodParticle *aParticle =
-			theParticleSystem->mParticleHolder->mParticles.DataArrayGet((unsigned int)aNode->mValue);
+		    theParticleSystem->mParticleHolder->mParticles.DataArrayGet((unsigned int)aNode->mValue);
 		if (theContext.mReading)
 		{
 			aParticle->mParticleEmitter = theParticleEmitter;
@@ -272,7 +276,8 @@ void SyncParticleEmitter(TodParticleSystem *theParticleSystem, TodParticleEmitte
 
 void SyncParticleSystem(Board *theBoard, TodParticleSystem *theParticleSystem, SaveContext &theContext)
 {
-	std::string aIDStr = StrFormat("%u", theBoard->mApp->mEffectSystem->mParticleHolder->mParticleSystems.DataArrayGetID(theParticleSystem));
+	std::string aIDStr = StrFormat(
+	    "%u", theBoard->mApp->mEffectSystem->mParticleHolder->mParticleSystems.DataArrayGetID(theParticleSystem));
 
 	theContext.SyncParticleDef(theParticleSystem->mParticleDef, StrFormat("ParticleSystem_%s", aIDStr.c_str()));
 	if (theContext.mReading)
@@ -281,20 +286,21 @@ void SyncParticleSystem(Board *theBoard, TodParticleSystem *theParticleSystem, S
 	}
 
 	SyncDataIDList((TodList<unsigned int> *)&theParticleSystem->mEmitterList, theContext,
-				   &theParticleSystem->mParticleHolder->mEmitterListNodeAllocator,
-				   StrFormat("ParticleSystem_%s", aIDStr.c_str()));
+	               &theParticleSystem->mParticleHolder->mEmitterListNodeAllocator,
+	               StrFormat("ParticleSystem_%s", aIDStr.c_str()));
 	for (TodListNode<ParticleEmitterID> *aNode = theParticleSystem->mEmitterList.mHead; aNode != nullptr;
-		 aNode = aNode->mNext)
+	     aNode = aNode->mNext)
 	{
 		TodParticleEmitter *aEmitter =
-			theParticleSystem->mParticleHolder->mEmitters.DataArrayGet((unsigned int)aNode->mValue);
+		    theParticleSystem->mParticleHolder->mEmitters.DataArrayGet((unsigned int)aNode->mValue);
 		SyncParticleEmitter(theParticleSystem, aEmitter, theContext);
 	}
 }
 
 void SyncReanimation(Board *theBoard, Reanimation *theReanimation, SaveContext &theContext)
 {
-	std::string aIDStr = StrFormat("%u", theBoard->mApp->mEffectSystem->mReanimationHolder->mReanimations.DataArrayGetID(theReanimation));
+	std::string aIDStr = StrFormat(
+	    "%u", theBoard->mApp->mEffectSystem->mReanimationHolder->mReanimations.DataArrayGetID(theReanimation));
 	theContext.SyncReanimationDef(theReanimation->mDefinition, StrFormat("Reanimation_%s", aIDStr.c_str()));
 	if (theContext.mReading)
 	{
@@ -308,12 +314,14 @@ void SyncReanimation(Board *theBoard, Reanimation *theReanimation, SaveContext &
 		{
 			theReanimation->mTrackInstances = (ReanimatorTrackInstance *)FindGlobalAllocator(aSize)->Calloc(aSize);
 		}
-		theContext.SyncBytes(theReanimation->mTrackInstances, aSize, StrFormat("Reanimation_%s_Tracks", aIDStr.c_str()));
+		theContext.SyncBytes(theReanimation->mTrackInstances, aSize,
+		                     StrFormat("Reanimation_%s_Tracks", aIDStr.c_str()));
 
 		for (int aTrackIndex = 0; aTrackIndex < theReanimation->mDefinition->mTrackCount; aTrackIndex++)
 		{
 			ReanimatorTrackInstance &aTrackInstance = theReanimation->mTrackInstances[aTrackIndex];
-			theContext.SyncImage(aTrackInstance.mImageOverride, StrFormat("Reanimation_%s_Track[%d]", aIDStr.c_str(), aTrackIndex));
+			theContext.SyncImage(aTrackInstance.mImageOverride,
+			                     StrFormat("Reanimation_%s_Track[%d]", aIDStr.c_str(), aTrackIndex));
 
 			if (theContext.mReading)
 			{
@@ -333,7 +341,9 @@ void SyncReanimation(Board *theBoard, Reanimation *theReanimation, SaveContext &
 
 void SyncTrail(Board *theBoard, Trail *theTrail, SaveContext &theContext)
 {
-	theContext.SyncTrailDef(theTrail->mDefinition, StrFormat("Trail_%u", theBoard->mApp->mEffectSystem->mTrailHolder->mTrails.DataArrayGetID(theTrail)));
+	theContext.SyncTrailDef(
+	    theTrail->mDefinition,
+	    StrFormat("Trail_%u", theBoard->mApp->mEffectSystem->mTrailHolder->mTrails.DataArrayGetID(theTrail)));
 	if (theContext.mReading)
 	{
 		theTrail->mTrailHolder = theBoard->mApp->mEffectSystem->mTrailHolder;
@@ -367,47 +377,47 @@ void SaveContext::LoadScheme(std::string thePath)
 		aSeparatedLine.push_back(aLine.substr(start));
 		size_t aCurrentIndex = 0;
 		std::string aVarName = "VAL_UNKNOWN";
-		for (auto& aValue : aSeparatedLine)
+		for (auto &aValue : aSeparatedLine)
 		{
 			switch (aCurrentIndex)
 			{
-				case 0:
-					aVarName = aValue;
-					break;
-				case 1:
-					sscanf(aValue.c_str(), "%zu", &anEntry.mOffset);
-					break;
-				case 2:
-					sscanf(aValue.c_str(), "%zu", &anEntry.mSize);
-					aCurrentIndex = -1;
-					break;
+			case 0:
+				aVarName = aValue;
+				break;
+			case 1:
+				sscanf(aValue.c_str(), "%zu", &anEntry.mOffset);
+				break;
+			case 2:
+				sscanf(aValue.c_str(), "%zu", &anEntry.mSize);
+				aCurrentIndex = -1;
+				break;
 			}
 			aCurrentIndex++;
 		}
-		mSchemeEntries.insert({aVarName, anEntry});
+		mSchemeEntries.insert({ aVarName, anEntry });
 	}
 }
 
-
 #define SYNC_VAR(name) theContext.SyncVar(name, #name)
 #define SYNC_ARRAY(name) theContext.SyncBytes(name, sizeof(name), #name)
+#define SYNC_STD_ARRAY(name) theContext.SyncBytes(name.data(), name.size(), #name)
 #define SYNC_CLASS(obj) theContext.SyncBytes(obj, sizeof(*obj), #obj)
-#define SYNC_DATA_ARRAY(type, arr)                                                                                     \
-	theContext.SyncVar(arr.mMaxUsedCount, #arr ".mMaxUsedCount");                                                      \
-	theContext.SyncVar(arr.mFreeListHead, #arr ".mFreeListHead");                                                      \
-	theContext.SyncVar(arr.mSize, #arr ".mSize");                                                                      \
+#define SYNC_DATA_ARRAY(type, arr)                                \
+	theContext.SyncVar(arr.mMaxUsedCount, #arr ".mMaxUsedCount"); \
+	theContext.SyncVar(arr.mFreeListHead, #arr ".mFreeListHead"); \
+	theContext.SyncVar(arr.mSize, #arr ".mSize");                 \
 	theContext.SyncBytes(arr.mBlock, sizeof(DataArray<type>::DataArrayItem) * arr.mMaxUsedCount, #arr ".mBlock");
 
-#define SYNC_GAMEOBJECT(obj) \
-	theContext.SyncVar(obj->mX, #obj "->mX");                                                                        \
-	theContext.SyncVar(obj->mY, #obj "->mY");                                                                        \
-	theContext.SyncVar(obj->mWidth, #obj "->mWidth");                                                                \
-	theContext.SyncVar(obj->mHeight, #obj "->mHeight");                                                              \
-	theContext.SyncVar(obj->mVisible, #obj "->mVisible");															 \
-	theContext.SyncVar(obj->mRow, #obj "->mRow");                                                                    \
-	theContext.SyncVar(obj->mRenderOrder, #obj "->mRenderOrder");                                                    \
+#define SYNC_GAMEOBJECT(obj)                              \
+	theContext.SyncVar(obj->mX, #obj "->mX");             \
+	theContext.SyncVar(obj->mY, #obj "->mY");             \
+	theContext.SyncVar(obj->mWidth, #obj "->mWidth");     \
+	theContext.SyncVar(obj->mHeight, #obj "->mHeight");   \
+	theContext.SyncVar(obj->mVisible, #obj "->mVisible"); \
+	theContext.SyncVar(obj->mRow, #obj "->mRow");         \
+	theContext.SyncVar(obj->mRenderOrder, #obj "->mRenderOrder");
 
-void LawnSyncGame(Board* theBoard, SaveContext &theContext)
+void LawnSyncGame(Board *theBoard, SaveContext &theContext)
 {
 
 	SYNC_ARRAY(theBoard->mGridSquareType);
@@ -597,14 +607,14 @@ void LawnSyncGame(Board* theBoard, SaveContext &theContext)
 	SYNC_VAR(theBoard->mSeedBank->mCutSceneDarken);
 	SYNC_VAR(theBoard->mSeedBank->mConveyorBeltCounter);
 
-	SYNC_ARRAY(theBoard->mAdvice->mLabel);
+	SYNC_STD_ARRAY(theBoard->mAdvice->mLabel);
 	SYNC_VAR(theBoard->mAdvice->mDisplayTime);
 	SYNC_VAR(theBoard->mAdvice->mDuration);
 	SYNC_VAR(theBoard->mAdvice->mMessageStyle);
-	SYNC_ARRAY(theBoard->mAdvice->mTextReanimID);
+	SYNC_STD_ARRAY(theBoard->mAdvice->mTextReanimID);
 	SYNC_VAR(theBoard->mAdvice->mReanimType);
 	SYNC_VAR(theBoard->mAdvice->mSlideOffTime);
-	SYNC_ARRAY(theBoard->mAdvice->mLabelNext);
+	SYNC_STD_ARRAY(theBoard->mAdvice->mLabelNext);
 	SYNC_VAR(theBoard->mAdvice->mMessageStyleNext);
 
 	SYNC_VAR(theBoard->mCursorPreview->mGridX);
@@ -625,15 +635,15 @@ void LawnSyncGame(Board* theBoard, SaveContext &theContext)
 	SYNC_DATA_ARRAY(Plant, theBoard->mPlants)
 	SYNC_DATA_ARRAY(Projectile, theBoard->mProjectiles)
 	theContext.SyncVar(theBoard->mCoins.mMaxUsedCount, "theBoard->mCoins"
-													   ".mMaxUsedCount");
+	                                                   ".mMaxUsedCount");
 	theContext.SyncVar(theBoard->mCoins.mFreeListHead, "theBoard->mCoins"
-													   ".mFreeListHead");
+	                                                   ".mFreeListHead");
 	theContext.SyncVar(theBoard->mCoins.mSize, "theBoard->mCoins"
-											   ".mSize");
+	                                           ".mSize");
 	theContext.SyncBytes(theBoard->mCoins.mBlock,
-						 sizeof(DataArray<Coin>::DataArrayItem) * theBoard->mCoins.mMaxUsedCount,
-						 "theBoard->mCoins"
-						 ".mBlock");
+	                     sizeof(DataArray<Coin>::DataArrayItem) * theBoard->mCoins.mMaxUsedCount,
+	                     "theBoard->mCoins"
+	                     ".mBlock");
 	SYNC_DATA_ARRAY(LawnMower, theBoard->mLawnMowers)
 	SYNC_DATA_ARRAY(GridItem, theBoard->mGridItems)
 	SYNC_DATA_ARRAY(TodParticleSystem, theBoard->mApp->mEffectSystem->mParticleHolder->mParticleSystems)

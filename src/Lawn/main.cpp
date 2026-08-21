@@ -19,9 +19,15 @@ int LawnMain()
 
 	gLawnApp = new LawnApp();
 	gLawnApp->mChangeDirTo =
-		(!Sexy::FileExists("properties/resources.xml") && Sexy::FileExists("../properties/resources.xml")) ? ".." : ".";
+	    (!Sexy::FileExists("properties/resources.xml") && Sexy::FileExists("../properties/resources.xml")) ? ".." : ".";
 
 	gLawnApp->Init();
+	if (gLawnApp->mRunInCompileMode)
+	{
+		gLawnApp->Shutdown();
+		delete gLawnApp;
+		return 0;
+	}
 	gLawnApp->Start();
 
 	gLawnApp->Shutdown();

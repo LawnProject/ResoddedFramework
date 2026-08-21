@@ -16,7 +16,7 @@
 #if SEXY_USE_IMGUI
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_sdlrenderer3.h> //use SDL3 Renderer for the handler.
-#include <imgui/imgui_impl_sdl3.h>		   //use SDL3 Renderer for the handler.
+#include <imgui/imgui_impl_sdl3.h>         //use SDL3 Renderer for the handler.
 #endif
 
 #include <cpptrace/cpptrace.hpp>
@@ -40,7 +40,7 @@ bool SEHCatcher::mAllowSubmit = true;
 std::string SEHCatcher::mCrashMessage = "An unexpected error has occured!";
 std::string SEHCatcher::mSubmitHost;
 std::string SEHCatcher::mSubmitMessage =
-	"Please help out by providing as much information as you can about this crash.";
+    "Please help out by providing as much information as you can about this crash.";
 std::string SEHCatcher::mSubmitErrorMessage = "Failed to redirect to issue page.";
 
 static bool gUseDefaultFonts = true;
@@ -315,8 +315,8 @@ void SEHCatcher::ShowErrorDialog(const std::string &theErrorTitle, const std::st
 		ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
 
 		ImGui::Begin("An unexpected error has occurred!", nullptr,
-					 ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove |
-						 ImGuiWindowFlags_NoSavedSettings);
+		             ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove |
+		                 ImGuiWindowFlags_NoSavedSettings);
 
 		ImGui::TextWrapped("%s", mCrashMessage.c_str());
 		ImGui::Spacing();
@@ -397,12 +397,12 @@ std::string SEHCatcher::GetSysInfo()
 		aDebugDump += "9x ";
 
 	char aVersionStr[20];
-	sprintf(aVersionStr, "%d.%d", aVersionInfo.dwMajorVersion, aVersionInfo.dwMinorVersion);
+	sprintf(aVersionStr, "%lu.%lu", aVersionInfo.dwMajorVersion, aVersionInfo.dwMinorVersion);
 	aDebugDump += aVersionStr;
 	aDebugDump += " ";
 	aDebugDump += aVersionInfo.szCSDVersion;
 	aDebugDump += " ";
-	sprintf(aVersionStr, "%d", aVersionInfo.dwBuildNumber);
+	sprintf(aVersionStr, "%lu", aVersionInfo.dwBuildNumber);
 	aDebugDump += "Build ";
 	aDebugDump += aVersionStr;
 	aDebugDump += "\n";

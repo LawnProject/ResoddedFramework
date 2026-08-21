@@ -12,7 +12,11 @@
 #include <SexyAppFramework/Checkbox.h>
 
 int gLawnEditWidgetColors[][4] = {
-	{0, 0, 0, 0}, {0, 0, 0, 0}, {240, 240, 255, 255}, {255, 255, 255, 255}, {0, 0, 0, 255},
+	{ 0,   0,   0,   0   },
+	{ 0,   0,   0,   0   },
+	{ 240, 240, 255, 255 },
+	{ 255, 255, 255, 255 },
+	{ 0,   0,   0,   255 },
 };
 
 bool ModInRange(int theNumber, int theMod, int theRange)
@@ -98,7 +102,7 @@ void DrawEditBox(Graphics *g, EditWidget *theWidget)
 Checkbox *MakeNewCheckbox(int theId, CheckboxListener *theListener, bool theDefault)
 {
 	Checkbox *aCheckbox =
-		new Checkbox(Sexy::IMAGE_OPTIONS_CHECKBOX0, Sexy::IMAGE_OPTIONS_CHECKBOX1, theId, theListener);
+	    new Checkbox(Sexy::IMAGE_OPTIONS_CHECKBOX0, Sexy::IMAGE_OPTIONS_CHECKBOX1, theId, theListener);
 	aCheckbox->mChecked = theDefault;
 	aCheckbox->mHasAlpha = true;
 	aCheckbox->mHasTransparencies = true;
@@ -164,7 +168,7 @@ void LawnScrollbar::Update()
 		{
 			if (aIsOver)
 				mValue = std::max(
-					0.0f, std::min((aMouseX - mGrabOffsetX) / (mWidth - mThumbRect.mWidth) * mMaxValue, mMaxValue));
+				    0.0f, std::min((aMouseX - mGrabOffsetX) / (mWidth - mThumbRect.mWidth) * mMaxValue, mMaxValue));
 			mThumbRect = Rect(aNormalized * (mWidth - mThumbRect.mWidth), 0, mSliderHeightPercent * mWidth, mHeight);
 		}
 		else
@@ -172,7 +176,7 @@ void LawnScrollbar::Update()
 
 			if (aIsOver)
 				mValue = std::max(
-					0.0f, std::min((aMouseY - mGrabOffsetY) / (mHeight - mThumbRect.mHeight) * mMaxValue, mMaxValue));
+				    0.0f, std::min((aMouseY - mGrabOffsetY) / (mHeight - mThumbRect.mHeight) * mMaxValue, mMaxValue));
 			mThumbRect = Rect(0, aNormalized * (mHeight - mThumbRect.mHeight), mWidth, mSliderHeightPercent * mHeight);
 		}
 	}
@@ -230,6 +234,20 @@ void LawnScrollbar::MouseWheel(int theDelta)
 	}
 }
 
+void LawnScrollbar::SetValue(float theValue)
+{
+	mValue = theValue;
+	float aNormalized = (mMaxValue > 0.0f) ? mValue / mMaxValue : 0.0f;
+	if (mIsHorizontal)
+	{
+		mThumbRect = Rect(aNormalized * (mWidth - mThumbRect.mWidth), 0, mSliderHeightPercent * mWidth, mHeight);
+	}
+	else
+	{
+		mThumbRect = Rect(0, aNormalized * (mHeight - mThumbRect.mHeight), mWidth, mSliderHeightPercent * mHeight);
+	}
+}
+
 float LawnScrollbar::GetValue()
 {
 	return mValue;
@@ -238,7 +256,7 @@ float LawnScrollbar::GetValue()
 Color DeriveLawnSliderColor(Color aColor, int r, int g, int b)
 {
 	return Color(std::clamp(aColor.mRed + r, 0, 255), std::clamp(aColor.mGreen + g, 0, 255),
-				 std::clamp(aColor.mBlue + b, 0, 255));
+	             std::clamp(aColor.mBlue + b, 0, 255));
 }
 
 void LawnScrollbar::Resize(int theX, int theY, int theWidth, int theHeight)

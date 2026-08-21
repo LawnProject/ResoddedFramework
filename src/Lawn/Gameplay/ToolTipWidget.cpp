@@ -149,7 +149,7 @@ void ToolTipWidget::Draw(Graphics *g)
 	{
 		g->SetFont(FONT_TINYBOLD);
 		g->DrawString(
-			mTitle, aPosX + (mWidth - FONT_TINYBOLD->StringWidth(mTitle)) / 2, aPosY + FONT_TINYBOLD->GetAscent());
+		    mTitle, aPosX + (mWidth - FONT_TINYBOLD->StringWidth(mTitle)) / 2, aPosY + FONT_TINYBOLD->GetAscent());
 		aPosY += FONT_TINYBOLD->GetAscent() + 2;
 	}
 
@@ -180,7 +180,7 @@ void ToolTipWidget::Draw(Graphics *g)
 	{
 		SexyString aLine = aLines[i];
 		g->DrawString(
-			aLine, aPosX + (mWidth - FONT_PICO129->StringWidth(aLine)) / 2, aPosY + FONT_PICO129->GetAscent());
+		    aLine, aPosX + (mWidth - FONT_PICO129->StringWidth(aLine)) / 2, aPosY + FONT_PICO129->GetAscent());
 		aPosY += FONT_PICO129->GetAscent() + 2;
 	}
 }

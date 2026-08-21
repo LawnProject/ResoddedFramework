@@ -11,36 +11,35 @@
 #include <TodLib/TodStringFile.h>
 
 static int gUserListWidgetColors[][3] = {
-	{23, 24, 35},
-	{0, 0, 0},
-	{235, 225, 180},
-	{255, 255, 255},
-	{20, 180, 15}};
-
-static int gDefaultWindowSizes[8][2] = {
-	{800, 600},
-	{1200, 900},
-	{1600, 1200},
-
-	// 16:9
-	{1280, 720},
-	{1600, 900},
-	{1920, 1080},
-
-	// 16:10
-	{1280, 800},
-	{1680, 1050},
+	{ 23,  24,  35  },
+	{ 0,   0,   0   },
+	{ 235, 225, 180 },
+	{ 255, 255, 255 },
+	{ 20,  180, 15  }
 };
 
-static const char *gTranslationFilterKeys[OutputFilteringMode::NUM_MODES] = {"[FILTER_NEAREST]", "[FILTER_LINEAR]"};
+static int gDefaultWindowSizes[8][2] = {
+	{ 800,  600  },
+	{ 1200, 900  },
+	{ 1600, 1200 },
 
+	// 16:9
+	{ 1280, 720  },
+	{ 1600, 900  },
+	{ 1920, 1080 },
+
+	// 16:10
+	{ 1280, 800  },
+	{ 1680, 1050 },
+};
+
+static const char *gTranslationFilterKeys[OutputFilteringMode::NUM_MODES] = { "[FILTER_NEAREST]", "[FILTER_LINEAR]" };
 
 SettingsDialog::SettingsDialog(LawnApp *theApp)
-	: LawnDialog(theApp, DIALOG_SETTINGS, true, "[SETTINGS_HEADER]", "", "", BUTTONS_NONE)
+    : LawnDialog(theApp, DIALOG_SETTINGS, true, "[SETTINGS_HEADER]", "", "", BUTTONS_NONE)
 {
 	mApp = theApp;
 
-	
 	SDL_Rect aUsableBounds{};
 	SDL_GetDisplayUsableBounds(SDL_GetDisplayForWindow(mApp->mWindow->mInternalWindow), &aUsableBounds);
 
@@ -50,7 +49,7 @@ SettingsDialog::SettingsDialog(LawnApp *theApp)
 	{
 		if (aSize[0] <= aUsableBounds.w - aPadding && aSize[1] <= aUsableBounds.h - aPadding)
 		{
-			mValidSizes.push_back({aSize[0], aSize[1]});
+			mValidSizes.push_back({ aSize[0], aSize[1] });
 		}
 	}
 
@@ -68,7 +67,7 @@ SettingsDialog::SettingsDialog(LawnApp *theApp)
 	mSaveFileButton = MakeButton(SETTINGS_OPEN_SAVE_FOLDER, this, "[SETTINGS_OPEN_SAVE_FOLDER]");
 
 	mApplyButton = MakeButton(SETTINGS_BACK, this, "[SETTINGS_BACK]");
-	
+
 	mRendererList = new ListWidget(SETTINGS_RENDER_LIST, Sexy::FONT_PICO129, this);
 	mRendererList->SetColors(gUserListWidgetColors, LENGTH(gUserListWidgetColors));
 	mRendererList->mDrawOutline = true;
@@ -80,12 +79,10 @@ SettingsDialog::SettingsDialog(LawnApp *theApp)
 		{
 			if (backend.first == i)
 				mRendererList->AddLine(backend.second, false);
-
 		}
 	}
 	mRendererList->SetSelect(mApp->mDesiredBackend - 1);
-	
-	
+
 	mFilterList = new ListWidget(SETTINGS_FILTER_LIST, Sexy::FONT_PICO129, this);
 	mFilterList->SetColors(gUserListWidgetColors, LENGTH(gUserListWidgetColors));
 	mFilterList->mDrawOutline = true;
@@ -96,7 +93,7 @@ SettingsDialog::SettingsDialog(LawnApp *theApp)
 		mFilterList->AddLine(StrFormat("%s", TodStringTranslate(gTranslationFilterKeys[i]).c_str()), false);
 	}
 	mFilterList->SetSelect(mApp->mScreenFiltering);
-	
+
 	mSizesList = new ListWidget(SETTINGS_WINDOW_SIZES, Sexy::FONT_PICO129, this);
 	mSizesList->SetColors(gUserListWidgetColors, LENGTH(gUserListWidgetColors));
 	mSizesList->mDrawOutline = true;
@@ -129,7 +126,7 @@ SettingsDialog::~SettingsDialog()
 	delete mFilterList;
 }
 
-void SettingsDialog::Draw(Graphics* g)
+void SettingsDialog::Draw(Graphics *g)
 {
 	LawnDialog::Draw(g);
 
@@ -144,9 +141,9 @@ void SettingsDialog::Draw(Graphics* g)
 	g->PopState();
 	g->PushState();
 	g->SetClipRect(Rect(mOptionsSlider->mAllowedMouseZone.mX - mX,
-						mOptionsSlider->mAllowedMouseZone.mY - mY,
-						mOptionsSlider->mAllowedMouseZone.mWidth,
-						mOptionsSlider->mAllowedMouseZone.mHeight));
+	                    mOptionsSlider->mAllowedMouseZone.mY - mY,
+	                    mOptionsSlider->mAllowedMouseZone.mWidth,
+	                    mOptionsSlider->mAllowedMouseZone.mHeight));
 	g->Translate(35, 120 - aScrollOffset);
 
 	int aY = 0;
@@ -158,55 +155,55 @@ void SettingsDialog::Draw(Graphics* g)
 	mVSyncCheckbox->Resize(40, aY - aScrollOffset + GetTop(), 46, 45);
 
 	mVSyncCheckbox->mDisabled =
-		(mVSyncCheckbox->mY + mY + mVSyncCheckbox->mHeight) < mOptionsSlider->mAllowedMouseZone.mY ||
-		(mVSyncCheckbox->mY + mY) > (mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
+	    (mVSyncCheckbox->mY + mY + mVSyncCheckbox->mHeight) < mOptionsSlider->mAllowedMouseZone.mY ||
+	    (mVSyncCheckbox->mY + mY) > (mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
 
 	TodDrawString(g, "[SETTINGS_VSYNC]", mVSyncCheckbox->mX + 20, aY + 30, Sexy::FONT_BRIANNETOD12, Color::White,
-				  DrawStringJustification::DS_ALIGN_LEFT);
+	              DrawStringJustification::DS_ALIGN_LEFT);
 
 	aY += 50;
 
 	mFullscreenCheckbox->Resize(40, aY - aScrollOffset + GetTop(), 46, 45);
 
 	mFullscreenCheckbox->mDisabled =
-		(mFullscreenCheckbox->mY + mY + mFullscreenCheckbox->mHeight) < mOptionsSlider->mAllowedMouseZone.mY ||
-		(mFullscreenCheckbox->mY + mY) >
-			(mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
+	    (mFullscreenCheckbox->mY + mY + mFullscreenCheckbox->mHeight) < mOptionsSlider->mAllowedMouseZone.mY ||
+	    (mFullscreenCheckbox->mY + mY) >
+	        (mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
 
 	TodDrawString(g, "[SETTINGS_FULLSCREEN]", mFullscreenCheckbox->mX + 20, aY + 30, Sexy::FONT_BRIANNETOD12,
-				  Color::White, DrawStringJustification::DS_ALIGN_LEFT);
+	              Color::White, DrawStringJustification::DS_ALIGN_LEFT);
 
 	aY += 50;
 
 	mHighQualityCheckbox->Resize(40, aY - aScrollOffset + GetTop(), 46, 45);
 
 	mHighQualityCheckbox->mDisabled =
-		(mHighQualityCheckbox->mY + mY + mHighQualityCheckbox->mHeight) < mOptionsSlider->mAllowedMouseZone.mY ||
-		(mHighQualityCheckbox->mY + mY) >
-			(mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
+	    (mHighQualityCheckbox->mY + mY + mHighQualityCheckbox->mHeight) < mOptionsSlider->mAllowedMouseZone.mY ||
+	    (mHighQualityCheckbox->mY + mY) >
+	        (mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
 
 	TodDrawString(g, "[SETTINGS_HIGHQUALITY]", mHighQualityCheckbox->mX + 20, aY + 30, Sexy::FONT_BRIANNETOD12,
-				  Color::White, DrawStringJustification::DS_ALIGN_LEFT);
+	              Color::White, DrawStringJustification::DS_ALIGN_LEFT);
 
 	aY += 85;
 
 	TodDrawString(g, "[SETTINGS_RENDERER_BACKEND]", 20, aY, Sexy::FONT_BRIANNETOD12, Color::White,
-				  DrawStringJustification::DS_ALIGN_LEFT);
+	              DrawStringJustification::DS_ALIGN_LEFT);
 
 	aY += 12;
 
 	mRendererList->Resize(40, aY - aScrollOffset + GetTop(), 130, 70);
 
 	mRendererList->mDisabled =
-		(mRendererList->mY + mY + mRendererList->mHeight) < mOptionsSlider->mAllowedMouseZone.mY ||
-		(mRendererList->mY + mY) > (mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
+	    (mRendererList->mY + mY + mRendererList->mHeight) < mOptionsSlider->mAllowedMouseZone.mY ||
+	    (mRendererList->mY + mY) > (mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
 
 	aY += mRendererList->mHeight + 30;
 
 	if (mApp->mRenderer->mCurrentBackend != mApp->mDesiredBackend)
 	{
 		TodDrawString(g, "[SETTINGS_RENDERER_RESTART_NOTIF]", 20, aY, Sexy::FONT_BRIANNETOD12, Color::White,
-					  DrawStringJustification::DS_ALIGN_LEFT);
+		              DrawStringJustification::DS_ALIGN_LEFT);
 
 		aY += 20;
 	}
@@ -214,48 +211,47 @@ void SettingsDialog::Draw(Graphics* g)
 		aY += 12;
 
 	TodDrawString(g, "[SETTINGS_WINDOW_SIZE]", 20, aY, Sexy::FONT_BRIANNETOD12, Color::White,
-				  DrawStringJustification::DS_ALIGN_LEFT);
+	              DrawStringJustification::DS_ALIGN_LEFT);
 
 	aY += 4;
 
 	mSizesList->Resize(40, aY - aScrollOffset + GetTop(), 130, 26 * (mValidSizes.size() + 1));
 
 	mSizesList->mDisabled =
-		(mSizesList->mY + mY + mSizesList->mHeight) < mOptionsSlider->mAllowedMouseZone.mY ||
-		(mSizesList->mY + mY) > (mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
+	    (mSizesList->mY + mY + mSizesList->mHeight) < mOptionsSlider->mAllowedMouseZone.mY ||
+	    (mSizesList->mY + mY) > (mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
 
 	aY += mSizesList->mHeight + 40;
 
 	TodDrawString(g, "[SETTINGS_FILTERING_MODE]", 20, aY, Sexy::FONT_BRIANNETOD12, Color::White,
-				  DrawStringJustification::DS_ALIGN_LEFT);
+	              DrawStringJustification::DS_ALIGN_LEFT);
 
 	aY += 4;
 	mFilterList->Resize(40, aY - aScrollOffset + GetTop(), 130, 26 * (mFilterList->mLines.size() + 1));
 
 	mFilterList->mDisabled =
-		(mFilterList->mY + mY + mFilterList->mHeight) < mOptionsSlider->mAllowedMouseZone.mY ||
-		(mFilterList->mY + mY) > (mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
+	    (mFilterList->mY + mY + mFilterList->mHeight) < mOptionsSlider->mAllowedMouseZone.mY ||
+	    (mFilterList->mY + mY) > (mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
 
 	aY += mFilterList->mHeight + 40;
 
 	TodDrawString(g, "[SETTINGS_MISC]", 20, aY, Sexy::FONT_BRIANNETOD12, Color::White,
-				  DrawStringJustification::DS_ALIGN_LEFT);
+	              DrawStringJustification::DS_ALIGN_LEFT);
 
 	aY += 20;
 
 	mSaveFileButton->Resize(40, aY - aScrollOffset + GetTop(), 270, 46);
 
 	mSaveFileButton->mDisabled =
-		(mSaveFileButton->mY + mY + mSaveFileButton->mHeight) < mOptionsSlider->mAllowedMouseZone.mY ||
-		(mSaveFileButton->mY + mY) > (mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
-
+	    (mSaveFileButton->mY + mY + mSaveFileButton->mHeight) < mOptionsSlider->mAllowedMouseZone.mY ||
+	    (mSaveFileButton->mY + mY) > (mOptionsSlider->mAllowedMouseZone.mY + mOptionsSlider->mAllowedMouseZone.mHeight);
 
 	SexyString aVersionString = "ResoddedFramework Release " + LawnApp::gResoddedVersion.toString();
 
 	TodDrawString(g, aVersionString,
-				  mOptionsSlider->mAllowedMouseZone.mWidth - Sexy::FONT_BRIANNETOD12->StringWidth(aVersionString) - 27,
-				  aMaxContentHeight - Sexy::FONT_BRIANNETOD12->GetHeight(), Sexy::FONT_BRIANNETOD12, Color::White,
-				  DrawStringJustification::DS_ALIGN_LEFT);
+	              mOptionsSlider->mAllowedMouseZone.mWidth - Sexy::FONT_BRIANNETOD12->StringWidth(aVersionString) - 27,
+	              aMaxContentHeight - Sexy::FONT_BRIANNETOD12->GetHeight(), Sexy::FONT_BRIANNETOD12, Color::White,
+	              DrawStringJustification::DS_ALIGN_LEFT);
 
 #if GIT_AVAILABLE
 
@@ -264,8 +260,8 @@ void SettingsDialog::Draw(Graphics* g)
 	SexyString aGitString = "Git: Hash (" + aHash + ")" + (GIT_IS_DIRTY ? " WORK IN PROGRESS" : "");
 
 	TodDrawString(g, aGitString,
-				  mOptionsSlider->mAllowedMouseZone.mWidth - Sexy::FONT_BRIANNETOD12->StringWidth(aGitString) - 27,
-				  aMaxContentHeight, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
+	              mOptionsSlider->mAllowedMouseZone.mWidth - Sexy::FONT_BRIANNETOD12->StringWidth(aGitString) - 27,
+	              aMaxContentHeight, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
 
 #endif
 
@@ -324,23 +320,21 @@ void SettingsDialog::ButtonDepress(int theId)
 {
 	switch (theId)
 	{
-		case SettingsDialog::SETTINGS_BACK:
-		{
-			mApp->KillDialog(mId);
-			break;
-		}
-		case SettingsDialog::SETTINGS_OPEN_SAVE_FOLDER:
-		{
-			SexyString aSaveFileFolder = GetAppDataFolder();
-			#ifdef _WIN32
-			ShellExecuteA(NULL, "open", aSaveFileFolder.c_str(), NULL, NULL, SW_SHOWDEFAULT);
-			#else
-			SexyString aFailString = StrFormat("Couldn't open the folder on this platform.\nThe path is: \n%s", aSaveFileFolder.c_str());
+	case SettingsDialog::SETTINGS_BACK: {
+		mApp->KillDialog(mId);
+		break;
+	}
+	case SettingsDialog::SETTINGS_OPEN_SAVE_FOLDER: {
+		SexyString aSaveFileFolder = GetAppDataFolder();
+#ifdef _WIN32
+		ShellExecuteA(NULL, "open", aSaveFileFolder.c_str(), NULL, NULL, SW_SHOWDEFAULT);
+#else
+		SexyString aFailString = StrFormat("Couldn't open the folder on this platform.\nThe path is: \n%s", aSaveFileFolder.c_str());
 
-			mApp->DoDialog(Dialogs::DIALOG_INFO, true, "Failed", aFailString, "OK", Dialog::BUTTONS_FOOTER);
-			#endif
-			break;
-		}
+		mApp->DoDialog(Dialogs::DIALOG_INFO, true, "Failed", aFailString, "OK", Dialog::BUTTONS_FOOTER);
+#endif
+		break;
+	}
 	}
 }
 
@@ -367,8 +361,8 @@ void SettingsDialog::ListClicked(int theId, int theIdx, int theClickCount)
 			if (mApp->mDesiredBackend != mApp->mRenderer->mCurrentBackend)
 			{
 				SexyString anInfoString =
-					StrFormat("Rendering Backend has been changed to %s\nRestart the game to apply the changes",
-							  aBackendName.c_str());
+				    StrFormat("Rendering Backend has been changed to %s\nRestart the game to apply the changes",
+				              aBackendName.c_str());
 				mApp->DoDialog(Dialogs::DIALOG_INFO, true, "", anInfoString, "OK", Dialog::BUTTONS_FOOTER);
 			}
 		}
@@ -402,11 +396,11 @@ void SettingsDialog::ListClicked(int theId, int theIdx, int theClickCount)
 			SDL_SetWindowPosition(mApp->mWindow->mInternalWindow, aNewX, aNewY);
 
 			//Send events to the app to update the engine as a whole
-			SDL_Event aSizeEvent = {SDL_EVENT_WINDOW_RESIZED};
+			SDL_Event aSizeEvent = { SDL_EVENT_WINDOW_RESIZED };
 			aSizeEvent.window.data1 = mValidSizes[theIdx].mWidth;
 			aSizeEvent.window.data2 = mValidSizes[theIdx].mHeight;
 			aSizeEvent.window.windowID = SDL_GetWindowID(mApp->mWindow->mInternalWindow);
-			SDL_Event aPosEvent = {SDL_EVENT_WINDOW_MOVED};
+			SDL_Event aPosEvent = { SDL_EVENT_WINDOW_MOVED };
 			aPosEvent.window.data1 = aNewX;
 			aPosEvent.window.data2 = aNewY;
 			aPosEvent.window.windowID = SDL_GetWindowID(mApp->mWindow->mInternalWindow);
@@ -414,9 +408,7 @@ void SettingsDialog::ListClicked(int theId, int theIdx, int theClickCount)
 			SDL_PushEvent(&aSizeEvent);
 		}
 		mSizesList->SetSelect(theIdx);
-
 	}
-
 }
 
 bool SettingsDialog::IsCurrentWindowSizeInList()
@@ -424,41 +416,39 @@ bool SettingsDialog::IsCurrentWindowSizeInList()
 	for (const auto &aSize : mValidSizes)
 	{
 		if (mApp->mRenderer->mPresentationRect.mWidth == aSize.mWidth &&
-			mApp->mRenderer->mPresentationRect.mWidth == aSize.mHeight)
+		    mApp->mRenderer->mPresentationRect.mWidth == aSize.mHeight)
 			return true;
 	}
 
 	return false;
 }
 
-
 void SettingsDialog::CheckboxChecked(int theId, bool checked)
 {
 	switch (theId)
 	{
-	case SettingsDialog::SETTINGS_VSYNC:
+	case SettingsDialog::SETTINGS_VSYNC: {
+		mApp->mWaitForVSync = checked;
+		RendererError anError = mApp->mRenderer->UpdateVSync();
+		if (anError == RendererError::ERROR_VSYNC)
 		{
-			mApp->mWaitForVSync = checked;
-			RendererError anError = mApp->mRenderer->UpdateVSync();
-			if (anError == RendererError::ERROR_VSYNC)
-			{
-				mVSyncCheckbox->SetChecked(!checked, false);
-				SexyString aFailString = StrFormat("V-Sync couldn't be toggled %s\n\nYour video card does not\nmeet the "
-												   "minimum requirements\nfor this feature.",
-												   (checked ? "on" : "off"));
-				mApp->DoDialog(Dialogs::DIALOG_INFO, true, "Failed", aFailString, "OK", Dialog::BUTTONS_FOOTER);
-			}
+			mVSyncCheckbox->SetChecked(!checked, false);
+			SexyString aFailString = StrFormat("V-Sync couldn't be toggled %s\n\nYour video card does not\nmeet the "
+			                                   "minimum requirements\nfor this feature.",
+			                                   (checked ? "on" : "off"));
+			mApp->DoDialog(Dialogs::DIALOG_INFO, true, "Failed", aFailString, "OK", Dialog::BUTTONS_FOOTER);
 		}
-		break;
+	}
+	break;
 	case SettingsDialog::SETTINGS_FULLSCREEN:
 		if (!checked && mApp->mForceFullscreen)
 		{
 			mApp->DoDialog(Dialogs::DIALOG_COLORDEPTH_EXP, true, "No Windowed Mode",
-						   "Windowed mode is only available if your desktop was running in either\n"
-						   "16 bit or 32 bit color mode when you started the game.\n\n"
-						   "If you'd like to run in Windowed mode then you need to quit the game and switch your "
-						   "desktop to 16 or 32 bit color mode.",
-						   "OK", Dialog::BUTTONS_FOOTER);
+			               "Windowed mode is only available if your desktop was running in either\n"
+			               "16 bit or 32 bit color mode when you started the game.\n\n"
+			               "If you'd like to run in Windowed mode then you need to quit the game and switch your "
+			               "desktop to 16 or 32 bit color mode.",
+			               "OK", Dialog::BUTTONS_FOOTER);
 
 			mFullscreenCheckbox->SetChecked(true, false);
 		}
@@ -467,10 +457,9 @@ void SettingsDialog::CheckboxChecked(int theId, bool checked)
 			mApp->SwitchScreenMode(!mFullscreenCheckbox->IsChecked(), true, false);
 		}
 		break;
-	
+
 	case SettingsDialog::SETTINGS_HIGHQUALITY:
 		mApp->mIs3D = mHighQualityCheckbox->IsChecked();
 		break;
 	}
-
 }

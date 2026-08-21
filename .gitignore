@@ -8,8 +8,7 @@ out/
 crash.txt
 
 Export/
-assets/base
-/assets/main.pak
+
 /pseudocode
 /vcpkg_installed
 /android
