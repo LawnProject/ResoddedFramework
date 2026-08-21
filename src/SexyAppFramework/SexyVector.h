@@ -147,6 +147,55 @@ class SexyVector3
 	}
 };
 
+class SexyVector4
+{
+  public:
+	float x, y, z, w;
+
+  public:
+	SexyVector4() : x(0), y(0), z(0), w(0)
+	{
+	}
+	SexyVector4(float theX, float theY, float theZ, float theW) : x(theX), y(theY), z(theZ), w(theW)
+	{
+	}
+
+	float Dot(const SexyVector4 &v) const
+	{
+		return x * v.x + y * v.y + z * v.z;
+	}
+	SexyVector4 Cross(const SexyVector4 &v) const
+	{
+		return SexyVector4(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x, 0.0f);
+	}
+	SexyVector4 operator+(const SexyVector4 &v) const
+	{
+		return SexyVector4(x + v.x, y + v.y, z + v.z, z + v.w);
+	}
+	SexyVector4 operator-(const SexyVector4 &v) const
+	{
+		return SexyVector4(x - v.x, y - v.y, z - v.z, z - v.w);
+	}
+	SexyVector4 operator*(float t) const
+	{
+		return SexyVector4(t * x, t * y, t * z, t * w);
+	}
+	SexyVector4 operator/(float t) const
+	{
+		return SexyVector4(x / t, y / t, z / t, w / t);
+	}
+	float Magnitude() const
+	{
+		return sqrtf(x * x + y * y + z * z + w * w);
+	}
+
+	SexyVector4 Normalize() const
+	{
+		float aMag = Magnitude();
+		return aMag != 0 ? (*this) / aMag : *this;
+	}
+};
+
 }; // namespace Sexy
 
 #endif

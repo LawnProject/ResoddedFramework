@@ -14,55 +14,6 @@
 
 using namespace Sexy;
 
-const char *gVertexShaderSrc = R"glsl(
-#version 330 core
-
-layout(location = 0) in vec2 aPos;
-layout(location = 1) in vec2 aTex;
-layout(location = 2) in vec4 aColor;
-
-uniform mat4 uProjection;
-
-out vec2 vTexCoord;
-out vec4 vColor;
-
-void main() {
-    gl_Position = uProjection * vec4(aPos, 0.0, 1.0);
-    vTexCoord = aTex;
-    vColor = aColor;
-}
-)glsl";
-
-const char *gFragmentShaderSrc = R"glsl(
-#version 330 core
-
-in vec2 vTexCoord;
-in vec4 vColor;
-
-uniform sampler2D uTexture;
-uniform bool uUseTexture;
-uniform int uBlendMode;
-
-out vec4 FragColor;
-
-void main() {
-	if (uBlendMode == 2) // Multiply
-	{
-		vec4 src = uUseTexture ? texture(uTexture, vTexCoord) * vColor : vColor;
-		FragColor = src; // blending handles the multiply (src * dst), no premultiply
-	}
-	else
-	{
-		if (uUseTexture)
-			FragColor = texture(uTexture, vTexCoord) * vColor;
-		else
-			FragColor = vColor;
-	}
-
-}
-)glsl";
-
-
 // 3.3 is the minimum: shaders use #version 330 core and glGenSamplers/glBindSampler require GL 3.3
 static const int gGLVersions[][2] = {{4, 6}, {4, 5}, {4, 4}, {4, 3}, {4, 2}, {4, 1}, {4, 0}, {3, 3}};
 
@@ -300,9 +251,9 @@ bool OpenGLRenderer::InitGLContext()
 	mSamplers[GL_LINEAR].mClamp = 0;
 
 	mDefaultShader = new GLShader();
-	if (!mDefaultShader->LoadFromSource(gVertexShaderSrc, gFragmentShaderSrc))
+	if (!mDefaultShader->LoadFromSource(gDefaultVertexShader, gDefaultFragmentShader))
 	{
-		printf("[SexyAppFramework] - Failed to compile the OpenGL shaders, OpenGL backend is unavailable\n");
+		printf("[SexyAppFramework] - Failed to compile the OpenGL shaders\n");
 		DeleteShader(mDefaultShader);
 		return false;
 	}

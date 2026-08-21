@@ -78,21 +78,30 @@ void GLShader::SetUniform(const std::string &name, int value) const
 {
 	glUniform1i(GetUniformLocation(name), value);
 }
+void GLShader::SetUniform(const std::string &name, unsigned int value) const
+{
+	glUniform1ui(GetUniformLocation(name), value);
+}
 void GLShader::SetUniform(const std::string &name, float value) const
 {
 	glUniform1f(GetUniformLocation(name), value);
 }
-void GLShader::SetUniform(const std::string &name, const glm::vec2 &value) const
+void GLShader::SetUniform(const std::string &name, const float &x, const float &y) const
 {
-	glUniform2f(GetUniformLocation(name), value.x, value.y);
+	glUniform2f(GetUniformLocation(name), x, y);
 }
-void GLShader::SetUniform(const std::string &name, const glm::vec4 &value) const
+void GLShader::SetUniform(const std::string &name, const float &x, const float &y, const float &z, const float &w) const
 {
-	glUniform4f(GetUniformLocation(name), value.r, value.g, value.b, value.a);
+	glUniform4f(GetUniformLocation(name), x, y, z, w);
 }
-void GLShader::SetUniform(const std::string &name, const glm::mat4 &value) const
+void GLShader::SetUniform(const std::string &name, const SexyMatrix4 &matrix) const
 {
-	glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
+	glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix.m[0][0]);
+}
+
+void GLShader::SetUniform(const std::string &name, const glm::mat4 &matrix) const
+{
+	glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 #endif

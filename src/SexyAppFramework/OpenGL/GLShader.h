@@ -3,7 +3,8 @@
 #include <string>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-#include "../Shader.h"
+#include <Shader.h>
+#include <SexyMatrix.h>
 
 namespace Sexy
 {
@@ -27,11 +28,13 @@ class GLShader : public Shader
 		return mProgramID;
 	}
 
-	void SetUniform(const std::string &name, int value) const;
-	void SetUniform(const std::string &name, float value) const;
-	void SetUniform(const std::string &name, const glm::vec2 &value) const;
-	void SetUniform(const std::string &name, const glm::vec4 &value) const;
-	void SetUniform(const std::string &name, const glm::mat4 &value) const;
+	virtual void SetUniform(const std::string &name, int value) const;
+	virtual void SetUniform(const std::string &name, unsigned int value) const;
+	virtual void SetUniform(const std::string &name, float value) const;
+	virtual void SetUniform(const std::string &name, const float &x, const float &y) const;
+	virtual void SetUniform(const std::string &name, const float &x, const float &y, const float &z, const float &w) const;
+	virtual void SetUniform(const std::string &name, const SexyMatrix4 &matrix) const;
+	virtual void SetUniform(const std::string &name, const glm::mat4 &matrix) const;
 };
 
 } // namespace PopLib

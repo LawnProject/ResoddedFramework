@@ -164,6 +164,8 @@ namespace Sexy
 		Shader* mCurrentShader;
 
 		static bool gRenderingPreDrawError;
+		static const char* gDefaultVertexShader;
+		static const char *gDefaultFragmentShader;
 
 	  public:
 		Renderer(SexyAppBase *theApp);

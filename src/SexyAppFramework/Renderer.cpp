@@ -7,6 +7,54 @@ using namespace Sexy;
 
 std::string Renderer::mErrorString;
 
+const char *Renderer::gDefaultVertexShader = R"glsl(
+#version 330 core
+
+layout(location = 0) in vec2 aPos;
+layout(location = 1) in vec2 aTex;
+layout(location = 2) in vec4 aColor;
+
+uniform mat4 uProjection;
+
+out vec2 vTexCoord;
+out vec4 vColor;
+
+void main() {
+    gl_Position = uProjection * vec4(aPos, 0.0, 1.0);
+    vTexCoord = aTex;
+    vColor = aColor;
+}
+)glsl";
+
+const char *Renderer::gDefaultFragmentShader = R"glsl(
+#version 330 core
+
+in vec2 vTexCoord;
+in vec4 vColor;
+
+uniform sampler2D uTexture;
+uniform bool uUseTexture;
+uniform int uBlendMode;
+
+out vec4 FragColor;
+
+void main() {
+	if (uBlendMode == 2) // Multiply
+	{
+		vec4 src = uUseTexture ? texture(uTexture, vTexCoord) * vColor : vColor;
+		FragColor = src; // blending handles the multiply (src * dst), no premultiply
+	}
+	else
+	{
+		if (uUseTexture)
+			FragColor = texture(uTexture, vTexCoord) * vColor;
+		else
+			FragColor = vColor;
+	}
+
+}
+)glsl";
+
 bool Renderer::gRenderingPreDrawError = false;
 
 Renderer::Renderer(SexyAppBase* theApp) : mApp(theApp)

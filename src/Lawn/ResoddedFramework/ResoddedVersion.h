@@ -1,3 +1,3 @@
 #pragma once
 
-#define RESODDED_BUILD 996
+#define RESODDED_BUILD 997

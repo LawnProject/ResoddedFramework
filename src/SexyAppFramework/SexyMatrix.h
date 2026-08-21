@@ -32,6 +32,35 @@ class SexyMatrix3
 	const SexyMatrix3 &operator*=(const SexyMatrix3 &theMat);
 };
 
+class SexyMatrix4
+{
+  public:
+	union {
+		float m[4][4];
+
+		struct
+		{
+			float m00, m01, m02, m03;
+			float m10, m11, m12, m13;
+			float m20, m21, m22, m23;
+			float m30, m31, m32, m33;
+		};
+	};
+
+  public:
+	SexyMatrix4();
+
+	void ZeroMatrix();
+	void LoadIdentity();
+
+	SexyVector2 operator*(const SexyVector2 &theVec) const;
+	SexyVector3 operator*(const SexyVector3 &theVec) const;
+	SexyVector4 operator*(const SexyVector4 &theVec) const;
+
+	SexyMatrix4 operator*(const SexyMatrix4 &theMat) const;
+	const SexyMatrix4 &operator*=(const SexyMatrix4 &theMat);
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 class SexyTransform2D : public SexyMatrix3
