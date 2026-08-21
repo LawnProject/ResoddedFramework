@@ -13,6 +13,7 @@
 #include <SexyAppFramework/PerfTimer.h>
 #include <SexyAppFramework/SexyMatrix.h>
 #include <SexyAppFramework/Renderer.h>
+#include <SexyAppFramework/RenderCommand.h>
 
 void Tod_SWTri_AddAllDrawTriFuncs()
 {

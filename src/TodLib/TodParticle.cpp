@@ -126,7 +126,7 @@ bool TodParticleLoadADef(TodParticleDefinition *theParticleDef, const char *theP
 	if (!DefinitionLoadXML(theParticleFileName, &gParticleDefMap, theParticleDef, recompile))
 	{
 
-		auto aMessage = std::format("Failed to load particle '{}'", theParticleFileName);
+		SexyString aMessage = StrFormat("Failed to load particle '%s'", theParticleFileName);
 		TodErrorMessageBox(aMessage.c_str(), "Error");
 		return false;
 	}
