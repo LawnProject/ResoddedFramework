@@ -63,7 +63,6 @@
 #endif
 #include <ResoddedFramework/ResoddedVersion.h>
 #include <ResoddedFramework/UpdateChecker.h>
-#include <ResoddedFramework/FrameworkResources.h>
 #include <ResoddedFramework/SettingsDialog.h>
 
 #include <ctime>
@@ -1675,9 +1674,7 @@ void LawnApp::LoadGroup(const char *theGroupName, int theGroupAveMsToLoad)
 
 	if (mShutdown || mCloseRequest)
 		return;
-	bool aResoddedResourceFound = ResoddedFrameworkExtractResourcesByName(mResourceManager, theGroupName);
-	if (mResourceManager->HadError() ||
-	    (!ExtractResourcesByName(mResourceManager, theGroupName) && !aResoddedResourceFound))
+	if (mResourceManager->HadError() || !ExtractResourcesByName(mResourceManager, theGroupName))
 	{
 		ShowResourceError();
 		mLoadingFailed = true;
