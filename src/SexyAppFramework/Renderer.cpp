@@ -41,7 +41,7 @@ void main() {
 	if (uBlendMode == 2) // Multiply
 	{
 		vec4 src = uUseTexture ? texture(uTexture, vTexCoord) * vColor : vColor;
-		FragColor = src; // blending handles the multiply (src * dst), no premultiply
+		FragColor = vec4(src.rgb * src.a, src.a);
 	}
 	else
 	{

@@ -1188,12 +1188,6 @@ void LawnApp::Init()
 		return;
 	}
 
-	if (!mResourceManager->AddResourcesFile("properties/framework_resources.xml"))
-	{
-		ShowResourceError(true);
-		return;
-	}
-
 	if (!TodLoadResources("Init"))
 	{
 		return;
