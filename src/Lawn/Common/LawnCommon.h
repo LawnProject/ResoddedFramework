@@ -69,6 +69,7 @@ class LawnScrollbar : public Widget
 	bool IsThumbDown();
 	float GetValue();
 	void SetValue(float theValue);
+	void SetMaxValue(float theMaxValue);
 };
 
 bool ModInRange(int theNumber, int theMod, int theRange = 0);

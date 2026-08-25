@@ -55,7 +55,7 @@ SettingsDialog::SettingsDialog(LawnApp *theApp)
 
 	mOptionsSlider = new LawnScrollbar(mApp);
 	mOptionsSlider->mSliderHeightPercent = 0.57f;
-	mOptionsSlider->mMaxValue = 600;
+	mOptionsSlider->SetMaxValue(600);
 	mOptionsSlider->Resize(500, 90, 8, 140);
 
 	mFullscreenCheckbox = MakeNewCheckbox(SettingsDialog::SETTINGS_FULLSCREEN, this, !theApp->mIsWindowed);
@@ -132,7 +132,7 @@ void SettingsDialog::Draw(Graphics *g)
 
 	int aMaxContentHeight = 880;
 	float aMaxScroll = std::max(0.0f, (float)aMaxContentHeight - mOptionsSlider->mAllowedMouseZone.mHeight);
-	mOptionsSlider->mMaxValue = aMaxScroll;
+	mOptionsSlider->SetMaxValue(aMaxScroll);
 	float aScrollOffset = mOptionsSlider->GetValue();
 
 	g->PushState();
@@ -250,20 +250,8 @@ void SettingsDialog::Draw(Graphics *g)
 
 	TodDrawString(g, aVersionString,
 	              mOptionsSlider->mAllowedMouseZone.mWidth - Sexy::FONT_BRIANNETOD12->StringWidth(aVersionString) - 27,
-	              aMaxContentHeight - Sexy::FONT_BRIANNETOD12->GetHeight(), Sexy::FONT_BRIANNETOD12, Color::White,
+	              aMaxContentHeight, Sexy::FONT_BRIANNETOD12, Color::White,
 	              DrawStringJustification::DS_ALIGN_LEFT);
-
-#if GIT_AVAILABLE
-
-	SexyString aHash = GIT_HASH;
-
-	SexyString aGitString = "Git: Hash (" + aHash + ")" + (GIT_IS_DIRTY ? " WORK IN PROGRESS" : "");
-
-	TodDrawString(g, aGitString,
-	              mOptionsSlider->mAllowedMouseZone.mWidth - Sexy::FONT_BRIANNETOD12->StringWidth(aGitString) - 27,
-	              aMaxContentHeight, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
-
-#endif
 
 	g->PopState();
 }

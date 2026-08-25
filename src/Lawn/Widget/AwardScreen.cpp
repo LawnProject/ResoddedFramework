@@ -72,7 +72,7 @@ AwardScreen::AwardScreen(LawnApp *theApp, AwardType theAwardType)
 				mScrollBar->mBaseColor = Color(233, 149, 88);
 				int aScrollableRange = aTotalHeight - aVisibleWindow;
 				mScrollBar->mSliderHeightPercent = (float)aVisibleWindow / (float)aTotalHeight;
-				mScrollBar->mMaxValue = aScrollableRange;
+				mScrollBar->SetMaxValue(aScrollableRange);
 				mScrollBar->Resize(770, 90, 8, 480);
 			}
 		}

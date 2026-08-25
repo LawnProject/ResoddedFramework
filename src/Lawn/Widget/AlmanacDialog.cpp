@@ -390,7 +390,7 @@ void AlmanacDialog::DrawPlants(Graphics *g)
 	{
 		mDescriptionScrollbar->mDisabled = false;
 		mDescriptionScrollbar->mVisible = true;
-		mDescriptionScrollbar->mMaxValue = aDescriptionHeight - aVisibleHeight + 70;
+		mDescriptionScrollbar->SetMaxValue(aDescriptionHeight - aVisibleHeight + 70);
 	}
 	int anOffsetSlider = 0;
 	int aMaxWidthOffset = 0;
@@ -635,7 +635,7 @@ void AlmanacDialog::DrawZombies(Graphics *g)
 	{
 		mDescriptionScrollbar->mDisabled = false;
 		mDescriptionScrollbar->mVisible = true;
-		mDescriptionScrollbar->mMaxValue = aDescriptionHeight - aVisibleHeight + 70;
+		mDescriptionScrollbar->SetMaxValue(aDescriptionHeight - aVisibleHeight + 70);
 	}
 
 	int aMaxWidthOffset = 0;
