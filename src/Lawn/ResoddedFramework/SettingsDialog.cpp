@@ -5,7 +5,6 @@
 #include <SexyAppFramework/Renderer.h>
 #include <SexyAppFramework/Checkbox.h>
 #include <LawnApp.h>
-#include <SexyAppFramework/BuildInfo.h>
 #include <SexyAppFramework/Window.h>
 #include <SexyAppFramework/ListWidget.h>
 #include <TodLib/TodStringFile.h>
