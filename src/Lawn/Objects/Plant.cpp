@@ -1643,7 +1643,7 @@ void Plant::UpdateBlover()
 		aBodyReanim->mLoopType = ReanimLoopType::REANIM_LOOP;
 	}
 
-	if (mState != PlantState::STATE_DOINGSPECIAL && mStateCountdown == 0)
+	if (mState != PlantState::STATE_DOINGSPECIAL && mDoSpecialCountdown == 0)
 	{
 		DoSpecial();
 	}
