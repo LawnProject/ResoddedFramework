@@ -125,42 +125,29 @@ bool PakInterface::AddPakFile(const std::string &theFileName)
 	aPakRecord->mStartPos = 0;
 	aPakRecord->mSize = aFileSize;
 
-	size_t aFileOffset = 0;
+	PFILE aPakFile; // "fake" file for loading
+	aPakFile.mFP = nullptr;
+	aPakFile.mRecord = aPakRecord;
+	aPakFile.mPos = 0;
+
 	uint32_t aMagic = 0;
 
-	memcpy(&aMagic, aPakCollection->mData.data() + aFileOffset, sizeof(uint32_t));
-	aFileOffset += sizeof(uint32_t);
+	PFILE *aFP = &aPakFile;
+	if (aFP == nullptr)
+		return false;
+
+	FRead(&aMagic, sizeof(uint32_t), 1, aFP);
 
 	if (aMagic != 0xBAC04AC0)
 	{
-		int aPos = 0;
-		int aPWLength = mDecryptPassword.length();
-		aPos = aPos % aPWLength;
-
-		for (size_t i = 0; i < aPakRecord->mCollection->mData.size(); i++)
-		{
-			aPakRecord->mCollection->mData[i] ^= mDecryptPassword[(aPos++)%aPWLength];
-		}
-		aFileOffset -= sizeof(uint32_t);
-		memcpy(&aMagic, aPakCollection->mData.data() + aFileOffset, sizeof(uint32_t)); // re-read the magic number
-		aFileOffset += sizeof(uint32_t);
-
-		if (aMagic != 0xBAC04AC0) //if the magic is 0xF7 encrypted, it means the whole file is
-		{
-#if DEBUG
-			printf("[PakLib] - Invalid Magic Number received in Pak File: %s\n", theFileName.c_str());
-#endif
-			return false;
-		}
-#if DEBUG
-		printf("[PakLib] - Pak File: %s is encrypted, decrypting now...\n", theFileName.c_str());
-#endif
-
+		#if DEBUG
+		printf("[PakLib] - Invalid Magic Number received in Pak File: %s\n", theFileName.c_str());
+		#endif
+		return false;
 	}
 
 	uint32_t aVersion = 0;
-	memcpy(&aVersion, aPakCollection->mData.data() + aFileOffset, sizeof(uint32_t));
-	aFileOffset += sizeof(uint32_t);
+	FRead(&aVersion, sizeof(uint32_t), 1, aFP);
 
 	if (aVersion > 0)
 	{
@@ -174,31 +161,24 @@ bool PakInterface::AddPakFile(const std::string &theFileName)
 	{
 		uint8_t aFlags = 0;
 
-		memcpy(&aFlags, aPakCollection->mData.data() + aFileOffset, sizeof(uint8_t));
-		aFileOffset += sizeof(uint8_t);
+		int aCount = FRead(&aFlags, sizeof(uint8_t), 1, aFP);
 
-		if ((aFlags & FILEFLAGS_END) || (aFileOffset >= aPakCollection->mData.size()))
+		if ((aFlags & FILEFLAGS_END) || (aCount == 0))
 			break;
 
 		uint8_t aNameWidth = 0;
 		char aName[256];
 
-		memcpy(&aNameWidth, aPakCollection->mData.data() + aFileOffset, sizeof(uint8_t));
-		aFileOffset += sizeof(uint8_t);
-
-		memcpy(&aName, aPakCollection->mData.data() + aFileOffset, aNameWidth);
-		aFileOffset += aNameWidth;
+		FRead(&aNameWidth, sizeof(uint8_t), 1, aFP);
+		FRead(aName, sizeof(char), aNameWidth, aFP);
 
 		aName[aNameWidth] = '\0';
 
 		int aSrcSize = 0;
 
-		memcpy(&aSrcSize, aPakCollection->mData.data() + aFileOffset, sizeof(int));
-		aFileOffset += sizeof(int);
-
+		FRead(&aSrcSize, sizeof(int), 1, aFP);
 		uint64_t aFileTime;
-		memcpy(&aFileTime, aPakCollection->mData.data() + aFileOffset, sizeof(uint64_t));
-		aFileOffset += sizeof(uint64_t);
+		FRead(&aFileTime, sizeof(uint64_t), 1, aFP);
 
 		for (int i = 0; i < aNameWidth; i++) //windows....
 		{
@@ -220,7 +200,7 @@ bool PakInterface::AddPakFile(const std::string &theFileName)
 		aPos += aSrcSize;
 	}
 
-	int anOffset = (int)aFileOffset;
+	int anOffset = FTell(aFP);
 
 	// Now fix file starts
 	aRecordItr = mPakRecordMap.begin();
@@ -313,7 +293,12 @@ size_t PakInterface::FRead(void *thePtr, int theElemSize, int theCount, PFILE *t
         // obtain pointer to start reading relative to the whole pak
 		uint8_t *src = theFile->mRecord->mCollection->mData.data() + theFile->mRecord->mStartPos + theFile->mPos;
 		uint8_t *dest = (uint8_t *)thePtr;
-		memcpy(thePtr, src, aSizeBytes);
+		int aPos = theFile->mRecord->mStartPos + theFile->mPos;
+		int aPWLength = mDecryptPassword.length();
+		aPos = aPos % aPWLength;
+
+		for (int i = 0; i < aSizeBytes; i++)
+			*(dest++) = (*src++) ^ mDecryptPassword[(aPos++) % aPWLength]; // 'Decrypt'
 		theFile->mPos += aSizeBytes;
 		return aSizeBytes / theElemSize;
 	}
@@ -330,8 +315,12 @@ int PakInterface::FGetC(PFILE *theFile)
 		{
 			if (theFile->mPos >= theFile->mRecord->mSize)
 				return EOF;
-			char aChar =
-				*((char *)theFile->mRecord->mCollection->mData.data() + theFile->mRecord->mStartPos + theFile->mPos++);
+
+			int aPos = theFile->mRecord->mStartPos + theFile->mPos;
+			int aPWLength = mDecryptPassword.length();
+			aPos = aPos % aPWLength;
+
+			char aChar = *((char *)theFile->mRecord->mCollection->mData.data() + theFile->mRecord->mStartPos + theFile->mPos++) ^ mDecryptPassword[(aPos++) % aPWLength];
 			if (aChar != '\r')
 				return (uint8_t)aChar;
 		}
@@ -366,8 +355,11 @@ char *PakInterface::FGetS(char *thePtr, int theSize, PFILE *theFile)
 					return NULL;
 				break;
 			}
-			char aChar =
-				*((char *)theFile->mRecord->mCollection->mData.data() + theFile->mRecord->mStartPos + theFile->mPos++);
+			int aPos = theFile->mRecord->mStartPos + theFile->mPos;
+			int aPWLength = mDecryptPassword.length();
+			aPos = aPos % aPWLength;
+
+			char aChar = *((char *)theFile->mRecord->mCollection->mData.data() + theFile->mRecord->mStartPos + theFile->mPos++) ^ mDecryptPassword[(aPos++) % aPWLength];
 			if (aChar != '\r')
 				thePtr[anIdx++] = aChar;
 			if (aChar == '\n')
