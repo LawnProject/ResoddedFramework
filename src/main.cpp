@@ -5,6 +5,9 @@
 // the shared library actually exports the name SDL looks for.
 #ifdef __ANDROID__
 #include <SDL3/SDL_main.h>
+#include <SDL3/SDL_log.h>
+#include <SDL3/SDL_system.h>
+#include <unistd.h>
 #endif
 
 #include "LawnApp.h"
@@ -16,6 +19,27 @@ SexyString (*gGetCurrentLevelName)();
 
 int LawnMain()
 {
+#ifdef __ANDROID__
+	// Android starts the process with the working directory at "/", which is
+	// read-only. The game opens its pak, saves and logs through relative
+	// paths, so point them at the app's external files dir instead, which is
+	// also where PvZPortableActivity stages main.pak and properties/.
+	{
+		const char *aDataDir = SDL_GetAndroidExternalStoragePath();
+		if (aDataDir)
+		{
+			if (chdir(aDataDir) != 0)
+				SDL_Log("Could not chdir to '%s': %s", aDataDir, SDL_GetError());
+			else
+				SDL_Log("Working directory set to '%s'", aDataDir);
+		}
+		else
+		{
+			SDL_Log("Could not resolve the Android external storage path");
+		}
+	}
+#endif
+
 	// make locale UTF-8 so console output displays correctly
 	std::setlocale(LC_ALL, "en_us.UTF-8");
 

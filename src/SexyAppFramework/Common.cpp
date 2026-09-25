@@ -4,18 +4,36 @@
 #include <chrono>
 #include "Platform.h" // for Windows API - do not remove
 
+#ifdef __ANDROID__
+#include <SDL3/SDL_system.h>
+#endif
+
 #include "PerfTimer.h"
 
 bool Sexy::gDebug = false;
 static Sexy::MTRand gMTRand;
 namespace Sexy
 {
+// getenv() returns null for unset variables, and std::filesystem::path()
+// dereferences its argument unconditionally, so it must be checked first.
+// Android apps run without $HOME set, which crashed this static initializer.
+static std::string GetEnvPathOrEmpty(const char *theEnvVar)
+{
+	const char *aValue = std::getenv(theEnvVar);
+	return aValue ? std::filesystem::path(aValue).string() : std::string();
+}
+
 #ifdef _WIN32
-std::string gAppDataFolder = std::filesystem::path(std::getenv("LOCALAPPDATA")).string() + "/";
+std::string gAppDataFolder = GetEnvPathOrEmpty("LOCALAPPDATA") + "/";
 #elif __APPLE__
-std::string gAppDataFolder = std::filesystem::path(std::getenv("HOME")).string() + "/Library/Application Support/";
+std::string gAppDataFolder = GetEnvPathOrEmpty("HOME") + "/Library/Application Support/";
+#elif defined(__ANDROID__)
+// Android sets no $HOME, and the app-private storage dir can only be
+// queried through the JNI, which does not exist yet at static init time.
+// Left empty on purpose; GetAppDataFolder() resolves it on first use.
+std::string gAppDataFolder;
 #else
-std::string gAppDataFolder = std::filesystem::path(std::getenv("HOME")).string() + "/.config/";
+std::string gAppDataFolder = GetEnvPathOrEmpty("HOME") + "/.config/";
 #endif
 } // namespace Sexy
 
@@ -41,6 +59,16 @@ void Sexy::SRand(uint32_t theSeed)
 
 std::string Sexy::GetAppDataFolder()
 {
+#if defined(__ANDROID__)
+	// Resolve the app-private dir lazily: SDL can only answer this once it
+	// holds a JNI environment, which is not the case during static init.
+	if (Sexy::gAppDataFolder.empty())
+	{
+		const char *aPath = SDL_GetAndroidExternalStoragePath();
+		if (aPath)
+			Sexy::gAppDataFolder = std::string(aPath) + "/";
+	}
+#endif
 	return Sexy::gAppDataFolder;
 }
 
