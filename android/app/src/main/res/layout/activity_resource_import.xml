@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient_main"
+    android:padding="20dp"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- ── Header ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:letterSpacing="0.06"
+            android:shadowColor="#40000000"
+            android:shadowDx="0"
+            android:shadowDy="2"
+            android:shadowRadius="8"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="4dp" />
+
+        <View
+            android:layout_width="48dp"
+            android:layout_height="3dp"
+            android:background="@drawable/btn_primary_gradient"
+            android:layout_marginBottom="20dp" />
+
+        <!-- ── Status Badge ── -->
+        <TextView
+            android:id="@+id/status_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/status_missing"
+            style="@style/StatusBadge" />
+
+        <!-- ── Progress ── -->
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:visibility="gone"
+            android:indeterminate="true"
+            android:layout_marginBottom="16dp" />
+
+        <!-- ════════════════════════════════ -->
+        <!--  IMPORT GAME RESOURCES CARD     -->
+        <!-- ════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card_section"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/section_import_resources"
+                style="@style/SectionTitle" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/import_help"
+                style="@style/HelpText" />
+
+            <Button
+                android:id="@+id/btn_pick_zip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_pick_zip"
+                style="@style/BtnPrimary" />
+
+            <Button
+                android:id="@+id/btn_pick_dir"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_pick_dir"
+                style="@style/BtnSecondary" />
+
+        </LinearLayout>
+
+        <!-- ════════════════════════════════ -->
+        <!--  SAVE DATA CARD                 -->
+        <!-- ════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card_section"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/section_save_data"
+                style="@style/SectionTitle" />
+
+            <Button
+                android:id="@+id/btn_export_save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_export_save"
+                style="@style/BtnSecondary" />
+
+            <Button
+                android:id="@+id/btn_import_save_zip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_import_save_zip"
+                style="@style/BtnSecondary" />
+
+            <Button
+                android:id="@+id/btn_import_save_dir"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_import_save_dir"
+                style="@style/BtnSecondary" />
+
+        </LinearLayout>
+
+        <!-- ════════════════════════════════ -->
+        <!--  LAUNCH GAME                    -->
+        <!-- ════════════════════════════════ -->
+        <Button
+            android:id="@+id/btn_launch_game"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_launch_game"
+            android:enabled="false"
+            style="@style/BtnLaunch" />
+
+        <!-- Footer spacer -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
+
+    </LinearLayout>
+</ScrollView>

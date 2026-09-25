@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Purple palette -->
+    <color name="purple_dark">#FF1A0A2E</color>
+    <color name="purple_medium">#FF2D1B69</color>
+    <color name="purple_primary">#FF6C2BD9</color>
+    <color name="purple_accent">#FF8B5CF6</color>
+    <color name="purple_light">#FFA78BFA</color>
+    <color name="purple_surface">#FF1E1040</color>
+    <color name="purple_card">#CC2A1550</color>
+    <color name="purple_button_primary">#FF7C3AED</color>
+    <color name="purple_button_secondary">#FF5B21B6</color>
+    <color name="purple_gradient_start">#FF4C1D95</color>
+    <color name="purple_gradient_end">#FF1E0A3C</color>
+
+    <!-- Text colors -->
+    <color name="text_primary">#FFF8FAFC</color>
+    <color name="text_secondary">#FFC4B5FD</color>
+    <color name="text_muted">#FF8B7AA9</color>
+
+    <!-- Status colors -->
+    <color name="status_ready">#FF6EE7B7</color>
+    <color name="status_warning">#FFFBBF24</color>
+
+    <!-- Overlay -->
+    <color name="overlay_dark">#80000000</color>
+</resources>
