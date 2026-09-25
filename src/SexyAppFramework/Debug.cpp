@@ -165,9 +165,9 @@ void SexyDumpUnfreed()
 
 	time_t aTime = time(NULL);
 	sprintf(buf, "Memory Leak Report for %s\n", asctime(localtime(&aTime)));
-	fprintf(f, buf);
+	fputs(buf, f);
 	printf("\n");
-	printf(buf);
+	fputs(buf, stdout);
 	for (i = gSexyAllocMap.begin(); i != gSexyAllocMap.end(); i++)
 	{
 		sprintf(buf,
@@ -176,8 +176,8 @@ void SexyDumpUnfreed()
 				i->second.line,
 				i->second.size,
 				i->second.size > 1 ? "s" : "");
-		printf(buf);
-		fprintf(f, buf);
+		fputs(buf, stdout);
+		fputs(buf, f);
 
 #ifdef SEXY_DUMP_LEAKED_MEM
 		unsigned char *data = (unsigned char *)i->first;
@@ -203,7 +203,7 @@ void SexyDumpUnfreed()
 			{
 				count = 0;
 				sprintf(buf, "%s\t%s\n", hex_dump, ascii_dump);
-				fprintf(f, buf);
+				fputs(buf, f);
 
 				memset((void *)hex_dump, 0, 1024);
 				memset((void *)ascii_dump, 0, 1024);
@@ -214,11 +214,11 @@ void SexyDumpUnfreed()
 
 		if (count != 0)
 		{
-			fprintf(f, hex_dump);
+			fputs(hex_dump, f);
 			for (index = 0; index < 16 - count; index++)
 				fprintf(f, "\t");
 
-			fprintf(f, ascii_dump);
+			fputs(ascii_dump, f);
 
 			for (index = 0; index < 16 - count; index++)
 				fprintf(f, ".");
@@ -235,11 +235,11 @@ void SexyDumpUnfreed()
 	}
 
 	sprintf(buf, "-----------------------------------------------------------\n");
-	fprintf(f, buf);
-	printf(buf);
+	fputs(buf, f);
+	fputs(buf, stdout);
 	sprintf(buf, "Total Unfreed: %d bytes (%dKB)\n\n", totalSize, totalSize / 1024);
-	printf(buf);
-	fprintf(f, buf);
+	fputs(buf, stdout);
+	fputs(buf, f);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -251,5 +251,5 @@ void OutputDebug(const SexyCharByte *fmt...)
 	std::string result = vformat(fmt, argList);
 	va_end(argList);
 
-	printf(result.c_str());
+	fputs(result.c_str(), stdout);
 }

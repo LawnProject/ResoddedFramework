@@ -343,7 +343,7 @@ enum DebugTextMode
 #endif
 	DEBUG_TEXT_MAX,
 };
-enum DrawStringJustification
+enum DrawStringJustification : int
 {
 	DS_ALIGN_LEFT = 0,
 	DS_ALIGN_RIGHT = 1,

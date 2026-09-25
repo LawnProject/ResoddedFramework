@@ -764,8 +764,8 @@ bool ZenGarden::PlantShouldRefreshNeed(PottedPlant *thePottedPlant)
 	}
 
 	tm aNowTM, aLastWateredTM;
-	_localtime64_s(&aNowTM, &aNow);
-	_localtime64_s(&aLastWateredTM, &thePottedPlant->mLastWateredTime);
+	localtime_r(&aNow, &aNowTM);
+	localtime_r(&thePottedPlant->mLastWateredTime, &aLastWateredTM);
 	return aNowTM.tm_year > aLastWateredTM.tm_year || aNowTM.tm_yday > aLastWateredTM.tm_yday;
 }
 

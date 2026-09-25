@@ -1,5 +1,12 @@
 #include <clocale>
 
+// SDL3's Android loader resolves the native entry point by looking up the
+// "SDL_main" symbol. Including SDL_main.h redefines main() to SDL_main so
+// the shared library actually exports the name SDL looks for.
+#ifdef __ANDROID__
+#include <SDL3/SDL_main.h>
+#endif
+
 #include "LawnApp.h"
 #include "Sexy.TodLib/TodStringFile.h"
 

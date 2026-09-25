@@ -191,9 +191,9 @@ void PottedPlant::InitializePottedPlant(SeedType theSeedType)
 	mWhichZenGarden = GardenType::GARDEN_MAIN;
 	mFeedingsPerGrow = RandRangeInt(3, 5);
 	mPlantNeed = PottedPlantNeed::PLANTNEED_NONE;
-	mLastNeedFulfilledTime = 0i64;
-	mLastFertilizedTime = 0i64;
-	mLastChocolateTime = 0i64;
+	mLastNeedFulfilledTime = 0LL;
+	mLastFertilizedTime = 0LL;
+	mLastChocolateTime = 0LL;
 }
 
 ProfileSyncer::ProfileSyncer()

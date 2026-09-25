@@ -8,6 +8,14 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
 
+#ifdef _WIN32
+#define strnicmp _strnicmp
+#else
+#include <strings.h>
+#define stricmp strcasecmp
+#define strnicmp strncasecmp
+#endif
+
 using namespace ImageLib;
 
 Image::Image()

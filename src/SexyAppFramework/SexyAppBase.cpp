@@ -497,6 +497,7 @@ SexyAppBase::~SexyAppBase()
 #endif
 }
 
+#ifdef _WIN32
 static BOOL CALLBACK ChangeDisplayWindowEnumProc(HWND hwnd, LPARAM lParam)
 {
 	typedef std::map<HWND, RECT> WindowMap;
@@ -529,6 +530,7 @@ static BOOL CALLBACK ChangeDisplayWindowEnumProc(HWND hwnd, LPARAM lParam)
 	}
 	return TRUE;
 }
+#endif // _WIN32
 
 void SexyAppBase::ClearUpdateBacklog(bool relaxForASecond)
 {
@@ -2203,7 +2205,9 @@ bool SexyAppBase::DoUpdateFrames()
 		if ((mLoadingThreadCompleted) && (!mLoaded) && (mDemoLoadingComplete))
 		{
 			mLoaded = true;
+#ifdef _WIN32
 			::SetThreadPriority(::GetCurrentThread(), THREAD_PRIORITY_NORMAL);
+#endif
 			mYieldMainThread = false;
 			LoadingThreadCompleted();
 		}
@@ -2221,7 +2225,9 @@ bool SexyAppBase::DoUpdateFrames()
 	{
 		if ((mLoadingThreadCompleted) && (!mLoaded))
 		{
+#ifdef _WIN32
 			::SetThreadPriority(::GetCurrentThread(), THREAD_PRIORITY_NORMAL);
+#endif
 			mLoaded = true;
 			mYieldMainThread = false;
 			LoadingThreadCompleted();
@@ -3153,7 +3159,9 @@ void SexyAppBase::RehupFocus()
 			mWidgetManager->LostFocus();
 			LostFocus();
 
+#ifdef _WIN32
 			ReleaseCapture();
+#endif
 			mWidgetManager->DoMouseUps();
 		}
 	}
@@ -5246,6 +5254,7 @@ void SexyAppBase::HandleCmdLineParam(const std::string &theParamName, const std:
 		mPlayingDemoBuffer = true;
 		mRecordingDemoBuffer = false;
 	}
+#ifdef _WIN32
 	else if (theParamName == "-recnum")
 	{
 		int aNum = atoi(theParamValue.c_str());
@@ -5272,6 +5281,7 @@ void SexyAppBase::HandleCmdLineParam(const std::string &theParamName, const std:
 		mRecordingDemoBuffer = false;
 		mPlayingDemoBuffer = true;
 	}
+#endif // _WIN32
 	else if (theParamName == "-record")
 	{
 		mRecordingDemoBuffer = true;

@@ -4,7 +4,7 @@
 #include "../SexyAppFramework/Graphics.h"
 using namespace Sexy;
 
-enum DrawStringJustification;
+enum DrawStringJustification : int;
 enum TodStringFormatFlag
 {
 	TOD_FORMAT_IGNORE_NEWLINES,

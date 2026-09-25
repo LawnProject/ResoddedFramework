@@ -193,7 +193,7 @@ void TodTraceAndLog(const char *theFormat, ...)
 		}
 	}
 
-	printf(aButter);
+	fputs(aButter, stdout);
 	TodLogString(aButter);
 }
 
@@ -226,7 +226,7 @@ void TodTraceWithoutSpamming(const char *theFormat, ...)
 		}
 	}
 
-	printf(aButter);
+	fputs(aButter, stdout);
 }
 
 #if defined (_WIN32) && defined(SEXY_CRASH_HANDLER) 

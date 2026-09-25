@@ -1,6 +1,7 @@
 #ifndef __IMAGEFONT_H__
 #define __IMAGEFONT_H__
 
+#include <list>
 #include <unordered_map>
 
 #include "Font.h"

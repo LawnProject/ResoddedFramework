@@ -1,5 +1,6 @@
 #include "FrameworkResources.h"
 #include "SexyAppFramework/ResourceManager.h"
+#include <cstdint>
 using namespace Sexy;
 
 #pragma warning(disable:4311 4312)
@@ -118,7 +119,7 @@ static Sexy::ResoddedFrameworkResourceId ResoddedFrameworkGetIdByVariable(const 
 			aMap[*(int*)gResources[i]] = i;
 	}
 
-	MyMap::iterator anItr = aMap.find((int)theVariable);
+	MyMap::iterator anItr = aMap.find((int)(intptr_t)theVariable);
 	if (anItr == aMap.end())
 		return ResoddedFrameworkRESOURCE_ID_MAX;
 	else

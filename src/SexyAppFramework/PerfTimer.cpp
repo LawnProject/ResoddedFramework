@@ -4,6 +4,14 @@
 #include <cstdint>
 #include <vector>
 
+#ifdef _WIN32
+#define strnicmp _strnicmp
+#else
+#include <strings.h>
+#define stricmp strcasecmp
+#define strnicmp strncasecmp
+#endif
+
 using namespace Sexy;
 
 ///////////////////////////////////////////////////////////////////////////////

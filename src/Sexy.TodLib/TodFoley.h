@@ -16,7 +16,7 @@ enum FoleyFlags
 	FOLEYFLAGS_DONT_REPEAT
 };
 
-enum FoleyType
+enum FoleyType : int
 {
 	FOLEY_SUN,
 	FOLEY_SPLAT,

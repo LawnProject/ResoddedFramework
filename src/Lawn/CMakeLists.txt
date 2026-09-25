@@ -31,7 +31,14 @@ foreach(EXCLUDED_FILE IN LISTS EXCLUDE_FILES)
     list(REMOVE_ITEM SOURCES "${EXCLUDED_FILE}")
 endforeach()
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+if(ANDROID)
+    # SDL3 loads the game as a shared library named "main" (libmain.so),
+    # not as a standalone executable.
+    add_library(${PROJECT_NAME} SHARED ${SOURCES})
+    set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "main")
+else()
+    add_executable(${PROJECT_NAME} ${SOURCES})
+endif()
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC
     $<$<CONFIG:Debug>:DEBUG>
@@ -71,6 +78,14 @@ endif()
 target_link_libraries(${PROJECT_NAME} PUBLIC
     SexyAppFramework
 )
+
+if(ANDROID)
+    # BASS ships as a prebuilt arm64 shared library that is packaged via
+    # jniLibs and loaded at runtime by PvZPortableActivity.
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+        "${CMAKE_SOURCE_DIR}/android/app/src/main/jniLibs/${ANDROID_ABI}/libbass.so"
+    )
+endif()
 
 foreach(FILE_PATH IN LISTS SOURCES)
     get_filename_component(EXT "${FILE_PATH}" EXT)
@@ -135,13 +150,15 @@ set(DLLS_TO_COPY
     swscale-8.dll
 )
 
-foreach(DLL ${DLLS_TO_COPY})
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${THIRDPARTY_DIR}/${DLL}"
-            "${EXPORT_DIR}"
-    )
-endforeach()
+if(NOT ANDROID)
+    foreach(DLL ${DLLS_TO_COPY})
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${THIRDPARTY_DIR}/${DLL}"
+                "${EXPORT_DIR}"
+        )
+    endforeach()
+endif()
 
 if(MSVC)
     # set source and execution charset to utf-8

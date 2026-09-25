@@ -17,6 +17,7 @@
 #include <list>
 #include <set>
 #include <mutex>
+#include <thread>
 #include FT_FREETYPE_H
 
 
@@ -38,8 +39,8 @@ enum JSONRegistryType
 	TYPE_LAST
 };
 
-enum RenderingBackend;
-enum OutputFilteringMode;
+enum RenderingBackend : int;
+enum OutputFilteringMode : int;
 
 class WidgetManager;
 class DDInterface;

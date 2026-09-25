@@ -23,9 +23,15 @@
 
 // SexyString Start
 
-#if defined(__clang__) && defined(_WIN32)
+#if defined(_WIN32)
+#if defined(__clang__)
 #define stricmp _stricmp
 #define strnicmp _strnicmp
+#endif
+#else
+#include <strings.h>
+#define stricmp strcasecmp
+#define strnicmp strncasecmp
 #endif
 
 typedef std::string SexyString;

@@ -2,6 +2,7 @@
 
 #include "GPUImage.h"
 #include "SexyMatrix.h"
+#include <list>
 #include <set>
 #include <mutex>
 #include <unordered_map>
@@ -60,14 +61,14 @@ namespace Sexy
 		ERROR_VSYNC,
 	};
 
-	enum OutputFilteringMode
+	enum OutputFilteringMode : int
 	{
 		MODE_NEAREST,
 		MODE_LINEAR,
 		NUM_MODES,
 	};
 
-	enum RenderingBackend
+	enum RenderingBackend : int
 	{
 		BACKEND_NONE = 0,
 #if SEXY_USE_OPENGL

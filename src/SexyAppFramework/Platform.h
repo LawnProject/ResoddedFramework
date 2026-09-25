@@ -29,6 +29,17 @@
 
 #endif
 
+// timeGetTime() is a Win32 multimedia timer. SDL3 exposes the equivalent
+// millisecond tick counter on every platform, so provide it as a shim
+// rather than rewriting every call site.
+#ifndef _WIN32
+#include <SDL3/SDL_timer.h>
+static inline uint32_t timeGetTime()
+{
+	return (uint32_t)SDL_GetTicks();
+}
+#endif
+
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif

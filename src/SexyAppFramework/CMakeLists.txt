@@ -124,9 +124,15 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
 
     # SAF specific
     USE_OGG_LIB
-    SEXY_USE_OPENGL
     SEXY_USE_SDL3_RENDERER
 )
+
+# Desktop OpenGL is unavailable on Android, where SDL3 provides the GLES
+# context instead. Enabling it there pulls in GL 3.x core symbols that
+# libGLES does not export.
+if(NOT ANDROID)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC SEXY_USE_OPENGL)
+endif()
 
 if(SEXY_USE_CONTROLLER)
     target_compile_definitions(${PROJECT_NAME} PUBLIC SEXY_USE_CONTROLLER)

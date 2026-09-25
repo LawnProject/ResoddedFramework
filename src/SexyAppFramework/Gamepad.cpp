@@ -1,6 +1,7 @@
 #if SEXY_USE_CONTROLLER
 #include "Gamepad.h"
 #include <SDL3/SDL_log.h>
+#include <cmath>
 
 using namespace Sexy;
 
