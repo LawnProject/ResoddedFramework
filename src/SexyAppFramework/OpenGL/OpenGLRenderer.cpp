@@ -300,6 +300,11 @@ bool OpenGLRenderer::InitBuffers()
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mFBOTexture, 0);
 
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		printf("[SexyAppFramework] - OpenGL Framebuffer creation failed: %d\n", glCheckFramebufferStatus(GL_FRAMEBUFFER));
+	}
+
 	gGLTextureCount++;
 
 	GLenum possiblefilters[2] = {GL_NEAREST, GL_LINEAR};

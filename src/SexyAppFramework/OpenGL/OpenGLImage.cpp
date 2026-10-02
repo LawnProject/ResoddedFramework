@@ -197,7 +197,21 @@ void OpenGLImage::CreateImageBuffers()
 	GLenum drawBuffers[1] = {GL_COLOR_ATTACHMENT0};
 	glDrawBuffers(1, drawBuffers);
 
-	mSurface = new GLuint(mTexID);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		printf("[SexyAppFramework] - OpenGL Framebuffer setup failed: %d\n", glCheckFramebufferStatus(GL_FRAMEBUFFER));
+	}
+
+	glDisable(GL_SCISSOR_TEST);
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	glClearColor(0.f, 0.f, 0.f, 0.f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	if (mSurface == nullptr)
+		mSurface = new GLuint(mTexID);
+	else
+		*(GLuint *)mSurface = mTexID;
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
