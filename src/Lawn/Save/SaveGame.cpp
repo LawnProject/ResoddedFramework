@@ -536,7 +536,6 @@ void LawnSyncGame(Board *theBoard, SaveContext &theContext)
 	SYNC_VAR(theBoard->mIntervalDrawCountStart);
 
 	SYNC_VAR(theBoard->mMinFPS);
-	SYNC_VAR(theBoard->mPreloadTime);
 	SYNC_VAR(theBoard->mGameID);
 
 	SYNC_VAR(theBoard->mGravesCleared);

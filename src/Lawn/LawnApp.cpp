@@ -1706,16 +1706,14 @@ void LawnApp::LoadingThreadProc()
 	PerfTimer aTimer;
 	aTimer.Start();
 
-	TodHesitationTrace("start loading");
-	TodHesitationBracket aHesitationResources("Resources");
-	TodHesitationTrace("loading thread start");
+	{
+		TodHesitationBracket aHesitationResources("Loading Resources");
+		LoadGroup("LoadingImages", 9);
+		LoadGroup("LoadingFonts", 54);
+	}
 
-	LoadGroup("LoadingImages", 9);
-	LoadGroup("LoadingFonts", 54);
 	if (mLoadingFailed || mShutdown || mCloseRequest)
 		return;
-
-	aHesitationResources.EndBracket();
 	TodTraceAndLog("[LawnProject] - loading '%s' %d ms", "resources", (int)aTimer.GetDuration());
 
 	mMusic->MusicInit();
@@ -1735,7 +1733,6 @@ void LawnApp::LoadingThreadProc()
 	TrailLoadDefinitions(gLawnTrailArray, LENGTH(gLawnTrailArray), mRunInCompileMode);
 	TodTraceAndLog("[LawnProject] - loading '%s' %d ms", "trail", (int)aTimer.GetDuration());
 	aTimer.Start();
-	TodHesitationTrace("trail");
 
 	TodParticleLoadDefinitions(gLawnParticleArray, LENGTH(gLawnParticleArray), mRunInCompileMode);
 	aDuration = std::max(aTimer.GetDuration(), 0.0);
@@ -1750,7 +1747,6 @@ void LawnApp::LoadingThreadProc()
 
 	GetNumPreloadingTasks();
 	LoadGroup("LoadingSounds", 54);
-	TodHesitationTrace("finished loading");
 }
 
 void LawnApp::FastLoad(GameMode theGameMode)

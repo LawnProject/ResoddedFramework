@@ -316,7 +316,7 @@ bool CutScene::Is2x2Zombie(ZombieType theZombieType)
 
 void CutScene::PreloadResources()
 {
-	TodHesitationTrace("pre-CutScene::PreloadResources()");
+	TodHesitationBracket preloadTrace("[LawnProject] - PreCutscene PreloadResources");
 
 	if (mPreloaded)
 	{
@@ -472,10 +472,6 @@ void CutScene::PreloadResources()
 	}
 
 	PlaceStreetZombies();
-
-	mBoard->mPreloadTime = std::max(aTimer.GetDuration(), 0.0);
-	TodTrace("[LawnProject] - preloading: %d ms", mBoard->mPreloadTime);
-	TodHesitationTrace("CutScene::PreloadResources");
 }
 
 void CutScene::PlaceStreetZombies()

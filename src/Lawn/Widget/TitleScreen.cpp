@@ -67,7 +67,6 @@ void TitleScreen::Draw(Graphics *g)
 		if (!mDrawnYet)
 		{
 			TodTraceAndLog("[LawnProject] - First Draw Time: %d ms\n", GetTicks() - mApp->mTimeLoaded);
-			TodHesitationTrace("TitleScreen First Draw");
 			mDrawnYet = true;
 		}
 

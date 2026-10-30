@@ -213,7 +213,7 @@ void Music::SetupMusicFileForTune(MusicFile theMusicFile, MusicTune theMusicTune
 
 void Music::LoadSong(MusicFile theMusicFile, const std::string &theFileName)
 {
-	TodHesitationTrace("preloadsong");
+	TodHesitationBracket preloadSong("Preload Song: %s", theFileName.c_str());
 	if (!TodLoadMusic(theMusicFile, theFileName))
 	{
 		TodTrace("[LawnProject] - music failed to load\n");
@@ -222,7 +222,6 @@ void Music::LoadSong(MusicFile theMusicFile, const std::string &theFileName)
 	else
 	{
 		BASS_ChannelSetAttribute(GetBassMusicHandle(theMusicFile), BASS_ATTRIB_MUSIC_PSCALER, 4);
-		TodHesitationTrace("song '%s'", theFileName.c_str());
 	}
 }
 

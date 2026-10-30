@@ -328,17 +328,12 @@ void ReanimationCreateAtlas(ReanimatorDefinition *theDefinition, ReanimationType
 	if (theDefinition->mReanimAtlas != nullptr || TestBit(aParam.mReanimParamFlags, ReanimFlags::REANIM_NO_ATLAS))
 		return;
 
-	PerfTimer aTimer;
-	aTimer.Start();
-	TodHesitationTrace("preatlas");
+	TodHesitationBracket atlasCreation("Reanimation Atlas Creation %s at %s", aParam.mReanimFileName, gGetCurrentLevelName().c_str());
+	atlasCreation.mTraceDuration = 20;
 	ReanimAtlas *aAtlas = new ReanimAtlas();
 	theDefinition->mReanimAtlas = aAtlas;
 	aAtlas->ReanimAtlasCreate(theDefinition);
 
-	TodHesitationTrace("atlas '%s'", aParam.mReanimFileName);
-	int aDuration = std::max(aTimer.GetDuration(), 0.0);
-	if (aDuration > 20 && theReanimationType != ReanimationType::REANIM_NONE)
-		TodTraceAndLog("[TodLib] - LOADING:Long atlas '%s' %d ms on %s", aParam.mReanimFileName, aDuration, gGetCurrentLevelName().c_str());
 }
 
 void ReanimationPreload(ReanimationType theReanimationType)
@@ -1114,14 +1109,9 @@ void ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsP
 	}
 	else
 	{
-		if (gAppHasUsedCheatKeys())
-			TodTraceAndLog("[TodLib] - Cheater failed to preload '%s' on %s", aReanimParams->mReanimFileName, gGetCurrentLevelName().c_str());
-		else
-			TodTraceAndLog("[TodLib] - Non-cheater failed to preload '%s' on %s", aReanimParams->mReanimFileName, gGetCurrentLevelName().c_str());
+		TodTraceAndLog("[TodLib] - Failed to preload '%s' on %s", aReanimParams->mReanimFileName, gGetCurrentLevelName().c_str());
 	}
 
-	PerfTimer aTimer;
-	aTimer.Start();
 	TodHesitationBracket aHesitation("Load Reanim '%s'", aReanimParams->mReanimFileName);
 	if (!ReanimationLoadDefinition(aReanimParams->mReanimFileName, aReanimDef, recompile))
 	{
@@ -1133,9 +1123,6 @@ void ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsP
 #endif
 		TodErrorMessageBox(aBuf, "Error");
 	}
-	int aDuration = aTimer.GetDuration();
-	if (aDuration > 100) // Report of Excessive Creation Time
-		TodTraceAndLog("[TodLib] - LOADING:Long reanim '%s' %d ms on %s", aReanimParams->mReanimFileName, aDuration, gGetCurrentLevelName().c_str());
 }
 
 void ReanimatorLoadDefinitions(ReanimationParams *theReanimationParamArray, int theReanimationParamArraySize, bool recompile)

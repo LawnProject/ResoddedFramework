@@ -12,6 +12,27 @@ using namespace Sexy;
 static char gLogFileName[1024];
 static char gDebugDataFolder[1024];
 
+TodHesitationBracket::TodHesitationBracket(const char *theFormat, ...)
+{
+	mTraceDuration = 100;
+	char aButter[1024];
+	va_list argList;
+	va_start(argList, theFormat);
+	int aCount = TodVsnprintf(aButter, sizeof(aButter), theFormat, argList);
+	va_end(argList);
+
+	mMessage = aButter;
+	mBracketStartTime = GetTicks();
+}
+
+TodHesitationBracket::~TodHesitationBracket()
+{
+	uint64_t currentTime = GetTicks();
+	uint64_t duration = currentTime - mBracketStartTime;
+	if (duration > mTraceDuration)
+		TodTraceAndLog("[Hesitation Trace: Duration: %llu ms | %s]\n", static_cast<unsigned long long>(duration), mMessage.c_str());
+}
+
 void TodErrorMessageBox(const char *theMessage, const char *theTitle)
 {
 	TodTraceAndLog("[TodLib] - %s.%s", theMessage, theTitle);
@@ -166,10 +187,6 @@ void TodTrace(const char *theFormat, ...)
 
 	printf("%s", aButter);
 
-}
-
-void TodHesitationTrace(...)
-{
 }
 
 void TodTraceAndLog(const char *theFormat, ...)

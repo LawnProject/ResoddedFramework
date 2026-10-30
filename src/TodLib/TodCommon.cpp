@@ -1084,7 +1084,6 @@ bool TodLoadNextResource()
 bool TodResourceManager::TodLoadNextResource()
 {
 	GetTicks();
-	TodHesitationTrace("preres");
 
 	while (mCurResGroupListItr != mCurResGroupList->end())
 	{
@@ -1142,8 +1141,6 @@ bool TodResourceManager::TodLoadNextResource()
 		}
 
 		GetTicks();
-		TodHesitationTrace("Loading: '%s'", aRes->mPath.c_str());
-		TodHesitationTrace("resource '%s'", aRes->mPath.c_str());
 		return true;
 	}
 

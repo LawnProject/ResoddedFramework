@@ -49,7 +49,7 @@ GameSelectorOverlay::GameSelectorOverlay(GameSelector *theGameSelector)
 
 GameSelector::GameSelector(LawnApp *theApp)
 {
-	TodHesitationTrace("pregameselector");
+	TodHesitationBracket pregameSelector("GameSelector Init");
 
 	mApp = theApp;
 	mApp->mAchievements->SyncAchievements();
@@ -309,7 +309,6 @@ GameSelector::GameSelector(LawnApp *theApp)
 
 	SyncProfile(false);
 	mApp->PlaySample(Sexy::SOUND_ROLL_IN);
-	TodHesitationTrace("gameselectorinit");
 
 	if (UpdateChecker::gIsOutdated)
 	{

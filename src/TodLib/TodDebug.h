@@ -2,27 +2,18 @@
 #define __TODDEBUG_H__
 
 #include <SexyAppFramework/Platform.h> // for Windows - do not remove
+#include <SexyAppFramework/Common.h>
 
 class TodHesitationBracket
 {
   public:
-	char mMessage[256];
-	int mBracketStartTime;
+	SexyString mMessage;
+	uint64_t mBracketStartTime;
+	uint64_t mTraceDuration;
 
   public:
-	TodHesitationBracket(const char *theFormat, ...)
-	{
-		;
-	}
-	~TodHesitationBracket()
-	{
-		;
-	}
-
-	inline void EndBracket()
-	{
-		;
-	}
+	TodHesitationBracket(const char *theFormat, ...);
+	~TodHesitationBracket();
 };
 
 void TodLog(const char *theFormat, ...);
@@ -31,7 +22,6 @@ void TodTrace(const char *theFormat, ...);
 void TodTraceMemory();
 void TodTraceAndLog(const char *theFormat, ...);
 void TodTraceWithoutSpamming(const char *theFormat, ...);
-void TodHesitationTrace(...);
 #if defined(_WIN32) && defined(SEXY_CRASH_HANDLER)
 void TodReportError(LPEXCEPTION_POINTERS exceptioninfo, const char *theMessage);
 long __stdcall TodUnhandledExceptionFilter(LPEXCEPTION_POINTERS exceptioninfo);

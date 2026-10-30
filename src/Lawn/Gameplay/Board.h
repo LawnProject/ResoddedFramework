@@ -219,7 +219,6 @@ class Board : public Widget, public ButtonListener
 	uint32_t mIntervalDrawTime;
 	int mIntervalDrawCountStart;
 	float mMinFPS;
-	int mPreloadTime;
 	int mGameID;
 	int mGravesCleared;
 	int mPlantsEaten;

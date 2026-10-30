@@ -307,7 +307,6 @@ bool DefinitionLoadImage(Image **theImage, const SexyString &theName)
 			SharedImageRef aImageRef = gSexyAppBase->GetSharedImage(aPathToTry);
 			if ((Image *)aImageRef != nullptr)
 			{
-				TodHesitationTrace("Load Image '%s'", theName.c_str());
 				TodAddImageToMap(&aImageRef, theName);
 				TodMarkImageForSanding((Image *)aImageRef);
 				*theImage = (Image *)aImageRef;
@@ -1358,7 +1357,7 @@ bool DefinitionCompileFile(const SexyString theXMLFilePath, const SexyString &th
 bool DefinitionCompileAndLoad(const SexyString &theXMLFilePath, DefMap *theDefMap, void *theDefinition, bool recompile)
 {
 	SexyString aCompiledFilePath = DefinitionGetCompiledFilePathFromXMLFilePath(theXMLFilePath);
-	TodHesitationTrace("predef");
+	TodHesitationBracket definitionLoad("Definition Loading: %s", theXMLFilePath.c_str());
 
 	if (!recompile)
 	{
@@ -1366,7 +1365,6 @@ bool DefinitionCompileAndLoad(const SexyString &theXMLFilePath, DefMap *theDefMa
 		{
 			if (DefinitionReadCompiledFile(aCompiledFilePath, theDefMap, theDefinition))
 			{
-				TodHesitationTrace("loaded %s", aCompiledFilePath.c_str());
 				return true;
 			}
 		}
@@ -1382,11 +1380,11 @@ bool DefinitionCompileAndLoad(const SexyString &theXMLFilePath, DefMap *theDefMa
 		//write to fresh_compiled to not overwrite on game re-compile by accident
 		aCompiledFilePath = "fresh_" + aCompiledFilePath;
 	}
-	bool aResult =
-	    DefinitionCompileFile(theXMLFilePath, aCompiledFilePath, theDefMap,
-	                          theDefinition);
-	TodTraceAndLog("[TodLib] - compile %d ms:'%s'", (int)aTimer.GetDuration(), aCompiledFilePath.c_str());
-	TodHesitationTrace("compiled %s", aCompiledFilePath.c_str());
+
+	TodHesitationBracket compilationTrace("Compiling %s", aCompiledFilePath.c_str());
+
+	bool aResult = DefinitionCompileFile(theXMLFilePath, aCompiledFilePath, theDefMap, theDefinition);
+
 	if (aResult)
 		return aResult;
 

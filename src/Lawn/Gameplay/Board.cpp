@@ -68,15 +68,17 @@ Board::Board(LawnApp *theApp)
 {
 	mApp = theApp;
 	mApp->mBoard = this;
-	TodHesitationTrace("preboard");
+	TodHesitationBracket preBoardTrace("[LawnProject] - Preboard Init");
+	{
+		TodHesitationBracket dataArrayTrace("[LawnProject] - Board DataArrays");
 
-	mZombies.DataArrayInitialize(MAX_ZOMBIES_SIZE, "zombies");
-	mPlants.DataArrayInitialize(MAX_PLANTS_SIZE, "plants");
-	mProjectiles.DataArrayInitialize(MAX_PROJECTILE_SIZE, "projectiles");
-	mCoins.DataArrayInitialize(MAX_COIN_SIZE, "coins");
-	mLawnMowers.DataArrayInitialize(MAX_LAWN_MOWER_SIZE, "lawnmowers");
-	mGridItems.DataArrayInitialize(MAX_GRID_ITEM_SIZE, "griditems");
-	TodHesitationTrace("board dataarrays");
+		mZombies.DataArrayInitialize(MAX_ZOMBIES_SIZE, "zombies");
+		mPlants.DataArrayInitialize(MAX_PLANTS_SIZE, "plants");
+		mProjectiles.DataArrayInitialize(MAX_PROJECTILE_SIZE, "projectiles");
+		mCoins.DataArrayInitialize(MAX_COIN_SIZE, "coins");
+		mLawnMowers.DataArrayInitialize(MAX_LAWN_MOWER_SIZE, "lawnmowers");
+		mGridItems.DataArrayInitialize(MAX_GRID_ITEM_SIZE, "griditems");
+	}
 
 	mApp->mEffectSystem->EffectSystemFreeAll();
 	mBoardRandSeed = mApp->mAppRandSeed;
@@ -144,7 +146,6 @@ Board::Board(LawnApp *theApp)
 	mStartDrawTime = 0;
 	mIntervalDrawTime = 0;
 	mIntervalDrawCountStart = 0;
-	mPreloadTime = 0;
 	mGameID = time(nullptr);
 	mMinFPS = 1000.0f;
 	mGravesCleared = 0;
@@ -6276,8 +6277,6 @@ static inline void AddUIRenderItem(RenderItem *theRenderList, int &theCurRenderI
 
 void Board::DrawGameObjects(Graphics *g)
 {
-	TodHesitationTrace("creating render list");
-
 	RenderItem aRenderList[MAX_RENDER_ITEMS];
 	int aRenderItemCount = 0;
 
@@ -6493,10 +6492,8 @@ void Board::DrawGameObjects(Graphics *g)
 	AddGameObjectRenderItemCursorPreview(aRenderList, aRenderItemCount, RenderObjectType::RENDER_ITEM_CURSOR_PREVIEW,
 	                                     mCursorPreview);
 
-	TodHesitationTrace("start sort");
 	std::sort(aRenderList, aRenderList + aRenderItemCount, RenderItemSortFunc);
 
-	TodHesitationTrace("end sort, start draw");
 	for (int i = 0; i < aRenderItemCount; i++)
 	{
 		RenderItem &aRenderItem = aRenderList[i];
@@ -6679,8 +6676,6 @@ void Board::DrawGameObjects(Graphics *g)
 			break;
 		}
 	}
-
-	TodHesitationTrace("end draw");
 }
 
 bool Board::HasProgressMeter()
