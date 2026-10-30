@@ -101,13 +101,13 @@ GPUImage *ReanimatorCache::MakeBlankGPUImage(int theWidth, int theHeight)
 	GPUImage *aImage = mApp->mRenderer->NewGPUImage();
 
 	int aBitsCount = theWidth * theHeight;
+	aImage->Create(theWidth, theHeight);
 	aImage->mBits = new uint32_t[aBitsCount + 1];
-	aImage->mWidth = theWidth;
-	aImage->mHeight = theHeight;
+	aImage->SetBits(aImage->mBits, theWidth, theHeight);
 	aImage->mHasTrans = true;
 	aImage->mHasAlpha = true;
 	memset(aImage->mBits, 0, aBitsCount * 4);
-	aImage->SetBits(aImage->mBits, theWidth,  theHeight);
+	aImage->GenerateSurface();
 	return aImage;
 }
 

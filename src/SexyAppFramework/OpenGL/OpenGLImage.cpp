@@ -106,9 +106,6 @@ bool OpenGLImage::GenerateSurface()
 
 	CommitBits();
 
-	if (mHasAlpha)
-		return false;
-
 	mWantSurface = true;
 
 	// Force into non-palletized mode for this
@@ -160,19 +157,14 @@ void OpenGLImage::SetSurface(void* theSurface) // this should be a texture id or
 
 bool OpenGLImage::LockSurface()
 {
-	if (mLockCount != 0)
-		return true;
-
 	mLockCount++;
 	return true;
 }
 
 bool OpenGLImage::UnlockSurface()
 {
-	if (mLockCount == 0)
-		return true;
-
-	mLockCount--;
+	if (mLockCount > 0)
+		mLockCount--;
 	return true;
 }
 
@@ -182,15 +174,13 @@ void OpenGLImage::CreateImageBuffers()
 		return;
 
 	mProjection = glm::ortho(0.0f, (float)mWidth, 0.0f, (float)mHeight, -1.0f, 1.0f);
-	glGenTextures(1, &mTexID);
-	glBindTexture(GL_TEXTURE_2D, mTexID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, mWidth, mHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	if (!GenerateSurface())
+		return;
+
 	glBindTexture(GL_TEXTURE_2D, 0);
-	OpenGLRenderer::gGLTextureCount++;
+	mTexID = *(GLuint *)mSurface;
+
 	glGenFramebuffers(1, &mFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexID, 0);
@@ -201,16 +191,6 @@ void OpenGLImage::CreateImageBuffers()
 	{
 		printf("[SexyAppFramework] - OpenGL Framebuffer setup failed: %d\n", glCheckFramebufferStatus(GL_FRAMEBUFFER));
 	}
-
-	glDisable(GL_SCISSOR_TEST);
-	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-	glClearColor(0.f, 0.f, 0.f, 0.f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	if (mSurface == nullptr)
-		mSurface = new GLuint(mTexID);
-	else
-		*(GLuint *)mSurface = mTexID;
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
