@@ -634,16 +634,7 @@ void LawnSyncGame(Board *theBoard, SaveContext &theContext)
 	SYNC_DATA_ARRAY(Zombie, theBoard->mZombies)
 	SYNC_DATA_ARRAY(Plant, theBoard->mPlants)
 	SYNC_DATA_ARRAY(Projectile, theBoard->mProjectiles)
-	theContext.SyncVar(theBoard->mCoins.mMaxUsedCount, "theBoard->mCoins"
-	                                                   ".mMaxUsedCount");
-	theContext.SyncVar(theBoard->mCoins.mFreeListHead, "theBoard->mCoins"
-	                                                   ".mFreeListHead");
-	theContext.SyncVar(theBoard->mCoins.mSize, "theBoard->mCoins"
-	                                           ".mSize");
-	theContext.SyncBytes(theBoard->mCoins.mBlock,
-	                     sizeof(DataArray<Coin>::DataArrayItem) * theBoard->mCoins.mMaxUsedCount,
-	                     "theBoard->mCoins"
-	                     ".mBlock");
+	SYNC_DATA_ARRAY(Coin, theBoard->mCoins)
 	SYNC_DATA_ARRAY(LawnMower, theBoard->mLawnMowers)
 	SYNC_DATA_ARRAY(GridItem, theBoard->mGridItems)
 	SYNC_DATA_ARRAY(TodParticleSystem, theBoard->mApp->mEffectSystem->mParticleHolder->mParticleSystems)
