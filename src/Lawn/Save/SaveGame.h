@@ -32,7 +32,6 @@ class SaveContext
 		std::ifstream *mBinaryReader;
 		std::map<std::string, SaveSchemeEntry> mSchemeEntries;
 		bool mReading;
-		bool mFailed;
 
 		template <typename T> void SyncVar(T &aValue, const std::string &aName);
 		void SyncBytes(void *aValue, size_t aSize, const std::string &aName);

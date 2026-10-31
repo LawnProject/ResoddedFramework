@@ -8,7 +8,12 @@
 #include <TodLib/EffectSystem.h>
 #include <Save/SaveGame.h>
 
-static constexpr uint32_t SAVE_VERSION = 1;
+static constexpr uint32_t SAVE_VERSION = 1000;
+#ifdef SEXY_IS_X86
+static constexpr uint32_t ARCHITECTURE_USED = 86;
+#else
+static constexpr uint32_t ARCHITECTURE_USED = 64;
+#endif
 
 template <typename T>
 void SaveContext::SyncVar(T &aValue, const std::string &aName)
@@ -18,7 +23,7 @@ void SaveContext::SyncVar(T &aValue, const std::string &aName)
 		if (mSchemeEntries.find(aName) == mSchemeEntries.end())
 		{
 			TodTraceAndLog("Couldn't find schema entry: %s", aName.c_str());
-			return;
+			throw std::runtime_error(StrFormat("Missing Schema Entry: %s", aName.c_str()).c_str());
 		}
 
 		TOD_ASSERT(std::is_trivially_copyable_v<T>);
@@ -26,7 +31,7 @@ void SaveContext::SyncVar(T &aValue, const std::string &aName)
 		if (anEntry.mSize != sizeof(T))
 		{
 			TodTraceAndLog("Size mismatch for %s", aName.c_str());
-			return;
+			throw std::runtime_error(StrFormat("Type size mismatch: %s", aName.c_str()).c_str());
 		}
 		mBinaryReader->seekg(anEntry.mOffset);
 		mBinaryReader->read(reinterpret_cast<char *>(&aValue), anEntry.mSize);
@@ -46,7 +51,7 @@ void SaveContext::SyncBytes(void *aValue, size_t aSize, const std::string &aName
 		if (mSchemeEntries.find(aName) == mSchemeEntries.end())
 		{
 			TodTraceAndLog("Couldn't find schema entry: %s", aName.c_str());
-			return;
+			throw std::runtime_error(StrFormat("Missing Schema Entry: %s", aName.c_str()).c_str());
 		}
 		SaveSchemeEntry anEntry = mSchemeEntries[aName];
 		mBinaryReader->seekg(anEntry.mOffset);
@@ -77,7 +82,7 @@ void SaveContext::SyncReanimationDef(ReanimatorDefinition *&theDefinition, const
 		}
 		else
 		{
-			mFailed = true;
+			throw std::runtime_error(StrFormat("Invalid Reanimation Type: %d", aReanimType).c_str());
 		}
 	}
 	else
@@ -112,7 +117,7 @@ void SaveContext::SyncParticleDef(TodParticleDefinition *&theDefinition, const s
 		}
 		else
 		{
-			mFailed = true;
+			throw std::runtime_error(StrFormat("Invalid Particle Type: %d", aParticleType).c_str());
 		}
 	}
 	else
@@ -147,7 +152,7 @@ void SaveContext::SyncTrailDef(TrailDefinition *&theDefinition, const std::strin
 		}
 		else
 		{
-			mFailed = true;
+			throw std::runtime_error(StrFormat("Invalid Trail Type: %d", aTrailType).c_str());
 		}
 	}
 	else
@@ -200,43 +205,36 @@ void SaveContext::SyncImage(Image *&theImage, const std::string &theOwner)
 void SyncDataIDList(TodList<unsigned int> *theDataIDList, SaveContext &theContext, TodAllocator *theAllocator,
                     const std::string &aListOwner)
 {
-	try
+	if (theContext.mReading)
 	{
-		if (theContext.mReading)
+		if (theDataIDList)
 		{
-			if (theDataIDList)
-			{
-				theDataIDList->mHead = nullptr;
-				theDataIDList->mTail = nullptr;
-				theDataIDList->mSize = 0;
-				theDataIDList->SetAllocator(theAllocator);
-			}
-
-			int aCount;
-			theContext.SyncVar(aCount, StrFormat("%s_List_Size", aListOwner.c_str()));
-			for (int i = 0; i < aCount; i++)
-			{
-				unsigned int aDataID;
-				theContext.SyncBytes(&aDataID, sizeof(aDataID), StrFormat("%s_List_Data[%d]", aListOwner.c_str(), i));
-				theDataIDList->AddTail(aDataID);
-			}
+			theDataIDList->mHead = nullptr;
+			theDataIDList->mTail = nullptr;
+			theDataIDList->mSize = 0;
+			theDataIDList->SetAllocator(theAllocator);
 		}
-		else
+
+		int aCount;
+		theContext.SyncVar(aCount, StrFormat("%s_List_Size", aListOwner.c_str()));
+		for (int i = 0; i < aCount; i++)
 		{
-			int aCount = theDataIDList->mSize;
-			theContext.SyncVar(aCount, StrFormat("%s_List_Size", aListOwner.c_str()));
-			int i = 0;
-			for (TodListNode<unsigned int> *aNode = theDataIDList->mHead; aNode != nullptr; aNode = aNode->mNext)
-			{
-				unsigned int aDataID = aNode->mValue;
-				theContext.SyncBytes(&aDataID, sizeof(aDataID), StrFormat("%s_List_Data[%d]", aListOwner.c_str(), i));
-				i++;
-			}
+			unsigned int aDataID;
+			theContext.SyncBytes(&aDataID, sizeof(aDataID), StrFormat("%s_List_Data[%d]", aListOwner.c_str(), i));
+			theDataIDList->AddTail(aDataID);
 		}
 	}
-	catch (std::exception &)
+	else
 	{
-		return;
+		int aCount = theDataIDList->mSize;
+		theContext.SyncVar(aCount, StrFormat("%s_List_Size", aListOwner.c_str()));
+		int i = 0;
+		for (TodListNode<unsigned int> *aNode = theDataIDList->mHead; aNode != nullptr; aNode = aNode->mNext)
+		{
+			unsigned int aDataID = aNode->mValue;
+			theContext.SyncBytes(&aDataID, sizeof(aDataID), StrFormat("%s_List_Data[%d]", aListOwner.c_str(), i));
+			i++;
+		}
 	}
 }
 
@@ -729,13 +727,41 @@ bool LawnLoadGame(Board *theBoard, const std::string &theFilePath)
 	theContext.mBinaryReader = &aReader;
 	theContext.mReading = true;
 	theContext.LoadScheme(theFilePath + ".schema");
-
-	LawnSyncGame(theBoard, theContext);
+	uint32_t aVersion = 0;
+	aReader.read(reinterpret_cast<char *>(&aVersion), sizeof(uint32_t));
+	if (aVersion < SAVE_VERSION)
+	{
+		TodErrorMessageBox(StrFormat("Save file version error: \nwanted: %zu, got: %zu", SAVE_VERSION, aVersion).c_str(), "Save File Error");
+		aReader.close();
+		return false;
+	}
+	uint32_t anArchitecture = 0;
+	aReader.read(reinterpret_cast<char *>(&anArchitecture), sizeof(uint32_t));
+	if (anArchitecture != ARCHITECTURE_USED)
+	{
+		TodErrorMessageBox(StrFormat("Save file architecture error: \nwanted: x%zu, got: x%zu", ARCHITECTURE_USED, anArchitecture).c_str(), "Save File Error");
+		aReader.close();
+		return false;
+	}
+	try
+	{
+		LawnSyncGame(theBoard, theContext);
+	}
+	catch (std::exception e)
+	{
+		TodErrorMessageBox(StrFormat("Save file read error: %s", e.what()).c_str(), "Save File Error");
+		aReader.close();
+		return false;
+	}
 	if (aReader.fail())
 	{
 		TodErrorMessageBox("Save file read error or truncated file", "Save File Error");
+		aReader.close();
 		return false;
 	}
+	
+	aReader.close();
+
 	theBoard->mApp->mGameScene = GameScenes::SCENE_PLAYING;
 	return true;
 }
@@ -750,7 +776,23 @@ bool LawnSaveGame(Board *theBoard, const std::string &theFilePath)
 	theContext.mReading = false;
 	theContext.mCurrentOffset = 0;
 
-	LawnSyncGame(theBoard, theContext);
+	aWriter.write(reinterpret_cast<const char *>(&SAVE_VERSION), sizeof(uint32_t));
+	theContext.mCurrentOffset += sizeof(uint32_t);
+
+	aWriter.write(reinterpret_cast<const char *>(&ARCHITECTURE_USED), sizeof(uint32_t));
+	theContext.mCurrentOffset += sizeof(uint32_t);
+
+	try
+	{
+		LawnSyncGame(theBoard, theContext);
+	}
+	catch (std::exception e)
+	{
+		TodErrorMessageBox(StrFormat("Save file write error: %s", e.what()).c_str(), "Save File Error");
+		aSchemaWriter.close();
+		aWriter.close();
+		return false;
+	}
 	aSchemaWriter << theContext.mSchema;
 	aSchemaWriter.close();
 	aWriter.close();
