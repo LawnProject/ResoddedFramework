@@ -43,7 +43,6 @@ bool TodStringListReadFile(const char *theFileName);
 void TodStringListLoad(const char *theFileName);
 SexyString TodStringListFind(const SexyString &theName);
 SexyString TodStringTranslate(const SexyString &theString);
-SexyString TodStringTranslate(const SexyChar *theString);
 bool TodStringListExists(const SexyString &theString);
 void TodStringRemoveReturnChars(std::string &theString);
 bool CharIsSpaceInFormat(SexyChar theChar, const TodStringListFormat &theCurrentFormat);

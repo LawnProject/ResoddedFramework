@@ -263,7 +263,7 @@ void EditWidget::EnforceMaxPixels()
 
 bool EditWidget::IsPartOfWord(SexyChar theChar)
 {
-	return utf8::is_valid(SexyStringFromChar(theChar));
+	return true; //SexyString::isValid(theChar);
 }
 
 void EditWidget::ProcessKey(KeyCode theKey, SexyChar theChar)
@@ -290,11 +290,9 @@ void EditWidget::ProcessKey(KeyCode theKey, SexyChar theChar)
 		if ((mHilitePos != -1) && (mHilitePos != mCursorPos))
 		{
 			if (mCursorPos < mHilitePos)
-				mWidgetManager->mApp->CopyToClipboard(
-					SexyStringToString(GetDisplayString().substr(mCursorPos, mHilitePos)));
+				mWidgetManager->mApp->CopyToClipboard(GetDisplayString().substr(mCursorPos, mHilitePos));
 			else
-				mWidgetManager->mApp->CopyToClipboard(
-					SexyStringToString(GetDisplayString().substr(mHilitePos, mCursorPos)));
+				mWidgetManager->mApp->CopyToClipboard(GetDisplayString().substr(mHilitePos, mCursorPos));
 
 			if (theChar == 3)
 			{
@@ -314,7 +312,7 @@ void EditWidget::ProcessKey(KeyCode theKey, SexyChar theChar)
 	{
 		// Paste selection
 
-		SexyString aBaseString = StringToSexyString(mWidgetManager->mApp->GetClipboard());
+		SexyString aBaseString = mWidgetManager->mApp->GetClipboard();
 
 		if (aBaseString.length() > 0)
 		{
@@ -479,9 +477,10 @@ void EditWidget::ProcessKey(KeyCode theKey, SexyChar theChar)
 	}
 	else
 	{
-		SexyString aCharString = SexyStringFromChar(theChar);
+		SexyString aCharString;
+		utf8::append(theChar, aCharString); //TODOSTR
 
-		if (utf8::is_valid(aCharString) && (mFont->StringWidth(aCharString) > 0) && mEditListener->AllowChar(mId, theChar))
+		if ((mFont->StringWidth(aCharString) > 0) && mEditListener->AllowChar(mId, theChar))
 		{
 			if ((mHilitePos != -1) && (mHilitePos != mCursorPos))
 			{

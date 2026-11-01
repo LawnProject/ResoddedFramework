@@ -319,7 +319,7 @@ bool DefinitionLoadImage(Image **theImage, const SexyString &theName)
 
 bool DefinitionLoadFont(Font **theFont, const SexyString &theName)
 {
-	Font *aFont = gSexyAppBase->mResourceManager->LoadFont(SexyStringToString(theName));
+	Font *aFont = gSexyAppBase->mResourceManager->LoadFont(theName);
 	*theFont = aFont;
 	return aFont != nullptr;
 }
@@ -668,7 +668,7 @@ void DefinitionXmlError(XMLParser *theXmlParser, const char *theFormat, ...)
 {
 	va_list argList;
 	va_start(argList, theFormat);
-	std::string aFormattedMessage = SexyStringToString(vformat(theFormat, argList));
+	std::string aFormattedMessage = vformat(theFormat, argList);
 	va_end(argList);
 
 	int aLine = theXmlParser->GetCurrentLineNum();

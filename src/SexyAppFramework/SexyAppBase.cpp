@@ -1368,48 +1368,38 @@ void SexyAppBase::DumpProgramInfo()
 		aTotalRLAdditiveMemory += aRLAdditiveMemory;
 
 		char aStr[256];
-		sprintf(aStr, "%d x %d<BR>%s bytes", aMemoryImage->mWidth, aMemoryImage->mHeight,
-		        CommaSeperate(aMemorySize).c_str());
+		sprintf(aStr, "%d x %d<BR>%s bytes", aMemoryImage->mWidth, aMemoryImage->mHeight, CommaSeperate(aMemorySize).c_str());
 		aDumpStream << "<TD ALIGN=RIGHT>" << aStr << "</TD>" << std::endl;
 
 		aDumpStream << "<TD>"
-		            << SexyStringToString(((aBitsMemory != 0) ? "mBits<BR>" + CommaSeperate(aBitsMemory) : "&nbsp;"))
+		            << ((aBitsMemory != 0) ? "mBits<BR>" + CommaSeperate(aBitsMemory) : "&nbsp;")
 		            << "</TD>" << std::endl;
 		aDumpStream << "<TD>"
-		            << SexyStringToString(
-		                   ((aPalletizedMemory != 0) ? "Palletized<BR>" + CommaSeperate(aPalletizedMemory) : "&nbsp;"))
+		            << ((aPalletizedMemory != 0) ? "Palletized<BR>" + CommaSeperate(aPalletizedMemory) : "&nbsp;")
 		            << "</TD>" << std::endl;
 		aDumpStream << "<TD>"
-		            << SexyStringToString(
-		                   ((aSurfaceMemory != 0) ? "DDSurface<BR>" + CommaSeperate(aSurfaceMemory) : "&nbsp;"))
+		            << ((aSurfaceMemory != 0) ? "DDSurface<BR>" + CommaSeperate(aSurfaceMemory) : "&nbsp;")
 		            << "</TD>" << std::endl;
 		aDumpStream << "<TD>"
-		            << SexyStringToString(((aMemoryImage->mGPUData != NULL)
-		                                       ? "Texture<BR>" + StringToSexyString(aTextureFormatName) + "<BR>" +
-		                                             CommaSeperate(aTextureMemory)
-		                                       : "&nbsp;"))
+		            << ((aMemoryImage->mGPUData != NULL) ? "Texture<BR>" + aTextureFormatName + "<BR>" + CommaSeperate(aTextureMemory) : "&nbsp;")
 		            << "</TD>" << std::endl;
 
-		aDumpStream << "<TD>" << SexyStringToString(((aMemoryImage->mIsVolatile) ? "Volatile" : "&nbsp;")) << "</TD>"
+		aDumpStream << "<TD>" << ((aMemoryImage->mIsVolatile) ? "Volatile" : "&nbsp;") << "</TD>"
 		            << std::endl;
-		aDumpStream << "<TD>" << SexyStringToString(((aMemoryImage->mForcedMode) ? "Forced" : "&nbsp;")) << "</TD>"
+		aDumpStream << "<TD>" << ((aMemoryImage->mForcedMode) ? "Forced" : "&nbsp;") << "</TD>"
 		            << std::endl;
-		aDumpStream << "<TD>" << SexyStringToString(((aMemoryImage->mHasAlpha) ? "HasAlpha" : "&nbsp;")) << "</TD>"
+		aDumpStream << "<TD>" << ((aMemoryImage->mHasAlpha) ? "HasAlpha" : "&nbsp;") << "</TD>"
 		            << std::endl;
-		aDumpStream << "<TD>" << SexyStringToString(((aMemoryImage->mHasTrans) ? "HasTrans" : "&nbsp;")) << "</TD>"
+		aDumpStream << "<TD>" << ((aMemoryImage->mHasTrans) ? "HasTrans" : "&nbsp;") << "</TD>"
 		            << std::endl;
 		aDumpStream << "<TD>"
-		            << SexyStringToString(((aNativeAlphaMemory != 0)
-		                                       ? "NativeAlpha<BR>" + CommaSeperate(aNativeAlphaMemory)
-		                                       : "&nbsp;"))
+		            << ((aNativeAlphaMemory != 0) ? "NativeAlpha<BR>" + CommaSeperate(aNativeAlphaMemory) : "&nbsp;")
 		            << "</TD>" << std::endl;
 		aDumpStream << "<TD>"
-		            << SexyStringToString(
-		                   ((aRLAlphaMemory != 0) ? "RLAlpha<BR>" + CommaSeperate(aRLAlphaMemory) : "&nbsp;"))
+		            << ((aRLAlphaMemory != 0) ? "RLAlpha<BR>" + CommaSeperate(aRLAlphaMemory) : "&nbsp;")
 		            << "</TD>" << std::endl;
 		aDumpStream << "<TD>"
-		            << SexyStringToString(
-		                   ((aRLAdditiveMemory != 0) ? "RLAdditive<BR>" + CommaSeperate(aRLAdditiveMemory) : "&nbsp;"))
+		            << ((aRLAdditiveMemory != 0) ? "RLAdditive<BR>" + CommaSeperate(aRLAdditiveMemory) : "&nbsp;")
 		            << "</TD>" << std::endl;
 		aDumpStream << "<TD>" << (aMemoryImage->mFilePath.empty() ? "&nbsp;" : aMemoryImage->mFilePath) << "</TD>"
 		            << std::endl;
@@ -1453,18 +1443,18 @@ void SexyAppBase::DumpProgramInfo()
 	}
 
 	aDumpStream << "<TD>Totals</TD>" << std::endl;
-	aDumpStream << "<TD>" << SexyStringToString(CommaSeperate(aTotalMemorySize)) << "</TD>" << std::endl;
-	aDumpStream << "<TD>" << SexyStringToString(CommaSeperate(aTotalBitsMemory)) << "</TD>" << std::endl;
-	aDumpStream << "<TD>" << SexyStringToString(CommaSeperate(aTotalPalletizedMemory)) << "</TD>" << std::endl;
-	aDumpStream << "<TD>" << SexyStringToString(CommaSeperate(aTotalSurfaceMemory)) << "</TD>" << std::endl;
-	aDumpStream << "<TD>" << SexyStringToString(CommaSeperate(aTotalTextureMemory)) << "</TD>" << std::endl;
+	aDumpStream << "<TD>" << CommaSeperate(aTotalMemorySize) << "</TD>" << std::endl;
+	aDumpStream << "<TD>" << CommaSeperate(aTotalBitsMemory) << "</TD>" << std::endl;
+	aDumpStream << "<TD>" << CommaSeperate(aTotalPalletizedMemory) << "</TD>" << std::endl;
+	aDumpStream << "<TD>" << CommaSeperate(aTotalSurfaceMemory) << "</TD>" << std::endl;
+	aDumpStream << "<TD>" << CommaSeperate(aTotalTextureMemory) << "</TD>" << std::endl;
 	aDumpStream << "<TD>&nbsp;</TD>" << std::endl;
 	aDumpStream << "<TD>&nbsp;</TD>" << std::endl;
 	aDumpStream << "<TD>&nbsp;</TD>" << std::endl;
 	aDumpStream << "<TD>&nbsp;</TD>" << std::endl;
-	aDumpStream << "<TD>" << SexyStringToString(CommaSeperate(aTotalNativeAlphaMemory)) << "</TD>" << std::endl;
-	aDumpStream << "<TD>" << SexyStringToString(CommaSeperate(aTotalRLAlphaMemory)) << "</TD>" << std::endl;
-	aDumpStream << "<TD>" << SexyStringToString(CommaSeperate(aTotalRLAdditiveMemory)) << "</TD>" << std::endl;
+	aDumpStream << "<TD>" << CommaSeperate(aTotalNativeAlphaMemory) << "</TD>" << std::endl;
+	aDumpStream << "<TD>" << CommaSeperate(aTotalRLAlphaMemory) << "</TD>" << std::endl;
+	aDumpStream << "<TD>" << CommaSeperate(aTotalRLAdditiveMemory) << "</TD>" << std::endl;
 	aDumpStream << "<TD>&nbsp;</TD>" << std::endl;
 
 	aDumpStream << "</TABLE></CENTER></BODY></HTML>" << std::endl;
@@ -3407,17 +3397,13 @@ void SexyAppBase::ShowMemoryUsage()
 	aStr += StrFormat("Num Textures: %d \n\n", aNumTextures);
 
 	FormatUsage aUsage = aFormatMap[PixelFormat_A8R8G8B8];
-	aStr += StrFormat("A8R8G8B8: %d - %s KB\n", aUsage.first,
-	                  SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
+	aStr += StrFormat("A8R8G8B8: %d - %s KB\n", aUsage.first, CommaSeperate(aUsage.second / 1024)).c_str();
 	aUsage = aFormatMap[PixelFormat_A4R4G4B4];
-	aStr += StrFormat("A4R4G4B4: %d - %s KB\n", aUsage.first,
-	                  SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
+	aStr += StrFormat("A4R4G4B4: %d - %s KB\n", aUsage.first, CommaSeperate(aUsage.second / 1024)).c_str();
 	aUsage = aFormatMap[PixelFormat_R5G6B5];
-	aStr += StrFormat("R5G6B5: %d - %s KB\n", aUsage.first,
-	                  SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
+	aStr += StrFormat("R5G6B5: %d - %s KB\n", aUsage.first, CommaSeperate(aUsage.second / 1024)).c_str();
 	aUsage = aFormatMap[PixelFormat_Palette8];
-	aStr += StrFormat("Palette8: %d - %s KB\n", aUsage.first,
-	                  SexyStringToString(CommaSeperate(aUsage.second / 1024)).c_str());
+	aStr += StrFormat("Palette8: %d - %s KB\n", aUsage.first, CommaSeperate(aUsage.second / 1024)).c_str();
 
 	MsgBox(aStr, "Video Stats", MESSAGEBOX_BTN_OK);
 	mLastTime = timeGetTime();
@@ -4925,8 +4911,7 @@ bool SexyAppBase::LoadProperties(const std::string &theFileName, bool required, 
 			return true;
 		else
 		{
-			Popup(GetString("UNABLE_OPEN_PROPERTIES", "Unable to open properties file ") +
-			      StringToSexyString(theFileName));
+			Popup(GetString("UNABLE_OPEN_PROPERTIES", "Unable to open properties file ") + theFileName);
 			return false;
 		}
 	}
@@ -4934,8 +4919,7 @@ bool SexyAppBase::LoadProperties(const std::string &theFileName, bool required, 
 	{
 		if (!CheckSignature(aBuffer, theFileName))
 		{
-			Popup(GetString("PROPERTIES_SIG_FAILED", "Signature check failed on ") +
-			      StringToSexyString(theFileName + "'"));
+			Popup(GetString("PROPERTIES_SIG_FAILED", "Signature check failed on ") + theFileName + "'");
 			return false;
 		}
 	}
@@ -5202,7 +5186,7 @@ void SexyAppBase::HandleCmdLineParam(const std::string &theParamName, const std:
 			aNum = 5;
 
 		int aDemoFileNum = GetMaxDemoFileNum(mDemoPrefix, aNum, true) + 1;
-		mDemoFileName = SexyStringToString(StrFormat(StringToSexyString(mDemoPrefix + "%d.dmo").c_str(), aDemoFileNum));
+		mDemoFileName = mDemoPrefix + StrFormat("%d.dmo", aDemoFileNum);
 		if (mDemoFileName.length() < 2 || (mDemoFileName[1] != ':' && mDemoFileName[2] != '\\'))
 		{
 			mDemoFileName = GetAppDataFolder() + mDemoFileName;
@@ -5217,7 +5201,7 @@ void SexyAppBase::HandleCmdLineParam(const std::string &theParamName, const std:
 			aNum = 0;
 
 		int aDemoFileNum = GetMaxDemoFileNum(mDemoPrefix, aNum, false) - aNum;
-		mDemoFileName = SexyStringToString(StrFormat(StringToSexyString(mDemoPrefix + "%d.dmo").c_str(), aDemoFileNum));
+		mDemoFileName = mDemoPrefix + StrFormat("%d.dmo", aDemoFileNum);
 		mRecordingDemoBuffer = false;
 		mPlayingDemoBuffer = true;
 	}
@@ -5250,8 +5234,7 @@ void SexyAppBase::HandleCmdLineParam(const std::string &theParamName, const std:
 	}
 	else
 	{
-		Popup(GetString("INVALID_COMMANDLINE_PARAM", "Invalid command line parameter: ") +
-		      StringToSexyString(theParamName));
+		Popup(GetString("INVALID_COMMANDLINE_PARAM", "Invalid command line parameter: ") + theParamName);
 		DoExit(0);
 	}
 }
@@ -6150,18 +6133,7 @@ void SexyAppBase::Set3DAcclerated(bool is3D, bool reinit)
 	if (reinit)
 	{
 		int aResult = InitRenderer();
-		/*
-		if (is3D && aResult != DDInterface::RESULT_OK)
-		{
-			Set3DAcclerated(false, reinit);
-			return;
-		}
-		else if (aResult != DDInterface::RESULT_OK)
-		{
-			Popup(GetString("FAILED_INIT_DIRECTDRAW", "Failed to initialize DirectDraw: ") +
-				  StringToSexyString(DDInterface::ResultToString(aResult) + " " + mDDInterface->mErrorString));
-			DoExit(1);
-		}*/
+		//TODO: renderer result handling
 
 		ReInitImages();
 

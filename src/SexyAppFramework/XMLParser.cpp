@@ -286,7 +286,7 @@ bool XMLParser::OpenFile(const std::string &theFileName)
 	if (mFile == NULL)
 	{
 		mLineNum = 0;
-		Fail(StringToSexyString("Unable to open file " + theFileName));
+		Fail("Unable to open file " + theFileName);
 		return false;
 	}
 	else if (!mForcedEncodingType)

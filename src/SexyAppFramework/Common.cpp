@@ -117,16 +117,6 @@ std::string Sexy::StringToLower(const std::string &theString)
 	return aString;
 }
 
-SexyString Sexy::StringToSexyString(const std::string &theString)
-{
-	return SexyString(theString);
-}
-
-std::string Sexy::SexyStringToString(const SexyString &theString)
-{
-	return std::string(theString);
-}
-
 std::string Sexy::Trim(const std::string &theString)
 {
 	auto aStart = theString.begin();
@@ -484,30 +474,10 @@ bool Sexy::AllowAllAccess(const std::string &theFileName)
 #endif // WIN32
 }
 
-SexyString Sexy::SexyStringFromChar(SexyChar theChar)
-{
-	SexyString theString;
-	utf8::append(theChar, theString);
-	return theString;
-}
-
-SexyString Sexy::SexyCharToString(const SexyChar *theChars, int theLength)
-{
-	return SexyCharToString(theChars, 0, theLength);
-}
-
-SexyString Sexy::SexyCharToString(const SexyChar *theChars, int theStart, int theEnd)
-{
-	SexyString aOut;
-	for (int i = theStart; i < theEnd; i++)
-		utf8::append(theChars[i], aOut);
-	return aOut;
-}
 
 SexyString Sexy::ANSIToUTF8(const SexyString &theString)
 {
 	SexyString aFixedText;
-	aFixedText.reserve(theString.size());
 	for (unsigned char c : theString)
 	{
 		if (c < 0x80)

@@ -177,8 +177,7 @@ void TodStringListLoad(const char *theFileName)
 
 SexyString TodStringListFind(const SexyString &theName)
 {
-	std::string aNameString = Sexy::SexyStringToString(theName);
-	StringStringMap::iterator anItr = gSexyAppBase->mStringProperties.find(aNameString);
+	StringStringMap::iterator anItr = gSexyAppBase->mStringProperties.find(theName);
 	if (anItr != gSexyAppBase->mStringProperties.end())
 	{
 		return anItr->second;
@@ -197,23 +196,6 @@ SexyString TodStringTranslate(const SexyString &theString)
 		return TodStringListFind(aName);
 	}
 	return theString;
-}
-
-SexyString TodStringTranslate(const SexyChar *theString)
-{
-	if (theString != nullptr)
-	{
-		int aLen = StringLength(theString);
-		if (aLen >= 3 && theString[0] == '[')
-		{
-			SexyString aName = SexyCharToString(theString, 1, aLen - 2);
-			return TodStringListFind(aName);
-		}
-		else
-			return SexyCharToString(theString, aLen);
-	}
-	else
-		return "";
 }
 
 bool TodStringListExists(const SexyString &theString)

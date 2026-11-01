@@ -33,7 +33,7 @@ bool TrailLoadADef(TrailDefinition *theTrailDef, const char *theTrailFileName, b
 {
 	TodHesitationBracket aHesitation("Load Trail '%s'", theTrailFileName);
 
-	if (!DefinitionLoadXML(StringToSexyString(theTrailFileName), &gTrailDefMap, theTrailDef, recompile))
+	if (!DefinitionLoadXML(theTrailFileName, &gTrailDefMap, theTrailDef, recompile))
 		return false;
 
 	FloatTrackSetDefault(theTrailDef->mWidthOverLength, 1.0f);

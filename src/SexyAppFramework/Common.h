@@ -90,8 +90,6 @@ void SetAppDataFolder(const std::string &thePath);
 std::string URLEncode(const std::string &theString);
 std::string StringToUpper(const std::string &theString);
 std::string StringToLower(const std::string &theString);
-SexyString StringToSexyString(const std::string &theString);
-std::string SexyStringToString(const SexyString &theString);
 std::string Upper(const std::string &theData);
 std::string Lower(const std::string &theData);
 std::string Trim(const std::string &theString);
@@ -117,9 +115,6 @@ std::string GetFullPath(const std::string &theRelPath);
 std::string GetPathFrom(const std::string &theRelPath, const std::string &theDir);
 bool AllowAllAccess(const std::string &theFileName);
 
-SexyString SexyStringFromChar(SexyChar theChar);
-SexyString SexyCharToString(const SexyChar *theChars, int theLength);
-SexyString SexyCharToString(const SexyChar *theChars, int theStart, int theEnd);
 SexyString ANSIToUTF8(const SexyString &theString);
 size_t StringLength(const SexyChar *theString);
 
