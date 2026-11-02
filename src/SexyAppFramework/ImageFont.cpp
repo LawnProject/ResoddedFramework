@@ -1460,15 +1460,15 @@ void ImageFont::DrawStringEx(Graphics *g,
 
 	while (it != end)
 	{
-		uint32_t aCodePoint = utf8::next(it, end);
+		uint32_t aCodePoint = *it;
 
 		uint32_t aChar = GetMappedChar(aCodePoint);
 
 		uint32_t aNextChar = 0;
 		auto itCopy = it;
-
+		++itCopy;
 		if (itCopy != end)
-			aNextChar = utf8::next(itCopy, end);
+			aNextChar = *itCopy;
 
 		aPrevCode = aCodePoint;
 
@@ -1616,6 +1616,7 @@ void ImageFont::DrawStringEx(Graphics *g,
 		}
 
 		aCurXPos = aMaxXPos;
+		++it;
 	}
 
 	if (theWidth != NULL)

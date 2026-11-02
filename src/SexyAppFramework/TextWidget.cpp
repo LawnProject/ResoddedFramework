@@ -169,7 +169,7 @@ void TextWidget::Resize(int theX, int theY, int theWidth, int theHeight)
 //UNICODE
 Color TextWidget::GetLastColor(const SexyString &theString)
 {
-	int anIdx = theString.rfind((char)0xFF);
+	int anIdx = theString.bytes().rfind((char)0xFF);
 	if (anIdx < 0)
 		return Color(0, 0, 0);
 

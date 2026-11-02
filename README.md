@@ -1,4 +1,12 @@
-# ResoddedFramework
+# ResoddedFramework - experimental_string
+
+This branch is to archive the experimental SexyString rewrite
+Why is it archived?
+
+WriteString becomes too slow at times, along with the TodWrite functions
+I will probably touch upon it at a later date...
+
+
 ResoddedFramework is an open-source modding base for the game Plants vs. Zombies.  <br>  <br> 
 It was based on version 0.9.9.1029 however features from future versions such as GOTY (Steam) have been backported.
 ## Join the Discord

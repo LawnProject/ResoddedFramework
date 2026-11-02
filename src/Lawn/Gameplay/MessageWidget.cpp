@@ -51,9 +51,10 @@ namespace
 
 // copy theInput to theTarget (both UTF-8 encoded), truncating at the final codepoint boundary that fits
 void CopyTruncatedToLabel(std::array<char, MAX_MESSAGE_BYTES> &theTarget, const SexyString &theInput)
-{
-	auto it = theInput.begin();
-	const auto end = theInput.end();
+{ 
+	const std::string &aBytes = theInput.bytes();
+	auto it = aBytes.begin();
+	const auto end = aBytes.end();
 	size_t aByteLen = 0;
 	while (it != end)
 	{
@@ -67,7 +68,7 @@ void CopyTruncatedToLabel(std::array<char, MAX_MESSAGE_BYTES> &theTarget, const 
 		}
 		aByteLen += aCodepointByteSize;
 	}
-	std::copy(theInput.begin(), it, theTarget.begin());
+	std::copy(aBytes.begin(), it, theTarget.begin());
 	theTarget[aByteLen] = '\0';
 }
 
@@ -76,7 +77,7 @@ void CopyTruncatedToLabel(std::array<char, MAX_MESSAGE_BYTES> &theTarget, const 
 void MessageWidget::SetLabel(const SexyString &theNewLabel, MessageStyle theMessageStyle)
 {
 	SexyString aLabel = TodStringTranslate(theNewLabel);
-	TOD_ASSERT(utf8::is_valid(aLabel));
+	TOD_ASSERT(SexyString::isValid(aLabel));
 
 	if (mReanimType != ReanimationType::REANIM_NONE && mDuration > 0)
 	{
@@ -161,22 +162,8 @@ void MessageWidget::LayoutReanimText()
 	{
 		int aCurLine = 0;
 		SexyString aLine;
-
-		auto it = mLabel.begin();
-		const auto end = mLabel.begin() + aLabelByteLen;
-		while (it != end)
-		{
-			uint32_t aCodepoint = utf8::next(it, end);
-			aCodepointCount++;
-			if (aCodepoint == '\n')
-			{
-				TOD_ASSERT(aCurLine < MAX_REANIM_LINES);
-				aLineWidth[aCurLine++] = aFont->StringWidth(aLine);
-				aLine.clear();
-				continue;
-			}
-			utf8::append(aCodepoint, aLine);
-		}
+		aLine += mLabel.data();
+		aCodepointCount += aLine.length();
 		if (!aLine.empty())
 		{
 			TOD_ASSERT(aCurLine < MAX_REANIM_LINES);
@@ -276,7 +263,9 @@ void MessageWidget::DrawReanimatedText(Graphics *g, Font *theFont, const Color &
 {
 	auto it = mLabel.begin();
 	const auto end = mLabel.begin() + strlen(mLabel.data());
-	for (int aPos = 0; it != end && aPos < mTextReanimID.size(); aPos++)
+	SexyString aConvertedText = mLabel.data();
+	int aPos = 0;
+	for (SexyChar c : aConvertedText)
 	{
 		if (mTextReanimID[aPos] == ReanimationID::REANIMATIONID_NULL)
 		{
@@ -309,9 +298,8 @@ void MessageWidget::DrawReanimatedText(Graphics *g, Font *theFont, const Color &
 
 		SexyMatrix3 aMatrix;
 		Reanimation::MatrixFromTransform(aTransform, aMatrix);
-		SexyString aSingleCodepoint;
-		utf8::append(utf8::next(it, end), aSingleCodepoint);
-		TodDrawStringMatrix(g, theFont, aMatrix, aSingleCodepoint, aFinalColor);
+		TodDrawStringMatrix(g, theFont, aMatrix, c, aFinalColor);
+		aPos++;
 	}
 }
 

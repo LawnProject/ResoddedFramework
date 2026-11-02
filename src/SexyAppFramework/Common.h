@@ -7,7 +7,6 @@
 //Libray Headers Start
 
 #include <SDL3/SDL_timer.h>
-#include <utf8.h>
 
 //Libray Headers End
 
@@ -21,14 +20,13 @@
 
 // STL Headers End
 
-// SexyString Start
+#include "SexyString.h"
 
 #if defined(__clang__) && defined(_WIN32)
 #define stricmp _stricmp
 #define strnicmp _strnicmp
 #endif
 
-typedef std::string SexyString;
 #define _S(x) static_assert(true, "_S has been removed");
 
 #define sexystrncmp strncmp
@@ -47,30 +45,6 @@ typedef std::string SexyString;
 #define LENGTH(anyarray) (sizeof(anyarray) / sizeof(anyarray[0]))
 
 typedef std::map<std::string, std::string> DefinesMap;
-typedef uint32_t SexyChar;
-typedef SexyString::value_type SexyCharByte;
-#define HAS_SEXYCHAR
-
-inline SexyString operator+(SexyChar c, const SexyString &s)
-{
-	SexyString aStringOfChar = "";
-
-	utf8::append(c, aStringOfChar);
-
-	return aStringOfChar + s;
-}
-
-inline SexyString operator+(const SexyString &s, SexyChar c)
-{
-	SexyString aString = s;
-
-	utf8::append(c, aString);
-
-	return aString;
-}
-
-
-// SexyString End
 
 namespace Sexy
 {
@@ -115,8 +89,7 @@ std::string GetFullPath(const std::string &theRelPath);
 std::string GetPathFrom(const std::string &theRelPath, const std::string &theDir);
 bool AllowAllAccess(const std::string &theFileName);
 
-SexyString ANSIToUTF8(const SexyString &theString);
-size_t StringLength(const SexyChar *theString);
+std::string ANSIToUTF8(const std::string &theString);
 
 uint64_t GetTicks();
 

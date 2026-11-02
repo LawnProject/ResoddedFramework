@@ -81,9 +81,9 @@ class ProfileSyncer
 	void SyncUnsignedLong(const SexyString &theName, unsigned long &theLong);
 	void SyncString(const SexyString &theName, SexyString &theStr);
 	template <typename T, size_t N> 
-	void SyncArray(const std::string &theName, T (&theArray)[N], int &theRealSize);
+	void SyncArray(const SexyString &theName, T (&theArray)[N], int &theRealSize);
 	template <typename T, size_t N> 
-	void SyncArrayFromSize(const std::string &theName, T (&theArray)[N], int theRealSize);
+	void SyncArrayFromSize(const SexyString &theName, T (&theArray)[N], int theRealSize);
 };
 class PlayerInfo
 {

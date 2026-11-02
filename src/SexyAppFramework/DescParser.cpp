@@ -543,7 +543,7 @@ bool DescParser::LoadDescriptor(const std::string &theFileName)
 								escaped = false;
 							}
 
-							if (mCurrentLine.size() == 0)
+							if (mCurrentLine.empty())
 								mCurrentLineNum = aLineCount + 1;
 
 							utf8::append(aChar, mCurrentLine);
@@ -561,15 +561,11 @@ bool DescParser::LoadDescriptor(const std::string &theFileName)
 				break;
 			}
 
-			//Apparently VC6 doesn't have a clear() function for basic_strings
-			//mCurrentLine.clear();
-			mCurrentLine.erase();
+			mCurrentLine.clear();
 		}
 	}
 
-	//Apparently VC6 doesn't have a clear() function for basic_strings
-	//mCurrentLine.clear();
-	mCurrentLine.erase();
+	mCurrentLine.clear();
 	mCurrentLineNum = 0;
 
 	return !hasErrors;

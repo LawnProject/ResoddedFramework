@@ -1192,8 +1192,8 @@ int Graphics::WriteString(const SexyString &theString,
 		}
 	}
 
-	if (theLength < 0 || theOffset + theLength > (int)theString.length())
-		theLength = (int)theString.length();
+	if (theLength < 0 || theOffset + theLength > (int)theString.size())
+		theLength = (int)theString.size();
 	else
 		theLength = theOffset + theLength;
 
@@ -1301,7 +1301,7 @@ int Graphics::WriteWordWrapped(const Rect &theRect,
 		anOrigColorInt &= ~0xFF000000;
 
 	if (theMaxChars < 0)
-		theMaxChars = (int)theLine.length();
+		theMaxChars = (int)theLine.size();
 
 	Font *aFont = GetFont();
 
@@ -1326,12 +1326,12 @@ int Graphics::WriteWordWrapped(const Rect &theRect,
 		aCurWidth = anIndentX;
 	}
 
-	while (aCurPos < theLine.length())
+	while (aCurPos < theLine.size())
 	{
 		aCurChar = theLine[aCurPos];
 		if (aCurChar == '^' && mWriteColoredString) // Handle special color modifier
 		{
-			if (aCurPos + 1 < theLine.length())
+			if (aCurPos + 1 < theLine.size())
 			{
 				if (theLine[aCurPos + 1] == '^')
 					aCurPos++; // literal '^' -> just skip the extra '^'
@@ -1389,7 +1389,7 @@ int Graphics::WriteWordWrapped(const Rect &theRect,
 				aCurPos = aSpacePos + 1;
 				if (aCurChar != '\n')
 				{
-					while (aCurPos < theLine.length() && theLine[aCurPos] == ' ')
+					while (aCurPos < theLine.size() && theLine[aCurPos] == ' ')
 						aCurPos++;
 				}
 				aLineStartPos = aCurPos;
@@ -1434,7 +1434,7 @@ int Graphics::WriteWordWrapped(const Rect &theRect,
 			aCurPos++;
 	}
 
-	if (aLineStartPos < (int)theLine.length()) // write the last piece
+	if (aLineStartPos < (int)theLine.size()) // write the last piece
 	{
 		int aWrittenWidth = WriteWordWrappedHelper(this,
 												   theLine,
@@ -1444,7 +1444,7 @@ int Graphics::WriteWordWrapped(const Rect &theRect,
 												   theJustification,
 												   true,
 												   aLineStartPos,
-												   theLine.length() - aLineStartPos,
+		                                           theLine.size() - aLineStartPos,
 												   anOrigColorInt,
 												   theMaxChars);
 

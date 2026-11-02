@@ -586,9 +586,9 @@ bool XMLParser::NextElement(XMLElement *theElement)
 								}
 
 								if (aLastSlash == -1)
-									mSection.erase(mSection.begin(), mSection.end());
+									mSection.erase();
 								else
-									mSection.erase(mSection.begin() + aLastSlash, mSection.end());
+									mSection.erase(std::next(mSection.begin(), aLastSlash), mSection.end());
 
 								break;
 							}

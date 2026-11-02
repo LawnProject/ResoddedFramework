@@ -77,11 +77,11 @@ SexyString NewUserDialog::GetName()
 		SexyChar aChar = mNameEditWidget->mString[i];
 		if (aChar != ' ')
 		{
-			aString.append(1, aChar);
+			aString += aChar;
 		}
 		else if (aChar != aLastChar)
 		{
-			aString.append(1, ' ');
+			aString += ' ';
 		}
 
 		aLastChar = aChar;

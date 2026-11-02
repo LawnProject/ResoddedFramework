@@ -1588,7 +1588,7 @@ bool SexyAppBase::RegistryEraseKey(const SexyString &_theKeyName)
 		return mDemoBuffer.ReadNumBits(1, false) != 0;
 	}
 
-	std::filesystem::path keyPath = GetAppDataFolder() + _theKeyName + "/registry.json";
+	std::filesystem::path keyPath = GetAppDataFolder() + _theKeyName.toString() + "/registry.json";
 
 	if (std::filesystem::exists(keyPath))
 	{

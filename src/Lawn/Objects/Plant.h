@@ -622,7 +622,7 @@ class PlantDefinition
 	/// How often does a plant do an action
 	int mLaunchRate;
 	/// Plant's Name Translation Key
-	const SexyCharByte *mPlantName;
+	const char *mPlantName;
 };
 extern PlantDefinition gPlantDefs[SeedType::NUM_SEED_TYPES];
 

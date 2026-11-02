@@ -13,8 +13,8 @@ void SexyTrace(const char *theStr);
 #define SEXY_TRACE(theStr)
 #endif
 
-extern void SexyTraceFmt(const SexyCharByte *fmt...);
-extern void OutputDebug(const SexyCharByte *fmt...);
+extern void SexyTraceFmt(const char *fmt...);
+extern void OutputDebug(const char *fmt...);
 
 #ifdef NDEBUG
 

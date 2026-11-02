@@ -83,7 +83,7 @@ std::string Sexy::URLEncode(const std::string &theString)
 
 std::string Sexy::StringToUpper(const std::string &theString)
 {
-	std::string aString;
+	SexyString aString;
 
 	auto it = theString.begin();
 	auto end = theString.end();
@@ -93,15 +93,15 @@ std::string Sexy::StringToUpper(const std::string &theString)
 		// only touch ascii
 		if (aCodepoint < 0x80)
 			aCodepoint = toupper(aCodepoint);
-		utf8::append(aCodepoint, aString);
+		aString += aCodepoint;
 	}
 
-	return aString;
+	return aString.toString();
 }
 
 std::string Sexy::StringToLower(const std::string &theString)
 {
-	std::string aString;
+	SexyString aString;
 
 	auto it = theString.begin();
 	auto end = theString.end();
@@ -111,10 +111,10 @@ std::string Sexy::StringToLower(const std::string &theString)
 		// only touch ascii
 		if (aCodepoint < 0x80)
 			aCodepoint = tolower(aCodepoint);
-		utf8::append(aCodepoint, aString);
+		aString += aCodepoint;
 	}
 
-	return aString;
+	return aString.toString();
 }
 
 std::string Sexy::Trim(const std::string &theString)
@@ -475,7 +475,7 @@ bool Sexy::AllowAllAccess(const std::string &theFileName)
 }
 
 
-SexyString Sexy::ANSIToUTF8(const SexyString &theString)
+std::string Sexy::ANSIToUTF8(const std::string &theString)
 {
 	SexyString aFixedText;
 	for (unsigned char c : theString)
@@ -566,11 +566,11 @@ SexyString Sexy::ANSIToUTF8(const SexyString &theString)
 				aCodepoint = c;
 				break;
 			}
-			utf8::append(aCodepoint, aFixedText);
+			aFixedText += aCodepoint;
 		}
 	}
 
-	return aFixedText;
+	return aFixedText.toString();
 }
 
 uint64_t Sexy::GetTicks()
@@ -957,12 +957,4 @@ void Sexy::SMemWStr(void *&_Dst, const std::string &theString)
 	size_t aStrLen = theString.size();
 	SMemW(_Dst, &aStrLen, sizeof(aStrLen));
 	SMemW(_Dst, theString.c_str(), aStrLen);
-}
-
-size_t Sexy::StringLength(const SexyChar *theString)
-{
-	size_t aLen = 0;
-	while (theString[aLen] != 0)
-		aLen++;
-	return aLen;
 }

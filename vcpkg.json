@@ -8,6 +8,7 @@
     "libvorbis",
     "openal-soft",
     "sdl3",
-    "zlib"
+    "zlib",
+    "utfcpp"
   ]
 }

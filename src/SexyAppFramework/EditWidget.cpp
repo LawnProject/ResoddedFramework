@@ -75,10 +75,8 @@ SexyString &EditWidget::GetDisplayString()
 
 	if (mPasswordDisplayString.size() != mString.size())
 	{
-		mPasswordDisplayString = SexyString(mString.size(), mPasswordChar);
-		//mPasswordDisplayString.resize(mString.size());
-		//for (int i=0; i<(int)mPasswordDisplayString.length(); i++)
-		//	mPasswordDisplayString[i] = mPasswordChar;
+		mPasswordDisplayString.clear();
+		mPasswordDisplayString += mPasswordChar;
 	}
 
 	return mPasswordDisplayString;
@@ -289,10 +287,11 @@ void EditWidget::ProcessKey(KeyCode theKey, SexyChar theChar)
 
 		if ((mHilitePos != -1) && (mHilitePos != mCursorPos))
 		{
+			SexyString aClipboard = GetDisplayString();
 			if (mCursorPos < mHilitePos)
-				mWidgetManager->mApp->CopyToClipboard(GetDisplayString().substr(mCursorPos, mHilitePos));
+				mWidgetManager->mApp->CopyToClipboard(aClipboard.substr(mCursorPos, mHilitePos));
 			else
-				mWidgetManager->mApp->CopyToClipboard(GetDisplayString().substr(mHilitePos, mCursorPos));
+				mWidgetManager->mApp->CopyToClipboard(aClipboard.substr(mHilitePos, mCursorPos));
 
 			if (theChar == 3)
 			{
@@ -321,16 +320,14 @@ void EditWidget::ProcessKey(KeyCode theKey, SexyChar theChar)
 			auto it = aBaseString.begin();
 			auto end = aBaseString.end();
 
-			while (it != end)
+			for (SexyChar c : aBaseString)
 			{
-				uint32_t aCodepoint = utf8::next(it, end);
-
-				if (aCodepoint == '\r' || aCodepoint == '\n')
+				if (c == '\r' || c == '\n')
 					break;
 
-				if (mFont->CharWidth(aCodepoint) != 0 && mEditListener->AllowChar(mId, aCodepoint))
+				if (mFont->CharWidth(c) != 0 && mEditListener->AllowChar(mId, c))
 				{
-					utf8::append(aCodepoint, aString);
+					aString += c;
 				}
 			}
 
@@ -477,16 +474,14 @@ void EditWidget::ProcessKey(KeyCode theKey, SexyChar theChar)
 	}
 	else
 	{
-		SexyString aCharString;
-		utf8::append(theChar, aCharString); //TODOSTR
+		SexyString aCharString = theChar;
 
 		if ((mFont->StringWidth(aCharString) > 0) && mEditListener->AllowChar(mId, theChar))
 		{
 			if ((mHilitePos != -1) && (mHilitePos != mCursorPos))
 			{
 				// Replace selection with new character
-				mString = mString.substr(0, std::min(mCursorPos, mHilitePos)) + SexyString(1, theChar) +
-						  mString.substr(std::max(mCursorPos, mHilitePos));
+				mString = mString.substr(0, std::min(mCursorPos, mHilitePos)) + theChar + mString.substr(std::max(mCursorPos, mHilitePos));
 				mCursorPos = std::min(mCursorPos, mHilitePos);
 				mHilitePos = -1;
 

@@ -8,8 +8,8 @@ class LawnApp;
 class AchievementDefinition
 {
   public:
-	const SexyCharByte *mName;
-	const SexyCharByte *mDescription;
+	const char *mName;
+	const char *mDescription;
 };
 
 extern AchievementDefinition gAchievementDefs[NUM_ACHIEVEMENT_TYPES];

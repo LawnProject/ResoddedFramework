@@ -244,6 +244,8 @@ int TodWriteString(Graphics *g,
 				   int theOffset,
 				   int theLength)
 {
+	std::string theStringBytes = theString.bytes();
+
 	Font *aFont = *theCurrentFormat.mNewFont;
 	if (drawString)
 	{
@@ -271,8 +273,8 @@ int TodWriteString(Graphics *g,
 		}
 	}
 
-	if (theLength < 0 || theOffset + theLength > theString.size())
-		theLength = theString.size();
+	if (theLength < 0 || theOffset + theLength > theStringBytes.size())
+		theLength = theStringBytes.size();
 	else
 		theLength = theOffset + theLength;
 
@@ -280,20 +282,20 @@ int TodWriteString(Graphics *g,
 	int aXOffset = 0;
 	bool aPrevCharWasSpace = false;
 
-	auto it = theString.begin() + theOffset;
-	auto end = theString.begin() + theLength;
+	auto it = theStringBytes.begin() + theOffset;
+	auto end = theStringBytes.begin() + theLength;
 
 	while (it != end)
 	{
-		auto aCurCharPos = it;
+		auto aCurCharPos = it; 
 		SexyChar aCodePoint = utf8::next(it, end);
 		if (aCodePoint == '{')
 		{
-			const char *aFormatStart = theString.c_str() + (aCurCharPos - theString.begin());
+			const char *aFormatStart = theStringBytes.c_str() + (aCurCharPos - theStringBytes.begin());
 			const char *aFormatEnd = strchr(aFormatStart + 1, '}');
 			if (aFormatEnd != nullptr)
 			{
-				it = theString.begin() + (aFormatEnd - theString.c_str()) + 1;
+				it = theStringBytes.begin() + (aFormatEnd - theStringBytes.c_str()) + 1;
 				if (drawString)
 					aFont->DrawString(g,
 									  theX + aXOffset,
@@ -303,7 +305,7 @@ int TodWriteString(Graphics *g,
 									  g->mClipRect);
 
 				aXOffset += aFont->StringWidth(aString);
-				aString.assign("");
+				aString = "";
 				TodWriteStringSetFormat(aFormatStart + 1, theCurrentFormat);
 				aFont = *theCurrentFormat.mNewFont;
 			}
@@ -323,7 +325,7 @@ int TodWriteString(Graphics *g,
 					aPrevCharWasSpace = false;
 			}
 
-			aString.append(aCurCharPos, it);
+			aString += aCodePoint;
 		}
 	}
 
@@ -363,6 +365,7 @@ int TodDrawStringWrappedHelper(Graphics *g,
 							   DrawStringJustification theJustification,
 							   bool drawString)
 {
+	const std::string &theTextBytes = theText.bytes();
 	int theMaxChars = theText.size();
 	TodStringListFormat aCurrentFormat;
 	aCurrentFormat.mNewFont = &theFont;
@@ -375,27 +378,27 @@ int TodDrawStringWrappedHelper(Graphics *g,
 	int aLineSpacing = theFont->GetLineSpacing() + aCurrentFormat.mLineSpacingOffset;
 	SexyString aCurString;
 	int aLineFeedPos = 0;
-	int aCurPos = 0;
+	size_t aCurPos = 0;
 	int aCurWidth = 0;
 	SexyChar aCurChar = '\0';
 	SexyChar aPrevChar = '\0';
 	int aSpacePos = -1;
 	int aMaxWidth = 0;
-	auto it = theText.begin();
-	auto end = theText.end();
+	auto it = theTextBytes.begin();
+	auto end = theTextBytes.end();
 	while (it != end)
 	{
 		auto aCharStart = it;
-		size_t aCurPos = aCharStart - theText.begin();
+		size_t aCurPos = aCharStart - theTextBytes.begin();
 		aCurChar = utf8::next(it, end);  
 		if (aCurChar == '{')
 		{
-			const char *aFmtStart = theText.c_str() + aCurPos;
+			const char *aFmtStart = theTextBytes.c_str() + aCurPos;
 			const char *aFormat = aFmtStart + 1;
 			const char *aFmtEnd = strchr(aFormat, '}');
 			if (aFmtEnd != nullptr)
 			{
-				it = theText.cbegin() + (aFmtEnd - theText.c_str()) + 1;
+				it = theTextBytes.cbegin() + (aFmtEnd - theTextBytes.c_str()) + 1;
 				int aOldAscentOffset = theFont->GetAscent() - theFont->GetAscentPadding();
 				Color aExistingColor = aCurrentFormat.mNewColor;
 				TodWriteStringSetFormat(aFormat, aCurrentFormat);
@@ -443,8 +446,8 @@ int TodDrawStringWrappedHelper(Graphics *g,
 				if (aLineWidth < 0)
 					break;
 
-				it = theText.begin() + aSpacePos + 1;
-				bool aWrappedOnNewLine = theText[aSpacePos] == '\n';
+				it = theTextBytes.begin() + aSpacePos + 1;
+				bool aWrappedOnNewLine = theTextBytes[aSpacePos] == '\n';
 				aCurPos = aSpacePos + 1;
 				if (!aWrappedOnNewLine)
 				{

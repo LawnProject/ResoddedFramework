@@ -257,7 +257,7 @@ static void ReadIntVector(const SexyString &theVal, std::vector<int> &theVector)
 	while (true)
 	{
 		theVector.push_back(sexyatoi(theVal.c_str() + aPos));
-		aPos = theVal.find_first_of(',', aPos);
+		aPos = theVal.bytes().find_first_of(',', aPos);
 		if (aPos == std::string::npos)
 			break;
 
@@ -334,7 +334,7 @@ bool ResourceManager::ParseImageResource(XMLElement &theElement)
 	AnimType anAnimType = AnimType_None;
 	if (anItr != theElement.mAttributes.end())
 	{
-		const SexyCharByte *aType = anItr->second.c_str();
+		const char *aType = anItr->second.c_str();
 
 		if (sexystricmp(aType, "none") == 0)
 			anAnimType = AnimType_None;
