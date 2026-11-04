@@ -16,6 +16,7 @@ if (SEXY_CRASH_HANDLER)
 find_package(cpptrace CONFIG REQUIRED)
 endif()
 find_package(CURL CONFIG REQUIRED)
+find_package(utf8cpp CONFIG REQUIRED)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/*.c"
