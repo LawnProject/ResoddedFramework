@@ -1663,7 +1663,7 @@ void LawnApp::LoadGroup(const char *theGroupName, int theGroupAveMsToLoad)
 	mResourceManager->StartLoadResources(theGroupName);
 	while (!mShutdown && !mCloseRequest && !mLoadingFailed && TodLoadNextResource())
 	{
-		mCompletedLoadingThreadTasks += theGroupAveMsToLoad;
+		mCompletedLoadingThreadTasks++;
 	}
 
 	if (mShutdown || mCloseRequest)
@@ -1694,14 +1694,15 @@ void LawnApp::LoadingThreadProc()
 	}
 
 	const char *groups[] = { "LoadingFonts", "LoadingImages", "LoadingSounds" };
-	int group_ave_ms_to_load[] = { 54, 9, 54 };
 	for (int i = 0; i < 3; i++)
 	{
-		mNumLoadingThreadTasks += mResourceManager->GetNumResources(groups[i]) * group_ave_ms_to_load[i];
+		mNumLoadingThreadTasks += mResourceManager->GetNumResources(groups[i]);
 	}
-	mNumLoadingThreadTasks += 636;
 	mNumLoadingThreadTasks += GetNumPreloadingTasks();
 	mNumLoadingThreadTasks += mMusic->GetNumLoadingTasks();
+	mNumLoadingThreadTasks += LENGTH(gLawnFoleyParamArray);
+	mNumLoadingThreadTasks += LENGTH(gLawnTrailArray);
+	mNumLoadingThreadTasks += LENGTH(gLawnParticleArray);
 
 	PerfTimer aTimer;
 	aTimer.Start();
@@ -1710,6 +1711,7 @@ void LawnApp::LoadingThreadProc()
 		TodHesitationBracket aHesitationResources("Loading Resources");
 		LoadGroup("LoadingImages", 9);
 		LoadGroup("LoadingFonts", 54);
+		LoadGroup("LoadingSounds", 54);
 	}
 
 	if (mLoadingFailed || mShutdown || mCloseRequest)
@@ -1725,28 +1727,17 @@ void LawnApp::LoadingThreadProc()
 	mZenGarden = new ZenGarden();
 	mReanimatorCache = new ReanimatorCache();
 	mReanimatorCache->ReanimatorCacheInitialize();
+
 	TodFoleyInitialize(gLawnFoleyParamArray, LENGTH(gLawnFoleyParamArray));
-
-	TodTraceAndLog("[LawnProject] - loading '%s' %d ms", "stuff", (int)aTimer.GetDuration());
-	aTimer.Start();
-
+	mCompletedLoadingThreadTasks += LENGTH(gLawnFoleyParamArray);
 	TrailLoadDefinitions(gLawnTrailArray, LENGTH(gLawnTrailArray), mRunInCompileMode);
-	TodTraceAndLog("[LawnProject] - loading '%s' %d ms", "trail", (int)aTimer.GetDuration());
-	aTimer.Start();
-
+	mCompletedLoadingThreadTasks += LENGTH(gLawnTrailArray);
 	TodParticleLoadDefinitions(gLawnParticleArray, LENGTH(gLawnParticleArray), mRunInCompileMode);
-	aDuration = std::max(aTimer.GetDuration(), 0.0);
-	aTimer.Start();
+	mCompletedLoadingThreadTasks += LENGTH(gLawnParticleArray);
 
 	PreloadForUser();
 	if (mLoadingFailed || mShutdown || mCloseRequest)
 		return;
-
-	aDuration = std::max(aTimer.GetDuration(), 0.0);
-	aTimer.Start();
-
-	GetNumPreloadingTasks();
-	LoadGroup("LoadingSounds", 54);
 }
 
 void LawnApp::FastLoad(GameMode theGameMode)
@@ -2946,7 +2937,7 @@ void LawnApp::DrawCrazyDave(Graphics *g)
 
 int LawnApp::GetNumPreloadingTasks()
 {
-	int aTaskCount = 10;
+	int aTaskCount = 0;
 	if (mPlayerInfo)
 	{
 		for (SeedType i = SeedType::SEED_PEASHOOTER; i < SeedType::NUM_SEED_TYPES; i = (SeedType)((int)i + 1))
@@ -2961,44 +2952,37 @@ int LawnApp::GetNumPreloadingTasks()
 		{
 			if (HasFinishedAdventure() || mPlayerInfo->mLevel >= GetZombieDefinition(i).mStartingLevel)
 			{
-				if (i != ZombieType::ZOMBIE_BOSS && i != ZombieType::ZOMBIE_CATAPULT &&
-				    i != ZombieType::ZOMBIE_GARGANTUAR && i != ZombieType::ZOMBIE_DIGGER &&
-				    i != ZombieType::ZOMBIE_ZAMBONI)
-				{
-					aTaskCount++;
-				}
+				aTaskCount++;
 			}
 		}
 	}
-	return aTaskCount * 68;
+	return aTaskCount;
 }
 
 void LawnApp::PreloadForUser()
 {
-	int aNumTasks = mNumLoadingThreadTasks + GetNumPreloadingTasks();
 	if (mTitleScreen && mTitleScreen->mQuickLoadKey != KeyCode::KEYCODE_UNKNOWN)
 	{
 		TodTraceAndLog("[LawnProject] - preload canceled\n");
-		mNumLoadingThreadTasks = aNumTasks;
 		return;
 	}
 
+	mNumLoadingThreadTasks += 12;
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_PUFF, true);
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_LAWN_MOWERED_ZOMBIE, true);
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_READYSETPLANT, true);
-	mCompletedLoadingThreadTasks += 68;
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_FINAL_WAVE, true);
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_SUN, true);
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_TEXT_FADE_ON, true);
-	mCompletedLoadingThreadTasks += 68;
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_ZOMBIE, true);
-	mCompletedLoadingThreadTasks += 68;
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_ZOMBIE_NEWSPAPER, true);
-	mCompletedLoadingThreadTasks += 68;
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_SELECTOR_SCREEN, true);
-	mCompletedLoadingThreadTasks += 340;
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_ZOMBIE_HAND, true);
-	mCompletedLoadingThreadTasks += 68;
+
+	//Zombatar assets
+	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_ZOMBATAR_HEAD, true);
+	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_FLAG, true);
+	mCompletedLoadingThreadTasks += 12;
 
 	if (mPlayerInfo)
 	{
@@ -3007,15 +2991,11 @@ void LawnApp::PreloadForUser()
 			if (SeedTypeAvailable(i) || HasFinishedAdventure())
 			{
 				Plant::PreloadPlantResources(i);
-				if (mCompletedLoadingThreadTasks < aNumTasks)
-				{
-					mCompletedLoadingThreadTasks += 68;
-				}
+				mCompletedLoadingThreadTasks++;
 
 				if (mTitleScreen && mTitleScreen->mQuickLoadKey != KeyCode::KEYCODE_UNKNOWN)
 				{
 					TodTraceAndLog("[LawnProject] - preload canceled\n");
-					mNumLoadingThreadTasks = aNumTasks;
 					return;
 				}
 
@@ -3032,22 +3012,13 @@ void LawnApp::PreloadForUser()
 			{
 				continue;
 			}
-			if (i == ZombieType::ZOMBIE_BOSS || i == ZombieType::ZOMBIE_CATAPULT ||
-			    i == ZombieType::ZOMBIE_GARGANTUAR || i == ZombieType::ZOMBIE_DIGGER || i == ZombieType::ZOMBIE_ZAMBONI)
-			{
-				continue;
-			}
 
 			Zombie::PreloadZombieResources(i);
-			if (mCompletedLoadingThreadTasks < aNumTasks)
-			{
-				mCompletedLoadingThreadTasks += 68;
-			}
+			mCompletedLoadingThreadTasks++;
 
 			if (mTitleScreen && mTitleScreen->mQuickLoadKey != KeyCode::KEYCODE_UNKNOWN)
 			{
 				TodTraceAndLog("[LawnProject] - preload canceled\n");
-				mNumLoadingThreadTasks = aNumTasks;
 				return;
 			}
 
@@ -3058,10 +3029,10 @@ void LawnApp::PreloadForUser()
 		}
 	}
 
-	if (mCompletedLoadingThreadTasks != aNumTasks)
+	if (mCompletedLoadingThreadTasks != mNumLoadingThreadTasks)
 	{
+		TodErrorMessageBox(StrFormat("[LawnProject] - num preload tasks wasn't calculated correctly\nQueued: %d | Completed: %d", mNumLoadingThreadTasks, mCompletedLoadingThreadTasks).c_str(), "[LawnProject] - Loading Error");
 		TodTraceAndLog("[LawnProject] - num preload tasks wasn't calculated correctly");
-		mCompletedLoadingThreadTasks = aNumTasks;
 	}
 }
 
@@ -3229,6 +3200,11 @@ void LawnApp::SwitchScreenMode(bool wantWindowed, bool is3d, bool force)
 	}
 }
 
+void LawnApp::TraceLoadGroup(const char *theGroupName, int theGroupTime, int theTotalGroupWeigth, int theTaskWeight)
+{
+	TodTraceAndLog("[LawnProject] - Loaded Group \"%s\" (Containing %d Resources) in %d ms", theGroupName, theTotalGroupWeigth / theTaskWeight, theGroupTime);
+}
+
 /* #################################################################################################### */
 
 // Unimplemented features from beta versions of PvZ
@@ -3243,10 +3219,6 @@ void LawnApp::BetaRecordLevelStats()
 }
 
 void LawnApp::BetaAddFile(std::list<std::string> &theUploadFileList, std::string theFileName, std::string theShortName)
-{
-}
-
-void LawnApp::TraceLoadGroup(const char *theGroupName, int theGroupTime, int theTotalGroupWeigth, int theTaskWeight)
 {
 }
 

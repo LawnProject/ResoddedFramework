@@ -233,22 +233,9 @@ void Music::MusicTitleScreenInit()
 
 void Music::MusicInit()
 {
-#ifdef _DEBUG
-	int aNumLoadingTasks = mApp->mCompletedLoadingThreadTasks + GetNumLoadingTasks();
-#endif
-
 	LoadSong(MusicFile::MUSIC_FILE_DRUMS, "sounds/mainmusic.mo3");
-	mApp->mCompletedLoadingThreadTasks += 3500;
-	;
 	LoadSong(MusicFile::MUSIC_FILE_HIHATS, "sounds/mainmusic_hihats.mo3");
-	mApp->mCompletedLoadingThreadTasks += 3500;
-
-#ifdef _DEBUG
-	LoadSong(MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN, "sounds/ZombiesOnYourLawn.ogg");
-	mApp->mCompletedLoadingThreadTasks += 3500;
-	if (mApp->mCompletedLoadingThreadTasks != aNumLoadingTasks)
-		TodTrace("[LawnProject] - Didn't calculate loading task count correctly!!!!");
-#endif
+	mApp->mCompletedLoadingThreadTasks += 2;
 }
 
 void Music::MusicLoadCreditsSong()
@@ -962,7 +949,7 @@ void Music::GameMusicPause(bool thePause)
 
 int Music::GetNumLoadingTasks()
 {
-	return 3500 * 2; //800 in Beta
+	return 2;
 }
 
 bool Music::IsTrackerMusic(MusicTune theMusicTune)

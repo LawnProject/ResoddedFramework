@@ -172,7 +172,7 @@ bool TodStringListReadFile(const char *theFileName)
 void TodStringListLoad(const char *theFileName)
 {
 	if (!TodStringListReadFile(theFileName))
-		TodErrorMessageBox(Sexy::StrFormat("Failed to load string list file '%s'", theFileName).c_str(), "Error");
+		TodErrorMessageBox(Sexy::StrFormat("Failed to load string list file '%s'", theFileName).c_str(), "[TodLib] - StringList Error");
 }
 
 SexyString TodStringListFind(const SexyString &theName)

@@ -133,6 +133,7 @@ class Music
 	unsigned long GetMusicOrder(MusicFile theMusicFile);
 	unsigned long GetMusicPosition(MusicFile theMusicFile);
 	void MusicLoadCreditsSong();
+	// Number of song files that should be preloaded
 	int GetNumLoadingTasks();
 	bool IsTrackerMusic(MusicTune theMusicTune);
 	MusicBurstType GetMusicBurstType(MusicTune theMusicTune);

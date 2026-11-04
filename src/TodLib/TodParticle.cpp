@@ -127,7 +127,7 @@ bool TodParticleLoadADef(TodParticleDefinition *theParticleDef, const char *theP
 	{
 
 		SexyString aMessage = StrFormat("Failed to load particle '%s'", theParticleFileName);
-		TodErrorMessageBox(aMessage.c_str(), "Error");
+		TodErrorMessageBox(aMessage.c_str(), "[TodLib] - Particle Error");
 		return false;
 	}
 	for (int i = 0; i < theParticleDef->mEmitterDefCount; i++)
@@ -193,9 +193,9 @@ void TodParticleLoadDefinitions(ParticleParams *theParticleParamArray, int thePa
 		{
 			char aBuf[512];
 			sprintf(aBuf, "Failed to load particle '%s'", aParticleParams.mParticleFileName);
-			TodErrorMessageBox(aBuf, "Error");
+			TodErrorMessageBox(aBuf, "[TodLib] - Particle Error");
 		}
-		gSexyAppBase->mNumLoadingThreadTasks += 6;
+		//gSexyAppBase->mNumLoadingThreadTasks++;
 	}
 }
 

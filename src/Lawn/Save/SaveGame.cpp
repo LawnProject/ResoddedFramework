@@ -731,7 +731,7 @@ bool LawnLoadGame(Board *theBoard, const std::string &theFilePath)
 	aReader.read(reinterpret_cast<char *>(&aVersion), sizeof(uint32_t));
 	if (aVersion < SAVE_VERSION)
 	{
-		TodErrorMessageBox(StrFormat("Save file version error: \nwanted: %zu, got: %zu", SAVE_VERSION, aVersion).c_str(), "Save File Error");
+		TodErrorMessageBox(StrFormat("Save file version error: \nwanted: %zu, got: %zu", SAVE_VERSION, aVersion).c_str(), "[LawnProject] - Save Error");
 		aReader.close();
 		return false;
 	}
@@ -739,7 +739,7 @@ bool LawnLoadGame(Board *theBoard, const std::string &theFilePath)
 	aReader.read(reinterpret_cast<char *>(&anArchitecture), sizeof(uint32_t));
 	if (anArchitecture != ARCHITECTURE_USED)
 	{
-		TodErrorMessageBox(StrFormat("Save file architecture error: \nwanted: x%zu, got: x%zu", ARCHITECTURE_USED, anArchitecture).c_str(), "Save File Error");
+		TodErrorMessageBox(StrFormat("Save file architecture error: \nwanted: x%zu, got: x%zu", ARCHITECTURE_USED, anArchitecture).c_str(), "[LawnProject] - Save Error");
 		aReader.close();
 		return false;
 	}
@@ -749,13 +749,13 @@ bool LawnLoadGame(Board *theBoard, const std::string &theFilePath)
 	}
 	catch (std::exception e)
 	{
-		TodErrorMessageBox(StrFormat("Save file read error: %s", e.what()).c_str(), "Save File Error");
+		TodErrorMessageBox(StrFormat("Save file read error: %s", e.what()).c_str(), "[LawnProject] - Save Error");
 		aReader.close();
 		return false;
 	}
 	if (aReader.fail())
 	{
-		TodErrorMessageBox("Save file read error or truncated file", "Save File Error");
+		TodErrorMessageBox("Save file read error or truncated file", "[LawnProject] - Save Error");
 		aReader.close();
 		return false;
 	}
@@ -788,7 +788,7 @@ bool LawnSaveGame(Board *theBoard, const std::string &theFilePath)
 	}
 	catch (std::exception e)
 	{
-		TodErrorMessageBox(StrFormat("Save file write error: %s", e.what()).c_str(), "Save File Error");
+		TodErrorMessageBox(StrFormat("Save file write error: %s", e.what()).c_str(), "[LawnProject] - Save Error");
 		aSchemaWriter.close();
 		aWriter.close();
 		return false;

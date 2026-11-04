@@ -1057,7 +1057,7 @@ bool DefinitionReadImageField(XMLParser *theXmlParser, Image **theImage)
 
 	std::string aMessgae =
 	    StrFormat("Failed to find image '%s' in %s", aStringValue.c_str(), theXmlParser->GetFileName().c_str());
-	TodErrorMessageBox(aMessgae.c_str(), "Missing image");
+	TodErrorMessageBox(aMessgae.c_str(), "[TodLib] - Missing Image");
 	return false;
 }
 
@@ -1072,7 +1072,7 @@ bool DefinitionReadFontField(XMLParser *theXmlParser, Font **theFont)
 
 	std::string aMessgae =
 	    StrFormat("Failed to find font '%s' in %s", aStringValue.c_str(), theXmlParser->GetFileName().c_str());
-	TodErrorMessageBox(aMessgae.c_str(), "Missing font");
+	TodErrorMessageBox(aMessgae.c_str(), "[TodLib] - Missing Font");
 	return false;
 }
 
@@ -1388,7 +1388,7 @@ bool DefinitionCompileAndLoad(const SexyString &theXMLFilePath, DefMap *theDefMa
 	if (aResult)
 		return aResult;
 
-	TodErrorMessageBox(StrFormat("missing resource %s", aCompiledFilePath.c_str()).c_str(), "Error");
+	TodErrorMessageBox(StrFormat("missing resource %s", aCompiledFilePath.c_str()).c_str(), "[TodLib] - Definition Error");
 	exit(0);
 }
 

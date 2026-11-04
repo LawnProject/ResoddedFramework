@@ -1121,7 +1121,7 @@ void ReanimatorEnsureDefinitionLoaded(ReanimationType theReanimType, bool theIsP
 #else
 		snprintf(aBuf, 1024, "Failed to load reanim '%s'", aReanimParams->mReanimFileName);
 #endif
-		TodErrorMessageBox(aBuf, "Error");
+		TodErrorMessageBox(aBuf, "[TodLib] - Reanimation Error");
 	}
 }
 
