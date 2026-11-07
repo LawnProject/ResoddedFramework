@@ -666,17 +666,17 @@ void SexyMatrix3ExtractScale(const SexyMatrix3 &m, float &theScaleX, float &theS
 
 void TodMarkImageForSanding(Image *theImage)
 {
-	((MemoryImage *)theImage)->mGPUFlags |= D3DIMAGEFLAG_SANDING;
+	((MemoryImage *)theImage)->mGPUFlags |= GPUIMAGEFLAG_SANDING;
 }
 
 void TodSandImageIfNeeded(Image *theImage)
 {
 	MemoryImage *aImage = (MemoryImage *)theImage;
-	if (TestBit(aImage->mGPUFlags, D3DIMAGEFLAG_SANDING))
+	if (TestBit(aImage->mGPUFlags, GPUIMAGEFLAG_SANDING))
 	{
 		FixPixelsOnAlphaEdgeForBlending(theImage);
-		//((MemoryImage*)theImage)->mGPUFlags &= ~D3DIMAGEFLAG_SANDING;
-		SetBit((unsigned int &)aImage->mGPUFlags, D3DIMAGEFLAG_SANDING, false);
+		//((MemoryImage*)theImage)->mGPUFlags &= ~GPUIMAGEFLAG_SANDING;
+		SetBit((unsigned int &)aImage->mGPUFlags, GPUIMAGEFLAG_SANDING, false);
 	}
 }
 
