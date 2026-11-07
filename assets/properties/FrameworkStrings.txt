@@ -31,8 +31,8 @@ Window Size
 [SETTINGS_MISC]
 Miscellaneous Settings
 
-[SETTINGS_OPEN_SAVE_FOLDER]
-Open Save Folder
+[SETTINGS_OPEN_USERDATA_FOLDER]
+Open User Data Folder
 
 [UPDATE_OUTDATED_MESSAGE]
 You are playing an outdated version of the mod.

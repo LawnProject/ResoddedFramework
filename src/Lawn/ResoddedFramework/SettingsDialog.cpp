@@ -63,7 +63,7 @@ SettingsDialog::SettingsDialog(LawnApp *theApp)
 
 	mHighQualityCheckbox = MakeNewCheckbox(SettingsDialog::SETTINGS_HIGHQUALITY, this, theApp->mIs3D);
 
-	mSaveFileButton = MakeButton(SETTINGS_OPEN_SAVE_FOLDER, this, "[SETTINGS_OPEN_SAVE_FOLDER]");
+	mSaveFileButton = MakeButton(SETTINGS_OPEN_SAVE_FOLDER, this, "[SETTINGS_OPEN_USERDATA_FOLDER]");
 
 	mApplyButton = MakeButton(SETTINGS_BACK, this, "[SETTINGS_BACK]");
 
@@ -147,9 +147,9 @@ void SettingsDialog::Draw(Graphics *g)
 
 	int aY = 0;
 
-	TodDrawString(g, "[SETTINGS_VIDEO]", 20, 20 + aY, Sexy::FONT_BRIANNETOD12, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
+	TodDrawString(g, "[SETTINGS_VIDEO]", 20, 20 + aY, Sexy::FONT_BRIANNETOD16, Color::White, DrawStringJustification::DS_ALIGN_LEFT);
 
-	aY += 20;
+	aY += 25;
 
 	mVSyncCheckbox->Resize(40, aY - aScrollOffset + GetTop(), 46, 45);
 
@@ -234,10 +234,10 @@ void SettingsDialog::Draw(Graphics *g)
 
 	aY += mFilterList->mHeight + 40;
 
-	TodDrawString(g, "[SETTINGS_MISC]", 20, aY, Sexy::FONT_BRIANNETOD12, Color::White,
+	TodDrawString(g, "[SETTINGS_MISC]", 20, aY, Sexy::FONT_BRIANNETOD16, Color::White,
 	              DrawStringJustification::DS_ALIGN_LEFT);
 
-	aY += 20;
+	aY += 25;
 
 	mSaveFileButton->Resize(40, aY - aScrollOffset + GetTop(), 270, 46);
 
