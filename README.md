@@ -21,6 +21,10 @@ Note: This isn't a tutorial on how to use CMake, please learn how to use it with
 3. Compile
 4. Start modding
 
+### Are there any tutorials?
+Yes, and no.
+I have created [1 official tutorial](https://youtu.be/A3-GchLlZAo?si=drt-aSQOttT8x54W), about setting up ResoddedFramework. I however plan to make more.
+
 ## What do i do now?
 
 Go wild, the source code is organized. That means you can easily extend or even implement new content.
@@ -33,7 +37,6 @@ Go wild, the source code is organized. That means you can easily extend or even 
 - Reworked Rendering - 100%
 
 - JSON Settings, replacing the registry - 100%
-- ResourceGen V2 ([Available now](https://github.com/LawnProject/ResourceGen))
 - Documentation - 100%
 
 
@@ -62,6 +65,7 @@ Go wild, the source code is organized. That means you can easily extend or even 
 - [Patoke](https://github.com/Patoke) -> Creator of [re-plants-vs-zombies](https://github.com/Patoke/re-plants-vs-zombies), a huge source of reference for reversed engineered code
 - spaghetto207 -> LawnScrollbar implementation
 - The original team behind the 0.9.9 decompilation
+- And everyone else who contributed to this project! (Github contributors and members of the PvZ Community!)
 
 ### Acknowledgements
 - PopCap -> Franchise and Open-Source Engine
