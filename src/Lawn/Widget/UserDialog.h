@@ -41,6 +41,7 @@ class UserDialog : public LawnDialog, public ListListener, public EditListener, 
 	virtual void ButtonDepress(int theId);
 	virtual void EditWidgetText(int theId, const SexyString &theString);
 	virtual bool AllowChar(int theId, SexyChar theChar);
+	virtual void MouseWheel(int theDelta);
 	virtual void Draw(Graphics *g);
 	virtual void Update();
 	void FinishDeleteUser();

@@ -7,6 +7,7 @@
 #include <TodLib/TodStringFile.h>
 #include <SexyAppFramework/ListWidget.h>
 #include <SexyAppFramework/Slider.h>
+#include <SexyAppFramework/WidgetManager.h>
 
 static int gUserListWidgetColors[][3] = {
 	{ 23,  24,  35  },
@@ -224,4 +225,16 @@ void UserDialog::EditWidgetText(int theId, const SexyString &theString)
 bool UserDialog::AllowChar(int theId, SexyChar theChar)
 {
 	return isdigit(theChar);
+}
+
+void UserDialog::MouseWheel(int theDelta)
+{
+	if (Rect(mX + mUserList->mX, mY + mUserList->mY, mUserList->mWidth, mUserList->mHeight).Contains(mApp->mWidgetManager->mLastMouseX, mApp->mWidgetManager->mLastMouseY))
+	{
+		mListSlider->mVal -= theDelta * 0.1f;
+		if (mListSlider->mVal > 1)
+			mListSlider->mVal = 1;
+		if (mListSlider->mVal < 0)
+			mListSlider->mVal = 0;
+	}
 }
