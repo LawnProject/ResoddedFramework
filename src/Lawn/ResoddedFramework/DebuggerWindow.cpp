@@ -5,6 +5,7 @@
 #include <Save/PlayerInfo.h>
 #include <Widget/ChallengeScreen.h>
 #include <System/Achievements.h>
+#include <Graphics/ReanimationLawn.h>
 #include <Widget/GameSelector.h>
 #include <TodLib/EffectSystem.h>
 #include <TodLib/Attachment.h>
@@ -15,6 +16,9 @@
 #include <Gameplay/Challenge.h>
 #include <LawnApp.h>
 #include <TodLib/TodStringFile.h>
+#if SEXY_USE_OPENGL
+#include <glad/glad.h>
+#endif
 
 using namespace Sexy;
 
@@ -35,42 +39,76 @@ const char *DebuggerWindow::ZombieTypeName(int i)
 }
 const char *DebuggerWindow::GameModeName(int m)
 {
-	switch ((GameMode)m)
-	{
-	case GAMEMODE_ADVENTURE:
-		return "Adventure";
-	case GAMEMODE_SURVIVAL_NORMAL_STAGE_1:
-		return "Surv Normal 1";
-	case GAMEMODE_SURVIVAL_HARD_STAGE_1:
-		return "Surv Hard 1";
-	case GAMEMODE_SURVIVAL_ENDLESS_STAGE_1:
-		return "Surv Endless 1";
-	case GAMEMODE_CHALLENGE_ZEN_GARDEN:
-		return "Zen Garden";
-	case GAMEMODE_CHALLENGE_FINAL_BOSS:
-		return "Final Boss";
-	case GAMEMODE_TREE_OF_WISDOM:
-		return "Tree of Wisdom";
-	default:
-		return "Other";
-	}
+	return GetChallengeDefinition(m).mChallengeName;
 }
+
 const char *DebuggerWindow::GameSceneName(int s)
 {
 	switch ((GameScenes)s)
 	{
 	case SCENE_LOADING:
-		return "Loading";
+		return "SCENE_LOADING";
 	case SCENE_MENU:
-		return "Menu";
+		return "SCENE_MENU";
+	case SCENE_LEVEL_INTRO:
+		return "SCENE_LEVEL_INTRO";
 	case SCENE_PLAYING:
-		return "Playing";
+		return "SCENE_PLAYING";
+	case SCENE_ZOMBIES_WON:
+		return "SCENE_ZOMBIES_WON";
 	case SCENE_AWARD:
-		return "Award";
+		return "SCENE_AWARD";
 	case SCENE_CREDIT:
-		return "Credit";
+		return "SCENE_CREDIT";
+	case SCENE_CHALLENGE:
+		return "SCENE_CHALLENGE";
 	default:
 		return "Other";
+	}
+}
+
+const char *DebuggerWindow::GetVariationString(DrawVariation v)
+{
+	switch (v)
+	{
+		case VARIATION_NORMAL:
+			return "NORMAL";
+	    case VARIATION_IMITATER:
+		    return "IMITATER";
+	    case VARIATION_MARIGOLD_WHITE:
+		    return "MARIGOLD_WHITE";
+	    case VARIATION_MARIGOLD_MAGENTA:
+		    return "MARIGOLD_MAGENTA";
+	    case VARIATION_MARIGOLD_ORANGE:
+		    return "MARIGOLD_ORANGE";
+	    case VARIATION_MARIGOLD_PINK:
+		    return "MARIGOLD_PINK";
+	    case VARIATION_MARIGOLD_LIGHT_BLUE:
+		    return "MARIGOLD_LIGHT_BLUE";
+	    case VARIATION_MARIGOLD_RED:
+		    return "MARIGOLD_RED";
+	    case VARIATION_MARIGOLD_BLUE:
+		    return "MARIGOLD_BLUE";
+	    case VARIATION_MARIGOLD_VIOLET:
+		    return "MARIGOLD_VIOLET";
+	    case VARIATION_MARIGOLD_LAVENDER:
+		    return "MARIGOLD_LAVENDER";
+	    case VARIATION_MARIGOLD_YELLOW:
+		    return "MARIGOLD_YELLOW";
+	    case VARIATION_MARIGOLD_LIGHT_GREEN:
+		    return "MARIGOLD_LIGHT_GREEN";
+	    case VARIATION_ZEN_GARDEN:
+		    return "ZEN_GARDEN";
+	    case VARIATION_ZEN_GARDEN_WATER:
+		    return "ZEN_GARDEN_WATER";
+	    case VARIATION_SPROUT_NO_FLOWER:
+		    return "SPROUT_NO_FLOWER";
+	    case VARIATION_IMITATER_LESS:
+		    return "IMITATER_LESS";
+	    case VARIATION_AQUARIUM:
+		    return "AQUARIUM";
+		default:
+		    return StrFormat("UNKNOWN | %d", v).c_str();
 	}
 }
 const char *DebuggerWindow::ZombiePhaseName(ZombiePhase p)
@@ -78,23 +116,23 @@ const char *DebuggerWindow::ZombiePhaseName(ZombiePhase p)
 	switch (p)
 	{
 	case PHASE_ZOMBIE_NORMAL:
-		return "Normal";
+		return "ZOMBIE_NORMAL";
 	case PHASE_ZOMBIE_DYING:
-		return "Dying";
+		return "ZOMBIE_DYING";
 	case PHASE_ZOMBIE_BURNED:
-		return "Burned";
+		return "ZOMBIE_BURNED";
 	case PHASE_ZOMBIE_MOWERED:
-		return "Mowered";
+		return "ZOMBIE_MOWERED";
 	case PHASE_DIGGER_TUNNELING:
-		return "Tunneling";
+		return "DIGGER_TUNNELING";
 	case PHASE_POGO_BOUNCING:
-		return "Pogo";
+		return "POGO_BOUNCING";
 	case PHASE_BUNGEE_DIVING:
-		return "Bungee";
+		return "BUNGEE_DIVING";
 	case PHASE_DANCER_DANCING_IN:
-		return "Dancing";
+		return "DANCER_DANCING_IN";
 	default:
-		return "Other";
+		return StrFormat("UNKNOWN | %d", p).c_str();
 	}
 }
 const char *DebuggerWindow::PlantStateName(PlantState s)
@@ -102,25 +140,25 @@ const char *DebuggerWindow::PlantStateName(PlantState s)
 	switch (s)
 	{
 	case STATE_NOTREADY:
-		return "Not Ready";
+		return "NOTREADY";
 	case STATE_READY:
-		return "Ready";
+		return "READY";
 	case STATE_DOINGSPECIAL:
-		return "Special";
+		return "DOINGSPECIAL";
 	case STATE_SQUASH_RISING:
-		return "Squash Rise";
+		return "SQUASH_RISING";
 	case STATE_SQUASH_FALLING:
-		return "Squash Fall";
+		return "SQUASH_FALLING";
 	case STATE_CHOMPER_BITING:
-		return "Chomper Bite";
+		return "CHOMPER_BITING";
 	case STATE_POTATO_ARMED:
-		return "Potato Armed";
+		return "POTATO_ARMED";
 	case STATE_COBCANNON_READY:
-		return "CobReady";
+		return "COBCANNON_READY";
 	case STATE_COBCANNON_FIRING:
-		return "CobFiring";
+		return "COBCANNON_FIRING";
 	default:
-		return "Other";
+		return StrFormat("UNKNOWN | %d", s).c_str();
 	}
 }
 const char *DebuggerWindow::DebugTextModeName(DebugTextMode m)
@@ -135,7 +173,7 @@ const char *DebuggerWindow::DebugTextModeName(DebugTextMode m)
     case DEBUG_TEXT_GRID:       return "Grid";
 
 	default:
-		return "Other";
+		return StrFormat("UNKNOWN | %d", m).c_str();
 	}
 }
 const char *DebuggerWindow::CoinTypeName(CoinType c)
@@ -155,7 +193,7 @@ const char *DebuggerWindow::CoinTypeName(CoinType c)
 	case COIN_LARGESUN:
 		return "Large Sun (50)";
 	default:
-		return "Other";
+		return StrFormat("Other | %d", c).c_str();
 	}
 }
 const char *DebuggerWindow::CoinMotionName(CoinMotion m)
@@ -181,6 +219,21 @@ const char *DebuggerWindow::CoinMotionName(CoinMotion m)
 	}
 }
 
+ImTextureID GetImGuiTexID(void *theSurface)
+{
+	if (!theSurface)
+		return (ImTextureID)0;
+
+	switch (gLawnApp->mRenderer->mCurrentBackend)
+	{
+#if SEXY_USE_OPENGL
+	case RenderingBackend::BACKEND_OPENGL:
+		return (ImTextureID)(uintptr_t)(*(GLuint*)(theSurface));
+#endif
+	default:
+		return (ImTextureID)0;
+	}
+}
 // ─────────────────────────────────────────────────────────────
 // Constructor / Destructor
 // ─────────────────────────────────────────────────────────────
@@ -247,6 +300,11 @@ void DebuggerWindow::Update()
 		if (ImGui::BeginTabItem("App"))
 		{
 			DrawAppTab();
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Reanimation Cache"))
+		{
+			DrawReanimCache();
 			ImGui::EndTabItem();
 		}
 		ImGui::EndTabBar();
@@ -996,6 +1054,79 @@ void DebuggerWindow::DrawDebugTab()
 	ImGui::SameLine();
 	ImGui::Checkbox("Fast-Mo", &gFastMo);
 	ImGui::SameLine();
+}
+
+void DebuggerWindow::DrawReanimCache()
+{
+	if (ImGui::Button("Clear Cache"))
+	{
+		mApp->mReanimatorCache->ReanimatorCacheDispose();
+		mApp->mReanimatorCache->ReanimatorCacheInitialize();
+	}
+	if (ImGui::BeginTabBar("SaveTabs"))
+	{
+		if (ImGui::BeginTabItem("Plants"))
+		{
+			for (int i = 0; i < LENGTH(mApp->mReanimatorCache->mPlantImages); i++)
+			{
+				GPUImage *anImage = mApp->mReanimatorCache->mPlantImages[i];
+				ImGui::SeparatorText(StrFormat("%s - %s", GetPlantDefinition((SeedType)i).mPlantName, anImage ? "Cached" : "Not cached").c_str());
+				if (anImage)
+				{
+					ImGui::Image(ImTextureRef(GetImGuiTexID(anImage->GetSurface())), ImVec2(anImage->mWidth, anImage->mHeight));
+				}
+			}
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Zombies"))
+		{
+			for (int i = 0; i < LENGTH(mApp->mReanimatorCache->mZombieImages); i++)
+			{
+				GPUImage *anImage = mApp->mReanimatorCache->mZombieImages[i];
+				ZombieType aType = (ZombieType)i;
+				if (aType == ZombieType::NUM_ZOMBIE_TYPES)
+					continue;
+				if (aType == ZombieType::ZOMBIE_CACHED_POLEVAULTER_WITH_POLE)
+					aType = ZombieType::ZOMBIE_POLEVAULTER;
+				ImGui::SeparatorText(StrFormat("%s - %s", GetZombieDefinition(aType).mZombieName, anImage ? "Cached" : "Not cached").c_str());
+				if (anImage)
+				{
+					ImGui::Image(ImTextureRef(GetImGuiTexID(anImage->GetSurface())), ImVec2(anImage->mWidth, anImage->mHeight));
+				}
+			}
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Lawn Mowers"))
+		{
+			for (int i = 0; i < LENGTH(mApp->mReanimatorCache->mLawnMowers); i++)
+			{
+				GPUImage *anImage = mApp->mReanimatorCache->mLawnMowers[i];
+				ImGui::SeparatorText(StrFormat("ID: %d - %s", i, anImage ? "Cached" : "Not cached").c_str());
+				if (anImage)
+				{
+					ImGui::Image(ImTextureRef(GetImGuiTexID(anImage->GetSurface())), ImVec2(anImage->mWidth, anImage->mHeight));
+				}
+			}
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Variations"))
+		{
+			for (TodListNode<ReanimCacheImageVariation> *aNode = mApp->mReanimatorCache->mImageVariationList.mHead; aNode != nullptr;
+			     aNode = aNode->mNext)
+			{
+				ReanimCacheImageVariation &aImageVariation = aNode->mValue;
+				GPUImage *anImage = aImageVariation.mImage;
+				ImGui::SeparatorText(StrFormat("ID: %s - %s", GetPlantDefinition(aImageVariation.mSeedType).mPlantName, GetVariationString(aImageVariation.mDrawVariation)).c_str());
+				if (anImage)
+				{
+					ImGui::Image(ImTextureRef(GetImGuiTexID(anImage->GetSurface())), ImVec2(anImage->mWidth, anImage->mHeight));
+				}
+			}
+			ImGui::EndTabItem();
+		}
+		ImGui::EndTabBar();
+	}
+
 }
 
 // ─── App panel ───────────────────────────────────────────────

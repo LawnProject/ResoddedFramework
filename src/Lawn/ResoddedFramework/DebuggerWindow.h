@@ -56,6 +56,7 @@ class DebuggerWindow : public ImGuiWindow
 	void DrawSaveFileTab();
 	void DrawDebugTab();
 	void DrawAppTab();
+	void DrawReanimCache();
 
 	static const char* SeedTypeName(int idx);
 	static const char* ZombieTypeName(int idx);
@@ -66,6 +67,7 @@ class DebuggerWindow : public ImGuiWindow
 	static const char* DebugTextModeName(DebugTextMode m);
 	static const char* CoinTypeName(CoinType c);
 	static const char* CoinMotionName(CoinMotion m);
+	static const char* GetVariationString(DrawVariation v);
 };
 
 

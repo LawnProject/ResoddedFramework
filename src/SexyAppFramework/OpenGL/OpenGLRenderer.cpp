@@ -235,6 +235,7 @@ bool OpenGLRenderer::InitGLContext()
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
 	mContext = SDL_GL_CreateContext(mApp->mWindow->mInternalWindow);
 
 	if (!gladLoadGL())
