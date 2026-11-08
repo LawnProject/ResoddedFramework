@@ -2962,8 +2962,9 @@ void Challenge::DrawRain(Graphics *g)
 		aBoardOffsetX = mBoard->mX / 100 * -100;
 	}
 
-	int aTimeOffsetXEst = TodAnimateCurve(0, 100, mBoard->mEffectCounter % 100, 0, -100, CURVE_LINEAR);
-	int aTimeOffsetYEst = TodAnimateCurve(0, 20, mBoard->mEffectCounter % 20, -100, 0, CURVE_LINEAR);
+	int aTime = mBoard->mEffectCounter;
+	int aTimeOffsetXEst = TodAnimateCurve(0, 100, aTime % 100, 0, -100, CURVE_LINEAR);
+	int aTimeOffsetYEst = TodAnimateCurve(0, 20, aTime % 20, -100, 0, CURVE_LINEAR);
 	for (int aHorCnt = 9; aHorCnt > 0; aHorCnt--)
 	{
 		for (int aVerCnt = 7; aVerCnt > 0; aVerCnt--)
@@ -2974,7 +2975,6 @@ void Challenge::DrawRain(Graphics *g)
 		}
 	}
 
-	int aTime = mBoard->mEffectCounter;
 	float aTimeOffsetXCls = TodAnimateCurve(0, 161, aTime % 161, 0, -100, CURVE_LINEAR);
 	float aTimeOffsetYCls = TodAnimateCurve(0, 33, aTime % 33, -100, 0, CURVE_LINEAR);
 	for (int aHorCnt = 0; aHorCnt < 9; aHorCnt++)

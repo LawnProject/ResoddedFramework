@@ -534,7 +534,7 @@ void Music::FadeOut(int theFadeOutDuration)
 
 void Music::UpdateMusicBurst()
 {
-	if (mApp->mBoard == nullptr)
+	if (mApp->mBoard == nullptr || mApp->mGameMode == GameMode::GAMEMODE_INTRO)
 		return;
 	if (IsTrackerMusic(mCurMusicTune))
 		UpdateBurstTracker();

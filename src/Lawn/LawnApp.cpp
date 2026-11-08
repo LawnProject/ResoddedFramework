@@ -1698,7 +1698,6 @@ void LawnApp::LoadingThreadProc()
 	{
 		mNumLoadingThreadTasks += mResourceManager->GetNumResources(groups[i]);
 	}
-	mNumLoadingThreadTasks += GetNumPreloadingTasks();
 	mNumLoadingThreadTasks += mMusic->GetNumLoadingTasks();
 	mNumLoadingThreadTasks += LENGTH(gLawnFoleyParamArray);
 	mNumLoadingThreadTasks += LENGTH(gLawnTrailArray);
@@ -2966,6 +2965,7 @@ void LawnApp::PreloadForUser()
 		TodTraceAndLog("[LawnProject] - preload canceled\n");
 		return;
 	}
+	mNumLoadingThreadTasks += GetNumPreloadingTasks();
 
 	mNumLoadingThreadTasks += 12;
 	ReanimatorEnsureDefinitionLoaded(ReanimationType::REANIM_PUFF, true);
@@ -3034,6 +3034,8 @@ void LawnApp::PreloadForUser()
 		TodErrorMessageBox(StrFormat("[LawnProject] - num preload tasks wasn't calculated correctly\nQueued: %d | Completed: %d", mNumLoadingThreadTasks, mCompletedLoadingThreadTasks).c_str(), "[LawnProject] - Loading Error");
 		TodTraceAndLog("[LawnProject] - num preload tasks wasn't calculated correctly");
 	}
+
+	mCompletedLoadingThreadTasks = mNumLoadingThreadTasks = 0; // Reset to 0, to make sure any future loading doesn't use the old counters
 }
 
 SexyString LawnApp::Pluralize(int theCount, const SexyString &theSingular, const SexyString &thePlural)

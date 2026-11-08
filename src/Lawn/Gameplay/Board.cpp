@@ -3192,13 +3192,16 @@ void Board::UpdateMousePosition()
 			}
 		}
 
-		HitResult aHitResult;
-		MouseHitTest(aMouseX, aMouseY, &aHitResult);
-		if (aHitResult.mObjectType == GameObjectType::OBJECT_TYPE_SCARY_POT)
+		if (!mPaused)
 		{
-			GridItem *aScaryPot = (GridItem *)aHitResult.mObject;
-			aScaryPot->mHighlighted = true;
-			return;
+			HitResult aHitResult;
+			MouseHitTest(aMouseX, aMouseY, &aHitResult);
+			if (aHitResult.mObjectType == GameObjectType::OBJECT_TYPE_SCARY_POT)
+			{
+				GridItem *aScaryPot = (GridItem *)aHitResult.mObject;
+				aScaryPot->mHighlighted = true;
+				return;
+			}
 		}
 	}
 
@@ -5381,10 +5384,14 @@ void Board::NextWaveComing()
 	{
 		mApp->PlaySample(Sexy::SOUND_AWOOGA);
 	}
-	else if ((mApp->IsWhackAZombieLevel() && mCurrentWave == mNumWaves - 1) || IsFlagWave(mCurrentWave))
-	{
-		mApp->PlaySample(Sexy::SOUND_SIREN);
-	}
+
+	if (mApp->IsWhackAZombieLevel() && mCurrentWave != mNumWaves - 1)
+		return;
+
+	if (!IsFlagWave(mCurrentWave))
+		return;
+
+	mApp->PlaySample(Sexy::SOUND_SIREN);
 }
 
 void Board::UpdateZombieSpawning()
