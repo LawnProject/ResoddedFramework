@@ -32,7 +32,6 @@ class SEHCatcher
 	static LPTOP_LEVEL_EXCEPTION_FILTER mPreviousFilter;
 #endif
 
-
   public:
 	static void SEHWindowProc();
 #ifdef _WIN32

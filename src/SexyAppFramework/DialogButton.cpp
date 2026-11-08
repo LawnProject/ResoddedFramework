@@ -5,10 +5,16 @@
 using namespace Sexy;
 
 static int gDialogButtonColors[][3] = {
-	{255, 255, 255}, {255, 255, 255}, {0, 0, 0}, {255, 255, 255}, {132, 132, 132}, {212, 212, 212}};
+	{ 255, 255, 255 },
+	{ 255, 255, 255 },
+	{ 0,   0,   0   },
+	{ 255, 255, 255 },
+	{ 132, 132, 132 },
+	{ 212, 212, 212 }
+};
 
 DialogButton::DialogButton(Image *theComponentImage, int theId, ButtonListener *theListener)
-	: ButtonWidget(theId, theListener)
+    : ButtonWidget(theId, theListener)
 {
 	mComponentImage = theComponentImage;
 

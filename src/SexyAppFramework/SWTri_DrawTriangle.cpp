@@ -59,10 +59,10 @@
 #define funcname1(t0, t1, t2, t3, t4, t5) funcname2(t0, t1, t2, t3, t4, t5)
 #define funcname funcname1(NAME0, NAME1, NAME2, NAME3, NAME4, NAME5)
 void Sexy::funcname(SWHelper::SWVertex *pVerts,
-					void *pFrameBuffer,
-					const unsigned int bytepitch,
-					const SWHelper::SWTextureInfo *textureInfo,
-					SWHelper::SWDiffuse &globalDiffuse)
+                    void *pFrameBuffer,
+                    const unsigned int bytepitch,
+                    const SWHelper::SWTextureInfo *textureInfo,
+                    SWHelper::SWDiffuse &globalDiffuse)
 {
 	const int pitch = bytepitch / sizeof(PTYPE);
 	const int tex_pitch = textureInfo->pitch;
@@ -70,11 +70,11 @@ void Sexy::funcname(SWHelper::SWVertex *pVerts,
 	const unsigned int tex_endpos = textureInfo->endpos;
 
 	const SWHelper::signed64 bigOne = static_cast<SWHelper::signed64>(1) << 48;
-#define swap(a, b, type)                                                                                               \
-	{                                                                                                                  \
-		type tmp = a;                                                                                                  \
-		a = b;                                                                                                         \
-		b = tmp;                                                                                                       \
+#define swap(a, b, type) \
+	{                    \
+		type tmp = a;    \
+		a = b;           \
+		b = tmp;         \
 	}
 
 	const unsigned int *pTexture;

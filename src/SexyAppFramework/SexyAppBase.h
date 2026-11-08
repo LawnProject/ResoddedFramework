@@ -19,7 +19,6 @@
 #include <mutex>
 #include FT_FREETYPE_H
 
-
 namespace ImageLib
 {
 class Image;
@@ -187,9 +186,9 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	bool mSkipSignatureChecks;
 
 	bool mOnlyAllowOneCopyToRun;
-	#ifdef _WIN32
+#ifdef _WIN32
 	HANDLE mCopyMutex;
-	#endif
+#endif
 	bool mBetaValidate;
 	uint8_t mAdd8BitMaxTable[512];
 	WidgetManager *mWidgetManager;
@@ -207,7 +206,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	bool mInitialized;
 	bool mProcessInTimer;
 	uint32_t mTimeLoaded;
-	Window* mWindow;
+	Window *mWindow;
 	bool mIsScreenSaver;
 	bool mAllowMonitorPowersave;
 	bool mNoDefer;
@@ -359,14 +358,16 @@ class SexyAppBase : public ButtonListener, public DialogListener
 #if SEXY_USE_CONTROLLER
 
 	int mNumGamepads;
-	Gamepad* mGamepads[MAX_GAMEPADS];
+	Gamepad *mGamepads[MAX_GAMEPADS];
 	bool mUsingGamepad;
-	bool UsingGamepad() const { return mUsingGamepad; }
+	bool UsingGamepad() const
+	{
+		return mUsingGamepad;
+	}
 
 #endif
 
 	static Version gVersion;
-
 
   protected:
 	void RehupFocus();
@@ -398,18 +399,18 @@ class SexyAppBase : public ButtonListener, public DialogListener
 
 	// Registry helpers
 	bool RegistryRead(const std::string &theValueName,
-					  JSONRegistryType *theType,
-					  uint8_t *theValue,
-					  uint32_t *theLength);
+	                  JSONRegistryType *theType,
+	                  uint8_t *theValue,
+	                  uint32_t *theLength);
 	bool RegistryReadKey(const std::string &theValueName,
-						 JSONRegistryType *theType,
-						 uint8_t *theValue,
-						 uint32_t *theLength,
-						 int theMainKey = 0);
+	                     JSONRegistryType *theType,
+	                     uint8_t *theValue,
+	                     uint32_t *theLength,
+	                     int theMainKey = 0);
 	bool RegistryWrite(const std::string &theValueName,
-					   JSONRegistryType theType,
-					   const uint8_t *theValue,
-					   uint32_t theLength);
+	                   JSONRegistryType theType,
+	                   const uint8_t *theValue,
+	                   uint32_t theLength);
 
 	// Demo recording helpers
 	void ProcessDemo();
@@ -427,11 +428,11 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	virtual void WriteToRegistry();
 	virtual void ReadFromRegistry();
 	virtual Dialog *NewDialog(int theDialogId,
-							  bool isModal,
-							  const SexyString &theDialogHeader,
-							  const SexyString &theDialogLines,
-							  const SexyString &theDialogFooter,
-							  int theButtonMode);
+	                          bool isModal,
+	                          const SexyString &theDialogHeader,
+	                          const SexyString &theDialogLines,
+	                          const SexyString &theDialogFooter,
+	                          int theButtonMode);
 	virtual void PreDisplayHook();
 	virtual void EnforceCursor();
 
@@ -457,8 +458,8 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	virtual void ParseCmdLine(const std::string &theCmdLine);
 	virtual void HandleCmdLineParam(const std::string &theParamName, const std::string &theParamValue);
 	virtual void HandleNotifyGameMessage(
-		int theType,
-		int theParam); // for HWND_BROADCAST of mNotifyGameMessage (0-1000 are reserved for SexyAppBase for theType)
+	    int theType,
+	    int theParam); // for HWND_BROADCAST of mNotifyGameMessage (0-1000 are reserved for SexyAppBase for theType)
 	virtual void HandleGameAlreadyRunning();
 
 	virtual void Start();
@@ -491,8 +492,8 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	void EnableCustomCursors(bool enabled);
 	virtual GPUImage *GetImage(const std::string &theFileName, bool commitBits = true);
 	virtual SharedImageRef GetSharedImage(const std::string &theFileName,
-										  const std::string &theVariant = "",
-										  bool *isNew = NULL);
+	                                      const std::string &theVariant = "",
+	                                      bool *isNew = NULL);
 
 	void CleanSharedImages();
 	void PrecacheAdditive(MemoryImage *theImage);
@@ -501,7 +502,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	void SetCursorImage(int theCursorNum, Image *theImage);
 
 	GPUImage *CreateCrossfadeImage(
-		Image *theImage1, const Rect &theRect1, Image *theImage2, const Rect &theRect2, double theFadeFactor);
+	    Image *theImage1, const Rect &theRect1, Image *theImage2, const Rect &theRect2, double theFadeFactor);
 	void ColorizeImage(Image *theImage, const Color &theColor);
 	GPUImage *CreateColorizedImage(Image *theImage, const Color &theColor);
 	GPUImage *CopyImage(Image *theImage, const Rect &theRect);
@@ -523,11 +524,11 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	virtual void SetAlphaDisabled(bool isDisabled);
 
 	virtual Dialog *DoDialog(int theDialogId,
-							 bool isModal,
-							 const SexyString &theDialogHeader,
-							 const SexyString &theDialogLines,
-							 const SexyString &theDialogFooter,
-							 int theButtonMode);
+	                         bool isModal,
+	                         const SexyString &theDialogHeader,
+	                         const SexyString &theDialogLines,
+	                         const SexyString &theDialogFooter,
+	                         int theButtonMode);
 	virtual Dialog *GetDialog(int theDialogId);
 	virtual void AddDialog(int theDialogId, Dialog *theDialog);
 	virtual void AddDialog(Dialog *theDialog);
@@ -598,7 +599,7 @@ class SexyAppBase : public ButtonListener, public DialogListener
 	void DemoAssertStringEqual(const std::string &theString);
 	void DemoAssertIntEqual(int theInt);
 	void DemoAddMarker(const std::string &theString);
-	void DemoRegisterHandle(void* theHandle);
+	void DemoRegisterHandle(void *theHandle);
 	void DemoWaitForHandle(void *theHandle);
 	bool DemoCheckHandle(void *theHandle);
 

@@ -46,9 +46,9 @@ class ReanimAtlas
 	int FindImage(Image *theImage);
 	bool ImageFits(int theImageCount, const Rect &rectTest, int theMaxWidth);
 	bool ImageFindPlaceOnSide(ReanimAtlasImage *theAtlasImageToPlace,
-							  int theImageCount,
-							  int theMaxWidth,
-							  bool theToRight);
+	                          int theImageCount,
+	                          int theMaxWidth,
+	                          bool theToRight);
 	bool ImageFindPlace(ReanimAtlasImage *theAtlasImageToPlace, int theImageCount, int theMaxWidth);
 	bool PlaceAtlasImage(ReanimAtlasImage *theAtlasImageToPlace, int theImageCount, int theMaxWidth);
 	int PickAtlasWidth();

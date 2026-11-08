@@ -333,7 +333,6 @@ void ReanimationCreateAtlas(ReanimatorDefinition *theDefinition, ReanimationType
 	ReanimAtlas *aAtlas = new ReanimAtlas();
 	theDefinition->mReanimAtlas = aAtlas;
 	aAtlas->ReanimAtlasCreate(theDefinition);
-
 }
 
 void ReanimationPreload(ReanimationType theReanimationType)

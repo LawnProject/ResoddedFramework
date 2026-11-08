@@ -8,7 +8,8 @@
 namespace Sexy
 {
 
-template <class _T> class TRect
+template <class _T>
+class TRect
 {
   public:
 	_T mX;
@@ -22,7 +23,7 @@ template <class _T> class TRect
 	}
 
 	TRect(const TRect<_T> &theTRect)
-		: mX(theTRect.mX), mY(theTRect.mY), mWidth(theTRect.mWidth), mHeight(theTRect.mHeight)
+	    : mX(theTRect.mX), mY(theTRect.mY), mWidth(theTRect.mWidth), mHeight(theTRect.mHeight)
 	{
 	}
 
@@ -33,7 +34,7 @@ template <class _T> class TRect
 	bool Intersects(const TRect<_T> &theTRect) const
 	{
 		return !((theTRect.mX + theTRect.mWidth <= mX) || (theTRect.mY + theTRect.mHeight <= mY) ||
-				 (theTRect.mX >= mX + mWidth) || (theTRect.mY >= mY + mHeight));
+		         (theTRect.mX >= mX + mWidth) || (theTRect.mY >= mY + mHeight));
 	}
 
 	TRect<_T> Intersection(const TRect<_T> &theTRect) const
@@ -65,7 +66,7 @@ template <class _T> class TRect
 	bool Contains(const TPoint<_T> &thePoint) const
 	{
 		return ((thePoint.mX >= mX) && (thePoint.mX < mX + mWidth) && (thePoint.mY >= mY) &&
-				(thePoint.mY < mY + mHeight));
+		        (thePoint.mY < mY + mHeight));
 	}
 
 	void Offset(_T theX, _T theY)

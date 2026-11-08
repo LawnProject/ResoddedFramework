@@ -5,8 +5,8 @@
 using namespace Sexy;
 
 Checkbox::Checkbox(Image *theUncheckedImage, Image *theCheckedImage, int theId, CheckboxListener *theCheckboxListener)
-	: mUncheckedImage(theUncheckedImage), mCheckedImage(theCheckedImage), mId(theId), mListener(theCheckboxListener),
-	  mChecked(false), mOutlineColor(Color::White), mBkgColor(Color(80, 80, 80)), mCheckColor(Color(255, 255, 0))
+    : mUncheckedImage(theUncheckedImage), mCheckedImage(theCheckedImage), mId(theId), mListener(theCheckboxListener),
+      mChecked(false), mOutlineColor(Color::White), mBkgColor(Color(80, 80, 80)), mCheckColor(Color(255, 255, 0))
 {
 	mDoFinger = true;
 }

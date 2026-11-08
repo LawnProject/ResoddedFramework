@@ -13,7 +13,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 extern void SexyDumpUnfreed();
 
 #if defined(SEXY_MEMTRACE) && !defined(RELEASEFINAL)

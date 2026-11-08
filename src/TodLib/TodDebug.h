@@ -42,17 +42,17 @@ extern void (*gBetaSubmitFunc)();
 #endif
 
 #ifdef _DEBUG
-#define TOD_ASSERT(condition, ...)                                                                                     \
-	{                                                                                                                  \
-		if (!bool(condition))                                                                                          \
-		{                                                                                                              \
-			TodAssertFailed("" #condition, __FILE__, __LINE__, ##__VA_ARGS__);                                         \
-			if (SexyDebuggerCheck())                                                                                   \
-			{                                                                                                          \
-				__debugbreak();                                                                                        \
-			}                                                                                                          \
-			TodTraceMemory();                                                                                          \
-		}                                                                                                              \
+#define TOD_ASSERT(condition, ...)                                             \
+	{                                                                          \
+		if (!bool(condition))                                                  \
+		{                                                                      \
+			TodAssertFailed("" #condition, __FILE__, __LINE__, ##__VA_ARGS__); \
+			if (SexyDebuggerCheck())                                           \
+			{                                                                  \
+				__debugbreak();                                                \
+			}                                                                  \
+			TodTraceMemory();                                                  \
+		}                                                                      \
 	}
 #else
 #define TOD_ASSERT(condition, ...)

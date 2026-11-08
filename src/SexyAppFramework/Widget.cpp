@@ -191,7 +191,7 @@ void Widget::SetDisabled(bool isDisabled)
 
 	// Incase a widget is enabled right under our cursor
 	if ((!isDisabled) && (mWidgetManager != NULL) &&
-		(Contains(mWidgetManager->mLastMouseX, mWidgetManager->mLastMouseY)))
+	    (Contains(mWidgetManager->mLastMouseX, mWidgetManager->mLastMouseY)))
 		mWidgetManager->MousePosition(mWidgetManager->mLastMouseX, mWidgetManager->mLastMouseY);
 }
 
@@ -323,11 +323,11 @@ Rect Widget::WriteCenteredLine(Graphics *g, int anOffset, const SexyString &theL
 }
 
 Rect Widget::WriteCenteredLine(Graphics *g,
-							   int anOffset,
-							   const SexyString &theLine,
-							   Color theColor1,
-							   Color theColor2,
-							   const Point &theShadowOffset)
+                               int anOffset,
+                               const SexyString &theLine,
+                               Color theColor1,
+                               Color theColor2,
+                               const Point &theShadowOffset)
 {
 	Font *aFont = g->GetFont();
 	int aWidth = aFont->StringWidth(theLine);
@@ -342,20 +342,20 @@ Rect Widget::WriteCenteredLine(Graphics *g,
 	// account for shadow in position and size
 	// TODO: this may not be necessary.
 	return Rect(aX + std::min(0, theShadowOffset.mX),
-				anOffset - aFont->GetAscent() + std::min(0, theShadowOffset.mY),
-				aWidth + abs(theShadowOffset.mX),
-				aFont->GetHeight() + abs(theShadowOffset.mY));
+	            anOffset - aFont->GetAscent() + std::min(0, theShadowOffset.mY),
+	            aWidth + abs(theShadowOffset.mX),
+	            aFont->GetHeight() + abs(theShadowOffset.mY));
 }
 
 int Widget::WriteString(Graphics *g,
-						const SexyString &theString,
-						int theX,
-						int theY,
-						int theWidth,
-						int theJustification,
-						bool drawString,
-						int theOffset,
-						int theLength)
+                        const SexyString &theString,
+                        int theX,
+                        int theY,
+                        int theWidth,
+                        int theJustification,
+                        bool drawString,
+                        int theOffset,
+                        int theLength)
 {
 	bool oldColored = g->mWriteColoredString;
 	g->mWriteColoredString = mWriteColoredString;
@@ -366,7 +366,7 @@ int Widget::WriteString(Graphics *g,
 }
 
 int Widget::WriteWordWrapped(
-	Graphics *g, const Rect &theRect, const SexyString &theLine, int theLineSpacing, int theJustification)
+    Graphics *g, const Rect &theRect, const SexyString &theLine, int theLineSpacing, int theJustification)
 {
 	bool oldColored = g->mWriteColoredString;
 	g->mWriteColoredString = mWriteColoredString;
@@ -428,9 +428,9 @@ bool Widget::Contains(int theX, int theY)
 Rect Widget::GetInsetRect()
 {
 	return Rect(mX + mMouseInsets.mLeft,
-				mY + mMouseInsets.mTop,
-				mWidth - mMouseInsets.mLeft - mMouseInsets.mRight,
-				mHeight - mMouseInsets.mTop - mMouseInsets.mBottom);
+	            mY + mMouseInsets.mTop,
+	            mWidth - mMouseInsets.mLeft - mMouseInsets.mRight,
+	            mHeight - mMouseInsets.mTop - mMouseInsets.mBottom);
 }
 
 void Widget::DeferOverlay(int thePriority)
@@ -439,7 +439,7 @@ void Widget::DeferOverlay(int thePriority)
 }
 
 void Widget::Layout(
-	int theLayoutFlags, Widget *theRelativeWidget, int theLeftPad, int theTopPad, int theWidthPad, int theHeightPad)
+    int theLayoutFlags, Widget *theRelativeWidget, int theLeftPad, int theTopPad, int theWidthPad, int theHeightPad)
 {
 	int aRelLeft = theRelativeWidget->Left();
 	int aRelTop = theRelativeWidget->Top();

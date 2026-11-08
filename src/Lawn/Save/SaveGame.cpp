@@ -759,7 +759,7 @@ bool LawnLoadGame(Board *theBoard, const std::string &theFilePath)
 		aReader.close();
 		return false;
 	}
-	
+
 	aReader.close();
 
 	theBoard->mApp->mGameScene = GameScenes::SCENE_PLAYING;

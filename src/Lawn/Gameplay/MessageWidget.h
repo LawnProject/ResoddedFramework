@@ -30,7 +30,7 @@ class MessageWidget
 	MessageStyle mMessageStyle;
 	// Each ID corresponds to a codepoint in the label
 	// i.e. NOT a 1-1 mapping to mLabel!
-	std::array<ReanimationID, MAX_MESSAGE_BYTES> mTextReanimID = {ReanimationID::REANIMATIONID_NULL};
+	std::array<ReanimationID, MAX_MESSAGE_BYTES> mTextReanimID = { ReanimationID::REANIMATIONID_NULL };
 	ReanimationType mReanimType;
 	int mSlideOffTime;
 	std::array<char, MAX_MESSAGE_BYTES> mLabelNext; // UTF-8 encoded, similar to mLabel

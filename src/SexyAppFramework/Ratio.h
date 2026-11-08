@@ -30,7 +30,7 @@ inline bool Ratio::operator!=(const Ratio &theRatio) const
 inline bool Ratio::operator<(const Ratio &theRatio) const
 {
 	return (mNumerator * theRatio.mDenominator / mDenominator < theRatio.mNumerator) ||
-		   (mNumerator < theRatio.mNumerator * mDenominator / theRatio.mDenominator);
+	       (mNumerator < theRatio.mNumerator * mDenominator / theRatio.mDenominator);
 }
 
 inline int Ratio::operator*(int theInt) const

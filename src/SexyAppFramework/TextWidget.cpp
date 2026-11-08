@@ -65,7 +65,7 @@ void TextWidget::DrawColorString(Graphics *g, const SexyString &theString, int x
 }
 
 void TextWidget::DrawColorStringHilited(
-	Graphics *g, const SexyString &theString, int x, int y, int theStartPos, int theEndPos)
+    Graphics *g, const SexyString &theString, int x, int y, int theStartPos, int theEndPos)
 {
 	DrawColorString(g, theString, x, y, true);
 
@@ -205,7 +205,7 @@ void TextWidget::AddToPhysicalLines(int theIdx, const SexyString &theLine)
 				mLineMap.push_back(theIdx);
 				Color aColor = GetLastColor(aCurString);
 				aCurString = "  " + SexyChar(0xFF) + (SexyChar)aColor.mRed + (SexyChar)aColor.mGreen +
-							 (SexyChar)aColor.mBlue + theLine.substr(aNextCheckPos, aSpacePos - aNextCheckPos);
+				             (SexyChar)aColor.mBlue + theLine.substr(aNextCheckPos, aSpacePos - aNextCheckPos);
 			}
 			else
 				aCurString = aNewString;
@@ -286,7 +286,7 @@ void TextWidget::AddLine(const SexyString &theLine)
 bool TextWidget::SelectionReversed()
 {
 	return ((mHiliteArea[1][1] < mHiliteArea[0][1]) ||
-			((mHiliteArea[1][1] == mHiliteArea[0][1]) && (mHiliteArea[1][0] < mHiliteArea[0][0])));
+	        ((mHiliteArea[1][1] == mHiliteArea[0][1]) && (mHiliteArea[1][0] < mHiliteArea[0][0])));
 }
 
 void TextWidget::GetSelectedIndices(int theLineIdx, int *theIndices)

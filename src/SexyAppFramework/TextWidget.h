@@ -36,7 +36,7 @@ class TextWidget : public Widget, public ScrollListener
 	virtual void Clear();
 	virtual void DrawColorString(Graphics *g, const SexyString &theString, int x, int y, bool useColors);
 	virtual void DrawColorStringHilited(
-		Graphics *g, const SexyString &theString, int x, int y, int theStartPos, int theEndPos);
+	    Graphics *g, const SexyString &theString, int x, int y, int theStartPos, int theEndPos);
 	virtual int GetStringIndex(const SexyString &theString, int thePixel);
 
 	virtual int GetColorStringWidth(const SexyString &theString);

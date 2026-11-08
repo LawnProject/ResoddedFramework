@@ -8,7 +8,6 @@ using namespace Sexy;
 
 GPUImage::GPUImage() : GPUImage(gSexyAppBase->mRenderer)
 {
-
 }
 GPUImage::GPUImage(Renderer *theRenderer) : MemoryImage(theRenderer->mApp)
 {
@@ -35,14 +34,14 @@ void GPUImage::Init()
 	mLockCount = 0;
 }
 void GPUImage::FillScanLinesWithCoverage(Span *theSpans,
-										 int theSpanCount,
-										 const Color &theColor,
-										 int theDrawMode,
-										 const uint8_t *theCoverage,
-										 int theCoverX,
-										 int theCoverY,
-										 int theCoverWidth,
-										 int theCoverHeight)
+                                         int theSpanCount,
+                                         const Color &theColor,
+                                         int theDrawMode,
+                                         const uint8_t *theCoverage,
+                                         int theCoverX,
+                                         int theCoverY,
+                                         int theCoverWidth,
+                                         int theCoverHeight)
 {
 	if (theSpanCount == 0)
 		return;
@@ -65,14 +64,14 @@ void GPUImage::FillScanLinesWithCoverage(Span *theSpans,
 	MemoryImage aTempImage;
 	aTempImage.Create(r - l + 1, b - t + 1);
 	aTempImage.FillScanLinesWithCoverage(theSpans,
-										 theSpanCount,
-										 theColor,
-										 theDrawMode,
-										 theCoverage,
-										 theCoverX - l,
-										 theCoverY - t,
-										 theCoverWidth,
-										 theCoverHeight);
+	                                     theSpanCount,
+	                                     theColor,
+	                                     theDrawMode,
+	                                     theCoverage,
+	                                     theCoverX - l,
+	                                     theCoverY - t,
+	                                     theCoverWidth,
+	                                     theCoverHeight);
 	Blt(&aTempImage, l, t, Rect(0, 0, r - l + 1, b - t + 1), Color::White, theDrawMode);
 }
 
@@ -192,10 +191,9 @@ bool GPUImage::GenerateSurface()
 
 void GPUImage::DeleteSurface()
 {
-
 }
 
-void GPUImage::SetSurface(void* theSurface)
+void GPUImage::SetSurface(void *theSurface)
 {
 	mSurfaceSet = true;
 	mSurface = theSurface;
@@ -203,7 +201,7 @@ void GPUImage::SetSurface(void* theSurface)
 	mHeight = 0;
 }
 
-void* GPUImage::GetSurface()
+void *GPUImage::GetSurface()
 {
 	if (mSurface == nullptr)
 		GenerateSurface();
@@ -212,13 +210,13 @@ void* GPUImage::GetSurface()
 }
 
 bool GPUImage::PolyFill3D(const Point theVertices[],
-						  int theNumVertices,
-						  const Rect &theClipRect,
-						  const Color &theColor,
-						  int theDrawMode,
-						  int tx,
-						  int ty,
-						  bool comvex)
+                          int theNumVertices,
+                          const Rect &theClipRect,
+                          const Color &theColor,
+                          int theDrawMode,
+                          int tx,
+                          int ty,
+                          bool comvex)
 {
 	if (Check3D(this))
 	{
@@ -229,12 +227,9 @@ bool GPUImage::PolyFill3D(const Point theVertices[],
 		return false;
 }
 
-
 void GPUImage::ImplFillRect(const Rect &theRect, const Color &theColor, int theDrawMode)
 {
-
 }
-
 
 void GPUImage::FillRect(const Rect &theRect, const Color &theColor, int theDrawMode)
 {
@@ -250,16 +245,15 @@ void GPUImage::FillRect(const Rect &theRect, const Color &theColor, int theDrawM
 		MemoryImage::FillRect(theRect, theColor, theDrawMode);
 		return;
 	}
-	
+
 	if (!mNoLock)
-		ImplFillRect(theRect,theColor,theDrawMode);
+		ImplFillRect(theRect, theColor, theDrawMode);
 
 	DeleteAllNonSurfaceData();
 }
 
 void GPUImage::ImplDrawLine(double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
 {
-
 }
 
 void GPUImage::DrawLine(double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
@@ -306,7 +300,7 @@ void GPUImage::ImplDrawLineAA(double theStartX, double theStartY, double theEndX
 }
 
 void GPUImage::DrawLineAA(
-	double theStartX, double theStartY, double theEndX, double theEndY, const Color& theColor, int theDrawMode)
+    double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
 {
 	if (Check3D(this))
 	{
@@ -343,11 +337,9 @@ void GPUImage::DrawLineAA(
 		ImplDrawLineAA(theStartX, theStartY, theEndX, theEndY, theColor, theDrawMode);
 }
 
-
 void GPUImage::ImplBlt(Image *theImage, int theX, int theY, const Rect &theSrcRect, const Color &theColor, int theDrawMode)
 {
 }
-
 
 void GPUImage::Blt(Image *theImage, int theX, int theY, const Rect &theSrcRect, const Color &theColor, int theDrawMode)
 {
@@ -381,23 +373,22 @@ void GPUImage::Blt(Image *theImage, int theX, int theY, const Rect &theSrcRect, 
 	DeleteAllNonSurfaceData();
 }
 void GPUImage::ImplBltF(Image *theImage,
-					float theX,
-					float theY,
-					const Rect &theSrcRect,
-					const Rect &theClipRect,
-					const Color &theColor,
-					int theDrawMode)
+                        float theX,
+                        float theY,
+                        const Rect &theSrcRect,
+                        const Rect &theClipRect,
+                        const Color &theColor,
+                        int theDrawMode)
 {
-
 }
 
 void GPUImage::BltF(Image *theImage,
-	float theX,
-	float theY,
-	const Rect& theSrcRect,
-	const Rect& theClipRect,
-	const Color& theColor,
-	int theDrawMode) 
+                    float theX,
+                    float theY,
+                    const Rect &theSrcRect,
+                    const Rect &theClipRect,
+                    const Color &theColor,
+                    int theDrawMode)
 {
 	theImage->mDrawn = true;
 
@@ -411,7 +402,7 @@ void GPUImage::BltF(Image *theImage,
 		{
 			if (anIntersect.mWidth != 0 && anIntersect.mHeight != 0)
 				mRenderer->BltClipF(
-					theImage, theX, theY, theSrcRect, theClipRect, theColor, theDrawMode);
+				    theImage, theX, theY, theSrcRect, theClipRect, theColor, theDrawMode);
 		}
 		else
 			mRenderer->Blt(theImage, theX, theY, theSrcRect, theColor, theDrawMode, true);
@@ -422,29 +413,28 @@ void GPUImage::BltF(Image *theImage,
 		ImplBltF(theImage, theX, theY, theSrcRect, theClipRect, theColor, theDrawMode);
 }
 void GPUImage::ImplBltRotated(Image *theImage,
-	float theX,
-	float theY,
-	const Rect& theSrcRect,
-	const Rect& theClipRect,
-	const Color& theColor,
-	int theDrawMode,
-	double theRot,
-	float theRotCenterX,
-	float theRotCenterY)
+                              float theX,
+                              float theY,
+                              const Rect &theSrcRect,
+                              const Rect &theClipRect,
+                              const Color &theColor,
+                              int theDrawMode,
+                              double theRot,
+                              float theRotCenterX,
+                              float theRotCenterY)
 {
-
 }
 
 void GPUImage::BltRotated(Image *theImage,
-	float theX,
-	float theY,
-	const Rect& theSrcRect,
-	const Rect& theClipRect,
-	const Color& theColor,
-	int theDrawMode,
-	double theRot,
-	float theRotCenterX,
-	float theRotCenterY)
+                          float theX,
+                          float theY,
+                          const Rect &theSrcRect,
+                          const Rect &theClipRect,
+                          const Color &theColor,
+                          int theDrawMode,
+                          double theRot,
+                          float theRotCenterX,
+                          float theRotCenterY)
 {
 	theImage->mDrawn = true;
 
@@ -456,22 +446,22 @@ void GPUImage::BltRotated(Image *theImage,
 	if (Check3D(this))
 	{
 		mRenderer->BltRotated(theImage,
-												theX,
-												theY,
-												theClipRect,
-												theColor,
-												theDrawMode,
-												theRot,
-												theRotCenterX,
-												theRotCenterY,
-												theSrcRect);
+		                      theX,
+		                      theY,
+		                      theClipRect,
+		                      theColor,
+		                      theDrawMode,
+		                      theRot,
+		                      theRotCenterX,
+		                      theRotCenterY,
+		                      theSrcRect);
 		return;
 	}
 
 	if ((mDrawToBits) || (mHasAlpha) || ((mHasTrans) && (!mFirstPixelTrans)))
 	{
 		MemoryImage::BltRotated(
-			theImage, theX, theY, theSrcRect, theClipRect, theColor, theDrawMode, theRot, theRotCenterX, theRotCenterY);
+		    theImage, theX, theY, theSrcRect, theClipRect, theColor, theDrawMode, theRot, theRotCenterX, theRotCenterY);
 		return;
 	}
 
@@ -480,24 +470,22 @@ void GPUImage::BltRotated(Image *theImage,
 	DeleteAllNonSurfaceData();
 }
 void GPUImage::ImplStretchBlt(Image *theImage,
-	const Rect& theDestRect,
-	const Rect& theSrcRect,
-	const Rect& theClipRect,
-	const Color& theColor,
-	int theDrawMode,
-	bool fastStretch)
+                              const Rect &theDestRect,
+                              const Rect &theSrcRect,
+                              const Rect &theClipRect,
+                              const Color &theColor,
+                              int theDrawMode,
+                              bool fastStretch)
 {
-
 }
 
-
 void GPUImage::StretchBlt(Image *theImage,
-	const Rect& theDestRect,
-	const Rect& theSrcRect,
-	const Rect& theClipRect,
-	const Color& theColor,
-	int theDrawMode,
-	bool fastStretch)
+                          const Rect &theDestRect,
+                          const Rect &theSrcRect,
+                          const Rect &theClipRect,
+                          const Color &theColor,
+                          int theDrawMode,
+                          bool fastStretch)
 {
 	theImage->mDrawn = true;
 
@@ -520,34 +508,33 @@ void GPUImage::StretchBlt(Image *theImage,
 	DeleteAllNonSurfaceData();
 }
 void GPUImage::ImplBltMatrix(Image *theImage,
-	float x,
-	float y,
-	const SexyMatrix3& theMatrix,
-	const Rect& theClipRect,
-	const Color& theColor,
-	int theDrawMode,
-	const Rect& theSrcRect,
-	bool blend)
+                             float x,
+                             float y,
+                             const SexyMatrix3 &theMatrix,
+                             const Rect &theClipRect,
+                             const Color &theColor,
+                             int theDrawMode,
+                             const Rect &theSrcRect,
+                             bool blend)
 {
-
 }
 
 void GPUImage::BltMatrix(Image *theImage,
-	float x,
-	float y,
-	const SexyMatrix3& theMatrix,
-	const Rect& theClipRect,
-	const Color& theColor,
-	int theDrawMode,
-	const Rect& theSrcRect,
-	bool blend)
+                         float x,
+                         float y,
+                         const SexyMatrix3 &theMatrix,
+                         const Rect &theClipRect,
+                         const Color &theColor,
+                         int theDrawMode,
+                         const Rect &theSrcRect,
+                         bool blend)
 {
 	theImage->mDrawn = true;
 
 	if (Check3D(this))
 	{
 		mRenderer->BltTransformed(
-			theImage, theClipRect, theColor, theDrawMode, theSrcRect, theMatrix, blend, x, y, true);
+		    theImage, theClipRect, theColor, theDrawMode, theSrcRect, theMatrix, blend, x, y, true);
 		return;
 	}
 
@@ -556,34 +543,33 @@ void GPUImage::BltMatrix(Image *theImage,
 	DeleteAllNonSurfaceData();
 }
 void GPUImage::ImplBltTrianglesTex(Image *theTexture,
-	const TriVertex theVertices[][3],
-	int theNumTriangles,
-	const Rect& theClipRect,
-	const Color& theColor,
-	int theDrawMode,
-	float tx,
-	float ty,
-	bool blend)
+                                   const TriVertex theVertices[][3],
+                                   int theNumTriangles,
+                                   const Rect &theClipRect,
+                                   const Color &theColor,
+                                   int theDrawMode,
+                                   float tx,
+                                   float ty,
+                                   bool blend)
 {
-	
 }
 
 void GPUImage::BltTrianglesTex(Image *theTexture,
-	const TriVertex theVertices[][3],
-	int theNumTriangles,
-	const Rect& theClipRect,
-	const Color& theColor,
-	int theDrawMode,
-	float tx,
-	float ty,
-	bool blend)
+                               const TriVertex theVertices[][3],
+                               int theNumTriangles,
+                               const Rect &theClipRect,
+                               const Color &theColor,
+                               int theDrawMode,
+                               float tx,
+                               float ty,
+                               bool blend)
 {
 	theTexture->mDrawn = true;
 
 	if (Check3D(this))
 	{
 		mRenderer->DrawTrianglesTex(
-			theVertices, theNumTriangles, theColor, theDrawMode, theTexture, tx, ty, blend);
+		    theVertices, theNumTriangles, theColor, theDrawMode, theTexture, tx, ty, blend);
 		return;
 	}
 
@@ -593,13 +579,12 @@ void GPUImage::BltTrianglesTex(Image *theTexture,
 }
 
 void GPUImage::ImplBltMirror(
-	Image* theImage, int theX, int theY, const Rect& theSrcRect, const Color& theColor, int theDrawMode)
+    Image *theImage, int theX, int theY, const Rect &theSrcRect, const Color &theColor, int theDrawMode)
 {
-
 }
 
 void GPUImage::BltMirror(
-	Image* theImage, int theX, int theY, const Rect& theSrcRect, const Color& theColor, int theDrawMode)
+    Image *theImage, int theX, int theY, const Rect &theSrcRect, const Color &theColor, int theDrawMode)
 {
 	DBG_ASSERTE((theColor.mRed >= 0) && (theColor.mRed <= 255));
 	DBG_ASSERTE((theColor.mGreen >= 0) && (theColor.mGreen <= 255));
@@ -621,23 +606,22 @@ void GPUImage::BltMirror(
 }
 
 void GPUImage::ImplStretchBltMirror(Image *theImage,
-	const Rect& theDestRectOrig,
-	const Rect& theSrcRect,
-	const Rect& theClipRect,
-	const Color& theColor,
-	int theDrawMode,
-	bool fastStretch)
+                                    const Rect &theDestRectOrig,
+                                    const Rect &theSrcRect,
+                                    const Rect &theClipRect,
+                                    const Color &theColor,
+                                    int theDrawMode,
+                                    bool fastStretch)
 {
-
 }
 
 void GPUImage::StretchBltMirror(Image *theImage,
-	const Rect& theDestRectOrig,
-	const Rect& theSrcRect,
-	const Rect& theClipRect,
-	const Color& theColor,
-	int theDrawMode,
-	bool fastStretch)
+                                const Rect &theDestRectOrig,
+                                const Rect &theSrcRect,
+                                const Rect &theClipRect,
+                                const Color &theColor,
+                                int theDrawMode,
+                                bool fastStretch)
 {
 	theImage->mDrawn = true;
 
@@ -646,7 +630,7 @@ void GPUImage::StretchBltMirror(Image *theImage,
 	if (Check3D(this))
 	{
 		mRenderer->StretchBlt(
-			theImage, theDestRectOrig, theSrcRect, theClipRect, theColor, theDrawMode, fastStretch, true);
+		    theImage, theDestRectOrig, theSrcRect, theClipRect, theColor, theDrawMode, fastStretch, true);
 		return;
 	}
 
@@ -655,34 +639,33 @@ void GPUImage::StretchBltMirror(Image *theImage,
 	DeleteAllNonSurfaceData();
 }
 
-void GPUImage::ImplBltRawTexture(void* theTexture,
-	int theTexWidth,
-	int theTexHeight,
-	const Rect& theDestRect,
-	const Rect& theSrcRect,
-	const Rect& theClipRect,
-	const Color& theColor,
-	int theDrawMode,
-	bool fastStretch)
+void GPUImage::ImplBltRawTexture(void *theTexture,
+                                 int theTexWidth,
+                                 int theTexHeight,
+                                 const Rect &theDestRect,
+                                 const Rect &theSrcRect,
+                                 const Rect &theClipRect,
+                                 const Color &theColor,
+                                 int theDrawMode,
+                                 bool fastStretch)
 {
-
 }
 
 void GPUImage::BltRawTexture(void *theTexture,
-							 int theTexWidth,
-							 int theTexHeight,
-							 const Rect &theDestRect,
-							 const Rect &theSrcRect,
-							 const Rect &theClipRect,
-							 const Color &theColor,
-							 int theDrawMode)
+                             int theTexWidth,
+                             int theTexHeight,
+                             const Rect &theDestRect,
+                             const Rect &theSrcRect,
+                             const Rect &theClipRect,
+                             const Color &theColor,
+                             int theDrawMode)
 {
 	CommitBits();
 
 	if (Check3D(this))
 	{
 		mRenderer->BltRawTexture(
-			theTexture, theTexWidth, theTexHeight, theDestRect, theSrcRect, theClipRect, theColor, theDrawMode);
+		    theTexture, theTexWidth, theTexHeight, theDestRect, theSrcRect, theClipRect, theColor, theDrawMode);
 		return;
 	}
 

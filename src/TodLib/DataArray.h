@@ -15,7 +15,8 @@ enum
 	DATA_ARRAY_KEY_FIRST = 1
 };
 
-template <typename T> class DataArray
+template <typename T>
+class DataArray
 {
   public:
 	class DataArrayItem

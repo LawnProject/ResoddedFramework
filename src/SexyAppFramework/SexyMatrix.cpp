@@ -58,8 +58,8 @@ SexyVector2 SexyMatrix3::operator*(const SexyVector2 &theVec) const
 SexyVector3 SexyMatrix3::operator*(const SexyVector3 &theVec) const
 {
 	return SexyVector3(m00 * theVec.x + m01 * theVec.y + m02 * theVec.z,
-					   m10 * theVec.x + m11 * theVec.y + m12 * theVec.z,
-					   m20 * theVec.x + m21 * theVec.y + m22 * theVec.z);
+	                   m10 * theVec.x + m11 * theVec.y + m12 * theVec.z,
+	                   m20 * theVec.x + m21 * theVec.y + m22 * theVec.z);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -127,8 +127,8 @@ SexyVector2 SexyMatrix4::operator*(const SexyVector2 &theVec) const
 SexyVector3 SexyMatrix4::operator*(const SexyVector3 &theVec) const
 {
 	return SexyVector3(m00 * theVec.x + m01 * theVec.y + m02 * theVec.z + m03,
-					   m10 * theVec.x + m11 * theVec.y + m12 * theVec.z + m13,
-					   m20 * theVec.x + m21 * theVec.y + m22 * theVec.z + m23);
+	                   m10 * theVec.x + m11 * theVec.y + m12 * theVec.z + m13,
+	                   m20 * theVec.x + m21 * theVec.y + m22 * theVec.z + m23);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -136,9 +136,9 @@ SexyVector3 SexyMatrix4::operator*(const SexyVector3 &theVec) const
 SexyVector4 SexyMatrix4::operator*(const SexyVector4 &theVec) const
 {
 	return SexyVector4(m00 * theVec.x + m01 * theVec.y + m02 * theVec.z + m03 * theVec.w,
-					   m10 * theVec.x + m11 * theVec.y + m12 * theVec.z + m13 * theVec.w,
-					   m20 * theVec.x + m21 * theVec.y + m22 * theVec.z + m23 * theVec.w,
-					   m30 * theVec.x + m31 * theVec.y + m32 * theVec.z + m33 * theVec.w);
+	                   m10 * theVec.x + m11 * theVec.y + m12 * theVec.z + m13 * theVec.w,
+	                   m20 * theVec.x + m21 * theVec.y + m22 * theVec.z + m23 * theVec.w,
+	                   m30 * theVec.x + m31 * theVec.y + m32 * theVec.z + m33 * theVec.w);
 }
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////

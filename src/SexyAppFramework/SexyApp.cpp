@@ -12,7 +12,7 @@ SexyApp *Sexy::gSexyApp = NULL;
 
 // Groups of 80-byte data
 const char DYNAMIC_DATA_BLOCK[400] = "DYN00000PACPOPPOPCAPPACPOPPOPCAPBUILDINFOMARKERPACPOPPOPCAPPACPOPPOPCAPXXXXXXXXX"
-									 "00000000PACPOPPOPCAPPACPOPPOPCAPBUILDINFOMARKERPACPOPPOPCAPPACPOPPOPCAPXXXXXXXXX";
+                                     "00000000PACPOPPOPCAPPACPOPPOPCAPBUILDINFOMARKERPACPOPPOPCAPPACPOPPOPCAPXXXXXXXXX";
 
 const char *BUILD_INFO_MARKER = DYNAMIC_DATA_BLOCK + 80;
 const char *SIGNATURE_CODE_MARKER = DYNAMIC_DATA_BLOCK + 80 * 2;
@@ -43,7 +43,7 @@ SexyApp::SexyApp()
 	mBetaValidate = false;
 
 	SetString("UPDATE_CHECK_BODY",
-			  "Contacting PopCap.com to determine if there are any updates available for this product ...");
+	          "Contacting PopCap.com to determine if there are any updates available for this product ...");
 
 	mBuildNum = gVersion.mBuildNumber;
 	mBuildDate = BUILD_DATE;
@@ -349,7 +349,7 @@ bool SexyApp::OpenRegisterPage(DefinesMap theStatsMap)
 		std::string aValueString = anItr->second;
 
 		aStatsString += StrFormat("%04X", aKeyString.length()) + aKeyString + "S" +
-						StrFormat("%04X", aValueString.length()) + aValueString;
+		                StrFormat("%04X", aValueString.length()) + aValueString;
 
 		++anItr;
 	}
@@ -375,7 +375,7 @@ bool SexyApp::ShouldCheckForUpdate()
 
 	// It is set to 0 if we crash, otherwise ask every week
 	return ((mLastVerCheckQueryTime == 0) || (!mLastShutdownWasGraceful) ||
-			((mLastVerCheckQueryTime != 0) && (aTimeNow - mLastVerCheckQueryTime > 7 * 24 * 60 * 60)));
+	        ((mLastVerCheckQueryTime != 0) && (aTimeNow - mLastVerCheckQueryTime > 7 * 24 * 60 * 60)));
 }
 
 void SexyApp::UpdateCheckQueried()
@@ -479,7 +479,7 @@ void SexyApp::HandleCmdLineParam(const std::string &theParamName, const std::str
 		// Just print version info and then quit
 
 		std::string aVersionString = "Product: " + mProdName + "\r\n" + "Version: " + mProductVersion + "\r\n" +
-									 "Build Num: " + StrFormat("%d", mBuildNum) + "\r\n" + "Build Date: " + mBuildDate;
+		                             "Build Num: " + StrFormat("%d", mBuildNum) + "\r\n" + "Build Date: " + mBuildDate;
 
 		MsgBox("Version Info", aVersionString.c_str(), MESSAGEBOX_INFORMATION | MESSAGEBOX_BTN_OK);
 		DoExit(0);
@@ -494,8 +494,8 @@ std::string SexyApp::GetGameSEHInfo()
 	sprintf(aGamesPlayedStr, "%d", mTimesPlayed);
 
 	std::string anInfoString = SexyAppBase::GetGameSEHInfo() + "Times Played: " + std::string(aGamesPlayedStr) +
-							   "\r\n" + "Build Num: " + StrFormat("%d", mBuildNum) + "\r\n" +
-							   "Build Date: " + mBuildDate + "\r\n";
+	                           "\r\n" + "Build Num: " + StrFormat("%d", mBuildNum) + "\r\n" +
+	                           "Build Date: " + mBuildDate + "\r\n";
 
 	if (mReferId.length() != 0)
 	{
@@ -551,19 +551,19 @@ void SexyApp::Init()
 {
 #if SEXY_CRASH_HANDLER
 	SEHCatcher::mCrashMessage = "An unexpected error has occured!  Pressing 'Send Report' "
-								"will send us helpful debugging information that may help "
-								"us resolve this issue in the future.\n\n"
-								"Contact the developers so this issue can be fixed.";
+	                            "will send us helpful debugging information that may help "
+	                            "us resolve this issue in the future.\n\n"
+	                            "Contact the developers so this issue can be fixed.";
 
 	SEHCatcher::mSubmitMessage = "Please help us out by providing as much information as "
-								 "you can about this crash. Is this the first time it happened? "
-								 "Have you used other games successfully before? "
-								 "Have you upgraded your drivers or any software recently that "
-								 "may be interfering with this program?";
+	                             "you can about this crash. Is this the first time it happened? "
+	                             "Have you used other games successfully before? "
+	                             "Have you upgraded your drivers or any software recently that "
+	                             "may be interfering with this program?";
 
 	SEHCatcher::mSubmitErrorMessage =
-		"Failed to redirect to issue page.  Please check your Internet connection.\n"
-		"If you are on a dial-up connection, you may have to manually connect to your ISP.";
+	    "Failed to redirect to issue page.  Please check your Internet connection.\n"
+	    "If you are on a dial-up connection, you may have to manually connect to your ISP.";
 
 	SEHCatcher::mSubmitHost = "www.popcap.com";
 #endif

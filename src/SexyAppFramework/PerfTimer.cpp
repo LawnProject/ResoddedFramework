@@ -85,7 +85,7 @@ struct PerfInfo
 	mutable int mCallCount;
 
 	PerfInfo(const char *theName)
-		: mPerfName(theName), mStartTime(0), mDuration(0), mStartCount(0), mCallCount(0), mLongestCall(0)
+	    : mPerfName(theName), mStartTime(0), mDuration(0), mStartCount(0), mCallCount(0), mLongestCall(0)
 	{
 	}
 
@@ -265,13 +265,13 @@ std::string SexyPerf::GetResults()
 	{
 		const PerfInfo &anInfo = *anItr;
 		sprintf(aBuf,
-				"%s (%d calls, %%%.2f time): %.2f (%.2f avg, %.2f longest)\n",
-				anInfo.mPerfName,
-				anInfo.mCallCount,
-				anInfo.mMillisecondDuration / gDuration * 100,
-				anInfo.mMillisecondDuration,
-				anInfo.mMillisecondDuration / anInfo.mCallCount,
-				anInfo.mLongestCall);
+		        "%s (%d calls, %%%.2f time): %.2f (%.2f avg, %.2f longest)\n",
+		        anInfo.mPerfName,
+		        anInfo.mCallCount,
+		        anInfo.mMillisecondDuration / gDuration * 100,
+		        anInfo.mMillisecondDuration,
+		        anInfo.mMillisecondDuration / anInfo.mCallCount,
+		        anInfo.mLongestCall);
 		aResult += aBuf;
 	}
 

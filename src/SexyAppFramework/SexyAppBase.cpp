@@ -1134,7 +1134,7 @@ std::string SexyAppBase::GetProductVersionDLL(const std::string &thePath)
 			aProductVersion = aBuffer;
 		}
 		else if (aVerQueryValueFunc(aVersionBuffer, const_cast<LPSTR>("\\StringFileInfo\\040904E4\\ProductVersion"), (void **)&aBuffer,
-									&aSize))
+		                            &aSize))
 		{
 			aProductVersion = aBuffer;
 
@@ -3523,7 +3523,7 @@ bool SexyAppBase::ProcessDeferredMessages(bool singleMessage)
 		anEvent = mDeferredMessages.front();
 		mDeferredMessages.pop_front();
 #if SEXY_USE_IMGUI
-			ImGui_ImplSDL3_ProcessEvent(&anEvent);
+		ImGui_ImplSDL3_ProcessEvent(&anEvent);
 		if (ImGui::GetIO().WantCaptureMouse)
 			break;
 
@@ -5288,7 +5288,7 @@ void SexyAppBase::Init()
 	// Load the embedded SDL_GameControllerDB so generic controllers
 	// (e.g. USB joysticks) are recognized as gamepads.
 	SDL_AddGamepadMappingsFromIO(
-		SDL_IOFromConstMem(GamepadDB::kData, sizeof(GamepadDB::kData) - 1), true);
+	    SDL_IOFromConstMem(GamepadDB::kData, sizeof(GamepadDB::kData) - 1), true);
 #endif
 
 #if SEXY_USE_IMGUI

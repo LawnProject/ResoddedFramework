@@ -29,8 +29,8 @@
 
 static float gFlowerCenter[3][2] = {
 	{ 765.0f, 483.0f },
-    { 663.0f, 455.0f },
-    { 701.0f, 439.0f }
+	{ 663.0f, 455.0f },
+	{ 701.0f, 439.0f }
 };
 
 int gSlideStartTime = 75;

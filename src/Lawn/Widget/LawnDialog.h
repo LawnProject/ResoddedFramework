@@ -53,12 +53,12 @@ class LawnDialog : public Dialog
 
   public:
 	LawnDialog(LawnApp *theApp,
-			   int theId,
-			   bool isModal,
-			   const SexyString &theDialogHeader,
-			   const SexyString &theDialogLines,
-			   const SexyString &theDialogFooter,
-			   int theButtonMode);
+	           int theId,
+	           bool isModal,
+	           const SexyString &theDialogHeader,
+	           const SexyString &theDialogLines,
+	           const SexyString &theDialogFooter,
+	           int theButtonMode);
 	~LawnDialog();
 
 	int GetLeft();

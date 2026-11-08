@@ -10,7 +10,6 @@ using namespace Sexy;
 
 VideoWidget::VideoWidget() : VideoWidget(gSexyAppBase)
 {
-
 }
 
 VideoWidget::VideoWidget(SexyAppBase *theApp)
@@ -68,15 +67,14 @@ VideoWidget::~VideoWidget()
 		switch (mApp->mRenderer->mCurrentBackend)
 		{
 #if SEXY_USE_OPENGL
-			case RenderingBackend::BACKEND_OPENGL: {
-				glDeleteTextures(1, (GLuint *)mVideoTexture); 
-				delete (GLuint *)mVideoTexture;
-				break;
-			}
+		case RenderingBackend::BACKEND_OPENGL: {
+			glDeleteTextures(1, (GLuint *)mVideoTexture);
+			delete (GLuint *)mVideoTexture;
+			break;
+		}
 #endif
 		}
 		mVideoTexture = nullptr;
-
 	}
 }
 
@@ -116,7 +114,7 @@ void VideoWidget::LoadVideo(const SexyString &aPath)
 	{
 		if (mPacket.stream_index == mVidStreamIndex)
 		{
-			avcodec_send_packet(mVideoDecoder,& mPacket);
+			avcodec_send_packet(mVideoDecoder, &mPacket);
 			if (avcodec_receive_frame(mVideoDecoder, mVideoFrame) == 0)
 				break;
 		}
@@ -126,22 +124,21 @@ void VideoWidget::LoadVideo(const SexyString &aPath)
 	switch (mApp->mRenderer->mCurrentBackend)
 	{
 #if SEXY_USE_OPENGL
-		case RenderingBackend::BACKEND_OPENGL: {
-			GLuint aTexID;
-			glGenTextures(1, &aTexID);
-			glBindTexture(GL_TEXTURE_2D, aTexID);
-			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mVidWidth, mVidHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			mVideoTexture = new GLuint(aTexID);
-			break;
-		}
+	case RenderingBackend::BACKEND_OPENGL: {
+		GLuint aTexID;
+		glGenTextures(1, &aTexID);
+		glBindTexture(GL_TEXTURE_2D, aTexID);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mVidWidth, mVidHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		mVideoTexture = new GLuint(aTexID);
+		break;
+	}
 #endif
 	}
-
 
 	//Audio
 
@@ -175,9 +172,9 @@ void VideoWidget::LoadVideo(const SexyString &aPath)
 					uint8_t *aOutput = nullptr;
 					int aLineSize = 0;
 					av_samples_alloc(&aOutput, &aLineSize, mAudioChannels, mAudioFrame->nb_samples, AV_SAMPLE_FMT_S16,
-									 0);
+					                 0);
 					int aNumSamples = swr_convert(mSwrContext, &aOutput, mAudioFrame->nb_samples,
-												  (const uint8_t **)mAudioFrame->data, mAudioFrame->nb_samples);
+					                              (const uint8_t **)mAudioFrame->data, mAudioFrame->nb_samples);
 					int aSize = aNumSamples * mAudioChannels * sizeof(int16_t);
 					alBufferData(aCurrentBuffer, mAudioFormat, aOutput, aSize, 44100);
 					alSourceQueueBuffers(mVidAudioSource, 1, &aCurrentBuffer);
@@ -203,8 +200,8 @@ void VideoWidget::Draw(Graphics *g)
 		return;
 	if (mVideoStartedRendering)
 		g->mDestImage->BltRawTexture(mVideoTexture, mVidWidth, mVidHeight,
-									 Rect(mX + g->mTransX, mY + g->mTransY, mWidth, mHeight),
-									 Rect(0, 0, mVidWidth, mVidHeight), g->mClipRect, g->mColor, g->mDrawMode);
+		                             Rect(mX + g->mTransX, mY + g->mTransY, mWidth, mHeight),
+		                             Rect(0, 0, mVidWidth, mVidHeight), g->mClipRect, g->mColor, g->mDrawMode);
 	else
 	{
 		g->PushState();
@@ -219,7 +216,6 @@ double VideoWidget::GetAudioClock()
 	return (SDL_GetTicks() - mPlayStartTick) / 1000.0;
 }
 
-
 double VideoWidget::GetFrameTime()
 {
 	AVStream *aStream = mFormatContext->streams[mVidStreamIndex];
@@ -233,7 +229,6 @@ void VideoWidget::Update()
 	if (mVideoTexture == nullptr || mPlayStartTick == -1)
 		return;
 
-	
 	ALint aState;
 	alGetSourcei(mVidAudioSource, AL_SOURCE_STATE, &aState);
 	if (aState != AL_PLAYING)
@@ -258,20 +253,20 @@ void VideoWidget::Update()
 			{
 				switch (mApp->mRenderer->mCurrentBackend)
 				{
-	#if SEXY_USE_OPENGL
-					case RenderingBackend::BACKEND_OPENGL: {
-						uint8_t *aData = new uint8_t[mVideoFrame->width * mVideoFrame->height * 4];
-						uint8_t *aDest[4] = {aData, nullptr, nullptr, nullptr};
-						int aDestLineSize[4] = {mVideoFrame->width * 4, 0, 0, 0};
-						sws_scale(mSwSContext, mVideoFrame->data, mVideoFrame->linesize, 0, mVideoFrame->height, aDest,
-								  aDestLineSize);
+#if SEXY_USE_OPENGL
+				case RenderingBackend::BACKEND_OPENGL: {
+					uint8_t *aData = new uint8_t[mVideoFrame->width * mVideoFrame->height * 4];
+					uint8_t *aDest[4] = { aData, nullptr, nullptr, nullptr };
+					int aDestLineSize[4] = { mVideoFrame->width * 4, 0, 0, 0 };
+					sws_scale(mSwSContext, mVideoFrame->data, mVideoFrame->linesize, 0, mVideoFrame->height, aDest,
+					          aDestLineSize);
 
-						glBindTexture(GL_TEXTURE_2D, *(GLuint *)mVideoTexture);
-						glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mVideoFrame->width, mVideoFrame->height, GL_RGBA,
-										GL_UNSIGNED_BYTE, aData);
-						delete[] aData;
-					}
-	#endif
+					glBindTexture(GL_TEXTURE_2D, *(GLuint *)mVideoTexture);
+					glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mVideoFrame->width, mVideoFrame->height, GL_RGBA,
+					                GL_UNSIGNED_BYTE, aData);
+					delete[] aData;
+				}
+#endif
 				}
 
 				mVideoStartedRendering = true;
@@ -294,7 +289,7 @@ void VideoWidget::Update()
 					av_samples_alloc(&aOutput, &aLineSize, mAudioChannels, mAudioFrame->nb_samples, AV_SAMPLE_FMT_S16, 0);
 
 					int aNumSamples = swr_convert(mSwrContext, &aOutput, mAudioFrame->nb_samples, mAudioFrame->data,
-												  mAudioFrame->nb_samples);
+					                              mAudioFrame->nb_samples);
 					int aSize = aNumSamples * mAudioChannels * sizeof(int16_t);
 					alBufferData(aCurrentBuffer, mAudioFormat, aOutput, aSize, 44100);
 					alSourceQueueBuffers(mVidAudioSource, 1, &aCurrentBuffer);
@@ -306,7 +301,6 @@ void VideoWidget::Update()
 		}
 
 		av_packet_unref(&mPacket);
-
 	}
 	if (aNeedsVideo || aNeedsAudio)
 		mFinished = true;

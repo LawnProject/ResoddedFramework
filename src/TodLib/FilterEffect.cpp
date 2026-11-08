@@ -129,7 +129,7 @@ void FilterEffectDoLumSat(MemoryImage *theImage, float theLum, float theSat)
 			HSL_to_RGB(h, s, l, r, g, b);
 
 			*ptr =
-				a << 24 | ClampInt(r * 255, 0, 255) << 16 | ClampInt(g * 255, 0, 255) << 8 | ClampInt(b * 255, 0, 255);
+			    a << 24 | ClampInt(r * 255, 0, 255) << 16 | ClampInt(g * 255, 0, 255) << 8 | ClampInt(b * 255, 0, 255);
 			ptr++;
 		}
 	}

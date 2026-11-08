@@ -4,7 +4,8 @@
 namespace Sexy
 {
 
-template <class _T> class TPoint
+template <class _T>
+class TPoint
 {
   public:
 	_T mX;

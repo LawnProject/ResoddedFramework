@@ -6,7 +6,7 @@
 using namespace Sexy;
 
 HyperlinkWidget::HyperlinkWidget(int theId, ButtonListener *theButtonListener)
-	: ButtonWidget(theId, theButtonListener), mColor(255, 255, 255), mOverColor(255, 255, 255)
+    : ButtonWidget(theId, theButtonListener), mColor(255, 255, 255), mOverColor(255, 255, 255)
 {
 	mDoFinger = true;
 	mUnderlineOffset = 3;

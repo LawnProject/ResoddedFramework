@@ -16,7 +16,7 @@ Image::Image()
 }
 
 Image::Image(const Image &theImage)
-	: mWidth(theImage.mWidth), mHeight(theImage.mHeight), mNumRows(theImage.mNumRows), mNumCols(theImage.mNumCols)
+    : mWidth(theImage.mWidth), mHeight(theImage.mHeight), mNumRows(theImage.mNumRows), mNumCols(theImage.mNumCols)
 {
 	mDrawn = false;
 	if (theImage.mAnimInfo != NULL)
@@ -225,12 +225,12 @@ void Image::DrawRect(const Rect &theRect, const Color &theColor, int theDrawMode
 }
 
 void Image::DrawLine(
-	double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
+    double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
 {
 }
 
 void Image::DrawLineAA(
-	double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
+    double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
 {
 }
 
@@ -244,25 +244,25 @@ void Image::FillScanLines(Span *theSpans, int theSpanCount, const Color &theColo
 }
 
 void Image::FillScanLinesWithCoverage(Span *theSpans,
-									  int theSpanCount,
-									  const Color &theColor,
-									  int theDrawMode,
-									  const uint8_t *theCoverage,
-									  int theCoverX,
-									  int theCoverY,
-									  int theCoverWidth,
-									  int theCoverHeight)
+                                      int theSpanCount,
+                                      const Color &theColor,
+                                      int theDrawMode,
+                                      const uint8_t *theCoverage,
+                                      int theCoverX,
+                                      int theCoverY,
+                                      int theCoverWidth,
+                                      int theCoverHeight)
 {
 }
 
 bool Image::PolyFill3D(const Point theVertices[],
-					   int theNumVertices,
-					   const Rect *theClipRect,
-					   const Color &theColor,
-					   int theDrawMode,
-					   int tx,
-					   int ty,
-					   bool convex)
+                       int theNumVertices,
+                       const Rect *theClipRect,
+                       const Color &theColor,
+                       int theDrawMode,
+                       int tx,
+                       int ty,
+                       bool convex)
 {
 	return false;
 }
@@ -272,83 +272,83 @@ void Image::Blt(Image *theImage, int theX, int theY, const Rect &theSrcRect, con
 }
 
 void Image::BltF(Image *theImage,
-				 float theX,
-				 float theY,
-				 const Rect &theSrcRect,
-				 const Rect &theClipRect,
-				 const Color &theColor,
-				 int theDrawMode)
+                 float theX,
+                 float theY,
+                 const Rect &theSrcRect,
+                 const Rect &theClipRect,
+                 const Color &theColor,
+                 int theDrawMode)
 {
 }
 
 void Image::BltRotated(Image *theImage,
-					   float theX,
-					   float theY,
-					   const Rect &theSrcRect,
-					   const Rect &theClipRect,
-					   const Color &theColor,
-					   int theDrawMode,
-					   double theRot,
-					   float theRotCenterX,
-					   float theRotCenterY)
+                       float theX,
+                       float theY,
+                       const Rect &theSrcRect,
+                       const Rect &theClipRect,
+                       const Color &theColor,
+                       int theDrawMode,
+                       double theRot,
+                       float theRotCenterX,
+                       float theRotCenterY)
 {
 }
 
 void Image::StretchBlt(Image *theImage,
-					   const Rect &theDestRect,
-					   const Rect &theSrcRect,
-					   const Rect &theClipRect,
-					   const Color &theColor,
-					   int theDrawMode,
-					   bool fastStretch)
+                       const Rect &theDestRect,
+                       const Rect &theSrcRect,
+                       const Rect &theClipRect,
+                       const Color &theColor,
+                       int theDrawMode,
+                       bool fastStretch)
 {
 }
 
 void Image::BltMatrix(Image *theImage,
-					  float x,
-					  float y,
-					  const SexyMatrix3 &theMatrix,
-					  const Rect &theClipRect,
-					  const Color &theColor,
-					  int theDrawMode,
-					  const Rect &theSrcRect,
-					  bool blend)
+                      float x,
+                      float y,
+                      const SexyMatrix3 &theMatrix,
+                      const Rect &theClipRect,
+                      const Color &theColor,
+                      int theDrawMode,
+                      const Rect &theSrcRect,
+                      bool blend)
 {
 }
 
 void Image::BltTrianglesTex(Image *theTexture,
-							const TriVertex theVertices[][3],
-							int theNumTriangles,
-							const Rect &theClipRect,
-							const Color &theColor,
-							int theDrawMode,
-							float tx,
-							float ty,
-							bool blend)
+                            const TriVertex theVertices[][3],
+                            int theNumTriangles,
+                            const Rect &theClipRect,
+                            const Color &theColor,
+                            int theDrawMode,
+                            float tx,
+                            float ty,
+                            bool blend)
 {
 }
 
 void Image::BltMirror(
-	Image *theImage, int theX, int theY, const Rect &theSrcRect, const Color &theColor, int theDrawMode)
+    Image *theImage, int theX, int theY, const Rect &theSrcRect, const Color &theColor, int theDrawMode)
 {
 }
 
 void Image::StretchBltMirror(Image *theImage,
-							 const Rect &theDestRect,
-							 const Rect &theSrcRect,
-							 const Rect &theClipRect,
-							 const Color &theColor,
-							 int theDrawMode,
-							 bool fastStretch)
+                             const Rect &theDestRect,
+                             const Rect &theSrcRect,
+                             const Rect &theClipRect,
+                             const Color &theColor,
+                             int theDrawMode,
+                             bool fastStretch)
 {
 }
 void Image::BltRawTexture(void *theTexture,
-						   int theTexWidth,
-						   int theTexHeight,
-						   const Rect &theDestRect,
-						   const Rect &theSrcRect,
-						   const Rect &theClipRect,
-						   const Color &theColor,
-						   int theDrawMode)
+                          int theTexWidth,
+                          int theTexHeight,
+                          const Rect &theDestRect,
+                          const Rect &theSrcRect,
+                          const Rect &theClipRect,
+                          const Color &theColor,
+                          int theDrawMode)
 {
 }

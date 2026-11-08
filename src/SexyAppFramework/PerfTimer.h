@@ -99,15 +99,15 @@ class SexyAutoPerf
 #define SEXY_PERF_END(theName) SexyPerf::StopTiming(theName)
 #define SEXY_AUTO_PERF_MULTI(theName, theSuffix) SexyAutoPerf anAutoPerf##theSuffix(theName)
 #define SEXY_AUTO_PERF_2(theName, theSuffix) SEXY_AUTO_PERF_MULTI(theName, theSuffix)
-#define SEXY_AUTO_PERFL(theName)                                                                                       \
+#define SEXY_AUTO_PERFL(theName) \
 	SEXY_AUTO_PERF_2(theName, __LINE__) // __LINE__ doesn't work correctly if Edit-and-Continue (/ZI) is enabled
 #define SEXY_AUTO_PERF(theName) SEXY_AUTO_PERF_2(theName, UNIQUE)
 
-#define SEXY_PERF_BEGIN_COND(theName, theCond)                                                                         \
-	if (theCond)                                                                                                       \
+#define SEXY_PERF_BEGIN_COND(theName, theCond) \
+	if (theCond)                               \
 	SexyPerf::StartTiming(theName)
-#define SEXY_PERF_END_COND(theName, theCond)                                                                           \
-	if (theCond)                                                                                                       \
+#define SEXY_PERF_END_COND(theName, theCond) \
+	if (theCond)                             \
 	SexyPerf::StopTiming(theName)
 #define SEXY_AUTO_PERF_MULTI_COND(theName, theSuffix, theCond) SexyAutoPerf anAutoPerf##theSuffix(theName, theCond);
 #define SEXY_AUTO_PERF_COND_2(theName, theSuffix, theCond) SEXY_AUTO_PERF_MULTI_COND(theName, theSuffix, theCond);

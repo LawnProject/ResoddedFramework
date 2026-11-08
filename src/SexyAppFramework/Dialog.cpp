@@ -13,23 +13,25 @@ SexyString Sexy::DIALOG_NO_STRING = "NO";
 SexyString Sexy::DIALOG_OK_STRING = "OK";
 SexyString Sexy::DIALOG_CANCEL_STRING = "CANCEL";
 
-static int gDialogColors[][3] = {{255, 255, 255},
-								 {255, 255, 0},
-								 {255, 255, 255},
-								 {255, 255, 255},
-								 {255, 255, 255},
+static int gDialogColors[][3] = {
+	{ 255, 255, 255 },
+	{ 255, 255, 0   },
+	{ 255, 255, 255 },
+	{ 255, 255, 255 },
+	{ 255, 255, 255 },
 
-								 {80, 80, 80},
-								 {255, 255, 255}};
+	{ 80,  80,  80  },
+	{ 255, 255, 255 }
+};
 
 Dialog::Dialog(Image *theComponentImage,
-			   Image *theButtonComponentImage,
-			   int theId,
-			   bool isModal,
-			   const SexyString &theDialogHeader,
-			   const SexyString &theDialogLines,
-			   const SexyString &theDialogFooter,
-			   int theButtonMode)
+               Image *theButtonComponentImage,
+               int theId,
+               bool isModal,
+               const SexyString &theDialogHeader,
+               const SexyString &theDialogLines,
+               const SexyString &theDialogFooter,
+               int theButtonMode)
 {
 	mId = theId;
 	mResult = 0x7FFFFFFF;
@@ -180,10 +182,10 @@ int Dialog::GetPreferredHeight(int theWidth)
 		Graphics g;
 		g.SetFont(mLinesFont);
 		aHeight += GetWordWrappedHeight(&g,
-										theWidth - mContentInsets.mLeft - mContentInsets.mRight -
-											mBackgroundInsets.mLeft - mBackgroundInsets.mRight - 4,
-										mDialogLines,
-										mLinesFont->GetLineSpacing() + mLineSpacingOffset);
+		                                theWidth - mContentInsets.mLeft - mContentInsets.mRight -
+		                                    mBackgroundInsets.mLeft - mBackgroundInsets.mRight - 4,
+		                                mDialogLines,
+		                                mLinesFont->GetLineSpacing() + mLineSpacingOffset);
 		needSpace = true;
 	}
 
@@ -210,9 +212,9 @@ void Dialog::Draw(Graphics *g)
 	EnsureFonts();
 
 	Rect aBoxRect(mBackgroundInsets.mLeft,
-				  mBackgroundInsets.mTop,
-				  mWidth - mBackgroundInsets.mLeft - mBackgroundInsets.mRight,
-				  mHeight - mBackgroundInsets.mTop - mBackgroundInsets.mBottom);
+	              mBackgroundInsets.mTop,
+	              mWidth - mBackgroundInsets.mLeft - mBackgroundInsets.mRight,
+	              mHeight - mBackgroundInsets.mTop - mBackgroundInsets.mBottom);
 	if (mComponentImage != NULL)
 	{
 		g->DrawImageBox(aBoxRect, mComponentImage);
@@ -255,10 +257,10 @@ void Dialog::Draw(Graphics *g)
 	}*/
 
 	Rect aRect(mBackgroundInsets.mLeft + mContentInsets.mLeft + 2,
-			   aCurY,
-			   mWidth - mContentInsets.mLeft - mContentInsets.mRight - mBackgroundInsets.mLeft -
-				   mBackgroundInsets.mRight - 4,
-			   0);
+	           aCurY,
+	           mWidth - mContentInsets.mLeft - mContentInsets.mRight - mBackgroundInsets.mLeft -
+	               mBackgroundInsets.mRight - 4,
+	           0);
 	aCurY += WriteWordWrapped(g, aRect, mDialogLines, mLinesFont->GetLineSpacing() + mLineSpacingOffset, mTextAlign);
 
 	if ((mDialogFooter.length() != 0) && (mButtonMode != BUTTONS_FOOTER))
@@ -308,14 +310,14 @@ void Dialog::Resize(int theX, int theY, int theWidth, int theHeight)
 	if ((mYesButton != NULL) && (mNoButton != NULL))
 	{
 		int aBtnWidth = (mWidth - mContentInsets.mLeft - mContentInsets.mRight - mBackgroundInsets.mLeft -
-						 mBackgroundInsets.mRight - mButtonSidePadding * 2 - mButtonHorzSpacing) /
-						2;
+		                 mBackgroundInsets.mRight - mButtonSidePadding * 2 - mButtonHorzSpacing) /
+		                2;
 		int aBtnHeight = mButtonHeight;
 
 		mYesButton->Resize(mX + mBackgroundInsets.mLeft + mContentInsets.mLeft + mButtonSidePadding,
-						   mY + mHeight - mContentInsets.mBottom - mBackgroundInsets.mBottom - aBtnHeight,
-						   aBtnWidth,
-						   aBtnHeight);
+		                   mY + mHeight - mContentInsets.mBottom - mBackgroundInsets.mBottom - aBtnHeight,
+		                   aBtnWidth,
+		                   aBtnHeight);
 		mNoButton->Resize(mYesButton->mX + aBtnWidth + mButtonHorzSpacing, mYesButton->mY, aBtnWidth, aBtnHeight);
 	}
 	else if (mYesButton != NULL)
@@ -323,10 +325,10 @@ void Dialog::Resize(int theX, int theY, int theWidth, int theHeight)
 		int aBtnHeight = mButtonHeight;
 
 		mYesButton->Resize(mX + mContentInsets.mLeft + mBackgroundInsets.mLeft,
-						   mY + mHeight - mContentInsets.mBottom - mBackgroundInsets.mBottom - aBtnHeight,
-						   mWidth - mContentInsets.mLeft - mContentInsets.mRight - mBackgroundInsets.mLeft -
-							   mBackgroundInsets.mRight,
-						   aBtnHeight);
+		                   mY + mHeight - mContentInsets.mBottom - mBackgroundInsets.mBottom - aBtnHeight,
+		                   mWidth - mContentInsets.mLeft - mContentInsets.mRight - mBackgroundInsets.mLeft -
+		                       mBackgroundInsets.mRight,
+		                   aBtnHeight);
 	}
 }
 

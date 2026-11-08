@@ -64,27 +64,27 @@ class Attachment
 	void Detach();
 	void CrossFade(const char *theCrossFadeName);
 	void PropogateColor(const Color &theColor,
-						bool theEnableAdditiveColor,
-						const Color &theAdditiveColor,
-						bool theEnableOverlayColor,
-						const Color &theOverlayColor);
+	                    bool theEnableAdditiveColor,
+	                    const Color &theAdditiveColor,
+	                    bool theEnableOverlayColor,
+	                    const Color &theOverlayColor);
 };
 
 AttachEffect *AttachReanim(AttachmentID &theAttachmentID,
-						   Reanimation *theReanimation,
-						   float theOffsetX,
-						   float theOffsetY);
+                           Reanimation *theReanimation,
+                           float theOffsetX,
+                           float theOffsetY);
 AttachEffect *AttachParticle(AttachmentID &theAttachmentID,
-							 TodParticleSystem *theParticleSystem,
-							 float theOffsetX,
-							 float theOffsetY);
+                             TodParticleSystem *theParticleSystem,
+                             float theOffsetX,
+                             float theOffsetY);
 AttachEffect *AttachTrail(AttachmentID &theAttachmentID, Trail *theTrail, float theOffsetX, float theOffsetY);
 void AttachmentPropogateColor(AttachmentID &theAttachmentID,
-										 const Color &theColor,
-										 bool theEnableAdditiveColor,
-										 const Color &theAdditiveColor,
-										 bool theEnableOverlayColor,
-										 const Color &theOverlayColor);
+                              const Color &theColor,
+                              bool theEnableAdditiveColor,
+                              const Color &theAdditiveColor,
+                              bool theEnableOverlayColor,
+                              const Color &theOverlayColor);
 void AttachmentOverrideColor(AttachmentID &theAttachmentID, const Color &theColor);
 void AttachmentOverrideScale(AttachmentID &theAttachmentID, float theScale);
 void AttachmentUpdateAndMove(AttachmentID &theAttachmentID, float theX, float theY);
@@ -92,18 +92,18 @@ void AttachmentUpdateAndSetMatrix(AttachmentID &theAttachmentID, SexyTransform2D
 void AttachmentDraw(AttachmentID &theAttachmentID, Graphics *g, bool theParentHidden);
 void AttachmentDetach(AttachmentID &theAttachmentID);
 void AttachmentDetachCrossFadeParticleType(AttachmentID &theAttachmentID,
-													  ParticleEffect theParticleEffect,
-													  const char *theCrossFadeName);
+                                           ParticleEffect theParticleEffect,
+                                           const char *theCrossFadeName);
 void AttachmentReanimTypeDie(AttachmentID &theAttachmentID, ReanimationType theReanimType);
 void AttachmentDie(AttachmentID &theAttachmentID);
 void AttachmentCrossFade(AttachmentID &theAttachmentID, const char *theCrossFadeName);
 AttachEffect *FindFirstAttachment(AttachmentID &theAttachmentID);
 Reanimation *FindReanimAttachment(AttachmentID &theAttachmentID);
 AttachEffect *CreateEffectAttachment(AttachmentID &theAttachmentID,
-									 EffectType theEffectType,
-									 unsigned int theDataID,
-									 float theOffsetX,
-									 float theOffsetY);
+                                     EffectType theEffectType,
+                                     unsigned int theDataID,
+                                     float theOffsetX,
+                                     float theOffsetY);
 bool IsFullOfAttachments(AttachmentID &theAttachmentID);
 
 class AttachmentHolder

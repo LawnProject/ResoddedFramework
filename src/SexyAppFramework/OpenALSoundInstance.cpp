@@ -3,8 +3,7 @@
 
 using namespace Sexy;
 
-
-OpenALSoundInstance::OpenALSoundInstance(OpenALSoundManager* theSoundManager, ALuint theSourceSound)
+OpenALSoundInstance::OpenALSoundInstance(OpenALSoundManager *theSoundManager, ALuint theSourceSound)
 {
 	mSoundManagerP = theSoundManager;
 	mReleased = false;
@@ -51,7 +50,6 @@ void OpenALSoundInstance::RehupPan()
 		alSourcei(mSoundSource, AL_SOURCE_RELATIVE, AL_TRUE);
 		alSource3f(mSoundSource, AL_POSITION, mBasePan + mPan, 0, -1.0f);
 	}
-		
 }
 
 void OpenALSoundInstance::Release()

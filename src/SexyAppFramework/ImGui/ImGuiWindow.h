@@ -23,6 +23,6 @@ class ImGuiWindow
 	ImGuiManager *mManager;
 };
 
-}
+} // namespace Sexy
 
 #endif

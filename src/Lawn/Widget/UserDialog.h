@@ -10,7 +10,7 @@ namespace Sexy
 {
 class ListWidget;
 class Slider;
-};
+}; // namespace Sexy
 
 class UserDialog : public LawnDialog, public ListListener, public EditListener, public SliderListener
 {

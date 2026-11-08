@@ -26,7 +26,6 @@ class NewOptionsDialog : public Sexy::Dialog, public Sexy::SliderListener, publi
 		NewOptionsDialog_MusicVolume,
 		NewOptionsDialog_SoundVolume,
 		NewOptionsDialog_Settings,
-
 	};
 
   public:

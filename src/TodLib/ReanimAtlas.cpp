@@ -104,7 +104,7 @@ bool ReanimAtlas::ImageFits(int theImageCount, const Rect &rectTest, int theMaxW
 }
 
 bool ReanimAtlas::ImageFindPlaceOnSide(ReanimAtlasImage *theAtlasImageToPlace, int theImageCount, int theMaxWidth,
-									   bool theToRight)
+                                       bool theToRight)
 {
 	Rect rectTest;
 	rectTest.mWidth = theAtlasImageToPlace->mWidth + 2;
@@ -143,7 +143,7 @@ bool ReanimAtlas::ImageFindPlaceOnSide(ReanimAtlasImage *theAtlasImageToPlace, i
 bool ReanimAtlas::ImageFindPlace(ReanimAtlasImage *theAtlasImageToPlace, int theImageCount, int theMaxWidth)
 {
 	return ImageFindPlaceOnSide(theAtlasImageToPlace, theImageCount, theMaxWidth, true) ||
-		   ImageFindPlaceOnSide(theAtlasImageToPlace, theImageCount, theMaxWidth, false);
+	       ImageFindPlaceOnSide(theAtlasImageToPlace, theImageCount, theMaxWidth, false);
 }
 
 bool ReanimAtlas::PlaceAtlasImage(ReanimAtlasImage *theAtlasImageToPlace, int theImageCount, int theMaxWidth)

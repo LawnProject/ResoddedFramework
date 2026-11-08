@@ -147,7 +147,7 @@ int ScrollbarWidget::GetThumbPosition()
 	if (mPageSize > mMaxValue)
 		return mUpButton->mWidth;
 	return (int)((double)(((mValue * (GetTrackSize() - GetThumbSize())) / (mMaxValue - mPageSize))) + 0.5) +
-		   mUpButton->mWidth;
+	       mUpButton->mWidth;
 }
 
 void ScrollbarWidget::Draw(Graphics *g)

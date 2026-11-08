@@ -69,61 +69,61 @@ class MemoryImage : public Image
 	void AdditiveDrawLineAA(double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor);
 
 	void SlowStretchBlt(
-		Image *theImage, const Rect &theDestRect, const FRect &theSrcRect, const Color &theColor, int theDrawMode);
+	    Image *theImage, const Rect &theDestRect, const FRect &theSrcRect, const Color &theColor, int theDrawMode);
 	void FastStretchBlt(
-		Image *theImage, const Rect &theDestRect, const FRect &theSrcRect, const Color &theColor, int theDrawMode);
+	    Image *theImage, const Rect &theDestRect, const FRect &theSrcRect, const Color &theColor, int theDrawMode);
 	bool BltRotatedClipHelper(float &theX,
-							  float &theY,
-							  const Rect &theSrcRect,
-							  const Rect &theClipRect,
-							  double theRot,
-							  FRect &theDestRect,
-							  float theRotCenterX,
-							  float theRotCenterY);
+	                          float &theY,
+	                          const Rect &theSrcRect,
+	                          const Rect &theClipRect,
+	                          double theRot,
+	                          FRect &theDestRect,
+	                          float theRotCenterX,
+	                          float theRotCenterY);
 	bool StretchBltClipHelper(const Rect &theSrcRect,
-							  const Rect &theClipRect,
-							  const Rect &theDestRect,
-							  FRect &theSrcRectOut,
-							  Rect &theDestRectOut);
+	                          const Rect &theClipRect,
+	                          const Rect &theDestRect,
+	                          FRect &theSrcRectOut,
+	                          Rect &theDestRectOut);
 	bool StretchBltMirrorClipHelper(const Rect &theSrcRect,
-									const Rect &theClipRect,
-									const Rect &theDestRect,
-									FRect &theSrcRectOut,
-									Rect &theDestRectOut);
+	                                const Rect &theClipRect,
+	                                const Rect &theDestRect,
+	                                FRect &theSrcRectOut,
+	                                Rect &theDestRectOut);
 	void BltMatrixHelper(Image *theImage,
-						 float x,
-						 float y,
-						 const SexyMatrix3 &theMatrix,
-						 const Rect &theClipRect,
-						 const Color &theColor,
-						 int theDrawMode,
-						 const Rect &theSrcRect,
-						 void *theSurface,
-						 int theBytePitch,
-						 int thePixelFormat,
-						 bool blend);
+	                     float x,
+	                     float y,
+	                     const SexyMatrix3 &theMatrix,
+	                     const Rect &theClipRect,
+	                     const Color &theColor,
+	                     int theDrawMode,
+	                     const Rect &theSrcRect,
+	                     void *theSurface,
+	                     int theBytePitch,
+	                     int thePixelFormat,
+	                     bool blend);
 	void BltTrianglesTexHelper(Image *theTexture,
-							   const TriVertex theVertices[][3],
-							   int theNumTriangles,
-							   const Rect &theClipRect,
-							   const Color &theColor,
-							   int theDrawMode,
-							   void *theSurface,
-							   int theBytePitch,
-							   int thePixelFormat,
-							   float tx,
-							   float ty,
-							   bool blend);
+	                           const TriVertex theVertices[][3],
+	                           int theNumTriangles,
+	                           const Rect &theClipRect,
+	                           const Color &theColor,
+	                           int theDrawMode,
+	                           void *theSurface,
+	                           int theBytePitch,
+	                           int thePixelFormat,
+	                           float tx,
+	                           float ty,
+	                           bool blend);
 
 	void FillScanLinesWithCoverage(Span *theSpans,
-								   int theSpanCount,
-								   const Color &theColor,
-								   int theDrawMode,
-								   const uint8_t *theCoverage,
-								   int theCoverX,
-								   int theCoverY,
-								   int theCoverWidth,
-								   int theCoverHeight);
+	                               int theSpanCount,
+	                               const Color &theColor,
+	                               int theDrawMode,
+	                               const uint8_t *theCoverage,
+	                               int theCoverX,
+	                               int theCoverY,
+	                               int theCoverWidth,
+	                               int theCoverHeight);
 
   public:
 	MemoryImage();
@@ -139,62 +139,62 @@ class MemoryImage : public Image
 	virtual void FillRect(const Rect &theRect, const Color &theColor, int theDrawMode);
 	virtual void ClearRect(const Rect &theRect);
 	virtual void DrawLine(
-		double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode);
+	    double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode);
 	virtual void DrawLineAA(
-		double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode);
+	    double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode);
 
 	virtual void Blt(
-		Image *theImage, int theX, int theY, const Rect &theSrcRect, const Color &theColor, int theDrawMode);
+	    Image *theImage, int theX, int theY, const Rect &theSrcRect, const Color &theColor, int theDrawMode);
 	virtual void BltF(Image *theImage,
-					  float theX,
-					  float theY,
-					  const Rect &theSrcRect,
-					  const Rect &theClipRect,
-					  const Color &theColor,
-					  int theDrawMode);
+	                  float theX,
+	                  float theY,
+	                  const Rect &theSrcRect,
+	                  const Rect &theClipRect,
+	                  const Color &theColor,
+	                  int theDrawMode);
 	virtual void BltRotated(Image *theImage,
-							float theX,
-							float theY,
-							const Rect &theSrcRect,
-							const Rect &theClipRect,
-							const Color &theColor,
-							int theDrawMode,
-							double theRot,
-							float theRotCenterX,
-							float theRotCenterY);
+	                        float theX,
+	                        float theY,
+	                        const Rect &theSrcRect,
+	                        const Rect &theClipRect,
+	                        const Color &theColor,
+	                        int theDrawMode,
+	                        double theRot,
+	                        float theRotCenterX,
+	                        float theRotCenterY);
 	virtual void StretchBlt(Image *theImage,
-							const Rect &theDestRect,
-							const Rect &theSrcRect,
-							const Rect &theClipRect,
-							const Color &theColor,
-							int theDrawMode,
-							bool fastStretch);
+	                        const Rect &theDestRect,
+	                        const Rect &theSrcRect,
+	                        const Rect &theClipRect,
+	                        const Color &theColor,
+	                        int theDrawMode,
+	                        bool fastStretch);
 	virtual void BltMatrix(Image *theImage,
-						   float x,
-						   float y,
-						   const SexyMatrix3 &theMatrix,
-						   const Rect &theClipRect,
-						   const Color &theColor,
-						   int theDrawMode,
-						   const Rect &theSrcRect,
-						   bool blend);
+	                       float x,
+	                       float y,
+	                       const SexyMatrix3 &theMatrix,
+	                       const Rect &theClipRect,
+	                       const Color &theColor,
+	                       int theDrawMode,
+	                       const Rect &theSrcRect,
+	                       bool blend);
 	virtual void BltTrianglesTex(Image *theTexture,
-								 const TriVertex theVertices[][3],
-								 int theNumTriangles,
-								 const Rect &theClipRect,
-								 const Color &theColor,
-								 int theDrawMode,
-								 float tx,
-								 float ty,
-								 bool blend);
+	                             const TriVertex theVertices[][3],
+	                             int theNumTriangles,
+	                             const Rect &theClipRect,
+	                             const Color &theColor,
+	                             int theDrawMode,
+	                             float tx,
+	                             float ty,
+	                             bool blend);
 	virtual void BltRawTexture(void *theTexture,
-							int theTexWidth,
-							int theTexHeight,
-							const Rect &theDestRect,
-							const Rect &theSrcRect,
-							const Rect &theClipRect,
-							const Color &theColor,
-							int theDrawMode);
+	                           int theTexWidth,
+	                           int theTexHeight,
+	                           const Rect &theDestRect,
+	                           const Rect &theSrcRect,
+	                           const Rect &theClipRect,
+	                           const Color &theColor,
+	                           int theDrawMode);
 	virtual void SetImageMode(bool hasTrans, bool hasAlpha);
 	virtual void SetVolatile(bool isVolatile);
 

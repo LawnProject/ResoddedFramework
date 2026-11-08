@@ -20,7 +20,7 @@ constexpr const int RENDER_GROUP_BOSS_FRONT_LEG = 5;
 constexpr const int RENDER_GROUP_BOSS_BACK_ARM = 6;
 constexpr const int RENDER_GROUP_BOSS_FIREBALL_ADDITIVE = 7;
 constexpr const int RENDER_GROUP_BOSS_FIREBALL_TOP = 8;
-constexpr const int RENDER_GROUP_ZOMBATAR_COSMETICS= 9;
+constexpr const int RENDER_GROUP_ZOMBATAR_COSMETICS = 9;
 constexpr const int ZOMBIE_LIMP_SPEED_FACTOR = 2;
 constexpr const int POGO_BOUNCE_TIME = 80;
 constexpr const int DOLPHIN_JUMP_TIME = 120;
@@ -156,7 +156,7 @@ class Zombie : public GameObject
 	PlantID mTargetPlantID;
 	int mBossMode;
 	int mTargetRow;
-	int mBossBungeeCounter;	
+	int mBossBungeeCounter;
 	int mBossStompCounter;
 	int mBossHeadCounter;
 	ReanimationID mBossFireBallReanimID;
@@ -164,7 +164,7 @@ class Zombie : public GameObject
 	int mFireballRow;
 	bool mIsFireBall;
 	ReanimationID mMoweredReanimID;
-	int mLastPortalX;	
+	int mLastPortalX;
 	bool mHasSetupZombatar;
 	Zombatar mZombatar;
 
@@ -175,7 +175,6 @@ class Zombie : public GameObject
 	ReanimationID mHairReanimID;
 	ReanimationID mEyewearReanimID;
 	ReanimationID mHatReanimID;
-
 
   public:
 	Zombie();
@@ -273,7 +272,7 @@ class Zombie : public GameObject
 
 	/// @brief Land the BungeeZombie
 	void BungeeLanding();
-	
+
 	/// @brief Is the Zombie affected by these damage flags
 	/// @param theDamageFlags Bitmask of damage types
 	bool EffectedByDamage(unsigned int theDamageRangeFlags);
@@ -385,7 +384,7 @@ class Zombie : public GameObject
 	/// @brief Override the colors of the particles to match the Zombie's color
 	/// @param aParticle The particle system to update
 	void OverrideParticleColor(TodParticleSystem *aParticle);
-	
+
 	/// @brief Override the scale of the particles to match the Zombie's scale
 	/// @param aParticle The particle system to update
 	void OverrideParticleScale(TodParticleSystem *aParticle);

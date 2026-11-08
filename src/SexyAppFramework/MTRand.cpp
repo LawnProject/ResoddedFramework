@@ -44,7 +44,7 @@ using namespace Sexy;
 
 /* Period parameters */
 #define MTRAND_M 397
-#define MATRIX_A 0x9908b0dfUL	/* constant vector a */
+#define MATRIX_A 0x9908b0dfUL   /* constant vector a */
 #define UPPER_MASK 0x80000000UL /* most significant w-r bits */
 #define LOWER_MASK 0x7fffffffUL /* least significant r bits */
 
@@ -127,7 +127,7 @@ unsigned long MTRand::Next()
 unsigned long MTRand::NextNoAssert()
 {
 	unsigned long y;
-	static unsigned long mag01[2] = {0x0, MATRIX_A};
+	static unsigned long mag01[2] = { 0x0, MATRIX_A };
 	/* mag01[x] = x * MATRIX_A  for x=0,1 */
 
 	if (mti >= MTRAND_N)

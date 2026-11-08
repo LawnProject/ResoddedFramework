@@ -83,27 +83,27 @@ class Widget : public WidgetContainer
 
 	virtual Rect WriteCenteredLine(Graphics *g, int anOffset, const SexyString &theLine);
 	virtual Rect WriteCenteredLine(Graphics *g,
-								   int anOffset,
-								   const SexyString &theLine,
-								   Color theColor1,
-								   Color theColor2,
-								   const Point &theShadowOffset = Point(1, 2));
+	                               int anOffset,
+	                               const SexyString &theLine,
+	                               Color theColor1,
+	                               Color theColor2,
+	                               const Point &theShadowOffset = Point(1, 2));
 
 	virtual int WriteString(Graphics *g,
-							const SexyString &theString,
-							int theX,
-							int theY,
-							int theWidth = -1,
-							int theJustification = -1,
-							bool drawString = true,
-							int theOffset = 0,
-							int theLength = -1);
+	                        const SexyString &theString,
+	                        int theX,
+	                        int theY,
+	                        int theWidth = -1,
+	                        int theJustification = -1,
+	                        bool drawString = true,
+	                        int theOffset = 0,
+	                        int theLength = -1);
 	virtual int WriteWordWrapped(
-		Graphics *g, const Rect &theRect, const SexyString &theLine, int theLineSpacing, int theJustification);
+	    Graphics *g, const Rect &theRect, const SexyString &theLine, int theLineSpacing, int theJustification);
 	virtual int GetWordWrappedHeight(Graphics *g, int theWidth, const SexyString &theLine, int aLineSpacing);
 	virtual int GetNumDigits(int theNumber);
 	virtual void WriteNumberFromStrip(
-		Graphics *g, int theNumber, int theX, int theY, Image *theNumberStrip, int aSpacing);
+	    Graphics *g, int theNumber, int theX, int theY, Image *theNumberStrip, int aSpacing);
 	virtual bool Contains(int theX, int theY);
 	virtual Rect GetInsetRect();
 	void DeferOverlay(int thePriority = 0);
@@ -135,11 +135,11 @@ class Widget : public WidgetContainer
 	}
 
 	void Layout(int theLayoutFlags,
-				Widget *theRelativeWidget,
-				int theLeftPad = 0,
-				int theTopPad = 0,
-				int theWidthPad = 0,
-				int theHeightPad = 0);
+	            Widget *theRelativeWidget,
+	            int theLeftPad = 0,
+	            int theTopPad = 0,
+	            int theWidthPad = 0,
+	            int theHeightPad = 0);
 };
 
 /////// Layout flags used in Widget::Layout method

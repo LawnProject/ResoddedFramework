@@ -5,7 +5,7 @@
 using namespace Sexy;
 
 ScrollbuttonWidget::ScrollbuttonWidget(int theId, ButtonListener *theButtonListener, int theType)
-	: ButtonWidget(theId, theButtonListener)
+    : ButtonWidget(theId, theButtonListener)
 {
 	mHorizontal = false;
 	mType = theType;
@@ -56,7 +56,7 @@ void ScrollbuttonWidget::Draw(Graphics *g)
 				g->FillRect(i + (mWidth - 4) / 2 + anArrowOffset, mHeight / 2 - i - 1 + anArrowOffset, 1, 1 + i * 2);
 			else
 				g->FillRect(
-					(3 - i) + (mWidth - 4) / 2 + anArrowOffset, mHeight / 2 - i - 1 + anArrowOffset, 1, 1 + i * 2);
+				    (3 - i) + (mWidth - 4) / 2 + anArrowOffset, mHeight / 2 - i - 1 + anArrowOffset, 1, 1 + i * 2);
 		}
 	}
 	else
@@ -67,7 +67,7 @@ void ScrollbuttonWidget::Draw(Graphics *g)
 				g->FillRect(mWidth / 2 - i - 1 + anArrowOffset, i + (mHeight - 4) / 2 + anArrowOffset, 1 + i * 2, 1);
 			else
 				g->FillRect(
-					mWidth / 2 - i - 1 + anArrowOffset, (3 - i) + (mHeight - 4) / 2 + anArrowOffset, 1 + i * 2, 1);
+				    mWidth / 2 - i - 1 + anArrowOffset, (3 - i) + (mHeight - 4) / 2 + anArrowOffset, 1 + i * 2, 1);
 		}
 	}
 }

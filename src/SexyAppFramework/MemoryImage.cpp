@@ -33,10 +33,10 @@ MemoryImage::MemoryImage(SexyAppBase *theApp)
 }
 
 MemoryImage::MemoryImage(const MemoryImage &theMemoryImage)
-	: Image(theMemoryImage), mApp(theMemoryImage.mApp), mHasAlpha(theMemoryImage.mHasAlpha),
-	  mHasTrans(theMemoryImage.mHasTrans), mBitsChanged(theMemoryImage.mBitsChanged),
-	  mIsVolatile(theMemoryImage.mIsVolatile), mPurgeBits(theMemoryImage.mPurgeBits), mWantPal(theMemoryImage.mWantPal),
-	  mGPUFlags(theMemoryImage.mGPUFlags), mBitsChangedCount(theMemoryImage.mBitsChangedCount), mGPUData(NULL)
+    : Image(theMemoryImage), mApp(theMemoryImage.mApp), mHasAlpha(theMemoryImage.mHasAlpha),
+      mHasTrans(theMemoryImage.mHasTrans), mBitsChanged(theMemoryImage.mBitsChanged),
+      mIsVolatile(theMemoryImage.mIsVolatile), mPurgeBits(theMemoryImage.mPurgeBits), mWantPal(theMemoryImage.mWantPal),
+      mGPUFlags(theMemoryImage.mGPUFlags), mBitsChangedCount(theMemoryImage.mBitsChangedCount), mGPUData(NULL)
 {
 	bool deleteBits = false;
 
@@ -175,7 +175,7 @@ void MemoryImage::BitsChanged()
 }
 
 void MemoryImage::NormalDrawLine(
-	double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor)
+    double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor)
 {
 	double aMinX = std::min(theStartX, theEndX);
 	double aMinY = std::min(theStartY, theEndY);
@@ -196,8 +196,8 @@ void MemoryImage::NormalDrawLine(
 		if (theColor.mAlpha == 255)
 		{
 			uint32_t aColor = 0xFF000000 | ((((theColor.mRed * aRMask) + aRRoundAdd) >> 8) & aRMask) |
-						   ((((theColor.mGreen * aGMask) + aGRoundAdd) >> 8) & aGMask) |
-						   ((((theColor.mBlue * aBMask) + aBRoundAdd) >> 8) & aBMask);
+			                  ((((theColor.mGreen * aGMask) + aGRoundAdd) >> 8) & aGMask) |
+			                  ((((theColor.mBlue * aBMask) + aBRoundAdd) >> 8) & aBMask);
 
 			double dv = theEndY - theStartY;
 			double dh = theEndX - theStartX;
@@ -323,9 +323,9 @@ void MemoryImage::NormalDrawLine(
 		else
 		{
 			uint32_t src = 0xFF000000 |
-						((((((theColor.mRed * theColor.mAlpha + 0x80) >> 8) * aRMask) + aRRoundAdd) >> 8) & aRMask) |
-						((((((theColor.mGreen * theColor.mAlpha + 0x80) >> 8) * aGMask) + aGRoundAdd) >> 8) & aGMask) |
-						((((((theColor.mBlue * theColor.mAlpha + 0x80) >> 8) * aBMask) + aBRoundAdd) >> 8) & aBMask);
+			               ((((((theColor.mRed * theColor.mAlpha + 0x80) >> 8) * aRMask) + aRRoundAdd) >> 8) & aRMask) |
+			               ((((((theColor.mGreen * theColor.mAlpha + 0x80) >> 8) * aGMask) + aGRoundAdd) >> 8) & aGMask) |
+			               ((((((theColor.mBlue * theColor.mAlpha + 0x80) >> 8) * aBMask) + aBRoundAdd) >> 8) & aBMask);
 			int oma = 256 - theColor.mAlpha;
 
 			double dv = theEndY - theStartY;
@@ -362,8 +362,8 @@ void MemoryImage::NormalDrawLine(
 				uint32_t *aDestPixels = ((uint32_t *)aSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
 				uint32_t dest = *aDestPixels;
 				*(aDestPixels++) = src + (((((dest & aRMask) * oma) + aRRoundAdd) >> 8) & aRMask) +
-								   (((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
-								   (((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
+				                   (((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
+				                   (((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
 
 				aCurY = theStartY;
 				aCurX = theStartX + 1;
@@ -390,8 +390,8 @@ void MemoryImage::NormalDrawLine(
 
 					dest = *aDestPixels;
 					*(aDestPixels++) = src + (((((dest & aRMask) * oma) + aRRoundAdd) >> 8) & aRMask) +
-									   (((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
-									   (((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
+					                   (((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
+					                   (((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
 
 					aCurX++;
 				}
@@ -420,8 +420,8 @@ void MemoryImage::NormalDrawLine(
 				uint32_t *aDestPixels = ((uint32_t *)aSurface) + ((int)theStartY * aRowWidth) + (int)theStartX;
 				uint32_t dest = *aDestPixels;
 				*aDestPixels = src + (((((dest & aRMask) * oma) + aRRoundAdd) >> 8) & aRMask) +
-							   (((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
-							   (((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
+				               (((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
+				               (((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
 				aDestPixels += aRowAdd;
 
 				aCurX = theStartX;
@@ -450,8 +450,8 @@ void MemoryImage::NormalDrawLine(
 
 					dest = *aDestPixels;
 					*aDestPixels = src + (((((dest & aRMask) * oma) + aRRoundAdd) >> 8) & aRMask) +
-								   (((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
-								   (((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
+					               (((((dest & aGMask) * oma) + aGRoundAdd) >> 8) & aGMask) +
+					               (((((dest & aBMask) * oma) + aBRoundAdd) >> 8) & aBMask);
 
 					aCurY++;
 					aDestPixels += aRowAdd;
@@ -462,7 +462,7 @@ void MemoryImage::NormalDrawLine(
 }
 
 void MemoryImage::AdditiveDrawLine(
-	double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor)
+    double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor)
 {
 	double aMinX = std::min(theStartX, theEndX);
 	double aMinY = std::min(theStartY, theEndY);
@@ -632,7 +632,7 @@ void MemoryImage::AdditiveDrawLine(
 }
 
 void MemoryImage::DrawLine(
-	double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
+    double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
 {
 	if (theStartY == theEndY)
 	{
@@ -665,7 +665,7 @@ void MemoryImage::DrawLine(
 }
 
 void MemoryImage::NormalDrawLineAA(
-	double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor)
+    double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor)
 {
 	uint32_t *aBits = GetBits();
 	uint32_t color = theColor.ToInt();
@@ -702,15 +702,15 @@ void MemoryImage::NormalDrawLineAA(
 	{
 #define PIXEL_TYPE uint32_t
 #define CALC_WEIGHT_A(w) (((w) * (theColor.mAlpha + 1)) >> 8)
-#define BLEND_PIXEL(p)                                                                                                 \
-	{                                                                                                                  \
-		int aDestAlpha = dest >> 24;                                                                                   \
-		int aNewDestAlpha = aDestAlpha + ((255 - aDestAlpha) * a) / 255;                                               \
-		a = 255 * a / aNewDestAlpha;                                                                                   \
-		oma = 256 - a;                                                                                                 \
-		*(p) = (aNewDestAlpha << 24) | ((((color & 0xFF0000) * a + (dest & 0xFF0000) * oma) >> 8) & 0xFF0000) |        \
-			   ((((color & 0x00FF00) * a + (dest & 0x00FF00) * oma) >> 8) & 0x00FF00) |                                \
-			   ((((color & 0x0000FF) * a + (dest & 0x0000FF) * oma) >> 8) & 0x0000FF);                                 \
+#define BLEND_PIXEL(p)                                                                                          \
+	{                                                                                                           \
+		int aDestAlpha = dest >> 24;                                                                            \
+		int aNewDestAlpha = aDestAlpha + ((255 - aDestAlpha) * a) / 255;                                        \
+		a = 255 * a / aNewDestAlpha;                                                                            \
+		oma = 256 - a;                                                                                          \
+		*(p) = (aNewDestAlpha << 24) | ((((color & 0xFF0000) * a + (dest & 0xFF0000) * oma) >> 8) & 0xFF0000) | \
+		       ((((color & 0x00FF00) * a + (dest & 0x00FF00) * oma) >> 8) & 0x00FF00) |                         \
+		       ((((color & 0x0000FF) * a + (dest & 0x0000FF) * oma) >> 8) & 0x0000FF);                          \
 	}
 		const int STRIDE = mWidth;
 
@@ -724,15 +724,15 @@ void MemoryImage::NormalDrawLineAA(
 	{
 #define PIXEL_TYPE uint32_t
 #define CALC_WEIGHT_A(w) (w)
-#define BLEND_PIXEL(p)                                                                                                 \
-	{                                                                                                                  \
-		int aDestAlpha = dest >> 24;                                                                                   \
-		int aNewDestAlpha = aDestAlpha + ((255 - aDestAlpha) * a) / 255;                                               \
-		a = 255 * a / aNewDestAlpha;                                                                                   \
-		oma = 256 - a;                                                                                                 \
-		*(p) = (aNewDestAlpha << 24) | ((((color & 0xFF0000) * a + (dest & 0xFF0000) * oma) >> 8) & 0xFF0000) |        \
-			   ((((color & 0x00FF00) * a + (dest & 0x00FF00) * oma) >> 8) & 0x00FF00) |                                \
-			   ((((color & 0x0000FF) * a + (dest & 0x0000FF) * oma) >> 8) & 0x0000FF);                                 \
+#define BLEND_PIXEL(p)                                                                                          \
+	{                                                                                                           \
+		int aDestAlpha = dest >> 24;                                                                            \
+		int aNewDestAlpha = aDestAlpha + ((255 - aDestAlpha) * a) / 255;                                        \
+		a = 255 * a / aNewDestAlpha;                                                                            \
+		oma = 256 - a;                                                                                          \
+		*(p) = (aNewDestAlpha << 24) | ((((color & 0xFF0000) * a + (dest & 0xFF0000) * oma) >> 8) & 0xFF0000) | \
+		       ((((color & 0x00FF00) * a + (dest & 0x00FF00) * oma) >> 8) & 0x00FF00) |                         \
+		       ((((color & 0x0000FF) * a + (dest & 0x0000FF) * oma) >> 8) & 0x0000FF);                          \
 	}
 		const int STRIDE = mWidth;
 
@@ -747,12 +747,12 @@ void MemoryImage::NormalDrawLineAA(
 }
 
 void MemoryImage::AdditiveDrawLineAA(
-	double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor)
+    double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor)
 {
 }
 
 void MemoryImage::DrawLineAA(
-	double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
+    double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
 {
 	if (theStartY == theEndY)
 	{
@@ -891,8 +891,8 @@ void *MemoryImage::GetNativeAlphaData(Renderer *theDisplay)
 			uint32_t b = ((val & 0x0000FF) * (anAlpha + 1)) >> 8;
 
 			*(aDestPtr++) = (((r >> rRightShift) << rLeftShift) & rMask) |
-							(((g >> gRightShift) << gLeftShift) & gMask) |
-							(((b >> bRightShift) << bLeftShift) & bMask) | (anAlpha << 24);
+			                (((g >> gRightShift) << gLeftShift) & gMask) |
+			                (((b >> bRightShift) << bLeftShift) & bMask) | (anAlpha << 24);
 		}
 
 		mNativeAlphaData = anAlphaData;
@@ -914,8 +914,8 @@ void *MemoryImage::GetNativeAlphaData(Renderer *theDisplay)
 			uint32_t b = ((val & 0x0000FF) * (anAlpha + 1)) >> 8;
 
 			anAlphaData[i] = (((r >> rRightShift) << rLeftShift) & rMask) |
-							 (((g >> gRightShift) << gLeftShift) & gMask) |
-							 (((b >> bRightShift) << bLeftShift) & bMask) | (anAlpha << 24);
+			                 (((g >> gRightShift) << gLeftShift) & gMask) |
+			                 (((b >> bRightShift) << bLeftShift) & bMask) | (anAlpha << 24);
 		}
 
 		mNativeAlphaData = anAlphaData;
@@ -1207,7 +1207,8 @@ uint32_t *MemoryImage::GetBits()
 	if (mBits == NULL)
 	{
 		int aSize = mWidth * mHeight;
-		if (aSize < 0 || aSize > 100000000) return NULL; 
+		if (aSize < 0 || aSize > 100000000)
+			return NULL;
 
 		mBits = new uint32_t[aSize + 1];
 		mBits[aSize] = MEMORYCHECK_ID;
@@ -1301,14 +1302,14 @@ void MemoryImage::FillRect(const Rect &theRect, const Color &theColor, int theDr
 
 #ifdef OPTIMIZE_SOFTWARE_DRAWING
 				*(aDestPixels++) = (aNewDestAlpha << 24) |
-								   ((((dest & 0xFF00FF) * oma + (src & 0xFF00FF) * newAlpha) >> 8) & 0xFF00FF) |
-								   ((((dest & 0x00FF00) * oma + (src & 0x00FF00) * newAlpha) >> 8) & 0x00FF00);
+				                   ((((dest & 0xFF00FF) * oma + (src & 0xFF00FF) * newAlpha) >> 8) & 0xFF00FF) |
+				                   ((((dest & 0x00FF00) * oma + (src & 0x00FF00) * newAlpha) >> 8) & 0x00FF00);
 #else
 				*(aDestPixels++) =
-					(aNewDestAlpha << 24) |
-					((((dest & 0x0000FF) * oma) >> 8) + (((src & 0x0000FF) * newAlpha) >> 8) & 0x0000FF) |
-					((((dest & 0x00FF00) * oma) >> 8) + (((src & 0x00FF00) * newAlpha) >> 8) & 0x00FF00) |
-					((((dest & 0xFF0000) * oma) >> 8) + (((src & 0xFF0000) * newAlpha) >> 8) & 0xFF0000);
+				    (aNewDestAlpha << 24) |
+				    ((((dest & 0x0000FF) * oma) >> 8) + (((src & 0x0000FF) * newAlpha) >> 8) & 0x0000FF) |
+				    ((((dest & 0x00FF00) * oma) >> 8) + (((src & 0x00FF00) * newAlpha) >> 8) & 0x00FF00) |
+				    ((((dest & 0xFF0000) * oma) >> 8) + (((src & 0xFF0000) * newAlpha) >> 8) & 0xFF0000);
 #endif
 			}
 		}
@@ -1395,7 +1396,7 @@ void MemoryImage::NormalBlt(Image *theImage, int theX, int theY, const Rect &the
 		if (aSrcMemoryImage->mColorTable == NULL)
 		{
 			uint32_t *aSrcPixelsRow =
-				((uint32_t *)aSrcMemoryImage->GetBits()) + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
+			    ((uint32_t *)aSrcMemoryImage->GetBits()) + (theSrcRect.mY * theImage->mWidth) + theSrcRect.mX;
 
 #define NEXT_SRC_COLOR (*(aSrcPtr++))
 #define READ_SRC_COLOR (*(aSrcPtr))
@@ -1428,7 +1429,7 @@ void MemoryImage::NormalBlt(Image *theImage, int theX, int theY, const Rect &the
 }
 
 void MemoryImage::Blt(
-	Image *theImage, int theX, int theY, const Rect &theSrcRect, const Color &theColor, int theDrawMode)
+    Image *theImage, int theX, int theY, const Rect &theSrcRect, const Color &theColor, int theDrawMode)
 {
 	theImage->mDrawn = true;
 
@@ -1451,12 +1452,12 @@ void MemoryImage::Blt(
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 void MemoryImage::BltF(Image *theImage,
-					   float theX,
-					   float theY,
-					   const Rect &theSrcRect,
-					   const Rect &theClipRect,
-					   const Color &theColor,
-					   int theDrawMode)
+                       float theX,
+                       float theY,
+                       const Rect &theSrcRect,
+                       const Rect &theClipRect,
+                       const Color &theColor,
+                       int theDrawMode)
 {
 	theImage->mDrawn = true;
 
@@ -1466,21 +1467,21 @@ void MemoryImage::BltF(Image *theImage,
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 bool MemoryImage::BltRotatedClipHelper(float &theX,
-									   float &theY,
-									   const Rect &theSrcRect,
-									   const Rect &theClipRect,
-									   double theRot,
-									   FRect &theDestRect,
-									   float theRotCenterX,
-									   float theRotCenterY)
+                                       float &theY,
+                                       const Rect &theSrcRect,
+                                       const Rect &theClipRect,
+                                       double theRot,
+                                       FRect &theDestRect,
+                                       float theRotCenterX,
+                                       float theRotCenterY)
 {
 	// Clipping Code (this used to be in Graphics::DrawImageRotated)
 	float aCos = cosf(theRot);
 	float aSin = sinf(theRot);
 
 	// Map the four corners and find the bounding rectangle
-	float px[4] = {0, static_cast<float>(theSrcRect.mWidth), static_cast<float>(theSrcRect.mWidth), 0};
-	float py[4] = {0, 0, static_cast<float>(theSrcRect.mWidth), static_cast<float>(theSrcRect.mWidth)};
+	float px[4] = { 0, static_cast<float>(theSrcRect.mWidth), static_cast<float>(theSrcRect.mWidth), 0 };
+	float py[4] = { 0, 0, static_cast<float>(theSrcRect.mWidth), static_cast<float>(theSrcRect.mWidth) };
 	float aMinX = 10000000;
 	float aMaxX = -10000000;
 	float aMinY = 10000000;
@@ -1517,21 +1518,21 @@ bool MemoryImage::BltRotatedClipHelper(float &theX,
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 bool MemoryImage::StretchBltClipHelper(const Rect &theSrcRect,
-									   const Rect &theClipRect,
-									   const Rect &theDestRect,
-									   FRect &theSrcRectOut,
-									   Rect &theDestRectOut)
+                                       const Rect &theClipRect,
+                                       const Rect &theDestRect,
+                                       FRect &theSrcRectOut,
+                                       Rect &theDestRectOut)
 {
 	theDestRectOut =
-		Rect(theDestRect.mX, theDestRect.mY, theDestRect.mWidth, theDestRect.mHeight).Intersection(theClipRect);
+	    Rect(theDestRect.mX, theDestRect.mY, theDestRect.mWidth, theDestRect.mHeight).Intersection(theClipRect);
 
 	double aXFactor = theSrcRect.mWidth / (double)theDestRect.mWidth;
 	double aYFactor = theSrcRect.mHeight / (double)theDestRect.mHeight;
 
 	theSrcRectOut = FRect(theSrcRect.mX + (theDestRectOut.mX - theDestRect.mX) * aXFactor,
-						  theSrcRect.mY + (theDestRectOut.mY - theDestRect.mY) * aYFactor,
-						  theSrcRect.mWidth + (theDestRectOut.mWidth - theDestRect.mWidth) * aXFactor,
-						  theSrcRect.mHeight + (theDestRectOut.mHeight - theDestRect.mHeight) * aYFactor);
+	                      theSrcRect.mY + (theDestRectOut.mY - theDestRect.mY) * aYFactor,
+	                      theSrcRect.mWidth + (theDestRectOut.mWidth - theDestRect.mWidth) * aXFactor,
+	                      theSrcRect.mHeight + (theDestRectOut.mHeight - theDestRect.mHeight) * aYFactor);
 
 	return theSrcRectOut.mWidth > 0 && theSrcRectOut.mHeight > 0;
 }
@@ -1539,13 +1540,13 @@ bool MemoryImage::StretchBltClipHelper(const Rect &theSrcRect,
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 bool MemoryImage::StretchBltMirrorClipHelper(const Rect &theSrcRect,
-											 const Rect &theClipRect,
-											 const Rect &theDestRect,
-											 FRect &theSrcRectOut,
-											 Rect &theDestRectOut)
+                                             const Rect &theClipRect,
+                                             const Rect &theDestRect,
+                                             FRect &theSrcRectOut,
+                                             Rect &theDestRectOut)
 {
 	theDestRectOut =
-		Rect(theDestRect.mX, theDestRect.mY, theDestRect.mWidth, theDestRect.mHeight).Intersection(theClipRect);
+	    Rect(theDestRect.mX, theDestRect.mY, theDestRect.mWidth, theDestRect.mHeight).Intersection(theClipRect);
 
 	double aXFactor = theSrcRect.mWidth / (double)theDestRect.mWidth;
 	double aYFactor = theSrcRect.mHeight / (double)theDestRect.mHeight;
@@ -1555,9 +1556,9 @@ bool MemoryImage::StretchBltMirrorClipHelper(const Rect &theSrcRect,
 	int aRightClip = aTotalClip - aLeftClip;
 
 	theSrcRectOut = FRect(theSrcRect.mX + (aRightClip)*aXFactor,
-						  theSrcRect.mY + (theDestRectOut.mY - theDestRect.mY) * aYFactor,
-						  theSrcRect.mWidth + (theDestRectOut.mWidth - theDestRect.mWidth) * aXFactor,
-						  theSrcRect.mHeight + (theDestRectOut.mHeight - theDestRect.mHeight) * aYFactor);
+	                      theSrcRect.mY + (theDestRectOut.mY - theDestRect.mY) * aYFactor,
+	                      theSrcRect.mWidth + (theDestRectOut.mWidth - theDestRect.mWidth) * aXFactor,
+	                      theSrcRect.mHeight + (theDestRectOut.mHeight - theDestRect.mHeight) * aYFactor);
 
 	return theSrcRectOut.mWidth > 0 && theSrcRectOut.mHeight > 0;
 }
@@ -1565,15 +1566,15 @@ bool MemoryImage::StretchBltMirrorClipHelper(const Rect &theSrcRect,
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 void MemoryImage::BltRotated(Image *theImage,
-							 float theX,
-							 float theY,
-							 const Rect &theSrcRect,
-							 const Rect &theClipRect,
-							 const Color &theColor,
-							 int theDrawMode,
-							 double theRot,
-							 float theRotCenterX,
-							 float theRotCenterY)
+                             float theX,
+                             float theY,
+                             const Rect &theSrcRect,
+                             const Rect &theClipRect,
+                             const Color &theColor,
+                             int theDrawMode,
+                             double theRot,
+                             float theRotCenterX,
+                             float theRotCenterY)
 {
 	theImage->mDrawn = true;
 
@@ -1632,7 +1633,7 @@ void MemoryImage::BltRotated(Image *theImage,
 }
 
 void MemoryImage::SlowStretchBlt(
-	Image *theImage, const Rect &theDestRect, const FRect &theSrcRect, const Color &theColor, int theDrawMode)
+    Image *theImage, const Rect &theDestRect, const FRect &theSrcRect, const Color &theColor, int theDrawMode)
 {
 	theImage->mDrawn = true;
 
@@ -1677,7 +1678,7 @@ void MemoryImage::SlowStretchBlt(
 
 //TODO: Make the special version
 void MemoryImage::FastStretchBlt(
-	Image *theImage, const Rect &theDestRect, const FRect &theSrcRect, const Color &theColor, int theDrawMode)
+    Image *theImage, const Rect &theDestRect, const FRect &theSrcRect, const Color &theColor, int theDrawMode)
 {
 	theImage->mDrawn = true;
 
@@ -1723,10 +1724,10 @@ void MemoryImage::FastStretchBlt(
 						int oma = 256 - a;
 
 						*(aDestPixels++) =
-							(aNewDestAlpha << 24) |
-							((((dest & 0x0000FF) * oma) >> 8) + (((src & 0x0000FF) * a) >> 8) & 0x0000FF) |
-							((((dest & 0x00FF00) * oma) >> 8) + (((src & 0x00FF00) * a) >> 8) & 0x00FF00) |
-							((((dest & 0xFF0000) * oma) >> 8) + (((src & 0xFF0000) * a) >> 8) & 0xFF0000);
+						    (aNewDestAlpha << 24) |
+						    ((((dest & 0x0000FF) * oma) >> 8) + (((src & 0x0000FF) * a) >> 8) & 0x0000FF) |
+						    ((((dest & 0x00FF00) * oma) >> 8) + (((src & 0x00FF00) * a) >> 8) & 0x00FF00) |
+						    ((((dest & 0xFF0000) * oma) >> 8) + (((src & 0xFF0000) * a) >> 8) & 0xFF0000);
 					}
 					else
 						aDestPixels++;
@@ -1745,12 +1746,12 @@ void MemoryImage::FastStretchBlt(
 }
 
 void MemoryImage::StretchBlt(Image *theImage,
-							 const Rect &theDestRect,
-							 const Rect &theSrcRect,
-							 const Rect &theClipRect,
-							 const Color &theColor,
-							 int theDrawMode,
-							 bool fastStretch)
+                             const Rect &theDestRect,
+                             const Rect &theSrcRect,
+                             const Rect &theClipRect,
+                             const Color &theColor,
+                             int theDrawMode,
+                             bool fastStretch)
 {
 	theImage->mDrawn = true;
 
@@ -1767,17 +1768,17 @@ void MemoryImage::StretchBlt(Image *theImage,
 }
 
 void MemoryImage::BltMatrixHelper(Image *theImage,
-								  float x,
-								  float y,
-								  const SexyMatrix3 &theMatrix,
-								  const Rect &theClipRect,
-								  const Color &theColor,
-								  int theDrawMode,
-								  const Rect &theSrcRect,
-								  void *theSurface,
-								  int theBytePitch,
-								  int thePixelFormat,
-								  bool blend)
+                                  float x,
+                                  float y,
+                                  const SexyMatrix3 &theMatrix,
+                                  const Rect &theClipRect,
+                                  const Color &theColor,
+                                  int theDrawMode,
+                                  const Rect &theSrcRect,
+                                  void *theSurface,
+                                  int theBytePitch,
+                                  int thePixelFormat,
+                                  bool blend)
 {
 	MemoryImage *anImage = dynamic_cast<MemoryImage *>(theImage);
 	if (anImage == NULL)
@@ -1791,10 +1792,12 @@ void MemoryImage::BltMatrixHelper(Image *theImage,
 	float v0 = (float)theSrcRect.mY / theImage->mHeight;
 	float v1 = (float)(theSrcRect.mY + theSrcRect.mHeight) / theImage->mHeight;
 
-	SWHelper::XYZStruct aVerts[4] = {{-w2, -h2, u0, v0, static_cast<long>(0xFFFFFFFF)},
-									 {w2, -h2, u1, v0, static_cast<long>(0xFFFFFFFF)},
-									 {-w2, h2, u0, v1, static_cast<long>(0xFFFFFFFF)},
-									 {w2, h2, u1, v1, static_cast<long>(0xFFFFFFFF)}};
+	SWHelper::XYZStruct aVerts[4] = {
+		{ -w2, -h2, u0, v0, static_cast<long>(0xFFFFFFFF) },
+		{ w2,  -h2, u1, v0, static_cast<long>(0xFFFFFFFF) },
+		{ -w2, h2,  u0, v1, static_cast<long>(0xFFFFFFFF) },
+		{ w2,  h2,  u1, v1, static_cast<long>(0xFFFFFFFF) }
+	};
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -1805,18 +1808,18 @@ void MemoryImage::BltMatrixHelper(Image *theImage,
 	}
 
 	SWHelper::SWDrawShape(
-		aVerts, 4, anImage, theColor, theDrawMode, theClipRect, theSurface, theBytePitch, thePixelFormat, blend, false);
+	    aVerts, 4, anImage, theColor, theDrawMode, theClipRect, theSurface, theBytePitch, thePixelFormat, blend, false);
 }
 
 void MemoryImage::BltMatrix(Image *theImage,
-							float x,
-							float y,
-							const SexyMatrix3 &theMatrix,
-							const Rect &theClipRect,
-							const Color &theColor,
-							int theDrawMode,
-							const Rect &theSrcRect,
-							bool blend)
+                            float x,
+                            float y,
+                            const SexyMatrix3 &theMatrix,
+                            const Rect &theClipRect,
+                            const Color &theColor,
+                            int theDrawMode,
+                            const Rect &theSrcRect,
+                            bool blend)
 {
 	theImage->mDrawn = true;
 
@@ -1827,22 +1830,22 @@ void MemoryImage::BltMatrix(Image *theImage,
 		aFormat = 0x888;
 
 	BltMatrixHelper(
-		theImage, x, y, theMatrix, theClipRect, theColor, theDrawMode, theSrcRect, aSurface, aPitch, aFormat, blend);
+	    theImage, x, y, theMatrix, theClipRect, theColor, theDrawMode, theSrcRect, aSurface, aPitch, aFormat, blend);
 	BitsChanged();
 }
 
 void MemoryImage::BltTrianglesTexHelper(Image *theTexture,
-										const TriVertex theVertices[][3],
-										int theNumTriangles,
-										const Rect &theClipRect,
-										const Color &theColor,
-										int theDrawMode,
-										void *theSurface,
-										int theBytePitch,
-										int thePixelFormat,
-										float tx,
-										float ty,
-										bool blend)
+                                        const TriVertex theVertices[][3],
+                                        int theNumTriangles,
+                                        const Rect &theClipRect,
+                                        const Color &theColor,
+                                        int theDrawMode,
+                                        void *theSurface,
+                                        int theBytePitch,
+                                        int thePixelFormat,
+                                        float tx,
+                                        float ty,
+                                        bool blend)
 {
 	MemoryImage *anImage = dynamic_cast<MemoryImage *>(theTexture);
 	//	if (anImage==NULL)
@@ -1867,28 +1870,28 @@ void MemoryImage::BltTrianglesTexHelper(Image *theTexture,
 		}
 
 		SWHelper::SWDrawShape(aVerts,
-							  3,
-							  anImage,
-							  theColor,
-							  theDrawMode,
-							  theClipRect,
-							  theSurface,
-							  theBytePitch,
-							  thePixelFormat,
-							  blend,
-							  vertexColor);
+		                      3,
+		                      anImage,
+		                      theColor,
+		                      theDrawMode,
+		                      theClipRect,
+		                      theSurface,
+		                      theBytePitch,
+		                      thePixelFormat,
+		                      blend,
+		                      vertexColor);
 	}
 }
 
 void MemoryImage::FillScanLinesWithCoverage(Span *theSpans,
-											int theSpanCount,
-											const Color &theColor,
-											int theDrawMode,
-											const uint8_t *theCoverage,
-											int theCoverX,
-											int theCoverY,
-											int theCoverWidth,
-											int theCoverHeight)
+                                            int theSpanCount,
+                                            const Color &theColor,
+                                            int theDrawMode,
+                                            const uint8_t *theCoverage,
+                                            int theCoverX,
+                                            int theCoverY,
+                                            int theCoverWidth,
+                                            int theCoverHeight)
 {
 	uint32_t *theBits = GetBits();
 	uint32_t src = theColor.ToInt();
@@ -1915,9 +1918,9 @@ void MemoryImage::FillScanLinesWithCoverage(Span *theSpans,
 				a = 255 * a / aNewDestAlpha;
 				oma = 256 - a;
 				*(aDestPixels++) = (aNewDestAlpha << 24) |
-								   ((((dest & 0x0000FF) * oma + (src & 0x0000FF) * a) >> 8) & 0x0000FF) |
-								   ((((dest & 0x00FF00) * oma + (src & 0x00FF00) * a) >> 8) & 0x00FF00) |
-								   ((((dest & 0xFF0000) * oma + (src & 0xFF0000) * a) >> 8) & 0xFF0000);
+				                   ((((dest & 0x0000FF) * oma + (src & 0x0000FF) * a) >> 8) & 0x0000FF) |
+				                   ((((dest & 0x00FF00) * oma + (src & 0x00FF00) * a) >> 8) & 0x00FF00) |
+				                   ((((dest & 0xFF0000) * oma + (src & 0xFF0000) * a) >> 8) & 0xFF0000);
 			}
 		}
 	}
@@ -1925,14 +1928,14 @@ void MemoryImage::FillScanLinesWithCoverage(Span *theSpans,
 }
 
 void MemoryImage::BltTrianglesTex(Image *theTexture,
-								  const TriVertex theVertices[][3],
-								  int theNumTriangles,
-								  const Rect &theClipRect,
-								  const Color &theColor,
-								  int theDrawMode,
-								  float tx,
-								  float ty,
-								  bool blend)
+                                  const TriVertex theVertices[][3],
+                                  int theNumTriangles,
+                                  const Rect &theClipRect,
+                                  const Color &theColor,
+                                  int theDrawMode,
+                                  float tx,
+                                  float ty,
+                                  bool blend)
 {
 	theTexture->mDrawn = true;
 
@@ -1944,28 +1947,28 @@ void MemoryImage::BltTrianglesTex(Image *theTexture,
 		aFormat = 0x888;
 
 	BltTrianglesTexHelper(theTexture,
-						  theVertices,
-						  theNumTriangles,
-						  theClipRect,
-						  theColor,
-						  theDrawMode,
-						  aSurface,
-						  aPitch,
-						  aFormat,
-						  tx,
-						  ty,
-						  blend);
+	                      theVertices,
+	                      theNumTriangles,
+	                      theClipRect,
+	                      theColor,
+	                      theDrawMode,
+	                      aSurface,
+	                      aPitch,
+	                      aFormat,
+	                      tx,
+	                      ty,
+	                      blend);
 	BitsChanged();
 }
 
-void MemoryImage::BltRawTexture(void* theTexture,
-	int theTexWidth,
-	int theTexHeight,
-	const Rect& theDestRect,
-	const Rect& theSrcRect,
-	const Rect& theClipRect,
-	const Color& theColor,
-	int theDrawMode)
+void MemoryImage::BltRawTexture(void *theTexture,
+                                int theTexWidth,
+                                int theTexHeight,
+                                const Rect &theDestRect,
+                                const Rect &theSrcRect,
+                                const Rect &theClipRect,
+                                const Color &theColor,
+                                int theDrawMode)
 {
 
 	uint32_t *aNewPixels = mApp->mRenderer->GetBitsFromTexture(theTexture, theTexWidth, theTexHeight);
@@ -1974,7 +1977,6 @@ void MemoryImage::BltRawTexture(void* theTexture,
 	aTempImage.SetBits(aNewPixels, 1, 1);
 	delete[] aNewPixels;
 	StretchBlt(&aTempImage, theDestRect, theSrcRect, theClipRect, theColor, theDrawMode, true);
-
 }
 
 bool MemoryImage::Palletize()

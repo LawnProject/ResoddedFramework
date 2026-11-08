@@ -17,7 +17,6 @@ extern AchievementDefinition gAchievementDefs[NUM_ACHIEVEMENT_TYPES];
 class Achievements
 {
   public:
-
   public:
 	LawnApp *mApp;
 

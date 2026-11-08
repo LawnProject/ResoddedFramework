@@ -17,7 +17,6 @@ ImGuiWindow::~ImGuiWindow()
 
 void ImGuiWindow::Update()
 {
-
 }
 
 #endif

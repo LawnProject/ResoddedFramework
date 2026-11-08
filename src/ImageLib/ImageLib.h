@@ -25,9 +25,9 @@ class Image
 };
 
 bool WriteImage(const std::string &theFileName,
-				Image *theImage,
-				const std::string &theExtension,
-				bool add_extension = true);
+                Image *theImage,
+                const std::string &theExtension,
+                bool add_extension = true);
 extern int gAlphaComposeColor;
 extern bool gAutoLoadAlpha;
 

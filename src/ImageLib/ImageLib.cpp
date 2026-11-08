@@ -40,9 +40,9 @@ uint32_t *Image::GetBits()
 }
 
 bool ImageLib::WriteImage(const std::string &theFileName,
-						  Image *theImage,
-						  const std::string &theExtension,
-						  bool add_extension)
+                          Image *theImage,
+                          const std::string &theExtension,
+                          bool add_extension)
 {
 	uint8_t *data = new uint8_t[theImage->mWidth * theImage->mHeight * theImage->mNumChannels];
 
@@ -56,7 +56,7 @@ bool ImageLib::WriteImage(const std::string &theFileName,
 			uint32_t px = aBits[j * theImage->mWidth + i];
 			data[index++] = (px >> 16) & 0xFF; // R
 			data[index++] = (px >> 8) & 0xFF;  // G
-			data[index++] = (px) & 0xFF;	   // B
+			data[index++] = (px) & 0xFF;       // B
 			if (theImage->mNumChannels == 4)
 				data[index++] = (px >> 24) & 0xFF; // A
 		}
@@ -68,11 +68,11 @@ bool ImageLib::WriteImage(const std::string &theFileName,
 		stbi_write_jpg(aFilename.c_str(), theImage->mWidth, theImage->mHeight, 3, data, 100);
 	else if (stricmp(theExtension.c_str(), ".png") == 0)
 		stbi_write_png(aFilename.c_str(),
-					   theImage->mWidth,
-					   theImage->mHeight,
-					   theImage->mNumChannels,
-					   data,
-					   theImage->mWidth * theImage->mNumChannels);
+		               theImage->mWidth,
+		               theImage->mHeight,
+		               theImage->mNumChannels,
+		               data,
+		               theImage->mWidth * theImage->mNumChannels);
 	else if (stricmp(theExtension.c_str(), ".bmp") == 0)
 		stbi_write_bmp(aFilename.c_str(), theImage->mWidth, theImage->mHeight, theImage->mNumChannels, data);
 	else if (stricmp(theExtension.c_str(), ".tga") == 0)
@@ -117,7 +117,7 @@ Image *ImageLib::GetImageBackend(const std::string &theFileName, const std::stri
 	else
 	{
 		stb_image =
-			stbi_load_gif_from_memory(data.data(), fileSize, &delays, &width, &height, &frame_count, &num_channels, 4);
+		    stbi_load_gif_from_memory(data.data(), fileSize, &delays, &width, &height, &frame_count, &num_channels, 4);
 
 		if (delays)
 			free(delays);
@@ -137,8 +137,6 @@ Image *ImageLib::GetImageBackend(const std::string &theFileName, const std::stri
 
 		aBits[i] = (a << 24) | (r << 16) | (g << 8) | b;
 	}
-
-
 
 	Image *anImage = new Image();
 	anImage->mWidth = width;
@@ -185,31 +183,30 @@ Image *ImageLib::GetImage(const std::string &theFilename, bool lookForAlphaImage
 		anImage = GetImageBackend(aFilename, ".gif");
 
 	// Check for alpha images
-	Image* anAlphaImage = NULL;
-	if(lookForAlphaImage)
+	Image *anAlphaImage = NULL;
+	if (lookForAlphaImage)
 	{
 		// Check _ImageName
-		anAlphaImage = GetImage(theFilename.substr(0, aLastSlashPos+1) + "_" +
-			theFilename.substr(aLastSlashPos+1, theFilename.length() - aLastSlashPos - 1), false);
+		anAlphaImage = GetImage(theFilename.substr(0, aLastSlashPos + 1) + "_" +
+		                            theFilename.substr(aLastSlashPos + 1, theFilename.length() - aLastSlashPos - 1),
+		                        false);
 
 		// Check ImageName_
-		if(anAlphaImage==NULL)
+		if (anAlphaImage == NULL)
 			anAlphaImage = GetImage(theFilename + "_", false);
 	}
 
-
-
 	// Compose alpha channel with image
-	if (anAlphaImage != NULL) 
+	if (anAlphaImage != NULL)
 	{
 		if (anImage != NULL)
 		{
 			if ((anImage->mWidth == anAlphaImage->mWidth) &&
-				(anImage->mHeight == anAlphaImage->mHeight))
+			    (anImage->mHeight == anAlphaImage->mHeight))
 			{
 				uint32_t *aBits1 = anImage->mBits;
 				uint32_t *aBits2 = anAlphaImage->mBits;
-				int aSize = anImage->mWidth*anImage->mHeight;
+				int aSize = anImage->mWidth * anImage->mHeight;
 
 				for (int i = 0; i < aSize; i++)
 				{
@@ -221,13 +218,13 @@ Image *ImageLib::GetImage(const std::string &theFilename, bool lookForAlphaImage
 
 			delete anAlphaImage;
 		}
-		else if (gAlphaComposeColor==0xFFFFFF)
+		else if (gAlphaComposeColor == 0xFFFFFF)
 		{
 			anImage = anAlphaImage;
 
 			uint32_t *aBits1 = anImage->mBits;
 
-			int aSize = anImage->mWidth*anImage->mHeight;
+			int aSize = anImage->mWidth * anImage->mHeight;
 			for (int i = 0; i < aSize; i++)
 			{
 				*aBits1 = (0x00FFFFFF) | ((*aBits1 & 0xFF) << 24);
@@ -241,7 +238,7 @@ Image *ImageLib::GetImage(const std::string &theFilename, bool lookForAlphaImage
 
 			uint32_t *aBits1 = anImage->mBits;
 
-			int aSize = anImage->mWidth*anImage->mHeight;
+			int aSize = anImage->mWidth * anImage->mHeight;
 			for (int i = 0; i < aSize; i++)
 			{
 				*aBits1 = aColor | ((*aBits1 & 0xFF) << 24);

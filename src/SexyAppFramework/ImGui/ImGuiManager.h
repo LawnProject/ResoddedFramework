@@ -18,8 +18,8 @@ class ImGuiWindow;
 
 class ImGuiManager
 {
-	public:
-	ImGuiManager(SexyAppBase* theApp);
+  public:
+	ImGuiManager(SexyAppBase *theApp);
 	~ImGuiManager();
 	void Reset();
 	void Frame();
@@ -27,14 +27,14 @@ class ImGuiManager
 
 	void Init();
 
-	public:
-	  std::vector<ImGuiWindow*> mWindows;
-	  bool mHasInitiated;
+  public:
+	std::vector<ImGuiWindow *> mWindows;
+	bool mHasInitiated;
 
-	private:
+  private:
 	SexyAppBase *mApp;
 };
 
-}
+} // namespace Sexy
 
 #endif

@@ -10,20 +10,21 @@ TodStringListFormat *gTodStringFormats;
 
 int gLawnStringFormatCount = 12;
 TodStringListFormat gLawnStringFormats[14] = {
-	{"NORMAL", nullptr, Color(40, 50, 90, 255), 0, 0U},
-	{"FLAVOR", nullptr, Color(143, 67, 27, 255), 0, 1U},
-	{"KEYWORD", nullptr, Color(143, 67, 27, 255), 0, 0U},
-	{"NOCTURNAL", nullptr, Color(136, 50, 170, 255), 0, 0U},
-	{"AQUATIC", nullptr, Color(11, 161, 219, 255), 0, 0U},
-	{"STAT", nullptr, Color(204, 36, 29, 255), 0, 0U},
-	{"METAL", nullptr, Color(204, 36, 29, 255), 0, 2U},
-	{"KEYMETAL", nullptr, Color(143, 67, 27, 255), 0, 2U},
-	{"SHORTLINE", nullptr, Color(0, 0, 0, 0), -9, 0U},
-	{"EXTRASHORTLINE", nullptr, Color(0, 0, 0, 0), -14, 0U},
-	{"CREDITS1", nullptr, Color(0, 0, 0, 0), 3, 0U},
-	{"CREDITS2", nullptr, Color(0, 0, 0, 0), 2, 0U},
-	{"NORMAL", nullptr, Color(40, 50, 90, 255), 0, 0U},
-	{"KEYWORD", nullptr, Color(143, 67, 27, 255), 0, 0U}};
+	{ "NORMAL",         nullptr, Color(40,  50,  90,  255), 0,   0U },
+	{ "FLAVOR",         nullptr, Color(143, 67,  27,  255), 0,   1U },
+	{ "KEYWORD",        nullptr, Color(143, 67,  27,  255), 0,   0U },
+	{ "NOCTURNAL",      nullptr, Color(136, 50,  170, 255), 0,   0U },
+	{ "AQUATIC",        nullptr, Color(11,  161, 219, 255), 0,   0U },
+	{ "STAT",           nullptr, Color(204, 36,  29,  255), 0,   0U },
+	{ "METAL",          nullptr, Color(204, 36,  29,  255), 0,   2U },
+	{ "KEYMETAL",       nullptr, Color(143, 67,  27,  255), 0,   2U },
+	{ "SHORTLINE",      nullptr, Color(0,   0,   0,   0),   -9,  0U },
+	{ "EXTRASHORTLINE", nullptr, Color(0,   0,   0,   0),   -14, 0U },
+	{ "CREDITS1",       nullptr, Color(0,   0,   0,   0),   3,   0U },
+	{ "CREDITS2",       nullptr, Color(0,   0,   0,   0),   2,   0U },
+	{ "NORMAL",         nullptr, Color(40,  50,  90,  255), 0,   0U },
+	{ "KEYWORD",        nullptr, Color(143, 67,  27,  255), 0,   0U }
+};
 
 TodStringListFormat::TodStringListFormat()
 {
@@ -34,12 +35,12 @@ TodStringListFormat::TodStringListFormat()
 }
 
 TodStringListFormat::TodStringListFormat(const char *theFormatName,
-										 Font **theFont,
-										 const Color &theColor,
-										 int theLineSpacingOffset,
-										 unsigned int theFormatFlags)
-	: mFormatName(theFormatName), mNewFont(theFont), mNewColor(theColor), mLineSpacingOffset(theLineSpacingOffset),
-	  mFormatFlags(theFormatFlags)
+                                         Font **theFont,
+                                         const Color &theColor,
+                                         int theLineSpacingOffset,
+                                         unsigned int theFormatFlags)
+    : mFormatName(theFormatName), mNewFont(theFont), mNewColor(theColor), mLineSpacingOffset(theLineSpacingOffset),
+      mFormatFlags(theFormatFlags)
 {
 }
 
@@ -102,7 +103,7 @@ bool TodStringListReadValue(const char *&thePtr, std::string &theValue)
 	int aLen = aValueEnd ? aValueEnd - thePtr : strlen(thePtr);
 	theValue = Sexy::Trim(std::string(thePtr, aLen));
 	TodStringRemoveReturnChars(theValue);
-	thePtr += aLen;	
+	thePtr += aLen;
 	return true;
 }
 
@@ -126,10 +127,9 @@ bool TodStringListReadItems(const char *theFileText)
 	}
 }
 
-
 bool TodStringListReadFile(const char *theFileName)
 {
-    TodTrace("[TodLib] - Loading String File '%s'", theFileName);
+	TodTrace("[TodLib] - Loading String File '%s'", theFileName);
 	PFILE *pFile = p_fopen(theFileName, "rb");
 	if (pFile == nullptr)
 	{
@@ -138,15 +138,15 @@ bool TodStringListReadFile(const char *theFileName)
 	}
 
 	p_fseek(pFile, 0, SEEK_END);
-    auto aSize = p_ftell(pFile);
+	auto aSize = p_ftell(pFile);
 	p_fseek(pFile, 0, SEEK_SET);
 
-    if (aSize <= 0)
-    {
+	if (aSize <= 0)
+	{
 		TodTrace("[TodLib] - String file is empty: '%s'", theFileName);
 		p_fclose(pFile);
 		return false;
-    }
+	}
 
 	std::string aBytes;
 	aBytes.resize(aSize);
@@ -159,13 +159,14 @@ bool TodStringListReadFile(const char *theFileName)
 
 	p_fclose(pFile);
 
-    std::optional<std::string> aDecoded = Sexy::ConvertToUtf8IfNeeded(aBytes);
-    bool aSuccess = aDecoded
-        ? TodStringListReadItems(aDecoded->c_str())
-        : TodStringListReadItems(aBytes.c_str());
-    if (!aSuccess) {
+	std::optional<std::string> aDecoded = Sexy::ConvertToUtf8IfNeeded(aBytes);
+	bool aSuccess = aDecoded
+	                    ? TodStringListReadItems(aDecoded->c_str())
+	                    : TodStringListReadItems(aBytes.c_str());
+	if (!aSuccess)
+	{
 		TodTrace("[TodLib] - Failed to read list items from '%s'", theFileName);
-    }
+	}
 	return aSuccess;
 }
 
@@ -192,7 +193,7 @@ SexyString TodStringTranslate(const SexyString &theString)
 {
 	if (theString.size() >= 3 && theString[0] == '[')
 	{
-		SexyString aName = theString.substr(1, theString.size() - 2); 
+		SexyString aName = theString.substr(1, theString.size() - 2);
 		return TodStringListFind(aName);
 	}
 	return theString;
@@ -230,34 +231,34 @@ void TodWriteStringSetFormat(const char *theFormat, TodStringListFormat &theCurr
 bool CharIsSpaceInFormat(SexyChar theChar, const TodStringListFormat &theCurrentFormat)
 {
 	return theChar == ' ' ||
-		   (TestBit(theCurrentFormat.mFormatFlags, TodStringFormatFlag::TOD_FORMAT_IGNORE_NEWLINES) && theChar == '\n');
+	       (TestBit(theCurrentFormat.mFormatFlags, TodStringFormatFlag::TOD_FORMAT_IGNORE_NEWLINES) && theChar == '\n');
 }
 
 int TodWriteString(Graphics *g,
-				   const SexyString &theString,
-				   int theX,
-				   int theY,
-				   TodStringListFormat &theCurrentFormat,
-				   int theWidth,
-				   DrawStringJustification theJustification,
-				   bool drawString,
-				   int theOffset,
-				   int theLength)
+                   const SexyString &theString,
+                   int theX,
+                   int theY,
+                   TodStringListFormat &theCurrentFormat,
+                   int theWidth,
+                   DrawStringJustification theJustification,
+                   bool drawString,
+                   int theOffset,
+                   int theLength)
 {
 	Font *aFont = *theCurrentFormat.mNewFont;
 	if (drawString)
 	{
 		TodStringListFormat aMeasureFormat = theCurrentFormat;
 		int aSpareX = theWidth - TodWriteString(g,
-												theString,
-												theX,
-												theY,
-												aMeasureFormat,
-												theWidth,
-												DrawStringJustification::DS_ALIGN_LEFT,
-												false,
-												theOffset,
-												theLength);
+		                                        theString,
+		                                        theX,
+		                                        theY,
+		                                        aMeasureFormat,
+		                                        theWidth,
+		                                        DrawStringJustification::DS_ALIGN_LEFT,
+		                                        false,
+		                                        theOffset,
+		                                        theLength);
 		switch (theJustification)
 		{
 		case DrawStringJustification::DS_ALIGN_RIGHT:
@@ -296,11 +297,11 @@ int TodWriteString(Graphics *g,
 				it = theString.begin() + (aFormatEnd - theString.c_str()) + 1;
 				if (drawString)
 					aFont->DrawString(g,
-									  theX + aXOffset,
-									  theY,
-									  aString,
-									  theCurrentFormat.mNewColor,
-									  g->mClipRect);
+					                  theX + aXOffset,
+					                  theY,
+					                  aString,
+					                  theCurrentFormat.mNewColor,
+					                  g->mClipRect);
 
 				aXOffset += aFont->StringWidth(aString);
 				aString.assign("");
@@ -311,7 +312,7 @@ int TodWriteString(Graphics *g,
 		else
 		{
 			if (TestBit(theCurrentFormat.mFormatFlags,
-						TodStringFormatFlag::TOD_FORMAT_IGNORE_NEWLINES))
+			            TodStringFormatFlag::TOD_FORMAT_IGNORE_NEWLINES))
 			{
 				if (CharIsSpaceInFormat(aCodePoint, theCurrentFormat))
 				{
@@ -329,21 +330,21 @@ int TodWriteString(Graphics *g,
 
 	if (drawString)
 		aFont->DrawString(
-			g, theX + aXOffset, theY, aString, theCurrentFormat.mNewColor, g->mClipRect);
+		    g, theX + aXOffset, theY, aString, theCurrentFormat.mNewColor, g->mClipRect);
 	return aXOffset + aFont->StringWidth(aString);
 }
 
 int TodWriteWordWrappedHelper(Graphics *g,
-							  const SexyString &theString,
-							  int theX,
-							  int theY,
-							  TodStringListFormat &theCurrentFormat,
-							  int theWidth,
-							  DrawStringJustification theJustification,
-							  bool drawString,
-							  int theOffset,
-							  int theLength,
-							  int theMaxChars)
+                              const SexyString &theString,
+                              int theX,
+                              int theY,
+                              TodStringListFormat &theCurrentFormat,
+                              int theWidth,
+                              DrawStringJustification theJustification,
+                              bool drawString,
+                              int theOffset,
+                              int theLength,
+                              int theMaxChars)
 {
 	if (theOffset + theLength > theMaxChars)
 	{
@@ -352,16 +353,16 @@ int TodWriteWordWrappedHelper(Graphics *g,
 			return -1;
 	}
 	return TodWriteString(
-		g, theString, theX, theY, theCurrentFormat, theWidth, theJustification, drawString, theOffset, theLength);
+	    g, theString, theX, theY, theCurrentFormat, theWidth, theJustification, drawString, theOffset, theLength);
 }
 
 int TodDrawStringWrappedHelper(Graphics *g,
-							   const SexyString &theText,
-							   const Rect &theRect,
-							   Font *theFont,
-							   const Color &theColor,
-							   DrawStringJustification theJustification,
-							   bool drawString)
+                               const SexyString &theText,
+                               const Rect &theRect,
+                               Font *theFont,
+                               const Color &theColor,
+                               DrawStringJustification theJustification,
+                               bool drawString)
 {
 	int theMaxChars = theText.size();
 	TodStringListFormat aCurrentFormat;
@@ -387,7 +388,7 @@ int TodDrawStringWrappedHelper(Graphics *g,
 	{
 		auto aCharStart = it;
 		size_t aCurPos = aCharStart - theText.begin();
-		aCurChar = utf8::next(it, end);  
+		aCurChar = utf8::next(it, end);
 		if (aCurChar == '{')
 		{
 			const char *aFmtStart = theText.c_str() + aCurPos;
@@ -427,17 +428,16 @@ int TodDrawStringWrappedHelper(Graphics *g,
 				int aCurY = (int)g->mTransY + theRect.mY + aYOffset;
 				bool aAllowDrawText = drawString && aCurY >= g->mClipRect.mY && aCurY <= g->mClipRect.mY + g->mClipRect.mHeight + aLineSpacing; // we do all that anyways cause the formatting
 				TodWriteWordWrappedHelper(g,
-					theText,
-					theRect.mX,
-					theRect.mY + aYOffset,
-					aCurrentFormat,
-					theRect.mWidth,
-					theJustification,
-					aAllowDrawText,
-					aLineFeedPos,
-					aSpacePos - aLineFeedPos,
-					theMaxChars);
-				
+				                          theText,
+				                          theRect.mX,
+				                          theRect.mY + aYOffset,
+				                          aCurrentFormat,
+				                          theRect.mWidth,
+				                          theJustification,
+				                          aAllowDrawText,
+				                          aLineFeedPos,
+				                          aSpacePos - aLineFeedPos,
+				                          theMaxChars);
 
 				aLineWidth = aCurWidth;
 				if (aLineWidth < 0)
@@ -459,23 +459,22 @@ int TodDrawStringWrappedHelper(Graphics *g,
 						}
 					}
 				}
-
 			}
 			else
 			{
 
 				aLineWidth =
-					TodWriteWordWrappedHelper(g,
-											  theText,
-											  theRect.mX,
-											  theRect.mY + aYOffset,
-											  aCurrentFormat,
-											  theRect.mWidth,
-											  theJustification,
-											  drawString,
-											  aLineFeedPos,
-											  aCurPos - aLineFeedPos,
-											  theMaxChars);
+				    TodWriteWordWrappedHelper(g,
+				                              theText,
+				                              theRect.mX,
+				                              theRect.mY + aYOffset,
+				                              aCurrentFormat,
+				                              theRect.mWidth,
+				                              theJustification,
+				                              drawString,
+				                              aLineFeedPos,
+				                              aCurPos - aLineFeedPos,
+				                              theMaxChars);
 				if (aLineWidth < 0)
 					break;
 			}
@@ -493,17 +492,17 @@ int TodDrawStringWrappedHelper(Graphics *g,
 	if (aLineFeedPos < theText.size())
 	{
 		int aLastLineLength =
-			TodWriteWordWrappedHelper(g,
-									  theText,
-									  theRect.mX,
-									  theRect.mY + aYOffset,
-									  aCurrentFormat,
-									  theRect.mWidth,
-									  theJustification,
-									  drawString,
-									  aLineFeedPos,
-									  theText.size() - aLineFeedPos,
-									  theMaxChars);
+		    TodWriteWordWrappedHelper(g,
+		                              theText,
+		                              theRect.mX,
+		                              theRect.mY + aYOffset,
+		                              aCurrentFormat,
+		                              theRect.mWidth,
+		                              theJustification,
+		                              drawString,
+		                              aLineFeedPos,
+		                              theText.size() - aLineFeedPos,
+		                              theMaxChars);
 		if (aLastLineLength >= 0)
 			aYOffset += aLineSpacing;
 	}
@@ -514,22 +513,22 @@ int TodDrawStringWrappedHelper(Graphics *g,
 }
 
 void TodDrawStringWrapped(Graphics *g,
-						  const SexyString &theText,
-						  const Rect &theRect,
-						  Font *theFont,
-						  const Color &theColor,
-						  DrawStringJustification theJustification)
+                          const SexyString &theText,
+                          const Rect &theRect,
+                          Font *theFont,
+                          const Color &theColor,
+                          DrawStringJustification theJustification)
 {
 	SexyString aTextFinal = TodStringTranslate(theText);
 	Rect aRectTodUse = theRect;
 	if (theJustification == DrawStringJustification::DS_ALIGN_LEFT_VERTICAL_MIDDLE ||
-		theJustification == DrawStringJustification::DS_ALIGN_RIGHT_VERTICAL_MIDDLE ||
-		theJustification == DrawStringJustification::DS_ALIGN_CENTER_VERTICAL_MIDDLE)
+	    theJustification == DrawStringJustification::DS_ALIGN_RIGHT_VERTICAL_MIDDLE ||
+	    theJustification == DrawStringJustification::DS_ALIGN_CENTER_VERTICAL_MIDDLE)
 	{
 		aRectTodUse.mY +=
-			(aRectTodUse.mHeight -
-			 TodDrawStringWrappedHelper(g, aTextFinal, aRectTodUse, theFont, theColor, theJustification, false)) /
-			2;
+		    (aRectTodUse.mHeight -
+		     TodDrawStringWrappedHelper(g, aTextFinal, aRectTodUse, theFont, theColor, theJustification, false)) /
+		    2;
 	}
 	TodDrawStringWrappedHelper(g, aTextFinal, aRectTodUse, theFont, theColor, theJustification, true);
 }

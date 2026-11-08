@@ -80,9 +80,9 @@ class ProfileSyncer
 	void SyncLong(const SexyString &theName, long &theLong);
 	void SyncUnsignedLong(const SexyString &theName, unsigned long &theLong);
 	void SyncString(const SexyString &theName, SexyString &theStr);
-	template <typename T, size_t N> 
+	template <typename T, size_t N>
 	void SyncArray(const std::string &theName, T (&theArray)[N], int &theRealSize);
-	template <typename T, size_t N> 
+	template <typename T, size_t N>
 	void SyncArrayFromSize(const std::string &theName, T (&theArray)[N], int theRealSize);
 };
 class PlayerInfo
@@ -113,7 +113,7 @@ class PlayerInfo
 	bool mHasUnlockedSurvivalMode;
 	bool mNeedsMessageOnGameSelector;
 	bool mNeedsMagicTacoReward;
-	bool mHasSeenStinky;	
+	bool mHasSeenStinky;
 	bool mHasSeenUpsell;
 	bool mAcceptedZombatarTOS;
 	int mNumPottedPlants;

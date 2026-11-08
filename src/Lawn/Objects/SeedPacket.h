@@ -130,13 +130,13 @@ class SeedBank : public GameObject
 /// @param theOffsetY The Y offset
 /// @param theScale The scale of the preview
 void SeedPacketDrawSeed(Graphics *g,
-						float x,
-						float y,
-						SeedType theSeedType,
-						SeedType theImitaterType,
-						float theOffsetX,
-						float theOffsetY,
-						float theScale);
+                        float x,
+                        float y,
+                        SeedType theSeedType,
+                        SeedType theImitaterType,
+                        float theOffsetX,
+                        float theOffsetY,
+                        float theScale);
 
 /// @brief Draw the Seed Preview on the Packet
 /// @param g Graphics object
@@ -149,13 +149,13 @@ void SeedPacketDrawSeed(Graphics *g,
 /// @param theDrawCost Should it draw the price of the Packet
 /// @param theUseCurrentCost Draw the current cost of the Packet
 void DrawSeedPacket(Graphics *g,
-					float x,
-					float y,
-					SeedType theSeedType,
-					SeedType theImitaterType,
-					float thePercentDark,
-					int theGrayness,
-					bool theDrawCost,
-					bool theUseCurrentCost);
+                    float x,
+                    float y,
+                    SeedType theSeedType,
+                    SeedType theImitaterType,
+                    float thePercentDark,
+                    int theGrayness,
+                    bool theDrawCost,
+                    bool theUseCurrentCost);
 
 #endif

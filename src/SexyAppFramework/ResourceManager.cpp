@@ -293,9 +293,9 @@ bool ResourceManager::ParseImageResource(XMLElement &theElement)
 	aRes->mA4R4G4B4 = theElement.mAttributes.find("a4r4g4b4") != theElement.mAttributes.end();
 	aRes->mDDSurface = theElement.mAttributes.find("ddsurface") != theElement.mAttributes.end();
 	aRes->mPurgeBits =
-		(theElement.mAttributes.find("nobits") != theElement.mAttributes.end()) ||
-		((mApp->Is3DAccelerated()) && (theElement.mAttributes.find("nobits3d") != theElement.mAttributes.end())) ||
-		((!mApp->Is3DAccelerated()) && (theElement.mAttributes.find("nobits2d") != theElement.mAttributes.end()));
+	    (theElement.mAttributes.find("nobits") != theElement.mAttributes.end()) ||
+	    ((mApp->Is3DAccelerated()) && (theElement.mAttributes.find("nobits3d") != theElement.mAttributes.end())) ||
+	    ((!mApp->Is3DAccelerated()) && (theElement.mAttributes.find("nobits2d") != theElement.mAttributes.end()));
 	aRes->mA8R8G8B8 = theElement.mAttributes.find("a8r8g8b8") != theElement.mAttributes.end();
 	aRes->mMinimizeSubdivisions = theElement.mAttributes.find("minsubdivide") != theElement.mAttributes.end();
 	aRes->mAutoFindAlpha = theElement.mAttributes.find("noalpha") == theElement.mAttributes.end();
@@ -652,7 +652,7 @@ bool ResourceManager::LoadAlphaGridImage(ImageRes *theRes, GPUImage *theImage)
 
 	if (anAlphaImage->mWidth != aCelWidth || anAlphaImage->mHeight != aCelHeight)
 		return Fail(StrFormat(
-			"GridAlphaImage size mismatch between %s and %s", theRes->mPath.c_str(), theRes->mAlphaGridImage.c_str()));
+		    "GridAlphaImage size mismatch between %s and %s", theRes->mPath.c_str(), theRes->mAlphaGridImage.c_str()));
 
 	uint32_t *aMasterRowPtr = theImage->mBits;
 	for (int i = 0; i < aNumRows; i++)
@@ -698,7 +698,7 @@ bool ResourceManager::LoadAlphaImage(ImageRes *theRes, GPUImage *theImage)
 
 	if (anAlphaImage->mWidth != theImage->mWidth || anAlphaImage->mHeight != theImage->mHeight)
 		return Fail(StrFormat(
-			"AlphaImage size mismatch between %s and %s", theRes->mPath.c_str(), theRes->mAlphaImage.c_str()));
+		    "AlphaImage size mismatch between %s and %s", theRes->mPath.c_str(), theRes->mAlphaImage.c_str()));
 
 	uint32_t *aBits1 = theImage->mBits;
 	uint32_t *aBits2 = anAlphaImage->mBits;
@@ -1027,7 +1027,7 @@ void ResourceManager::DumpCurResGroup(std::string &theDestStr)
 	const ResList *rl = &mResGroupMap.find(mCurResGroup)->second;
 	ResList::const_iterator it = rl->begin();
 	theDestStr =
-		StrFormat("About to dump %d elements from current res group name %s\r\n", rl->size(), mCurResGroup.c_str());
+	    StrFormat("About to dump %d elements from current res group name %s\r\n", rl->size(), mCurResGroup.c_str());
 
 	ResList::const_iterator rl_end = rl->end();
 	while (it != rl_end)

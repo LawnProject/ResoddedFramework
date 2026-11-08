@@ -8,7 +8,7 @@
 using namespace Sexy;
 
 Slider::Slider(Image *theTrackImage, Image *theThumbImage, int theId, SliderListener *theListener)
-	: mTrackImage(theTrackImage), mThumbImage(theThumbImage), mId(theId), mListener(theListener), mVal(0.0)
+    : mTrackImage(theTrackImage), mThumbImage(theThumbImage), mId(theId), mListener(theListener), mVal(0.0)
 {
 	mDragging = false;
 	mHorizontal = true;
@@ -65,10 +65,10 @@ void Slider::Draw(Graphics *g)
 
 	if (mHorizontal && (mThumbImage != NULL))
 		g->DrawImage(
-			mThumbImage, (int)(mVal * (mWidth - mThumbImage->GetWidth())), (mHeight - mThumbImage->GetHeight()) / 2);
+		    mThumbImage, (int)(mVal * (mWidth - mThumbImage->GetWidth())), (mHeight - mThumbImage->GetHeight()) / 2);
 	else if (!mHorizontal && (mThumbImage != NULL))
 		g->DrawImage(
-			mThumbImage, (mWidth - mThumbImage->GetWidth()) / 2, (int)(mVal * (mHeight - mThumbImage->GetHeight())));
+		    mThumbImage, (mWidth - mThumbImage->GetWidth()) / 2, (int)(mVal * (mHeight - mThumbImage->GetHeight())));
 
 	//g->SetColor(Color(255, 255, 0));
 	//g->FillRect(0, 0, mWidth, mHeight);

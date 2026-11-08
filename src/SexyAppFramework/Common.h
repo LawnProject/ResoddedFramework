@@ -38,7 +38,7 @@ typedef std::string SexyString;
 #define sexyatoi atoi
 #define sexystrcpy strcpy
 
-#define LONG_BIGE_TO_NATIVE(l)                                                                                         \
+#define LONG_BIGE_TO_NATIVE(l) \
 	(((l >> 24) & 0xFF) | ((l >> 8) & 0xFF00) | ((l << 8) & 0xFF0000) | ((l << 24) & 0xFF000000))
 #define WORD_BIGE_TO_NATIVE(w) (((w >> 8) & 0xFF) | ((w << 8) & 0xFF00))
 #define LONG_LITTLEE_TO_NATIVE(l) (l)
@@ -68,7 +68,6 @@ inline SexyString operator+(const SexyString &s, SexyChar c)
 
 	return aString;
 }
-
 
 // SexyString End
 
@@ -143,7 +142,6 @@ inline void inlineLower(std::string &theData)
 {
 	std::transform(theData.begin(), theData.end(), theData.begin(), tolower);
 }
-
 
 inline void inlineLTrim(std::string &theData, const std::string &theChars = " \t\r\n")
 {

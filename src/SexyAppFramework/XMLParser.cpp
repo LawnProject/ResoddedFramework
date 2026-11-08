@@ -63,8 +63,8 @@ void XMLParser::Init()
 }
 
 bool XMLParser::AddAttribute(XMLElement *theElement,
-							 const SexyString &theAttributeKey,
-							 const SexyString &theAttributeValue)
+                             const SexyString &theAttributeKey,
+                             const SexyString &theAttributeValue)
 {
 	std::pair<XMLParamMap::iterator, bool> aRet;
 
@@ -168,7 +168,7 @@ bool XMLParser::GetUTF8Char(char *theChar, bool *error)
 			return false;
 
 		if (aTempChar == 0xFEFF &&
-			mFirstChar) // zero-width non breaking space as the first char is a byte order marker.
+		    mFirstChar) // zero-width non breaking space as the first char is a byte order marker.
 		{
 			mFirstChar = false;
 			return GetUTF8Char(theChar, error);
@@ -501,8 +501,8 @@ bool XMLParser::NextElement(XMLElement *theElement)
 
 										aLastAttributeKey = aAttributeKey;
 										AddAttribute(theElement,
-													 aLastAttributeKey,
-													 aAttributeValue);
+										             aLastAttributeKey,
+										             aAttributeValue);
 
 										aAttributeKey = "";
 										aAttributeValue = "";
@@ -511,7 +511,7 @@ bool XMLParser::NextElement(XMLElement *theElement)
 									if (aLastAttributeKey.length() > 0)
 									{
 										SexyString aVal =
-											theElement->mAttributes[aLastAttributeKey];
+										    theElement->mAttributes[aLastAttributeKey];
 
 										int aLen = aVal.length();
 
@@ -521,8 +521,8 @@ bool XMLParser::NextElement(XMLElement *theElement)
 											//											theElement->mAttributes[aLastAttributeKey] = aVal.substr(0, aLen - 1);
 
 											AddAttribute(theElement,
-														 aLastAttributeKey,
-														 XMLDecodeString(aVal.substr(0, aLen - 1)));
+											             aLastAttributeKey,
+											             XMLDecodeString(aVal.substr(0, aLen - 1)));
 
 											insertEnd = true;
 										}
@@ -581,7 +581,7 @@ bool XMLParser::NextElement(XMLElement *theElement)
 								if (aLastSectionName != theElement->mValue)
 								{
 									Fail("End '" + theElement->mValue + "' Doesn't Match Start '" +
-										 aLastSectionName + "'");
+									     aLastSectionName + "'");
 									return false;
 								}
 
@@ -599,12 +599,12 @@ bool XMLParser::NextElement(XMLElement *theElement)
 							}
 						}
 						else if ((c == L'/') && (theElement->mType == XMLElement::TYPE_START) &&
-								 (theElement->mValue == ""))
+						         (theElement->mValue == ""))
 						{
 							theElement->mType = XMLElement::TYPE_END;
 						}
 						else if ((c == L'?') && (theElement->mType == XMLElement::TYPE_START) &&
-								 (theElement->mValue == ""))
+						         (theElement->mValue == ""))
 						{
 							theElement->mType = XMLElement::TYPE_INSTRUCTION;
 						}
@@ -642,7 +642,7 @@ bool XMLParser::NextElement(XMLElement *theElement)
 							if (hasSpace)
 							{
 								if ((!doingAttribute) || ((!AttributeVal) && (c != '=')) ||
-									((AttributeVal) && ((aAttributeValue.length() > 0) || gotEndQuote)))
+								    ((AttributeVal) && ((aAttributeValue.length() > 0) || gotEndQuote)))
 								{
 									if (doingAttribute)
 									{
@@ -652,8 +652,8 @@ bool XMLParser::NextElement(XMLElement *theElement)
 										//										theElement->mAttributes[aAttributeKey] = aAttributeValue;
 
 										AddAttribute(theElement,
-													 aAttributeKey,
-													 aAttributeValue);
+										             aAttributeKey,
+										             aAttributeValue);
 
 										aAttributeKey = "";
 										aAttributeValue = "";

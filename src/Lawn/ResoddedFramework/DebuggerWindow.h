@@ -14,37 +14,38 @@ class LawnApp;
 class DebuggerWindow : public ImGuiWindow
 {
   public:
-	DebuggerWindow(LawnApp* theApp);
+	DebuggerWindow(LawnApp *theApp);
 	~DebuggerWindow();
 
 	virtual void Update();
+
   private:
 	// ── State ─────────────────────────────────────────────────────────────
-	LawnApp*  mApp;
+	LawnApp *mApp;
 
 	// Board → Plants
-	Plant*    mSelectedPlant;
-	int       mQuickPlantSeedIdx;   // index into gPlantDefs[0..NUM_SEED_TYPES-1]
-	int       mQuickPlantCol;
-	int       mQuickPlantRow;
+	Plant *mSelectedPlant;
+	int mQuickPlantSeedIdx; // index into gPlantDefs[0..NUM_SEED_TYPES-1]
+	int mQuickPlantCol;
+	int mQuickPlantRow;
 
 	// Board → Zombies
-	int       mSpawnZombieTypeIdx;
-	int       mSpawnZombieRow;
-	int       mWaveEditorWaveIdx;
+	int mSpawnZombieTypeIdx;
+	int mSpawnZombieRow;
+	int mWaveEditorWaveIdx;
 
 	// Board → Cheats
-	int       mAddSunAmount;
-	int       mSpawnCoinType;       // index into CoinType
-	int       mSpawnCoinMotion;     // index into CoinMotion
+	int mAddSunAmount;
+	int mSpawnCoinType;   // index into CoinType
+	int mSpawnCoinMotion; // index into CoinMotion
 
 	// Debug panel
-	bool      mShowImGuiDemo;
-	bool      mDebugDrawGrid;
-	bool      mDebugDrawRects;
+	bool mShowImGuiDemo;
+	bool mDebugDrawGrid;
+	bool mDebugDrawRects;
 
 	// App panel
-	int       mFastLoadModeIdx;
+	int mFastLoadModeIdx;
 
 	// ── Helpers ────────────────────────────────────────────────────────────
 	void DrawBoardTab();
@@ -58,17 +59,16 @@ class DebuggerWindow : public ImGuiWindow
 	void DrawAppTab();
 	void DrawReanimCache();
 
-	static const char* SeedTypeName(int idx);
-	static const char* ZombieTypeName(int idx);
-	static const char* GameModeName(int mode);
-	static const char* GameSceneName(int scene);
-	static const char* ZombiePhaseName(ZombiePhase p);
-	static const char* PlantStateName(PlantState s);
-	static const char* DebugTextModeName(DebugTextMode m);
-	static const char* CoinTypeName(CoinType c);
-	static const char* CoinMotionName(CoinMotion m);
-	static const char* GetVariationString(DrawVariation v);
+	static const char *SeedTypeName(int idx);
+	static const char *ZombieTypeName(int idx);
+	static const char *GameModeName(int mode);
+	static const char *GameSceneName(int scene);
+	static const char *ZombiePhaseName(ZombiePhase p);
+	static const char *PlantStateName(PlantState s);
+	static const char *DebugTextModeName(DebugTextMode m);
+	static const char *CoinTypeName(CoinType c);
+	static const char *CoinMotionName(CoinMotion m);
+	static const char *GetVariationString(DrawVariation v);
 };
-
 
 #endif

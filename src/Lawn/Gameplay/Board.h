@@ -128,7 +128,7 @@ class Board : public Widget, public ButtonListener
 
 #if LAWN_DEBUG_TOOLS
 	Zombie *mDebugSelectedZombie;
-	Plant  *mDebugSelectedPlant;
+	Plant *mDebugSelectedPlant;
 #endif
 
 	bool mPaused;
@@ -151,7 +151,7 @@ class Board : public Widget, public ButtonListener
 	ZombieType mZombiesInWave[MAX_ZOMBIE_WAVES][MAX_ZOMBIES_IN_WAVE];
 	bool mZombieAllowed[100];
 	int mSunCountDown;
-	int mNumSunsFallen;	
+	int mNumSunsFallen;
 	int mShakeCounter;
 	int mShakeAmountX;
 	int mShakeAmountY;
@@ -465,7 +465,7 @@ class Board : public Widget, public ButtonListener
 
 	/// @brief Handle a mouse down press with a tool
 	void MouseDownWithTool(int x, int y, int theClickCount, CursorType theCursorType);
-	
+
 	/// @brief Can we interact with the Board buttons
 	/// @return	True if we can interact
 	bool CanInteractWithBoardButtons();
@@ -614,7 +614,7 @@ class Board : public Widget, public ButtonListener
 	/// @return True if we find a new Plant, false otherwise
 	/// @param thePlant Reference to a Plant to iterate
 	bool IteratePlants(Plant *&thePlant);
-	
+
 	/// @return True if we find a new Projectile, false otherwise
 	/// @param theProjectile Reference to a Projectile to iterate
 	bool IterateProjectiles(Projectile *&theProjectile);
@@ -880,7 +880,7 @@ class Board : public Widget, public ButtonListener
 	/// @param theRadius The Circle's Radius
 	/// @param theRowRange Max row distance it can check
 	/// @param theDamageRangeFlags Damage Flags to filter the Zombies
-	std::vector<Zombie*> GetZombiesInRadius(int theRow, int theX, int theY, int theRadius, int theRowRange, int theDamageRangeFlags);
+	std::vector<Zombie *> GetZombiesInRadius(int theRow, int theX, int theY, int theRadius, int theRowRange, int theDamageRangeFlags);
 
 	/// @brief Kill all Zombies found in the radius
 	/// @param theX The Circle's X Coordinate
@@ -1070,9 +1070,9 @@ class Board : public Widget, public ButtonListener
 	/// @param theMessageStyle The Style of the Message (see MessageStyle enum)
 	/// @param theHelpIndex The index of the advice (see AdviceType enum)
 	void DisplayAdviceAgain(const SexyString &theAdvice,
-									   MessageStyle theMessageStyle,
-									   AdviceType theHelpIndex);
-	
+	                        MessageStyle theMessageStyle,
+	                        AdviceType theHelpIndex);
+
 	/// @brief Try to get the Squirrel GridItem
 	/// @param theGridX The X grid coordinate
 	/// @param theGridY The Y grid coordinate
@@ -1099,7 +1099,7 @@ class Board : public Widget, public ButtonListener
 	void PlaceRake();
 
 	/// @brief Place a rake on the Board if has one purchased
-	/// @return 
+	/// @return
 	GridItem *GetRake();
 
 	/// @brief Did Crazy Dave finish talking in Vasebreaker

@@ -703,7 +703,6 @@ bool SeedPacket::CanPickUp()
 		{
 			return false;
 		}
-
 	}
 
 	return true;
@@ -811,7 +810,6 @@ void SeedPacket::MouseDown(int x, int y, int theClickCount)
 
 			return;
 		}
-
 	}
 
 	mBoard->ClearAdvice(AdviceType::ADVICE_CANT_AFFORD_PLANT);

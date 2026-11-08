@@ -12,7 +12,6 @@
 #endif
 #endif
 
-
 extern bool gInAssert = false;
 extern bool gSexyDumpLeakedMem = false;
 
@@ -35,7 +34,7 @@ static bool gSexyAllocMapValid = false;
 class SexyAllocMap : public std::map<void *, SEXY_ALLOC_INFO>
 {
   public:
-    std::mutex mCrit;
+	std::mutex mCrit;
 
   public:
 	SexyAllocMap()
@@ -171,11 +170,11 @@ void SexyDumpUnfreed()
 	for (i = gSexyAllocMap.begin(); i != gSexyAllocMap.end(); i++)
 	{
 		sprintf(buf,
-				"%s(%d) : Leak %d byte%s\n",
-				i->second.file,
-				i->second.line,
-				i->second.size,
-				i->second.size > 1 ? "s" : "");
+		        "%s(%d) : Leak %d byte%s\n",
+		        i->second.file,
+		        i->second.line,
+		        i->second.size,
+		        i->second.size > 1 ? "s" : "");
 		printf(buf);
 		fprintf(f, buf);
 

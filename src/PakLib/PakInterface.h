@@ -7,7 +7,6 @@
 #include <list>
 #include <string>
 
-
 class PakCollection;
 
 class PakRecord

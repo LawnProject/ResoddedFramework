@@ -23,10 +23,10 @@ class TodStringListFormat
   public:
 	TodStringListFormat();
 	TodStringListFormat(const char *theFormatName,
-						Font **theFont,
-						const Color &theColor,
-						int theLineSpacingOffset,
-						unsigned int theFormatFlags);
+	                    Font **theFont,
+	                    const Color &theColor,
+	                    int theLineSpacingOffset,
+	                    unsigned int theFormatFlags);
 };
 extern int gTodStringFormatCount;
 extern TodStringListFormat *gTodStringFormats;
@@ -47,38 +47,38 @@ bool TodStringListExists(const SexyString &theString);
 void TodStringRemoveReturnChars(std::string &theString);
 bool CharIsSpaceInFormat(SexyChar theChar, const TodStringListFormat &theCurrentFormat);
 int TodWriteString(Graphics *g,
-				   const SexyString &theString,
-				   int theX,
-				   int theY,
-				   TodStringListFormat &theCurrentFormat,
-				   int theWidth,
-				   DrawStringJustification theJustification,
-				   bool drawString,
-				   int theOffset,
-				   int theLength);
+                   const SexyString &theString,
+                   int theX,
+                   int theY,
+                   TodStringListFormat &theCurrentFormat,
+                   int theWidth,
+                   DrawStringJustification theJustification,
+                   bool drawString,
+                   int theOffset,
+                   int theLength);
 int TodWriteWordWrappedHelper(Graphics *g,
-										 const SexyString &theString,
-										 int theX,
-										 int theY,
-										 TodStringListFormat &theCurrentFormat,
-										 int theWidth,
-										 DrawStringJustification theJustification,
-										 bool drawString,
-										 int theOffset,
-										 int theLength,
-										 int theMaxChars);
+                              const SexyString &theString,
+                              int theX,
+                              int theY,
+                              TodStringListFormat &theCurrentFormat,
+                              int theWidth,
+                              DrawStringJustification theJustification,
+                              bool drawString,
+                              int theOffset,
+                              int theLength,
+                              int theMaxChars);
 int TodDrawStringWrappedHelper(Graphics *g,
-							   const SexyString &theText,
-							   const Rect &theRect,
-							   Font *theFont,
-							   const Color &theColor,
-							   DrawStringJustification theJustification,
-							   bool drawString);
+                               const SexyString &theText,
+                               const Rect &theRect,
+                               Font *theFont,
+                               const Color &theColor,
+                               DrawStringJustification theJustification,
+                               bool drawString);
 void TodDrawStringWrapped(Graphics *g,
-									 const SexyString &theText,
-									 const Rect &theRect,
-									 Font *theFont,
-									 const Color &theColor,
-									 DrawStringJustification theJustification);
+                          const SexyString &theText,
+                          const Rect &theRect,
+                          Font *theFont,
+                          const Color &theColor,
+                          DrawStringJustification theJustification);
 
 #endif //__TODSTRINGFILE_H__

@@ -7,7 +7,13 @@
 using namespace Sexy;
 
 static int gButtonWidgetColors[][3] = {
-	{0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {255, 255, 255}, {132, 132, 132}, {212, 212, 212}};
+	{ 0,   0,   0   },
+	{ 0,   0,   0   },
+	{ 0,   0,   0   },
+	{ 255, 255, 255 },
+	{ 132, 132, 132 },
+	{ 212, 212, 212 }
+};
 
 ButtonWidget::ButtonWidget(int theId, ButtonListener *theButtonListener)
 {

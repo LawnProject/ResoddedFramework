@@ -34,7 +34,7 @@ class Font
 	virtual int CharWidthKern(SexyChar theChar, SexyChar thePrevChar);
 
 	virtual void DrawString(
-		Graphics *g, int theX, int theY, const SexyString &theString, const Color &theColor, const Rect &theClipRect);
+	    Graphics *g, int theX, int theY, const SexyString &theString, const Color &theColor, const Rect &theClipRect);
 
 	virtual Font *Duplicate() = 0;
 };

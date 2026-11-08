@@ -21,7 +21,7 @@ OpenALSoundManager::OpenALSoundManager()
 		return;
 	}
 
-	ALCint attrs[] = {ALC_FREQUENCY, 44100, 0};
+	ALCint attrs[] = { ALC_FREQUENCY, 44100, 0 };
 	mContext = alcCreateContext(mAudioDevice, attrs);
 	if (!alcMakeContextCurrent(mContext))
 	{
@@ -124,7 +124,6 @@ SoundInstance *OpenALSoundManager::GetSoundInstance(unsigned int theSfxID)
 	if (aFreeChannel < 0)
 		return nullptr;
 
-
 	if (mSourceSounds[theSfxID] == AL_NONE)
 		return nullptr;
 
@@ -156,12 +155,11 @@ bool OpenALSoundManager::LoadSound(unsigned int theSfxID, const std::string &the
 
 	mSourceFileNames[theSfxID] = theFilename;
 
-	return 
-		LoadWAVSound(theSfxID, theFilename + ".wav") ||
-		LoadFLACSound(theSfxID, theFilename + ".flac") || 
-		LoadMP3Sound(theSfxID, theFilename + ".mp3") || 
-		LoadOGGSound(theSfxID, theFilename + ".ogg") ||
-		LoadAUSound(theSfxID, theFilename + ".au");
+	return LoadWAVSound(theSfxID, theFilename + ".wav") ||
+	       LoadFLACSound(theSfxID, theFilename + ".flac") ||
+	       LoadMP3Sound(theSfxID, theFilename + ".mp3") ||
+	       LoadOGGSound(theSfxID, theFilename + ".ogg") ||
+	       LoadAUSound(theSfxID, theFilename + ".au");
 }
 
 #ifdef USE_OGG_LIB
@@ -175,10 +173,10 @@ static int p_fseek64_wrap(PFILE *f, ogg_int64_t off, int whence)
 
 int ov_pak_open(PFILE *f, OggVorbis_File *vf, char *initial, long ibytes)
 {
-	ov_callbacks callbacks = {(size_t (*)(void *, size_t, size_t, void *))p_fread,
-							  (int (*)(void *, ogg_int64_t, int))p_fseek64_wrap,
-							  (int (*)(void *))p_fclose,
-							  (long (*)(void *))p_ftell};
+	ov_callbacks callbacks = { (size_t (*)(void *, size_t, size_t, void *))p_fread,
+		                       (int (*)(void *, ogg_int64_t, int))p_fseek64_wrap,
+		                       (int (*)(void *))p_fclose,
+		                       (long (*)(void *))p_ftell };
 
 	return ov_open_callbacks((void *)f, vf, initial, ibytes, callbacks);
 }
@@ -288,10 +286,10 @@ bool OpenALSoundManager::LoadMP3Sound(unsigned int theSfxID, const std::string &
 	ALuint buffer;
 	alGenBuffers(1, &buffer);
 	alBufferData(buffer,
-				 aMP3.channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16,
-				 pDecodedInterleavedPCMFrames,
-				 (ALsizei)(numberOfFramesActuallyDecoded * aMP3.channels * sizeof(int16_t)),
-				 (ALsizei)aMP3.sampleRate);
+	             aMP3.channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16,
+	             pDecodedInterleavedPCMFrames,
+	             (ALsizei)(numberOfFramesActuallyDecoded * aMP3.channels * sizeof(int16_t)),
+	             (ALsizei)aMP3.sampleRate);
 
 	mSourceDataSizes[theSfxID] = aSize;
 	mSourceSounds[theSfxID] = buffer;
@@ -307,7 +305,7 @@ bool OpenALSoundManager::LoadWAVSound(unsigned int theSfxID, const std::string &
 {
 	int aDataSize;
 
-	PFILE* aPakFile;
+	PFILE *aPakFile;
 
 	aPakFile = p_fopen(theFilename.c_str(), "rb");
 
@@ -331,15 +329,15 @@ bool OpenALSoundManager::LoadWAVSound(unsigned int theSfxID, const std::string &
 	aSize = (int)(aWAV.totalPCMFrameCount * aWAV.channels * sizeof(int16_t));
 	int16_t *pDecodedInterleavedPCMFrames = (int16_t *)malloc(aSize);
 	uint64_t numberOfFramesActuallyDecoded =
-		drwav_read_pcm_frames_s16(&aWAV, aWAV.totalPCMFrameCount, pDecodedInterleavedPCMFrames);
+	    drwav_read_pcm_frames_s16(&aWAV, aWAV.totalPCMFrameCount, pDecodedInterleavedPCMFrames);
 
 	ALuint buffer;
 	alGenBuffers(1, &buffer);
 	alBufferData(buffer,
-				 aWAV.channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16,
-				 pDecodedInterleavedPCMFrames,
-				 (ALsizei)(numberOfFramesActuallyDecoded * aWAV.channels * sizeof(int16_t)),
-				 (ALsizei)aWAV.sampleRate);
+	             aWAV.channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16,
+	             pDecodedInterleavedPCMFrames,
+	             (ALsizei)(numberOfFramesActuallyDecoded * aWAV.channels * sizeof(int16_t)),
+	             (ALsizei)aWAV.sampleRate);
 
 	mSourceDataSizes[theSfxID] = aSize;
 	mSourceSounds[theSfxID] = buffer;
@@ -378,15 +376,15 @@ bool OpenALSoundManager::LoadFLACSound(unsigned int theSfxID, const std::string 
 	aSize = (int)(aFLAC->totalPCMFrameCount * aFLAC->channels * sizeof(int16_t));
 	int16_t *pDecodedInterleavedPCMFrames = (int16_t *)malloc(aSize);
 	uint64_t numberOfFramesActuallyDecoded =
-		drflac_read_pcm_frames_s16(aFLAC, aFLAC->totalPCMFrameCount, pDecodedInterleavedPCMFrames);
+	    drflac_read_pcm_frames_s16(aFLAC, aFLAC->totalPCMFrameCount, pDecodedInterleavedPCMFrames);
 
 	ALuint buffer;
 	alGenBuffers(1, &buffer);
 	alBufferData(buffer,
-				 aFLAC->channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16,
-				 pDecodedInterleavedPCMFrames,
-				 (ALsizei)(numberOfFramesActuallyDecoded * aFLAC->channels * sizeof(int16_t)),
-				 (ALsizei)aFLAC->sampleRate);
+	             aFLAC->channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16,
+	             pDecodedInterleavedPCMFrames,
+	             (ALsizei)(numberOfFramesActuallyDecoded * aFLAC->channels * sizeof(int16_t)),
+	             (ALsizei)aFLAC->sampleRate);
 
 	mSourceDataSizes[theSfxID] = aSize;
 	mSourceSounds[theSfxID] = buffer;
@@ -422,10 +420,10 @@ bool OpenALSoundManager::LoadAUSound(unsigned int theSfxID, const std::string &t
 	ALuint buffer;
 	alGenBuffers(1, &buffer);
 	alBufferData(buffer,
-				 anAUFile.mChannels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16,
-				 anAUFile.mSamples.data(),
-				 anAUFile.mSamples.size() * sizeof(int16_t),
-				 anAUFile.mSampleRate);
+	             anAUFile.mChannels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16,
+	             anAUFile.mSamples.data(),
+	             anAUFile.mSamples.size() * sizeof(int16_t),
+	             anAUFile.mSampleRate);
 
 	mSourceSounds[theSfxID] = buffer;
 
@@ -435,8 +433,8 @@ bool OpenALSoundManager::LoadAUSound(unsigned int theSfxID, const std::string &t
 }
 
 bool Sexy::OpenALSoundManager::WriteWAV(unsigned int theSfxID,
-										const std::string &theFilename,
-										const std::string &theDepFile)
+                                        const std::string &theFilename,
+                                        const std::string &theDepFile)
 {
 	return false;
 }

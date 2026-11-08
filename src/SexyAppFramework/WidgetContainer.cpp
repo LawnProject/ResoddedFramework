@@ -121,7 +121,7 @@ Widget *WidgetContainer::GetWidgetAtHelper(int x, int y, int theFlags, bool *fou
 			{
 				bool childFound;
 				Widget *aCheckWidget = aWidget->GetWidgetAtHelper(
-					x - aWidget->mX, y - aWidget->mY, aCurFlags, &childFound, theWidgetX, theWidgetY);
+				    x - aWidget->mX, y - aWidget->mY, aCurFlags, &childFound, theWidgetX, theWidgetY);
 				if ((aCheckWidget != NULL) || (childFound))
 				{
 					*found = true;
@@ -404,9 +404,9 @@ void WidgetContainer::MarkDirtyFull(WidgetContainer *theWidget)
 					// Clip the widget's bounds to the screen and check if it fully overlapped by this non-transparent widget underneath it
 					// If it is fully overlapped then we can stop marking dirty underneath it since it's not transparent.
 					Rect aRect = Rect(theWidget->mX, theWidget->mY, theWidget->mWidth, theWidget->mHeight)
-									 .Intersection(Rect(0, 0, mWidth, mHeight));
+					                 .Intersection(Rect(0, 0, mWidth, mHeight));
 					if ((aWidget->Contains(aRect.mX, aRect.mY) &&
-						 (aWidget->Contains(aRect.mX + aRect.mWidth - 1, aRect.mY + aRect.mHeight - 1))))
+					     (aWidget->Contains(aRect.mX + aRect.mWidth - 1, aRect.mY + aRect.mHeight - 1))))
 					{
 						// If this widget is fully contained within a lower widget, there is no need to dig down
 						// any deeper.

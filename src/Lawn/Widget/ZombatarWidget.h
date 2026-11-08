@@ -186,6 +186,7 @@ class ZombatarWidget : public Widget, public ButtonListener
 		ZOMBATAR_HATS,
 		ZOMBATAR_BACKDROPS,
 	};
+
   public:
 	LawnApp *mApp;
 	GameButton *mBackButton;
@@ -200,9 +201,7 @@ class ZombatarWidget : public Widget, public ButtonListener
 	GameButton *mNextPageButton;
 	GameButton *mPrevPageButton;
 
-
 	GameButton *mToggledButton;
-
 
 	GameButton *mSkinButton;
 	GameButton *mHairButton;
@@ -247,6 +246,7 @@ class ZombatarWidget : public Widget, public ButtonListener
 
 	virtual void MouseDown(int x, int y, int theClickCount);
 	virtual void MouseUp(int x, int y, int theClickCount);
+
   private:
 };
 

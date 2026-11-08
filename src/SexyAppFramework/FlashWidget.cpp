@@ -87,52 +87,52 @@ struct __declspec(uuid("d27cdb6c-ae6d-11cf-96b8-444553540000")) IShockwaveFlash 
 	//
 
 	virtual HRESULT __stdcall get_ReadyState(
-		/*[out,retval]*/ long *thestate) = 0;
+	    /*[out,retval]*/ long *thestate) = 0;
 	virtual HRESULT __stdcall get_TotalFrames(
-		/*[out,retval]*/ long *numframes) = 0;
+	    /*[out,retval]*/ long *numframes) = 0;
 	virtual HRESULT __stdcall get_Playing(
-		/*[out,retval]*/ VARIANT_BOOL *Playing) = 0;
+	    /*[out,retval]*/ VARIANT_BOOL *Playing) = 0;
 	virtual HRESULT __stdcall put_Playing(
-		/*[in]*/ VARIANT_BOOL Playing) = 0;
+	    /*[in]*/ VARIANT_BOOL Playing) = 0;
 	virtual HRESULT __stdcall get_Quality(
-		/*[out,retval]*/ int *Quality) = 0;
+	    /*[out,retval]*/ int *Quality) = 0;
 	virtual HRESULT __stdcall put_Quality(
-		/*[in]*/ int Quality) = 0;
+	    /*[in]*/ int Quality) = 0;
 	virtual HRESULT __stdcall get_ScaleMode(
-		/*[out,retval]*/ int *scale) = 0;
+	    /*[out,retval]*/ int *scale) = 0;
 	virtual HRESULT __stdcall put_ScaleMode(
-		/*[in]*/ int scale) = 0;
+	    /*[in]*/ int scale) = 0;
 	virtual HRESULT __stdcall get_AlignMode(
-		/*[out,retval]*/ int *align) = 0;
+	    /*[out,retval]*/ int *align) = 0;
 	virtual HRESULT __stdcall put_AlignMode(
-		/*[in]*/ int align) = 0;
+	    /*[in]*/ int align) = 0;
 	virtual HRESULT __stdcall get_BackgroundColor(
-		/*[out,retval]*/ long *color) = 0;
+	    /*[out,retval]*/ long *color) = 0;
 	virtual HRESULT __stdcall put_BackgroundColor(
-		/*[in]*/ long color) = 0;
+	    /*[in]*/ long color) = 0;
 	virtual HRESULT __stdcall get_Loop(
-		/*[out,retval]*/ VARIANT_BOOL *Loop) = 0;
+	    /*[out,retval]*/ VARIANT_BOOL *Loop) = 0;
 	virtual HRESULT __stdcall put_Loop(
-		/*[in]*/ VARIANT_BOOL Loop) = 0;
+	    /*[in]*/ VARIANT_BOOL Loop) = 0;
 	virtual HRESULT __stdcall get_Movie(
-		/*[out,retval]*/ BSTR *path) = 0;
+	    /*[out,retval]*/ BSTR *path) = 0;
 	virtual HRESULT __stdcall put_Movie(
-		/*[in]*/ BSTR path) = 0;
+	    /*[in]*/ BSTR path) = 0;
 	virtual HRESULT __stdcall get_FrameNum(
-		/*[out,retval]*/ long *FrameNum) = 0;
+	    /*[out,retval]*/ long *FrameNum) = 0;
 	virtual HRESULT __stdcall put_FrameNum(
-		/*[in]*/ long FrameNum) = 0;
+	    /*[in]*/ long FrameNum) = 0;
 	virtual HRESULT __stdcall SetZoomRect(
-		/*[in]*/ long left,
-		/*[in]*/ long top,
-		/*[in]*/ long right,
-		/*[in]*/ long bottom) = 0;
+	    /*[in]*/ long left,
+	    /*[in]*/ long top,
+	    /*[in]*/ long right,
+	    /*[in]*/ long bottom) = 0;
 	virtual HRESULT __stdcall Zoom(
-		/*[in]*/ int factor) = 0;
+	    /*[in]*/ int factor) = 0;
 	virtual HRESULT __stdcall Pan(
-		/*[in]*/ long x,
-		/*[in]*/ long y,
-		/*[in]*/ int mode) = 0;
+	    /*[in]*/ long x,
+	    /*[in]*/ long y,
+	    /*[in]*/ int mode) = 0;
 	virtual HRESULT __stdcall Play() = 0;
 	virtual HRESULT __stdcall Stop() = 0;
 	virtual HRESULT __stdcall Back() = 0;
@@ -140,109 +140,109 @@ struct __declspec(uuid("d27cdb6c-ae6d-11cf-96b8-444553540000")) IShockwaveFlash 
 	virtual HRESULT __stdcall Rewind() = 0;
 	virtual HRESULT __stdcall StopPlay() = 0;
 	virtual HRESULT __stdcall GotoFrame(
-		/*[in]*/ long FrameNum) = 0;
+	    /*[in]*/ long FrameNum) = 0;
 	virtual HRESULT __stdcall CurrentFrame(
-		/*[out,retval]*/ long *FrameNum) = 0;
+	    /*[out,retval]*/ long *FrameNum) = 0;
 	virtual HRESULT __stdcall IsPlaying(
-		/*[out,retval]*/ VARIANT_BOOL *Playing) = 0;
+	    /*[out,retval]*/ VARIANT_BOOL *Playing) = 0;
 	virtual HRESULT __stdcall PercentLoaded(
-		/*[out,retval]*/ long *__MIDL_0011) = 0;
+	    /*[out,retval]*/ long *__MIDL_0011) = 0;
 	virtual HRESULT __stdcall FrameLoaded(
-		/*[in]*/ long FrameNum,
-		/*[out,retval]*/ VARIANT_BOOL *loaded) = 0;
+	    /*[in]*/ long FrameNum,
+	    /*[out,retval]*/ VARIANT_BOOL *loaded) = 0;
 	virtual HRESULT __stdcall FlashVersion(
-		/*[out,retval]*/ long *version) = 0;
+	    /*[out,retval]*/ long *version) = 0;
 	virtual HRESULT __stdcall get_WMode(
-		/*[out,retval]*/ BSTR *pVal) = 0;
+	    /*[out,retval]*/ BSTR *pVal) = 0;
 	virtual HRESULT __stdcall put_WMode(
-		/*[in]*/ BSTR pVal) = 0;
+	    /*[in]*/ BSTR pVal) = 0;
 	virtual HRESULT __stdcall get_SAlign(
-		/*[out,retval]*/ BSTR *pVal) = 0;
+	    /*[out,retval]*/ BSTR *pVal) = 0;
 	virtual HRESULT __stdcall put_SAlign(
-		/*[in]*/ BSTR pVal) = 0;
+	    /*[in]*/ BSTR pVal) = 0;
 	virtual HRESULT __stdcall get_Menu(
-		/*[out,retval]*/ VARIANT_BOOL *pVal) = 0;
+	    /*[out,retval]*/ VARIANT_BOOL *pVal) = 0;
 	virtual HRESULT __stdcall put_Menu(
-		/*[in]*/ VARIANT_BOOL pVal) = 0;
+	    /*[in]*/ VARIANT_BOOL pVal) = 0;
 	virtual HRESULT __stdcall get_Base(
-		/*[out,retval]*/ BSTR *pVal) = 0;
+	    /*[out,retval]*/ BSTR *pVal) = 0;
 	virtual HRESULT __stdcall put_Base(
-		/*[in]*/ BSTR pVal) = 0;
+	    /*[in]*/ BSTR pVal) = 0;
 	virtual HRESULT __stdcall get_scale(
-		/*[out,retval]*/ BSTR *pVal) = 0;
+	    /*[out,retval]*/ BSTR *pVal) = 0;
 	virtual HRESULT __stdcall put_scale(
-		/*[in]*/ BSTR pVal) = 0;
+	    /*[in]*/ BSTR pVal) = 0;
 	virtual HRESULT __stdcall get_DeviceFont(
-		/*[out,retval]*/ VARIANT_BOOL *pVal) = 0;
+	    /*[out,retval]*/ VARIANT_BOOL *pVal) = 0;
 	virtual HRESULT __stdcall put_DeviceFont(
-		/*[in]*/ VARIANT_BOOL pVal) = 0;
+	    /*[in]*/ VARIANT_BOOL pVal) = 0;
 	virtual HRESULT __stdcall get_EmbedMovie(
-		/*[out,retval]*/ VARIANT_BOOL *pVal) = 0;
+	    /*[out,retval]*/ VARIANT_BOOL *pVal) = 0;
 	virtual HRESULT __stdcall put_EmbedMovie(
-		/*[in]*/ VARIANT_BOOL pVal) = 0;
+	    /*[in]*/ VARIANT_BOOL pVal) = 0;
 	virtual HRESULT __stdcall get_BGColor(
-		/*[out,retval]*/ BSTR *pVal) = 0;
+	    /*[out,retval]*/ BSTR *pVal) = 0;
 	virtual HRESULT __stdcall put_BGColor(
-		/*[in]*/ BSTR pVal) = 0;
+	    /*[in]*/ BSTR pVal) = 0;
 	virtual HRESULT __stdcall get_Quality2(
-		/*[out,retval]*/ BSTR *pVal) = 0;
+	    /*[out,retval]*/ BSTR *pVal) = 0;
 	virtual HRESULT __stdcall put_Quality2(
-		/*[in]*/ BSTR pVal) = 0;
+	    /*[in]*/ BSTR pVal) = 0;
 	virtual HRESULT __stdcall LoadMovie(
-		/*[in]*/ int layer,
-		/*[in]*/ BSTR url) = 0;
+	    /*[in]*/ int layer,
+	    /*[in]*/ BSTR url) = 0;
 	virtual HRESULT __stdcall TGotoFrame(
-		/*[in]*/ BSTR target,
-		/*[in]*/ long FrameNum) = 0;
+	    /*[in]*/ BSTR target,
+	    /*[in]*/ long FrameNum) = 0;
 	virtual HRESULT __stdcall TGotoLabel(
-		/*[in]*/ BSTR target,
-		/*[in]*/ BSTR label) = 0;
+	    /*[in]*/ BSTR target,
+	    /*[in]*/ BSTR label) = 0;
 	virtual HRESULT __stdcall TCurrentFrame(
-		/*[in]*/ BSTR target,
-		/*[out,retval]*/ long *FrameNum) = 0;
+	    /*[in]*/ BSTR target,
+	    /*[out,retval]*/ long *FrameNum) = 0;
 	virtual HRESULT __stdcall TCurrentLabel(
-		/*[in]*/ BSTR target,
-		/*[out,retval]*/ BSTR *pVal) = 0;
+	    /*[in]*/ BSTR target,
+	    /*[out,retval]*/ BSTR *pVal) = 0;
 	virtual HRESULT __stdcall TPlay(
-		/*[in]*/ BSTR target) = 0;
+	    /*[in]*/ BSTR target) = 0;
 	virtual HRESULT __stdcall TStopPlay(
-		/*[in]*/ BSTR target) = 0;
+	    /*[in]*/ BSTR target) = 0;
 	virtual HRESULT __stdcall SetVariable(
-		/*[in]*/ BSTR name,
-		/*[in]*/ BSTR value) = 0;
+	    /*[in]*/ BSTR name,
+	    /*[in]*/ BSTR value) = 0;
 	virtual HRESULT __stdcall GetVariable(
-		/*[in]*/ BSTR name,
-		/*[out,retval]*/ BSTR *pVal) = 0;
+	    /*[in]*/ BSTR name,
+	    /*[out,retval]*/ BSTR *pVal) = 0;
 	virtual HRESULT __stdcall TSetProperty(
-		/*[in]*/ BSTR target,
-		/*[in]*/ int property,
-		/*[in]*/ BSTR value) = 0;
+	    /*[in]*/ BSTR target,
+	    /*[in]*/ int property,
+	    /*[in]*/ BSTR value) = 0;
 	virtual HRESULT __stdcall TGetProperty(
-		/*[in]*/ BSTR target,
-		/*[in]*/ int property,
-		/*[out,retval]*/ BSTR *pVal) = 0;
+	    /*[in]*/ BSTR target,
+	    /*[in]*/ int property,
+	    /*[out,retval]*/ BSTR *pVal) = 0;
 	virtual HRESULT __stdcall TCallFrame(
-		/*[in]*/ BSTR target,
-		/*[in]*/ int FrameNum) = 0;
+	    /*[in]*/ BSTR target,
+	    /*[in]*/ int FrameNum) = 0;
 	virtual HRESULT __stdcall TCallLabel(
-		/*[in]*/ BSTR target,
-		/*[in]*/ BSTR label) = 0;
+	    /*[in]*/ BSTR target,
+	    /*[in]*/ BSTR label) = 0;
 	virtual HRESULT __stdcall TSetPropertyNum(
-		/*[in]*/ BSTR target,
-		/*[in]*/ int property,
-		/*[in]*/ double value) = 0;
+	    /*[in]*/ BSTR target,
+	    /*[in]*/ int property,
+	    /*[in]*/ double value) = 0;
 	virtual HRESULT __stdcall TGetPropertyNum(
-		/*[in]*/ BSTR target,
-		/*[in]*/ int property,
-		/*[out,retval]*/ double *pVal) = 0;
+	    /*[in]*/ BSTR target,
+	    /*[in]*/ int property,
+	    /*[out,retval]*/ double *pVal) = 0;
 	virtual HRESULT __stdcall get_SWRemote(
-		/*[out,retval]*/ BSTR *pVal) = 0;
+	    /*[out,retval]*/ BSTR *pVal) = 0;
 	virtual HRESULT __stdcall put_SWRemote(
-		/*[in]*/ BSTR pVal) = 0;
+	    /*[in]*/ BSTR pVal) = 0;
 	virtual HRESULT __stdcall get_Stacking(
-		/*[out,retval]*/ BSTR *pVal) = 0;
+	    /*[out,retval]*/ BSTR *pVal) = 0;
 	virtual HRESULT __stdcall put_Stacking(
-		/*[in]*/ BSTR pVal) = 0;
+	    /*[in]*/ BSTR pVal) = 0;
 };
 
 struct __declspec(uuid("d27cdb6d-ae6d-11cf-96b8-444553540000")) _IShockwaveFlashEvents : IDispatch
@@ -276,15 +276,15 @@ struct __declspec(uuid("a6ef9860-c720-11d0-9337-00a0c90dcaa9")) IDispatchEx : ID
 
 	HRESULT GetDispID(_bstr_t bstrName, unsigned long grfdex, long *pid);
 	HRESULT RemoteInvokeEx(long id,
-						   unsigned long lcid,
-						   unsigned long dwFlags,
-						   struct DISPPARAMS *pdp,
-						   VARIANT *pvarRes,
-						   struct EXCEPINFO *pei,
-						   struct IServiceProvider *pspCaller,
-						   unsigned int cvarRefArg,
-						   unsigned int *rgiRefArg,
-						   VARIANT *rgvarRefArg);
+	                       unsigned long lcid,
+	                       unsigned long dwFlags,
+	                       struct DISPPARAMS *pdp,
+	                       VARIANT *pvarRes,
+	                       struct EXCEPINFO *pei,
+	                       struct IServiceProvider *pspCaller,
+	                       unsigned int cvarRefArg,
+	                       unsigned int *rgiRefArg,
+	                       VARIANT *rgvarRefArg);
 	HRESULT DeleteMemberByName(_bstr_t bstrName, unsigned long grfdex);
 	HRESULT DeleteMemberByDispID(long id);
 	HRESULT GetMemberProperties(long id, unsigned long grfdexFetch, unsigned long *pgrfdex);
@@ -297,38 +297,38 @@ struct __declspec(uuid("a6ef9860-c720-11d0-9337-00a0c90dcaa9")) IDispatchEx : ID
 	//
 
 	virtual HRESULT __stdcall raw_GetDispID(
-		/*[in]*/ BSTR bstrName,
-		/*[in]*/ unsigned long grfdex,
-		/*[out]*/ long *pid) = 0;
+	    /*[in]*/ BSTR bstrName,
+	    /*[in]*/ unsigned long grfdex,
+	    /*[out]*/ long *pid) = 0;
 	virtual HRESULT __stdcall raw_RemoteInvokeEx(
-		/*[in]*/ long id,
-		/*[in]*/ unsigned long lcid,
-		/*[in]*/ unsigned long dwFlags,
-		/*[in]*/ struct DISPPARAMS *pdp,
-		/*[out]*/ VARIANT *pvarRes,
-		/*[out]*/ struct EXCEPINFO *pei,
-		/*[in]*/ struct IServiceProvider *pspCaller,
-		/*[in]*/ unsigned int cvarRefArg,
-		/*[in]*/ unsigned int *rgiRefArg,
-		/*[in,out]*/ VARIANT *rgvarRefArg) = 0;
+	    /*[in]*/ long id,
+	    /*[in]*/ unsigned long lcid,
+	    /*[in]*/ unsigned long dwFlags,
+	    /*[in]*/ struct DISPPARAMS *pdp,
+	    /*[out]*/ VARIANT *pvarRes,
+	    /*[out]*/ struct EXCEPINFO *pei,
+	    /*[in]*/ struct IServiceProvider *pspCaller,
+	    /*[in]*/ unsigned int cvarRefArg,
+	    /*[in]*/ unsigned int *rgiRefArg,
+	    /*[in,out]*/ VARIANT *rgvarRefArg) = 0;
 	virtual HRESULT __stdcall raw_DeleteMemberByName(
-		/*[in]*/ BSTR bstrName,
-		/*[in]*/ unsigned long grfdex) = 0;
+	    /*[in]*/ BSTR bstrName,
+	    /*[in]*/ unsigned long grfdex) = 0;
 	virtual HRESULT __stdcall raw_DeleteMemberByDispID(
-		/*[in]*/ long id) = 0;
+	    /*[in]*/ long id) = 0;
 	virtual HRESULT __stdcall raw_GetMemberProperties(
-		/*[in]*/ long id,
-		/*[in]*/ unsigned long grfdexFetch,
-		/*[out]*/ unsigned long *pgrfdex) = 0;
+	    /*[in]*/ long id,
+	    /*[in]*/ unsigned long grfdexFetch,
+	    /*[out]*/ unsigned long *pgrfdex) = 0;
 	virtual HRESULT __stdcall raw_GetMemberName(
-		/*[in]*/ long id,
-		/*[out]*/ BSTR *pbstrName) = 0;
+	    /*[in]*/ long id,
+	    /*[out]*/ BSTR *pbstrName) = 0;
 	virtual HRESULT __stdcall raw_GetNextDispID(
-		/*[in]*/ unsigned long grfdex,
-		/*[in]*/ long id,
-		/*[out]*/ long *pid) = 0;
+	    /*[in]*/ unsigned long grfdex,
+	    /*[in]*/ long id,
+	    /*[out]*/ long *pid) = 0;
 	virtual HRESULT __stdcall raw_GetNameSpaceParent(
-		/*[out]*/ IUnknown **ppunk) = 0;
+	    /*[out]*/ IUnknown **ppunk) = 0;
 };
 
 struct __declspec(uuid("d27cdb72-ae6d-11cf-96b8-444553540000")) IFlashObjectInterface : IDispatchEx
@@ -379,9 +379,9 @@ class FlashSink : public ShockwaveFlashObjects::_IShockwaveFlashEvents
 		LPCONNECTIONPOINTCONTAINER aConnectionPoint = NULL;
 
 		if ((mFlashWidget->mFlashInterface->QueryInterface(IID_IConnectionPointContainer, (void **)&aConnectionPoint) ==
-			 S_OK) &&
-			(aConnectionPoint->FindConnectionPoint(__uuidof(ShockwaveFlashObjects::_IShockwaveFlashEvents),
-												   &mConnectionPoint) == S_OK))
+		     S_OK) &&
+		    (aConnectionPoint->FindConnectionPoint(__uuidof(ShockwaveFlashObjects::_IShockwaveFlashEvents),
+		                                           &mConnectionPoint) == S_OK))
 		{
 			IDispatch *aDispatch = NULL;
 			QueryInterface(__uuidof(IDispatch), (void **)&aDispatch);
@@ -477,13 +477,13 @@ class FlashSink : public ShockwaveFlashObjects::_IShockwaveFlashEvents
 	}
 
 	virtual HRESULT STDMETHODCALLTYPE Invoke(DISPID dispIdMember,
-											 REFIID riid,
-											 LCID lcid,
-											 WORD wFlags,
-											 ::DISPPARAMS __RPC_FAR *pDispParams,
-											 VARIANT __RPC_FAR *pVarResult,
-											 ::EXCEPINFO __RPC_FAR *pExcepInfo,
-											 UINT __RPC_FAR *puArgErr)
+	                                         REFIID riid,
+	                                         LCID lcid,
+	                                         WORD wFlags,
+	                                         ::DISPPARAMS __RPC_FAR *pDispParams,
+	                                         VARIANT __RPC_FAR *pVarResult,
+	                                         ::EXCEPINFO __RPC_FAR *pExcepInfo,
+	                                         UINT __RPC_FAR *puArgErr)
 	{
 		switch (dispIdMember)
 		{
@@ -491,7 +491,7 @@ class FlashSink : public ShockwaveFlashObjects::_IShockwaveFlashEvents
 			break;
 		case 0x96:
 			if ((pDispParams->cArgs == 2) && (pDispParams->rgvarg[0].vt == VT_BSTR) &&
-				(pDispParams->rgvarg[1].vt == VT_BSTR))
+			    (pDispParams->rgvarg[1].vt == VT_BSTR))
 			{
 				FSCommand(pDispParams->rgvarg[1].bstrVal, pDispParams->rgvarg[0].bstrVal);
 			}
@@ -688,11 +688,11 @@ class ControlSite : public IOleInPlaceSiteWindowless, public IOleClientSite
 		return S_OK;
 	}
 
-	HRESULT STDMETHODCALLTYPE GetWindowContext(/* [out] */ IOleInPlaceFrame __RPC_FAR *__RPC_FAR *ppFrame,
-											   /* [out] */ IOleInPlaceUIWindow __RPC_FAR *__RPC_FAR *ppDoc,
-											   /* [out] */ LPRECT lprcPosRect,
-											   /* [out] */ LPRECT lprcClipRect,
-											   /* [out][in] */ LPOLEINPLACEFRAMEINFO lpFrameInfo)
+	HRESULT STDMETHODCALLTYPE GetWindowContext(/* [out] */ IOleInPlaceFrame __RPC_FAR * __RPC_FAR * ppFrame,
+	                                           /* [out] */ IOleInPlaceUIWindow __RPC_FAR * __RPC_FAR * ppDoc,
+	                                           /* [out] */ LPRECT lprcPosRect,
+	                                           /* [out] */ LPRECT lprcClipRect,
+	                                           /* [out][in] */ LPOLEINPLACEFRAMEINFO lpFrameInfo)
 	{
 		RECT aRect = mFlashWidget->GetRect().ToRECT();
 
@@ -785,8 +785,8 @@ class ControlSite : public IOleInPlaceSiteWindowless, public IOleClientSite
 	}
 
 	HRESULT STDMETHODCALLTYPE GetDC(/* [in] */ LPCRECT pRect,
-									/* [in] */ DWORD grfFlags,
-									/* [out] */ HDC __RPC_FAR *phDC)
+	                                /* [in] */ DWORD grfFlags,
+	                                /* [out] */ HDC __RPC_FAR *phDC)
 	{
 		return E_INVALIDARG;
 	}
@@ -806,13 +806,13 @@ class ControlSite : public IOleInPlaceSiteWindowless, public IOleClientSite
 		else if (!mFlashWidget->mFlashDirty)
 		{
 			mFlashWidget->mDirtyRect =
-				Rect(pRect->left, pRect->top, pRect->right - pRect->left, pRect->bottom - pRect->top);
+			    Rect(pRect->left, pRect->top, pRect->right - pRect->left, pRect->bottom - pRect->top);
 			mFlashWidget->mFlashDirty = true;
 		}
 		else
 		{
 			mFlashWidget->mDirtyRect = mFlashWidget->mDirtyRect.Union(
-				Rect(pRect->left, pRect->top, pRect->right - pRect->left, pRect->bottom - pRect->top));
+			    Rect(pRect->left, pRect->top, pRect->right - pRect->left, pRect->bottom - pRect->top));
 		}
 
 		return S_OK;
@@ -826,9 +826,9 @@ class ControlSite : public IOleInPlaceSiteWindowless, public IOleClientSite
 	}
 
 	HRESULT STDMETHODCALLTYPE ScrollRect(/* [in] */ INT dx,
-										 /* [in] */ INT dy,
-										 /* [in] */ LPCRECT pRectScroll,
-										 /* [in] */ LPCRECT pRectClip)
+	                                     /* [in] */ INT dy,
+	                                     /* [in] */ LPCRECT pRectScroll,
+	                                     /* [in] */ LPCRECT pRectClip)
 	{
 		return S_OK;
 	}
@@ -844,9 +844,9 @@ class ControlSite : public IOleInPlaceSiteWindowless, public IOleClientSite
 	}
 
 	HRESULT STDMETHODCALLTYPE OnDefWindowMessage(/* [in] */ UINT msg,
-												 /* [in] */ WPARAM wParam,
-												 /* [in] */ LPARAM lParam,
-												 /* [out] */ LRESULT __RPC_FAR *plResult)
+	                                             /* [in] */ WPARAM wParam,
+	                                             /* [in] */ LPARAM lParam,
+	                                             /* [out] */ LRESULT __RPC_FAR *plResult)
 	{
 		return S_FALSE;
 	}
@@ -856,7 +856,9 @@ class ControlSite : public IOleInPlaceSiteWindowless, public IOleClientSite
 
 //////////////////////////////////////////////////////////////////////////
 
-const CLSID CLSID_ShockwaveFlash = {0xD27CDB6E, 0xAE6D, 0x11cf, {0x96, 0xB8, 0x44, 0x45, 0x53, 0x54, 0x00, 0x00}};
+const CLSID CLSID_ShockwaveFlash = {
+	0xD27CDB6E, 0xAE6D, 0x11cf, { 0x96, 0xB8, 0x44, 0x45, 0x53, 0x54, 0x00, 0x00 }
+};
 
 typedef HRESULT(__stdcall *DllGetClassObjectFunc)(REFCLSID rclsid, REFIID riid, LPVOID *ppv);
 
@@ -900,7 +902,7 @@ FlashWidget::FlashWidget(int theId, FlashListener *theFlashListener)
 	{
 		IClassFactory *aClassFactory = NULL;
 		DllGetClassObjectFunc aDllGetClassObjectFunc =
-			(DllGetClassObjectFunc)GetProcAddress(mFlashLibHandle, "DllGetClassObject");
+		    (DllGetClassObjectFunc)GetProcAddress(mFlashLibHandle, "DllGetClassObject");
 		aResult = aDllGetClassObjectFunc(CLSID_ShockwaveFlash, IID_IClassFactory, (void **)&aClassFactory);
 		aClassFactory->CreateInstance(NULL, IID_IOleObject, (void **)&mOleObject);
 		aClassFactory->Release();
@@ -964,7 +966,7 @@ double FlashWidget::GetFlashVersion()
 
 	IOleObject *anOleObject = NULL;
 	if (FAILED(
-			CoCreateInstance(CLSID_ShockwaveFlash, NULL, CLSCTX_INPROC_SERVER, IID_IOleObject, (void **)&anOleObject)))
+	        CoCreateInstance(CLSID_ShockwaveFlash, NULL, CLSCTX_INPROC_SERVER, IID_IOleObject, (void **)&anOleObject)))
 		return 0.0;
 
 	IShockwaveFlash *aFlashInterface = NULL;
@@ -1050,7 +1052,7 @@ bool FlashWidget::StartAnimation(const std::string &theFileName)
 
 void FlashWidget::SetQuality(int theQuality)
 {
-	static char *aQualityNames[3] = {"Low", "Medium", "High"};
+	static char *aQualityNames[3] = { "Low", "Medium", "High" };
 
 	_bstr_t aNewStr = aQualityNames[theQuality];
 	mFlashInterface->put_Quality2(aNewStr);
@@ -1243,14 +1245,14 @@ void FlashWidget::Draw(Graphics *g)
 		mFlashInterface->QueryInterface(IID_IViewObject, (LPVOID *)&aViewObject);
 		if (aViewObject != NULL)
 		{
-			RECTL aRect = {0, 0, mWidth, mHeight};
+			RECTL aRect = { 0, 0, mWidth, mHeight };
 
 			Point anAbsPos = GetAbsPos();
 
 			HRGN aRgn = CreateRectRgn(mDirtyRect.mX - anAbsPos.mX,
-									  mDirtyRect.mY - anAbsPos.mY,
-									  mDirtyRect.mX + mDirtyRect.mWidth - anAbsPos.mX,
-									  mDirtyRect.mY + mDirtyRect.mHeight - anAbsPos.mY);
+			                          mDirtyRect.mY - anAbsPos.mY,
+			                          mDirtyRect.mX + mDirtyRect.mWidth - anAbsPos.mX,
+			                          mDirtyRect.mY + mDirtyRect.mHeight - anAbsPos.mY);
 			SelectClipRgn(aDC, aRgn);
 			DeleteObject(aRgn);
 
@@ -1286,7 +1288,7 @@ void FlashWidget::MouseDown(int x, int y, int theBtnNum, int theClickCount)
 		LRESULT aResult;
 		Point anAbsPos = GetAbsPos();
 		mWindowlessObject->OnWindowMessage(
-			WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(x + anAbsPos.mX, y + anAbsPos.mY), &aResult);
+		    WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(x + anAbsPos.mX, y + anAbsPos.mY), &aResult);
 		CheckCursor();
 	}
 }
@@ -1309,7 +1311,7 @@ void FlashWidget::MouseDrag(int x, int y)
 		LRESULT aResult;
 		Point anAbsPos = GetAbsPos();
 		mWindowlessObject->OnWindowMessage(
-			WM_MOUSEMOVE, MK_LBUTTON, MAKELPARAM(x + anAbsPos.mX, y + anAbsPos.mY), &aResult);
+		    WM_MOUSEMOVE, MK_LBUTTON, MAKELPARAM(x + anAbsPos.mX, y + anAbsPos.mY), &aResult);
 		CheckCursor();
 	}
 }
@@ -1333,6 +1335,5 @@ void FlashWidget::SysColorChanged()
 
 	MarkDirty();
 }
-
 
 #endif

@@ -34,7 +34,7 @@ WidgetManager::WidgetManager(SexyAppBase *theApp)
 	mDownButtons = 0;
 	mActualDownButtons = 0;
 	mWidgetFlags =
-		WIDGETFLAGS_UPDATE | WIDGETFLAGS_DRAW | WIDGETFLAGS_CLIP | WIDGETFLAGS_ALLOW_MOUSE | WIDGETFLAGS_ALLOW_FOCUS;
+	    WIDGETFLAGS_UPDATE | WIDGETFLAGS_DRAW | WIDGETFLAGS_CLIP | WIDGETFLAGS_ALLOW_MOUSE | WIDGETFLAGS_ALLOW_FOCUS;
 
 	for (int i = 0; i < 0xFF; i++)
 		mKeyDown[i] = false;
@@ -178,7 +178,7 @@ void WidgetManager::FlushDeferredOverlayWidgets(int theMaxPriority)
 
 void WidgetManager::DoMouseUps(Widget *theWidget, uint32_t theDownCode)
 {
-	int aClickCountTable[3] = {1, -1, 3};
+	int aClickCountTable[3] = { 1, -1, 3 };
 	for (int i = 0; i < 3; i++)
 	{
 		if ((theDownCode & (1 << i)) != 0)
@@ -219,7 +219,7 @@ void WidgetManager::SetBaseModal(Widget *theWidget, const FlagsMod &theBelowFlag
 	mBelowModalFlagsMod = theBelowFlagsMod;
 
 	if ((mOverWidget != NULL) && (mBelowModalFlagsMod.mRemoveFlags & WIDGETFLAGS_ALLOW_MOUSE) &&
-		(IsBelow(mOverWidget, mBaseModalWidget)))
+	    (IsBelow(mOverWidget, mBaseModalWidget)))
 	{
 		Widget *aWidget = mOverWidget;
 		mOverWidget = NULL;
@@ -227,7 +227,7 @@ void WidgetManager::SetBaseModal(Widget *theWidget, const FlagsMod &theBelowFlag
 	}
 
 	if ((mLastDownWidget != NULL) && (mBelowModalFlagsMod.mRemoveFlags & WIDGETFLAGS_ALLOW_MOUSE) &&
-		(IsBelow(mLastDownWidget, mBaseModalWidget)))
+	    (IsBelow(mLastDownWidget, mBaseModalWidget)))
 	{
 		Widget *aWidget = mLastDownWidget;
 		int aDownButtons = mDownButtons;
@@ -237,7 +237,7 @@ void WidgetManager::SetBaseModal(Widget *theWidget, const FlagsMod &theBelowFlag
 	}
 
 	if ((mFocusWidget != NULL) && (mBelowModalFlagsMod.mRemoveFlags & WIDGETFLAGS_ALLOW_FOCUS) &&
-		(IsBelow(mFocusWidget, mBaseModalWidget)))
+	    (IsBelow(mFocusWidget, mBaseModalWidget)))
 	{
 		Widget *aWidget = mFocusWidget;
 		mFocusWidget = NULL;

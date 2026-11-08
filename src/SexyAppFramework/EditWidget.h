@@ -39,7 +39,7 @@ class EditWidget : public Widget
 	bool mShowingCursor;
 	bool mDrawSelOverride; // set this to true to draw selected text even when not in focus
 	bool
-		mHadDoubleClick; // Used to fix a bug with double clicking to hilite a word after the widget manager started calling mouse drag before mouse down/up events
+	    mHadDoubleClick; // Used to fix a bug with double clicking to hilite a word after the widget manager started calling mouse drag before mouse down/up events
 	int mCursorPos;
 	int mHilitePos;
 	int mBlinkAcc;

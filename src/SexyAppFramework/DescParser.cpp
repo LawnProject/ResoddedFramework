@@ -34,7 +34,7 @@ DataElement *DescParser::Dereference(const std::string &theString)
 bool DescParser::IsImmediate(const std::string &theString)
 {
 	return (((theString[0] >= '0') && (theString[0] <= '9')) || (theString[0] == '-') || (theString[0] == '+') ||
-			(theString[0] == '\'') || (theString[0] == '"'));
+	        (theString[0] == '\'') || (theString[0] == '"'));
 }
 
 std::string DescParser::Unquote(const std::string &theQuotedString)
@@ -290,7 +290,7 @@ bool DescParser::DataToDoubleVector(DataElement *theSource, DoubleVector *theDou
 }
 
 bool DescParser::ParseToList(std::string::const_iterator &it, const std::string::const_iterator &end,
-							 ListDataElement *theList, bool expectListEnd)
+                             ListDataElement *theList, bool expectListEnd)
 {
 	bool inSingleQuotes = false;
 	bool inDoubleQuotes = false;
@@ -534,7 +534,7 @@ bool DescParser::LoadDescriptor(const std::string &theFileName)
 								inDoubleQuotes = !inDoubleQuotes;
 
 							if ((aChar == ';') && (mCmdSep & CMDSEP_SEMICOLON) && (!inSingleQuotes) &&
-								(!inDoubleQuotes))
+							    (!inDoubleQuotes))
 								break;
 
 							if (escaped) // stay escaped for when this is actually parsed

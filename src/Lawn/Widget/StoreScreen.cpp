@@ -21,16 +21,17 @@
 #include <SexyAppFramework/WidgetManager.h>
 
 static StoreItem gStoreItemSpots[NUM_STORE_PAGES][MAX_PAGE_SPOTS] = {
-	{STORE_ITEM_PACKET_UPGRADE, STORE_ITEM_POOL_CLEANER, STORE_ITEM_RAKE, STORE_ITEM_ROOF_CLEANER,
-	 STORE_ITEM_PLANT_GATLINGPEA, STORE_ITEM_PLANT_TWINSUNFLOWER, STORE_ITEM_PLANT_GLOOMSHROOM,
-	 STORE_ITEM_PLANT_CATTAIL},
-	{STORE_ITEM_PLANT_SPIKEROCK, STORE_ITEM_PLANT_GOLD_MAGNET, STORE_ITEM_PLANT_WINTERMELON, STORE_ITEM_PLANT_COBCANNON,
-	 STORE_ITEM_PLANT_IMITATER, STORE_ITEM_FIRSTAID, STORE_ITEM_INVALID, STORE_ITEM_INVALID},
-	{STORE_ITEM_POTTED_MARIGOLD_1, STORE_ITEM_POTTED_MARIGOLD_2, STORE_ITEM_POTTED_MARIGOLD_3,
-	 STORE_ITEM_GOLD_WATERINGCAN, STORE_ITEM_FERTILIZER, STORE_ITEM_BUG_SPRAY, STORE_ITEM_PHONOGRAPH,
-	 STORE_ITEM_GARDENING_GLOVE},
-	{STORE_ITEM_MUSHROOM_GARDEN, STORE_ITEM_AQUARIUM_GARDEN, STORE_ITEM_WHEEL_BARROW, STORE_ITEM_STINKY_THE_SNAIL,
-	 STORE_ITEM_TREE_OF_WISDOM, STORE_ITEM_TREE_FOOD, STORE_ITEM_INVALID, STORE_ITEM_INVALID}};
+	{ STORE_ITEM_PACKET_UPGRADE,    STORE_ITEM_POOL_CLEANER,      STORE_ITEM_RAKE,              STORE_ITEM_ROOF_CLEANER,
+     STORE_ITEM_PLANT_GATLINGPEA,	                                                                                                               STORE_ITEM_PLANT_TWINSUNFLOWER, STORE_ITEM_PLANT_GLOOMSHROOM,
+     STORE_ITEM_PLANT_CATTAIL	                                                                                                                                                                                                    },
+	{ STORE_ITEM_PLANT_SPIKEROCK,   STORE_ITEM_PLANT_GOLD_MAGNET, STORE_ITEM_PLANT_WINTERMELON, STORE_ITEM_PLANT_COBCANNON,
+     STORE_ITEM_PLANT_IMITATER,	                                                                                                                 STORE_ITEM_FIRSTAID,            STORE_ITEM_INVALID,           STORE_ITEM_INVALID },
+	{ STORE_ITEM_POTTED_MARIGOLD_1, STORE_ITEM_POTTED_MARIGOLD_2, STORE_ITEM_POTTED_MARIGOLD_3,
+     STORE_ITEM_GOLD_WATERINGCAN,	                                                                                        STORE_ITEM_FERTILIZER, STORE_ITEM_BUG_SPRAY,           STORE_ITEM_PHONOGRAPH,
+     STORE_ITEM_GARDENING_GLOVE	                                                                                                                                                                                                  },
+	{ STORE_ITEM_MUSHROOM_GARDEN,   STORE_ITEM_AQUARIUM_GARDEN,   STORE_ITEM_WHEEL_BARROW,      STORE_ITEM_STINKY_THE_SNAIL,
+     STORE_ITEM_TREE_OF_WISDOM,	                                                                                                                 STORE_ITEM_TREE_FOOD,           STORE_ITEM_INVALID,           STORE_ITEM_INVALID }
+};
 
 StoreScreenOverlay::StoreScreenOverlay(StoreScreen *theParent)
 {
@@ -165,7 +166,7 @@ bool StoreScreen::IsFullVersionOnly(StoreItem theStoreItem)
 bool StoreScreen::IsPottedPlant(StoreItem theStoreItem)
 {
 	return theStoreItem == STORE_ITEM_POTTED_MARIGOLD_1 || theStoreItem == STORE_ITEM_POTTED_MARIGOLD_2 ||
-		   theStoreItem == STORE_ITEM_POTTED_MARIGOLD_3;
+	       theStoreItem == STORE_ITEM_POTTED_MARIGOLD_3;
 }
 
 bool StoreScreen::IsComingSoon(StoreItem theStoreItem)
@@ -174,12 +175,12 @@ bool StoreScreen::IsComingSoon(StoreItem theStoreItem)
 		return true;
 	else if (theStoreItem == STORE_ITEM_WHEEL_BARROW)
 		return !mApp->mPlayerInfo->mPurchases[STORE_ITEM_MUSHROOM_GARDEN] &&
-			   !mApp->mPlayerInfo->mPurchases[STORE_ITEM_AQUARIUM_GARDEN];
+		       !mApp->mPlayerInfo->mPurchases[STORE_ITEM_AQUARIUM_GARDEN];
 	else if (IsPottedPlant(theStoreItem))
 		return !mApp->HasFinishedAdventure();
 	else if (theStoreItem == STORE_ITEM_TREE_FOOD)
 		return !mApp->mPlayerInfo->mPurchases[STORE_ITEM_TREE_OF_WISDOM] ||
-			   mApp->mPlayerInfo->mPurchases[STORE_ITEM_TREE_FOOD] < PURCHASE_COUNT_OFFSET;
+		       mApp->mPlayerInfo->mPurchases[STORE_ITEM_TREE_FOOD] < PURCHASE_COUNT_OFFSET;
 	return false;
 }
 
@@ -198,7 +199,7 @@ bool StoreScreen::IsItemSoldOut(StoreItem theStoreItem)
 		return aPlayer->mPurchases[STORE_ITEM_BONUS_LAWN_MOWER] >= 2;
 	else if (IsPottedPlant(theStoreItem))
 		return mApp->mZenGarden->IsZenGardenFull(true) ||
-			   aPlayer->mPurchases[theStoreItem] == GetCurrentDaysSince2000();
+		       aPlayer->mPurchases[theStoreItem] == GetCurrentDaysSince2000();
 	else
 		return aPlayer->mPurchases[theStoreItem];
 }
@@ -255,7 +256,7 @@ bool StoreScreen::IsItemUnavailable(StoreItem theStoreItem)
 		return !mApp->HasFinishedAdventure() && mApp->mPlayerInfo->GetLevel() < 41;
 	}
 	if (theStoreItem == STORE_ITEM_PLANT_WINTERMELON || theStoreItem == STORE_ITEM_PLANT_COBCANNON ||
-		theStoreItem == STORE_ITEM_PLANT_IMITATER || theStoreItem == STORE_ITEM_FIRSTAID)
+	    theStoreItem == STORE_ITEM_PLANT_IMITATER || theStoreItem == STORE_ITEM_FIRSTAID)
 	{
 		return !mApp->HasFinishedAdventure();
 	}
@@ -301,7 +302,7 @@ void StoreScreen::DrawItemIcon(Graphics *g, int theItemPosition, StoreItem theIt
 		SexyString aSlotText = TodReplaceNumberString("[STORE_UPGRADE_SLOTS]", "{SLOTS}", aNumSlots);
 		Rect aRect(aPosX, aPosY + 6, 55, 70);
 		TodDrawStringWrapped(g, aSlotText, aRect, Sexy::FONT_HOUSEOFTERROR16, Color::White,
-							 DS_ALIGN_CENTER_VERTICAL_MIDDLE);
+		                     DS_ALIGN_CENTER_VERTICAL_MIDDLE);
 	}
 	else if (theItemType == STORE_ITEM_POOL_CLEANER)
 	{
@@ -409,13 +410,13 @@ void StoreScreen::DrawItem(Graphics *g, int theItemPosition, StoreItem theItemTy
 			aRect.mX -= 4;
 		}
 		TodDrawStringWrapped(g, "[COMING_SOON]", aRect, Sexy::FONT_HOUSEOFTERROR16, Color(255, 0, 0),
-							 DS_ALIGN_CENTER_VERTICAL_MIDDLE);
+		                     DS_ALIGN_CENTER_VERTICAL_MIDDLE);
 	}
 	else if (IsItemSoldOut(theItemType))
 	{
 		Rect aRect(aPosX, aPosY, 50, 70);
 		TodDrawStringWrapped(g, "[SOLD_OUT]", aRect, Sexy::FONT_HOUSEOFTERROR16, Color(255, 0, 0),
-							 DS_ALIGN_CENTER_VERTICAL_MIDDLE);
+		                     DS_ALIGN_CENTER_VERTICAL_MIDDLE);
 	}
 	else if (mMouseOverItem == theItemType)
 	{
@@ -643,7 +644,7 @@ void StoreScreen::UpdateMouse()
 				else
 					mBubbleCountDown = 100;
 				if (IsFullVersionOnly(aItemType) ||
-					(!IsItemSoldOut(aItemType) && !IsItemUnavailable(aItemType) && !IsComingSoon(aItemType)))
+				    (!IsItemSoldOut(aItemType) && !IsItemUnavailable(aItemType) && !IsComingSoon(aItemType)))
 					aShowFinger = true;
 				break;
 			}
@@ -651,8 +652,8 @@ void StoreScreen::UpdateMouse()
 	}
 
 	mApp->SetCursor(mBackButton->mIsOver || mPrevButton->mIsOver || mNextButton->mIsOver || aShowFinger
-						? CURSOR_HAND
-						: CURSOR_POINTER);
+	                    ? CURSOR_HAND
+	                    : CURSOR_POINTER);
 }
 
 void StoreScreen::StorePreload()
@@ -791,8 +792,8 @@ void StoreScreen::Update()
 				if (mBubbleCountDown == 0)
 				{
 					if (mApp->mSoundSystem->IsFoleyPlaying(FOLEY_CRAZY_DAVE_SHORT) ||
-						mApp->mSoundSystem->IsFoleyPlaying(FOLEY_CRAZY_DAVE_LONG) ||
-						mApp->mSoundSystem->IsFoleyPlaying(FOLEY_CRAZY_DAVE_EXTRA_LONG))
+					    mApp->mSoundSystem->IsFoleyPlaying(FOLEY_CRAZY_DAVE_LONG) ||
+					    mApp->mSoundSystem->IsFoleyPlaying(FOLEY_CRAZY_DAVE_EXTRA_LONG))
 					{
 						mBubbleCountDown = 1;
 					}
@@ -973,7 +974,9 @@ int StoreScreen::GetItemCost(StoreItem theStoreItem)
 		return 300;
 	case STORE_ITEM_PACKET_UPGRADE: {
 		int aPurchase = gLawnApp->mPlayerInfo->mPurchases[STORE_ITEM_PACKET_UPGRADE];
-		return aPurchase == 0 ? 75 : aPurchase == 1 ? 500 : aPurchase == 2 ? 2000 : 8000;
+		return aPurchase == 0 ? 75 : aPurchase == 1 ? 500
+		                         : aPurchase == 2   ? 2000
+		                                            : 8000;
 	}
 	case STORE_ITEM_POOL_CLEANER:
 		return 100;
@@ -1008,7 +1011,7 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
 	if (!CanAffordItem(theStoreItem))
 	{
 		Dialog *aDialog = mApp->DoDialog(DIALOG_NOT_ENOUGH_MONEY, true, "[NOT_ENOUGH_MONEY]", "[CANNOT_AFFORD_ITEM]",
-										 "[DIALOG_BUTTON_OK]", BUTTONS_FOOTER);
+		                                 "[DIALOG_BUTTON_OK]", BUTTONS_FOOTER);
 		mWaitForDialog = true;
 		aDialog->WaitForResult(true);
 		mWaitForDialog = false;
@@ -1016,7 +1019,7 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
 	else
 	{
 		LawnDialog *aComfirmDialog = (LawnDialog *)mApp->DoDialog(DIALOG_STORE_PURCHASE, true, "[BUY_ITEM_HEADER]",
-																  "[BUY_ITEM]", "", BUTTONS_YES_NO);
+		                                                          "[BUY_ITEM]", "", BUTTONS_YES_NO);
 		aComfirmDialog->mLawnYesButton->SetLabel("[DIALOG_BUTTON_YES]");
 		aComfirmDialog->mLawnNoButton->SetLabel("[DIALOG_BUTTON_NO]");
 
@@ -1031,9 +1034,9 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
 			{
 				++mApp->mPlayerInfo->mPurchases[theStoreItem];
 				SexyString aDialogLines = StrFormat(TodStringTranslate("[NOW_YOU_CAN_CHOOSE_X_SEEDS]").c_str(),
-													6 + mApp->mPlayerInfo->mPurchases[theStoreItem]);
+				                                    6 + mApp->mPlayerInfo->mPurchases[theStoreItem]);
 				Dialog *aDialog = mApp->DoDialog(DIALOG_UPGRADED, true, "[MORE_SLOTS]", aDialogLines,
-												 "[DIALOG_BUTTON_OK]", BUTTONS_FOOTER);
+				                                 "[DIALOG_BUTTON_OK]", BUTTONS_FOOTER);
 
 				mWaitForDialog = true;
 				aDialog->WaitForResult(true);
@@ -1078,7 +1081,7 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
 				mApp->mPlayerInfo->mChallengeRecords[GAMEMODE_TREE_OF_WISDOM] = 1;
 
 				LawnDialog *aDialog = (LawnDialog *)mApp->DoDialog(DIALOG_STORE_PURCHASE, true, "[VISIT_TREE_HEADER]",
-																   "[VISIT_TREE_BODY]", "", BUTTONS_YES_NO);
+				                                                   "[VISIT_TREE_BODY]", "", BUTTONS_YES_NO);
 				aDialog->mLawnYesButton->SetLabel("[DIALOG_BUTTON_YES]");
 				aDialog->mLawnNoButton->SetLabel("[DIALOG_BUTTON_NO]");
 
@@ -1097,7 +1100,7 @@ void StoreScreen::PurchaseItem(StoreItem theStoreItem)
 				mApp->mZenGarden->AddPottedPlant(&mPottedPlantSpecs);
 				mPottedPlantSpecs.InitializePottedPlant(SEED_MARIGOLD);
 				mPottedPlantSpecs.mDrawVariation =
-					(DrawVariation)RandRangeInt(VARIATION_MARIGOLD_WHITE, VARIATION_MARIGOLD_LIGHT_GREEN);
+				    (DrawVariation)RandRangeInt(VARIATION_MARIGOLD_WHITE, VARIATION_MARIGOLD_LIGHT_GREEN);
 				mApp->mPlayerInfo->mPurchases[theStoreItem] = GetCurrentDaysSince2000();
 			}
 			else
@@ -1208,15 +1211,15 @@ void StoreScreen::MouseDown(int x, int y, int theClickCount)
 			{
 				mWaitForDialog = true;
 				mApp->LawnMessageBox(DIALOG_MESSAGE, "[GET_FULL_VERSION_TITLE]", "[FULL_VERSION_TO_BUY]",
-									 "[DIALOG_BUTTON_OK]", "", BUTTONS_FOOTER);
+				                     "[DIALOG_BUTTON_OK]", "", BUTTONS_FOOTER);
 				mWaitForDialog = false;
 			}
 			else if (aItemType == STORE_ITEM_PVZ)
 			{
 				mWaitForDialog = true;
 				int aResult = mApp->LawnMessageBox(DIALOG_MESSAGE, "[BUY_PVZ_TITLE]", "[BUY_PVZ_BODY]",
-												   "[GET_FULL_VERSION_YES_BUTTON]", "[GET_FULL_VERSION_NO_BUTTON]",
-												   BUTTONS_YES_NO);
+				                                   "[GET_FULL_VERSION_YES_BUTTON]", "[GET_FULL_VERSION_NO_BUTTON]",
+				                                   BUTTONS_YES_NO);
 				mWaitForDialog = false;
 				if (aResult == ID_OK)
 				{

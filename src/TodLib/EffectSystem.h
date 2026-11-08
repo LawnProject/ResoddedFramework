@@ -28,476 +28,476 @@ class TodTriangleGroup
 	TodTriangleGroup();
 	void DrawGroup(Graphics *g);
 	void AddTriangle(Graphics *g,
-					 Image *theImage,
-					 const SexyMatrix3 &theMatrix,
-					 const Rect &theClipRect,
-					 const Color &theColor,
-					 int theDrawMode,
-					 const Rect &theSrcRect);
+	                 Image *theImage,
+	                 const SexyMatrix3 &theMatrix,
+	                 const Rect &theClipRect,
+	                 const Color &theColor,
+	                 int theDrawMode,
+	                 const Rect &theSrcRect);
 };
 
 extern bool gTodTriangleDrawAdditive;
 
 extern void TodDrawTriangle_8888_TEX1_TALPHA0_MOD0_GLOB0_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_8888_TEX1_TALPHA0_MOD0_GLOB0_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_8888_TEX1_TALPHA0_MOD0_GLOB1_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_8888_TEX1_TALPHA0_MOD0_GLOB1_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_8888_TEX1_TALPHA0_MOD1_GLOB0_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_8888_TEX1_TALPHA0_MOD1_GLOB0_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_8888_TEX1_TALPHA0_MOD1_GLOB1_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_8888_TEX1_TALPHA0_MOD1_GLOB1_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_8888_TEX1_TALPHA1_MOD0_GLOB0_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_8888_TEX1_TALPHA1_MOD0_GLOB0_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_8888_TEX1_TALPHA1_MOD0_GLOB1_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_8888_TEX1_TALPHA1_MOD0_GLOB1_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_8888_TEX1_TALPHA1_MOD1_GLOB0_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_8888_TEX1_TALPHA1_MOD1_GLOB0_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_8888_TEX1_TALPHA1_MOD1_GLOB1_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_8888_TEX1_TALPHA1_MOD1_GLOB1_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA0_MOD0_GLOB0_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA0_MOD0_GLOB0_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA0_MOD0_GLOB1_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA0_MOD0_GLOB1_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA0_MOD1_GLOB0_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA0_MOD1_GLOB0_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA0_MOD1_GLOB1_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA0_MOD1_GLOB1_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA1_MOD0_GLOB0_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA1_MOD0_GLOB0_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA1_MOD0_GLOB1_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA1_MOD0_GLOB1_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA1_MOD1_GLOB0_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA1_MOD1_GLOB0_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA1_MOD1_GLOB1_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA1_MOD1_GLOB1_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA0_MOD0_GLOB0_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA0_MOD0_GLOB0_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA0_MOD0_GLOB1_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA0_MOD0_GLOB1_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA0_MOD1_GLOB0_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA0_MOD1_GLOB0_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA0_MOD1_GLOB1_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA0_MOD1_GLOB1_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA1_MOD0_GLOB0_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA1_MOD0_GLOB0_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA1_MOD0_GLOB1_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA1_MOD0_GLOB1_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA1_MOD1_GLOB0_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA1_MOD1_GLOB0_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA1_MOD1_GLOB1_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA1_MOD1_GLOB1_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0555_TEX1_TALPHA0_MOD0_GLOB0_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0555_TEX1_TALPHA0_MOD0_GLOB0_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0555_TEX1_TALPHA0_MOD0_GLOB1_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0555_TEX1_TALPHA0_MOD0_GLOB1_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0555_TEX1_TALPHA0_MOD1_GLOB0_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0555_TEX1_TALPHA0_MOD1_GLOB0_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0555_TEX1_TALPHA0_MOD1_GLOB1_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0555_TEX1_TALPHA0_MOD1_GLOB1_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0555_TEX1_TALPHA1_MOD0_GLOB0_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0555_TEX1_TALPHA1_MOD0_GLOB0_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0555_TEX1_TALPHA1_MOD0_GLOB1_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0555_TEX1_TALPHA1_MOD0_GLOB1_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0555_TEX1_TALPHA1_MOD1_GLOB0_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0555_TEX1_TALPHA1_MOD1_GLOB0_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0555_TEX1_TALPHA1_MOD1_GLOB1_BLEND0(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0555_TEX1_TALPHA1_MOD1_GLOB1_BLEND1(SWHelper::SWVertex *pVerts,
-																void *pFrameBuffer,
-																const unsigned int bytepitch,
-																const SWHelper::SWTextureInfo *textureInfo,
-																SWHelper::SWDiffuse &globalDiffuse);
+                                                                void *pFrameBuffer,
+                                                                const unsigned int bytepitch,
+                                                                const SWHelper::SWTextureInfo *textureInfo,
+                                                                SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA0_MOD0_GLOB1_BLEND0_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA0_MOD0_GLOB1_BLEND1_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA0_MOD1_GLOB0_BLEND0_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA0_MOD1_GLOB0_BLEND1_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA0_MOD1_GLOB1_BLEND0_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA0_MOD1_GLOB1_BLEND1_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA1_MOD0_GLOB0_BLEND0_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA1_MOD0_GLOB0_BLEND1_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA1_MOD0_GLOB1_BLEND0_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA1_MOD0_GLOB1_BLEND1_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA1_MOD1_GLOB0_BLEND0_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA1_MOD1_GLOB0_BLEND1_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA1_MOD1_GLOB1_BLEND0_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0888_TEX1_TALPHA1_MOD1_GLOB1_BLEND1_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA0_MOD0_GLOB1_BLEND0_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA0_MOD0_GLOB1_BLEND1_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA0_MOD1_GLOB0_BLEND0_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA0_MOD1_GLOB0_BLEND1_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA0_MOD1_GLOB1_BLEND0_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA0_MOD1_GLOB1_BLEND1_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA1_MOD0_GLOB0_BLEND0_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA1_MOD0_GLOB0_BLEND1_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA1_MOD0_GLOB1_BLEND0_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA1_MOD0_GLOB1_BLEND1_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA1_MOD1_GLOB0_BLEND0_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA1_MOD1_GLOB0_BLEND1_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA1_MOD1_GLOB1_BLEND0_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 extern void TodDrawTriangle_0565_TEX1_TALPHA1_MOD1_GLOB1_BLEND1_ADDITIVE(SWHelper::SWVertex *pVerts,
-																		 void *pFrameBuffer,
-																		 const unsigned int bytepitch,
-																		 const SWHelper::SWTextureInfo *textureInfo,
-																		 SWHelper::SWDiffuse &globalDiffuse);
+                                                                         void *pFrameBuffer,
+                                                                         const unsigned int bytepitch,
+                                                                         const SWHelper::SWTextureInfo *textureInfo,
+                                                                         SWHelper::SWDiffuse &globalDiffuse);
 
 class Reanimation;
 class TodParticleHolder;
@@ -514,7 +514,7 @@ class EffectSystem
 
   public:
 	EffectSystem()
-		: mParticleHolder(nullptr), mTrailHolder(nullptr), mReanimationHolder(nullptr), mAttachmentHolder(nullptr)
+	    : mParticleHolder(nullptr), mTrailHolder(nullptr), mReanimationHolder(nullptr), mAttachmentHolder(nullptr)
 	{
 	}
 	~EffectSystem()

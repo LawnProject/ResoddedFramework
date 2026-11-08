@@ -56,7 +56,7 @@ void main() {
 
 bool Renderer::gRenderingPreDrawError = false;
 
-Renderer::Renderer(SexyAppBase* theApp) : mApp(theApp)
+Renderer::Renderer(SexyAppBase *theApp) : mApp(theApp)
 {
 	mWidth = mApp->mWidth;
 	mHeight = mApp->mHeight;
@@ -92,7 +92,6 @@ Renderer::~Renderer()
 
 void Renderer::Cleanup()
 {
-
 }
 
 void Renderer::DeleteShader(Shader *theShader)
@@ -103,15 +102,14 @@ void Renderer::DeleteShader(Shader *theShader)
 			mCurrentShader = nullptr;
 		delete theShader;
 	}
-		
 }
 
-Shader* Renderer::GetCurrentShader()
+Shader *Renderer::GetCurrentShader()
 {
 	return mCurrentShader ? mCurrentShader : mDefaultShader;
 }
 
-void Renderer::PushTransform(const SexyMatrix3& theTransform, bool concatenate)
+void Renderer::PushTransform(const SexyMatrix3 &theTransform, bool concatenate)
 {
 	if (mTransformStack.empty() || !concatenate)
 		mTransformStack.push_back(theTransform);
@@ -149,13 +147,13 @@ BlendMode Renderer::ChooseBlendMode(int theBlendMode)
 
 void Renderer::AddImage(Image *theImage)
 {
-    auto lock = std::scoped_lock(mCritSect);
+	auto lock = std::scoped_lock(mCritSect);
 	mImageSet.insert((MemoryImage *)theImage);
 }
 
 void Renderer::RemoveImage(Image *theImage)
 {
-    auto lock = std::scoped_lock(mCritSect);
+	auto lock = std::scoped_lock(mCritSect);
 
 	ImageSet::iterator anItr = mImageSet.find((MemoryImage *)theImage);
 	if (anItr != mImageSet.end())

@@ -40,7 +40,6 @@ PakInterface::~PakInterface()
 {
 }
 
-
 static void FixFileName(const char *theFileName, char *theUpperName)
 {
 	if ((theFileName[0] != 0) && (theFileName[1] == ':'))
@@ -98,7 +97,6 @@ static void FixFileName(const char *theFileName, char *theUpperName)
 	}
 }
 
-
 bool PakInterface::AddPakFile(const std::string &theFileName)
 {
 	std::ifstream aFile(theFileName, std::ios::binary | std::ios::ate);
@@ -115,10 +113,10 @@ bool PakInterface::AddPakFile(const std::string &theFileName)
 	mPakCollectionList.push_back(PakCollection());
 	PakCollection *aPakCollection = &mPakCollectionList.back();
 
-    aPakCollection->mData = std::move(buffer);
+	aPakCollection->mData = std::move(buffer);
 
 	PakRecordMap::iterator aRecordItr =
-		mPakRecordMap.insert(PakRecordMap::value_type(StringToUpper(theFileName), PakRecord())).first;
+	    mPakRecordMap.insert(PakRecordMap::value_type(StringToUpper(theFileName), PakRecord())).first;
 	PakRecord *aPakRecord = &(aRecordItr->second);
 	aPakRecord->mCollection = aPakCollection;
 	aPakRecord->mFileName = theFileName;
@@ -140,9 +138,9 @@ bool PakInterface::AddPakFile(const std::string &theFileName)
 
 	if (aMagic != 0xBAC04AC0)
 	{
-		#if DEBUG
+#if DEBUG
 		printf("[PakLib] - Invalid Magic Number received in Pak File: %s\n", theFileName.c_str());
-		#endif
+#endif
 		return false;
 	}
 
@@ -189,7 +187,7 @@ bool PakInterface::AddPakFile(const std::string &theFileName)
 		FixFileName(aName, anUpperName);
 
 		PakRecordMap::iterator aRecordItr =
-			mPakRecordMap.insert(PakRecordMap::value_type(StringToUpper(aName), PakRecord())).first;
+		    mPakRecordMap.insert(PakRecordMap::value_type(StringToUpper(aName), PakRecord())).first;
 		PakRecord *aPakRecord = &(aRecordItr->second);
 		aPakRecord->mCollection = aPakCollection;
 		aPakRecord->mFileName = anUpperName;
@@ -290,7 +288,7 @@ size_t PakInterface::FRead(void *thePtr, int theElemSize, int theCount, PFILE *t
 	{
 		int aSizeBytes = std::min(1l * theElemSize * theCount, theFile->mRecord->mSize - theFile->mPos);
 
-        // obtain pointer to start reading relative to the whole pak
+		// obtain pointer to start reading relative to the whole pak
 		uint8_t *src = theFile->mRecord->mCollection->mData.data() + theFile->mRecord->mStartPos + theFile->mPos;
 		uint8_t *dest = (uint8_t *)thePtr;
 		int aPos = theFile->mRecord->mStartPos + theFile->mPos;

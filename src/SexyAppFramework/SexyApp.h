@@ -71,7 +71,6 @@ class SexyApp : public SexyAppBase
 	virtual void HandleCmdLineParam(const std::string &theParamName, const std::string &theParamValue);
 	virtual std::string GetGameSEHInfo();
 	virtual void GetSEHWebParams(DefinesMap *theDefinesMap);
-
 };
 
 extern SexyApp *gSexyApp;

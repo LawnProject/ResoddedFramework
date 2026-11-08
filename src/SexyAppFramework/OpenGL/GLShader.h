@@ -37,4 +37,4 @@ class GLShader : public Shader
 	virtual void SetUniform(const std::string &name, const glm::mat4 &matrix) const;
 };
 
-} // namespace PopLib
+} // namespace Sexy

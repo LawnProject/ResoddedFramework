@@ -26,11 +26,10 @@ void ImGuiManager::Frame()
 	switch (mApp->mRenderer->mCurrentBackend)
 	{
 #if SEXY_USE_OPENGL
-		case RenderingBackend::BACKEND_OPENGL: 
-		{
-			ImGui_ImplOpenGL3_NewFrame();
-			break;
-		}
+	case RenderingBackend::BACKEND_OPENGL: {
+		ImGui_ImplOpenGL3_NewFrame();
+		break;
+	}
 #endif
 	}
 	ImGui_ImplSDL3_NewFrame();
@@ -51,27 +50,25 @@ void ImGuiManager::Flush()
 	switch (mApp->mRenderer->mCurrentBackend)
 	{
 #if SEXY_USE_OPENGL
-		case RenderingBackend::BACKEND_OPENGL: 
+	case RenderingBackend::BACKEND_OPENGL: {
+
 		{
-
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+			ImGuiIO &io = ImGui::GetIO();
+			if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 			{
-				ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-				ImGuiIO &io = ImGui::GetIO();
-				if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-				{
-					SDL_Window *aBKWindow = SDL_GL_GetCurrentWindow();
-					SDL_GLContext aBKContext = SDL_GL_GetCurrentContext();
+				SDL_Window *aBKWindow = SDL_GL_GetCurrentWindow();
+				SDL_GLContext aBKContext = SDL_GL_GetCurrentContext();
 
-					ImGui::UpdatePlatformWindows();
-					ImGui::RenderPlatformWindowsDefault();
+				ImGui::UpdatePlatformWindows();
+				ImGui::RenderPlatformWindowsDefault();
 
-					SDL_GL_MakeCurrent(aBKWindow, aBKContext);
-				}
+				SDL_GL_MakeCurrent(aBKWindow, aBKContext);
 			}
-		
-		break;
-
 		}
+
+		break;
+	}
 #endif
 	}
 }
@@ -83,16 +80,14 @@ void ImGuiManager::Reset()
 	switch (mApp->mRenderer->mCurrentBackend)
 	{
 #if SEXY_USE_OPENGL
-		case RenderingBackend::BACKEND_OPENGL: 
-		{
-			ImGui_ImplOpenGL3_Shutdown();
-			break;
-
-		}
+	case RenderingBackend::BACKEND_OPENGL: {
+		ImGui_ImplOpenGL3_Shutdown();
+		break;
+	}
 #endif
-		default:
-			mApp->Popup("INVALID RENDERING BACKEND GIVEN TO IMGUI");
-			break;
+	default:
+		mApp->Popup("INVALID RENDERING BACKEND GIVEN TO IMGUI");
+		break;
 	}
 	ImGui_ImplSDL3_Shutdown();
 	ImGui::DestroyContext();
@@ -114,22 +109,20 @@ void ImGuiManager::Init()
 	switch (mApp->mRenderer->mCurrentBackend)
 	{
 #if SEXY_USE_OPENGL
-		case RenderingBackend::BACKEND_OPENGL:
+	case RenderingBackend::BACKEND_OPENGL: {
 		{
-			{
-				OpenGLRenderer *aRenderer = static_cast<OpenGLRenderer *>(mApp->mRenderer);
-				ImGui_ImplSDL3_InitForOpenGL(mApp->mWindow->mInternalWindow, aRenderer->mContext);
-				ImGui_ImplOpenGL3_Init();
-				break;
-			}
-		}
-#endif
-		default:
-			mApp->Popup("INVALID RENDERING BACKEND GIVEN TO IMGUI");
+			OpenGLRenderer *aRenderer = static_cast<OpenGLRenderer *>(mApp->mRenderer);
+			ImGui_ImplSDL3_InitForOpenGL(mApp->mWindow->mInternalWindow, aRenderer->mContext);
+			ImGui_ImplOpenGL3_Init();
 			break;
+		}
+	}
+#endif
+	default:
+		mApp->Popup("INVALID RENDERING BACKEND GIVEN TO IMGUI");
+		break;
 	}
 	mHasInitiated = true;
 }
-
 
 #endif

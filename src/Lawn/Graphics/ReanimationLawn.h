@@ -37,7 +37,7 @@ class ReanimatorCache
 	void ReanimatorCacheInitialize();
 	void ReanimatorCacheDispose();
 	void DrawCachedPlant(
-		Graphics *g, float thePosX, float thePosY, SeedType theSeedType, DrawVariation theDrawVariation);
+	    Graphics *g, float thePosX, float thePosY, SeedType theSeedType, DrawVariation theDrawVariation);
 	void DrawCachedMower(Graphics *g, float thePosX, float thePosY, LawnMowerType theMowerType);
 	void DrawCachedZombie(Graphics *g, float thePosX, float thePosY, ZombieType theZombieType);
 	GPUImage *MakeBlankGPUImage(int theWidth, int theHeight);
@@ -45,13 +45,13 @@ class ReanimatorCache
 	GPUImage *MakeCachedMowerFrame(LawnMowerType theMowerType);
 	GPUImage *MakeCachedZombieFrame(ZombieType theZombieType);
 	void GetPlantImageSize(
-		SeedType theSeedType, int &theOffsetX, int &theOffsetY, int &theWidth, int &theHeight);
+	    SeedType theSeedType, int &theOffsetX, int &theOffsetY, int &theWidth, int &theHeight);
 	void DrawReanimatorFrame(Graphics *g,
-							 float thePosX,
-							 float thePosY,
-							 ReanimationType theReanimationType,
-							 const char *theTrackName,
-							 DrawVariation theDrawVariation);
+	                         float thePosX,
+	                         float thePosY,
+	                         ReanimationType theReanimationType,
+	                         const char *theTrackName,
+	                         DrawVariation theDrawVariation);
 	void UpdateReanimationForVariation(Reanimation *theReanim, DrawVariation theDrawVariation);
 };
 

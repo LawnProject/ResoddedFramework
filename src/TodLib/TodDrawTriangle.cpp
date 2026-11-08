@@ -62,7 +62,7 @@
 #define funcname funcname1(NAME0, NAME1, NAME2, NAME3, NAME4, NAME5)
 #endif
 void funcname(SWHelper::SWVertex *pVerts, void *pFrameBuffer, const unsigned int bytepitch,
-			  const SWHelper::SWTextureInfo *textureInfo, SWHelper::SWDiffuse &globalDiffuse)
+              const SWHelper::SWTextureInfo *textureInfo, SWHelper::SWDiffuse &globalDiffuse)
 {
 #if !defined(NAME_ADDITIVE)
 	if (gTodTriangleDrawAdditive)
@@ -80,11 +80,11 @@ void funcname(SWHelper::SWVertex *pVerts, void *pFrameBuffer, const unsigned int
 	const unsigned int tex_endpos = textureInfo->endpos;
 
 	const SWHelper::signed64 bigOne = static_cast<SWHelper::signed64>(1) << 48;
-#define swap(a, b, type)                                                                                               \
-	{                                                                                                                  \
-		type tmp = a;                                                                                                  \
-		a = b;                                                                                                         \
-		b = tmp;                                                                                                       \
+#define swap(a, b, type) \
+	{                    \
+		type tmp = a;    \
+		a = b;           \
+		b = tmp;         \
 	}
 
 	const unsigned int *pTexture;

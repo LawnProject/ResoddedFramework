@@ -82,12 +82,12 @@ void TodAssertFailed(const char *theCondition, const char *theFile, int theLine,
 	if (*theCondition != '\0')
 	{
 		TodSnprintf(aBuffer,
-					sizeof(aBuffer),
-					"\n%s(%d)\nassertion failed: '%s'\n%s\n",
-					theFile,
-					theLine,
-					theCondition,
-					aFormattedMsg);
+		            sizeof(aBuffer),
+		            "\n%s(%d)\nassertion failed: '%s'\n%s\n",
+		            theFile,
+		            theLine,
+		            theCondition,
+		            aFormattedMsg);
 	}
 	else
 	{
@@ -186,7 +186,6 @@ void TodTrace(const char *theFormat, ...)
 	}
 
 	printf("%s", aButter);
-
 }
 
 void TodTraceAndLog(const char *theFormat, ...)
@@ -246,12 +245,11 @@ void TodTraceWithoutSpamming(const char *theFormat, ...)
 	printf(aButter);
 }
 
-#if defined (_WIN32) && defined(SEXY_CRASH_HANDLER) 
+#if defined(_WIN32) && defined(SEXY_CRASH_HANDLER)
 void TodReportError(LPEXCEPTION_POINTERS exceptioninfo, const char *theMessage)
 {
 	Sexy::SEHCatcher::UnhandledExceptionFilter(exceptioninfo);
 }
-
 
 long __stdcall TodUnhandledExceptionFilter(LPEXCEPTION_POINTERS exceptioninfo)
 {

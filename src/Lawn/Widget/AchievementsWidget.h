@@ -16,6 +16,7 @@ class AchievementsWidget : public Widget, public ButtonListener
 		ACHIEVEMENTS_BACK = 200,
 		ACHIEVEMENTS_MORE,
 	};
+
   public:
 	LawnApp *mApp;
 	int mScrollValue;
@@ -25,9 +26,8 @@ class AchievementsWidget : public Widget, public ButtonListener
 	NewLawnButton *mBackButton;
 	NewLawnButton *mMoreButton;
 
-
   public:
-	AchievementsWidget(LawnApp* theApp);
+	AchievementsWidget(LawnApp *theApp);
 	virtual ~AchievementsWidget();
 
 	virtual void Draw(Graphics *g);
@@ -38,5 +38,6 @@ class AchievementsWidget : public Widget, public ButtonListener
 	virtual void KeyDown(KeyCode theKey);
 	virtual void ButtonPress(int theId, int theClickCount);
 	virtual void ButtonDepress(int theId);
+
   private:
 };

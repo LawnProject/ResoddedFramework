@@ -10,15 +10,15 @@ Color::Color() : mRed(0), mGreen(0), mBlue(0), mAlpha(255)
 }
 
 Color::Color(int theColor)
-	: mAlpha((theColor >> 24) & 0xFF), mRed((theColor >> 16) & 0xFF), mGreen((theColor >> 8) & 0xFF),
-	  mBlue((theColor) & 0xFF)
+    : mAlpha((theColor >> 24) & 0xFF), mRed((theColor >> 16) & 0xFF), mGreen((theColor >> 8) & 0xFF),
+      mBlue((theColor) & 0xFF)
 {
 	if (mAlpha == 0)
 		mAlpha = 0xff;
 }
 
 Color::Color(int theColor, int theAlpha)
-	: mRed((theColor >> 16) & 0xFF), mGreen((theColor >> 8) & 0xFF), mBlue((theColor) & 0xFF), mAlpha(theAlpha)
+    : mRed((theColor >> 16) & 0xFF), mGreen((theColor >> 8) & 0xFF), mBlue((theColor) & 0xFF), mAlpha(theAlpha)
 {
 }
 
@@ -27,7 +27,7 @@ Color::Color(int theRed, int theGreen, int theBlue) : mRed(theRed), mGreen(theGr
 }
 
 Color::Color(int theRed, int theGreen, int theBlue, int theAlpha)
-	: mRed(theRed), mGreen(theGreen), mBlue(theBlue), mAlpha(theAlpha)
+    : mRed(theRed), mGreen(theGreen), mBlue(theBlue), mAlpha(theAlpha)
 {
 }
 
@@ -36,7 +36,7 @@ Color::Color(const SexyRGBA &theColor) : mRed(theColor.r), mGreen(theColor.g), m
 }
 
 Color::Color(const uint8_t *theElements)
-	: mRed(theElements[0]), mGreen(theElements[1]), mBlue(theElements[2]), mAlpha(0xFF)
+    : mRed(theElements[0]), mGreen(theElements[1]), mBlue(theElements[2]), mAlpha(0xFF)
 {
 }
 
@@ -119,11 +119,11 @@ SexyRGBA Color::ToRGBA() const
 bool Sexy::operator==(const Color &theColor1, const Color &theColor2)
 {
 	return (theColor1.mRed == theColor2.mRed) && (theColor1.mGreen == theColor2.mGreen) &&
-		   (theColor1.mBlue == theColor2.mBlue) && (theColor1.mAlpha == theColor2.mAlpha);
+	       (theColor1.mBlue == theColor2.mBlue) && (theColor1.mAlpha == theColor2.mAlpha);
 }
 
 bool Sexy::operator!=(const Color &theColor1, const Color &theColor2)
 {
 	return (theColor1.mRed != theColor2.mRed) || (theColor1.mGreen != theColor2.mGreen) ||
-		   (theColor1.mBlue != theColor2.mBlue) || (theColor1.mAlpha != theColor2.mAlpha);
+	       (theColor1.mBlue != theColor2.mBlue) || (theColor1.mAlpha != theColor2.mAlpha);
 }

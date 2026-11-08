@@ -8,7 +8,13 @@
 using namespace Sexy;
 
 static int gInitialListWidgetColors[][3] = {
-	{255, 255, 255}, {255, 255, 255}, {0, 0, 0}, {0, 192, 0}, {0, 0, 128}, {255, 255, 255}};
+	{ 255, 255, 255 },
+	{ 255, 255, 255 },
+	{ 0,   0,   0   },
+	{ 0,   192, 0   },
+	{ 0,   0,   128 },
+	{ 255, 255, 255 }
+};
 
 ListWidget::ListWidget(int theId, Font *theFont, ListListener *theListListener)
 {

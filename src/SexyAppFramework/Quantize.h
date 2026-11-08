@@ -7,7 +7,7 @@ namespace Sexy
 {
 
 bool Quantize8Bit(
-	const uint32_t *theSrcBits, int theWidth, int theHeight, uint8_t *theDestColorIndices, uint32_t *theDestColorTable);
+    const uint32_t *theSrcBits, int theWidth, int theHeight, uint8_t *theDestColorIndices, uint32_t *theDestColorTable);
 
 }
 

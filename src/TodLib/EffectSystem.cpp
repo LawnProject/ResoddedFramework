@@ -138,9 +138,9 @@ static inline void Tod_Tod_lClip(TriVertex &dst, const TriVertex &on, const TriV
 	dst.u = off.u + (on.u - off.u) * delta;
 	dst.v = off.v + (on.v - off.v) * delta;
 	dst.color = ((int)((off.color >> 24 & 0xff) + ((on.color >> 24 & 0xff) - (off.color >> 24 & 0xff)) * delta) << 24) |
-				((int)((off.color >> 16 & 0xff) + ((on.color >> 16 & 0xff) - (off.color >> 16 & 0xff)) * delta) << 16) |
-				((int)((off.color >> 8 & 0xff) + ((on.color >> 8 & 0xff) - (off.color >> 8 & 0xff)) * delta) << 8) |
-				((int)((off.color & 0xff) + ((on.color & 0xff) - (off.color & 0xff)) * delta));
+	            ((int)((off.color >> 16 & 0xff) + ((on.color >> 16 & 0xff) - (off.color >> 16 & 0xff)) * delta) << 16) |
+	            ((int)((off.color >> 8 & 0xff) + ((on.color >> 8 & 0xff) - (off.color >> 8 & 0xff)) * delta) << 8) |
+	            ((int)((off.color & 0xff) + ((on.color & 0xff) - (off.color & 0xff)) * delta));
 }
 static inline void rClip(TriVertex &dst, const TriVertex &on, const TriVertex &off, const float edge)
 {
@@ -150,9 +150,9 @@ static inline void rClip(TriVertex &dst, const TriVertex &on, const TriVertex &o
 	dst.u = off.u + (on.u - off.u) * delta;
 	dst.v = off.v + (on.v - off.v) * delta;
 	dst.color = ((int)((off.color >> 24 & 0xff) + ((on.color >> 24 & 0xff) - (off.color >> 24 & 0xff)) * delta) << 24) |
-				((int)((off.color >> 16 & 0xff) + ((on.color >> 16 & 0xff) - (off.color >> 16 & 0xff)) * delta) << 16) |
-				((int)((off.color >> 8 & 0xff) + ((on.color >> 8 & 0xff) - (off.color >> 8 & 0xff)) * delta) << 8) |
-				((int)((off.color & 0xff) + ((on.color & 0xff) - (off.color & 0xff)) * delta));
+	            ((int)((off.color >> 16 & 0xff) + ((on.color >> 16 & 0xff) - (off.color >> 16 & 0xff)) * delta) << 16) |
+	            ((int)((off.color >> 8 & 0xff) + ((on.color >> 8 & 0xff) - (off.color >> 8 & 0xff)) * delta) << 8) |
+	            ((int)((off.color & 0xff) + ((on.color & 0xff) - (off.color & 0xff)) * delta));
 }
 
 static inline void Tod_tClip(TriVertex &dst, const TriVertex &on, const TriVertex &off, const float edge)
@@ -163,9 +163,9 @@ static inline void Tod_tClip(TriVertex &dst, const TriVertex &on, const TriVerte
 	dst.u = off.u + (on.u - off.u) * delta;
 	dst.v = off.v + (on.v - off.v) * delta;
 	dst.color = ((int)((off.color >> 24 & 0xff) + ((on.color >> 24 & 0xff) - (off.color >> 24 & 0xff)) * delta) << 24) |
-				((int)((off.color >> 16 & 0xff) + ((on.color >> 16 & 0xff) - (off.color >> 16 & 0xff)) * delta) << 16) |
-				((int)((off.color >> 8 & 0xff) + ((on.color >> 8 & 0xff) - (off.color >> 8 & 0xff)) * delta) << 8) |
-				((int)((off.color & 0xff) + ((on.color & 0xff) - (off.color & 0xff)) * delta));
+	            ((int)((off.color >> 16 & 0xff) + ((on.color >> 16 & 0xff) - (off.color >> 16 & 0xff)) * delta) << 16) |
+	            ((int)((off.color >> 8 & 0xff) + ((on.color >> 8 & 0xff) - (off.color >> 8 & 0xff)) * delta) << 8) |
+	            ((int)((off.color & 0xff) + ((on.color & 0xff) - (off.color & 0xff)) * delta));
 }
 static inline void Tod_bClip(TriVertex &dst, const TriVertex &on, const TriVertex &off, const float edge)
 {
@@ -175,9 +175,9 @@ static inline void Tod_bClip(TriVertex &dst, const TriVertex &on, const TriVerte
 	dst.u = off.u + (on.u - off.u) * delta;
 	dst.v = off.v + (on.v - off.v) * delta;
 	dst.color = ((int)((off.color >> 24 & 0xff) + ((on.color >> 24 & 0xff) - (off.color >> 24 & 0xff)) * delta) << 24) |
-				((int)((off.color >> 16 & 0xff) + ((on.color >> 16 & 0xff) - (off.color >> 16 & 0xff)) * delta) << 16) |
-				((int)((off.color >> 8 & 0xff) + ((on.color >> 8 & 0xff) - (off.color >> 8 & 0xff)) * delta) << 8) |
-				((int)((off.color & 0xff) + ((on.color & 0xff) - (off.color & 0xff)) * delta));
+	            ((int)((off.color >> 16 & 0xff) + ((on.color >> 16 & 0xff) - (off.color >> 16 & 0xff)) * delta) << 16) |
+	            ((int)((off.color >> 8 & 0xff) + ((on.color >> 8 & 0xff) - (off.color >> 8 & 0xff)) * delta) << 8) |
+	            ((int)((off.color & 0xff) + ((on.color & 0xff) - (off.color & 0xff)) * delta));
 }
 
 static inline unsigned int Tod_leClip(TriVertex **src, TriVertex **dst, const float edge)
@@ -329,7 +329,7 @@ static inline unsigned int Tod_beClip(TriVertex **src, TriVertex **dst, const fl
 }
 
 static inline int Tod_clipShape(
-	TriVertex **dst, TriVertex *src, const float left, const float right, const float top, const float bottom)
+    TriVertex **dst, TriVertex *src, const float left, const float right, const float top, const float bottom)
 {
 	gTodVertexReservoirUsed = 0;
 
@@ -377,19 +377,19 @@ void TodTriangleGroup::DrawGroup(Graphics *g)
 			GPUImage *anImage = (GPUImage *)g->mDestImage;
 			mImage->mDrawn = true;
 			anImage->mRenderer->DrawTrianglesTex(
-				mVertArray, mTriangleCount, Color::White, mDrawMode, mImage, 0.0f, 0.0f, g->mLinearBlend);
+			    mVertArray, mTriangleCount, Color::White, mDrawMode, mImage, 0.0f, 0.0f, g->mLinearBlend);
 		}
 		else
 		{
 			g->mDestImage->BltTrianglesTex(mImage,
-										   mVertArray,
-										   mTriangleCount,
-										   Rect(0, 0, BOARD_WIDTH, BOARD_HEIGHT),
-										   Color::White,
-										   mDrawMode,
-										   0.0f,
-										   0.0f,
-										   g->mLinearBlend);
+			                               mVertArray,
+			                               mTriangleCount,
+			                               Rect(0, 0, BOARD_WIDTH, BOARD_HEIGHT),
+			                               Color::White,
+			                               mDrawMode,
+			                               0.0f,
+			                               0.0f,
+			                               g->mLinearBlend);
 		}
 
 		mTriangleCount = 0;
@@ -398,12 +398,12 @@ void TodTriangleGroup::DrawGroup(Graphics *g)
 }
 
 void TodTriangleGroup::AddTriangle(Graphics *g,
-								   Image *theImage,
-								   const SexyMatrix3 &theMatrix,
-								   const Rect &theClipRect,
-								   const Color &theColor,
-								   int theDrawMode,
-								   const Rect &theSrcRect)
+                                   Image *theImage,
+                                   const SexyMatrix3 &theMatrix,
+                                   const Rect &theClipRect,
+                                   const Color &theColor,
+                                   int theDrawMode,
+                                   const Rect &theSrcRect)
 {
 	TOD_ASSERT(theImage != nullptr);
 
@@ -448,15 +448,15 @@ void TodTriangleGroup::AddTriangle(Graphics *g,
 	if (mTriangleCount + 2 <= MAX_TRIANGLES)
 	{
 		if ((theClipRect.mX == 0 && theClipRect.mY == 0 && theClipRect.mWidth == BOARD_WIDTH &&
-			 theClipRect.mHeight == BOARD_HEIGHT && gSexyAppBase->Is3DAccelerated()) ||
-			(theClipRect.mX <= tp[0].x && theClipRect.mX + theClipRect.mWidth >= tp[0].x && theClipRect.mX <= tp[1].x &&
-			 theClipRect.mX + theClipRect.mWidth >= tp[1].x && theClipRect.mX <= tp[2].x &&
-			 theClipRect.mX + theClipRect.mWidth >= tp[2].x && theClipRect.mX <= tp[3].x &&
-			 theClipRect.mX + theClipRect.mWidth >= tp[3].x && theClipRect.mY <= tp[0].y &&
-			 theClipRect.mY + theClipRect.mHeight >= tp[0].y && theClipRect.mY <= tp[1].y &&
-			 theClipRect.mY + theClipRect.mHeight >= tp[1].y && theClipRect.mY <= tp[2].y &&
-			 theClipRect.mY + theClipRect.mHeight >= tp[2].y && theClipRect.mY <= tp[3].y &&
-			 theClipRect.mY + theClipRect.mHeight >= tp[3].y))
+		     theClipRect.mHeight == BOARD_HEIGHT && gSexyAppBase->Is3DAccelerated()) ||
+		    (theClipRect.mX <= tp[0].x && theClipRect.mX + theClipRect.mWidth >= tp[0].x && theClipRect.mX <= tp[1].x &&
+		     theClipRect.mX + theClipRect.mWidth >= tp[1].x && theClipRect.mX <= tp[2].x &&
+		     theClipRect.mX + theClipRect.mWidth >= tp[2].x && theClipRect.mX <= tp[3].x &&
+		     theClipRect.mX + theClipRect.mWidth >= tp[3].x && theClipRect.mY <= tp[0].y &&
+		     theClipRect.mY + theClipRect.mHeight >= tp[0].y && theClipRect.mY <= tp[1].y &&
+		     theClipRect.mY + theClipRect.mHeight >= tp[1].y && theClipRect.mY <= tp[2].y &&
+		     theClipRect.mY + theClipRect.mHeight >= tp[2].y && theClipRect.mY <= tp[3].y &&
+		     theClipRect.mY + theClipRect.mHeight >= tp[3].y))
 		{
 			aNoClipping = true;
 			aTriRef = &mVertArray[mTriangleCount];

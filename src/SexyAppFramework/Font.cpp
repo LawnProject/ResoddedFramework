@@ -12,8 +12,8 @@ Font::Font()
 }
 
 Font::Font(const Font &theFont)
-	: mAscent(theFont.mAscent), mHeight(theFont.mHeight), mAscentPadding(theFont.mAscentPadding),
-	  mLineSpacingOffset(theFont.mLineSpacingOffset)
+    : mAscent(theFont.mAscent), mHeight(theFont.mHeight), mAscentPadding(theFont.mAscentPadding),
+      mLineSpacingOffset(theFont.mLineSpacingOffset)
 {
 }
 
@@ -58,9 +58,9 @@ int Font::StringWidth(const SexyString &theString)
 
 int Font::CharWidth(SexyChar theChar)
 {
-    // theChar is really a Codepoint (see derived class StringWidth implementations)
-    std::string aString;
-    utf8::append(theChar, std::back_inserter(aString));
+	// theChar is really a Codepoint (see derived class StringWidth implementations)
+	std::string aString;
+	utf8::append(theChar, std::back_inserter(aString));
 	return StringWidth(aString);
 }
 
@@ -70,6 +70,6 @@ int Font::CharWidthKern(SexyChar theChar, SexyChar thePrevChar)
 }
 
 void Font::DrawString(
-	Graphics *g, int theX, int theY, const SexyString &theString, const Color &theColor, const Rect &theClipRect)
+    Graphics *g, int theX, int theY, const SexyString &theString, const Color &theColor, const Rect &theClipRect)
 {
 }

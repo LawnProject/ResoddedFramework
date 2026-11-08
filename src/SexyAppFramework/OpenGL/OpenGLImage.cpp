@@ -24,7 +24,7 @@ OpenGLImage::OpenGLImage(Renderer *theRenderer) : GPUImage(theRenderer)
 
 OpenGLImage::OpenGLImage() : GPUImage(gSexyAppBase->mRenderer)
 {
-	mGLRenderer = (OpenGLRenderer*)gSexyAppBase->mRenderer;
+	mGLRenderer = (OpenGLRenderer *)gSexyAppBase->mRenderer;
 	Init();
 }
 
@@ -40,7 +40,6 @@ OpenGLImage::~OpenGLImage()
 		OpenGLRenderer::gGLTextureCount--;
 	}
 
-		
 	if (mFBO != 0)
 		glDeleteFramebuffers(1, &mFBO);
 }
@@ -62,14 +61,14 @@ uint32_t *OpenGLImage::GetBits()
 		mBits[mWidth * mHeight] = MEMORYCHECK_ID;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
-		glReadBuffer(GL_COLOR_ATTACHMENT0); 
+		glReadBuffer(GL_COLOR_ATTACHMENT0);
 		glBindTexture(GL_TEXTURE_2D, mTexID);
 		glReadPixels(0,
-					0,
-					mWidth,
-					mHeight,
-					GL_BGRA, GL_UNSIGNED_BYTE,
-					mBits);
+		             0,
+		             mWidth,
+		             mHeight,
+		             GL_BGRA, GL_UNSIGNED_BYTE,
+		             mBits);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		UnlockSurface();
@@ -112,12 +111,12 @@ bool OpenGLImage::GenerateSurface()
 	if (mColorTable != NULL)
 		GetBits();
 
-    // prevent mSurface from being released while we're in this code
-    auto aLock = std::scoped_lock(mRenderer->mCritSect);
+	// prevent mSurface from being released while we're in this code
+	auto aLock = std::scoped_lock(mRenderer->mCritSect);
 
 	if (!LockSurface())
 		return false;
-	
+
 	glGenTextures(1, &mTexID);
 	glBindTexture(GL_TEXTURE_2D, mTexID);
 
@@ -136,7 +135,7 @@ bool OpenGLImage::GenerateSurface()
 	return true;
 }
 
-void OpenGLImage::SetSurface(void* theSurface) // this should be a texture id or something.
+void OpenGLImage::SetSurface(void *theSurface) // this should be a texture id or something.
 {
 	mSurfaceSet = true;
 	mSurface = theSurface;
@@ -147,7 +146,7 @@ void OpenGLImage::SetSurface(void* theSurface) // this should be a texture id or
 		glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, GL_UNSIGNED_BYTE, mBits);
 		glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexID, 0);
-		GLenum drawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+		GLenum drawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
 		glDrawBuffers(1, drawBuffers);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
@@ -184,7 +183,7 @@ void OpenGLImage::CreateImageBuffers()
 	glGenFramebuffers(1, &mFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexID, 0);
-	GLenum drawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+	GLenum drawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, drawBuffers);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -204,8 +203,8 @@ void OpenGLImage::SetupGenerics(GLuint theTexID, const std::vector<Vertex> &theV
 	theShader->SetUniform("uUseTexture", (theTexID != 0));
 	theShader->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	glBindSampler(0, mGLRenderer->mCurrentUVWrapMode == TextureUVWrapMode::UV_CLAMP
-						 ? mGLRenderer->mSamplers[blend ? GL_LINEAR : GL_NEAREST].mClamp
-						 : mGLRenderer->mSamplers[blend ? GL_LINEAR : GL_NEAREST].mWrap);
+	                     ? mGLRenderer->mSamplers[blend ? GL_LINEAR : GL_NEAREST].mClamp
+	                     : mGLRenderer->mSamplers[blend ? GL_LINEAR : GL_NEAREST].mWrap);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, theTexID);
@@ -265,58 +264,75 @@ void OpenGLImage::ImplFillRect(const Rect &theRect, const Color &theColor, int t
 
 	PreTextureDraw();
 
-	glm::vec2 p0 = {theRect.mX, theRect.mY};
-	glm::vec2 p1 = {theRect.mX + theRect.mWidth, theRect.mY};
-	glm::vec2 p2 = {theRect.mX + theRect.mWidth, theRect.mY + theRect.mHeight};
-	glm::vec2 p3 = {theRect.mX, theRect.mY + theRect.mHeight};
+	glm::vec2 p0 = { theRect.mX, theRect.mY };
+	glm::vec2 p1 = { theRect.mX + theRect.mWidth, theRect.mY };
+	glm::vec2 p2 = { theRect.mX + theRect.mWidth, theRect.mY + theRect.mHeight };
+	glm::vec2 p3 = { theRect.mX, theRect.mY + theRect.mHeight };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
 	std::vector<Vertex> aVertices;
 
-	aVertices.push_back({p0, {0, 0}, aColor});
-	aVertices.push_back({p1, {0, 0}, aColor});
-	aVertices.push_back({p2, {0, 0}, aColor});
-	aVertices.push_back({p2, {0, 0}, aColor});
-	aVertices.push_back({p3, {0, 0}, aColor});
-	aVertices.push_back({p0, {0, 0}, aColor});
+	aVertices.push_back({
+	    p0, { 0, 0 },
+         aColor
+    });
+	aVertices.push_back({
+	    p1, { 0, 0 },
+         aColor
+    });
+	aVertices.push_back({
+	    p2, { 0, 0 },
+         aColor
+    });
+	aVertices.push_back({
+	    p2, { 0, 0 },
+         aColor
+    });
+	aVertices.push_back({
+	    p3, { 0, 0 },
+         aColor
+    });
+	aVertices.push_back({
+	    p0, { 0, 0 },
+         aColor
+    });
 
-	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
+	GLShader *aShaderToUse = (GLShader *)mGLRenderer->GetCurrentShader();
 
 	SetupGenerics(0, aVertices, aShaderToUse, theDrawMode, false);
-
 }
 
 void OpenGLImage::ImplDrawLine(
-	double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
+    double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
 {
 	PreTextureDraw();
 
-	glm::vec2 p0 = {theStartX, theStartY};
-	glm::vec2 p1 = {theEndX, theEndY};
+	glm::vec2 p0 = { theStartX, theStartY };
+	glm::vec2 p1 = { theEndX, theEndY };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
 	std::vector<Vertex> aVertices;
 
-	aVertices.push_back({p0, {}, aColor});
-	aVertices.push_back({p1, {}, aColor});
+	aVertices.push_back({ p0, {}, aColor });
+	aVertices.push_back({ p1, {}, aColor });
 
-	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
+	GLShader *aShaderToUse = (GLShader *)mGLRenderer->GetCurrentShader();
 	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	aShaderToUse->Use();
 	aShaderToUse->SetUniform("uProjection", mProjection);
 	aShaderToUse->SetUniform("uUseTexture", 0);
 	glBindSampler(0, mGLRenderer->mCurrentUVWrapMode == TextureUVWrapMode::UV_CLAMP
-						 ? mGLRenderer->mSamplers[GL_NEAREST].mClamp
-						 : mGLRenderer->mSamplers[GL_NEAREST].mWrap);
+	                     ? mGLRenderer->mSamplers[GL_NEAREST].mClamp
+	                     : mGLRenderer->mSamplers[GL_NEAREST].mWrap);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
@@ -328,30 +344,30 @@ void OpenGLImage::ImplDrawLine(
 }
 
 void OpenGLImage::ImplDrawLineAA(
-	double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
+    double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
 {
 	PreTextureDraw();
 
-	glm::vec2 p0 = {theStartX, theStartY};
-	glm::vec2 p1 = {theEndX, theEndY};
+	glm::vec2 p0 = { theStartX, theStartY };
+	glm::vec2 p1 = { theEndX, theEndY };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f, (float)theColor.mGreen / 255.0f, (float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f, (float)theColor.mGreen / 255.0f, (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
 	std::vector<Vertex> aVertices;
 
-	aVertices.push_back({p0, {}, aColor});
-	aVertices.push_back({p1, {}, aColor});
+	aVertices.push_back({ p0, {}, aColor });
+	aVertices.push_back({ p1, {}, aColor });
 
-	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
+	GLShader *aShaderToUse = (GLShader *)mGLRenderer->GetCurrentShader();
 	mGLRenderer->ApplyBlendMode(mRenderer->ChooseBlendMode(theDrawMode));
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	aShaderToUse->Use();
 	aShaderToUse->SetUniform("uProjection", mProjection);
 	aShaderToUse->SetUniform("uUseTexture", 0);
 	glBindSampler(0, mGLRenderer->mCurrentUVWrapMode == TextureUVWrapMode::UV_CLAMP
-						 ? mGLRenderer->mSamplers[GL_LINEAR].mClamp
-						 : mGLRenderer->mSamplers[GL_LINEAR].mWrap);
+	                     ? mGLRenderer->mSamplers[GL_LINEAR].mClamp
+	                     : mGLRenderer->mSamplers[GL_LINEAR].mWrap);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, aVertices.size() * sizeof(Vertex), aVertices.data());
@@ -363,7 +379,7 @@ void OpenGLImage::ImplDrawLineAA(
 }
 
 void OpenGLImage::ImplBlt(
-	Image *theImage, int theX, int theY, const Rect &theSrcRect, const Color &theColor, int theDrawMode)
+    Image *theImage, int theX, int theY, const Rect &theSrcRect, const Color &theColor, int theDrawMode)
 {
 	MemoryImage *aImg = (MemoryImage *)theImage;
 
@@ -372,37 +388,37 @@ void OpenGLImage::ImplBlt(
 
 	PreTextureDraw();
 
-	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
+	GLShader *aShaderToUse = (GLShader *)mGLRenderer->GetCurrentShader();
 	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
-	glm::vec2 p0 = {theX, theY};
-	glm::vec2 p1 = {theX + theSrcRect.mWidth, theY};
-	glm::vec2 p2 = {theX + theSrcRect.mWidth, theY + theSrcRect.mHeight};
-	glm::vec2 p3 = {theX, theY + theSrcRect.mHeight};
+	glm::vec2 p0 = { theX, theY };
+	glm::vec2 p1 = { theX + theSrcRect.mWidth, theY };
+	glm::vec2 p2 = { theX + theSrcRect.mWidth, theY + theSrcRect.mHeight };
+	glm::vec2 p3 = { theX, theY + theSrcRect.mHeight };
 
 	float u0 = (float)theSrcRect.mX / (float)theImage->mWidth;
 	float v0 = (float)theSrcRect.mY / (float)theImage->mHeight;
 	float u1 = (float)(theSrcRect.mX + theSrcRect.mWidth) / (float)theImage->mWidth;
 	float v1 = (float)(theSrcRect.mY + theSrcRect.mHeight) / (float)theImage->mHeight;
 
-	glm::vec2 uv0 = {u0, v0};
-	glm::vec2 uv1 = {u1, v0};
-	glm::vec2 uv2 = {u1, v1};
-	glm::vec2 uv3 = {u0, v1};
+	glm::vec2 uv0 = { u0, v0 };
+	glm::vec2 uv1 = { u1, v0 };
+	glm::vec2 uv2 = { u1, v1 };
+	glm::vec2 uv3 = { u0, v1 };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
 	std::vector<Vertex> aVertices;
 
-	aVertices.push_back({p0, uv0, aColor});
-	aVertices.push_back({p1, uv1, aColor});
-	aVertices.push_back({p2, uv2, aColor});
-	aVertices.push_back({p2, uv2, aColor});
-	aVertices.push_back({p3, uv3, aColor});
-	aVertices.push_back({p0, uv0, aColor});
+	aVertices.push_back({ p0, uv0, aColor });
+	aVertices.push_back({ p1, uv1, aColor });
+	aVertices.push_back({ p2, uv2, aColor });
+	aVertices.push_back({ p2, uv2, aColor });
+	aVertices.push_back({ p3, uv3, aColor });
+	aVertices.push_back({ p0, uv0, aColor });
 
 	SetupGenerics(aTexID, aVertices, aShaderToUse, theDrawMode, true);
 }
@@ -412,12 +428,12 @@ void doScissorFromTLCauseOpenGL(int x, int y, int w, int h, int screenHeight)
 	glScissor(x, screenHeight - h - y, w, h);
 }
 void OpenGLImage::ImplBltF(Image *theImage,
-						float theX,
-						float theY,
-						const Rect &theSrcRect,
-						const Rect &theClipRect,
-						const Color &theColor,
-						int theDrawMode)
+                           float theX,
+                           float theY,
+                           const Rect &theSrcRect,
+                           const Rect &theClipRect,
+                           const Color &theColor,
+                           int theDrawMode)
 {
 	MemoryImage *aImg = (MemoryImage *)theImage;
 
@@ -426,7 +442,7 @@ void OpenGLImage::ImplBltF(Image *theImage,
 
 	PreTextureDraw();
 
-	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
+	GLShader *aShaderToUse = (GLShader *)mGLRenderer->GetCurrentShader();
 
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
 	{
@@ -439,49 +455,48 @@ void OpenGLImage::ImplBltF(Image *theImage,
 
 	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
-	glm::vec2 p0 = {theX, theY};
-	glm::vec2 p1 = {theX + theSrcRect.mWidth, theY};
-	glm::vec2 p2 = {theX + theSrcRect.mWidth, theY + theSrcRect.mHeight};
-	glm::vec2 p3 = {theX, theY + theSrcRect.mHeight};
+	glm::vec2 p0 = { theX, theY };
+	glm::vec2 p1 = { theX + theSrcRect.mWidth, theY };
+	glm::vec2 p2 = { theX + theSrcRect.mWidth, theY + theSrcRect.mHeight };
+	glm::vec2 p3 = { theX, theY + theSrcRect.mHeight };
 
 	float u0 = (float)theSrcRect.mX / (float)theImage->mWidth;
 	float v0 = (float)theSrcRect.mY / (float)theImage->mHeight;
 	float u1 = (float)(theSrcRect.mX + theSrcRect.mWidth) / (float)theImage->mWidth;
 	float v1 = (float)(theSrcRect.mY + theSrcRect.mHeight) / (float)theImage->mHeight;
 
-	glm::vec2 uv0 = {u0, v0};
-	glm::vec2 uv1 = {u1, v0};
-	glm::vec2 uv2 = {u1, v1};
-	glm::vec2 uv3 = {u0, v1};
+	glm::vec2 uv0 = { u0, v0 };
+	glm::vec2 uv1 = { u1, v0 };
+	glm::vec2 uv2 = { u1, v1 };
+	glm::vec2 uv3 = { u0, v1 };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
 	std::vector<Vertex> aVertices;
 
-	aVertices.push_back({p0, uv0, aColor});
-	aVertices.push_back({p1, uv1, aColor});
-	aVertices.push_back({p2, uv2, aColor});
-	aVertices.push_back({p2, uv2, aColor});
-	aVertices.push_back({p3, uv3, aColor});
-	aVertices.push_back({p0, uv0, aColor});
+	aVertices.push_back({ p0, uv0, aColor });
+	aVertices.push_back({ p1, uv1, aColor });
+	aVertices.push_back({ p2, uv2, aColor });
+	aVertices.push_back({ p2, uv2, aColor });
+	aVertices.push_back({ p3, uv3, aColor });
+	aVertices.push_back({ p0, uv0, aColor });
 
 	SetupGenerics(aTexID, aVertices, aShaderToUse, theDrawMode, true);
 }
 
-
 void OpenGLImage::ImplBltRotated(Image *theImage,
-							  float theX,
-							  float theY,
-							  const Rect &theSrcRect,
-							  const Rect &theClipRect,
-							  const Color &theColor,
-							  int theDrawMode,
-							  double theRot,
-							  float theRotCenterX,
-							  float theRotCenterY)
+                                 float theX,
+                                 float theY,
+                                 const Rect &theSrcRect,
+                                 const Rect &theClipRect,
+                                 const Color &theColor,
+                                 int theDrawMode,
+                                 double theRot,
+                                 float theRotCenterX,
+                                 float theRotCenterY)
 {
 	MemoryImage *aImg = (MemoryImage *)theImage;
 
@@ -490,7 +505,7 @@ void OpenGLImage::ImplBltRotated(Image *theImage,
 
 	PreTextureDraw();
 
-	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
+	GLShader *aShaderToUse = (GLShader *)mGLRenderer->GetCurrentShader();
 
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
 	{
@@ -503,13 +518,13 @@ void OpenGLImage::ImplBltRotated(Image *theImage,
 
 	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
-	glm::vec2 p0 = {theX, theY};
-	glm::vec2 p1 = {theX + theSrcRect.mWidth, theY};
-	glm::vec2 p2 = {theX + theSrcRect.mWidth, theY + theSrcRect.mHeight};
-	glm::vec2 p3 = {theX, theY + theSrcRect.mHeight};
+	glm::vec2 p0 = { theX, theY };
+	glm::vec2 p1 = { theX + theSrcRect.mWidth, theY };
+	glm::vec2 p2 = { theX + theSrcRect.mWidth, theY + theSrcRect.mHeight };
+	glm::vec2 p3 = { theX, theY + theSrcRect.mHeight };
 
 	float radians = glm::radians(theRot);
-	glm::vec2 center = {theRotCenterX + theX, theRotCenterY + theY};
+	glm::vec2 center = { theRotCenterX + theX, theRotCenterY + theY };
 	p0 = mGLRenderer->RotatePointAroundPivot(p0, center, radians);
 	p1 = mGLRenderer->RotatePointAroundPivot(p1, center, radians);
 	p2 = mGLRenderer->RotatePointAroundPivot(p2, center, radians);
@@ -520,37 +535,35 @@ void OpenGLImage::ImplBltRotated(Image *theImage,
 	float u1 = (float)(theSrcRect.mX + theSrcRect.mWidth) / (float)theImage->mWidth;
 	float v1 = (float)(theSrcRect.mY + theSrcRect.mHeight) / (float)theImage->mHeight;
 
-	glm::vec2 uv0 = {u0, v0};
-	glm::vec2 uv1 = {u1, v0};
-	glm::vec2 uv2 = {u1, v1};
-	glm::vec2 uv3 = {u0, v1};
+	glm::vec2 uv0 = { u0, v0 };
+	glm::vec2 uv1 = { u1, v0 };
+	glm::vec2 uv2 = { u1, v1 };
+	glm::vec2 uv3 = { u0, v1 };
 
-
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
 	std::vector<Vertex> aVertices;
 
-	aVertices.push_back({p0, uv0, aColor});
-	aVertices.push_back({p1, uv1, aColor});
-	aVertices.push_back({p2, uv2, aColor});
-	aVertices.push_back({p2, uv2, aColor});
-	aVertices.push_back({p3, uv3, aColor});
-	aVertices.push_back({p0, uv0, aColor});
+	aVertices.push_back({ p0, uv0, aColor });
+	aVertices.push_back({ p1, uv1, aColor });
+	aVertices.push_back({ p2, uv2, aColor });
+	aVertices.push_back({ p2, uv2, aColor });
+	aVertices.push_back({ p3, uv3, aColor });
+	aVertices.push_back({ p0, uv0, aColor });
 
 	SetupGenerics(aTexID, aVertices, aShaderToUse, theDrawMode, true);
-
 }
 
 void OpenGLImage::ImplStretchBlt(Image *theImage,
-							  const Rect &theDestRect,
-							  const Rect &theSrcRect,
-							  const Rect &theClipRect,
-							  const Color &theColor,
-							  int theDrawMode,
-							  bool fastStretch)
+                                 const Rect &theDestRect,
+                                 const Rect &theSrcRect,
+                                 const Rect &theClipRect,
+                                 const Color &theColor,
+                                 int theDrawMode,
+                                 bool fastStretch)
 {
 	MemoryImage *aImg = (MemoryImage *)theImage;
 
@@ -559,7 +572,7 @@ void OpenGLImage::ImplStretchBlt(Image *theImage,
 
 	PreTextureDraw();
 
-	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
+	GLShader *aShaderToUse = (GLShader *)mGLRenderer->GetCurrentShader();
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
 	{
@@ -572,48 +585,47 @@ void OpenGLImage::ImplStretchBlt(Image *theImage,
 
 	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
-	glm::vec2 p0 = {theDestRect.mX, theDestRect.mY};
-	glm::vec2 p1 = {theDestRect.mX + theDestRect.mWidth, theDestRect.mY};
-	glm::vec2 p2 = {theDestRect.mX + theDestRect.mWidth, theDestRect.mY + theDestRect.mHeight};
-	glm::vec2 p3 = {theDestRect.mX, theDestRect.mY + theDestRect.mHeight};
+	glm::vec2 p0 = { theDestRect.mX, theDestRect.mY };
+	glm::vec2 p1 = { theDestRect.mX + theDestRect.mWidth, theDestRect.mY };
+	glm::vec2 p2 = { theDestRect.mX + theDestRect.mWidth, theDestRect.mY + theDestRect.mHeight };
+	glm::vec2 p3 = { theDestRect.mX, theDestRect.mY + theDestRect.mHeight };
 
 	float u0 = (float)theSrcRect.mX / (float)theImage->mWidth;
 	float v0 = (float)theSrcRect.mY / (float)theImage->mHeight;
 	float u1 = (float)(theSrcRect.mX + theSrcRect.mWidth) / (float)theImage->mWidth;
 	float v1 = (float)(theSrcRect.mY + theSrcRect.mHeight) / (float)theImage->mHeight;
 
-	glm::vec2 uv0 = {u0, v0};
-	glm::vec2 uv1 = {u1, v0};
-	glm::vec2 uv2 = {u1, v1};
-	glm::vec2 uv3 = {u0, v1};
+	glm::vec2 uv0 = { u0, v0 };
+	glm::vec2 uv1 = { u1, v0 };
+	glm::vec2 uv2 = { u1, v1 };
+	glm::vec2 uv3 = { u0, v1 };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
 	std::vector<Vertex> aVertices;
 
-	aVertices.push_back({p0, uv0, aColor});
-	aVertices.push_back({p1, uv1, aColor});
-	aVertices.push_back({p2, uv2, aColor});
-	aVertices.push_back({p2, uv2, aColor});
-	aVertices.push_back({p3, uv3, aColor});
-	aVertices.push_back({p0, uv0, aColor});
+	aVertices.push_back({ p0, uv0, aColor });
+	aVertices.push_back({ p1, uv1, aColor });
+	aVertices.push_back({ p2, uv2, aColor });
+	aVertices.push_back({ p2, uv2, aColor });
+	aVertices.push_back({ p3, uv3, aColor });
+	aVertices.push_back({ p0, uv0, aColor });
 
 	SetupGenerics(aTexID, aVertices, aShaderToUse, theDrawMode, !fastStretch);
 }
 
-
 void OpenGLImage::ImplBltMatrix(Image *theImage,
-							 float x,
-							 float y,
-							 const SexyMatrix3 &theMatrix,
-							 const Rect &theClipRect,
-							 const Color &theColor,
-							 int theDrawMode,
-							 const Rect &theSrcRect,
-							 bool blend)
+                                float x,
+                                float y,
+                                const SexyMatrix3 &theMatrix,
+                                const Rect &theClipRect,
+                                const Color &theColor,
+                                int theDrawMode,
+                                const Rect &theSrcRect,
+                                bool blend)
 {
 	MemoryImage *aImg = (MemoryImage *)theImage;
 
@@ -622,7 +634,7 @@ void OpenGLImage::ImplBltMatrix(Image *theImage,
 
 	PreTextureDraw();
 
-	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
+	GLShader *aShaderToUse = (GLShader *)mGLRenderer->GetCurrentShader();
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
 	{
@@ -638,12 +650,12 @@ void OpenGLImage::ImplBltMatrix(Image *theImage,
 	float aWidth = static_cast<float>(theSrcRect.mWidth);
 	float aHeight = static_cast<float>(theSrcRect.mHeight);
 
-	glm::vec2 origin = {aWidth * 0.5f, aHeight * 0.5f}; //Matrix Draw calls on Images are centered by default
+	glm::vec2 origin = { aWidth * 0.5f, aHeight * 0.5f }; //Matrix Draw calls on Images are centered by default
 
-	glm::vec2 localP0 = {-origin.x, -origin.y};
-	glm::vec2 localP1 = {aWidth - origin.x, -origin.y};
-	glm::vec2 localP2 = {aWidth - origin.x, aHeight - origin.y};
-	glm::vec2 localP3 = {-origin.x, aHeight - origin.y};
+	glm::vec2 localP0 = { -origin.x, -origin.y };
+	glm::vec2 localP1 = { aWidth - origin.x, -origin.y };
+	glm::vec2 localP2 = { aWidth - origin.x, aHeight - origin.y };
+	glm::vec2 localP3 = { -origin.x, aHeight - origin.y };
 
 	glm::vec2 p0 = mGLRenderer->TransformToPoint(localP0.x, localP0.y, theMatrix, x, y);
 	glm::vec2 p1 = mGLRenderer->TransformToPoint(localP1.x, localP1.y, theMatrix, x, y);
@@ -655,36 +667,36 @@ void OpenGLImage::ImplBltMatrix(Image *theImage,
 	float u1 = (float)(theSrcRect.mX + theSrcRect.mWidth) / (float)theImage->mWidth;
 	float v1 = (float)(theSrcRect.mY + theSrcRect.mHeight) / (float)theImage->mHeight;
 
-	glm::vec2 uv0 = {u0, v0};
-	glm::vec2 uv1 = {u1, v0};
-	glm::vec2 uv2 = {u1, v1};
-	glm::vec2 uv3 = {u0, v1};
+	glm::vec2 uv0 = { u0, v0 };
+	glm::vec2 uv1 = { u1, v0 };
+	glm::vec2 uv2 = { u1, v1 };
+	glm::vec2 uv3 = { u0, v1 };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
 	std::vector<Vertex> aVertices;
 
-	aVertices.push_back({p0, uv0, aColor});
-	aVertices.push_back({p1, uv1, aColor});
-	aVertices.push_back({p2, uv2, aColor});
-	aVertices.push_back({p2, uv2, aColor});
-	aVertices.push_back({p3, uv3, aColor});
-	aVertices.push_back({p0, uv0, aColor});
+	aVertices.push_back({ p0, uv0, aColor });
+	aVertices.push_back({ p1, uv1, aColor });
+	aVertices.push_back({ p2, uv2, aColor });
+	aVertices.push_back({ p2, uv2, aColor });
+	aVertices.push_back({ p3, uv3, aColor });
+	aVertices.push_back({ p0, uv0, aColor });
 	SetupGenerics(aTexID, aVertices, aShaderToUse, theDrawMode, blend);
 }
 
 void OpenGLImage::ImplBltTrianglesTex(Image *theTexture,
-								   const TriVertex theVertices[][3],
-								   int theNumTriangles,
-								   const Rect &theClipRect,
-								   const Color &theColor,
-								   int theDrawMode,
-								   float tx,
-								   float ty,
-								   bool blend)
+                                      const TriVertex theVertices[][3],
+                                      int theNumTriangles,
+                                      const Rect &theClipRect,
+                                      const Color &theColor,
+                                      int theDrawMode,
+                                      float tx,
+                                      float ty,
+                                      bool blend)
 {
 	MemoryImage *aImg = (MemoryImage *)theTexture;
 
@@ -693,14 +705,14 @@ void OpenGLImage::ImplBltTrianglesTex(Image *theTexture,
 
 	PreTextureDraw();
 
-	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
+	GLShader *aShaderToUse = (GLShader *)mGLRenderer->GetCurrentShader();
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	std::vector<Vertex> aVertices;
 	aVertices.reserve(theNumTriangles * 3);
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
 	for (int i = 0; i < theNumTriangles; i++)
@@ -722,7 +734,11 @@ void OpenGLImage::ImplBltTrianglesTex(Image *theTexture,
 			aVertColor.b = aColor.b * vertexB;
 			aVertColor.a = aColor.a * vertexA;
 
-			aVertices.push_back({{tv.x, tv.y}, {tv.u, tv.v}, aVertColor});
+			aVertices.push_back({
+			    { tv.x, tv.y },
+			    { tv.u, tv.v },
+			    aVertColor
+            });
 		}
 	}
 
@@ -738,7 +754,7 @@ void OpenGLImage::ImplBltTrianglesTex(Image *theTexture,
 }
 
 void OpenGLImage::ImplBltMirror(
-	Image *theImage, int theX, int theY, const Rect &theSrcRect, const Color &theColor, int theDrawMode)
+    Image *theImage, int theX, int theY, const Rect &theSrcRect, const Color &theColor, int theDrawMode)
 {
 	MemoryImage *aImg = (MemoryImage *)theImage;
 
@@ -747,50 +763,49 @@ void OpenGLImage::ImplBltMirror(
 
 	PreTextureDraw();
 
-	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
+	GLShader *aShaderToUse = (GLShader *)mGLRenderer->GetCurrentShader();
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
-	glm::vec2 p0 = {theX, theY};
-	glm::vec2 p1 = {theX + theSrcRect.mWidth, theY};
-	glm::vec2 p2 = {theX + theSrcRect.mWidth, theY + theSrcRect.mHeight};
-	glm::vec2 p3 = {theX, theY + theSrcRect.mHeight};
+	glm::vec2 p0 = { theX, theY };
+	glm::vec2 p1 = { theX + theSrcRect.mWidth, theY };
+	glm::vec2 p2 = { theX + theSrcRect.mWidth, theY + theSrcRect.mHeight };
+	glm::vec2 p3 = { theX, theY + theSrcRect.mHeight };
 
 	float u0 = (float)(theSrcRect.mX + theSrcRect.mWidth) / (float)theImage->mWidth;
 	float v0 = (float)theSrcRect.mY / (float)theImage->mHeight;
 	float u1 = (float)theSrcRect.mX / (float)theImage->mWidth;
 	float v1 = (float)(theSrcRect.mY + theSrcRect.mHeight) / (float)theImage->mHeight;
 
-	glm::vec2 uv0 = {u0, v0};
-	glm::vec2 uv1 = {u1, v0};
-	glm::vec2 uv2 = {u1, v1};
-	glm::vec2 uv3 = {u0, v1};
+	glm::vec2 uv0 = { u0, v0 };
+	glm::vec2 uv1 = { u1, v0 };
+	glm::vec2 uv2 = { u1, v1 };
+	glm::vec2 uv3 = { u0, v1 };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
 	std::vector<Vertex> aVertices;
 
-	aVertices.push_back({p0, uv0, aColor});
-	aVertices.push_back({p1, uv1, aColor});
-	aVertices.push_back({p2, uv2, aColor});
-	aVertices.push_back({p2, uv2, aColor});
-	aVertices.push_back({p3, uv3, aColor});
-	aVertices.push_back({p0, uv0, aColor});
+	aVertices.push_back({ p0, uv0, aColor });
+	aVertices.push_back({ p1, uv1, aColor });
+	aVertices.push_back({ p2, uv2, aColor });
+	aVertices.push_back({ p2, uv2, aColor });
+	aVertices.push_back({ p3, uv3, aColor });
+	aVertices.push_back({ p0, uv0, aColor });
 
 	SetupGenerics(aTexID, aVertices, aShaderToUse, theDrawMode, true);
 }
 
-
 void OpenGLImage::ImplStretchBltMirror(Image *theImage,
-									const Rect &theDestRectOrig,
-									const Rect &theSrcRect,
-									const Rect &theClipRect,
-									const Color &theColor,
-									int theDrawMode,
-									bool fastStretch)
+                                       const Rect &theDestRectOrig,
+                                       const Rect &theSrcRect,
+                                       const Rect &theClipRect,
+                                       const Color &theColor,
+                                       int theDrawMode,
+                                       bool fastStretch)
 {
 	MemoryImage *aImg = (MemoryImage *)theImage;
 
@@ -799,7 +814,7 @@ void OpenGLImage::ImplStretchBltMirror(Image *theImage,
 
 	PreTextureDraw();
 
-	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
+	GLShader *aShaderToUse = (GLShader *)mGLRenderer->GetCurrentShader();
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))
 	{
@@ -812,34 +827,34 @@ void OpenGLImage::ImplStretchBltMirror(Image *theImage,
 
 	int aTexID = static_cast<OpenGLTextureData *>(aImg->mGPUData)->GetTextureID();
 
-	glm::vec2 p0 = {theDestRectOrig.mX, theDestRectOrig.mY};
-	glm::vec2 p1 = {theDestRectOrig.mX + theDestRectOrig.mWidth, theDestRectOrig.mY};
-	glm::vec2 p2 = {theDestRectOrig.mX + theDestRectOrig.mWidth, theDestRectOrig.mY + theDestRectOrig.mHeight};
-	glm::vec2 p3 = {theDestRectOrig.mX, theDestRectOrig.mY + theDestRectOrig.mHeight};
+	glm::vec2 p0 = { theDestRectOrig.mX, theDestRectOrig.mY };
+	glm::vec2 p1 = { theDestRectOrig.mX + theDestRectOrig.mWidth, theDestRectOrig.mY };
+	glm::vec2 p2 = { theDestRectOrig.mX + theDestRectOrig.mWidth, theDestRectOrig.mY + theDestRectOrig.mHeight };
+	glm::vec2 p3 = { theDestRectOrig.mX, theDestRectOrig.mY + theDestRectOrig.mHeight };
 
 	float u0 = (float)(theSrcRect.mX + theSrcRect.mWidth) / (float)theImage->mWidth;
 	float v0 = (float)theSrcRect.mY / (float)theImage->mHeight;
-	float u1 = (float)theSrcRect.mX / (float)theImage->mWidth; 
+	float u1 = (float)theSrcRect.mX / (float)theImage->mWidth;
 	float v1 = (float)(theSrcRect.mY + theSrcRect.mHeight) / (float)theImage->mHeight;
 
-	glm::vec2 uv0 = {u0, v0};
-	glm::vec2 uv1 = {u1, v0};
-	glm::vec2 uv2 = {u1, v1};
-	glm::vec2 uv3 = {u0, v1};
+	glm::vec2 uv0 = { u0, v0 };
+	glm::vec2 uv1 = { u1, v0 };
+	glm::vec2 uv2 = { u1, v1 };
+	glm::vec2 uv3 = { u0, v1 };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
 	std::vector<Vertex> aVertices;
 
-	aVertices.push_back({p0, uv0, aColor});
-	aVertices.push_back({p1, uv1, aColor});
-	aVertices.push_back({p2, uv2, aColor});
-	aVertices.push_back({p2, uv2, aColor});
-	aVertices.push_back({p3, uv3, aColor});
-	aVertices.push_back({p0, uv0, aColor});
+	aVertices.push_back({ p0, uv0, aColor });
+	aVertices.push_back({ p1, uv1, aColor });
+	aVertices.push_back({ p2, uv2, aColor });
+	aVertices.push_back({ p2, uv2, aColor });
+	aVertices.push_back({ p3, uv3, aColor });
+	aVertices.push_back({ p0, uv0, aColor });
 
 	SetupGenerics(aTexID, aVertices, aShaderToUse, theDrawMode, !fastStretch);
 }
@@ -856,7 +871,7 @@ void OpenGLImage::ImplBltRawTexture(void *theTexture,
 {
 	PreTextureDraw();
 
-	GLShader *aShaderToUse = (GLShader*)mGLRenderer->GetCurrentShader();
+	GLShader *aShaderToUse = (GLShader *)mGLRenderer->GetCurrentShader();
 	aShaderToUse->SetUniform("uBlendMode", mRenderer->ChooseBlendMode(theDrawMode) - 1);
 	GLuint aFilter = !fastStretch ? GL_LINEAR : GL_NEAREST;
 	if (theClipRect != Rect(0, 0, mWidth, mHeight))

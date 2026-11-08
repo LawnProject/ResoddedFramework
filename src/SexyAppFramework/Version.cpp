@@ -2,7 +2,6 @@
 
 using namespace Sexy;
 
-
 Version::Version() : Version(-1, -1, -1, -1)
 {
 }
@@ -15,7 +14,9 @@ Version::Version(int theMajor, int theMinor, int thePatch, int theBuildNumber)
 	mBuildNumber = theBuildNumber;
 }
 
-Version::Version(const Version &theVersion) : Version(theVersion.mMajor, theVersion.mMinor, theVersion.mPatch, theVersion.mBuildNumber) {}
+Version::Version(const Version &theVersion) : Version(theVersion.mMajor, theVersion.mMinor, theVersion.mPatch, theVersion.mBuildNumber)
+{
+}
 
 Version::~Version()
 {

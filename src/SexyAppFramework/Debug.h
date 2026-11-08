@@ -23,17 +23,17 @@ extern void OutputDebug(const SexyCharByte *fmt...);
 
 #else
 
-#define DBG_ASSERTE(exp)                                                                                               \
-	{                                                                                                                  \
-		gInAssert = true;                                                                                              \
-		assert(exp);                                                                                                   \
-		gInAssert = false;                                                                                             \
+#define DBG_ASSERTE(exp)   \
+	{                      \
+		gInAssert = true;  \
+		assert(exp);       \
+		gInAssert = false; \
 	}
-#define DBG_ASSERT(exp)                                                                                                \
-	{                                                                                                                  \
-		gInAssert = true;                                                                                              \
-		assert(exp);                                                                                                   \
-		gInAssert = false;                                                                                             \
+#define DBG_ASSERT(exp)    \
+	{                      \
+		gInAssert = true;  \
+		assert(exp);       \
+		gInAssert = false; \
 	}
 
 #endif // NDEBUG

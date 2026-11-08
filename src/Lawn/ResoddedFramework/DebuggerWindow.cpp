@@ -71,44 +71,44 @@ const char *DebuggerWindow::GetVariationString(DrawVariation v)
 {
 	switch (v)
 	{
-		case VARIATION_NORMAL:
-			return "NORMAL";
-	    case VARIATION_IMITATER:
-		    return "IMITATER";
-	    case VARIATION_MARIGOLD_WHITE:
-		    return "MARIGOLD_WHITE";
-	    case VARIATION_MARIGOLD_MAGENTA:
-		    return "MARIGOLD_MAGENTA";
-	    case VARIATION_MARIGOLD_ORANGE:
-		    return "MARIGOLD_ORANGE";
-	    case VARIATION_MARIGOLD_PINK:
-		    return "MARIGOLD_PINK";
-	    case VARIATION_MARIGOLD_LIGHT_BLUE:
-		    return "MARIGOLD_LIGHT_BLUE";
-	    case VARIATION_MARIGOLD_RED:
-		    return "MARIGOLD_RED";
-	    case VARIATION_MARIGOLD_BLUE:
-		    return "MARIGOLD_BLUE";
-	    case VARIATION_MARIGOLD_VIOLET:
-		    return "MARIGOLD_VIOLET";
-	    case VARIATION_MARIGOLD_LAVENDER:
-		    return "MARIGOLD_LAVENDER";
-	    case VARIATION_MARIGOLD_YELLOW:
-		    return "MARIGOLD_YELLOW";
-	    case VARIATION_MARIGOLD_LIGHT_GREEN:
-		    return "MARIGOLD_LIGHT_GREEN";
-	    case VARIATION_ZEN_GARDEN:
-		    return "ZEN_GARDEN";
-	    case VARIATION_ZEN_GARDEN_WATER:
-		    return "ZEN_GARDEN_WATER";
-	    case VARIATION_SPROUT_NO_FLOWER:
-		    return "SPROUT_NO_FLOWER";
-	    case VARIATION_IMITATER_LESS:
-		    return "IMITATER_LESS";
-	    case VARIATION_AQUARIUM:
-		    return "AQUARIUM";
-		default:
-		    return StrFormat("UNKNOWN | %d", v).c_str();
+	case VARIATION_NORMAL:
+		return "NORMAL";
+	case VARIATION_IMITATER:
+		return "IMITATER";
+	case VARIATION_MARIGOLD_WHITE:
+		return "MARIGOLD_WHITE";
+	case VARIATION_MARIGOLD_MAGENTA:
+		return "MARIGOLD_MAGENTA";
+	case VARIATION_MARIGOLD_ORANGE:
+		return "MARIGOLD_ORANGE";
+	case VARIATION_MARIGOLD_PINK:
+		return "MARIGOLD_PINK";
+	case VARIATION_MARIGOLD_LIGHT_BLUE:
+		return "MARIGOLD_LIGHT_BLUE";
+	case VARIATION_MARIGOLD_RED:
+		return "MARIGOLD_RED";
+	case VARIATION_MARIGOLD_BLUE:
+		return "MARIGOLD_BLUE";
+	case VARIATION_MARIGOLD_VIOLET:
+		return "MARIGOLD_VIOLET";
+	case VARIATION_MARIGOLD_LAVENDER:
+		return "MARIGOLD_LAVENDER";
+	case VARIATION_MARIGOLD_YELLOW:
+		return "MARIGOLD_YELLOW";
+	case VARIATION_MARIGOLD_LIGHT_GREEN:
+		return "MARIGOLD_LIGHT_GREEN";
+	case VARIATION_ZEN_GARDEN:
+		return "ZEN_GARDEN";
+	case VARIATION_ZEN_GARDEN_WATER:
+		return "ZEN_GARDEN_WATER";
+	case VARIATION_SPROUT_NO_FLOWER:
+		return "SPROUT_NO_FLOWER";
+	case VARIATION_IMITATER_LESS:
+		return "IMITATER_LESS";
+	case VARIATION_AQUARIUM:
+		return "AQUARIUM";
+	default:
+		return StrFormat("UNKNOWN | %d", v).c_str();
 	}
 }
 const char *DebuggerWindow::ZombiePhaseName(ZombiePhase p)
@@ -163,14 +163,20 @@ const char *DebuggerWindow::PlantStateName(PlantState s)
 }
 const char *DebuggerWindow::DebugTextModeName(DebugTextMode m)
 {
-    switch (m)
-    {
-    case DEBUG_TEXT_NONE:       return "None";
-    case DEBUG_TEXT_ZOMBIE_SPAWN: return "Zombie Spawn";
-    case DEBUG_TEXT_MUSIC:      return "Music";
-    case DEBUG_TEXT_MEMORY:     return "Memory";
-    case DEBUG_TEXT_COLLISION:  return "Collision";
-    case DEBUG_TEXT_GRID:       return "Grid";
+	switch (m)
+	{
+	case DEBUG_TEXT_NONE:
+		return "None";
+	case DEBUG_TEXT_ZOMBIE_SPAWN:
+		return "Zombie Spawn";
+	case DEBUG_TEXT_MUSIC:
+		return "Music";
+	case DEBUG_TEXT_MEMORY:
+		return "Memory";
+	case DEBUG_TEXT_COLLISION:
+		return "Collision";
+	case DEBUG_TEXT_GRID:
+		return "Grid";
 
 	default:
 		return StrFormat("UNKNOWN | %d", m).c_str();
@@ -228,7 +234,7 @@ ImTextureID GetImGuiTexID(void *theSurface)
 	{
 #if SEXY_USE_OPENGL
 	case RenderingBackend::BACKEND_OPENGL:
-		return (ImTextureID)(uintptr_t)(*(GLuint*)(theSurface));
+		return (ImTextureID)(uintptr_t)(*(GLuint *)(theSurface));
 #endif
 	default:
 		return (ImTextureID)0;
@@ -1126,7 +1132,6 @@ void DebuggerWindow::DrawReanimCache()
 		}
 		ImGui::EndTabBar();
 	}
-
 }
 
 // ─── App panel ───────────────────────────────────────────────

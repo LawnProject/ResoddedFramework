@@ -14,7 +14,16 @@
 using namespace Sexy;
 
 // 3.3 is the minimum: shaders use #version 330 core and glGenSamplers/glBindSampler require GL 3.3
-static const int gGLVersions[][2] = {{4, 6}, {4, 5}, {4, 4}, {4, 3}, {4, 2}, {4, 1}, {4, 0}, {3, 3}};
+static const int gGLVersions[][2] = {
+	{ 4, 6 },
+	{ 4, 5 },
+	{ 4, 4 },
+	{ 4, 3 },
+	{ 4, 2 },
+	{ 4, 1 },
+	{ 4, 0 },
+	{ 3, 3 }
+};
 
 int OpenGLRenderer::gGLTextureCount = 0;
 uint64_t OpenGLRenderer::gGLUsedMemoryCount = 0;
@@ -26,7 +35,6 @@ OpenGLRenderer::OpenGLRenderer(SexyAppBase *theApp) : Renderer(theApp)
 
 OpenGLRenderer::~OpenGLRenderer()
 {
-	
 }
 
 bool OpenGLRenderer::Init()
@@ -94,9 +102,9 @@ void OpenGLRenderer::Cleanup()
 	Renderer::Cleanup();
 
 	DeleteShader(mDefaultShader);
-	
+
 	if (mScreenImage)
-		delete (OpenGLImage*)mScreenImage;
+		delete (OpenGLImage *)mScreenImage;
 	mScreenImage = nullptr;
 
 	ImageSet::iterator anItr;
@@ -119,7 +127,7 @@ void OpenGLRenderer::Cleanup()
 
 	mImageSet.clear();
 
-	std::set<SysFont*>::iterator anFontItr;
+	std::set<SysFont *>::iterator anFontItr;
 	for (anFontItr = mSysFonts.begin(); anFontItr != mSysFonts.end(); ++anFontItr)
 	{
 		SysFont *aFont = *anFontItr;
@@ -130,7 +138,7 @@ void OpenGLRenderer::Cleanup()
 	mCommandBuffer.clear();
 
 	glDeleteTextures(1, &mFBOTexture);
-	
+
 	glDeleteBuffers(1, &mVBO);
 	glDeleteVertexArrays(1, &mVAO);
 	glDeleteFramebuffers(1, &mFBO);
@@ -158,7 +166,7 @@ void OpenGLRenderer::Cleanup()
 void OpenGLRenderer::SetVideoOnlyDraw(bool videoOnly)
 {
 	if (mScreenImage)
-		delete (OpenGLImage*)mScreenImage;
+		delete (OpenGLImage *)mScreenImage;
 	mScreenImage = nullptr;
 	mScreenImage = new OpenGLImage(this);
 	mScreenImage->Create(mWidth, mHeight);
@@ -187,7 +195,7 @@ bool OpenGLRenderer::PreDraw()
 void OpenGLRenderer::DeleteShader(Shader *theShader)
 {
 	if (theShader)
-		delete (GLShader*)theShader;
+		delete (GLShader *)theShader;
 }
 
 bool TryVersion(SDL_Window *window, int major, int minor)
@@ -206,7 +214,6 @@ bool TryVersion(SDL_Window *window, int major, int minor)
 
 	return false;
 }
-
 
 bool OpenGLRenderer::InitGLContext()
 {
@@ -308,7 +315,7 @@ bool OpenGLRenderer::InitBuffers()
 
 	gGLTextureCount++;
 
-	GLenum possiblefilters[2] = {GL_NEAREST, GL_LINEAR};
+	GLenum possiblefilters[2] = { GL_NEAREST, GL_LINEAR };
 	for (int i = 0; i < 2; i++)
 	{
 		GLenum aFilter = possiblefilters[i];
@@ -322,7 +329,6 @@ bool OpenGLRenderer::InitBuffers()
 		glSamplerParameteri(mSamplers[aFilter].mClamp, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glSamplerParameteri(mSamplers[aFilter].mClamp, GL_TEXTURE_MIN_FILTER, aFilter);
 		glSamplerParameteri(mSamplers[aFilter].mClamp, GL_TEXTURE_MAG_FILTER, aFilter);
-
 	}
 
 	return true;
@@ -337,18 +343,18 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 {
 	if (mCommandBuffer.empty())
 	{
-#if SEXY_USE_IMGUI 
+#if SEXY_USE_IMGUI
 		mApp->mImGuiManager->Flush();
 #endif
 		SDL_GL_SwapWindow(mApp->mWindow->mInternalWindow);
 		return !gRenderingPreDrawError;
 	}
-		
+
 	// Draw to FBO Here:
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, mWidth, mHeight);
 	glScissor(0, 0, mWidth, mHeight);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); 
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	glClear(GL_COLOR_BUFFER_BIT);
 	glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
@@ -384,7 +390,7 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 
 		theShader->SetUniform("uUseTexture", (cmd.mTextureID != 0));
 		theShader->SetUniform("uBlendMode", cmd.mBlendMode - 1);
-		
+
 		glBindTexture(GL_TEXTURE_2D, cmd.mTextureID);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, cmd.mVertices.size() * sizeof(Vertex), cmd.mVertices.data());
 		glDrawArrays(cmd.mPrimitiveType, 0, (GLsizei)cmd.mVertices.size());
@@ -398,8 +404,8 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 
 	// Draw to screen here:
 	glBlitFramebuffer(0, 0, mWidth, mHeight, mPresentationRect.mX, mPresentationRect.mY,
-						mPresentationRect.mX + mPresentationRect.mWidth,
-						mPresentationRect.mY + mPresentationRect.mHeight, GL_COLOR_BUFFER_BIT, mApp->mScreenFiltering == MODE_LINEAR ? GL_LINEAR : GL_NEAREST);
+	                  mPresentationRect.mX + mPresentationRect.mWidth,
+	                  mPresentationRect.mY + mPresentationRect.mHeight, GL_COLOR_BUFFER_BIT, mApp->mScreenFiltering == MODE_LINEAR ? GL_LINEAR : GL_NEAREST);
 
 #if SEXY_USE_IMGUI
 	mApp->mImGuiManager->Flush();
@@ -410,7 +416,7 @@ bool OpenGLRenderer::Redraw(Rect *theClipRect)
 	return !gRenderingPreDrawError;
 }
 
-Shader* OpenGLRenderer::CreateShader(const std::string& theVertShader, const std::string& theFragShader)
+Shader *OpenGLRenderer::CreateShader(const std::string &theVertShader, const std::string &theFragShader)
 {
 	GLShader *aShader = new GLShader();
 	bool aSuccess = aShader->LoadFromSource(theVertShader, theFragShader);
@@ -483,7 +489,7 @@ void OpenGLRenderer::UpdateViewport()
 	}
 
 	mPresentationRect = Rect(vpX, vpY, vpW, vpH);
-	
+
 	glDeleteTextures(1, &mFBOTexture);
 	glDeleteFramebuffers(1, &mFBO);
 
@@ -558,7 +564,7 @@ uint32_t *OpenGLRenderer::GetBitsFromTexture(void *theTexture, int theWidth, int
 	return aPixels;
 }
 
-void OpenGLRenderer::DeleteTexture(void* theTexture)
+void OpenGLRenderer::DeleteTexture(void *theTexture)
 {
 	glDeleteTextures(1, (GLuint *)theTexture);
 	delete (GLuint *)theTexture;
@@ -583,7 +589,6 @@ void *OpenGLRenderer::CreateTexture(void *thePixels, int theWidth, int theHeight
 	return aTexPtr;
 }
 
-
 // OpenGLTextureData
 
 OpenGLTextureData::OpenGLTextureData()
@@ -607,7 +612,7 @@ void OpenGLTextureData::ReleaseTextures()
 		delete (GLuint *)mTexData;
 		mTexID = 0;
 	}
-		
+
 	mTexData = nullptr;
 }
 
@@ -622,8 +627,8 @@ GLuint OpenGLTextureData::GetTextureID()
 	}
 	return mTexID;
 }
-	
-void OpenGLTextureData::CreateTextures(MemoryImage* theImage, void* theRendererData)
+
+void OpenGLTextureData::CreateTextures(MemoryImage *theImage, void *theRendererData)
 {
 	if (mSourceIsFBO)
 		return;
@@ -641,7 +646,7 @@ void OpenGLTextureData::CreateTextures(MemoryImage* theImage, void* theRendererD
 		createTexture = true;
 	}
 
-	OpenGLImage *aNativeImage = dynamic_cast<OpenGLImage*>(theImage);
+	OpenGLImage *aNativeImage = dynamic_cast<OpenGLImage *>(theImage);
 	if (aNativeImage != nullptr && aNativeImage->mTexID != 0 && aNativeImage->mFBO != 0)
 	{
 		createTexture = false;
@@ -665,7 +670,7 @@ void OpenGLTextureData::CreateTextures(MemoryImage* theImage, void* theRendererD
 		else
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, aWidth, aHeight, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, theImage->GetBits());
 		mPixelFormat = theImage->mGPUFlags & ImageFlag_UseA4R4G4B4 ? PixelFormat_A4R4G4B4 : PixelFormat_A8R8G8B8;
-		
+
 		OpenGLRenderer::gGLTextureCount++;
 	}
 	else if (mBitsChangedCount != theImage->mBitsChangedCount && !mSourceIsFBO)
@@ -693,7 +698,7 @@ void OpenGLTextureData::CreateTextures(MemoryImage* theImage, void* theRendererD
 	OpenGLRenderer::gGLUsedMemoryCount += mTexMemSize;
 }
 
-void OpenGLTextureData::CheckCreateTextures(MemoryImage* theImage, void* theRendererData)
+void OpenGLTextureData::CheckCreateTextures(MemoryImage *theImage, void *theRendererData)
 {
 	if (GetTextureID() != 0)
 	{
@@ -712,12 +717,12 @@ void OpenGLRenderer::AddCommand(const GLDrawCommand &theCommand)
 }
 
 void OpenGLRenderer::Blt(Image *theImage,
-						float theX,
-						float theY,
-						const Rect &theSrcRect,
-						const Color &theColor,
-						int theDrawMode,
-						bool linearFilter)
+                         float theX,
+                         float theY,
+                         const Rect &theSrcRect,
+                         const Color &theColor,
+                         int theDrawMode,
+                         bool linearFilter)
 {
 	MemoryImage *aImg = (MemoryImage *)theImage;
 
@@ -732,43 +737,43 @@ void OpenGLRenderer::Blt(Image *theImage,
 	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mFilterMode = linearFilter ? GL_LINEAR : GL_NEAREST;
 
-	glm::vec2 p0 = {theX, theY};
-	glm::vec2 p1 = {theX + theSrcRect.mWidth, theY};
-	glm::vec2 p2 = {theX + theSrcRect.mWidth, theY + theSrcRect.mHeight};
-	glm::vec2 p3 = {theX, theY + theSrcRect.mHeight};
+	glm::vec2 p0 = { theX, theY };
+	glm::vec2 p1 = { theX + theSrcRect.mWidth, theY };
+	glm::vec2 p2 = { theX + theSrcRect.mWidth, theY + theSrcRect.mHeight };
+	glm::vec2 p3 = { theX, theY + theSrcRect.mHeight };
 
 	float u0 = (float)theSrcRect.mX / (float)theImage->mWidth;
 	float v0 = (float)theSrcRect.mY / (float)theImage->mHeight;
 	float u1 = (float)(theSrcRect.mX + theSrcRect.mWidth) / (float)theImage->mWidth;
 	float v1 = (float)(theSrcRect.mY + theSrcRect.mHeight) / (float)theImage->mHeight;
 
-	glm::vec2 uv0 = {u0, v0};
-	glm::vec2 uv1 = {u1, v0};
-	glm::vec2 uv2 = {u1, v1};
-	glm::vec2 uv3 = {u0, v1};
+	glm::vec2 uv0 = { u0, v0 };
+	glm::vec2 uv1 = { u1, v0 };
+	glm::vec2 uv2 = { u1, v1 };
+	glm::vec2 uv3 = { u0, v1 };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
-	aCmd.mVertices.push_back({p0, uv0, aColor});
-	aCmd.mVertices.push_back({p1, uv1, aColor});
-	aCmd.mVertices.push_back({p2, uv2, aColor});
-	aCmd.mVertices.push_back({p2, uv2, aColor});
-	aCmd.mVertices.push_back({p3, uv3, aColor});
-	aCmd.mVertices.push_back({p0, uv0, aColor});
+	aCmd.mVertices.push_back({ p0, uv0, aColor });
+	aCmd.mVertices.push_back({ p1, uv1, aColor });
+	aCmd.mVertices.push_back({ p2, uv2, aColor });
+	aCmd.mVertices.push_back({ p2, uv2, aColor });
+	aCmd.mVertices.push_back({ p3, uv3, aColor });
+	aCmd.mVertices.push_back({ p0, uv0, aColor });
 
 	AddCommand(aCmd);
 }
 
 void OpenGLRenderer::BltClipF(Image *theImage,
-							  float theX,
-							  float theY,
-							  const Rect &theSrcRect,
-							  const Rect &theClipRect,
-							  const Color &theColor,
-							  int theDrawMode)
+                              float theX,
+                              float theY,
+                              const Rect &theSrcRect,
+                              const Rect &theClipRect,
+                              const Color &theColor,
+                              int theDrawMode)
 {
 	MemoryImage *aImg = (MemoryImage *)theImage;
 
@@ -788,43 +793,43 @@ void OpenGLRenderer::BltClipF(Image *theImage,
 	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
 
-	glm::vec2 p0 = {theX, theY};
-	glm::vec2 p1 = {theX + theSrcRect.mWidth, theY};
-	glm::vec2 p2 = {theX + theSrcRect.mWidth, theY + theSrcRect.mHeight};
-	glm::vec2 p3 = {theX, theY + theSrcRect.mHeight};
+	glm::vec2 p0 = { theX, theY };
+	glm::vec2 p1 = { theX + theSrcRect.mWidth, theY };
+	glm::vec2 p2 = { theX + theSrcRect.mWidth, theY + theSrcRect.mHeight };
+	glm::vec2 p3 = { theX, theY + theSrcRect.mHeight };
 
 	float u0 = (float)theSrcRect.mX / (float)theImage->mWidth;
 	float v0 = (float)theSrcRect.mY / (float)theImage->mHeight;
 	float u1 = (float)(theSrcRect.mX + theSrcRect.mWidth) / (float)theImage->mWidth;
 	float v1 = (float)(theSrcRect.mY + theSrcRect.mHeight) / (float)theImage->mHeight;
 
-	glm::vec2 uv0 = {u0, v0};
-	glm::vec2 uv1 = {u1, v0};
-	glm::vec2 uv2 = {u1, v1};
-	glm::vec2 uv3 = {u0, v1};
+	glm::vec2 uv0 = { u0, v0 };
+	glm::vec2 uv1 = { u1, v0 };
+	glm::vec2 uv2 = { u1, v1 };
+	glm::vec2 uv3 = { u0, v1 };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
-	aCmd.mVertices.push_back({p0, uv0, aColor});
-	aCmd.mVertices.push_back({p1, uv1, aColor});
-	aCmd.mVertices.push_back({p2, uv2, aColor});
-	aCmd.mVertices.push_back({p2, uv2, aColor});
-	aCmd.mVertices.push_back({p3, uv3, aColor});
-	aCmd.mVertices.push_back({p0, uv0, aColor});
+	aCmd.mVertices.push_back({ p0, uv0, aColor });
+	aCmd.mVertices.push_back({ p1, uv1, aColor });
+	aCmd.mVertices.push_back({ p2, uv2, aColor });
+	aCmd.mVertices.push_back({ p2, uv2, aColor });
+	aCmd.mVertices.push_back({ p3, uv3, aColor });
+	aCmd.mVertices.push_back({ p0, uv0, aColor });
 
 	AddCommand(aCmd);
 }
 
 void OpenGLRenderer::BltMirror(Image *theImage,
-							   float theX,
-							   float theY,
-							   const Rect &theSrcRect,
-							   const Color &theColor,
-							   int theDrawMode,
-							   bool linearFilter)
+                               float theX,
+                               float theY,
+                               const Rect &theSrcRect,
+                               const Color &theColor,
+                               int theDrawMode,
+                               bool linearFilter)
 {
 	MemoryImage *aImg = (MemoryImage *)theImage;
 
@@ -839,10 +844,10 @@ void OpenGLRenderer::BltMirror(Image *theImage,
 	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mFilterMode = linearFilter ? GL_LINEAR : GL_NEAREST;
 
-	glm::vec2 p0 = {theX, theY};
-	glm::vec2 p1 = {theX + theSrcRect.mWidth, theY};
-	glm::vec2 p2 = {theX + theSrcRect.mWidth, theY + theSrcRect.mHeight};
-	glm::vec2 p3 = {theX, theY + theSrcRect.mHeight};
+	glm::vec2 p0 = { theX, theY };
+	glm::vec2 p1 = { theX + theSrcRect.mWidth, theY };
+	glm::vec2 p2 = { theX + theSrcRect.mWidth, theY + theSrcRect.mHeight };
+	glm::vec2 p3 = { theX, theY + theSrcRect.mHeight };
 
 	float u0 = (float)theSrcRect.mX / (float)theImage->mWidth;
 	float v0 = (float)theSrcRect.mY / (float)theImage->mHeight;
@@ -851,34 +856,34 @@ void OpenGLRenderer::BltMirror(Image *theImage,
 
 	std::swap(u0, u1);
 
-	glm::vec2 uv0 = {u0, v0};
-	glm::vec2 uv1 = {u1, v0};
-	glm::vec2 uv2 = {u1, v1};
-	glm::vec2 uv3 = {u0, v1};
+	glm::vec2 uv0 = { u0, v0 };
+	glm::vec2 uv1 = { u1, v0 };
+	glm::vec2 uv2 = { u1, v1 };
+	glm::vec2 uv3 = { u0, v1 };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
-	aCmd.mVertices.push_back({p0, uv0, aColor});
-	aCmd.mVertices.push_back({p1, uv1, aColor});
-	aCmd.mVertices.push_back({p2, uv2, aColor});
-	aCmd.mVertices.push_back({p2, uv2, aColor});
-	aCmd.mVertices.push_back({p3, uv3, aColor});
-	aCmd.mVertices.push_back({p0, uv0, aColor});
+	aCmd.mVertices.push_back({ p0, uv0, aColor });
+	aCmd.mVertices.push_back({ p1, uv1, aColor });
+	aCmd.mVertices.push_back({ p2, uv2, aColor });
+	aCmd.mVertices.push_back({ p2, uv2, aColor });
+	aCmd.mVertices.push_back({ p3, uv3, aColor });
+	aCmd.mVertices.push_back({ p0, uv0, aColor });
 
 	AddCommand(aCmd);
 }
 
 void OpenGLRenderer::StretchBlt(Image *theImage,
-								const Rect &theDestRect,
-								const Rect &theSrcRect,
-								const Rect &theClipRect,
-								const Color &theColor,
-								int theDrawMode,
-								bool fastStretch,
-								bool mirror)
+                                const Rect &theDestRect,
+                                const Rect &theSrcRect,
+                                const Rect &theClipRect,
+                                const Color &theColor,
+                                int theDrawMode,
+                                bool fastStretch,
+                                bool mirror)
 {
 	MemoryImage *aImg = (MemoryImage *)theImage;
 
@@ -897,10 +902,10 @@ void OpenGLRenderer::StretchBlt(Image *theImage,
 	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
 
-	glm::vec2 p0 = {theDestRect.mX, theDestRect.mY};
-	glm::vec2 p1 = {theDestRect.mX + theDestRect.mWidth, theDestRect.mY};
-	glm::vec2 p2 = {theDestRect.mX + theDestRect.mWidth, theDestRect.mY + theDestRect.mHeight};
-	glm::vec2 p3 = {theDestRect.mX, theDestRect.mY + theDestRect.mHeight};
+	glm::vec2 p0 = { theDestRect.mX, theDestRect.mY };
+	glm::vec2 p1 = { theDestRect.mX + theDestRect.mWidth, theDestRect.mY };
+	glm::vec2 p2 = { theDestRect.mX + theDestRect.mWidth, theDestRect.mY + theDestRect.mHeight };
+	glm::vec2 p3 = { theDestRect.mX, theDestRect.mY + theDestRect.mHeight };
 
 	float u0 = (float)theSrcRect.mX / (float)theImage->mWidth;
 	float v0 = (float)theSrcRect.mY / (float)theImage->mHeight;
@@ -912,36 +917,36 @@ void OpenGLRenderer::StretchBlt(Image *theImage,
 		std::swap(u0, u1);
 	}
 
-	glm::vec2 uv0 = {u0, v0};
-	glm::vec2 uv1 = {u1, v0};
-	glm::vec2 uv2 = {u1, v1};
-	glm::vec2 uv3 = {u0, v1};
+	glm::vec2 uv0 = { u0, v0 };
+	glm::vec2 uv1 = { u1, v0 };
+	glm::vec2 uv2 = { u1, v1 };
+	glm::vec2 uv3 = { u0, v1 };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
-	aCmd.mVertices.push_back({p0, uv0, aColor});
-	aCmd.mVertices.push_back({p1, uv1, aColor});
-	aCmd.mVertices.push_back({p2, uv2, aColor});
-	aCmd.mVertices.push_back({p2, uv2, aColor});
-	aCmd.mVertices.push_back({p3, uv3, aColor});
-	aCmd.mVertices.push_back({p0, uv0, aColor});
+	aCmd.mVertices.push_back({ p0, uv0, aColor });
+	aCmd.mVertices.push_back({ p1, uv1, aColor });
+	aCmd.mVertices.push_back({ p2, uv2, aColor });
+	aCmd.mVertices.push_back({ p2, uv2, aColor });
+	aCmd.mVertices.push_back({ p3, uv3, aColor });
+	aCmd.mVertices.push_back({ p0, uv0, aColor });
 
 	AddCommand(aCmd);
 }
 
 void OpenGLRenderer::BltRotated(Image *theImage,
-								float theX,
-								float theY,
-								const Rect &theClipRect,
-								const Color &theColor,
-								int theDrawMode,
-								double theRot,
-								float theRotCenterX,
-								float theRotCenterY,
-								const Rect &theSrcRect)
+                                float theX,
+                                float theY,
+                                const Rect &theClipRect,
+                                const Color &theColor,
+                                int theDrawMode,
+                                double theRot,
+                                float theRotCenterX,
+                                float theRotCenterY,
+                                const Rect &theSrcRect)
 {
 	MemoryImage *aImg = (MemoryImage *)theImage;
 
@@ -958,15 +963,15 @@ void OpenGLRenderer::BltRotated(Image *theImage,
 	aCmd.mPrimitiveType = GL_TRIANGLES;
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
-	aCmd.mShader = (GLShader*)GetCurrentShader();
+	aCmd.mShader = (GLShader *)GetCurrentShader();
 
-	glm::vec2 p0 = {theX, theY};
-	glm::vec2 p1 = {theX + theSrcRect.mWidth, theY};
-	glm::vec2 p2 = {theX + theSrcRect.mWidth, theY + theSrcRect.mHeight};
-	glm::vec2 p3 = {theX, theY + theSrcRect.mHeight};
+	glm::vec2 p0 = { theX, theY };
+	glm::vec2 p1 = { theX + theSrcRect.mWidth, theY };
+	glm::vec2 p2 = { theX + theSrcRect.mWidth, theY + theSrcRect.mHeight };
+	glm::vec2 p3 = { theX, theY + theSrcRect.mHeight };
 
 	float radians = glm::radians(theRot);
-	glm::vec2 center = {theRotCenterX + theX, theRotCenterY + theY};
+	glm::vec2 center = { theRotCenterX + theX, theRotCenterY + theY };
 	p0 = RotatePointAroundPivot(p0, center, radians);
 	p1 = RotatePointAroundPivot(p1, center, radians);
 	p2 = RotatePointAroundPivot(p2, center, radians);
@@ -977,36 +982,36 @@ void OpenGLRenderer::BltRotated(Image *theImage,
 	float u1 = (float)(theSrcRect.mX + theSrcRect.mWidth) / (float)theImage->mWidth;
 	float v1 = (float)(theSrcRect.mY + theSrcRect.mHeight) / (float)theImage->mHeight;
 
-	glm::vec2 uv0 = {u0, v0};
-	glm::vec2 uv1 = {u1, v0};
-	glm::vec2 uv2 = {u1, v1};
-	glm::vec2 uv3 = {u0, v1};
+	glm::vec2 uv0 = { u0, v0 };
+	glm::vec2 uv1 = { u1, v0 };
+	glm::vec2 uv2 = { u1, v1 };
+	glm::vec2 uv3 = { u0, v1 };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
-	aCmd.mVertices.push_back({p0, uv0, aColor});
-	aCmd.mVertices.push_back({p1, uv1, aColor});
-	aCmd.mVertices.push_back({p2, uv2, aColor});
-	aCmd.mVertices.push_back({p2, uv2, aColor});
-	aCmd.mVertices.push_back({p3, uv3, aColor});
-	aCmd.mVertices.push_back({p0, uv0, aColor});
+	aCmd.mVertices.push_back({ p0, uv0, aColor });
+	aCmd.mVertices.push_back({ p1, uv1, aColor });
+	aCmd.mVertices.push_back({ p2, uv2, aColor });
+	aCmd.mVertices.push_back({ p2, uv2, aColor });
+	aCmd.mVertices.push_back({ p3, uv3, aColor });
+	aCmd.mVertices.push_back({ p0, uv0, aColor });
 
 	AddCommand(aCmd);
 }
 
 void OpenGLRenderer::BltTransformed(Image *theImage,
-									const Rect &theClipRect,
-									const Color &theColor,
-									int theDrawMode,
-									const Rect &theSrcRect,
-									const SexyMatrix3 &theTransform,
-									bool linearFilter,
-									float theX,
-									float theY,
-									bool center)
+                                    const Rect &theClipRect,
+                                    const Color &theColor,
+                                    int theDrawMode,
+                                    const Rect &theSrcRect,
+                                    const SexyMatrix3 &theTransform,
+                                    bool linearFilter,
+                                    float theX,
+                                    float theY,
+                                    bool center)
 {
 	MemoryImage *aImg = (MemoryImage *)theImage;
 
@@ -1029,14 +1034,14 @@ void OpenGLRenderer::BltTransformed(Image *theImage,
 	float aWidth = static_cast<float>(theSrcRect.mWidth);
 	float aHeight = static_cast<float>(theSrcRect.mHeight);
 
-	glm::vec2 origin = {0.0f, 0.0f};
+	glm::vec2 origin = { 0.0f, 0.0f };
 	if (center)
-		origin = {aWidth * 0.5f, aHeight * 0.5f};
+		origin = { aWidth * 0.5f, aHeight * 0.5f };
 
-	glm::vec2 localP0 = {-origin.x, -origin.y};
-	glm::vec2 localP1 = {aWidth - origin.x, -origin.y};
-	glm::vec2 localP2 = {aWidth - origin.x, aHeight - origin.y};
-	glm::vec2 localP3 = {-origin.x, aHeight - origin.y};
+	glm::vec2 localP0 = { -origin.x, -origin.y };
+	glm::vec2 localP1 = { aWidth - origin.x, -origin.y };
+	glm::vec2 localP2 = { aWidth - origin.x, aHeight - origin.y };
+	glm::vec2 localP3 = { -origin.x, aHeight - origin.y };
 
 	glm::vec2 p0 = TransformToPoint(localP0.x, localP0.y, theTransform, theX, theY);
 	glm::vec2 p1 = TransformToPoint(localP1.x, localP1.y, theTransform, theX, theY);
@@ -1048,28 +1053,28 @@ void OpenGLRenderer::BltTransformed(Image *theImage,
 	float u1 = (float)(theSrcRect.mX + theSrcRect.mWidth) / (float)theImage->mWidth;
 	float v1 = (float)(theSrcRect.mY + theSrcRect.mHeight) / (float)theImage->mHeight;
 
-	glm::vec2 uv0 = {u0, v0};
-	glm::vec2 uv1 = {u1, v0};
-	glm::vec2 uv2 = {u1, v1};
-	glm::vec2 uv3 = {u0, v1};
+	glm::vec2 uv0 = { u0, v0 };
+	glm::vec2 uv1 = { u1, v0 };
+	glm::vec2 uv2 = { u1, v1 };
+	glm::vec2 uv3 = { u0, v1 };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
-	aCmd.mVertices.push_back({p0, uv0, aColor});
-	aCmd.mVertices.push_back({p1, uv1, aColor});
-	aCmd.mVertices.push_back({p2, uv2, aColor});
-	aCmd.mVertices.push_back({p2, uv2, aColor});
-	aCmd.mVertices.push_back({p3, uv3, aColor});
-	aCmd.mVertices.push_back({p0, uv0, aColor});
+	aCmd.mVertices.push_back({ p0, uv0, aColor });
+	aCmd.mVertices.push_back({ p1, uv1, aColor });
+	aCmd.mVertices.push_back({ p2, uv2, aColor });
+	aCmd.mVertices.push_back({ p2, uv2, aColor });
+	aCmd.mVertices.push_back({ p3, uv3, aColor });
+	aCmd.mVertices.push_back({ p0, uv0, aColor });
 
 	AddCommand(aCmd);
 }
 
 void OpenGLRenderer::DrawLine(
-	double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
+    double theStartX, double theStartY, double theEndX, double theEndY, const Color &theColor, int theDrawMode)
 {
 	GLDrawCommand aCmd;
 	aCmd.mPrimitiveType = GL_LINES;
@@ -1077,9 +1082,17 @@ void OpenGLRenderer::DrawLine(
 	aCmd.mBlendMode = ChooseBlendMode(theDrawMode);
 	aCmd.mShader = (GLShader *)GetCurrentShader();
 	glm::vec4 color =
-		glm::vec4(theColor.mRed / 255.0f, theColor.mGreen / 255.0f, theColor.mBlue / 255.0f, theColor.mAlpha / 255.0f);
-	aCmd.mVertices.push_back({{theStartX, theStartY}, {}, color});
-	aCmd.mVertices.push_back({{theEndX, theEndY}, {}, color});
+	    glm::vec4(theColor.mRed / 255.0f, theColor.mGreen / 255.0f, theColor.mBlue / 255.0f, theColor.mAlpha / 255.0f);
+	aCmd.mVertices.push_back({
+	    { theStartX, theStartY },
+	    {},
+	    color
+    });
+	aCmd.mVertices.push_back({
+	    { theEndX, theEndY },
+	    {},
+	    color
+    });
 
 	AddCommand(aCmd);
 }
@@ -1093,28 +1106,28 @@ void OpenGLRenderer::FillRect(const Rect &theRect, const Color &theColor, int th
 	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
 
-	glm::vec2 p0 = {theRect.mX, theRect.mY};
-	glm::vec2 p1 = {theRect.mX + theRect.mWidth, theRect.mY};
-	glm::vec2 p2 = {theRect.mX + theRect.mWidth, theRect.mY + theRect.mHeight};
-	glm::vec2 p3 = {theRect.mX, theRect.mY + theRect.mHeight};
+	glm::vec2 p0 = { theRect.mX, theRect.mY };
+	glm::vec2 p1 = { theRect.mX + theRect.mWidth, theRect.mY };
+	glm::vec2 p2 = { theRect.mX + theRect.mWidth, theRect.mY + theRect.mHeight };
+	glm::vec2 p3 = { theRect.mX, theRect.mY + theRect.mHeight };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
-	aCmd.mVertices.push_back({p0, {}, aColor});
-	aCmd.mVertices.push_back({p1, {}, aColor});
-	aCmd.mVertices.push_back({p2, {}, aColor});
-	aCmd.mVertices.push_back({p2, {}, aColor});
-	aCmd.mVertices.push_back({p3, {}, aColor});
-	aCmd.mVertices.push_back({p0, {}, aColor});
+	aCmd.mVertices.push_back({ p0, {}, aColor });
+	aCmd.mVertices.push_back({ p1, {}, aColor });
+	aCmd.mVertices.push_back({ p2, {}, aColor });
+	aCmd.mVertices.push_back({ p2, {}, aColor });
+	aCmd.mVertices.push_back({ p3, {}, aColor });
+	aCmd.mVertices.push_back({ p0, {}, aColor });
 
 	AddCommand(aCmd);
 }
 
 void OpenGLRenderer::DrawTriangle(
-	const TriVertex &p1, const TriVertex &p2, const TriVertex &p3, const Color &theColor, int theDrawMode)
+    const TriVertex &p1, const TriVertex &p2, const TriVertex &p3, const Color &theColor, int theDrawMode)
 {
 	GLDrawCommand aCmd;
 	aCmd.mTextureID = 0;
@@ -1123,29 +1136,38 @@ void OpenGLRenderer::DrawTriangle(
 	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
 
-	glm::vec2 vert0 = {p1.x, p1.y};
-	glm::vec2 vert1 = {p2.x, p2.y};
-	glm::vec2 vert2 = {p3.x, p3.y};
+	glm::vec2 vert0 = { p1.x, p1.y };
+	glm::vec2 vert1 = { p2.x, p2.y };
+	glm::vec2 vert2 = { p3.x, p3.y };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
-	aCmd.mVertices.push_back({vert0, {p1.u, p1.v}, aColor});
-	aCmd.mVertices.push_back({vert1, {p2.u, p2.v}, aColor});
-	aCmd.mVertices.push_back({vert2, {p3.u, p3.v}, aColor});
+	aCmd.mVertices.push_back({
+	    vert0, { p1.u, p1.v },
+         aColor
+    });
+	aCmd.mVertices.push_back({
+	    vert1, { p2.u, p2.v },
+         aColor
+    });
+	aCmd.mVertices.push_back({
+	    vert2, { p3.u, p3.v },
+         aColor
+    });
 
 	AddCommand(aCmd);
 }
 
 void OpenGLRenderer::DrawTriangleTex(const TriVertex &p1,
-									 const TriVertex &p2,
-									 const TriVertex &p3,
-									 const Color &theColor,
-									 int theDrawMode,
-									 Image *theTexture,
-									 bool blend)
+                                     const TriVertex &p2,
+                                     const TriVertex &p3,
+                                     const Color &theColor,
+                                     int theDrawMode,
+                                     Image *theTexture,
+                                     bool blend)
 {
 	MemoryImage *aImg = (MemoryImage *)theTexture;
 
@@ -1159,30 +1181,39 @@ void OpenGLRenderer::DrawTriangleTex(const TriVertex &p1,
 	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
 
-	glm::vec2 vert0 = {p1.x, p1.y};
-	glm::vec2 vert1 = {p2.x, p2.y};
-	glm::vec2 vert2 = {p3.x, p3.y};
+	glm::vec2 vert0 = { p1.x, p1.y };
+	glm::vec2 vert1 = { p2.x, p2.y };
+	glm::vec2 vert2 = { p3.x, p3.y };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
-	aCmd.mVertices.push_back({vert0, {p1.u, p1.v}, aColor});
-	aCmd.mVertices.push_back({vert1, {p2.u, p2.v}, aColor});
-	aCmd.mVertices.push_back({vert2, {p3.u, p3.v}, aColor});
+	aCmd.mVertices.push_back({
+	    vert0, { p1.u, p1.v },
+         aColor
+    });
+	aCmd.mVertices.push_back({
+	    vert1, { p2.u, p2.v },
+         aColor
+    });
+	aCmd.mVertices.push_back({
+	    vert2, { p3.u, p3.v },
+         aColor
+    });
 
 	AddCommand(aCmd);
 }
 
 void OpenGLRenderer::DrawTrianglesTex(const TriVertex theVertices[][3],
-								  int theNumTriangles,
-								  const Color &theColor,
-								  int theDrawMode,
-								  Image *theTexture,
-								  float tx,
-								  float ty,
-								  bool blend)
+                                      int theNumTriangles,
+                                      const Color &theColor,
+                                      int theDrawMode,
+                                      Image *theTexture,
+                                      float tx,
+                                      float ty,
+                                      bool blend)
 {
 	MemoryImage *aImg = (MemoryImage *)theTexture;
 
@@ -1196,14 +1227,14 @@ void OpenGLRenderer::DrawTrianglesTex(const TriVertex theVertices[][3],
 	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
 	aCmd.mVertices.reserve(theNumTriangles * 3);
 
-    for (int i = 0; i < theNumTriangles; i++)
+	for (int i = 0; i < theNumTriangles; i++)
 	{
 		for (int v = 0; v < 3; v++)
 		{
@@ -1222,7 +1253,11 @@ void OpenGLRenderer::DrawTrianglesTex(const TriVertex theVertices[][3],
 			aVertColor.b = aColor.b * vertexB;
 			aVertColor.a = aColor.a * vertexA;
 
-			aCmd.mVertices.push_back({{tv.x, tv.y}, {tv.u, tv.v}, aVertColor});
+			aCmd.mVertices.push_back({
+			    { tv.x, tv.y },
+			    { tv.u, tv.v },
+			    aVertColor
+            });
 		}
 	}
 
@@ -1230,13 +1265,13 @@ void OpenGLRenderer::DrawTrianglesTex(const TriVertex theVertices[][3],
 }
 
 void OpenGLRenderer::DrawTrianglesTexStrip(const TriVertex theVertices[],
-									   int theNumTriangles,
-									   const Color &theColor,
-									   int theDrawMode,
-									   Image *theTexture,
-									   float tx,
-									   float ty,
-									   bool blend)
+                                           int theNumTriangles,
+                                           const Color &theColor,
+                                           int theDrawMode,
+                                           Image *theTexture,
+                                           float tx,
+                                           float ty,
+                                           bool blend)
 {
 	TriVertex aList[100][3];
 	int aTriNum = 0;
@@ -1254,12 +1289,12 @@ void OpenGLRenderer::DrawTrianglesTexStrip(const TriVertex theVertices[],
 }
 
 void OpenGLRenderer::FillPoly(const Point theVertices[],
-							int theNumVertices,
-							const Rect &theClipRect,
-							const Color &theColor,
-							int theDrawMode,
-							int tx,
-							int ty)
+                              int theNumVertices,
+                              const Rect &theClipRect,
+                              const Color &theColor,
+                              int theDrawMode,
+                              int tx,
+                              int ty)
 {
 	if (theNumVertices < 3)
 		return;
@@ -1282,13 +1317,13 @@ void OpenGLRenderer::FillPoly(const Point theVertices[],
 }
 
 void OpenGLRenderer::BltRawTexture(void *theTexture,
-							  int theTexWidth,
-							  int theTexHeight,
-							  const Rect &theDestRect,
-							  const Rect &theSrcRect,
-							  const Rect &theClipRect,
-							  const Color &theColor,
-							  int theDrawMode)
+                                   int theTexWidth,
+                                   int theTexHeight,
+                                   const Rect &theDestRect,
+                                   const Rect &theSrcRect,
+                                   const Rect &theClipRect,
+                                   const Color &theColor,
+                                   int theDrawMode)
 {
 	GLuint aTextureID = *(GLuint *)theTexture;
 
@@ -1299,32 +1334,32 @@ void OpenGLRenderer::BltRawTexture(void *theTexture,
 	aCmd.mShader = (GLShader *)GetCurrentShader();
 	aCmd.mUVWrapMode = mCurrentUVWrapMode;
 
-	glm::vec2 p0 = {theDestRect.mX, theDestRect.mY};
-	glm::vec2 p1 = {theDestRect.mX + theDestRect.mWidth, theDestRect.mY};
-	glm::vec2 p2 = {theDestRect.mX + theDestRect.mWidth, theDestRect.mY + theDestRect.mHeight};
-	glm::vec2 p3 = {theDestRect.mX, theDestRect.mY + theDestRect.mHeight};
+	glm::vec2 p0 = { theDestRect.mX, theDestRect.mY };
+	glm::vec2 p1 = { theDestRect.mX + theDestRect.mWidth, theDestRect.mY };
+	glm::vec2 p2 = { theDestRect.mX + theDestRect.mWidth, theDestRect.mY + theDestRect.mHeight };
+	glm::vec2 p3 = { theDestRect.mX, theDestRect.mY + theDestRect.mHeight };
 
 	float u0 = (float)theSrcRect.mX / (float)theTexWidth;
 	float v0 = (float)theSrcRect.mY / (float)theTexHeight;
 	float u1 = (float)(theSrcRect.mX + theSrcRect.mWidth) / (float)theTexWidth;
 	float v1 = (float)(theSrcRect.mY + theSrcRect.mHeight) / (float)theTexHeight;
 
-	glm::vec2 uv0 = {u0, v0};
-	glm::vec2 uv1 = {u1, v0};
-	glm::vec2 uv2 = {u1, v1};
-	glm::vec2 uv3 = {u0, v1};
+	glm::vec2 uv0 = { u0, v0 };
+	glm::vec2 uv1 = { u1, v0 };
+	glm::vec2 uv2 = { u1, v1 };
+	glm::vec2 uv3 = { u0, v1 };
 
-	glm::vec4 aColor = {(float)theColor.mRed / 255.0f,
-						(float)theColor.mGreen / 255.0f,
-						(float)theColor.mBlue / 255.0f,
-						(float)theColor.mAlpha / 255.0f};
+	glm::vec4 aColor = { (float)theColor.mRed / 255.0f,
+		                 (float)theColor.mGreen / 255.0f,
+		                 (float)theColor.mBlue / 255.0f,
+		                 (float)theColor.mAlpha / 255.0f };
 
-	aCmd.mVertices.push_back({p0, uv0, aColor});
-	aCmd.mVertices.push_back({p1, uv1, aColor});
-	aCmd.mVertices.push_back({p2, uv2, aColor});
-	aCmd.mVertices.push_back({p2, uv2, aColor});
-	aCmd.mVertices.push_back({p3, uv3, aColor});
-	aCmd.mVertices.push_back({p0, uv0, aColor});
+	aCmd.mVertices.push_back({ p0, uv0, aColor });
+	aCmd.mVertices.push_back({ p1, uv1, aColor });
+	aCmd.mVertices.push_back({ p2, uv2, aColor });
+	aCmd.mVertices.push_back({ p2, uv2, aColor });
+	aCmd.mVertices.push_back({ p3, uv3, aColor });
+	aCmd.mVertices.push_back({ p0, uv0, aColor });
 
 	AddCommand(aCmd);
 }

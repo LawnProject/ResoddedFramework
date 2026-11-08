@@ -6,7 +6,7 @@
 using namespace Sexy;
 
 bool Sexy::Quantize8Bit(
-	const uint32_t *theSrcBits, int theWidth, int theHeight, uint8_t *theDestColorIndices, uint32_t *theDestColorTable)
+    const uint32_t *theSrcBits, int theWidth, int theHeight, uint8_t *theDestColorIndices, uint32_t *theDestColorTable)
 {
 	int aSize = theWidth * theHeight;
 
@@ -57,13 +57,13 @@ bool Sexy::Quantize8Bit(
 
 				// Insert color into the table
 				memmove(aSearchTable + anInsertPos + 1,
-						aSearchTable + anInsertPos,
-						(aColorTableSize - anInsertPos) * sizeof(uint32_t));
+				        aSearchTable + anInsertPos,
+				        (aColorTableSize - anInsertPos) * sizeof(uint32_t));
 				aSearchTable[anInsertPos] = aColor;
 
 				memmove(aTranslationTable + anInsertPos + 1,
-						aTranslationTable + anInsertPos,
-						(aColorTableSize - anInsertPos) * sizeof(uint8_t));
+				        aTranslationTable + anInsertPos,
+				        (aColorTableSize - anInsertPos) * sizeof(uint8_t));
 				aTranslationTable[anInsertPos] = aColorTableSize;
 
 				theDestColorTable[aColorTableSize] = aColor;

@@ -37,8 +37,8 @@ class OpenALSoundManager : public SoundManager
 	void ReleaseFreeChannels();
 
   public:
-	ALCdevice* mAudioDevice;
-	ALCcontext* mContext;
+	ALCdevice *mAudioDevice;
+	ALCcontext *mContext;
 
 	OpenALSoundManager();
 	virtual ~OpenALSoundManager();

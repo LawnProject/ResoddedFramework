@@ -86,7 +86,7 @@ class DescParser
 	bool DataToIntVector(DataElement *theSource, IntVector *theIntVector);
 	bool DataToDoubleVector(DataElement *theSource, DoubleVector *theDoubleVector);
 	bool ParseToList(std::string::const_iterator &it, const std::string::const_iterator &end, ListDataElement *theList,
-					 bool expectListEnd);
+	                 bool expectListEnd);
 	bool ParseDescriptorLine(const std::string &theDescriptorLine);
 
 	// You must implement this one

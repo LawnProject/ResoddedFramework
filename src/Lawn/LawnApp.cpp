@@ -3092,7 +3092,6 @@ bool LawnApp::IsTrialStageLocked()
 
 void LawnApp::InitHook()
 {
-
 }
 
 SexyString LawnApp::GetMoneyString(int theAmount)

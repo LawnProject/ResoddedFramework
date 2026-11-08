@@ -85,13 +85,13 @@ class Dialog : public Widget, public ButtonListener
 
   public:
 	Dialog(Image *theComponentImage,
-		   Image *theButtonComponentImage,
-		   int theId,
-		   bool isModal,
-		   const SexyString &theDialogHeader,
-		   const SexyString &theDialogLines,
-		   const SexyString &theDialogFooter,
-		   int theButtonMode); //UNICODE
+	       Image *theButtonComponentImage,
+	       int theId,
+	       bool isModal,
+	       const SexyString &theDialogHeader,
+	       const SexyString &theDialogLines,
+	       const SexyString &theDialogFooter,
+	       int theButtonMode); //UNICODE
 
 	virtual ~Dialog();
 

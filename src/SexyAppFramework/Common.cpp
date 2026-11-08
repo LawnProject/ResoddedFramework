@@ -169,7 +169,7 @@ bool Sexy::StringToInt(const std::string theString, int *theIntVal)
 		if ((theRadix == 10) && (aChar >= '0') && (aChar <= '9'))
 			*theIntVal = (*theIntVal * 10) + (aChar - '0');
 		else if ((theRadix == 0x10) && (((aChar >= '0') && (aChar <= '9')) || ((aChar >= 'A') && (aChar <= 'F')) ||
-										((aChar >= 'a') && (aChar <= 'f'))))
+		                                ((aChar >= 'a') && (aChar <= 'f'))))
 		{
 			if (aChar <= '9')
 				*theIntVal = (*theIntVal * 0x10) + (aChar - '0');
@@ -313,7 +313,7 @@ std::string Sexy::GetPathFrom(const std::string &theRelPath, const std::string &
 
 	// Append a trailing slash if necessary
 	if ((aNewPath.length() > 0) && (aNewPath[aNewPath.length() - 1] != '\\') &&
-		(aNewPath[aNewPath.length() - 1] != '/'))
+	    (aNewPath[aNewPath.length() - 1] != '/'))
 		aNewPath += aSlashChar;
 
 	std::string aTempRelPath = theRelPath;
@@ -400,16 +400,16 @@ bool Sexy::AllowAllAccess(const std::string &theFileName)
 		return false;
 
 	BOOL(WINAPI * fnSetFileSecurity)(LPCTSTR lpFileName, SECURITY_INFORMATION SecurityInformation,
-									 PSECURITY_DESCRIPTOR pSecurityDescriptor);
+	                                 PSECURITY_DESCRIPTOR pSecurityDescriptor);
 	BOOL(WINAPI * fnSetSecurityDescriptorDacl)(PSECURITY_DESCRIPTOR pSecurityDescriptor, BOOL bDaclPresent, PACL pDacl,
-											   BOOL bDaclDefaulted);
+	                                           BOOL bDaclDefaulted);
 	BOOL(WINAPI * fnInitializeSecurityDescriptor)(PSECURITY_DESCRIPTOR pSecurityDescriptor, DWORD dwRevision);
 	BOOL(WINAPI * fnAllocateAndInitializeSid)(PSID_IDENTIFIER_AUTHORITY pIdentifierAuthority, BYTE nSubAuthorityCount,
-											  DWORD dwSubAuthority0, DWORD dwSubAuthority1, DWORD dwSubAuthority2,
-											  DWORD dwSubAuthority3, DWORD dwSubAuthority4, DWORD dwSubAuthority5,
-											  DWORD dwSubAuthority6, DWORD dwSubAuthority7, PSID * pSid);
+	                                          DWORD dwSubAuthority0, DWORD dwSubAuthority1, DWORD dwSubAuthority2,
+	                                          DWORD dwSubAuthority3, DWORD dwSubAuthority4, DWORD dwSubAuthority5,
+	                                          DWORD dwSubAuthority6, DWORD dwSubAuthority7, PSID * pSid);
 	DWORD(WINAPI * fnSetEntriesInAcl)(ULONG cCountOfExplicitEntries, PEXPLICIT_ACCESS pListOfExplicitEntries,
-									  PACL OldAcl, PACL * NewAcl);
+	                                  PACL OldAcl, PACL * NewAcl);
 	PVOID(WINAPI * fnFreeSid)(PSID pSid);
 
 	*(void **)&fnSetFileSecurity = (void *)GetProcAddress(aLib, "SetFileSecurityA");
@@ -420,7 +420,7 @@ bool Sexy::AllowAllAccess(const std::string &theFileName)
 	*(void **)&fnFreeSid = (void *)GetProcAddress(aLib, "FreeSid");
 
 	if (!(fnSetFileSecurity && fnSetSecurityDescriptorDacl && fnInitializeSecurityDescriptor &&
-		  fnAllocateAndInitializeSid && fnSetEntriesInAcl && fnFreeSid))
+	      fnAllocateAndInitializeSid && fnSetEntriesInAcl && fnFreeSid))
 	{
 		FreeLibrary(aLib);
 		return false;
@@ -456,9 +456,9 @@ bool Sexy::AllowAllAccess(const std::string &theFileName)
 			{
 				// Add the ACL to the security descriptor.
 				if (fnSetSecurityDescriptorDacl(pSD,
-												TRUE, // bDaclPresent flag
-												pACL,
-												FALSE)) // not a default DACL
+				                                TRUE, // bDaclPresent flag
+				                                pACL,
+				                                FALSE)) // not a default DACL
 				{
 					if (fnSetFileSecurity(theFileName.c_str(), DACL_SECURITY_INFORMATION, pSD))
 						result = true;
@@ -473,7 +473,6 @@ bool Sexy::AllowAllAccess(const std::string &theFileName)
 	return false;
 #endif // WIN32
 }
-
 
 SexyString Sexy::ANSIToUTF8(const SexyString &theString)
 {
@@ -662,7 +661,7 @@ uint64_t Sexy::GetLastWriteFileDate(const std::string &theFileName)
 {
 	auto ftime = std::filesystem::last_write_time(theFileName);
 	auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(
-		ftime - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now());
+	    ftime - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now());
 	return std::chrono::system_clock::to_time_t(sctp);
 }
 
@@ -756,9 +755,9 @@ std::string Sexy::Evaluate(const std::string &theString, const DefinesMap &theDe
 			aValue = "";
 
 		anEvaluatedString.erase(anEvaluatedString.begin() + aPercentPos,
-								anEvaluatedString.begin() + aSecondPercentPos + 1);
+		                        anEvaluatedString.begin() + aSecondPercentPos + 1);
 		anEvaluatedString.insert(anEvaluatedString.begin() + aPercentPos, aValue.begin(),
-								 aValue.begin() + aValue.length());
+		                         aValue.begin() + aValue.length());
 	}
 
 	return anEvaluatedString;

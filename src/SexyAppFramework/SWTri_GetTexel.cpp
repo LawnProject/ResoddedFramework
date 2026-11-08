@@ -27,17 +27,17 @@ unsigned int tex;
 	int a01 = ((t01 >> 24) * ((uint32_t)((0x10000 - aUFactor) * (aVFactor)) >> 16)) >> 16;
 	int a11 = ((t11 >> 24) * ((uint32_t)((aUFactor) * (aVFactor)) >> 16)) >> 16;
 	unsigned int r =
-		(((t00 & 0x00FF0000) * a00 + (t10 & 0x00FF0000) * a10 + (t01 & 0x00FF0000) * a01 + (t11 & 0x00FF0000) * a11) >>
-		 8) &
-		0xFF0000;
+	    (((t00 & 0x00FF0000) * a00 + (t10 & 0x00FF0000) * a10 + (t01 & 0x00FF0000) * a01 + (t11 & 0x00FF0000) * a11) >>
+	     8) &
+	    0xFF0000;
 	unsigned int g =
-		(((t00 & 0x0000FF00) * a00 + (t10 & 0x0000FF00) * a10 + (t01 & 0x0000FF00) * a01 + (t11 & 0x0000FF00) * a11) >>
-		 8) &
-		0x00FF00;
+	    (((t00 & 0x0000FF00) * a00 + (t10 & 0x0000FF00) * a10 + (t01 & 0x0000FF00) * a01 + (t11 & 0x0000FF00) * a11) >>
+	     8) &
+	    0x00FF00;
 	unsigned int b =
-		(((t00 & 0x000000FF) * a00 + (t10 & 0x000000FF) * a10 + (t01 & 0x000000FF) * a01 + (t11 & 0x000000FF) * a11) >>
-		 8) &
-		0x0000FF;
+	    (((t00 & 0x000000FF) * a00 + (t10 & 0x000000FF) * a10 + (t01 & 0x000000FF) * a01 + (t11 & 0x000000FF) * a11) >>
+	     8) &
+	    0x0000FF;
 	unsigned int a = ((a00 + a10 + a01 + a11) << 24) & 0xFF000000;
 
 	tex = a | r | g | b;

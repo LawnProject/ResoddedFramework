@@ -5,20 +5,21 @@
 
 namespace Sexy
 {
-    class SexyAppBase;
+class SexyAppBase;
 
-    class Window
-    {
-    public:
-        SexyAppBase* mApp;
-        SDL_Window* mInternalWindow;
-    public:
-        Window(SexyAppBase* theApp);
-        ~Window();
+class Window
+{
+  public:
+	SexyAppBase *mApp;
+	SDL_Window *mInternalWindow;
 
-        #ifdef _WIN32
-            HWND GetHWND();
-        #endif
-    };
+  public:
+	Window(SexyAppBase *theApp);
+	~Window();
+
+#ifdef _WIN32
+	HWND GetHWND();
+#endif
+};
 
 } // namespace Sexy

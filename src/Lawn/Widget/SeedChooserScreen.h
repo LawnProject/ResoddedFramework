@@ -76,8 +76,8 @@ class SeedChooserScreen : public Widget
 	~SeedChooserScreen();
 
 	static int PickFromWeightedArrayUsingSpecialRandSeed(TodWeightedArray *theArray,
-																	int theCount,
-																	MTRand &theLevelRNG);
+	                                                     int theCount,
+	                                                     MTRand &theLevelRNG);
 	void CrazyDavePickSeeds();
 	bool Has7Rows();
 	void GetSeedPositionInChooser(int theIndex, int &x, int &y);

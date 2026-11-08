@@ -27,7 +27,7 @@ class TriVertex
 		color = 0;
 	}
 	TriVertex(float theX, float theY, float theU, float theV, uint32_t theColor)
-		: x(theX), y(theY), u(theU), v(theV), color(theColor)
+	    : x(theX), y(theY), u(theU), v(theV), color(theColor)
 	{
 	}
 };

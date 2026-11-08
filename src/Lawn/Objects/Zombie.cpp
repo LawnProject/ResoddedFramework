@@ -5883,21 +5883,21 @@ void Zombie::DrawReanim(Graphics *g, const ZombieDrawPosition &theDrawPos, int t
 			{
 				if (gPortraitItems[mZombatar.mEyewear + ZombatarItem::ZOMBATAR_EYEWEAR_1].mAllowColor)
 					aEyewearReanim->mColorOverride = gMoreColors[mZombatar.mEyewearColor];
-				else 
+				else
 					aEyewearReanim->mColorOverride = Color::White;
 			};
 			if (mZombatar.mAccessories != -1)
 			{
 				if (gPortraitItems[mZombatar.mAccessories + ZombatarItem::ZOMBATAR_ACCESSORY_1].mAllowColor)
 					aAccessoriesReanim->mColorOverride = gMoreColors[mZombatar.mAccessoriesColor];
-				else 
+				else
 					aAccessoriesReanim->mColorOverride = Color::White;
 			};
 			if (mZombatar.mFacialHair != -1)
 			{
 				if (gPortraitItems[mZombatar.mFacialHair + ZombatarItem::ZOMBATAR_FACIALHAIR_1].mAllowColor)
 					aFacialHairReanim->mColorOverride = gMoreColors[mZombatar.mFacialHairColor];
-				else 
+				else
 					aFacialHairReanim->mColorOverride = Color::White;
 			};
 		}

@@ -83,7 +83,7 @@ class LawnStoneButton : public DialogButton
 {
   public:
 	LawnStoneButton(Image *theComponentImage, int theId, ButtonListener *theListener)
-		: DialogButton(theComponentImage, theId, theListener)
+	    : DialogButton(theComponentImage, theId, theListener)
 	{
 	}
 
@@ -113,19 +113,19 @@ class NewLawnButton : public DialogButton
 
 LawnStoneButton *MakeButton(int theId, ButtonListener *theListener, const SexyString &theText);
 NewLawnButton *MakeNewButton(int theId,
-							 ButtonListener *theListener,
-							 const SexyString &theText,
-							 Font *theFont,
-							 Image *theImageNormal,
-							 Image *theImageOver,
-							 Image *theImageDown);
+                             ButtonListener *theListener,
+                             const SexyString &theText,
+                             Font *theFont,
+                             Image *theImageNormal,
+                             Image *theImageOver,
+                             Image *theImageDown);
 void DrawStoneButton(Graphics *g,
-					 int x,
-					 int y,
-					 int theWidth,
-					 int theHeight,
-					 bool isDown,
-					 bool isHighLighted,
-					 const SexyString &theLabel);
+                     int x,
+                     int y,
+                     int theWidth,
+                     int theHeight,
+                     bool isDown,
+                     bool isHighLighted,
+                     const SexyString &theLabel);
 
 #endif

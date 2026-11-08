@@ -361,7 +361,7 @@ class Plant : public GameObject
 	TodParticleSystem *AddAttachedParticle(int thePosX, int thePosY, int theRenderPosition, ParticleEffect theEffect);
 
 	/// @brief Offset the coordinates by the positions of the Peashooter's (and others) Head
-	/// @param theOffsetX Reference to the X position 
+	/// @param theOffsetX Reference to the X position
 	/// @param theOffsetY Reference to the Y position
 	void GetPeaHeadOffset(int &theOffsetX, int &theOffsetY);
 
@@ -376,11 +376,11 @@ class Plant : public GameObject
 	/// @param thePosX The X position
 	/// @param thePosY The Y position
 	static void DrawSeedType(Graphics *g,
-							 SeedType theSeedType,
-							 SeedType theImitaterType,
-							 DrawVariation theDrawVariation,
-							 float thePosX,
-							 float thePosY);
+	                         SeedType theSeedType,
+	                         SeedType theImitaterType,
+	                         DrawVariation theDrawVariation,
+	                         float thePosX,
+	                         float thePosY);
 
 	/// @brief Kill all Plants on the same grid as the DoomShroom explosion
 	void KillAllPlantsNearDoom();

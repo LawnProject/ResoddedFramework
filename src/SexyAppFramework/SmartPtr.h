@@ -63,7 +63,8 @@ class RefCount
 
 // Const smart pointer.  Automatically performs reference counting on objects which
 // implement the CreateRef and Release interface.  Allows const access to underlying object.
-template <class T> class ConstSmartPtr
+template <class T>
+class ConstSmartPtr
 {
   protected:
 	T *p;
@@ -150,7 +151,8 @@ template <class T> class ConstSmartPtr
 
 // Smart pointer.  Automatically performs reference counting on objects which
 // implement the CreateRef and Release interface.  Allows non-const access to underlying object.
-template <class T> class SmartPtr : public ConstSmartPtr<T>
+template <class T>
+class SmartPtr : public ConstSmartPtr<T>
 {
   public:
 	SmartPtr()
@@ -200,11 +202,11 @@ typedef SmartPtr<RefCount> RefCountPtr;
 #pragma pack(pop)
 
 // Helper macro to forward declare reference counted classes along with their smart pointer definitions
-#define SEXY_PTR_FORWARD(X)                                                                                            \
-	class X;                                                                                                           \
+#define SEXY_PTR_FORWARD(X) \
+	class X;                \
 	typedef SmartPtr<X> X##Ptr
-#define SEXY_PTR_FORWARDNS(X)                                                                                          \
-	class X;                                                                                                           \
+#define SEXY_PTR_FORWARDNS(X) \
+	class X;                  \
 	typedef Sexy::SmartPtr<X> X##Ptr
 
 #endif

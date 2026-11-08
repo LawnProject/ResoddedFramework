@@ -20,7 +20,6 @@ class AchievementScreenItem
 	int mY;
 };
 
-
 class AwardScreen : public Widget
 {
   private:
@@ -42,7 +41,6 @@ class AwardScreen : public Widget
 	std::vector<AchievementScreenItem> mAchievementItems;
 	LawnScrollbar *mScrollBar;
 
-
   public:
 	AwardScreen(LawnApp *theApp, AwardType theAwardType);
 	virtual ~AwardScreen();
@@ -53,9 +51,9 @@ class AwardScreen : public Widget
 		Widget::Resize(theX, theY, theWidth, theHeight);
 	}
 	static void DrawBottom(Graphics *g,
-						   const SexyString &theTitle,
-						   const SexyString &theAward,
-						   const SexyString &theMessage);
+	                       const SexyString &theTitle,
+	                       const SexyString &theAward,
+	                       const SexyString &theMessage);
 	void DrawAwardSeed(Graphics *g);
 	virtual void Draw(Graphics *g);
 	virtual void Update();

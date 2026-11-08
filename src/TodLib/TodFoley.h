@@ -149,7 +149,7 @@ class TodSoundInstance : public OpenALSoundInstance
 
   public:
 	TodSoundInstance(OpenALSoundManager *theSoundManager, ALuint theSourceSound)
-		: OpenALSoundInstance(theSoundManager, theSourceSound)
+	    : OpenALSoundInstance(theSoundManager, theSourceSound)
 	{
 	}
 

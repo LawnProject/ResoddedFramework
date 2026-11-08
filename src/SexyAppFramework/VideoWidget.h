@@ -12,56 +12,56 @@ extern "C"
 
 namespace Sexy
 {
-	class SexyAppBase;
+class SexyAppBase;
 
-	class VideoWidget : public Widget
-	{
+class VideoWidget : public Widget
+{
 
-	  public:
-		SexyAppBase *mApp;
+  public:
+	SexyAppBase *mApp;
 
-	  public:
-		VideoWidget();
-		VideoWidget(SexyAppBase *theApp);
-		~VideoWidget();
+  public:
+	VideoWidget();
+	VideoWidget(SexyAppBase *theApp);
+	~VideoWidget();
 
-		void Play();
-		bool Playing();
-		bool IsFinished();
+	void Play();
+	bool Playing();
+	bool IsFinished();
 
-		void LoadVideo(const SexyString &aPath);
-		virtual void Draw(Graphics *g);
-		virtual void Update();
+	void LoadVideo(const SexyString &aPath);
+	virtual void Draw(Graphics *g);
+	virtual void Update();
 
-		double GetAudioClock();
+	double GetAudioClock();
 
-		double GetFrameTime();
+	double GetFrameTime();
 
-	  private:
-		void *mVideoTexture;
+  private:
+	void *mVideoTexture;
 
-		bool mFinished;
-		bool mVideoStartedRendering;
-		int mVidStreamIndex;
-		int mVidWidth;
-		int mVidHeight;
-		AVFormatContext *mFormatContext;
-		const AVCodec *mVideoCodec;
-		AVCodecContext *mVideoDecoder;
-		AVPacket mPacket;
-		AVFrame *mVideoFrame;
-		AVFrame *mAudioFrame;
-		SwsContext *mSwSContext;
+	bool mFinished;
+	bool mVideoStartedRendering;
+	int mVidStreamIndex;
+	int mVidWidth;
+	int mVidHeight;
+	AVFormatContext *mFormatContext;
+	const AVCodec *mVideoCodec;
+	AVCodecContext *mVideoDecoder;
+	AVPacket mPacket;
+	AVFrame *mVideoFrame;
+	AVFrame *mAudioFrame;
+	SwsContext *mSwSContext;
 
-		AVCodecContext *mAudioDecoder;
-		const AVCodec *mAudioCodec;
-		int mAudioStreamIndex;
-		SwrContext *mSwrContext;
-		ALuint mVidAudioSource;
-		ALuint mVidAudioBuffers[4];
-		int mAudioChannels;
-		ALenum mAudioFormat;
-		int64_t mPlayStartTick;
-		double mPrebufferDuration = 0.0;
-	};
-}
+	AVCodecContext *mAudioDecoder;
+	const AVCodec *mAudioCodec;
+	int mAudioStreamIndex;
+	SwrContext *mSwrContext;
+	ALuint mVidAudioSource;
+	ALuint mVidAudioBuffers[4];
+	int mAudioChannels;
+	ALenum mAudioFormat;
+	int64_t mPlayStartTick;
+	double mPrebufferDuration = 0.0;
+};
+} // namespace Sexy

@@ -9,20 +9,21 @@
 #include <SexyAppFramework/Slider.h>
 
 static int gUserListWidgetColors[][3] = {
-	{23, 24, 35},
-	{0, 0, 0},
-	{235, 225, 180},
-	{255, 255, 255},
-	{20, 180, 15}};
+	{ 23,  24,  35  },
+	{ 0,   0,   0   },
+	{ 235, 225, 180 },
+	{ 255, 255, 255 },
+	{ 20,  180, 15  }
+};
 
 UserDialog::UserDialog(LawnApp *theApp)
-	: LawnDialog(theApp,
-				 Dialogs::DIALOG_USERDIALOG,
-				 true,
-				 "[WHO_ARE_YOU]",
-				 "",
-				 "",
-				 Dialog::BUTTONS_OK_CANCEL)
+    : LawnDialog(theApp,
+                 Dialogs::DIALOG_USERDIALOG,
+                 true,
+                 "[WHO_ARE_YOU]",
+                 "",
+                 "",
+                 Dialog::BUTTONS_OK_CANCEL)
 {
 	mVerticalCenterText = false;
 	mUserList = new ListWidget(0, FONT_BRIANNETOD16, this);
@@ -83,19 +84,19 @@ void UserDialog::Resize(int theX, int theY, int theWidth, int theHeight)
 	LawnDialog::Resize(theX, theY, theWidth, theHeight);
 	mUserList->Resize(GetLeft() + 30, GetTop() + 4, GetWidth() - 60, 200);
 	mRenameButton->Layout(LayoutFlags::LAY_SameLeft | LayoutFlags::LAY_Above | LayoutFlags::LAY_SameHeight |
-							  LayoutFlags::LAY_SameWidth,
-						  mLawnYesButton,
-						  0,
-						  0,
-						  0,
-						  0);
+	                          LayoutFlags::LAY_SameWidth,
+	                      mLawnYesButton,
+	                      0,
+	                      0,
+	                      0,
+	                      0);
 	mDeleteButton->Layout(LayoutFlags::LAY_SameLeft | LayoutFlags::LAY_Above | LayoutFlags::LAY_SameHeight |
-							  LayoutFlags::LAY_SameWidth,
-						  mLawnNoButton,
-						  0,
-						  0,
-						  0,
-						  0);
+	                          LayoutFlags::LAY_SameWidth,
+	                      mLawnNoButton,
+	                      0,
+	                      0,
+	                      0,
+	                      0);
 
 	mListSlider->Resize(Rect(GetWidth() + 20, GetTop() + 5, 40, 200));
 }
