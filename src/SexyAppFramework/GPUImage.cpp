@@ -26,7 +26,6 @@ void GPUImage::Init()
 
 	mNoLock = false;
 	mVideoMemory = false;
-	mFirstPixelTrans = false;
 	mWantSurface = false;
 	mDrawToBits = false;
 	mSurfaceSet = false;
@@ -240,7 +239,7 @@ void GPUImage::FillRect(const Rect &theRect, const Color &theColor, int theDrawM
 	}
 
 	CommitBits();
-	if ((mDrawToBits) || (mHasAlpha) || ((mHasTrans) && (!mFirstPixelTrans)))
+	if (mDrawToBits)
 	{
 		MemoryImage::FillRect(theRect, theColor, theDrawMode);
 		return;
@@ -264,7 +263,7 @@ void GPUImage::DrawLine(double theStartX, double theStartY, double theEndX, doub
 		return;
 	}
 
-	if ((mDrawToBits) || (mHasAlpha) || (mHasTrans))
+	if (mDrawToBits)
 	{
 		MemoryImage::DrawLine(theStartX, theStartY, theEndX, theEndY, theColor, theDrawMode);
 		return;
@@ -308,7 +307,7 @@ void GPUImage::DrawLineAA(
 		return;
 	}
 
-	if ((mDrawToBits) || (mHasAlpha) || (mHasTrans))
+	if (mDrawToBits)
 	{
 		MemoryImage::DrawLine(theStartX, theStartY, theEndX, theEndY, theColor, theDrawMode);
 		return;
@@ -361,7 +360,7 @@ void GPUImage::Blt(Image *theImage, int theX, int theY, const Rect &theSrcRect, 
 		return;
 	}
 
-	if ((mDrawToBits) || (mHasAlpha) || ((mHasTrans) && (!mFirstPixelTrans)))
+	if (mDrawToBits)
 	{
 		MemoryImage::Blt(theImage, theX, theY, theSrcRect, theColor, theDrawMode);
 		return;
@@ -458,7 +457,7 @@ void GPUImage::BltRotated(Image *theImage,
 		return;
 	}
 
-	if ((mDrawToBits) || (mHasAlpha) || ((mHasTrans) && (!mFirstPixelTrans)))
+	if (mDrawToBits)
 	{
 		MemoryImage::BltRotated(
 		    theImage, theX, theY, theSrcRect, theClipRect, theColor, theDrawMode, theRot, theRotCenterX, theRotCenterY);
@@ -497,7 +496,7 @@ void GPUImage::StretchBlt(Image *theImage,
 		return;
 	}
 
-	if ((mDrawToBits) || (mHasAlpha) || (mHasTrans))
+	if (mDrawToBits)
 	{
 		MemoryImage::StretchBlt(theImage, theDestRect, theSrcRect, theClipRect, theColor, theDrawMode, fastStretch);
 		return;

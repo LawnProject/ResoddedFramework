@@ -20,7 +20,6 @@ class GPUImage : public MemoryImage
 	bool mSurfaceSet;
 	bool mNoLock;
 	bool mVideoMemory;
-	bool mFirstPixelTrans;
 	bool mWantSurface;
 	bool mDrawToBits;
 
