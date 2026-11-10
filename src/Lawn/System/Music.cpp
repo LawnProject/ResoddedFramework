@@ -240,12 +240,10 @@ void Music::MusicInit()
 
 void Music::MusicLoadCreditsSong()
 {
-#ifndef _DEBUG
 	BassMusicInterface *aBass = (BassMusicInterface *)mMusicInterface;
 	if (aBass->mMusicMap.find((int)MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN) ==
 	    aBass->mMusicMap.end())
 		LoadSong(MusicFile::MUSIC_FILE_CREDITS_ZOMBIES_ON_YOUR_LAWN, "sounds/ZombiesOnYourLawn.ogg");
-#endif
 }
 
 void Music::StopAllMusic()
